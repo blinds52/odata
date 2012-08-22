@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCases xmlns="http://docs.oasis-open.org/odata/ns/testcases">
+  <TestCase Name="URI with path and trailing slash" 
+            Rule="absolute-URI">
+    <Input>http://My.Org:8080/MyService/</Input>
+  </TestCase>
+  <TestCase Name="URI without schema separator" 
+            Rule="absolute-URI" 
+            FailAt="4">
+    <Input>http//My.Org/</Input>
+  </TestCase>
+  <TestCase Name="Service Root with path and trailing slash" 
+            Rule="odataUri">
+    <Input>http://My.Org/MyService/</Input>
+  </TestCase>
+  <TestCase Name="Service Root without trailing slash" 
+            Rule="odataUri" FailAt="23">
+    <Input>http://My.Org/MyService</Input>
+  </TestCase>
+  <TestCase Name="Service Root directly at server root" 
+            Rule="odataUri">
+    <Input>http://My.Org:80/</Input>
+  </TestCase>
+  <!-- rule odataUri isn't correctly processed as APG is over-eager and interprets $metadata as segment-nz 
+  <TestCase Name="Metadata" 
+            Rule="odataUri">
+    <Input>http://My.Org/$metadata</Input>
+  </TestCase>
+  <TestCase Name="Batch with path" 
+            Rule="odataUri">
+    <Input>http://My.Org/SomePath/SomeService.svc/$batch</Input>
+  </TestCase>
+  -->
+  <TestCase Name="Resource Path - Entity Set" 
+            Rule="resourcePath">
+    <Input>EntitySet</Input>
+  </TestCase>
+  <TestCase Name="Resource Path - Entity" 
+            Rule="resourcePath">
+    <Input>EntitySet(11)</Input>
+  </TestCase>
+  <TestCase Name="Resource Path - Entity" 
+            Rule="resourcePath">
+    <Input>EntitySet(Id=1)</Input>
+  </TestCase>
+  <TestCase Name="Key"
+            Rule="string">
+    <Input>'Hugo''s%20Tavern'</Input>
+  </TestCase>
+  <TestCase Name="Resource Path - Entity" 
+            Rule="resourcePath">
+    <Input>EntitySet(Id=1,Size=5)</Input>
+  </TestCase>
+  <TestCase Name="Resource Path - Entity + Navigation" 
+            Rule="resourcePath">
+    <Input>EntitySet(0)/NavProp</Input>
+  </TestCase>
+  <TestCase Name="Correct Guid" 
+            Rule="GUID">
+    <Input>guid'01234567-89ab-cdef-0123-456789abcdef'</Input>
+  </TestCase>
+  <TestCase Name="Guid with wrong character" 
+            Rule="GUID"
+            FailAt="10">
+    <Input>guid'01234g67-89ab-cdef-0123-456789abcdef'</Input>
+  </TestCase>
+  <TestCase Name="Guid with less than 32 digits" 
+            Rule="GUID"
+            FailAt="28">
+    <Input>guid'01234567-89ab-cdef-456789abcdef'</Input>
+  </TestCase>
+  <TestCase Name="Time: a year and a day" 
+            Rule="TIME">
+    <Input>time'P1Y1D'</Input>
+  </TestCase>
+  <TestCase Name="Time: plus a year and a day" 
+            Rule="TIME">
+    <Input>time'+P1Y1D'</Input>
+  </TestCase>
+  <TestCase Name="Time: a month before" 
+            Rule="TIME">
+    <Input>time'-P1M'</Input>
+  </TestCase>
+  <TestCase Name="Time: twelve seconds" 
+            Rule="TIME">
+    <Input>time'PT12S'</Input>
+  </TestCase>
+  <TestCase Name="Time: two hours, ten minutes and three point one seconds" 
+            Rule="TIME">
+    <Input>time'PT2H10M3.1S'</Input>
+  </TestCase>
+  <TestCase Name="Time: not time on the clock" 
+            Rule="TIME"
+            FailAt="5">
+    <Input>time'11:22:33'</Input>
+  </TestCase>
+  <TestCase Name="Identifier" 
+            Rule="odataIdentifier">
+    <Input>TheQuickBrownFoxSays42</Input>
+  </TestCase>
+  <TestCase Name="Identifier with leading underscores" 
+            Rule="odataIdentifier">
+    <Input>__ID</Input>
+  </TestCase>
+  <TestCase Name="Identifier: no starting digit" 
+            Rule="odataIdentifier" 
+            FailAt="0">
+    <Input>0time</Input>
+  </TestCase>
+  <TestCase Name="Entity Set" 
+            Rule="resourcePath">
+    <Input>Container.EntitySet</Input>
+  </TestCase>
+  <TestCase Name="Expand single navigation property" 
+            Rule="expand">
+    <Input>$expand=Items</Input>
+  </TestCase>
+  <TestCase Name="Expand multiple navigation properties, recursive" 
+            Rule="expand">
+    <Input>$expand=Items,Items/Product</Input>
+  </TestCase>
+  <TestCase Name="Select simple" 
+            Rule="select">
+    <Input>$select=ID,Items</Input>
+  </TestCase>
+  <TestCase Name="Select with navigation" 
+            Rule="select">
+    <Input>$select=Items/ID,Items/Product/*</Input>
+  </TestCase>
+  <!-- Leads to timeout
+  <TestCase Name="OrderBy" 
+            Rule="orderby">
+    <Input>$orderby=Name</Input>
+  </TestCase>
+  <TestCase Name="Filter" 
+            Rule="filter">
+    <Input>$filter=Name eq 'Hugo'</Input>
+  </TestCase>
+  -->
+  <TestCase Name="Call unbound action" 
+            Rule="actionCall">
+    <Input>Activation()</Input>
+  </TestCase>
+  <TestCase Name="Call unbound action with container" 
+            Rule="actionCall">
+    <Input>Container.Activation</Input>
+  </TestCase>
+  <TestCase Name="Call bound action" 
+            Rule="resourcePath">
+    <Input>LeaveRequests(4)/Rejection()</Input>
+  </TestCase>
+  <TestCase Name="Custom Query Option" 
+            Rule="customQueryOption">
+      <Input>search=blue</Input>
+  </TestCase>
+  <TestCase Name="Custom Query Option" 
+            Rule="customQueryOption">
+      <Input>!deltatoken=201208210403</Input>
+  </TestCase>
+</TestCases>
