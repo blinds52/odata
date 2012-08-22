@@ -1940,17 +1940,17 @@ public class OData extends Grammar{
         {int[] a = {1139,1140}; op[1138] = getOpcodeCat(a);}
         op[1139] = getOpcodeRnm(97, 534); // qualifiedEntityTypeName
         {char[] a = {47}; op[1140] = getOpcodeTls(a);}
-        {int[] a = {1142,1143,1144,1145,1146}; op[1141] = getOpcodeAlt(a);}
-        op[1142] = getOpcodeRnm(108, 589); // propertyName
-        op[1143] = getOpcodeRnm(144, 679); // qualifiedActionName
-        op[1144] = getOpcodeRnm(145, 686); // qualifiedFunctionName
-        op[1145] = getOpcodeRnm(95, 520); // allOperationsInContainer
-        {int[] a = {1147,1148}; op[1146] = getOpcodeCat(a);}
-        op[1147] = getOpcodeRnm(119, 612); // navigationProperty
-        op[1148] = getOpcodeRep((char)0, (char)1, 1149);
-        {int[] a = {1150,1151}; op[1149] = getOpcodeCat(a);}
-        {char[] a = {47}; op[1150] = getOpcodeTls(a);}
-        op[1151] = getOpcodeRnm(201, 1134); // selectItem
+        {int[] a = {1142,1148,1149,1150,1151}; op[1141] = getOpcodeAlt(a);}
+        {int[] a = {1143,1144}; op[1142] = getOpcodeCat(a);}
+        op[1143] = getOpcodeRnm(119, 612); // navigationProperty
+        op[1144] = getOpcodeRep((char)0, (char)1, 1145);
+        {int[] a = {1146,1147}; op[1145] = getOpcodeCat(a);}
+        {char[] a = {47}; op[1146] = getOpcodeTls(a);}
+        op[1147] = getOpcodeRnm(201, 1134); // selectItem
+        op[1148] = getOpcodeRnm(108, 589); // propertyName
+        op[1149] = getOpcodeRnm(144, 679); // qualifiedActionName
+        op[1150] = getOpcodeRnm(145, 686); // qualifiedFunctionName
+        op[1151] = getOpcodeRnm(95, 520); // allOperationsInContainer
         {int[] a = {1153,1154}; op[1152] = getOpcodeCat(a);}
         {char[] a = {36,115,107,105,112,116,111,107,101,110,61}; op[1153] = getOpcodeTls(a);}
         op[1154] = getOpcodeRep((char)1, Character.MAX_VALUE, 1155);
@@ -3653,16 +3653,15 @@ public class OData extends Grammar{
         out.println("");
         out.println("selectItem                              =       star / ");
         out.println("                                                                        [ qualifiedEntityTypeName \"/\" ] (");
-        out.println("                                                                                propertyName / ");
+        out.println("                                                                                ( navigationProperty [ \"/\" selectItem ] ) /                                                                                propertyName / ");
         out.println("                                                                                qualifiedActionName / ");
         out.println("                                                                                qualifiedFunctionName / ");
-        out.println("                                                                                allOperationsInContainer /");
-        out.println("                                                                                ( navigationProperty [ \"/\" selectItem ] )");
+        out.println("                                                                                allOperationsInContainer ");
         out.println("                                                                        )");
         out.println("");
         out.println("skiptoken                                       =       \"$skiptoken=\" 1*pchar");
         out.println("");
-        out.println("customQueryOption               =       customName [ WSP ] [ \"=\" [ WSP ] customValue ]");
+        out.println("customQueryOption                               =       customName [ WSP ] [ \"=\" [ WSP ] customValue ]");
         out.println("");
         out.println("customName                                      =       ( unreserved / pct-encoded / \":\" / \"@\" / \"!\" / \"'\" / \"(\" / \")\" / \"*\" / \"+\" / \",\" / \";\" ) ");
         out.println("                                                                        *( unreserved / pct-encoded / \":\" / \"@\" / \"!\" / \"$\" / \"'\" / \"(\" / \")\" / \"*\" / \"+\" / \",\" / \";\" )                 ");
