@@ -294,7 +294,7 @@ null = "null" [ "'" qualifiedTypeName "'" ]
  ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
  ; Knowing the type is useful for function overload resolution purposes. 
                                                 
-binary = ( %d88 / "binary" ) SQUOTE 2*HEXDIG SQUOTE ; note: "X" is case sensitive "binary" is not hence using the character code.
+binary = ( %d88 / "binary" ) SQUOTE *(2HEXDIG) SQUOTE ; note: "X" is case sensitive "binary" is not hence using the character code.
 boolean = ( "true" / "1" ) / ( "false" / "0" )
 byte = 1*3DIGIT ; numbers in the range from 0 to 257
 dateTime = "datetime" SQUOTE dateTimeBody SQUOTE
@@ -340,7 +340,8 @@ single = (
  ) ("F" / "f") /
  nanInfinity [ "F" / "f" ]
 
-string = SQUOTE *( unreserved / pct-encoded / "''") SQUOTE ; TODO; was SQUOTE *UTF8-char SQUOTE, but that's not sufficient for use in URLs
+string = SQUOTE *( unreserved / pct-encoded / SQUOTE-in-string ) SQUOTE ; TODO; was SQUOTE *UTF8-char SQUOTE, but that's not sufficient for use in URLs
+SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal in quotes
 time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ] SQUOTE
  ; the above is an approximation of the rules for an xml duration.
  ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema-2 for more information
@@ -378,7 +379,8 @@ count                                           =       "/$count"
 filter                                          =       "$filter" [ WSP ] "=" [ WSP] boolCommonExpr
         
 orderby                                         =       "$orderby" [ WSP ] "=" [ WSP] 
-                                                                        commonExpr [WSP] [ "asc" / "desc" ] *( COMMA [ WSP ]  commonExpr [ WSP ] [ "asc" / "desc" ])
+                                                                        orderExpr [WSP] [ "asc" / "desc" ] *( COMMA [ WSP ]  orderExpr [ WSP ] [ "asc" / "desc" ])
+orderExpr                                       =  primitiveKeyProperty / primitiveNonKeyProperty      ; TODO: originally commonExpr                                                                 
 
 skip                                            =   "$skip=" 1*DIGIT
 
@@ -438,28 +440,30 @@ collectionNavigation        =       [ "/" qualifiedEntityTypeName ] "/"
                                                                         )
 
 singleNavigation                        =    [ "/" qualifiedEntityTypeName ] 
-                                             ( boundOperation  /
-                                             "/" ( 
-                                                ( "$links/" navigationProperty ) / 
-                                        ( entityColNavigationProperty [ collectionNavigation ] ) /
-                                        ( entityNavigationProperty [ singleNavigation ] ) /
-                                                                                primitivePropertyPath / 
-                                        complexPropertyPath /
-                                                                                collectionPropertyPath / 
-                                        streamPropertyPath / 
-                                        value
-                                        ) )
+                                             ( 
+                                               "/" ( 
+                                                     ( "$links/" navigationProperty ) / 
+                                                     ( entityColNavigationProperty [ collectionNavigation ] ) /
+                                                     ( entityNavigationProperty [ singleNavigation ] ) /
+                                                     primitivePropertyPath / 
+                                                     complexPropertyPath /
+                                                     collectionPropertyPath / 
+                                                     streamPropertyPath / 
+                                                     value
+                                                   )
+                                             / boundOperation 
+                                             )
                         
 boundOperation              =       [ "/" qualifiedEntityTypeName ] 
                                                                         "/" 
                                                                         (
-                                                                                boundActionCall / 
                                                                                 boundEntityColFuncCall [ singleNavigation ] /
                                                                                 boundEntityFuncCall [ collectionNavigation ] /
                                                                                 boundPrimitiveFuncCall [ boundOperation / value ] /
                                                                                 boundPrimitiveColFuncCall [ boundOperation ] /
                                                                                 boundComplexFuncCall [ complexPropertyPath / boundOperation ] /
-                                                                                boundComplexColFuncCall [ boundOperation ]
+                                                                                boundComplexColFuncCall [ boundOperation ] /
+                                                                                boundActionCall  
                                                                         )
                                     ; boundOperation segments can only be composed if the type of the previous segment matches 
                                     ; the type of the first parameter of the action or function being called.
@@ -648,7 +652,7 @@ serviceOperationCall            =       entityServiceOpCall /
 serviceOpParameterName          =       odataIdentifier;
                                                                         ; identifies by name a parameter to a ServiceOperation
         
-sopParameterNameAndValue        =       serviceOperationParameterName "=" primitiveParameterValue
+sopParameterNameAndValue        =       serviceOpParameterName "=" primitiveParameterValue
                                                                         ; when a serviceOperation Parameter is omitted the parameter value MUST be assumed to be null           
     
 commonExpr = [ WSP ] (
@@ -928,5 +932,4 @@ primitiveColInJSON = "{TODO49}"
 primitiveFuncCall = "{TODO50}"
 primitiveVJSONLiteral = "{TODO51}"
 quotation-mark = "{TODO53}"
-serviceOperationParameterName = "{TODO54}"
 substringMethodCallExpr = "{TODO55}"

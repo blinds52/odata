@@ -9,28 +9,19 @@
             FailAt="4">
     <Input>http//My.Org/</Input>
   </TestCase>
-  <TestCase Name="Service Root with path and trailing slash" 
-            Rule="odataUri">
-    <Input>http://My.Org/MyService/</Input>
+  <TestCase Name="Binary with X" 
+            Rule="binary">
+    <Input>X'1a2B3c4D'</Input>
   </TestCase>
-  <TestCase Name="Service Root without trailing slash" 
-            Rule="odataUri" FailAt="23">
-    <Input>http://My.Org/MyService</Input>
+  <TestCase Name="Binary with binary" 
+            Rule="binary">
+    <Input>binary'1a2B3c4D'</Input>
   </TestCase>
-  <TestCase Name="Service Root directly at server root" 
-            Rule="odataUri">
-    <Input>http://My.Org:80/</Input>
+  <TestCase Name="Binary with odd number of hex digits" 
+            Rule="binary" 
+            FailAt="5">
+    <Input>X'123'</Input>
   </TestCase>
-  <!-- rule odataUri isn't correctly processed as APG is over-eager and interprets $metadata as segment-nz 
-  <TestCase Name="Metadata" 
-            Rule="odataUri">
-    <Input>http://My.Org/$metadata</Input>
-  </TestCase>
-  <TestCase Name="Batch with path" 
-            Rule="odataUri">
-    <Input>http://My.Org/SomePath/SomeService.svc/$batch</Input>
-  </TestCase>
-  -->
   <TestCase Name="Resource Path - Entity Set" 
             Rule="resourcePath">
     <Input>EntitySet</Input>
@@ -131,11 +122,11 @@
             Rule="select">
     <Input>$select=Items/ID,Items/Product/*</Input>
   </TestCase>
-  <!-- Leads to timeout
   <TestCase Name="OrderBy" 
             Rule="orderby">
-    <Input>$orderby=Name</Input>
+    <Input>$orderby=name</Input>
   </TestCase>
+  <!-- Leads to timeout
   <TestCase Name="Filter" 
             Rule="filter">
     <Input>$filter=Name eq 'Hugo'</Input>
@@ -151,7 +142,7 @@
   </TestCase>
   <TestCase Name="Call bound action" 
             Rule="resourcePath">
-    <Input>LeaveRequests(4)/Rejection()</Input>
+    <Input>LeaveRequests(4)/Rejection</Input>
   </TestCase>
   <TestCase Name="Custom Query Option" 
             Rule="customQueryOption">
@@ -159,6 +150,85 @@
   </TestCase>
   <TestCase Name="Custom Query Option" 
             Rule="customQueryOption">
-      <Input>!deltatoken=201208210403</Input>
+      <Input>!deltatoken='201208210403'</Input>
   </TestCase>
+  <TestCase Name="Custom Query Option" 
+            Rule="customQueryOption">
+      <Input>!special</Input>
+  </TestCase>
+  <!-- 
+  	Test cases for example URLs in OData URI  
+  	-->
+  <TestCase Name="2 URL Components - service root URL" 
+            Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/</Input>
+  </TestCase>
+  <TestCase Name="Service Root directly at server root" 
+            Rule="odataUri">
+    <Input>http://My.Org:80/</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - resource path" 
+            Rule="resourcePath">
+    <Input>Category(1)/Products</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - query options" 
+            Rule="queryOptions">
+    <Input>$top=2&amp;$orderby=name</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - resource path and query options" 
+            Rule="odataRelativeUri">
+    <Input>Category(1)/Products?$top=2&amp;$orderby=name</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - entity set" 
+            Rule="entitySetName">
+    <Input>Products</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - entity set" 
+            Rule="resourcePath">
+    <Input>Products</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - function call" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCategoryId(categoryId=2)</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - service operation parameter" 
+            Rule="sopParameterNameAndValue">
+    <Input>color='red'</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - service operation call" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByColor?color='red'</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - single entity" 
+            Rule="resourcePath">
+    <Input>Categories(1)</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - bound operation on entity set" 
+            Rule="resourcePath">
+    <Input>Products/MostExpensive</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - follow navigation property" 
+            Rule="resourcePath">
+    <Input>Products(1)/Supplier</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - follow navigation property and call function" 
+            Rule="odataRelativeUri">
+    <Input>Categories(1)/Products/AllOrders</Input>
+  </TestCase>
+  <!-- 
+  <TestCase Name="4.1.1 Canonical URL" 
+            Rule="odataRelativeUri">
+    <Input>Categories(1)/Products(1)</Input>
+  </TestCase>
+  -->
+  <!-- rule odataUri isn't correctly processed as APG is over-eager and interprets $metadata as segment-nz 
+  <TestCase Name="Metadata" 
+            Rule="odataUri">
+    <Input>http://My.Org/$metadata</Input>
+  </TestCase>
+  <TestCase Name="Batch with path" 
+            Rule="odataUri">
+    <Input>http://My.Org/SomePath/SomeService.svc/$batch</Input>
+  </TestCase>
+  -->
 </TestCases>
