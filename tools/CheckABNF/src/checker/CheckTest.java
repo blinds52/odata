@@ -77,7 +77,7 @@ public class CheckTest {
 		assertEquals("out", "", outArray.toString());
 		assertEquals(
 				"err",
-				"\nERROR: Fail without FailAt fails at 36: guid'01234567-89ab-cdef-456789abcdef['] is no GUID\n",
+				"\nERROR: Fail without FailAt fails at 28: guid'01234567-89ab-cdef-4567[89abcdef'] is no GUID\n",
 				errLine(0));
 	}
 	
