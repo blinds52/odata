@@ -1,4 +1,5 @@
 Title:	Meeting minutes of OASIS OData TC's Conference Call #4
+Revision: 1
 Date:	Thursday, 23 Aug 2012, 0800 - 0900 PT    
 Author:	Stefan Drees <stefan@drees.name>  
 
@@ -194,7 +195,7 @@ Michael:
 ####4.3.7 OData ABNF Construction Rules Version 1.0 Working Draft 01####
 
 Ralf: 
->I **move** to close the action item AI#0012 and approve the [delivered revision of OData ABNF Construction Rules Version 1.0 Working Draft 01](https://www.oasis-open.org/committees/download.php/46748/odata-abnf-current.abnf) specification (as of today) as baseline document. (**Martin seconds**).
+>I **move** to close the action item AI#0012 and approve the [delivered revision of OData ABNF Construction Rules Version 1.0 Working Draft 01](https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-abnf-current.abnf?op=dl&rev=10&isdir=0) specification (as of today, i.e. svn revision 10) as baseline document. (**Martin seconds**).
 
 Discussion of motion:
 
@@ -203,6 +204,9 @@ Discussion of motion:
 * Michael adds that it is like with XSD-files in other contexts (CSDL) with the difference, that here the ABNF is the **normative base** for the OData protocol, whilst the XSD file for the CSDL is non-normative.
 
 **No further discussion**. **No objections**. The **motion passes**.
+
+Note: 
+>The above link to the document revision approved as baseline is a no-frills download link. It is stated to point unambiguously to the exact document. For ongoing work and review it is suggested to visit OData ABNF Construction Rules Version 1.0 Working Draft 01](https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-abnf-current.abnf?rev=10) instead. This will offer the access to earlier/later revision and diffs.
 
 New Action [AI#0022](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3512):
 
