@@ -258,11 +258,21 @@ parameterTypeName = qualifiedTypeName
 
 ; Literal data values
 primitiveLiteral = null /
+ decimal /
+ single /
+ double /
+ sbyte /
+ byte /
+ int16 /
+ int32 /
+ int64 / 
  binary / 
  dateTime /
  dateTimeOffset /
- decimal /
- double /
+ guid / 
+ string / 
+ time /
+ boolean /
  geography /
  geographyCollection / 
  geographyLineString /
@@ -278,17 +288,7 @@ primitiveLiteral = null /
  geometryMultiPoint /
  geometryMultiPolygon /
  geometryPoint / 
- geometryPolygon /
- guid / 
- int16 /
- int32 /
- int64 / 
- sbyte /
- byte /
- single /
- string / 
- time /
- boolean
+ geometryPolygon 
 
 null = "null" [ "'" qualifiedTypeName "'" ] 
  ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
@@ -386,14 +386,15 @@ skip                                            =   "$skip=" 1*DIGIT
 
 top                                                     =       "$top=" 1*DIGIT
 
-format = "$format=" (
- "json" / 
- "atom" / 
- "xml" / 
- "{TODO17}" / ; <a data service specific value indicating a format specific to the specific data service>
- "{TODO18}" ; <An IANA-defined [IANA-MMT] content type>
- )
-        
+format = "$format=" ( "json" 
+                    / "atom"
+                    / "xml" 
+                    / 1*( pchar / "/" ) ; <a data service specific value 
+                    )                   ; indicating a format specific to
+                                        ; the specific data service> or
+                                        ; <An IANA-defined [IANA-MMT] 
+                                        ; content type>
+                          
 inlinecount                                     =       "$inlinecount=" ( "allpages" / "none" )
 
 select                                          =       "$select=" selectClause
@@ -443,14 +444,14 @@ singleNavigation                        =    [ "/" qualifiedEntityTypeName ]
                                              ( 
                                                "/" ( 
                                                      ( "$links/" navigationProperty ) / 
-                                                     ( entityColNavigationProperty [ collectionNavigation ] ) /
                                                      ( entityNavigationProperty [ singleNavigation ] ) /
+                                                     ( entityColNavigationProperty [ collectionNavigation / keyPredicate [ singleNavigation ] ] )
+                                                   ) /
                                                      primitivePropertyPath / 
                                                      complexPropertyPath /
                                                      collectionPropertyPath / 
-                                                     streamPropertyPath / 
-                                                     value
-                                                   )
+                                                     streamPropertyPath 
+                                             / value
                                              / boundOperation 
                                              )
                         
