@@ -102,36 +102,6 @@
             Rule="resourcePath">
     <Input>Container.EntitySet</Input>
   </TestCase>
-  <TestCase Name="Top and Skip" 
-            Rule="queryOptions">
-    <Input>$top=5&amp;$skip=10</Input>
-  </TestCase>
-  <TestCase Name="Expand single navigation property" 
-            Rule="expand">
-    <Input>$expand=Items</Input>
-  </TestCase>
-  <TestCase Name="Expand multiple navigation properties, recursive" 
-            Rule="expand">
-    <Input>$expand=Items,Items/Product</Input>
-  </TestCase>
-  <TestCase Name="Select simple" 
-            Rule="select">
-    <Input>$select=ID,Items</Input>
-  </TestCase>
-  <TestCase Name="Select with navigation" 
-            Rule="select">
-    <Input>$select=Items/ID,Items/Product/*</Input>
-  </TestCase>
-  <TestCase Name="OrderBy" 
-            Rule="orderby">
-    <Input>$orderby=name</Input>
-  </TestCase>
-  <!-- Leads to timeout
-  <TestCase Name="Filter" 
-            Rule="filter">
-    <Input>$filter=Name eq 'Hugo'</Input>
-  </TestCase>
-  -->
   <TestCase Name="Call unbound action" 
             Rule="actionCall">
     <Input>Activation()</Input>
@@ -143,18 +113,6 @@
   <TestCase Name="Call bound action" 
             Rule="resourcePath">
     <Input>LeaveRequests(4)/Rejection</Input>
-  </TestCase>
-  <TestCase Name="Custom Query Option" 
-            Rule="customQueryOption">
-      <Input>search=blue</Input>
-  </TestCase>
-  <TestCase Name="Custom Query Option" 
-            Rule="customQueryOption">
-      <Input>!deltatoken='201208210403'</Input>
-  </TestCase>
-  <TestCase Name="Custom Query Option" 
-            Rule="customQueryOption">
-      <Input>!special</Input>
   </TestCase>
   <!-- 
   	Test cases for example URLs in OData URI  
@@ -215,20 +173,190 @@
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products/AllOrders</Input>
   </TestCase>
-  <!-- 
+  <!-- parser cannot distinguish between entityColNavigationProperty and entityNavigationProperty, so it will pick the wrong branch and never reach the keyPredicate
   <TestCase Name="4.1.1 Canonical URL" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products(1)</Input>
   </TestCase>
   -->
-  <!-- rule odataUri isn't correctly processed as APG is over-eager and interprets $metadata as segment-nz 
-  <TestCase Name="Metadata" 
-            Rule="odataUri">
-    <Input>http://My.Org/$metadata</Input>
+  <TestCase Name="4.2 Addressing Links between Entities" 
+            Rule="odataRelativeUri">
+    <Input>Categories(1)/$links/Products</Input>
   </TestCase>
-  <TestCase Name="Batch with path" 
-            Rule="odataUri">
-    <Input>http://My.Org/SomePath/SomeService.svc/$batch</Input>
+  <!-- TODO: rule for $filter is currently broken, doesn't lead to propertyName anywhere. Example is $filter=Price%20gt%2020.0M -->
+  <TestCase Name="4.3.3 Addressing Legacy Service Operations" 
+            Rule="odataRelativeUri">
+    <Input>GetProductsByRating?rating=3&amp;$filter=true</Input>
+  </TestCase>
+  <TestCase Name="4.4 Addressing a Property - simple" 
+            Rule="odataRelativeUri">
+    <Input>Category(1)/ID</Input>
+  </TestCase>
+  <TestCase Name="4.4 Addressing a Property - complex" 
+            Rule="odataRelativeUri">
+    <Input>Category(1)/Address/Street</Input>
+  </TestCase>
+  <TestCase Name="4.5 Addressing a Property Value" 
+            Rule="odataRelativeUri">
+    <Input>Category(1)/ID/$value</Input>
+  </TestCase>
+  <TestCase Name="5.1.1 Filter" 
+            Rule="filter">
+    <Input>$filter=true</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.1 Equals" 
+            Rule="eqExpr">
+    <Input>true   eq false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.2 Not Equals" 
+            Rule="neExpr">
+    <Input>true   ne false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.3 Greater Than" 
+            Rule="gtExpr">
+    <Input>true   gt false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.4 Greater Than or Equal" 
+            Rule="geExpr">
+    <Input>true   ge false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.5 Less Than" 
+            Rule="ltExpr">
+    <Input>true   lt false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.6 Less Than or Equal" 
+            Rule="leExpr">
+    <Input>true   le false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.7 Logical And" 
+            Rule="andExpr">
+    <Input>true  and false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.8 Logical Or" 
+            Rule="orExpr">
+    <Input>true  or false</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.9 Logical Negation" 
+            Rule="notExpr">
+    <Input>not false</Input>
+  </TestCase>
+  <!-- TODO: leads to timeout
+  <TestCase Name="5.1.1.1.10 Logical Operator Examples" 
+            Rule="filter">
+    <Input>$filter=Name eq 'Milk'</Input>
+  </TestCase>
+  -->  
+  <!-- TODO: leads to endles recursion
+  <TestCase Name="5.1.1.2 Arithmetic Operators" 
+            Rule="addExpr">
+    <Input>5   add 5</Input>
   </TestCase>
   -->
+  <!-- TODO: 5.1.1.2.x -->
+  <TestCase Name="5.1.1.3 Parenthesis" 
+            Rule="parenExpr">
+    <Input>(true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.3 Parenthesis" 
+            Rule="parenExpr">
+    <Input>( true )</Input>
+  </TestCase>
+  <!--  TODO: doesn't recognize nested andExpr
+  <TestCase Name="5.1.1.3 Parenthesis" 
+            Rule="parenExpr">
+    <Input>(true  and false)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.3 Parenthesis" 
+            Rule="filter">
+    <Input>$filter=( 4 add 5 ) mod ( 4 sub 1 ) eq 0</Input>
+  </TestCase>
+  -->
+  <!-- TODO: 5.1.1.4.x leads to endless recursion
+  <TestCase Name="5.1.1.4.1 substringof" 
+            Rule="substringOfMethodCallExpr">
+    <Input>substringof('Alfreds', CompanyName)</Input>
+  </TestCase>
+  -->
+  <TestCase Name="5.1.2 Expand - single navigation property" 
+            Rule="expand">
+    <Input>$expand=Items</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - multiple navigation properties, recursive" 
+            Rule="expand">
+    <Input>$expand=Items,Items/Product</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - simple" 
+            Rule="select">
+    <Input>$select=Rating,ReleaseDate</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - with star" 
+            Rule="select">
+    <Input>$select=*</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - with navigation" 
+            Rule="select">
+    <Input>$select=Category/Name</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - with navigation and expand" 
+            Rule="queryOptions">
+    <Input>$select=Category/Name&amp;$expand=Category</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - with navigation and star" 
+            Rule="select">
+    <Input>$select=Items/ID,Items/Product/*</Input>
+  </TestCase>
+  <!--  TODO:
+  <TestCase Name="5.1.3 Select - tricky" 
+            Rule="select">
+    <Input>$select=Namespace.BestSellingProduct/Spokesperson,Supplier/Namespace.PreferredSupplier/AccountRepresentative</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - actions by container" 
+            Rule="select">
+    <Input>$select=Container.ActionName,Container2.*</Input>
+  </TestCase>
+  -->
+  <TestCase Name="5.1.4 OrderBy" 
+            Rule="orderby">
+    <Input>$orderby=name</Input>
+  </TestCase>
+  <TestCase Name="5.1.4 OrderBy asc" 
+            Rule="orderby">
+    <Input>$orderby=name asc</Input>
+  </TestCase>
+  <TestCase Name="5.1.4 OrderBy mixed" 
+            Rule="orderby">
+    <Input>$orderby=Name asc,Rating,Size desc</Input>
+  </TestCase>
+  <TestCase Name="5.1.5 Top and Skip" 
+            Rule="queryOptions">
+    <Input>$top=5&amp;$skip=10</Input>
+  </TestCase>
+  <TestCase Name="5.1.6 Inlinecount" 
+            Rule="queryOptions">
+    <Input>$inlinecount=allpages</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Format" 
+            Rule="queryOptions">
+    <Input>$format=json&amp;$format=atom&amp;$format=xml&amp;$format=text/html</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Format - media type" 
+            Rule="queryOptions">
+    <Input>$format=text/html</Input>
+  </TestCase>
+  <TestCase Name="5.2 Custom Query Option" 
+            Rule="customQueryOption">
+      <Input>search=blue</Input>
+  </TestCase>
+  <TestCase Name="5.2 Custom Query Option" 
+            Rule="customQueryOption">
+      <Input>!deltatoken='201208210403'</Input>
+  </TestCase>
+  <TestCase Name="5.2 Custom Query Option" 
+            Rule="customQueryOption">
+      <Input>!special</Input>
+  </TestCase>
+  <TestCase Name="5.2 Custom Query Option" 
+            Rule="queryOptions">
+      <Input>$orderby=Name&amp;securitytoken=0412312321</Input>
+  </TestCase>
 </TestCases>
