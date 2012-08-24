@@ -75,6 +75,11 @@ public class Check {
 					// parse again with trace enabled
 					Trace t = p.enableTrace(true);
 					t.setOut(err);
+					t.enableRule(false, OData.RuleNames.ODATAIDENTIFIER.ruleID());
+					t.enableRule(false, OData.RuleNames.IDENTIFIERLEADINGCHARACTER.ruleID());
+					t.enableRule(false, OData.RuleNames.IDENTIFIERCHARACTER.ruleID());
+					t.enableRule(false, OData.RuleNames.ALPHA.ruleID());
+					t.enableRule(false, OData.RuleNames.DIGIT.ruleID());
 					p.parse();
 					err.println();
 					err.flush();
