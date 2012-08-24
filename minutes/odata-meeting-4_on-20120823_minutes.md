@@ -206,7 +206,7 @@ Discussion of motion:
 **No further discussion**. **No objections**. The **motion passes**.
 
 Note: 
->The above link to the document revision approved as baseline is a no-frills download link. It is stated to point unambiguously to the exact document. For ongoing work and review it is suggested to visit OData ABNF Construction Rules Version 1.0 Working Draft 01](https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-abnf-current.abnf?rev=10) instead. This will offer the access to earlier/later revision and diffs.
+>The above link to the document revision approved as baseline is a no-frills download link. It is stated to point unambiguously to the exact document. For ongoing work and review it is suggested to visit [OData ABNF Construction Rules Version 1.0 Working Draft 01](https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-abnf-current.abnf?rev=10) instead. This will offer the access to earlier/later revision and diffs.
 
 New Action [AI#0022](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3512):
 
