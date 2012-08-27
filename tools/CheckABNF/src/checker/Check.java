@@ -2,10 +2,15 @@ package checker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import checker.TestSuite.TestCase;
 
 import com.coasttocoastresearch.apg.Parser;
 import com.coasttocoastresearch.apg.Parser.Result;
+import com.coasttocoastresearch.apg.Parser.RuleCallback;
 import com.coasttocoastresearch.apg.Statistics;
 import com.coasttocoastresearch.apg.Trace;
 
@@ -13,38 +18,84 @@ import OData.OData;
 
 public class Check {
 
-	private class InvalidRuleName extends Exception {
+	private PrintStream trace;
+
+	private class InvalidRuleName extends IllegalArgumentException {
+
 		private static final long serialVersionUID = 1L;
+
+		public InvalidRuleName(String ruleName) {
+			super(ruleName);
+		}
+	}
+
+	private class ModelElementCheck extends RuleCallback {
+
+		private String ruleName;
+		private Set<String> allowed;
+
+		private ModelElementCheck(Parser p, String ruleName, Set<String> names)
+				throws InvalidRuleName {
+			super(p);
+			this.ruleName = ruleName;
+			this.allowed = names;
+			p.setRuleCallback(ruleID(ruleName), this);
+		}
+
+		public int postBranch(int offset, int length)
+				throws java.lang.Exception {
+			if (length <= 0)
+				return -1;
+
+			String match = new String(callbackData.inputString, offset, length);
+			if (allowed.contains(match))
+				return -1;
+			else {
+				if (trace != null)
+					trace.println("=> " + match + " is no " + ruleName);
+				return -2;
+			}
+		}
 	}
 
 	/**
-	 * @param args
+	 * Executes all test cases in the given XML files 
+	 * @param args list of XML file names containing test cases
 	 */
 	public static void main(String[] args) {
 		// Will run all test cases in the provided files
 		for (String filename : args) {
 			System.out.println("Running test cases from " + filename + "\n");
-			List<TestCase> tcs = TestCase.read(filename);
+			TestSuite ts = TestSuite.read(filename);
 			Check c = new Check();
-			c.run(tcs, System.out, System.err);
+			c.run(ts, System.out, System.err);
 		}
 	}
 
-	public void run(List<TestCase> tcs, PrintStream out, PrintStream err) {
+	public void run(TestSuite ts, PrintStream out, PrintStream err) {
 		int failures = 0;
 		Parser p = new Parser(OData.getInstance());
 		Statistics s = p.enableStatistics(true);
 		s.enableCumulate(true);
 
-		for (TestCase tc : tcs) {
+		try {
+			for (Map.Entry<String, HashSet<String>> c : ts.Constraints()
+					.entrySet())
+				new ModelElementCheck(p, c.getKey(), c.getValue());
+		} catch (InvalidRuleName e) {
+			e.printStackTrace();
+			return;
+		}
+
+		for (TestCase tc : ts.TestCases()) {
 			try {
-				p.setStartRule(ruleID(tc));
+				p.setStartRule(ruleID(tc.Rule()));
 				p.setInputString(tc.Input());
 				p.enableTrace(false);
 
 				Result r = p.parse();
 
-				if (r.success() && tc.FailAt() == TestCase.NOWHERE) {
+				if (r.success() && tc.FailAt() == TestSuite.NOWHERE) {
 					out.println("OK: " + tc.Name() + ": " + tc.Input() + " is "
 							+ tc.Rule());
 				} else if (!r.success()
@@ -62,7 +113,7 @@ public class Check {
 								+ tc.FailAt() + ": " + tc.Input() + " is ");
 					else {
 						err.print(" fails at " + r.getMaxMatchedPhraseLength());
-						if (tc.FailAt() != TestCase.NOWHERE)
+						if (tc.FailAt() != TestSuite.NOWHERE)
 							err.print(" instead of " + tc.FailAt());
 						err.print(": "
 								+ highlight(tc.Input(),
@@ -73,21 +124,26 @@ public class Check {
 					err.println(tc.Rule() + "\n");
 
 					// parse again with trace enabled
+					trace = err;
 					Trace t = p.enableTrace(true);
 					t.setOut(err);
-					t.enableRule(false, OData.RuleNames.ODATAIDENTIFIER.ruleID());
-					t.enableRule(false, OData.RuleNames.IDENTIFIERLEADINGCHARACTER.ruleID());
-					t.enableRule(false, OData.RuleNames.IDENTIFIERCHARACTER.ruleID());
+					t.enableRule(false,
+							OData.RuleNames.ODATAIDENTIFIER.ruleID());
+					t.enableRule(false,
+							OData.RuleNames.IDENTIFIERLEADINGCHARACTER.ruleID());
+					t.enableRule(false,
+							OData.RuleNames.IDENTIFIERCHARACTER.ruleID());
 					t.enableRule(false, OData.RuleNames.ALPHA.ruleID());
 					t.enableRule(false, OData.RuleNames.DIGIT.ruleID());
 					p.parse();
 					err.println();
 					err.flush();
+					trace = null;
 				}
 			} catch (InvalidRuleName e) {
 				failures++;
-				err.println("\nERROR: " + tc.Name() + ": unknown rule "
-						+ tc.Rule() + "\n");
+				err.println("\nERROR: " + tc.Name() + ": " + e.getMessage()
+						+ "\n");
 			} catch (Exception e) {
 				failures++;
 				e.printStackTrace(err);
@@ -96,21 +152,21 @@ public class Check {
 		if (failures == 0) {
 			int coveredRules = coveredRules(s);
 			int coverage = (100 * coveredRules) / OData.ruleCount;
-			out.println("\nAll " + tcs.size() + " test cases passed, "
-					+ coveredRules + " of " + OData.ruleCount
-					+ " rules covered (" + coverage + "%)");
+			out.println("\nAll " + ts.TestCases().size()
+					+ " test cases passed, " + coveredRules + " of "
+					+ OData.ruleCount + " rules covered (" + coverage + "%)");
 		} else {
-			err.println("\n" + failures + " of " + tcs.size()
+			err.println("\n" + failures + " of " + ts.TestCases().size()
 					+ " test cases failed\n");
 		}
 	}
 
-	private int ruleID(TestCase tc) throws InvalidRuleName {
+	int ruleID(String ruleName) {
 		try {
 			return OData.RuleNames.valueOf(
-					tc.Rule().toUpperCase().replace('-', '_')).ruleID();
+					ruleName.toUpperCase().replace('-', '_')).ruleID();
 		} catch (IllegalArgumentException e) {
-			throw new InvalidRuleName();
+			throw new Check.InvalidRuleName("unknown rule " + ruleName);
 		}
 	}
 

@@ -1,37 +1,76 @@
-This ABNF checker uses Java APG 1.0 from http://www.coasttocoastresearch.com/apg/docs/docjava.
-Open the Java APG project in your workspace to use CheckABNF.
+This ABNF checker uses Java APG 1.0 from 
+http://www.coasttocoastresearch.com/apg/docs/docjava
+with a small modification, so you need to get the variant from 
+https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/tools/#_trunk_tools_
 
-The project uses a custom build step to generate src/OData/OData.java from the linked file odata-abnf-current.abnf. 
-Point the linked file to where it resides in your file system. 
+Open both the apg and CheckABNF projects in your Eclipse workspace.
 
-It executes all test cases in the linked file odata-abnf-testcases.xml.
-Point the linked file to where it resides in your file system. 
+The project contains two linked files:
+ - odata-abnf-current.abnf
+ - odata-abnf-testcases.xml
+Get the latest version of these files from 
+https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/#_trunk_spec_ABNF_
+and point the linked files to where they reside in your file system.
 
-Each test case has a name, a start rule for the parser, and an input string to parse
-It may specify the position at which the parser is expected to fail:
+The project uses a custom build step to generate src/OData/OData.java from the
+linked file odata-abnf-current.abnf. 
 
-     <TestCases xmlns="http://docs.oasis-open.org/odata/ns/testcases">
-       <TestCase Name="URI with path and trailing slash" 
-                 Rule="ABSOLUTE_URI">
-         <Input>http://My.Org:8080/MyService/</Input>
-       </TestCase>
-       <TestCase Name="URI without schema separator" 
-                 Rule="ABSOLUTE_URI" 
-                 FailAt="4">
-         <Input>http//My.Org/</Input>
-       </TestCase> 
-       ...
-    </TestCases>
-    
-Test cases without a FailAt attribute succeed if the complete input is successfully parserd.
-Test cases with a FailAt attribute succeed if the parser fails at the specified position.
-Test cases fail otherwise. In that case a parser trace is included in the console output. 
+The default run configuration Check executes all test cases in the linked file
+odata-abnf-testcases.xml.
 
-The schema for TestCases.xml is TestCases.xsd. Add it to
+The second run configuration CheckTest executes the JUnit self-test of CheckABNF. 
+It uses the included test case file TestCases.xml 
 
-     Window -> Preferences -> XML -> XML Catalog -> User Specified Entries
+The schema for the test case XML files is TestCases.xsd. Add it to
+
+   Window -> Preferences -> XML -> XML Catalog -> User Specified Entries
      
 as
  - Location: CheckABNF/TestCases.xsd
  - Key type: Namespace name
  - Key:      http://docs.oasis-open.org/odata/ns/testcases
+ 
+Each test case has a name, a start rule for the parser, and an input string to 
+parse. It may specify the position at which the parser is expected to fail:
+
+   <TestSuite xmlns="http://docs.oasis-open.org/odata/ns/testcases">
+     <TestCase Name="URI with path and trailing slash" 
+               Rule="ABSOLUTE_URI">
+       <Input>http://My.Org:8080/MyService/</Input>
+     </TestCase>
+     <TestCase Name="URI without schema separator" 
+               Rule="ABSOLUTE_URI" 
+               FailAt="4">
+       <Input>http//My.Org/</Input>
+     </TestCase> 
+     ...
+   </TestSuite>
+    
+Test cases without a FailAt attribute succeed if the complete input is successfully parsed.
+Test cases with a FailAt attribute succeed if the parser fails at the specified position.
+Test cases fail otherwise. In that case a parser trace is included in the console output.
+
+In addition to test cases the XML file may contain any number of constraints:
+
+   <TestSuite xmlns="http://docs.oasis-open.org/odata/ns/testcases">
+     ...
+     <Constraint Rule="entityNavigationProperty">
+       <Match>Category</Match>
+       <Match>Product</Match>
+       <Match>Supplier</Match>
+     </Constraint>
+     <Constraint Rule="entityColNavigationProperty">
+       <Match>Items</Match>
+       <Match>Products</Match>
+     </Constraint>
+     ...
+   </TestSuite>
+   
+This helps the parser to disambiguate between rules that accept the same character
+sequences; in this example between navigation properties with cardinality 1 and *.
+If the parser successfully matches an entityNavigationProperty, it will trigger a
+callback that will check whether the matched character sequence is identical to one
+of the given <Match>es. If not, the parser will continue with the next alternative.
+
+This "backing out" of otherwise successful matches is the above mentioned modification
+to the original Java APG.
