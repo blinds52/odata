@@ -348,7 +348,7 @@ time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" 
 
 odataUri = scheme "://" host [ ":" port ] serviceRoot [ "$metadata" / "$batch" / odataRelativeUri ]  
 
-serviceRoot = *( "/" segment-nz ) "/"
+serviceRoot = "/" *( segment-nz "/" )
 odataRelativeUri = resourcePath ["?" queryOptions ]
 queryOptions = queryOption *("&" queryOption)        
 queryOption = systemQueryOption / 
@@ -451,10 +451,10 @@ singleNavigation                        =    [ "/" qualifiedEntityTypeName ]
                                                      complexPropertyPath /
                                                      collectionPropertyPath / 
                                                      streamPropertyPath 
-                                             / value
+                                             / value  ; TODO: this doesn't make sense if singleNavigation means "everything after having reached a single entity
                                              / boundOperation 
                                              )
-                        
+                                                                    
 boundOperation              =       [ "/" qualifiedEntityTypeName ] 
                                                                         "/" 
                                                                         (
@@ -502,17 +502,17 @@ boundActionCall                         =       [ operationQualifier ] action [ 
                                                                         ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
                                     ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
 
-entityFunctionCall                      =       fullEntityFunctionCall functionParameters
+entityFunctionCall                      =       fullEntityFunction functionParameters
 
-entityColFunctionCall           =       fullEntityColFunctionCall functionParameters
+entityColFunctionCall           =       fullEntityColFunction functionParameters
 
-complexFunctionCall                     =       fullComplexFunctionCall functionParameters
+complexFunctionCall                     =       fullComplexFunction functionParameters
 
-complexColFunctionCall          =       fullComplexColFunctionCall functionParameters
+complexColFunctionCall          =       fullComplexColFunction functionParameters
 
-primitiveFunctionCall           =       fullPrimitiveFunctionCall functionParameters
+primitiveFunctionCall           =       fullPrimitiveFunction functionParameters
 
-primitiveColFunctionCall        =       fullPrimitiveFunctionCall functionParameters
+primitiveColFunctionCall        =       fullPrimitiveColFunction functionParameters
 
 functionCall                            =       entityFunctionCall / 
                                                                         entityColFunctionCall /
@@ -521,32 +521,32 @@ functionCall                            =       entityFunctionCall /
                                                                         primitiveFunctionCall /
                                                                         primitiveColFunctionCall
 
-boundEntityFuncCall                     =       fullEntityFunctionCall functionParameters
+boundEntityFuncCall                     =       fullEntityFunction functionParameters
                                                                         ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
                                                                         ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundEntityFuncCall
                                                                         ; and the functionParameters MUST NOT include the bindingParameter.
 
-boundEntityColFuncCall          =       fullEntityColFunctionCall functionParameters
+boundEntityColFuncCall          =       fullEntityColFunction functionParameters
                                                                         ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
                                                                         ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundEntityColFuncCall
                                                                         ; and the functionParameters MUST NOT include the bindingParameter.
 
-boundComplexFuncCall            =       fullComplexFunctionCall functionParameters
+boundComplexFuncCall            =       fullComplexFunction functionParameters
                                                                         ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
                                                                         ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundComplexFuncCall
                                                                         ; and the functionParameters MUST NOT include the bindingParameter.
 
-boundComplexColFuncCall         =       fullComplexColFunctionCall functionParameters
+boundComplexColFuncCall         =       fullComplexColFunction functionParameters
                                                                         ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
                                                                         ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundComplexColFuncCall
                                                                         ; and the functionParameters MUST NOT include the bindingParameter.
 
-boundPrimitiveFuncCall          =       fullPrimitiveFunctionCall functionParameters
+boundPrimitiveFuncCall          =       fullPrimitiveFunction functionParameters
                                                                         ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
                                                                         ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundPrimitiveFuncCall
                                                                         ; and the functionParameters MUST NOT include the bindingParameter.
 
-boundPrimitiveColFuncCall       =       fullPrimitiveFunctionCall functionParameters
+boundPrimitiveColFuncCall       =       fullPrimitiveColFunction functionParameters
                                                                         ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
                                                                         ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundPrimitiveColFuncCall
                                                                         ; and the functionParameters MUST NOT include the bindingParameter.
@@ -561,6 +561,8 @@ boundFunctionCall                       =       boundEntityFuncCall /
 functionParameters                      =       "(" [ functionParameter *( "," functionParameter ) ] ")"
 
 functionParameter                       =       functionParameterName "=" ( primitiveParameterValue / parameterAlias )
+
+functionParameterName          =       odataIdentifier;
 
 primitiveParameterValue     =       primitiveLiteral
 
@@ -919,13 +921,7 @@ complexTypeInJSON = "{TODO32}"
 entityColFuncCall = "{TODO33}"
 entityFuncCall = "{TODO34}"
 entityProperty = "{TODO35}"
-fullComplexColFunctionCall = "{TODO37}"
-fullComplexFunctionCall = "{TODO38}"
-fullEntityColFunctionCall = "{TODO39}"
-fullEntityFunctionCall = "{TODO40}"
-fullPrimitiveFunctionCall = "{TODO41}"
 functionCallExpr = "{TODO42}"
-functionParameterName = "{TODO43}"
 lambdaPredicatePrefixExpr = "{TODO45}"
 parameterNameAndValue = "{TODO47}"
 primitiveColFuncCall = "{TODO48}"
