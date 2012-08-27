@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TestCases xmlns="http://docs.oasis-open.org/odata/ns/testcases">
+<TestSuite xmlns="http://docs.oasis-open.org/odata/ns/testcases">
+  <Constraint Rule="entityNavigationProperty">
+    <Match>Category</Match>
+    <Match>Product</Match>
+    <Match>Supplier</Match>
+  </Constraint>
+  <Constraint Rule="entityColNavigationProperty">
+    <Match>Items</Match>
+    <Match>Products</Match>
+  </Constraint>
+  <Constraint Rule="complexProperty">
+    <Match>Address</Match>
+  </Constraint>
+  <Constraint Rule="primitiveKeyProperty">
+    <Match>ID</Match>
+    <Match>Size</Match>
+    </Constraint>
+  <Constraint Rule="primitiveNonKeyProperty">
+    <Match>Name</Match>
+    <Match>Rating</Match>
+    <Match>Street</Match>
+  </Constraint>
+  <Constraint Rule="streamProperty">
+    <Match>Thumbnail</Match>
+  </Constraint>
+  <Constraint Rule="entitySetName">
+    <Match>Categories</Match>
+    <Match>LeaveRequests</Match>
+    <Match>Products</Match>
+  </Constraint>
+  <Constraint Rule="entityColServiceOp">
+    <Match>ProductsByColor</Match>
+  </Constraint>
+  
   <TestCase Name="URI with path and trailing slash" 
             Rule="absolute-URI">
     <Input>http://My.Org:8080/MyService/</Input>
@@ -24,15 +57,15 @@
   </TestCase>
   <TestCase Name="Resource Path - Entity Set" 
             Rule="resourcePath">
-    <Input>EntitySet</Input>
+    <Input>Categories</Input>
   </TestCase>
   <TestCase Name="Resource Path - Entity" 
             Rule="resourcePath">
-    <Input>EntitySet(11)</Input>
+    <Input>Categories(11)</Input>
   </TestCase>
   <TestCase Name="Resource Path - Entity" 
             Rule="resourcePath">
-    <Input>EntitySet(Id=1)</Input>
+    <Input>Categories(ID=1)</Input>
   </TestCase>
   <TestCase Name="Key"
             Rule="string">
@@ -40,11 +73,7 @@
   </TestCase>
   <TestCase Name="Resource Path - Entity" 
             Rule="resourcePath">
-    <Input>EntitySet(Id=1,Size=5)</Input>
-  </TestCase>
-  <TestCase Name="Resource Path - Entity + Navigation" 
-            Rule="resourcePath">
-    <Input>EntitySet(0)/NavProp</Input>
+    <Input>Categories(ID=1,Size=5)</Input>
   </TestCase>
   <TestCase Name="Correct Guid" 
             Rule="GUID">
@@ -98,21 +127,30 @@
             FailAt="0">
     <Input>0time</Input>
   </TestCase>
+  <TestCase Name="Identifier: no dots within" 
+            Rule="odataIdentifier" 
+            FailAt="2">
+    <Input>No.Dot</Input>
+  </TestCase>
   <TestCase Name="Entity Set" 
             Rule="resourcePath">
     <Input>Container.EntitySet</Input>
   </TestCase>
   <TestCase Name="Call unbound action" 
             Rule="actionCall">
-    <Input>Activation()</Input>
+    <Input>Activation</Input>
   </TestCase>
   <TestCase Name="Call unbound action with container" 
             Rule="actionCall">
-    <Input>Container.Activation</Input>
+    <Input>Container.Activation()</Input>
   </TestCase>
   <TestCase Name="Call bound action" 
             Rule="resourcePath">
     <Input>LeaveRequests(4)/Rejection</Input>
+  </TestCase>
+  <TestCase Name="Call bound action" 
+            Rule="resourcePath">
+    <Input>LeaveRequests(4)/Container.Rejection()</Input>
   </TestCase>
   <!-- 
   	Test cases for example URLs in OData URI  
@@ -121,21 +159,29 @@
             Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/</Input>
   </TestCase>
+  <TestCase Name="2 URL Components - metadata URL" 
+            Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$metadata</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - batch URL" 
+            Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$batch</Input>
+  </TestCase>
   <TestCase Name="Service Root directly at server root" 
             Rule="odataUri">
     <Input>http://My.Org:80/</Input>
   </TestCase>
   <TestCase Name="2 URL Components - resource path" 
             Rule="resourcePath">
-    <Input>Category(1)/Products</Input>
+    <Input>Categories(1)/Products</Input>
   </TestCase>
   <TestCase Name="2 URL Components - query options" 
             Rule="queryOptions">
-    <Input>$top=2&amp;$orderby=name</Input>
+    <Input>$top=2&amp;$orderby=Name</Input>
   </TestCase>
   <TestCase Name="2 URL Components - resource path and query options" 
             Rule="odataRelativeUri">
-    <Input>Category(1)/Products?$top=2&amp;$orderby=name</Input>
+    <Input>Categories(1)/Products?$top=2&amp;$orderby=Name</Input>
   </TestCase>
   <TestCase Name="4.1 Addressing entities - entity set" 
             Rule="entitySetName">
@@ -173,12 +219,11 @@
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products/AllOrders</Input>
   </TestCase>
-  <!-- parser cannot distinguish between entityColNavigationProperty and entityNavigationProperty, so it will pick the wrong branch and never reach the keyPredicate
+  <!-- parser cannot distinguish between entityColNavigationProperty and entityNavigationProperty, so it will pick the wrong branch and never reach the keyPredicate -->
   <TestCase Name="4.1.1 Canonical URL" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products(1)</Input>
   </TestCase>
-  -->
   <TestCase Name="4.2 Addressing Links between Entities" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/$links/Products</Input>
@@ -190,15 +235,15 @@
   </TestCase>
   <TestCase Name="4.4 Addressing a Property - simple" 
             Rule="odataRelativeUri">
-    <Input>Category(1)/ID</Input>
+    <Input>Categories(1)/ID</Input>
   </TestCase>
   <TestCase Name="4.4 Addressing a Property - complex" 
             Rule="odataRelativeUri">
-    <Input>Category(1)/Address/Street</Input>
+    <Input>Categories(1)/Address/Street</Input>
   </TestCase>
   <TestCase Name="4.5 Addressing a Property Value" 
             Rule="odataRelativeUri">
-    <Input>Category(1)/ID/$value</Input>
+    <Input>Categories(1)/ID/$value</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" 
             Rule="filter">
@@ -317,11 +362,11 @@
   -->
   <TestCase Name="5.1.4 OrderBy" 
             Rule="orderby">
-    <Input>$orderby=name</Input>
+    <Input>$orderby=Name</Input>
   </TestCase>
   <TestCase Name="5.1.4 OrderBy asc" 
             Rule="orderby">
-    <Input>$orderby=name asc</Input>
+    <Input>$orderby=Name asc</Input>
   </TestCase>
   <TestCase Name="5.1.4 OrderBy mixed" 
             Rule="orderby">
@@ -359,4 +404,4 @@
             Rule="queryOptions">
       <Input>$orderby=Name&amp;securitytoken=0412312321</Input>
   </TestCase>
-</TestCases>
+</TestSuite>
