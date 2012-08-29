@@ -131,18 +131,22 @@ namespace = namespacePart *("." namespacePart)
 entitySetName = odataIdentifier
 entityTypeName = odataIdentifier
 complexTypeName = odataIdentifier 
+enumerationTypeName = odataIdentifier
 operationQualifier = [ namespace "." ] entityContainerName "."
 allOperationsInContainer = operationQualifier "*"                  
-qualifiedTypeName = qualifiedEntityTypeName /
- qualifiedComplexTypeName / 
- primitiveTypeName /
-  "collection(" (
-  qualifiedEntityTypeName /
-  qualifiedComplexTypeName / 
-  primitiveTypeName 
-  ) ")"
+qualifiedTypeName = qualifiedEntityTypeName 
+                  / qualifiedComplexTypeName
+                  / qualifiedEnumerationTypeName
+                  / primitiveTypeName 
+                  / "collection(" 
+                    ( qualifiedEntityTypeName 
+                    / qualifiedComplexTypeName
+                    / qualifiedEnumerationTypeName 
+                    / primitiveTypeName 
+                    ) ")"
 qualifiedEntityTypeName = namespace "." entityTypeName
 qualifiedComplexTypeName = namespace "." complexTypeName
+qualifiedEnumerationTypeName = namespace "." enumerationTypeName
 primitiveTypeName = ["edm."] (
  "binary" /
  "boolean" /
@@ -404,7 +408,7 @@ selectClause                            =       selectItem *( COMMA selectItem )
 selectItem                              =       star / 
                                                                         [ qualifiedEntityTypeName "/" ] (
                                                                                 ( navigationProperty [ "/" selectItem ] ) /  
-                                                                                propertyName / 
+                                                                                propertyName / ; TODO: also allow properties of complex properties
                                                                                 qualifiedActionName / 
                                                                                 qualifiedFunctionName / 
                                                                                 allOperationsInContainer 
