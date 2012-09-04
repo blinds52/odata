@@ -81,11 +81,13 @@ public class TestSuite {
 				TestCase tc = new TestCase();
 				tc.name = tcEl.getAttribute("Name");
 				tc.rule = tcEl.getAttribute("Rule");
+
 				String failAt = tcEl.getAttribute("FailAt");
 				if (failAt.length() > 0)
 					tc.failAt = Integer.parseInt(failAt);
 				else
 					tc.failAt = NOWHERE;
+
 				Element input = (Element) tcEl.getElementsByTagName("Input")
 						.item(0);
 				tc.input = input.getFirstChild().getNodeValue();

@@ -18,6 +18,7 @@ import OData.OData;
 
 public class Check {
 
+	private static final int MAX_UNMATCHED_RULES = 25;
 	private PrintStream trace;
 
 	private class InvalidRuleName extends IllegalArgumentException {
@@ -59,8 +60,10 @@ public class Check {
 	}
 
 	/**
-	 * Executes all test cases in the given XML files 
-	 * @param args list of XML file names containing test cases
+	 * Executes all test cases in the given XML files
+	 * 
+	 * @param args
+	 *            list of XML file names containing test cases
 	 */
 	public static void main(String[] args) {
 		// Will run all test cases in the provided files
@@ -127,6 +130,8 @@ public class Check {
 					trace = err;
 					Trace t = p.enableTrace(true);
 					t.setOut(err);
+					// TODO: move these to test suite XML file
+					// TODO: add recursive disabling to Java APG?
 					t.enableRule(false,
 							OData.RuleNames.ODATAIDENTIFIER.ruleID());
 					t.enableRule(false,
@@ -150,7 +155,7 @@ public class Check {
 			}
 		}
 		if (failures == 0) {
-			int coveredRules = coveredRules(s);
+			int coveredRules = coveredRules(s, out);
 			int coverage = (100 * coveredRules) / OData.ruleCount;
 			out.println("\nAll " + ts.TestCases().size()
 					+ " test cases passed, " + coveredRules + " of "
@@ -174,26 +179,34 @@ public class Check {
 		return input.substring(0, pos) + "[" + input.substring(pos) + "]";
 	}
 
-	private int coveredRules(Statistics s) {
+	private int coveredRules(Statistics s, PrintStream out) {
 		int matchedRules = 0;
+		int unMatchedRules = 0;
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		PrintStream out = new PrintStream(os);
+		PrintStream statOut = new PrintStream(os);
 		try {
-			s.displayStats(out, "rules");
+			s.displayStats(statOut, "rules");
 			String statString = os.toString("UTF8");
 			String stats[] = statString.split(System
 					.getProperty("line.separator"));
 			for (int i = 1; i < stats.length; i++) {
 				String[] words = stats[i].split("\\s+");
-				if (!words[1].equals("0")) {
-					// words[5] contains the rule name
+				if (!words[1].equals("0"))
 					matchedRules++;
+				else {
+					if (unMatchedRules == 0)
+						out.println("\nUncovered rules:");
+					else if (unMatchedRules < MAX_UNMATCHED_RULES)
+						out.println("  " + words[5]);
+					else if (unMatchedRules == MAX_UNMATCHED_RULES)
+						out.println("  ...");
+					unMatchedRules++;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		out.close();
+		statOut.close();
 		return matchedRules;
 	}
 }
