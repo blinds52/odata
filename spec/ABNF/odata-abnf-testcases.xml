@@ -32,13 +32,19 @@
   <Constraint Rule="entityColServiceOp">
     <Match>ProductsByColor</Match>
   </Constraint>
-  
-  <TestCase Name="URI with path and trailing slash" 
-            Rule="absolute-URI">
-    <Input>http://My.Org:8080/MyService/</Input>
+  <Constraint Rule="primitiveColProperty"/>
+  <Constraint Rule="complexColProperty"/>
+    
+  <TestCase Name="URI with IPv4 address, path and trailing slash"
+            Rule="odataURI">
+    <Input>http://127.0.0.1:8080/MyService/</Input>
+  </TestCase>
+  <TestCase Name="URI with IPv6 address, path and trailing slash"
+            Rule="odataURI">
+    <Input>https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:8080/MyService/</Input>
   </TestCase>
   <TestCase Name="URI without schema separator" 
-            Rule="absolute-URI" 
+            Rule="odataURI" 
             FailAt="4">
     <Input>http//My.Org/</Input>
   </TestCase>
@@ -54,6 +60,114 @@
             Rule="binary" 
             FailAt="5">
     <Input>X'123'</Input>
+  </TestCase>
+  <TestCase Name="DateTime: no seconds" 
+            Rule="dateTimeBody">
+    <Input>2012-09-03T13:52</Input>
+  </TestCase>
+  <TestCase Name="DateTime: seconds" 
+            Rule="dateTimeBody">
+    <Input>2012-09-03T08:09:02</Input>
+  </TestCase>
+  <TestCase Name="DateTime: subseconds" 
+            Rule="dateTimeBody">
+    <Input>2012-08-31T18:19:22.1</Input>
+  </TestCase>
+  <TestCase Name="DateTime: earliest possible" 
+            Rule="dateTimeBody">
+    <Input>1753-01-01T00:00:00.000000000000</Input>
+  </TestCase>
+  <TestCase Name="DateTime: Midnight this day" 
+            Rule="dateTimeBody">
+    <Input>2011-12-31T24:00</Input>
+  </TestCase>
+  <TestCase Name="DateTime: Midnight this day with seconds" 
+            Rule="dateTimeBody">
+    <Input>2011-12-31T24:00:00</Input>
+  </TestCase>
+  <TestCase Name="DateTime: Midnight this day" 
+            Rule="dateTimeBody"
+            FailAt="12">
+    <Input>2011-12-31T24:01</Input>
+  </TestCase>
+  <TestCase Name="DateTime: Midnight this day" 
+            Rule="dateTimeBody"
+            FailAt="16">
+    <Input>2011-12-31T24:00:01</Input>
+  </TestCase>
+  <TestCase Name="DateTime in URL" 
+            Rule="dateTime">
+    <Input>datetime'2012-09-03T14:27:34.1'</Input>
+  </TestCase>
+  <TestCase Name="DateTimeOffset in URL: CEST" 
+            Rule="dateTimeOffsetBody">
+    <Input>2012-09-03T14:53+02:00</Input>
+  </TestCase>
+  <TestCase Name="DateTimeOffset in URL: UTC" 
+            Rule="dateTimeOffset">
+    <Input>datetimeoffset'2012-09-03T12:53Z'</Input>
+  </TestCase>
+  <TestCase Name="DateTimeOffset in URL: Midnight" 
+            Rule="dateTimeOffset">
+    <Input>datetimeoffset'2012-09-03T24:00-03:00'</Input>
+  </TestCase>
+  <TestCase Name="Decimal" 
+            Rule="decimalBody">
+    <Input>3.14</Input>
+  </TestCase>
+  <TestCase Name="Decimal: integer" 
+            Rule="decimalBody">
+    <Input>-2</Input>
+  </TestCase>
+  <TestCase Name="Decimal: integer" 
+            Rule="decimalBody"
+            FailAt="4">
+    <Input>+42.</Input>
+  </TestCase>
+  <TestCase Name="Decimal: no digit before decimal point" 
+            Rule="decimalBody"
+            FailAt="0">
+    <Input>.1</Input>
+  </TestCase>
+  <TestCase Name="Decimal in URL" 
+            Rule="decimal">
+    <Input>3.14M</Input>
+  </TestCase>
+  <TestCase Name="Double" 
+            Rule="doubleBody">
+    <Input>3.14</Input>
+  </TestCase>
+  <TestCase Name="Double with exponent" 
+            Rule="doubleBody">
+    <Input>-0.314e1</Input>
+  </TestCase>
+  <TestCase Name="Negative infinity" 
+            Rule="doubleBody">
+    <Input>-INF</Input>
+  </TestCase>
+  <TestCase Name="Positive infinity" 
+            Rule="doubleBody">
+    <Input>INF</Input>
+  </TestCase>
+  <TestCase Name="Not a Number" 
+            Rule="doubleBody">
+    <Input>NaN</Input>
+  </TestCase>
+  <TestCase Name="Double in URL" 
+            Rule="double">
+    <Input>-0.314e1d</Input>
+  </TestCase>
+  <TestCase Name="Single in URL" 
+            Rule="single">
+    <Input>-0.314e1f</Input>
+  </TestCase>
+  <TestCase Name="Null: unqualified" 
+            Rule="null">
+    <Input>null</Input>
+  </TestCase>
+  <TestCase Name="Null: qualified" 
+            Rule="null">
+    <Input>null'double'</Input>
   </TestCase>
   <TestCase Name="Resource Path - Entity Set" 
             Rule="resourcePath">
@@ -188,8 +302,12 @@
     <Input>Products</Input>
   </TestCase>
   <TestCase Name="4.1 Addressing entities - entity set" 
-            Rule="resourcePath">
+            Rule="odataRelativeUri">
     <Input>Products</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - entity set with $count" 
+            Rule="odataRelativeUri">
+    <Input>Products/$count</Input>
   </TestCase>
   <TestCase Name="4.1 Addressing entities - function call" 
             Rule="odataRelativeUri">
@@ -240,6 +358,10 @@
   <TestCase Name="4.4 Addressing a Property - complex" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Address/Street</Input>
+  </TestCase>
+  <TestCase Name="4.4 Addressing a Property - stream" 
+            Rule="odataRelativeUri">
+    <Input>Categories(1)/Thumbnail</Input>
   </TestCase>
   <TestCase Name="4.5 Addressing a Property Value" 
             Rule="odataRelativeUri">
