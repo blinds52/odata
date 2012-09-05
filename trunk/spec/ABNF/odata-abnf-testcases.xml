@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TestSuite xmlns="http://docs.oasis-open.org/odata/ns/testcases">
+<TestSuite MaxUncoveredRules="80" xmlns="http://docs.oasis-open.org/odata/ns/testcases">
+  <DisableTrace Rule="odataIdentifier"/>
+  <DisableTrace Rule="identifierLeadingCharacter"/>
+  <DisableTrace Rule="identifierCharacter"/>
+  <DisableTrace Rule="ALPHA"/>
+  <DisableTrace Rule="DIGIT"/>
+  
   <Constraint Rule="entityNavigationProperty">
     <Match>Category</Match>
     <Match>Product</Match>
@@ -15,7 +21,7 @@
   <Constraint Rule="primitiveKeyProperty">
     <Match>ID</Match>
     <Match>Size</Match>
-    </Constraint>
+  </Constraint>
   <Constraint Rule="primitiveNonKeyProperty">
     <Match>Name</Match>
     <Match>Rating</Match>
@@ -28,12 +34,19 @@
     <Match>Categories</Match>
     <Match>LeaveRequests</Match>
     <Match>Products</Match>
+    <Match>Suppliers</Match>
   </Constraint>
-  <Constraint Rule="entityColServiceOp">
+  <Constraint Rule="entityColFunction">
     <Match>ProductsByColor</Match>
+    <Match>ProductsByCategoryId</Match>
   </Constraint>
-  <Constraint Rule="primitiveColProperty"/>
-  <Constraint Rule="complexColProperty"/>
+  <Constraint Rule="primitiveColProperty">
+    <Match>EmailAddresses</Match>
+  </Constraint>
+  <Constraint Rule="complexColProperty">
+    <Match>Addresses</Match>
+  </Constraint>
+  <Constraint Rule="namespace"/>
     
   <TestCase Name="URI with IPv4 address, path and trailing slash"
             Rule="odataURI">
@@ -160,6 +173,26 @@
   <TestCase Name="Single in URL" 
             Rule="single">
     <Input>-0.314e1f</Input>
+  </TestCase>
+  <TestCase Name="Byte" 
+            Rule="byte">
+    <Input>255</Input>
+  </TestCase>
+  <TestCase Name="SByte" 
+            Rule="sbyte">
+    <Input>-128</Input>
+  </TestCase>
+  <TestCase Name="Int16" 
+            Rule="int16">
+    <Input>+32000</Input>
+  </TestCase>
+  <TestCase Name="Int32" 
+            Rule="int32">
+    <Input>-2000000000</Input>
+  </TestCase>
+  <TestCase Name="Int64" 
+            Rule="int64">
+    <Input>1234567890123456789</Input>
   </TestCase>
   <TestCase Name="Null: unqualified" 
             Rule="null">
@@ -313,8 +346,12 @@
             Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=2)</Input>
   </TestCase>
+  <TestCase Name="4.1 Addressing entities - function call with alias" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCategoryId(categoryId=@cat)?@cat=2</Input>
+  </TestCase>
   <TestCase Name="4.1 Addressing entities - service operation parameter" 
-            Rule="sopParameterNameAndValue">
+            Rule="parameterNameAndValue">
     <Input>color='red'</Input>
   </TestCase>
   <TestCase Name="4.1 Addressing entities - service operation call" 
@@ -351,7 +388,7 @@
             Rule="odataRelativeUri">
     <Input>GetProductsByRating?rating=3&amp;$filter=true</Input>
   </TestCase>
-  <TestCase Name="4.4 Addressing a Property - simple" 
+  <TestCase Name="4.4 Addressing a Property - primitive" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/ID</Input>
   </TestCase>
@@ -362,6 +399,14 @@
   <TestCase Name="4.4 Addressing a Property - stream" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Thumbnail</Input>
+  </TestCase>
+  <TestCase Name="4.4 Addressing a Property - collection of primitive" 
+            Rule="odataRelativeUri">
+    <Input>Suppliers(1)/EmailAddresses</Input>
+  </TestCase>
+  <TestCase Name="4.4 Addressing a Property - collection of complex" 
+            Rule="odataRelativeUri">
+    <Input>Suppliers(1)/Addresses</Input>
   </TestCase>
   <TestCase Name="4.5 Addressing a Property Value" 
             Rule="odataRelativeUri">
@@ -470,7 +515,7 @@
   </TestCase>
   <TestCase Name="5.1.3 Select - with navigation and star" 
             Rule="select">
-    <Input>$select=Items/ID,Items/Product/*</Input>
+    <Input>$select=Items/ID,Items/Product/*,Container.*</Input>
   </TestCase>
   <!--  TODO:
   <TestCase Name="5.1.3 Select - with property of complex property" 
@@ -492,7 +537,7 @@
   </TestCase>
   <TestCase Name="5.1.4 OrderBy asc" 
             Rule="orderby">
-    <Input>$orderby=Name asc</Input>
+    <Input>$orderby=Name&#09;asc</Input>
   </TestCase>
   <TestCase Name="5.1.4 OrderBy mixed" 
             Rule="orderby">
@@ -513,6 +558,15 @@
   <TestCase Name="5.1.7 Format - media type" 
             Rule="queryOptions">
     <Input>$format=text/html</Input>
+  </TestCase>
+  <TestCase Name="Next Link" 
+            Rule="queryOptions">
+    <Input>$skiptoken=Start@Next_Chunk:From=Here!</Input>
+  </TestCase>
+  <TestCase Name="Next Link: no Ampersand" 
+            Rule="queryOptions"
+            FailAt="15">
+    <Input>$skiptoken=Here?</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" 
             Rule="customQueryOption">
