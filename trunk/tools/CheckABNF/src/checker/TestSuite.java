@@ -19,10 +19,29 @@ public class TestSuite {
 
 	private List<TestCase> testCases;
 	private Map<String, HashSet<String>> constraints;
+	private HashSet<String> disableTrace;
+	private int maxUncoveredRules = 0;
 
 	private TestSuite() {
 		testCases = new ArrayList<TestCase>();
 		constraints = new HashMap<String, HashSet<String>>();
+		disableTrace = new HashSet<String>();
+	}
+
+	public List<TestCase> TestCases() {
+		return testCases;
+	}
+
+	public int MaxUncoveredRules() {
+		return maxUncoveredRules;
+	}
+
+	public HashSet<String> DisableTrace() {
+		return disableTrace;
+	}
+
+	public Map<String, HashSet<String>> Constraints() {
+		return constraints;
 	}
 
 	public static class TestCase {
@@ -74,6 +93,10 @@ public class TestSuite {
 			Document dom = db.parse(new File(filename));
 			Element root = dom.getDocumentElement();
 
+			String maxUncoveredRules = root.getAttribute("MaxUncoveredRules");
+			if (maxUncoveredRules.length() > 0)
+				ts.maxUncoveredRules = Integer.parseInt(maxUncoveredRules);
+
 			NodeList tcEls = root.getElementsByTagName("TestCase");
 			for (int i = 0; i < tcEls.getLength(); i++) {
 				Element tcEl = (Element) tcEls.item(i);
@@ -111,18 +134,18 @@ public class TestSuite {
 					matches.add(matchEl.getFirstChild().getNodeValue());
 				}
 			}
+
+			NodeList dtEls = root.getElementsByTagName("DisableTrace");
+			for (int i = 0; i < dtEls.getLength(); i++) {
+				Element dtEl = (Element) dtEls.item(i);
+
+				String rule = dtEl.getAttribute("Rule");
+				ts.disableTrace.add(rule);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ts;
-	}
-
-	public List<TestCase> TestCases() {
-		return testCases;
-	}
-
-	public Map<String, HashSet<String>> Constraints() {
-		return constraints;
 	}
 
 	public TestSuite clone(String name) {

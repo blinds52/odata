@@ -83,7 +83,7 @@ public class CheckTest {
 		assertEquals("out", "", outArray.toString());
 		assertEquals(
 				"err",
-				"\nERROR: Fail to Fail succeeds instead of failing at 4: http://www.odata.org is absolute-Uri\n",
+				"\nERROR: Fail to Fail succeeds instead of failing at 4: http://www.odata.org/ is odataUri\n",
 				errLine(0));
 	}
 
