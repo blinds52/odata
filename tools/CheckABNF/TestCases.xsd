@@ -5,8 +5,13 @@
   <xs:element name="TestSuite">
     <xs:complexType>
       <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="DisableTrace">
+          <xs:complexType>
+            <xs:attribute name="Rule" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
         <xs:choice maxOccurs="unbounded">
-          <xs:element maxOccurs="unbounded" name="Constraint">
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Constraint">
             <xs:complexType>
               <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="Match" type="xs:string" />
@@ -26,6 +31,7 @@
           </xs:element>
         </xs:choice>
       </xs:sequence>
+      <xs:attribute name="MaxUncoveredRules" type="xs:unsignedInt" use="optional" />
     </xs:complexType>
   </xs:element>
 </xs:schema>

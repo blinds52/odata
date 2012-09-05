@@ -15,10 +15,10 @@ import com.coasttocoastresearch.apg.Statistics;
 import com.coasttocoastresearch.apg.Trace;
 
 import OData.OData;
+import OData.OData.RuleNames;
 
 public class Check {
 
-	private static final int MAX_UNMATCHED_RULES = 25;
 	private PrintStream trace;
 
 	private class InvalidRuleName extends IllegalArgumentException {
@@ -130,16 +130,10 @@ public class Check {
 					trace = err;
 					Trace t = p.enableTrace(true);
 					t.setOut(err);
-					// TODO: move these to test suite XML file
 					// TODO: add recursive disabling to Java APG?
-					t.enableRule(false,
-							OData.RuleNames.ODATAIDENTIFIER.ruleID());
-					t.enableRule(false,
-							OData.RuleNames.IDENTIFIERLEADINGCHARACTER.ruleID());
-					t.enableRule(false,
-							OData.RuleNames.IDENTIFIERCHARACTER.ruleID());
-					t.enableRule(false, OData.RuleNames.ALPHA.ruleID());
-					t.enableRule(false, OData.RuleNames.DIGIT.ruleID());
+					for (String rule : ts.DisableTrace()) {
+						t.enableRule(false, ruleID(rule));
+					}
 					p.parse();
 					err.println();
 					err.flush();
@@ -155,7 +149,7 @@ public class Check {
 			}
 		}
 		if (failures == 0) {
-			int coveredRules = coveredRules(s, out);
+			int coveredRules = coveredRules(s, ts, out);
 			int coverage = (100 * coveredRules) / OData.ruleCount;
 			out.println("\nAll " + ts.TestCases().size()
 					+ " test cases passed, " + coveredRules + " of "
@@ -179,11 +173,13 @@ public class Check {
 		return input.substring(0, pos) + "[" + input.substring(pos) + "]";
 	}
 
-	private int coveredRules(Statistics s, PrintStream out) {
-		int matchedRules = 0;
+	private int coveredRules(Statistics s, TestSuite ts, PrintStream out) {
 		int unMatchedRules = 0;
+		HashSet<String> matchedRuleNames = new HashSet<String>();
+
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PrintStream statOut = new PrintStream(os);
+
 		try {
 			s.displayStats(statOut, "rules");
 			String statString = os.toString("UTF8");
@@ -192,21 +188,26 @@ public class Check {
 			for (int i = 1; i < stats.length; i++) {
 				String[] words = stats[i].split("\\s+");
 				if (!words[1].equals("0"))
-					matchedRules++;
-				else {
-					if (unMatchedRules == 0)
-						out.println("\nUncovered rules:");
-					else if (unMatchedRules < MAX_UNMATCHED_RULES)
-						out.println("  " + words[5]);
-					else if (unMatchedRules == MAX_UNMATCHED_RULES)
-						out.println("  ...");
-					unMatchedRules++;
+					matchedRuleNames.add(words[5]);
+			}
+
+			if (matchedRuleNames.size() < OData.RuleNames.values().length) {
+				out.println("\nUncovered rules:");
+				unMatchedRules = 0;
+				for (RuleNames r : OData.RuleNames.values()) {
+					if (!matchedRuleNames.contains(r.ruleName())) {
+						if (unMatchedRules < ts.MaxUncoveredRules())
+							out.println("  " + r.ruleName());
+						else if (unMatchedRules == ts.MaxUncoveredRules())
+							out.println("  ...");
+						unMatchedRules++;
+					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		statOut.close();
-		return matchedRules;
+		return matchedRuleNames.size();
 	}
 }
