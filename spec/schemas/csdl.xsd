@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:edm="http://schemas.microsoft.com/ado/2009/11/edm" targetNamespace="http://schemas.microsoft.com/ado/2009/11/edm">
+<!--TODO: do we really need 
+    xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" and
+    xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration"? 
+-->
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"  
+           xmlns:edm="http://docs.oasis-open.org/odata/ns/csdl/4.0" 
+           targetNamespace="http://docs.oasis-open.org/odata/ns/csdl/4.0">
   <xs:annotation>
     <xs:documentation xml:lang="en">
       Common Data Model Schema Definition Language.
       Copyright (c) Microsoft Corp. All rights reserved.
     </xs:documentation>
   </xs:annotation>
+<!--TODO: do we really need this?  
   <xs:import namespace="http://schemas.microsoft.com/ado/2006/04/codegeneration" schemaLocation="System.Data.Resources.CodeGenerationSchema.xsd" />
   <xs:import namespace="http://schemas.microsoft.com/ado/2009/02/edm/annotation" schemaLocation="System.Data.Resources.AnnotationSchema.xsd" />
+-->  
   <xs:element name="Schema" type="edm:TSchema" />
   <xs:complexType name="TSchema">
     <xs:sequence>
@@ -158,8 +166,10 @@
         <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
-    <xs:attributeGroup ref="edm:TTypeAttributes" />
+    <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
+<!--TODO: do we really need this?  
     <xs:attribute ref="cg:TypeAccess" use="optional" />
+-->    
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
   <xs:complexType name="TConstraint">
@@ -192,8 +202,10 @@
     <xs:attribute name="ToRole" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="FromRole" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="ContainsTarget" type="xs:boolean" use="optional" />
+<!--TODO: do we really need this?  
     <xs:attribute ref="cg:GetterAccess" use="optional" />
     <xs:attribute ref="cg:SetterAccess" use="optional" />
+-->    
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
   <xs:complexType name="TEntityType">
@@ -210,7 +222,9 @@
     </xs:sequence>
     <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
     <xs:attribute name="OpenType" type="xs:boolean" use="optional" default="false" />
+<!--TODO: do we really need this?  
     <xs:attribute ref="cg:TypeAccess" use="optional" />
+-->    
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
   <xs:complexType name="TEnumTypeMember">
@@ -234,7 +248,9 @@
     <xs:attributeGroup ref="edm:TTypeAttributes" />
     <xs:attribute name="IsFlags" type="xs:boolean" use="optional" />
     <xs:attribute name="UnderlyingType" type="edm:TPropertyType" use="optional" />
+<!--TODO: do we really need this?  
     <xs:attribute ref="cg:TypeAccess" use="optional" />
+-->    
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:complexType>
   <xs:complexType name="TFunction">
@@ -728,8 +744,10 @@
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TCommonPropertyAttributes" />
+<!--TODO: this or something similar should be part of the CSDL namespace, or a core annotation  
     <xs:attribute ref="annotation:StoreGeneratedPattern" use="optional" />
     <xs:anyAttribute namespace="##other" processContents="lax" />
+-->    
   </xs:complexType>
   <xs:complexType name="TComplexTypeProperty">
     <xs:sequence>
@@ -800,8 +818,10 @@
     <xs:attribute name="SRID" type="edm:TSridFacet" use="optional" />
     <!--End Facets -->
     <xs:attribute name="ConcurrencyMode" type="edm:TConcurrencyMode" use="optional" />
+<!--TODO: do we really need this?  
     <xs:attribute ref="cg:SetterAccess" use="optional" />
     <xs:attribute ref="cg:GetterAccess" use="optional" />
+-->    
   </xs:attributeGroup>
   <xs:attributeGroup name="TFunctionImportParameterAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
@@ -823,7 +843,9 @@
     <xs:attribute name="IsComposable" type="xs:boolean" use="optional" default="false" />
     <xs:attribute name="IsSideEffecting" type="xs:boolean" use="optional" />
     <xs:attribute name="IsBindable" type="xs:boolean" use="optional" default="false" />
+<!--TODO: do we really need this?  
     <xs:attribute ref="cg:MethodAccess" use="optional" />
+-->    
     <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TTypeAttributes">
@@ -837,7 +859,9 @@
   <xs:attributeGroup name="TEntitySetAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="EntityType" type="edm:TQualifiedName" use="required" />
+<!--TODO: do we really need this?  
     <xs:attribute ref="cg:GetterAccess" use="optional" />
+-->    
   </xs:attributeGroup>
   <xs:element name="EntityContainer">
     <xs:complexType>
@@ -905,8 +929,10 @@
       </xs:sequence>
       <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
       <xs:attribute name="Extends" type ="edm:TSimpleIdentifier" use="optional" />
+<!--TODO: do we really need this?  
       <xs:attribute ref="cg:TypeAccess" use="optional" />
       <xs:attribute ref="annotation:LazyLoadingEnabled" use="optional" />
+-->      
       <xs:anyAttribute namespace="##other" processContents="lax" />
     </xs:complexType>
   </xs:element>
@@ -936,7 +962,7 @@
       <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '/' for path segment separation and
            the '.' for namespace qualification inside the segments. It also allows using parens and commas to designate function signatures
            such as "Namespace1.Namespace2.Function1(String,Collection(Int32))/Parameter1".-->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}\(\)\,]{0,}([/\.][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}\(\)\,]{0,}){0,}" />
+      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}\(\),]{0,}([/\.][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}\(\),]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TSimpleIdentifier">
