@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Alias="Self"
+  Namespace="org.oasisOpen.docs.odata.vocabularies.capabilities.v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ..\schemas\csdl.xsd"
+>
+  <Documentation>
+    <Summary>Terms describing (restrictions on) capabilties of services</Summary>
+  </Documentation>
+
+  <Using Alias="Core" Namespace="org.oasisOpen.docs.odata.vocabularies.core.v1" />
+
+  <ValueTerm Name="Creatable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Instances can be added to this set</Summary>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+    <ValueAnnotation Term="Core.AppliesToAssociationSet" />
+  </ValueTerm>
+
+  <ValueTerm Name="Updatable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Entities of the annotated set can be changed</Summary>
+      <LongDescription>If properties of the corresponding entity types are annotated with
+        this term, properties annotated with "false" cannot be updated.
+      </LongDescription>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+    <ValueAnnotation Term="Core.AppliesToProperty" />
+  </ValueTerm>
+
+  <ValueTerm Name="Deletable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Instances can be removed from this set</Summary>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+    <ValueAnnotation Term="Core.AppliesToAssociationSet" />
+  </ValueTerm>
+
+  <ValueTerm Name="Pagable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Entity set supports $top and $skip</Summary>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+  </ValueTerm>
+
+  <ValueTerm Name="Sortable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Annotated entity set supports $orderby</Summary>
+      <LongDescription>If properties of the corresponding entity types are annotated with
+        this term, only properties annotated with "true" may be used in $orderby.
+        expressions
+      </LongDescription>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+    <ValueAnnotation Term="Core.AppliesToProperty" />
+  </ValueTerm>
+
+  <ValueTerm Name="Countable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Entity set supports $count and $inlinecount=allpages</Summary>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+  </ValueTerm>
+
+  <ValueTerm Name="Addressable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Entity set can be directly queried. If false, the entity set can only be
+        addressed via a navigation property, e.g. ~/SalesOrders(4711)/Items
+      </Summary>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+  </ValueTerm>
+
+  <ValueTerm Name="RequiresFilter" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Entity set can only be queried when a $filter query option is provided.
+        Additional restrictions on the filter expression SHOULD be expressed via
+        human-readable error messages when violating
+        the restriction
+      </Summary>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToEntitySet" />
+  </ValueTerm>
+
+  <ValueTerm Name="Filterable" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Properties annotated with "false" cannot be used in $filter expressions
+      </Summary>
+    </Documentation>
+    <ValueAnnotation Term="Core.AppliesToProperty" />
+  </ValueTerm>
+
+</Schema>
