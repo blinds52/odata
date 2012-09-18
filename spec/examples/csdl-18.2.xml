@@ -2,7 +2,8 @@
 <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="Model1" Alias="Self" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ..\schemas\csdl.xsd">
 	<Using Alias="Vocabulary1" Namespace="Vocabulary1"/>
-  <ValueTerm Name="Caption" DefaultValue="0"/>
+    <ValueTerm Name="Caption" Type="Edm.String" DefaultValue="Put Caption Here"/>
+    <ValueTerm Name="Tags" Type="Collection(String)"/>
 	<EntityContainer Name="Model1Container">
 		<EntitySet Name="CustomerSet" EntityType="Model1.Customer"/>
 		<EntitySet Name="OrderSet" EntityType="Model1.Order"/>
@@ -22,7 +23,7 @@
 		<Key>
 			<PropertyRef Name="CustomerId"/>
 		</Key>
-		<Property Name="CustomerId" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="CustomerId" Type="Edm.Int32" Nullable="false"/>
 		<Property Name="FirstName" Type="Edm.String" Nullable="true"/>
 		<Property Name="LastName" Type="Edm.String" Nullable="true"/>
 		<Property Name="AccountNumber" Type="Edm.Int32" Nullable="true"/>
@@ -36,7 +37,12 @@
 				</Apply>
 			</PropertyValue>
 		</TypeAnnotation>
-	</EntityType>
+        <ValueAnnotation Term="Self.Tags">
+          <Collection>
+            <String>MasterData</String>
+          </Collection>
+        </ValueAnnotation>    
+   	</EntityType>
 	<EntityType Name="Order">
 		<Key>
 			<PropertyRef Name="OrderId"/>
