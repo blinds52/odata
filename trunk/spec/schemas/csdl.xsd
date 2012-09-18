@@ -25,7 +25,7 @@
     </xs:sequence>
     <xs:attribute name="Namespace" type="edm:TNamespaceName" use="optional" />
     <xs:attribute name="Alias" type="edm:TSimpleIdentifier" use="optional" />
-    <xs:anyAttribute namespace="##other" processContents="lax" />
+    <xs:anyAttribute namespace="##local" processContents="lax" />
   </xs:complexType>
   <xs:group name="GSchemaBodyElements">
     <xs:choice>
@@ -789,7 +789,7 @@
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TFunctionImportParameterAttributes" />
-    <xs:anyAttribute namespace="##other" processContents="lax" />
+    <xs:anyAttribute namespace="##local" processContents="lax" />
   </xs:complexType>
 
   <xs:attributeGroup name="TFacetAttributes">
@@ -827,14 +827,12 @@
   <xs:attributeGroup name="TFunctionImportParameterAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="Type" type="edm:TFunctionImportParameterAndReturnType" use="required" />
-    <xs:attribute name="Mode" type="edm:TParameterMode" use="optional" default="In" />
     <xs:attribute name="Nullable" type="xs:boolean" use="optional" />
     <xs:attribute name="DefaultValue" type="xs:string" use="optional" />
     <xs:attribute name="MaxLength" type="edm:TMaxLengthFacet" use="optional" />
     <xs:attribute name="Precision" type="edm:TPrecisionFacet" use="optional" />
     <xs:attribute name="Scale" type="edm:TScaleFacet" use="optional" />
     <xs:attribute name="SRID" type="edm:TSridFacet" use="optional" />
-    <xs:anyAttribute namespace="##other" processContents="lax" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TFunctionImportAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
@@ -941,13 +939,6 @@
   <!-- 
     general  (more or less) purpose simple types 
     -->
-  <xs:simpleType name="TParameterMode">
-    <xs:restriction base="xs:token">
-      <xs:enumeration value="In" />
-      <xs:enumeration value="Out" />
-      <xs:enumeration value="InOut" />
-    </xs:restriction>
-  </xs:simpleType>
   <xs:simpleType name="TNamespaceName">
     <xs:restriction base="edm:TQualifiedName">
       <xs:maxLength value="512" />
