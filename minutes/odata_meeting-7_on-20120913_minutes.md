@@ -356,11 +356,6 @@ ODATA-58
 ODATA-66
 : "10.1 Collection Types: enumeration types are missing from list of types usable with attribute notation" [component: OData CSDL]. 
 
-Ralf: 
->I **move** to resolve ODATA-66 as proposed. **Mike seconds**.
-
-**No further discussion**. **No objections**. The **motion passes**.
-
 ODATA-66
 : "10.1 Collection Types: enumeration types are missing from list of types usable with attribute notation" [component: OData CSDL] is **approved as open** with no objections. 
 
@@ -398,7 +393,7 @@ ODATA-74
 : "Explicitly mention dynamic navigation properties" [components: OData CSDL, OData Protocol]. 
 
 Ralf: 
->I **move** to resolve ODATA-66 as proposed. **Mike seconds**.
+>I **move** to resolve ODATA-74 as proposed. **Mike seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
 
