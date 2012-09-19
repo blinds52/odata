@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://docs.oasis-open.org/odata/ns/csdl/4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <choice>
+      <ref name="EntityContainer"/>
+      <element name="Schema">
+        <attribute name="Alias">
+          <data type="NCName"/>
+        </attribute>
+        <attribute name="Namespace">
+          <data type="NCName"/>
+        </attribute>
+        <attribute name="xsi:schemaLocation"/>
+        <ref name="Documentation"/>
+        <oneOrMore>
+          <element name="Function">
+            <attribute name="Collation">
+              <data type="NCName"/>
+            </attribute>
+            <attribute name="DefaultValue">
+              <data type="NCName"/>
+            </attribute>
+            <attribute name="FixedLength">
+              <data type="boolean"/>
+            </attribute>
+            <attribute name="MaxLength">
+              <data type="NCName"/>
+            </attribute>
+            <attribute name="Name">
+              <data type="NCName"/>
+            </attribute>
+            <attribute name="Nullable">
+              <data type="boolean"/>
+            </attribute>
+            <attribute name="Precision">
+              <data type="integer"/>
+            </attribute>
+            <attribute name="ReturnType">
+              <data type="NCName"/>
+            </attribute>
+            <attribute name="SRID">
+              <data type="NCName"/>
+            </attribute>
+            <attribute name="Scale">
+              <data type="integer"/>
+            </attribute>
+            <attribute name="Unicode">
+              <data type="boolean"/>
+            </attribute>
+            <ref name="Documentation"/>
+            <oneOrMore>
+              <element name="TypeAnnotation">
+                <attribute name="Binary">
+                  <data type="integer"/>
+                </attribute>
+                <attribute name="Bool">
+                  <data type="boolean"/>
+                </attribute>
+                <attribute name="DateTime">
+                  <data type="NMTOKEN"/>
+                </attribute>
+                <attribute name="DateTimeOffset">
+                  <data type="NMTOKEN"/>
+                </attribute>
+                <attribute name="Decimal">
+                  <data type="integer"/>
+                </attribute>
+                <attribute name="Float">
+                  <data type="integer"/>
+                </attribute>
+                <attribute name="Guid"/>
+                <attribute name="Int">
+                  <data type="integer"/>
+                </attribute>
+                <attribute name="Path">
+                  <data type="NCName"/>
+                </attribute>
+                <attribute name="Qualifier">
+                  <data type="NCName"/>
+                </attribute>
+                <attribute name="String">
+                  <data type="NCName"/>
+                </attribute>
+                <attribute name="Term">
+                  <data type="NCName"/>
+                </attribute>
+                <attribute name="Time">
+                  <data type="NMTOKEN"/>
+                </attribute>
+                <ref name="Documentation"/>
+                <oneOrMore>
+                  <ref name="PropertyValue"/>
+                </oneOrMore>
+              </element>
+            </oneOrMore>
+          </element>
+        </oneOrMore>
+        <ref name="EntityContainer"/>
+      </element>
+    </choice>
+  </start>
+  <define name="Documentation">
+    <element name="Documentation">
+      <optional>
+        <element name="Summary">
+          <empty/>
+        </element>
+        <element name="LongDescription">
+          <empty/>
+        </element>
+      </optional>
+    </element>
+  </define>
+  <define name="PropertyValue">
+    <element name="PropertyValue">
+      <attribute name="Binary">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Bool">
+        <data type="boolean"/>
+      </attribute>
+      <attribute name="DateTime">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <attribute name="DateTimeOffset">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <attribute name="Decimal">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Float">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Guid"/>
+      <attribute name="Int">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Path">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Property">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="String">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Time">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <optional>
+        <element name="Collection">
+          <ref name="Documentation"/>
+          <ref name="ValueTermReference"/>
+          <ref name="DateTimeOffset"/>
+          <ref name="Binary"/>
+          <ref name="Bool"/>
+        </element>
+      </optional>
+      <optional>
+        <ref name="Documentation"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="PropertyReference"/>
+          <element name="Null">
+            <ref name="Documentation"/>
+          </element>
+        </choice>
+      </optional>
+      <optional>
+        <element name="Decimal">
+          <data type="integer"/>
+        </element>
+      </optional>
+      <optional>
+        <ref name="IsType"/>
+      </optional>
+      <optional>
+        <ref name="Bool"/>
+      </optional>
+      <optional>
+        <element name="Guid">
+          <text/>
+        </element>
+      </optional>
+      <optional>
+        <element name="Path">
+          <data type="NCName"/>
+        </element>
+      </optional>
+      <optional>
+        <ref name="EnumMemberReference"/>
+      </optional>
+      <optional>
+        <element name="FunctionReference">
+          <attribute name="Function">
+            <data type="NCName"/>
+          </attribute>
+          <ref name="Documentation"/>
+          <zeroOrMore>
+            <element name="Parameter">
+              <attribute name="Type">
+                <data type="NCName"/>
+              </attribute>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="AssertType"/>
+          <ref name="Binary"/>
+          <group>
+            <ref name="ValueTermReference"/>
+            <ref name="LabeledElementReference"/>
+          </group>
+        </choice>
+      </optional>
+      <optional>
+        <ref name="ParameterReference"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="Float"/>
+          <ref name="Record"/>
+        </choice>
+      </optional>
+    </element>
+  </define>
+  <define name="EntityContainer">
+    <element name="EntityContainer">
+      <attribute name="Extends">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="IsDefaultEntityContainer">
+        <data type="boolean"/>
+      </attribute>
+      <attribute name="Name">
+        <data type="NCName"/>
+      </attribute>
+      <optional>
+        <attribute name="xsi:schemaLocation"/>
+      </optional>
+      <ref name="Documentation"/>
+      <choice>
+        <element name="AssociationSet">
+          <attribute name="Association">
+            <data type="NCName"/>
+          </attribute>
+          <attribute name="Name">
+            <data type="NCName"/>
+          </attribute>
+          <ref name="Documentation"/>
+          <oneOrMore>
+            <element name="End">
+              <attribute name="EntitySet">
+                <data type="NCName"/>
+              </attribute>
+              <attribute name="Role">
+                <data type="NCName"/>
+              </attribute>
+              <ref name="Documentation"/>
+            </element>
+          </oneOrMore>
+        </element>
+        <element name="EntitySet">
+          <attribute name="EntityType">
+            <data type="NCName"/>
+          </attribute>
+          <attribute name="Name">
+            <data type="NCName"/>
+          </attribute>
+          <ref name="Documentation"/>
+          <oneOrMore>
+            <ref name="ValueAnnotation"/>
+          </oneOrMore>
+        </element>
+      </choice>
+      <ref name="ValueAnnotation"/>
+    </element>
+  </define>
+  <define name="ValueTermReference">
+    <element name="ValueTermReference">
+      <attribute name="Qualifier">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Term">
+        <data type="NCName"/>
+      </attribute>
+      <optional>
+        <ref name="Documentation"/>
+        <ref name="If"/>
+        <ref name="ParameterReference"/>
+      </optional>
+    </element>
+  </define>
+  <define name="DateTimeOffset">
+    <element name="DateTimeOffset">
+      <data type="NMTOKEN"/>
+    </element>
+  </define>
+  <define name="Binary">
+    <element name="Binary">
+      <data type="integer"/>
+    </element>
+  </define>
+  <define name="Bool">
+    <element name="Bool">
+      <data type="boolean"/>
+    </element>
+  </define>
+  <define name="PropertyReference">
+    <element name="PropertyReference">
+      <attribute name="Property">
+        <data type="NCName"/>
+      </attribute>
+      <ref name="Documentation"/>
+      <choice>
+        <group>
+          <ref name="Record"/>
+          <ref name="Time"/>
+        </group>
+        <group>
+          <ref name="DateTimeOffset"/>
+          <ref name="ParameterReference"/>
+        </group>
+      </choice>
+    </element>
+  </define>
+  <define name="IsType">
+    <element name="IsType">
+      <attribute name="Collation">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="DefaultValue">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="FixedLength">
+        <data type="boolean"/>
+      </attribute>
+      <attribute name="MaxLength">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Nullable">
+        <data type="boolean"/>
+      </attribute>
+      <attribute name="Precision">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="SRID">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Scale">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Type">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Unicode">
+        <data type="boolean"/>
+      </attribute>
+      <ref name="Documentation"/>
+      <zeroOrMore>
+        <ref name="ReferenceType"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="Int"/>
+        <ref name="AssertType"/>
+      </optional>
+      <optional>
+        <ref name="Time"/>
+        <element name="Apply">
+          <attribute name="Function">
+            <data type="NCName"/>
+          </attribute>
+          <ref name="Documentation"/>
+          <ref name="If"/>
+          <ref name="ValueTermReference"/>
+          <ref name="Float"/>
+          <ref name="LabeledElementReference"/>
+        </element>
+        <ref name="PropertyReference"/>
+      </optional>
+      <optional>
+        <element name="String">
+          <data type="NCName"/>
+        </element>
+      </optional>
+      <optional>
+        <ref name="Bool"/>
+      </optional>
+      <optional>
+        <element name="CollectionType">
+          <attribute name="Collation">
+            <data type="NCName"/>
+          </attribute>
+          <attribute name="DefaultValue">
+            <data type="NCName"/>
+          </attribute>
+          <attribute name="ElementType">
+            <data type="NCName"/>
+          </attribute>
+          <attribute name="FixedLength">
+            <data type="boolean"/>
+          </attribute>
+          <attribute name="MaxLength">
+            <data type="NCName"/>
+          </attribute>
+          <attribute name="Nullable">
+            <data type="boolean"/>
+          </attribute>
+          <attribute name="Precision">
+            <data type="integer"/>
+          </attribute>
+          <attribute name="SRID">
+            <data type="NCName"/>
+          </attribute>
+          <attribute name="Scale">
+            <data type="integer"/>
+          </attribute>
+          <attribute name="Unicode">
+            <data type="boolean"/>
+          </attribute>
+        </element>
+      </optional>
+    </element>
+  </define>
+  <define name="EnumMemberReference">
+    <element name="EnumMemberReference">
+      <data type="NCName"/>
+    </element>
+  </define>
+  <define name="LabeledElementReference">
+    <element name="LabeledElementReference">
+      <data type="NCName"/>
+    </element>
+  </define>
+  <define name="AssertType">
+    <element name="AssertType">
+      <attribute name="Collation">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="DefaultValue">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="FixedLength">
+        <data type="boolean"/>
+      </attribute>
+      <attribute name="MaxLength">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Nullable">
+        <data type="boolean"/>
+      </attribute>
+      <attribute name="Precision">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="SRID">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Scale">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Type">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Unicode">
+        <data type="boolean"/>
+      </attribute>
+      <optional>
+        <ref name="Documentation"/>
+      </optional>
+      <choice>
+        <group>
+          <ref name="LabeledElementReference"/>
+          <element name="LabeledElement">
+            <attribute name="Name">
+              <data type="NCName"/>
+            </attribute>
+          </element>
+          <oneOrMore>
+            <ref name="Time"/>
+          </oneOrMore>
+        </group>
+        <zeroOrMore>
+          <ref name="ReferenceType"/>
+        </zeroOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="ParameterReference">
+    <element name="ParameterReference">
+      <data type="NCName"/>
+    </element>
+  </define>
+  <define name="Record">
+    <element name="Record">
+      <attribute name="Type">
+        <data type="NCName"/>
+      </attribute>
+      <optional>
+        <ref name="Documentation"/>
+        <oneOrMore>
+          <ref name="PropertyValue"/>
+        </oneOrMore>
+      </optional>
+    </element>
+  </define>
+  <define name="Float">
+    <element name="Float">
+      <data type="integer"/>
+    </element>
+  </define>
+  <define name="ValueAnnotation">
+    <element name="ValueAnnotation">
+      <attribute name="Binary">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Bool">
+        <data type="boolean"/>
+      </attribute>
+      <attribute name="DateTime">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <attribute name="DateTimeOffset">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <attribute name="Decimal">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Float">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Guid"/>
+      <attribute name="Int">
+        <data type="integer"/>
+      </attribute>
+      <attribute name="Path">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Qualifier">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="String">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Term">
+        <data type="NCName"/>
+      </attribute>
+      <attribute name="Time">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <ref name="Documentation"/>
+      <optional>
+        <ref name="ParameterReference"/>
+        <ref name="IsType"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="EnumMemberReference"/>
+          <ref name="Time"/>
+        </choice>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="Int"/>
+          <group>
+            <ref name="Binary"/>
+            <element name="EntitySetReference">
+              <data type="NCName"/>
+            </element>
+          </group>
+        </choice>
+      </optional>
+    </element>
+  </define>
+  <define name="If">
+    <element name="If">
+      <empty/>
+    </element>
+  </define>
+  <define name="Time">
+    <element name="Time">
+      <data type="NMTOKEN"/>
+    </element>
+  </define>
+  <define name="ReferenceType">
+    <element name="ReferenceType">
+      <attribute name="Type">
+        <data type="NCName"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="Int">
+    <element name="Int">
+      <data type="integer"/>
+    </element>
+  </define>
+</grammar>
