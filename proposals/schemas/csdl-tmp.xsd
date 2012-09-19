@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://docs.oasis-open.org/odata/ns/csdl/4.0" xmlns:csdl="http://docs.oasis-open.org/odata/ns/csdl/4.0">
+  <xs:element name="Schema">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element maxOccurs="unbounded" ref="csdl:Function"/>
+        <xs:element ref="csdl:EntityContainer"/>
+      </xs:sequence>
+      <xs:attribute name="Alias" use="required" type="xs:NCName"/>
+      <xs:attribute name="Namespace" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Function">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element maxOccurs="unbounded" ref="csdl:TypeAnnotation"/>
+      </xs:sequence>
+      <xs:attribute name="Collation" use="required" type="xs:NCName"/>
+      <xs:attribute name="DefaultValue" use="required" type="xs:NCName"/>
+      <xs:attribute name="FixedLength" use="required" type="xs:boolean"/>
+      <xs:attribute name="MaxLength" use="required" type="xs:NCName"/>
+      <xs:attribute name="Name" use="required" type="xs:NCName"/>
+      <xs:attribute name="Nullable" use="required" type="xs:boolean"/>
+      <xs:attribute name="Precision" use="required" type="xs:integer"/>
+      <xs:attribute name="ReturnType" use="required" type="xs:NCName"/>
+      <xs:attribute name="SRID" use="required" type="xs:NCName"/>
+      <xs:attribute name="Scale" use="required" type="xs:integer"/>
+      <xs:attribute name="Unicode" use="required" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TypeAnnotation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element maxOccurs="unbounded" ref="csdl:PropertyValue"/>
+      </xs:sequence>
+      <xs:attribute name="Binary" use="required" type="xs:integer"/>
+      <xs:attribute name="Bool" use="required" type="xs:boolean"/>
+      <xs:attribute name="DateTime" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="DateTimeOffset" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="Decimal" use="required" type="xs:integer"/>
+      <xs:attribute name="Float" use="required" type="xs:integer"/>
+      <xs:attribute name="Guid" use="required"/>
+      <xs:attribute name="Int" use="required" type="xs:integer"/>
+      <xs:attribute name="Path" use="required" type="xs:NCName"/>
+      <xs:attribute name="Qualifier" use="required" type="xs:NCName"/>
+      <xs:attribute name="String" use="required" type="xs:NCName"/>
+      <xs:attribute name="Term" use="required" type="xs:NCName"/>
+      <xs:attribute name="Time" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Documentation">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="csdl:Summary"/>
+        <xs:element ref="csdl:LongDescription"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Summary">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="LongDescription">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="PropertyValue">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="csdl:Collection"/>
+        <xs:element minOccurs="0" ref="csdl:Documentation"/>
+        <xs:choice minOccurs="0">
+          <xs:element ref="csdl:PropertyReference"/>
+          <xs:element ref="csdl:Null"/>
+        </xs:choice>
+        <xs:element minOccurs="0" ref="csdl:Decimal"/>
+        <xs:element minOccurs="0" ref="csdl:IsType"/>
+        <xs:element minOccurs="0" ref="csdl:Bool"/>
+        <xs:element minOccurs="0" ref="csdl:Guid"/>
+        <xs:element minOccurs="0" ref="csdl:Path"/>
+        <xs:element minOccurs="0" ref="csdl:EnumMemberReference"/>
+        <xs:element minOccurs="0" ref="csdl:FunctionReference"/>
+        <xs:choice minOccurs="0">
+          <xs:element ref="csdl:AssertType"/>
+          <xs:element ref="csdl:Binary"/>
+          <xs:sequence>
+            <xs:element ref="csdl:ValueTermReference"/>
+            <xs:element ref="csdl:LabeledElementReference"/>
+          </xs:sequence>
+        </xs:choice>
+        <xs:element minOccurs="0" ref="csdl:ParameterReference"/>
+        <xs:choice minOccurs="0">
+          <xs:element ref="csdl:Float"/>
+          <xs:element ref="csdl:Record"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="Binary" use="required" type="xs:integer"/>
+      <xs:attribute name="Bool" use="required" type="xs:boolean"/>
+      <xs:attribute name="DateTime" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="DateTimeOffset" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="Decimal" use="required" type="xs:integer"/>
+      <xs:attribute name="Float" use="required" type="xs:integer"/>
+      <xs:attribute name="Guid" use="required"/>
+      <xs:attribute name="Int" use="required" type="xs:integer"/>
+      <xs:attribute name="Path" use="required" type="xs:NCName"/>
+      <xs:attribute name="Property" use="required" type="xs:NCName"/>
+      <xs:attribute name="String" use="required" type="xs:NCName"/>
+      <xs:attribute name="Time" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Collection">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element ref="csdl:ValueTermReference"/>
+        <xs:element ref="csdl:DateTimeOffset"/>
+        <xs:element ref="csdl:Binary"/>
+        <xs:element ref="csdl:Bool"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Null">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Decimal" type="xs:integer"/>
+  <xs:element name="Guid" type="xs:string"/>
+  <xs:element name="Path" type="xs:NCName"/>
+  <xs:element name="FunctionReference">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="csdl:Parameter"/>
+      </xs:sequence>
+      <xs:attribute name="Function" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Parameter">
+    <xs:complexType>
+      <xs:attribute name="Type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EntityContainer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:choice>
+          <xs:element ref="csdl:AssociationSet"/>
+          <xs:element ref="csdl:EntitySet"/>
+        </xs:choice>
+        <xs:element ref="csdl:ValueAnnotation"/>
+      </xs:sequence>
+      <xs:attribute name="Extends" use="required" type="xs:NCName"/>
+      <xs:attribute name="IsDefaultEntityContainer" use="required" type="xs:boolean"/>
+      <xs:attribute name="Name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AssociationSet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element maxOccurs="unbounded" ref="csdl:End"/>
+      </xs:sequence>
+      <xs:attribute name="Association" use="required" type="xs:NCName"/>
+      <xs:attribute name="Name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="End">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+      </xs:sequence>
+      <xs:attribute name="EntitySet" use="required" type="xs:NCName"/>
+      <xs:attribute name="Role" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EntitySet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element maxOccurs="unbounded" ref="csdl:ValueAnnotation"/>
+      </xs:sequence>
+      <xs:attribute name="EntityType" use="required" type="xs:NCName"/>
+      <xs:attribute name="Name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValueTermReference">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element ref="csdl:If"/>
+        <xs:element ref="csdl:ParameterReference"/>
+      </xs:sequence>
+      <xs:attribute name="Qualifier" use="required" type="xs:NCName"/>
+      <xs:attribute name="Term" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DateTimeOffset" type="xs:NMTOKEN"/>
+  <xs:element name="Binary" type="xs:integer"/>
+  <xs:element name="Bool" type="xs:boolean"/>
+  <xs:element name="PropertyReference">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:choice>
+          <xs:sequence>
+            <xs:element ref="csdl:Record"/>
+            <xs:element ref="csdl:Time"/>
+          </xs:sequence>
+          <xs:sequence>
+            <xs:element ref="csdl:DateTimeOffset"/>
+            <xs:element ref="csdl:ParameterReference"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="Property" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IsType">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="csdl:ReferenceType"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="csdl:Int"/>
+          <xs:element ref="csdl:AssertType"/>
+        </xs:sequence>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="csdl:Time"/>
+          <xs:element ref="csdl:Apply"/>
+          <xs:element ref="csdl:PropertyReference"/>
+        </xs:sequence>
+        <xs:element minOccurs="0" ref="csdl:String"/>
+        <xs:element minOccurs="0" ref="csdl:Bool"/>
+        <xs:element minOccurs="0" ref="csdl:CollectionType"/>
+      </xs:sequence>
+      <xs:attribute name="Collation" use="required" type="xs:NCName"/>
+      <xs:attribute name="DefaultValue" use="required" type="xs:NCName"/>
+      <xs:attribute name="FixedLength" use="required" type="xs:boolean"/>
+      <xs:attribute name="MaxLength" use="required" type="xs:NCName"/>
+      <xs:attribute name="Nullable" use="required" type="xs:boolean"/>
+      <xs:attribute name="Precision" use="required" type="xs:integer"/>
+      <xs:attribute name="SRID" use="required" type="xs:NCName"/>
+      <xs:attribute name="Scale" use="required" type="xs:integer"/>
+      <xs:attribute name="Type" use="required" type="xs:NCName"/>
+      <xs:attribute name="Unicode" use="required" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Apply">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element ref="csdl:If"/>
+        <xs:element ref="csdl:ValueTermReference"/>
+        <xs:element ref="csdl:Float"/>
+        <xs:element ref="csdl:LabeledElementReference"/>
+      </xs:sequence>
+      <xs:attribute name="Function" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="String" type="xs:NCName"/>
+  <xs:element name="CollectionType">
+    <xs:complexType>
+      <xs:attribute name="Collation" use="required" type="xs:NCName"/>
+      <xs:attribute name="DefaultValue" use="required" type="xs:NCName"/>
+      <xs:attribute name="ElementType" use="required" type="xs:NCName"/>
+      <xs:attribute name="FixedLength" use="required" type="xs:boolean"/>
+      <xs:attribute name="MaxLength" use="required" type="xs:NCName"/>
+      <xs:attribute name="Nullable" use="required" type="xs:boolean"/>
+      <xs:attribute name="Precision" use="required" type="xs:integer"/>
+      <xs:attribute name="SRID" use="required" type="xs:NCName"/>
+      <xs:attribute name="Scale" use="required" type="xs:integer"/>
+      <xs:attribute name="Unicode" use="required" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnumMemberReference" type="xs:NCName"/>
+  <xs:element name="LabeledElementReference" type="xs:NCName"/>
+  <xs:element name="AssertType">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="csdl:Documentation"/>
+        <xs:choice>
+          <xs:sequence>
+            <xs:element ref="csdl:LabeledElementReference"/>
+            <xs:element ref="csdl:LabeledElement"/>
+            <xs:element maxOccurs="unbounded" ref="csdl:Time"/>
+          </xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="csdl:ReferenceType"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="Collation" use="required" type="xs:NCName"/>
+      <xs:attribute name="DefaultValue" use="required" type="xs:NCName"/>
+      <xs:attribute name="FixedLength" use="required" type="xs:boolean"/>
+      <xs:attribute name="MaxLength" use="required" type="xs:NCName"/>
+      <xs:attribute name="Nullable" use="required" type="xs:boolean"/>
+      <xs:attribute name="Precision" use="required" type="xs:integer"/>
+      <xs:attribute name="SRID" use="required" type="xs:NCName"/>
+      <xs:attribute name="Scale" use="required" type="xs:integer"/>
+      <xs:attribute name="Type" use="required" type="xs:NCName"/>
+      <xs:attribute name="Unicode" use="required" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LabeledElement">
+    <xs:complexType>
+      <xs:attribute name="Name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ParameterReference" type="xs:NCName"/>
+  <xs:element name="Record">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="csdl:Documentation"/>
+        <xs:element maxOccurs="unbounded" ref="csdl:PropertyValue"/>
+      </xs:sequence>
+      <xs:attribute name="Type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Float" type="xs:integer"/>
+  <xs:element name="ValueAnnotation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="csdl:Documentation"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="csdl:ParameterReference"/>
+          <xs:element ref="csdl:IsType"/>
+        </xs:sequence>
+        <xs:choice minOccurs="0">
+          <xs:element ref="csdl:EnumMemberReference"/>
+          <xs:element ref="csdl:Time"/>
+        </xs:choice>
+        <xs:choice minOccurs="0">
+          <xs:element ref="csdl:Int"/>
+          <xs:sequence>
+            <xs:element ref="csdl:Binary"/>
+            <xs:element ref="csdl:EntitySetReference"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="Binary" use="required" type="xs:integer"/>
+      <xs:attribute name="Bool" use="required" type="xs:boolean"/>
+      <xs:attribute name="DateTime" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="DateTimeOffset" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="Decimal" use="required" type="xs:integer"/>
+      <xs:attribute name="Float" use="required" type="xs:integer"/>
+      <xs:attribute name="Guid" use="required"/>
+      <xs:attribute name="Int" use="required" type="xs:integer"/>
+      <xs:attribute name="Path" use="required" type="xs:NCName"/>
+      <xs:attribute name="Qualifier" use="required" type="xs:NCName"/>
+      <xs:attribute name="String" use="required" type="xs:NCName"/>
+      <xs:attribute name="Term" use="required" type="xs:NCName"/>
+      <xs:attribute name="Time" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EntitySetReference" type="xs:NCName"/>
+  <xs:element name="If">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="Time" type="xs:NMTOKEN"/>
+  <xs:element name="ReferenceType">
+    <xs:complexType>
+      <xs:attribute name="Type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Int" type="xs:integer"/>
+</xs:schema>

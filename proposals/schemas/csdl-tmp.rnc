@@ -1,0 +1,225 @@
+default namespace = "http://docs.oasis-open.org/odata/ns/csdl/4.0"
+namespace xsi = "http://www.w3.org/2001/XMLSchema-instance"
+
+start =
+  EntityContainer
+  | element Schema {
+      attribute Alias { xsd:NCName },
+      attribute Namespace { xsd:NCName },
+      attribute xsi:schemaLocation { text },
+      Documentation,
+      element Function {
+        attribute Collation { xsd:NCName },
+        attribute DefaultValue { xsd:NCName },
+        attribute FixedLength { xsd:boolean },
+        attribute MaxLength { xsd:NCName },
+        attribute Name { xsd:NCName },
+        attribute Nullable { xsd:boolean },
+        attribute Precision { xsd:integer },
+        attribute ReturnType { xsd:NCName },
+        attribute SRID { xsd:NCName },
+        attribute Scale { xsd:integer },
+        attribute Unicode { xsd:boolean },
+        Documentation,
+        element TypeAnnotation {
+          attribute Binary { xsd:integer },
+          attribute Bool { xsd:boolean },
+          attribute DateTime { xsd:NMTOKEN },
+          attribute DateTimeOffset { xsd:NMTOKEN },
+          attribute Decimal { xsd:integer },
+          attribute Float { xsd:integer },
+          attribute Guid { text },
+          attribute Int { xsd:integer },
+          attribute Path { xsd:NCName },
+          attribute Qualifier { xsd:NCName },
+          attribute String { xsd:NCName },
+          attribute Term { xsd:NCName },
+          attribute Time { xsd:NMTOKEN },
+          Documentation,
+          PropertyValue+
+        }+
+      }+,
+      EntityContainer
+    }
+Documentation =
+  element Documentation {
+    (element Summary { empty },
+     element LongDescription { empty })?
+  }
+PropertyValue =
+  element PropertyValue {
+    attribute Binary { xsd:integer },
+    attribute Bool { xsd:boolean },
+    attribute DateTime { xsd:NMTOKEN },
+    attribute DateTimeOffset { xsd:NMTOKEN },
+    attribute Decimal { xsd:integer },
+    attribute Float { xsd:integer },
+    attribute Guid { text },
+    attribute Int { xsd:integer },
+    attribute Path { xsd:NCName },
+    attribute Property { xsd:NCName },
+    attribute String { xsd:NCName },
+    attribute Time { xsd:NMTOKEN },
+    element Collection {
+      Documentation, ValueTermReference, DateTimeOffset, Binary, Bool
+    }?,
+    Documentation?,
+    (PropertyReference
+     | element Null { Documentation })?,
+    element Decimal { xsd:integer }?,
+    IsType?,
+    Bool?,
+    element Guid { text }?,
+    element Path { xsd:NCName }?,
+    EnumMemberReference?,
+    element FunctionReference {
+      attribute Function { xsd:NCName },
+      Documentation,
+      element Parameter {
+        attribute Type { xsd:NCName }
+      }*
+    }?,
+    (AssertType
+     | Binary
+     | (ValueTermReference, LabeledElementReference))?,
+    ParameterReference?,
+    (Float | Record)?
+  }
+EntityContainer =
+  element EntityContainer {
+    attribute Extends { xsd:NCName },
+    attribute IsDefaultEntityContainer { xsd:boolean },
+    attribute Name { xsd:NCName },
+    attribute xsi:schemaLocation { text }?,
+    Documentation,
+    (element AssociationSet {
+       attribute Association { xsd:NCName },
+       attribute Name { xsd:NCName },
+       Documentation,
+       element End {
+         attribute EntitySet { xsd:NCName },
+         attribute Role { xsd:NCName },
+         Documentation
+       }+
+     }
+     | element EntitySet {
+         attribute EntityType { xsd:NCName },
+         attribute Name { xsd:NCName },
+         Documentation,
+         ValueAnnotation+
+       }),
+    ValueAnnotation
+  }
+ValueTermReference =
+  element ValueTermReference {
+    attribute Qualifier { xsd:NCName },
+    attribute Term { xsd:NCName },
+    (Documentation, If, ParameterReference)?
+  }
+DateTimeOffset = element DateTimeOffset { xsd:NMTOKEN }
+Binary = element Binary { xsd:integer }
+Bool = element Bool { xsd:boolean }
+PropertyReference =
+  element PropertyReference {
+    attribute Property { xsd:NCName },
+    Documentation,
+    ((Record, Time) | (DateTimeOffset, ParameterReference))
+  }
+IsType =
+  element IsType {
+    attribute Collation { xsd:NCName },
+    attribute DefaultValue { xsd:NCName },
+    attribute FixedLength { xsd:boolean },
+    attribute MaxLength { xsd:NCName },
+    attribute Nullable { xsd:boolean },
+    attribute Precision { xsd:integer },
+    attribute SRID { xsd:NCName },
+    attribute Scale { xsd:integer },
+    attribute Type { xsd:NCName },
+    attribute Unicode { xsd:boolean },
+    Documentation,
+    ReferenceType*,
+    (Int, AssertType)?,
+    (Time,
+     element Apply {
+       attribute Function { xsd:NCName },
+       Documentation,
+       If,
+       ValueTermReference,
+       Float,
+       LabeledElementReference
+     },
+     PropertyReference)?,
+    element String { xsd:NCName }?,
+    Bool?,
+    element CollectionType {
+      attribute Collation { xsd:NCName },
+      attribute DefaultValue { xsd:NCName },
+      attribute ElementType { xsd:NCName },
+      attribute FixedLength { xsd:boolean },
+      attribute MaxLength { xsd:NCName },
+      attribute Nullable { xsd:boolean },
+      attribute Precision { xsd:integer },
+      attribute SRID { xsd:NCName },
+      attribute Scale { xsd:integer },
+      attribute Unicode { xsd:boolean }
+    }?
+  }
+EnumMemberReference = element EnumMemberReference { xsd:NCName }
+LabeledElementReference = element LabeledElementReference { xsd:NCName }
+AssertType =
+  element AssertType {
+    attribute Collation { xsd:NCName },
+    attribute DefaultValue { xsd:NCName },
+    attribute FixedLength { xsd:boolean },
+    attribute MaxLength { xsd:NCName },
+    attribute Nullable { xsd:boolean },
+    attribute Precision { xsd:integer },
+    attribute SRID { xsd:NCName },
+    attribute Scale { xsd:integer },
+    attribute Type { xsd:NCName },
+    attribute Unicode { xsd:boolean },
+    Documentation?,
+    ((LabeledElementReference,
+      element LabeledElement {
+        attribute Name { xsd:NCName }
+      },
+      Time+)
+     | ReferenceType*)
+  }
+ParameterReference = element ParameterReference { xsd:NCName }
+Record =
+  element Record {
+    attribute Type { xsd:NCName },
+    (Documentation, PropertyValue+)?
+  }
+Float = element Float { xsd:integer }
+ValueAnnotation =
+  element ValueAnnotation {
+    attribute Binary { xsd:integer },
+    attribute Bool { xsd:boolean },
+    attribute DateTime { xsd:NMTOKEN },
+    attribute DateTimeOffset { xsd:NMTOKEN },
+    attribute Decimal { xsd:integer },
+    attribute Float { xsd:integer },
+    attribute Guid { text },
+    attribute Int { xsd:integer },
+    attribute Path { xsd:NCName },
+    attribute Qualifier { xsd:NCName },
+    attribute String { xsd:NCName },
+    attribute Term { xsd:NCName },
+    attribute Time { xsd:NMTOKEN },
+    Documentation,
+    (ParameterReference, IsType)?,
+    (EnumMemberReference | Time)?,
+    (Int
+     | (Binary,
+        element EntitySetReference { xsd:NCName }))?
+  }
+If = element If { empty }
+Time = element Time { xsd:NMTOKEN }
+ReferenceType =
+  element ReferenceType {
+    attribute Type { xsd:NCName }
+  }
+Int = element Int { xsd:integer }
