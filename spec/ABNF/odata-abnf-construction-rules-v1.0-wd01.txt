@@ -1,4 +1,5 @@
-; odata-v1.0-abnf 
+; odata-v1.0-abnf for URI conventions
+; TODO: and action request payloads? They are specified in the core part, not a format specification
 
 odataUri = scheme "://" host [ ":" port ] serviceRoot [ "$metadata" / "$batch" / odataRelativeUri ]  
 
@@ -11,7 +12,6 @@ queryOption  = systemQueryOption
              / aliasAndValue 
              / parameterNameAndValue
              / customQueryOption  
-;             / sopParameterNameAndValue  
 
 systemQueryOption = expand 
                   / filter 
@@ -23,18 +23,19 @@ systemQueryOption = expand
                   / select 
                   / skiptoken
 
-; TODO: names are case-sensitive
-; TODO: whitespace around "=" (use EQ instead?)
+; TODO: case-sensitivity of system query option names (ODATA-117)
+; TODO: whitespace around "=" (use EQ instead?) (ODATA-115
+; TODO: use peWS = "%20" / "%09" instead in URL fragments (ODATA-127) 
 expand       = "$expand=" expandClause 
 expandClause = expandItem *( "," expandItem )
 expandItem   =        [ qualifiedEntityTypeName "/" ] navigationProperty 
                *( "/" [ qualifiedEntityTypeName "/" ] navigationProperty ) 
 
 filter = "$filter" *WSP "=" *WSP boolCommonExpr
-        
-orderby = "$orderby" *WSP "=" *WSP orderExpr [ 1*WSP ( "asc" / "desc" ) ]    ; TODO: really case-insensitive aSc and dEsC? Currently not
-                     *( COMMA *WSP orderExpr [ 1*WSP ( "asc" / "desc" ) ] )
-orderExpr =  primitiveKeyProperty / primitiveNonKeyProperty      ; TODO: originally commonExpr                                                                 
+
+; TODO: case-sensitivity of asc and desc (ODATA-117)        
+orderby = "$orderby" *WSP "=" *WSP commonExpr [ 1*WSP ( "asc" / "desc" ) ]    
+                     *( COMMA *WSP commonExpr [ 1*WSP ( "asc" / "desc" ) ] )
 
 skip = "$skip=" 1*DIGIT
 top  = "$top="  1*DIGIT
@@ -55,7 +56,7 @@ selectClause = selectItem *( COMMA selectItem )
 selectItem   = star  
              / [ qualifiedEntityTypeName "/" ] 
                ( ( navigationProperty [ "/" selectItem ] ) 
-               / propertyName  ; TODO: also allow properties of complex properties
+               / *( ( complexProperty / complexColProperty ) "/" ) property 
                / allOperationsInContainer 
                / qualifiedActionName  
                / qualifiedFunctionName  
@@ -63,20 +64,18 @@ selectItem   = star
 allOperationsInContainer = operationQualifier "*"                  
 operationQualifier       = [ namespace "." ] entityContainerName "."
 
-skiptoken = "$skiptoken=" 1*pchar ; TODO: minus "&" - use customValue?
+skiptoken = "$skiptoken=" 1*( unreserved / pct-encoded / other-delims /  ":" / "@" / "$" / "=" ) ; everything except "&"
 
 customQueryOption = customName *WSP [ "=" *WSP customValue ]
-; TODO: can this be expressed in terms of pchar, reserved etc.?
-customName        =  ( unreserved / pct-encoded / ":" / "@" / "!" /       "'" / "(" / ")" / "*" / "+" / "," / ";" ) 
-                    *( unreserved / pct-encoded / ":" / "@" / "!" / "$" / "'" / "(" / ")" / "*" / "+" / "," / ";" )                 
-                     ; MUST not start with '$'
-customValue       = *( unreserved / pct-encoded / ":" / "@" / "!" / "$" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "=" )
+customName        =  ( unreserved / pct-encoded / other-delims / ":" / "@" )       ; MUST NOT start with "$"
+                    *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" ) ; MUST NOT contain "="
+customValue       = *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" / "=" ) ; everything except "&"
 
 ; ABNF core definitions [RFC5234]
 ALPHA  = %x41-5A / %x61-7A 
 DIGIT  = %x30-39 
 HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F" 
-;DQUOTE = %x22
+DQUOTE = %x22
 SP     = %x20 
 HTAB   = %x09 
 WSP    = SP / HTAB 
@@ -84,14 +83,12 @@ WSP    = SP / HTAB
 ;VCHAR = %x21-7E 
 ;CHAR = %x01-7F
 ;LOCTET = %x00-FF 
-;CTL = %x00-1F / %x7F 
-CR     = %x0D 
-LF     = %x0A 
-CRLF   = CR LF
+;CR     = %x0D 
+;LF     = %x0A 
+;CRLF   = CR LF
 ;BIT = "0" / "1" 
 
-; TODO: remove rules not necessary in OData context
-;URI syntax [RFC3986]
+; URI syntax [RFC3986]
 ;URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
 ;hier-part     = "//" authority path-abempty
 ;              / path-absolute
@@ -104,7 +101,8 @@ CRLF   = CR LF
 ;              / path-absolute
 ;              / path-noscheme
 ;              / path-empty
-scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." ) ; TODO: restrict to http[s]?
+; TODO: restrict to http[s]? (ODATA-128)
+scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 ;authority     = [ userinfo "@" ] host [ ":" port ]
 ;userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
 host          = IP-literal / IPv4address / reg-name
@@ -149,18 +147,21 @@ pct-encoded   = "%" HEXDIG HEXDIG
 unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ;reserved      = gen-delims / sub-delims
 ;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+sub-delims    = option-delims / "$" / other-delims
+option-delims = "&" / "="
+other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
 
 ; UTF-8 syntax [RFC3629]
 ;UTF8-octets = *( UTF8-char )
-UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
-UTF8-1      = %x00-7F
-UTF8-2      = %xC2-DF UTF8-tail
-UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
-              %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
-UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
-              %xF4 %x80-8F 2( UTF8-tail )
-UTF8-tail   = %x80-BF
+;UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
+;UTF8-1      = %x00-7F
+;UTF8-2      = %xC2-DF UTF8-tail
+;UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
+;              %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
+;UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
+;              %xF4 %x80-8F 2( UTF8-tail )
+;UTF8-tail   = %x80-BF
 
 ; Punctuation
 SQUOTE = %x27              
@@ -168,14 +169,9 @@ SQUOTE = %x27
 ;SEMI = %x3B              
 COMMA = %x2C
 sign = "+" / "-"
-begin-object = "{"
-end-object = "}"
-value-separator = COMMA
-name-separator = ":"
 star = "*"
 
 ; Unrepresentable numeric values
-; TODO: exact case required --> hex values
 nan              = %x4e.61.4e ; NaN (upper lower upper case)
 positiveInfinity = %x49.4e.46 ; INF (all upper case)
 negativeInfinity = "-" positiveInfinity ; -INF (all upper case)
@@ -314,6 +310,7 @@ qualifiedEntityTypeName      = namespace "." entityTypeName
 qualifiedComplexTypeName     = namespace "." complexTypeName
 qualifiedEnumerationTypeName = namespace "." enumerationTypeName
 
+; TODO: case-sensitivity of Edm type names (ODATA-77)
 primitiveTypeName = ["edm."] ( "binary" 
                              / "boolean" 
                              / "byte" 
@@ -357,27 +354,14 @@ complexProperty         = odataIdentifier
 complexColProperty      = odataIdentifier
 streamProperty          = odataIdentifier
 
-propertyName = primitiveKeyProperty  
-             / primitiveNonKeyProperty 
-             / primitiveColProperty 
-             / complexProperty 
-             / complexColProperty 
-             / streamProperty
+property = primitiveKeyProperty  
+         / primitiveNonKeyProperty 
+         / primitiveColProperty 
+         / complexProperty 
+         / complexColProperty 
+         / streamProperty
 
 entityContainerName = odataIdentifier
-
-;serviceOperation = entityServiceOp  
-;                 / entityColServiceOp 
-;                 / complexServiceOp  
-;                 / complexColServiceOp 
-;                 / primitiveServiceOp 
-;                 / primitiveColServiceOp 
-;entityServiceOp = odataIdentifier        
-;entityColServiceOp = odataIdentifier        
-;complexServiceOp = odataIdentifier        
-;complexColServiceOp = odataIdentifier        
-;primitiveServiceOp = odataIdentifier        
-;primitiveColServiceOp = odataIdentifier
 
 navigationProperty          = entityNavigationProperty / entityColNavigationProperty  
 entityNavigationProperty    = odataIdentifier
@@ -397,11 +381,11 @@ primitiveFunction    = odataIdentifier
 primitiveColFunction = odataIdentifier
 
 ; TODO: why do we need these separately, but not the corresponding fullXxxActions?
-fullEntityFunction = [ operationQualifier ] entityFunction
-fullEntityColFunction = [ operationQualifier ] entityColFunction
-fullComplexFunction = [ operationQualifier ] complexFunction
-fullComplexColFunction = [ operationQualifier ] complexColFunction
-fullPrimitiveFunction = [ operationQualifier ] primitiveFunction
+fullEntityFunction       = [ operationQualifier ] entityFunction
+fullEntityColFunction    = [ operationQualifier ] entityColFunction
+fullComplexFunction      = [ operationQualifier ] complexFunction
+fullComplexColFunction   = [ operationQualifier ] complexColFunction
+fullPrimitiveFunction    = [ operationQualifier ] primitiveFunction
 fullPrimitiveColFunction = [ operationQualifier ] primitiveColFunction
 ;fullFunction = fullEntityFunction / 
 ; fullEntityColFunction /
@@ -411,12 +395,12 @@ fullPrimitiveColFunction = [ operationQualifier ] primitiveColFunction
 ; fullPrimitiveColFunction   
  
 action = entityAction 
-         / entityColAction 
-         / complexAction 
-         / complexColAction 
-         / primitiveAction 
-         / primitiveColAction 
-         / voidAction
+       / entityColAction 
+       / complexAction 
+       / complexColAction 
+       / primitiveAction 
+       / primitiveColAction 
+       / voidAction
 entityAction       = odataIdentifier
 entityColAction    = odataIdentifier
 complexAction      = odataIdentifier
@@ -441,12 +425,12 @@ parameterTypeName = qualifiedTypeName
 ;------------------------------------------------------------------------------
 
 resourcePath = [ entityContainerName "." ] entitySetName [count / collectionNavigation / keyPredicate [ singleNavigation ] ] 
-             / entityColFunctionCall [ collectionNavigation ] 
-             / entityFunctionCall [ singleNavigation ] 
-             / complexColFunctionCall [ boundOperation ] 
-             / complexFunctionCall [ boundOperation / complexPropertyPath ] 
+             / entityColFunctionCall    [ collectionNavigation ] 
+             / entityFunctionCall       [ singleNavigation ] 
+             / complexColFunctionCall   [ boundOperation ] 
+             / complexFunctionCall      [ boundOperation / complexPropertyPath ] 
              / primitiveColFunctionCall [ boundOperation ] 
-             / primitiveFunctionCall [ boundOperation / value ] 
+             / primitiveFunctionCall    [ boundOperation / value ] 
              / actionCall 
 
 count = "/$count" 
@@ -524,24 +508,19 @@ boundActionCall                         =       [ operationQualifier ] action [ 
                                                                         ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
                                     ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
 
-entityFunctionCall                      =       fullEntityFunction functionParameters
+functionCall = entityFunctionCall  
+             / entityColFunctionCall
+             / complexFunctionCall  
+             / complexColFunctionCall 
+             / primitiveFunctionCall 
+             / primitiveColFunctionCall
+entityFunctionCall       = fullEntityFunction       functionParameters
+entityColFunctionCall    = fullEntityColFunction    functionParameters
+complexFunctionCall      = fullComplexFunction      functionParameters
+complexColFunctionCall   = fullComplexColFunction   functionParameters
+primitiveFunctionCall    = fullPrimitiveFunction    functionParameters
+primitiveColFunctionCall = fullPrimitiveColFunction functionParameters
 
-entityColFunctionCall           =       fullEntityColFunction functionParameters
-
-complexFunctionCall                     =       fullComplexFunction functionParameters
-
-complexColFunctionCall          =       fullComplexColFunction functionParameters
-
-primitiveFunctionCall           =       fullPrimitiveFunction functionParameters
-
-primitiveColFunctionCall        =       fullPrimitiveColFunction functionParameters
-
-functionCall                            =       entityFunctionCall / 
-                                                                        entityColFunctionCall /
-                                                                        complexFunctionCall / 
-                                                                        complexColFunctionCall /
-                                                                        primitiveFunctionCall /
-                                                                        primitiveColFunctionCall
 
 boundEntityFuncCall                     =       fullEntityFunction functionParameters
                                                                         ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
@@ -584,34 +563,43 @@ functionParameters      = "(" [ functionParameter *( "," functionParameter ) ] "
 functionParameter       = functionParameterName "=" ( primitiveParameterValue / parameterAlias )
 functionParameterName   = odataIdentifier;
 primitiveParameterValue = primitiveLiteral
-parameterAlias          = "@" odataIdentifier ; TODO: was *pchar, which is definitely too relaxed: at least one, and no ")"
+parameterAlias          = "@" odataIdentifier ; TODO: was *pchar, which is definitely too relaxed: at least one, and no ")" (ODATA-116)
 
-aliasAndValue = parameterAlias "=" parameterValue
-
+aliasAndValue         = parameterAlias        "=" parameterValue
 parameterNameAndValue = functionParameterName "=" parameterValue
 
-;primitivePropInJSONLight        = "{TODO19}"       ; arlo JSON Light format
-                                                                        ; unreferenced until complexInJSONLight is defined.
+parameterValue = primitiveLiteral     ; note this is a Uri literal, not a JSON literal
+               / complexTypeInJSON  
+               / primitiveColInJSON 
+               / complexColInJSON
 
-primitivePropertyInVJSON        =       quotation-mark ( primitiveKeyProperty / primitiveNonKeyProperty ) quotation-mark name-separator primitiveLiteralInVJSON
+complexTypeInJSON = complexInVJSON ; was: "{TODO32}"
+complexColInJSON = "{TODO30}"
+primitiveColInJSON = "{TODO49}"
 
-;complexPropertyInJSON           =       complexPropertyInVJSON / complexPropertyInJSONLight
+; TODO: rather complexInUriJSON
+complexInVJSON = begin-object
+                 [ ( complexTypeMetadataInVJSON / 
+                     primitivePropertyInVJSON /
+                     complexPropertyInVJSON /
+                     collectionPropertyInVJSON  
+                   )
+                  *( value-separator 
+                     ( primitivePropertyInVJSON /
+                       complexPropertyInVJSON /
+                       collectionPropertyInVJSON  
+                     ) 
+                   )
+                 ]  
+                 end-object
 
-complexPropertyInVJSON          =       quotation-mark complexProperty quotation-mark name-separator complexInVJSON
+begin-object = "{"
+end-object   = "}"
+quotation-mark  = DQUOTE
+value-separator = COMMA
+name-separator  = ":"
+; TODO: begin-array, end-array as percent-encoded [ ]
 
-;complexPropertyInJSONLight      = "{TODO20}"       ; arlo JSON Light format.
-
-;collectionPropertyInJSON        =       colPropertyInJSONLight / collectionPropertyInVJSON
-
-collectionPropertyInVJSON       =       ( quotation-mark primitiveColProperty quotation-mark name-separator "[" [ primitiveVJSONLiteral *( COMMA primitiveLiteralInVJSON ) ] "]" ) /
-                                                                        ( quotation-mark complexColProperty quotation-mark name-separator "[" [ complexInVJSON *( COMMA complexInVJSON ) ] "]" )
-                
-;colPropertyInJSONLight          = "{TODO21}"       ; alro JSON Light format
-
-primitiveLiteralInVJSON         = "{TODO22}"       ; arlo VJSON format.
-
-;primitiveLiteralInJSONLight     = "{TODO23}"       ; arlo JSON Light format.
-                                                        
 complexTypeMetadataInVJSON      =       quotation-mark "__metadata" quotation-mark
                                                         name-separator
                                                         begin-object
@@ -622,148 +610,105 @@ typeNVPInVJSON                          =       quotation-mark "type" quotation-
                                                 name-separator
                                                 quotation-mark qualifiedTypeName quotation-mark
 
-parameterValue                          =       primitiveLiteral /                                              ; note this is a Uri literal not a JSON literal
-                                                                        complexTypeInJSON / 
-                                                                        primitiveColInJSON /
-                                                                        complexColInJSON
+primitivePropertyInVJSON        =       quotation-mark ( primitiveKeyProperty / primitiveNonKeyProperty ) quotation-mark name-separator primitiveLiteralInVJSON
+primitiveLiteralInVJSON         = "{TODO22}"       ; arlo VJSON format.
 
+complexPropertyInVJSON          =       quotation-mark complexProperty quotation-mark name-separator complexInVJSON
+
+collectionPropertyInVJSON       =       ( quotation-mark primitiveColProperty quotation-mark name-separator "[" [ primitiveLiteralInVJSON *( COMMA primitiveLiteralInVJSON ) ] "]" ) /
+                                                                        ( quotation-mark complexColProperty quotation-mark name-separator "[" [ complexInVJSON *( COMMA complexInVJSON ) ] "]" )
+                
+;primitivePropInJSONLight        = "{TODO19}"       ; arlo JSON Light format
+                                                    ; unreferenced until complexInJSONLight is defined.
+;complexPropertyInJSON           =       complexPropertyInVJSON / complexPropertyInJSONLight
+;complexPropertyInJSONLight      = "{TODO20}"       ; arlo JSON Light format.
+;collectionPropertyInJSON        =       colPropertyInJSONLight / collectionPropertyInVJSON
+;colPropertyInJSONLight          = "{TODO21}"       ; alro JSON Light format
+;primitiveLiteralInJSONLight     = "{TODO23}"       ; arlo JSON Light format.
 ;complexInJSON                           =       complexInVJSON / complexInJSONLight
-
 ;complexInJSONLight                      = "{TODO24}"       ; arlo JSON light format
 
-complexInVJSON                          =       begin-object
-                                                        [
-                                                        (
-                                                                complexTypeMetadataInVJSON / 
-                                                                                        primitivePropertyInVJSON /
-                                                                                        complexPropertyInVJSON /
-                                                                                        collectionPropertyInVJSON  
-                                                            )
-                                                            *( 
-                                                                value-separator 
-                                                                                        ( 
-                                                                                                primitivePropertyInVJSON /
-                                                                                                complexPropertyInVJSON /
-                                                                                                collectionPropertyInVJSON  
-                                                                                        ) 
-                                                            )
-                                                        ]  
-                                                                        end-object
 
+commonExpr = literalExpr
+           / firstMemberExpr 
+           / boolCommonExpr 
+           / methodCallExpr 
+           / parenExpr 
+           / addExpr 
+           / subExpr 
+           / mulExpr 
+           / divExpr 
+           / modExpr 
+           / negateExpr 
+           / memberExpr 
+           / castExpr 
+           / functionCall 
 
-;entityServiceOpCall                     =       [ operationQualifier ] entityServiceOp [ "()" ]
-;entityColServiceOpCall          =       [ operationQualifier ] entityColServiceOp [ "()" ]
-;complexServiceOpCall            =       [ operationQualifier ] complexServiceOp [ "()" ]
-;complexColServiceOpCall         =       [ operationQualifier ] complexColServiceOp [ "()" ]
-;primitiveServiceOpCall          =       [ operationQualifier ] primitiveServiceOp [ "()" ]
-;primitiveColServiceOpCall       =       [ operationQualifier ] primitiveServiceOp [ "()" ]
+boolCommonExpr = boolLiteralExpr  
+               / firstBoolPrimitiveMemExpr  
+               / eqExpr 
+               / neExpr 
+               / ltExpr  
+               / leExpr  
+               / gtExpr 
+               / geExpr  
+               / notExpr  
+               / andExpr 
+               / orExpr 
+               / boolPrimitiveMemberExpr  
+               / isofExpr 
+               / boolCastExpr  
+               / boolMethodCallExpr  
+               / boolParenExpr 
+               / boolFunctionCallExpr
 
-;serviceOperationCall            =       entityServiceOpCall / 
-;                                                                        entityColServiceOpCall /
-;                                                                        complexServiceOpCall / 
-;                                                                        complexColServiceOpCall /
-;                                                                        primitiveServiceOpCall /
-;                                                                        primitiveColServiceOpCall 
+boolLiteralExpr = boolean
+literalExpr     = primitiveLiteral
 
-;serviceOpParameterName          =       odataIdentifier;
-                                                                        ; identifies by name a parameter to a ServiceOperation
-        
-;sopParameterNameAndValue        =       serviceOpParameterName "=" primitiveParameterValue
-                                                                        ; when a serviceOperation Parameter is omitted the parameter value MUST be assumed to be null           
-    
-commonExpr = [ WSP ] (
- boolCommonExpr / 
- methodCallExpr /
- parenExpr / 
- literalExpr / 
- addExpr /
- subExpr / 
- mulExpr / 
- divExpr /
- modExpr /  
- negateExpr / 
- memberExpr / 
- firstMemberExpr / 
- castExpr / 
- functionCall 
- ) [ WSP ]
+firstBoolPrimitiveMemExpr = [ qualifiedEntityTypeName "/"] property
 
-boolCommonExpr                          =       [ WSP ] (
-                                                                                boolLiteralExpr / 
-                                                                                andExpr /
-                                                                orExpr /
-                                                                boolPrimitiveMemberExpr / 
-                                                                                eqExpr / 
-                                                                                neExpr /
-                                                                ltExpr / 
-                                                                                leExpr / 
-                                                                                gtExpr /
-                                                                geExpr / 
-                                                                                notExpr / 
-                                                                                isofExpr /
-                                                                boolCastExpr / 
-                                                                                boolMethodCallExpr  /
-                                                                firstBoolPrimitiveMemExpr / 
-                                                                                boolParenExpr /
-                                                                boolFunctionCallExpr
-                                                                        ) [ WSP ]
+parenExpr     = "(" *WSP commonExpr     *WSP ")"
+boolParenExpr = "(" *WSP boolCommonExpr *WSP ")"
 
-boolLiteralExpr                         =   boolean
+; TODO: case-insensitive? (ODATA-117)
+andExpr = boolCommonExpr 1*WSP "and" 1*WSP boolCommonExpr
+orExpr  = boolCommonExpr 1*WSP "or"  1*WSP boolCommonExpr
 
-literalExpr                                     =       primitiveLiteral
+eqExpr = commonExpr 1*WSP "eq" 1*WSP commonExpr     
+neExpr = commonExpr 1*WSP "ne" 1*WSP commonExpr
+ltExpr = commonExpr 1*WSP "lt" 1*WSP commonExpr
+leExpr = commonExpr 1*WSP "le" 1*WSP commonExpr
+gtExpr = commonExpr 1*WSP "gt" 1*WSP commonExpr
+geExpr = commonExpr 1*WSP "ge" 1*WSP commonExpr
 
-parenExpr                                       =       "(" [ WSP ] commonExpr [ WSP ] ")"
+addExpr = commonExpr 1*WSP "add" 1*WSP commonExpr
+subExpr = commonExpr 1*WSP "sub" 1*WSP commonExpr
+mulExpr = commonExpr 1*WSP "mul" 1*WSP commonExpr
+divExpr = commonExpr 1*WSP "div" 1*WSP commonExpr
+modExpr = commonExpr 1*WSP "mod" 1*WSP commonExpr
 
-boolParenExpr                           =       "(" [ WSP ] boolCommonExpr [ WSP ] ")"
+negateExpr = "-" *WSP commonExpr
 
-andExpr                                         =       boolCommonExpr WSP "and" WSP boolCommonExpr
+; TODO: case-insensitive? (ODATA-117)
+notExpr = "not" 1*WSP commonExpr
 
-orExpr                                          =       boolCommonExpr WSP "or" WSP boolCommonExpr
-
-eqExpr                                  =       commonExpr WSP "eq" WSP commonExpr      
-
-neExpr                                  =       commonExpr WSP "ne" WSP commonExpr
-
-ltExpr                                  =       commonExpr WSP "lt" WSP commonExpr
-
-leExpr                                  =       commonExpr WSP "le" WSP commonExpr
-
-gtExpr                                  =       commonExpr WSP "gt" WSP commonExpr
-
-geExpr                                  =       commonExpr WSP "ge" WSP commonExpr
-
-addExpr                                 =       commonExpr WSP "add" WSP commonExpr
-
-subExpr                                 =       commonExpr WSP "sub" WSP commonExpr
-
-mulExpr                                 =       commonExpr WSP "mul" WSP commonExpr
-
-divExpr                                 =       commonExpr WSP "div" WSP commonExpr
-
-modExpr                                 =       commonExpr WSP "mod" WSP commonExpr
-
-negateExpr                              =       "-" [ WSP ] commonExpr
-
-notExpr                                 =       "not" WSP commonExpr
-
-isofExpr                                =       "isof" [ WSP ] "(" [ [ WSP ] commonExpr [ WSP ] "," ] [ WSP ] qualifiedTypeName [ WSP ] ")"
-
-castExpr                                =       "cast" [ WSP ] "(" [ [ WSP ] commonExpr [ WSP ] "," ] [ WSP ] qualifiedTypeName [ WSP ] ")"
-
-boolCastExpr                            =       "cast" [ WSP ] "(" [ [ WSP ] commonExpr [ WSP ] "," ] [ WSP ] "Edm.Boolean" [ WSP ] ")"
+; TODO: isn't this rather singleNavigation (once the leading slash has been removed)?
+isofExpr     = "isof" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP qualifiedTypeName *WSP ")"
+castExpr     = "cast" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP qualifiedTypeName *WSP ")"
+boolCastExpr = "cast" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP "Edm.Boolean"     *WSP ")"
 
 firstMemberExpr = [ WSP ] [ qualifiedEntityTypeName "/"]
                   [ lambdaPredicatePrefixExpr ] ; A lambdaPredicatePrefixExpr is only defined inside a 
                                                 ; lambdaPredicateExpr. A lambdaPredicateExpr is required   
                                                 ; inside a lambdaPredicateExpr.
+                  property / ; TODO: just until xPropertyPath is cleaned up                                                
                   entityColNavigationProperty [ collectionNavigationExpr ] /
                   entityNavigationProperty [ singleNavigationExpr ] /
                   primitivePropertyPath / 
                   complexPropertyPath /
                   collectionPropertyPath [ anyExpr / allExpr ]
 
-firstBoolPrimitiveMemExpr = [ qualifiedEntityTypeName "/"] entityProperty
-
+; TODO: what does this mean?
 boolPrimitiveMemberExpr = commonExpr [ WSP ]  "/" [WSP] [ qualifiedEntityTypeName "/" ] primitivePropertyPath
 
 memberExpr = commonExpr [ WSP ]  "/" [ WSP ] [ qualifiedEntityTypeName "/" ]
@@ -824,102 +769,71 @@ lambdaVariableExpr = odataIdentifier
 ;inscopeVariableExpr = implicitVariableExpr / lambdaVariableExpr
 lambdaPredicateExpr = boolCommonExpr
    
-methodCallExpr = boolMethodExpr /
-                                                indexOfMethodCallExpr /
-                                                replaceMethodCallExpr / 
-                                                toLowerMethodCallExpr /
-                                                toUpperMethodCallExpr / 
-                                                trimMethodCallExpr /
-                                                substringMethodCallExpr /
-                                                concatMethodCallExpr /
-                                                lengthMethodCallExpr /
-                                                yearMethodCallExpr /
-                                                monthMethodCallExpr /
-                                                dayMethodCallExpr /
-                                                hourMethodCallExpr /
-                                                minuteMethodCallExpr /
-                                                secondMethodCallExpr /
-                                                roundMethodCallExpr /
-                                                floorMethodCallExpr /
-                                                ceilingMethodCallExpr /
-                                                distanceMethodCallExpr /
-                                                geoLengthMethodCallExpr /
-                                                getTotalOffsetMinutesExpr
+methodCallExpr = boolMethodExpr 
+               / indexOfMethodCallExpr 
+               / toLowerMethodCallExpr 
+               / toUpperMethodCallExpr  
+               / trimMethodCallExpr 
+               / substringMethodCallExpr 
+               / concatMethodCallExpr 
+               / lengthMethodCallExpr 
+               / yearMethodCallExpr 
+               / yearsMethodCallExpr 
+               / monthMethodCallExpr 
+               / monthsMethodCallExpr 
+               / dayMethodCallExpr 
+               / daysMethodCallExpr 
+               / hourMethodCallExpr 
+               / hoursMethodCallExpr 
+               / minuteMethodCallExpr 
+               / minutesMethodCallExpr 
+               / secondMethodCallExpr 
+               / secondsMethodCallExpr 
+               / roundMethodCallExpr 
+               / floorMethodCallExpr 
+               / ceilingMethodCallExpr 
+               / distanceMethodCallExpr 
+               / geoLengthMethodCallExpr 
+               / getTotalOffsetMinutesExpr
 
-boolMethodExpr = endsWithMethodCallExpr /
-                                                startsWithMethodCallExpr /
-                                                substringOfMethodCallExpr /                                         
-                                                intersectsMethodCallExpr /
-                                                anyMethodCallExpr /
-                                                allMethodCallExpr
+boolMethodExpr = endsWithMethodCallExpr 
+               / startsWithMethodCallExpr 
+               / substringOfMethodCallExpr                                          
+               / intersectsMethodCallExpr 
+               / anyMethodCallExpr 
+               / allMethodCallExpr
 
-endsWithMethodCallExpr = "endswith" [WSP]
-                                        "(" [WSP] commonExpr [WSP]
-                                        "," [WSP] commonExpr  [WSP] ")"
+substringOfMethodCallExpr = "substringof" *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+startsWithMethodCallExpr  = "startswith"  *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+endsWithMethodCallExpr    = "endswith"    *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+lengthMethodCallExpr      = "length"      *WSP "(" *WSP commonExpr *WSP ")"
+indexOfMethodCallExpr     = "indexof"     *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+substringMethodCallExpr   = "substring"   *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP [ "," *WSP commonExpr *WSP ] ")"
+toLowerMethodCallExpr     = "tolower"     *WSP "(" *WSP commonExpr *WSP ")"
+toUpperMethodCallExpr     = "toupper"     *WSP "(" *WSP commonExpr *WSP ")"
+trimMethodCallExpr        = "trim"        *WSP "(" *WSP commonExpr *WSP ")"
+concatMethodCallExpr      = "concat"      *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+yearMethodCallExpr        = "year"        *WSP "(" *WSP commonExpr *WSP ")"
+yearsMethodCallExpr       = "years"       *WSP "(" *WSP commonExpr *WSP ")"
+monthMethodCallExpr       = "month"       *WSP "(" *WSP commonExpr *WSP ")"
+monthsMethodCallExpr      = "months"      *WSP "(" *WSP commonExpr *WSP ")"
+dayMethodCallExpr         = "day"         *WSP "(" *WSP commonExpr *WSP ")"
+daysMethodCallExpr        = "days"        *WSP "(" *WSP commonExpr *WSP ")"
+hourMethodCallExpr        = "hour"        *WSP "(" *WSP commonExpr *WSP ")"
+hoursMethodCallExpr       = "hours"       *WSP "(" *WSP commonExpr *WSP ")"
+minuteMethodCallExpr      = "minute"      *WSP "(" *WSP commonExpr *WSP ")"
+minutesMethodCallExpr     = "minutes"     *WSP "(" *WSP commonExpr *WSP ")"
+secondMethodCallExpr      = "second"      *WSP "(" *WSP commonExpr *WSP ")"
+secondsMethodCallExpr     = "seconds"     *WSP "(" *WSP commonExpr *WSP ")"
+roundMethodCallExpr       = "round"       *WSP "(" *WSP commonExpr *WSP ")"
+floorMethodCallExpr       = "floor"       *WSP "(" *WSP commonExpr *WSP ")"
+ceilingMethodCallExpr     = "ceiling"     *WSP "(" *WSP commonExpr *WSP ")"
 
-indexOfMethodCallExpr = "indexof" [WSP]
-                                        "(" [WSP] commonExpr [WSP]
-                                        "," [WSP] commonExpr [WSP] ")"
-
-replaceMethodCallExpr = "replace" [WSP]
-                                        "(" [WSP] commonExpr [WSP]
-                                        "," [WSP] commonExpr [WSP]
-                                        "," [WSP] commonExpr [WSP] ")"
-
-startsWithMethodCallExpr = "startswith" [WSP]
-                                        "(" [WSP] commonExpr [WSP]
-                                        "," [WSP] commonExpr  [WSP] ")"
-
-toLowerMethodCallExpr = "tolower" [WSP]
-                                        "(" [WSP] commonExpr [WSP] ")"
-
-toUpperMethodCallExpr = "toupper" [WSP]
-                                        "(" [WSP] commonExpr [WSP] ")"
-
-trimMethodCallExpr = "trim" [WSP]
-                                                "(" [WSP] commonExpr [WSP] ")"
-
-substringMethodCallExpr = "substring" [WSP]
-                                        "(" [WSP] commonExpr [WSP]
-                                        "," [WSP] commonExpr [WSP]
-                                        [ "," [WSP] commonExpr  [WSP] ] ")"
-
-substringOfMethodCallExpr = "substringof" [WSP]
-                                        "(" [WSP] commonExpr [WSP]
-                                        [ "," [WSP] commonExpr [WSP] ] ")"
-
-concatMethodCallExpr = "concat" [WSP]
-                                        "(" [WSP] commonExpr [WSP]
-                                        [ "," [WSP] commonExpr [WSP] ] ")"
-
-lengthMethodCallExpr = "length" [WSP]
-                                        "(" [WSP] commonExpr [WSP] ")"
-
-getTotalOffsetMinutesExpr = "gettotaloffsetminutes" [WSP] "(" [WSP] commonExpr [WSP] ")" 
-
-yearMethodCallExpr = "year" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-monthMethodCallExpr = "month" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-dayMethodCallExpr = "day" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-hourMethodCallExpr = "hour" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-minuteMethodCallExpr = "minute" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-secondMethodCallExpr = "second" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-roundMethodCallExpr = "round" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-floorMethodCallExpr = "floor" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-ceilingMethodCallExpr = "ceiling" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-distanceMethodCallExpr = "geo.distance" [WSP] "(" [WSP] commonExpr [WSP] "," [WSP] commonExpr  [WSP] ")"
-
-geoLengthMethodCallExpr = "geo.length" [WSP] "(" [WSP] commonExpr [WSP] ")"
-
-intersectsMethodCallExpr = "geo.intersects" [WSP] "(" [WSP] commonExpr [WSP] "," [WSP] commonExpr  [WSP] ")"
+; TODO: what are these? They are not mentioned in the URL conventions
+getTotalOffsetMinutesExpr = "gettotaloffsetminutes" *WSP "(" *WSP commonExpr *WSP ")" 
+distanceMethodCallExpr    = "geo.distance"          *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+geoLengthMethodCallExpr   = "geo.length"            *WSP "(" *WSP commonExpr *WSP ")"
+intersectsMethodCallExpr  = "geo.intersects"        *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
 
 ; Other undefined terms
 allMethodCallExpr = "{TODO25}"
@@ -927,17 +841,12 @@ anyMethodCallExpr = "{TODO26}"
 boolFunctionCallExpr = "{TODO27}"
 boolMethodCallExpr = "{TODO28}"
 ;complexColFuncCall = "{TODO29}"
-complexColInJSON = "{TODO30}"
 ;complexFuncCall = "{TODO31}" 
-complexTypeInJSON = "{TODO32}"
 ;entityColFuncCall = "{TODO33}"
 ;entityFuncCall = "{TODO34}"
-entityProperty = "{TODO35}"
 lambdaPredicatePrefixExpr = "{TODO45}"
 ;primitiveColFuncCall = "{TODO48}"
-primitiveColInJSON = "{TODO49}"
 ;primitiveFuncCall = "{TODO50}"
-primitiveVJSONLiteral = "{TODO51}"
-quotation-mark = "{TODO53}"
+;primitiveVJSONLiteral = "{TODO51}"
 
 ; End of odata-v1.0-abnf
