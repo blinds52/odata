@@ -90,4 +90,43 @@
     <ValueAnnotation Term="Core.AppliesToProperty" />
   </ValueTerm>
 
+  <ValueTerm Name="RequiredInFilter" Type="Edm.Boolean" DefaultValue="true">
+    <Documentation>
+      <Summary>Properties annotated with "true" must be used in $filter expressions
+      </Summary>
+    </Documentation>
+    <!-- TODO: reformulate as annotation on entity set -->
+    <ValueAnnotation Term="Core.AppliesToProperty" />
+  </ValueTerm>
+
+  <ValueTerm Name="FilterRestriction" Type="Self.FilterRestrictionKind">
+    <Documentation>
+      <Summary>Properties annotated with "true" must be used in $filter expressions
+      </Summary>
+    </Documentation>
+    <!-- TODO: reformulate as annotation on entity set -->
+    <ValueAnnotation Term="Core.AppliesToProperty" />
+  </ValueTerm>
+
+  <EnumType Name="FilterRestrictionKind">
+    <Member Name="SingleValue">
+      <Documentation>
+        <Summary>Only a single "eq" clause is allowed</Summary>
+      </Documentation>
+    </Member>
+    <Member Name="MultiValue">
+      <Documentation>
+        <Summary>Several "eq" clauses joined by "or" are allowed</Summary>
+      </Documentation>
+    </Member>
+    <Member Name="MultiValue">
+      <Documentation>
+        <Summary>
+          At most one "ge" or "gt" clause and one "lt" or "le" clause are allowed.
+          Two clauses must be joined by "and".
+        </Summary>
+      </Documentation>
+    </Member>
+  </EnumType>
+
 </Schema>
