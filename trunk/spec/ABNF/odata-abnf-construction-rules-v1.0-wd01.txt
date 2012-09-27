@@ -274,7 +274,8 @@ geographyMultiPoint      = "{TODO5}"       ; Format specific
 geographyMultiPolygon    = "{TODO6}"       ; Format specific
 geographyPoint           = "{TODO7}"       ; Format specific
 geographyPolygon         = "{TODO8}"       ; Format specific
-geometry                 = "{TODO9}"       ; Format specific
+
+geometry                = "{TODO9}"        ; Format specific
 geometryCollection      = "{TODO10}"       ; Format specific
 geometryLineString      = "{TODO11}"       ; Format specific
 geometryMultiLineString = "{TODO12}"       ; Format specific
@@ -434,79 +435,66 @@ resourcePath = [ entityContainerName "." ] entitySetName [count / collectionNavi
              / actionCall 
 
 count = "/$count" 
+value = "/$value"
 
-collectionNavigation        =       [ "/" qualifiedEntityTypeName ] "/"
-                                                                        (
-                                                                                boundEntityFuncCall [ singleNavigation ] /
-                                                                                boundEntityColFuncCall [ collectionNavigation ] /
-                                                                                boundPrimitiveFuncCall [ boundOperation / value ] /
-                                                                                boundPrimitiveColFuncCall [ boundOperation ] /
-                                                                                boundComplexFuncCall [ complexPropertyPath / boundOperation ] /
-                                                                                boundComplexColFuncCall [ boundOperation ] /
-                                                                                boundActionCall
-                                                                        )
+collectionNavigation = [ "/" qualifiedEntityTypeName ] "/"
+                       ( boundEntityFuncCall [ singleNavigation ] 
+                       / boundEntityColFuncCall [ collectionNavigation ] 
+                       / boundPrimitiveFuncCall [ boundOperation / value ] 
+                       / boundPrimitiveColFuncCall [ boundOperation ] 
+                       / boundComplexFuncCall [ complexPropertyPath / boundOperation ] 
+                       / boundComplexColFuncCall [ boundOperation ] 
+                       / boundActionCall
+                       )
 
-singleNavigation                        =    [ "/" qualifiedEntityTypeName ] 
-                                             ( 
-                                               "/" ( 
-                                                     ( "$links/" navigationProperty ) / 
-                                                     ( entityNavigationProperty [ singleNavigation ] ) /
-                                                     ( entityColNavigationProperty [ collectionNavigation / keyPredicate [ singleNavigation ] ] )
-                                                   ) /
-                                                     primitivePropertyPath / 
-                                                     complexPropertyPath /
-                                                     collectionPropertyPath / 
-                                                     streamPropertyPath 
-                                             / value  ; TODO: this doesn't make sense if singleNavigation means "everything after having reached a single entity
-                                             / boundOperation 
-                                             )
+singleNavigation = [ "/" qualifiedEntityTypeName ] 
+                   ( "/" ( ( "$links/" navigationProperty ) 
+                         / ( entityNavigationProperty [ singleNavigation ] ) 
+                         / ( entityColNavigationProperty [ count / collectionNavigation / keyPredicate [ singleNavigation ] ] )
+                         ) 
+                   / primitivePropertyPath 
+                   / complexPropertyPath 
+                   / collectionPropertyPath  
+                   / streamPropertyPath 
+                   / value  ; for addressing media resources
+                   / boundOperation 
+                   )
                                                                     
-boundOperation              =       [ "/" qualifiedEntityTypeName ] 
-                                                                        "/" 
-                                                                        (
-                                                                                boundEntityColFuncCall [ singleNavigation ] /
-                                                                                boundEntityFuncCall [ collectionNavigation ] /
-                                                                                boundPrimitiveFuncCall [ boundOperation / value ] /
-                                                                                boundPrimitiveColFuncCall [ boundOperation ] /
-                                                                                boundComplexFuncCall [ complexPropertyPath / boundOperation ] /
-                                                                                boundComplexColFuncCall [ boundOperation ] /
-                                                                                boundActionCall  
-                                                                        )
-                                    ; boundOperation segments can only be composed if the type of the previous segment matches 
-                                    ; the type of the first parameter of the action or function being called.
-                                                                        ; NOTE: the qualifiedEntityTypeName is only permitted if the previous segment is an entity or collection of entities.
+; boundOperation segments can only be composed if the type of the previous segment matches 
+; the type of the first parameter of the action or function being called.
+; NOTE: the qualifiedEntityTypeName is only permitted if the previous segment is an entity or collection of entities.
+; TODO: roll this into the rules by placing the optional qualifiedEntityTypeSegment after / within singleNavigation and collectionNavigation
+boundOperation = [ "/" qualifiedEntityTypeName ] 
+                 "/" ( boundEntityColFuncCall [ singleNavigation ] 
+                     / boundEntityFuncCall [ collectionNavigation ] 
+                     / boundPrimitiveFuncCall [ boundOperation / value ] 
+                     / boundPrimitiveColFuncCall [ boundOperation ] 
+                     / boundComplexFuncCall [ complexPropertyPath / boundOperation ] 
+                     / boundComplexColFuncCall [ boundOperation ] 
+                     / boundActionCall  
+                     )
 
-primitivePropertyPath       =       [ "/" qualifiedEntityTypeName ] "/" ( primitiveKeyProperty / primitiveNonKeyProperty ) [ value ]
-    
-complexPropertyPath         =       [ "/" qualifiedEntityTypeName ] "/" complexProperty 
-                                                                        [ 
-                                                                                primitivePropertyPath / 
-                                                                                complexPropertyPath /
-                                                                                collectionPropertyPath /
-                                                                                boundOperation
-                                                                        ] 
+primitivePropertyPath  = [ "/" qualifiedEntityTypeName ] "/" ( primitiveKeyProperty / primitiveNonKeyProperty ) [ value ]
+complexPropertyPath    = [ "/" qualifiedEntityTypeName ] "/" complexProperty 
+                         [ primitivePropertyPath  
+                         / complexPropertyPath 
+                         / collectionPropertyPath 
+                         / boundOperation
+                         ] 
 
-collectionPropertyPath          =       [ "/" qualifiedEntityTypeName ] "/" ( primitiveColProperty / complexColProperty ) [ boundOperation ]
+collectionPropertyPath = [ "/" qualifiedEntityTypeName ] "/" ( primitiveColProperty / complexColProperty ) [ boundOperation ]
+streamPropertyPath     = [ "/" qualifiedEntityTypeName ] "/" streamProperty
 
-streamPropertyPath                  =       [ "/" qualifiedEntityTypeName ] "/" streamProperty
+keyPredicate     = simpleKey / compoundKey
+simpleKey        = "(" primitiveLiteral ")"
+compoundKey      = "(" keyValuePair *("," keyValuePair) ")"
+keyValuePair     = primitiveKeyProperty "=" keyPropertyValue
+keyPropertyValue = primitiveLiteral
 
-value                       =       "/$value"
-
-keyPredicate                       =       simpleKey / compoundKey
-
-simpleKey                                       =       "(" primitiveLiteral ")"
-
-compoundKey                             =       "(" keyValuePair *("," keyValuePair) ")"
-
-keyValuePair                                =       primitiveKeyProperty "=" keyPropertyValue
-
-keyPropertyValue                        =       primitiveLiteral
-
-actionCall                                      =       [ operationQualifier ] action [ "()" ]
-
-boundActionCall                         =       [ operationQualifier ] action [ "()" ]
-                                                                        ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
-                                    ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
+actionCall      = [ operationQualifier ] action [ "()" ]
+boundActionCall = [ operationQualifier ] action [ "()" ]
+                  ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
+                  ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
 
 functionCall = entityFunctionCall  
              / entityColFunctionCall
@@ -521,36 +509,17 @@ complexColFunctionCall   = fullComplexColFunction   functionParameters
 primitiveFunctionCall    = fullPrimitiveFunction    functionParameters
 primitiveColFunctionCall = fullPrimitiveColFunction functionParameters
 
-
-boundEntityFuncCall                     =       fullEntityFunction functionParameters
-                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
-                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundEntityFuncCall
-                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
-
-boundEntityColFuncCall          =       fullEntityColFunction functionParameters
-                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
-                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundEntityColFuncCall
-                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
-
-boundComplexFuncCall            =       fullComplexFunction functionParameters
-                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
-                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundComplexFuncCall
-                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
-
-boundComplexColFuncCall         =       fullComplexColFunction functionParameters
-                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
-                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundComplexColFuncCall
-                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
-
-boundPrimitiveFuncCall          =       fullPrimitiveFunction functionParameters
-                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
-                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundPrimitiveFuncCall
-                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
-
-boundPrimitiveColFuncCall       =       fullPrimitiveColFunction functionParameters
-                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
-                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundPrimitiveColFuncCall
-                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
+; The following boundXxxFuncCall rules have the added restrictions that
+;  - the Function MUST support binding, and 
+;  - the binding parameter type MUST match the type of resource identified by the 
+;    Uri immediately preceding (to the left) of the boundPrimitiveColFuncCall, and
+;  - the functionParameters MUST NOT include the bindingParameter.
+boundEntityFuncCall       = fullEntityFunction       functionParameters
+boundEntityColFuncCall    = fullEntityColFunction    functionParameters
+boundComplexFuncCall      = fullComplexFunction      functionParameters
+boundComplexColFuncCall   = fullComplexColFunction   functionParameters
+boundPrimitiveFuncCall    = fullPrimitiveFunction    functionParameters
+boundPrimitiveColFuncCall = fullPrimitiveColFunction functionParameters
 
 ;boundFunctionCall = boundEntityFuncCall / 
 ;                    boundEntityColFuncCall /
@@ -569,30 +538,32 @@ aliasAndValue         = parameterAlias        "=" parameterValue
 parameterNameAndValue = functionParameterName "=" parameterValue
 
 parameterValue = primitiveLiteral     ; note this is a Uri literal, not a JSON literal
-               / complexTypeInJSON  
-               / primitiveColInJSON 
-               / complexColInJSON
+               / complexInUrl  
+               / primitiveColInUrl
+               / complexColInUrl
 
-complexTypeInJSON = complexInVJSON ; was: "{TODO32}"
-complexColInJSON = "{TODO30}"
-primitiveColInJSON = "{TODO49}"
+; The following rules define a URL-encoded JSON format for function parameters
+; TODO: duplicate rules for unencoded action request body format
+complexColInUrl   = "[" [ complexInUrl *( COMMA complexInUrl ) ] "]"
+primitiveColInUrl = "[" [ primitiveLiteralInVJSON *( COMMA primitiveLiteralInVJSON ) ] "]"
 
 ; TODO: rather complexInUriJSON
-complexInVJSON = begin-object
-                 [ ( complexTypeMetadataInVJSON / 
-                     primitivePropertyInVJSON /
-                     complexPropertyInVJSON /
-                     collectionPropertyInVJSON  
-                   )
-                  *( value-separator 
-                     ( primitivePropertyInVJSON /
-                       complexPropertyInVJSON /
-                       collectionPropertyInVJSON  
-                     ) 
-                   )
-                 ]  
-                 end-object
+complexInUrl = begin-object
+                   [ ( complexTypeMetadataInVJSON  
+                     / primitivePropertyInVJSON 
+                     / complexPropertyInVJSON 
+                     / collectionPropertyInVJSON  
+                     )
+                    *( value-separator 
+                       ( primitivePropertyInVJSON 
+                       / complexPropertyInVJSON 
+                       / collectionPropertyInVJSON  
+                       ) 
+                     )
+                   ]  
+                   end-object
 
+; TODO: will have to be the percent-encoded representation
 begin-object = "{"
 end-object   = "}"
 quotation-mark  = DQUOTE
@@ -600,35 +571,30 @@ value-separator = COMMA
 name-separator  = ":"
 ; TODO: begin-array, end-array as percent-encoded [ ]
 
-complexTypeMetadataInVJSON      =       quotation-mark "__metadata" quotation-mark
-                                                        name-separator
-                                                        begin-object
-                                                        [typeNVPInVJSON]
-                                                        end-object
+complexTypeMetadataInVJSON = quotation-mark "__metadata" quotation-mark
+                             name-separator
+                             begin-object
+                             [ typeNVPInVJSON ]
+                             end-object
 
-typeNVPInVJSON                          =       quotation-mark "type" quotation-mark
-                                                name-separator
-                                                quotation-mark qualifiedTypeName quotation-mark
+typeNVPInVJSON = quotation-mark "type" quotation-mark
+                 name-separator
+                 quotation-mark qualifiedTypeName quotation-mark
 
-primitivePropertyInVJSON        =       quotation-mark ( primitiveKeyProperty / primitiveNonKeyProperty ) quotation-mark name-separator primitiveLiteralInVJSON
-primitiveLiteralInVJSON         = "{TODO22}"       ; arlo VJSON format.
-
-complexPropertyInVJSON          =       quotation-mark complexProperty quotation-mark name-separator complexInVJSON
-
-collectionPropertyInVJSON       =       ( quotation-mark primitiveColProperty quotation-mark name-separator "[" [ primitiveLiteralInVJSON *( COMMA primitiveLiteralInVJSON ) ] "]" ) /
-                                                                        ( quotation-mark complexColProperty quotation-mark name-separator "[" [ complexInVJSON *( COMMA complexInVJSON ) ] "]" )
+primitivePropertyInVJSON  = quotation-mark ( primitiveKeyProperty / primitiveNonKeyProperty ) quotation-mark name-separator primitiveLiteralInVJSON
+primitiveLiteralInVJSON   = "{TODO22}"       ; arlo VJSON format.
+complexPropertyInVJSON    = quotation-mark complexProperty quotation-mark 
+                            name-separator 
+                            complexInUrl
+collectionPropertyInVJSON = ( quotation-mark primitiveColProperty quotation-mark 
+                              name-separator 
+                              primitiveColInUrl 
+                            ) 
+                          / ( quotation-mark complexColProperty quotation-mark 
+                              name-separator 
+                              complexColInUrl 
+                            )
                 
-;primitivePropInJSONLight        = "{TODO19}"       ; arlo JSON Light format
-                                                    ; unreferenced until complexInJSONLight is defined.
-;complexPropertyInJSON           =       complexPropertyInVJSON / complexPropertyInJSONLight
-;complexPropertyInJSONLight      = "{TODO20}"       ; arlo JSON Light format.
-;collectionPropertyInJSON        =       colPropertyInJSONLight / collectionPropertyInVJSON
-;colPropertyInJSONLight          = "{TODO21}"       ; alro JSON Light format
-;primitiveLiteralInJSONLight     = "{TODO23}"       ; arlo JSON Light format.
-;complexInJSON                           =       complexInVJSON / complexInJSONLight
-;complexInJSONLight                      = "{TODO24}"       ; arlo JSON light format
-
-
 commonExpr = literalExpr
            / firstMemberExpr 
            / boolCommonExpr 
@@ -661,6 +627,8 @@ boolCommonExpr = boolLiteralExpr
                / boolMethodCallExpr  
                / boolParenExpr 
                / boolFunctionCallExpr
+boolFunctionCallExpr = "{TODO27}"
+boolMethodCallExpr = "{TODO28}"
 
 boolLiteralExpr = boolean
 literalExpr     = primitiveLiteral
@@ -697,39 +665,44 @@ isofExpr     = "isof" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP qualifiedTypeNa
 castExpr     = "cast" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP qualifiedTypeName *WSP ")"
 boolCastExpr = "cast" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP "Edm.Boolean"     *WSP ")"
 
+; TODO: what do these memberExpr mean?
 firstMemberExpr = [ WSP ] [ qualifiedEntityTypeName "/"]
                   [ lambdaPredicatePrefixExpr ] ; A lambdaPredicatePrefixExpr is only defined inside a 
                                                 ; lambdaPredicateExpr. A lambdaPredicateExpr is required   
                                                 ; inside a lambdaPredicateExpr.
-                  property / ; TODO: just until xPropertyPath is cleaned up                                                
-                  entityColNavigationProperty [ collectionNavigationExpr ] /
-                  entityNavigationProperty [ singleNavigationExpr ] /
-                  primitivePropertyPath / 
-                  complexPropertyPath /
-                  collectionPropertyPath [ anyExpr / allExpr ]
+                  entityColNavigationProperty [ collectionNavigationExpr ] 
+                / entityNavigationProperty [ singleNavigationExpr ] 
+                / primitivePropertyPath 
+                / complexPropertyPath 
+                / collectionPropertyPath [ anyExpr / allExpr ]
 
-; TODO: what does this mean?
-boolPrimitiveMemberExpr = commonExpr [ WSP ]  "/" [WSP] [ qualifiedEntityTypeName "/" ] primitivePropertyPath
+lambdaPredicatePrefixExpr = "{TODO45}"
 
-memberExpr = commonExpr [ WSP ]  "/" [ WSP ] [ qualifiedEntityTypeName "/" ]
-             entityColNavigationProperty [ collectionNavigationExpr ] /
-             entityNavigationProperty [ singleNavigationExpr ] /
-             primitivePropertyPath / 
-             complexPropertyPath /
-             collectionPropertyPath [ anyExpr / allExpr ]
+; TODO: what does this mean? The WSP around the "/" is really odd
+boolPrimitiveMemberExpr = commonExpr [ WSP ] "/" [WSP] [ qualifiedEntityTypeName "/" ] primitivePropertyPath
 
-collectionNavigationExpr = [ "/" qualifiedEntityTypeName ] "/" ( boundFunctionExpr / anyExpr / allExpr )
+; TODO: what does this mean? The WSP around the "/" is really odd
+memberExpr = commonExpr [ WSP ] "/" [ WSP ] [ qualifiedEntityTypeName "/" ] entityColNavigationProperty [ collectionNavigationExpr ] 
+           / entityNavigationProperty [ singleNavigationExpr ] 
+           / primitivePropertyPath 
+           / complexPropertyPath 
+           / collectionPropertyPath [ anyExpr / allExpr ]
 
-singleNavigationExpr            =       [ "/" qualifiedEntityTypeName ] "/"
-                                    ( 
-                                        ( entityColNavigationProperty [ collectionNavigationExpr ] ) /
-                                        ( entityNavigationProperty [ singleNavigationExpr ] ) /
-                                                                                primitivePropertyPath / 
-                                        complexPropertyPath /
-                                                                                collectionPropertyPath [ anyExpr / allExpr ] / 
-                                        streamPropertyPath / 
-                                        boundFunctionExpr 
-                                        )
+collectionNavigationExpr = [ "/" qualifiedEntityTypeName ] "/" 
+                           ( boundFunctionExpr 
+                           / anyExpr 
+                           / allExpr 
+                           )
+
+singleNavigationExpr = [ "/" qualifiedEntityTypeName ] "/"
+                       ( ( entityColNavigationProperty [ collectionNavigationExpr ] ) 
+                       / ( entityNavigationProperty [ singleNavigationExpr ] ) 
+                       / primitivePropertyPath 
+                       / complexPropertyPath 
+                       / collectionPropertyPath [ anyExpr / allExpr ] 
+                       / streamPropertyPath 
+                       / boundFunctionExpr 
+                       )
         
 ;functionExpr = ( entityColFuncCall [ singleNavigationExpr ] 
 ;               / entityFuncCall [ collectionNavigationExpr ] 
@@ -741,32 +714,33 @@ singleNavigationExpr            =       [ "/" qualifiedEntityTypeName ] "/"
 
 ;boolFunctionExpr                        =       functionExpr
                                                 ; with the added restriction that the boolFunctionExpr MUST return a boolean value
-        
-boundFunctionExpr                       =       [ "/" qualifiedEntityTypeName ] 
-                                                                        "/" 
-                                                                        (
-                                                                                boundEntityColFuncCall [ singleNavigationExpr ] /
-                                                                                boundEntityFuncCall [ collectionNavigationExpr ] /
-                                                                                boundPrimitiveFuncCall [ boundFunctionExpr ] /
-                                                                                boundPrimitiveColFuncCall [ boundFunctionExpr ] /
-                                                                                boundComplexFuncCall [ complexPropertyPath / boundFunctionExpr ] /
-                                                                                boundComplexColFuncCall [ boundFunctionExpr ]
-                                                                        )
-                                    ; boundOperation segments can only be composed if the type of the previous segment matches 
-                                    ; the type of the first parameter of the action or function being called.
-                                                                        ; NOTE: the qualifiedEntityTypeName is only permitted if the previous segment is an Entity or Collection of Entities.
 
-;boolBoundFunctionExpr           =       boundFunctionExpr
-                                                                        ; with the added restriction that the boolBoundFunctionExpr MUST return a boolean value
+; TODO: check whether this can be used in boundOperation rule (and probably be renamed to boundFuncCall        
+boundFunctionExpr = [ "/" qualifiedEntityTypeName ] "/" 
+                    ( boundEntityColFuncCall [ singleNavigationExpr ] 
+                    / boundEntityFuncCall [ collectionNavigationExpr ] 
+                    / boundPrimitiveFuncCall [ boundFunctionExpr ] 
+                    / boundPrimitiveColFuncCall [ boundFunctionExpr ] 
+                    / boundComplexFuncCall [ complexPropertyPath / boundFunctionExpr ] 
+                    / boundComplexColFuncCall [ boundFunctionExpr ]
+                    )
+                    ; boundOperation segments can only be composed if the type of the previous segment matches 
+                    ; the type of the first parameter of the action or function being called.
+                    ; NOTE: the qualifiedEntityTypeName is only permitted if the previous segment is an Entity or Collection of Entities.
+                    ; TOOD: roll this restriction into the ABNF
 
+;boolBoundFunctionExpr = boundFunctionExpr
+                         ; with the added restriction that the boolBoundFunctionExpr MUST return a boolean value
+
+; TODO: what would any() mean?
 anyExpr = "any(" [ lambdaVariableExpr ":" lambdaPredicateExpr ] ")"
-
 allExpr = "all(" lambdaVariableExpr ":" lambdaPredicateExpr ")"
 
+; TODO: use this somewhere if we want to have it
+;inscopeVariableExpr = implicitVariableExpr / lambdaVariableExpr
 ;implicitVariableExpr = "$it" ; references the unnamed outer variable of the query
 
-lambdaVariableExpr = odataIdentifier
-;inscopeVariableExpr = implicitVariableExpr / lambdaVariableExpr
+lambdaVariableExpr  = odataIdentifier
 lambdaPredicateExpr = boolCommonExpr
    
 methodCallExpr = boolMethodExpr 
@@ -802,6 +776,8 @@ boolMethodExpr = endsWithMethodCallExpr
                / intersectsMethodCallExpr 
                / anyMethodCallExpr 
                / allMethodCallExpr
+allMethodCallExpr = "{TODO25}"
+anyMethodCallExpr = "{TODO26}"
 
 substringOfMethodCallExpr = "substringof" *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
 startsWithMethodCallExpr  = "startswith"  *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
@@ -834,19 +810,5 @@ getTotalOffsetMinutesExpr = "gettotaloffsetminutes" *WSP "(" *WSP commonExpr *WS
 distanceMethodCallExpr    = "geo.distance"          *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
 geoLengthMethodCallExpr   = "geo.length"            *WSP "(" *WSP commonExpr *WSP ")"
 intersectsMethodCallExpr  = "geo.intersects"        *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
-
-; Other undefined terms
-allMethodCallExpr = "{TODO25}"
-anyMethodCallExpr = "{TODO26}"
-boolFunctionCallExpr = "{TODO27}"
-boolMethodCallExpr = "{TODO28}"
-;complexColFuncCall = "{TODO29}"
-;complexFuncCall = "{TODO31}" 
-;entityColFuncCall = "{TODO33}"
-;entityFuncCall = "{TODO34}"
-lambdaPredicatePrefixExpr = "{TODO45}"
-;primitiveColFuncCall = "{TODO48}"
-;primitiveFuncCall = "{TODO50}"
-;primitiveVJSONLiteral = "{TODO51}"
 
 ; End of odata-v1.0-abnf
