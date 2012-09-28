@@ -92,12 +92,12 @@ AI#0005
 : "Come up with a first milestine for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2012-09-27)
 
 Andrew:
-> Due date will need move to next week.
+> Due date will need to be moved two weeks later.
  
 **No further discussion**. **No objections**. 
 
 AI#0005
-: "Come up with a first milestine for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2012-10-04)
+: "Come up with a first milestine for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2012-10-11)
 
 ####4.1.3 [AI#0006](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3463)####
 
@@ -105,12 +105,12 @@ AI#0006
 : "Come up with estimate for first milestone for XML data extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2012-09-27)
 
 Andrew:
-> Due date will need move to next week.
+> Due date will need to be moved two weeks later.
  
 **No further discussion**. **No objections**. 
 
 AI#0006
-: "Come up with estimate for first milestone for XML data extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2012-10-04)
+: "Come up with estimate for first milestone for XML data extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2012-10-11)
 
 ####4.1.4 [AI#0007](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3464)####
 
@@ -118,12 +118,12 @@ AI#0007
 : "Come up with estimate for first milestone for JSON data extension" [owner: Susan Malaika] is **Ongoing** (Note: Due 2012-09-27)
 
 Susan:
-> Due date will need move to next week.
+> Due date will need to be moved two weeks later.
  
 **No further discussion**. **No objections**. 
 
 AI#0007
-: "Come up with estimate for first milestone for JSON data extension" [owner: Susan Malaika] is **Ongoing** (Note: Due 2012-10-04)
+: "Come up with estimate for first milestone for JSON data extension" [owner: Susan Malaika] is **Ongoing** (Note: Due 2012-10-11)
 
 ###4.2 Action items NOT due by 2012-09-27 but MAY be ready for closure###
 
