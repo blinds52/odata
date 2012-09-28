@@ -24,18 +24,17 @@ systemQueryOption = expand
                   / skiptoken
 
 ; TODO: case-sensitivity of system query option names (ODATA-117)
-; TODO: whitespace around "=" (use EQ instead?) (ODATA-115
 ; TODO: use peWS = "%20" / "%09" instead in URL fragments (ODATA-127) 
 expand       = "$expand=" expandClause 
 expandClause = expandItem *( "," expandItem )
 expandItem   =        [ qualifiedEntityTypeName "/" ] navigationProperty 
                *( "/" [ qualifiedEntityTypeName "/" ] navigationProperty ) 
 
-filter = "$filter" *WSP "=" *WSP boolCommonExpr
+filter = "$filter=" boolCommonExpr
 
 ; TODO: case-sensitivity of asc and desc (ODATA-117)        
-orderby = "$orderby" *WSP "=" *WSP commonExpr [ 1*WSP ( "asc" / "desc" ) ]    
-                     *( COMMA *WSP commonExpr [ 1*WSP ( "asc" / "desc" ) ] )
+orderby = "$orderby=" commonExpr [ 1*WSP ( "asc" / "desc" ) ]    
+             *( COMMA commonExpr [ 1*WSP ( "asc" / "desc" ) ] )
 
 skip = "$skip=" 1*DIGIT
 top  = "$top="  1*DIGIT
@@ -66,7 +65,7 @@ operationQualifier       = [ namespace "." ] entityContainerName "."
 
 skiptoken = "$skiptoken=" 1*( unreserved / pct-encoded / other-delims /  ":" / "@" / "$" / "=" ) ; everything except "&"
 
-customQueryOption = customName *WSP [ "=" *WSP customValue ]
+customQueryOption = customName [ "=" customValue ]
 customName        =  ( unreserved / pct-encoded / other-delims / ":" / "@" )       ; MUST NOT start with "$"
                     *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" ) ; MUST NOT contain "="
 customValue       = *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" / "=" ) ; everything except "&"
@@ -148,8 +147,7 @@ unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ;reserved      = gen-delims / sub-delims
 ;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
 ;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-sub-delims    = option-delims / "$" / other-delims
-option-delims = "&" / "="
+sub-delims    = "&" / "=" / "$" / other-delims
 other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
 
 ; UTF-8 syntax [RFC3629]
@@ -454,7 +452,7 @@ singleNavigation = [ "/" qualifiedEntityTypeName ]
                          ) 
                    / primitivePropertyPath 
                    / complexPropertyPath 
-                   / collectionPropertyPath  
+                   / collectionPropertyPath [ count ]  
                    / streamPropertyPath 
                    / value  ; for addressing media resources
                    / boundOperation 
@@ -532,23 +530,19 @@ functionParameters      = "(" [ functionParameter *( "," functionParameter ) ] "
 functionParameter       = functionParameterName "=" ( primitiveParameterValue / parameterAlias )
 functionParameterName   = odataIdentifier;
 primitiveParameterValue = primitiveLiteral
-parameterAlias          = "@" odataIdentifier ; TODO: was *pchar, which is definitely too relaxed: at least one, and no ")" (ODATA-116)
+parameterAlias          = "@" odataIdentifier
 
 aliasAndValue         = parameterAlias        "=" parameterValue
 parameterNameAndValue = functionParameterName "=" parameterValue
 
 parameterValue = primitiveLiteral     ; note this is a Uri literal, not a JSON literal
-               / complexInUrl  
-               / primitiveColInUrl
-               / complexColInUrl
+               / complexInUri  
+               / complexColInUri
+               / primitiveColInUri
 
 ; The following rules define a URL-encoded JSON format for function parameters
 ; TODO: duplicate rules for unencoded action request body format
-complexColInUrl   = "[" [ complexInUrl *( COMMA complexInUrl ) ] "]"
-primitiveColInUrl = "[" [ primitiveLiteralInVJSON *( COMMA primitiveLiteralInVJSON ) ] "]"
-
-; TODO: rather complexInUriJSON
-complexInUrl = begin-object
+complexInUri = begin-object
                    [ ( complexTypeMetadataInVJSON  
                      / primitivePropertyInVJSON 
                      / complexPropertyInVJSON 
@@ -563,14 +557,30 @@ complexInUrl = begin-object
                    ]  
                    end-object
 
-; TODO: will have to be the percent-encoded representation
-begin-object = "{"
-end-object   = "}"
-quotation-mark  = DQUOTE
+complexColInUri = begin-array 
+                  [ complexInUri *( value-separator complexInUri ) ] 
+                  end-array
+                  
+primitiveColInUri = begin-array 
+                    [ primitiveLiteralInJSON *( value-separator primitiveLiteralInJSON ) ] 
+                    end-array
+
+begin-object    = "{" 
+end-object      = "}"
+begin-object-pe = "%7B"
+end-object-pe   = "%7D"
+
+begin-array    = "[" 
+end-array      = "]" 
+begin-array-pe = "%5B"
+end-array-pe   = "%5D"
+
+quotation-mark    = DQUOTE
+quotation-mark-pe = "%22"
 value-separator = COMMA
 name-separator  = ":"
-; TODO: begin-array, end-array as percent-encoded [ ]
 
+; TODO: use -pe alternative
 complexTypeMetadataInVJSON = quotation-mark "__metadata" quotation-mark
                              name-separator
                              begin-object
@@ -581,18 +591,48 @@ typeNVPInVJSON = quotation-mark "type" quotation-mark
                  name-separator
                  quotation-mark qualifiedTypeName quotation-mark
 
-primitivePropertyInVJSON  = quotation-mark ( primitiveKeyProperty / primitiveNonKeyProperty ) quotation-mark name-separator primitiveLiteralInVJSON
-primitiveLiteralInVJSON   = "{TODO22}"       ; arlo VJSON format.
-complexPropertyInVJSON    = quotation-mark complexProperty quotation-mark 
-                            name-separator 
-                            complexInUrl
+primitivePropertyInVJSON = quotation-mark ( primitiveKeyProperty / primitiveNonKeyProperty ) quotation-mark 
+                           name-separator 
+                           primitiveLiteralInJSON
+; TODO: not complete
+; JSON syntay [ RFC4627 ]                 
+primitiveLiteralInJSON = stringInJSON
+                       / numberInJSON
+                       / %x74.72.75.65    ; true 
+                       / %x66.61.6c.73.65 ; false
+                       / %x6e.75.6c.6c    ; null
+stringInJSON = quotation-mark *charInJSON quotation-mark
+charInJSON = pchar   ; TODO: more specific, following RFC4627?
+;         char = unescaped /
+;                escape (
+;                    %x22 /          ; "    quotation mark  U+0022
+;                    %x5C /          ; \    reverse solidus U+005C
+;                    %x2F /          ; /    solidus         U+002F
+;                    %x62 /          ; b    backspace       U+0008
+;                    %x66 /          ; f    form feed       U+000C
+;                    %x6E /          ; n    line feed       U+000A
+;                    %x72 /          ; r    carriage return U+000D
+;                    %x74 /          ; t    tab             U+0009
+;                    %x75 4HEXDIG )  ; uXXXX                U+XXXX
+;         escape = %x5C              ; \
+;         quotation-mark = %x22      ; "
+;         unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
+numberInJSON  = [ "-" ] int [ frac ] [ exp ]
+int           = "0" / ( oneToNine *DIGIT )
+frac          = "." 1*DIGIT
+exp           = "e" [ "-" / "+" ] 1*DIGIT
+
+complexPropertyInVJSON = quotation-mark complexProperty quotation-mark 
+                         name-separator 
+                         complexInUri
+                            
 collectionPropertyInVJSON = ( quotation-mark primitiveColProperty quotation-mark 
                               name-separator 
-                              primitiveColInUrl 
+                              primitiveColInUri 
                             ) 
                           / ( quotation-mark complexColProperty quotation-mark 
                               name-separator 
-                              complexColInUrl 
+                              complexColInUri
                             )
                 
 commonExpr = literalExpr
@@ -661,12 +701,11 @@ negateExpr = "-" *WSP commonExpr
 notExpr = "not" 1*WSP commonExpr
 
 ; TODO: isn't this rather singleNavigation (once the leading slash has been removed)?
-isofExpr     = "isof" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP qualifiedTypeName *WSP ")"
-castExpr     = "cast" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP qualifiedTypeName *WSP ")"
-boolCastExpr = "cast" *WSP "(" [ *WSP commonExpr *WSP "," ] *WSP "Edm.Boolean"     *WSP ")"
+isofExpr     = "isof" *WSP "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
+castExpr     = "cast" *WSP "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
+boolCastExpr = "cast" *WSP "(" *WSP [ commonExpr "," ] "Edm.Boolean"     *WSP ")"
 
-; TODO: what do these memberExpr mean?
-firstMemberExpr = [ WSP ] [ qualifiedEntityTypeName "/"]
+firstMemberExpr = [ qualifiedEntityTypeName "/"]
                   [ lambdaPredicatePrefixExpr ] ; A lambdaPredicatePrefixExpr is only defined inside a 
                                                 ; lambdaPredicateExpr. A lambdaPredicateExpr is required   
                                                 ; inside a lambdaPredicateExpr.
@@ -678,17 +717,15 @@ firstMemberExpr = [ WSP ] [ qualifiedEntityTypeName "/"]
 
 lambdaPredicatePrefixExpr = "{TODO45}"
 
-; TODO: what does this mean? The WSP around the "/" is really odd
-boolPrimitiveMemberExpr = commonExpr [ WSP ] "/" [WSP] [ qualifiedEntityTypeName "/" ] primitivePropertyPath
+boolPrimitiveMemberExpr = commonExpr "/" [ qualifiedEntityTypeName "/" ] primitivePropertyPath
 
-; TODO: what does this mean? The WSP around the "/" is really odd
-memberExpr = commonExpr [ WSP ] "/" [ WSP ] [ qualifiedEntityTypeName "/" ] entityColNavigationProperty [ collectionNavigationExpr ] 
+memberExpr = commonExpr "/" [ qualifiedEntityTypeName "/" ] entityColNavigationProperty [ collectionNavigationExpr ] 
            / entityNavigationProperty [ singleNavigationExpr ] 
            / primitivePropertyPath 
            / complexPropertyPath 
            / collectionPropertyPath [ anyExpr / allExpr ]
 
-collectionNavigationExpr = [ "/" qualifiedEntityTypeName ] "/" 
+collectionNavigationExpr = "/" [ qualifiedEntityTypeName "/" ] 
                            ( boundFunctionExpr 
                            / anyExpr 
                            / allExpr 
@@ -779,16 +816,16 @@ boolMethodExpr = endsWithMethodCallExpr
 allMethodCallExpr = "{TODO25}"
 anyMethodCallExpr = "{TODO26}"
 
-substringOfMethodCallExpr = "substringof" *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
-startsWithMethodCallExpr  = "startswith"  *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
-endsWithMethodCallExpr    = "endswith"    *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+substringOfMethodCallExpr = "substringof" *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
+startsWithMethodCallExpr  = "startswith"  *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
+endsWithMethodCallExpr    = "endswith"    *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
 lengthMethodCallExpr      = "length"      *WSP "(" *WSP commonExpr *WSP ")"
-indexOfMethodCallExpr     = "indexof"     *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
-substringMethodCallExpr   = "substring"   *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP [ "," *WSP commonExpr *WSP ] ")"
+indexOfMethodCallExpr     = "indexof"     *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
+substringMethodCallExpr   = "substring"   *WSP "(" *WSP commonExpr "," commonExpr [ "," commonExpr *WSP ] ")"
 toLowerMethodCallExpr     = "tolower"     *WSP "(" *WSP commonExpr *WSP ")"
 toUpperMethodCallExpr     = "toupper"     *WSP "(" *WSP commonExpr *WSP ")"
 trimMethodCallExpr        = "trim"        *WSP "(" *WSP commonExpr *WSP ")"
-concatMethodCallExpr      = "concat"      *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+concatMethodCallExpr      = "concat"      *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
 yearMethodCallExpr        = "year"        *WSP "(" *WSP commonExpr *WSP ")"
 yearsMethodCallExpr       = "years"       *WSP "(" *WSP commonExpr *WSP ")"
 monthMethodCallExpr       = "month"       *WSP "(" *WSP commonExpr *WSP ")"
@@ -807,8 +844,8 @@ ceilingMethodCallExpr     = "ceiling"     *WSP "(" *WSP commonExpr *WSP ")"
 
 ; TODO: what are these? They are not mentioned in the URL conventions
 getTotalOffsetMinutesExpr = "gettotaloffsetminutes" *WSP "(" *WSP commonExpr *WSP ")" 
-distanceMethodCallExpr    = "geo.distance"          *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+distanceMethodCallExpr    = "geo.distance"          *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
 geoLengthMethodCallExpr   = "geo.length"            *WSP "(" *WSP commonExpr *WSP ")"
-intersectsMethodCallExpr  = "geo.intersects"        *WSP "(" *WSP commonExpr *WSP "," *WSP commonExpr *WSP ")"
+intersectsMethodCallExpr  = "geo.intersects"        *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
 
 ; End of odata-v1.0-abnf
