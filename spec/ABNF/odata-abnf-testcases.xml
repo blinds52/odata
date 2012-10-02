@@ -6,60 +6,106 @@
   <DisableTrace Rule="ALPHA"/>
   <DisableTrace Rule="DIGIT"/>
   
-  <Constraint Rule="entityNavigationProperty">
-    <Match>Category</Match>
-    <Match>Product</Match>
-    <Match>Supplier</Match>
+  <Constraint Rule="action">
+    <Match>ActionName</Match>
+    <Match>Activation</Match>
+    <Match>Rejection</Match>
+  </Constraint>
+  <Constraint Rule="complexColProperty">
+    <Match>Addresses</Match>
+  </Constraint>
+  <Constraint Rule="complexColFunction">
+    <Match>MostPopularAddresses</Match>
+  </Constraint>
+  <Constraint Rule="complexFunction">
+    <Match>MostPopularAddress</Match>
+  </Constraint>
+  <Constraint Rule="complexProperty">
+    <Match>Address</Match>
+  </Constraint>
+  <Constraint Rule="complexTypeName">
+    <Match>Customer</Match>
+  </Constraint>
+  <Constraint Rule="entityColFunction">
+    <Match>AllOrders</Match>
+    <Match>ProductsByColor</Match>
+    <Match>ProductsByCategoryId</Match>
   </Constraint>
   <Constraint Rule="entityColNavigationProperty">
     <Match>Items</Match>
     <Match>Products</Match>
   </Constraint>
-  <Constraint Rule="complexProperty">
-    <Match>Address</Match>
+  <Constraint Rule="entityContainerName">
+    <Match>Container</Match>
+    <Match>Container2</Match>
   </Constraint>
-  <Constraint Rule="complexColProperty">
-    <Match>Addresses</Match>
+  <Constraint Rule="entityColFunction">
+    <Match>ProductsByComplex</Match>
   </Constraint>
-  <Constraint Rule="primitiveColProperty">
-    <Match>Sizes</Match>
+  <Constraint Rule="entityFunction">
+    <Match>MostExpensive</Match>
+    <Match>BestProduct</Match>
   </Constraint>
-  <Constraint Rule="primitiveKeyProperty">
-    <Match>ID</Match>
-    <Match>Size</Match>
-  </Constraint>
-  <Constraint Rule="primitiveNonKeyProperty">
-    <Match>Name</Match>
-    <Match>Rating</Match>
-    <Match>Street</Match>
-    <Match>Price</Match>
-    <Match>CompanyName</Match>
-    <Match>BirthDate</Match>
-    <Match>LifeTime</Match>
-  </Constraint>
-  <Constraint Rule="streamProperty">
-    <Match>Thumbnail</Match>
+  <Constraint Rule="entityNavigationProperty">
+    <Match>Category</Match>
+    <Match>Product</Match>
+    <Match>Supplier</Match>
   </Constraint>
   <Constraint Rule="entitySetName">
     <Match>Categories</Match>
     <Match>Customers</Match>
     <Match>LeaveRequests</Match>
+    <Match>Orders</Match>
+    <Match>OrderItems</Match>
     <Match>Products</Match>
     <Match>Suppliers</Match>
   </Constraint>
-  <Constraint Rule="entityColFunction">
-    <Match>ProductsByColor</Match>
-    <Match>ProductsByCategoryId</Match>
+  <Constraint Rule="entityTypeName">
+    <Match>BestSellingProduct</Match>
+    <Match>PreferredSupplier</Match>
   </Constraint>
-  <Constraint Rule="primitiveColProperty">
-    <Match>EmailAddresses</Match>
+  <Constraint Rule="enumerationTypeName">
+    <Match>NameKind</Match>
   </Constraint>
-  <Constraint Rule="complexColProperty">
-    <Match>Addresses</Match>
+  <Constraint Rule="lambdaVariableExpr">
+    <Match>lambda</Match>
   </Constraint>
   <Constraint Rule="namespacePart">
     <Match>Namespace</Match>
     <Match>Model</Match>
+  </Constraint>
+  <Constraint Rule="primitiveColFunction">
+    <Match>MostPopularNames</Match>
+  </Constraint>
+  <Constraint Rule="primitiveColProperty">
+    <Match>EmailAddresses</Match>
+    <Match>Names</Match>
+    <Match>Sizes</Match>
+  </Constraint>
+  <Constraint Rule="primitiveFunction">
+    <Match>MostPopularName</Match>
+  </Constraint>
+  <Constraint Rule="primitiveKeyProperty">
+    <Match>ID</Match>
+    <Match>ItemID</Match>
+    <Match>OrderID</Match>
+    <Match>Size</Match>
+  </Constraint>
+  <Constraint Rule="primitiveNonKeyProperty">
+    <Match>AccountRepresentative</Match>
+    <Match>BirthDate</Match>
+    <Match>CompanyName</Match>
+    <Match>LifeTime</Match>
+    <Match>Name</Match>
+    <Match>Price</Match>
+    <Match>Rating</Match>
+    <Match>Rating</Match>
+    <Match>ReleaseDate</Match>
+    <Match>Spokesperson</Match>
+    <Match>Street</Match>
+  </Constraint>
+  <Constraint Rule="streamProperty">
+    <Match>Thumbnail</Match>
   </Constraint>
     
   <TestCase Name="URI with IPv4 address, path and trailing slash"
@@ -299,23 +345,7 @@
   </TestCase>
   <TestCase Name="Entity Set" 
             Rule="resourcePath">
-    <Input>Container.EntitySet</Input>
-  </TestCase>
-  <TestCase Name="Call unbound action" 
-            Rule="actionCall">
-    <Input>Activation</Input>
-  </TestCase>
-  <TestCase Name="Call unbound action with container" 
-            Rule="actionCall">
-    <Input>Container.Activation()</Input>
-  </TestCase>
-  <TestCase Name="Call bound action" 
-            Rule="resourcePath">
-    <Input>LeaveRequests(4)/Rejection</Input>
-  </TestCase>
-  <TestCase Name="Call bound action" 
-            Rule="resourcePath">
-    <Input>LeaveRequests(4)/Container.Rejection()</Input>
+    <Input>Container.Products</Input>
   </TestCase>
   <!-- 
   	Test cases for example URLs in OData URI  
@@ -356,22 +386,6 @@
             Rule="odataRelativeUri">
     <Input>Products</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - entity set with $count" 
-            Rule="odataRelativeUri">
-    <Input>Products/$count</Input>
-  </TestCase>
-  <TestCase Name="4.1 Addressing entities - entity set navigation with $count" 
-            Rule="odataRelativeUri">
-    <Input>Products(1)/Items/$count</Input>
-  </TestCase>
-  <TestCase Name="4.1 Addressing entities - collection property with $count" 
-            Rule="odataRelativeUri">
-    <Input>Products(1)/Addresses/$count</Input>
-  </TestCase>
-  <TestCase Name="4.1 Addressing entities - collection property with $count" 
-            Rule="odataRelativeUri">
-    <Input>Products(1)/Sizes/$count</Input>
-  </TestCase>
   <TestCase Name="4.1 Addressing entities - function call" 
             Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=2)</Input>
@@ -380,25 +394,37 @@
             Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=@cat)?@cat=2</Input>
   </TestCase>
+  <TestCase Name="4.1 Addressing entities - function call with alias" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCategoryId()?categoryId=2</Input>
+  </TestCase>
   <TestCase Name="4.1 Addressing entities - service operation parameter" 
             Rule="parameterNameAndValue">
     <Input>color='red'</Input>
   </TestCase>
   <TestCase Name="4.1 Addressing entities - service operation call" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor?color='red'</Input>
+    <Input>ProductsByColor()?color='red'</Input>
   </TestCase>
   <TestCase Name="4.1 Addressing entities - service operation call" 
             Rule="odataRelativeUri">
-    <Input>Categories(1)/ProductsByColor?color='red'</Input>
+    <Input>Categories(1)/ProductsByColor()?color='red'</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - single entity" 
+  <TestCase Name="4.1 Addressing entities - single entity (short)" 
             Rule="resourcePath">
     <Input>Categories(1)</Input>
   </TestCase>
+  <TestCase Name="4.1 Addressing entities - single entity (long)" 
+            Rule="resourcePath">
+    <Input>Categories(ID=1)</Input>
+  </TestCase>
+  <TestCase Name="4.1 Addressing entities - single entity (multi-part key)" 
+            Rule="resourcePath">
+    <Input>OrderItems(OrderID=1,ItemID='a')</Input>
+  </TestCase>
   <TestCase Name="4.1 Addressing entities - bound operation on entity set" 
             Rule="resourcePath">
-    <Input>Products/MostExpensive</Input>
+    <Input>Products/MostExpensive()</Input>
   </TestCase>
   <TestCase Name="4.1 Addressing entities - follow navigation property" 
             Rule="resourcePath">
@@ -406,7 +432,7 @@
   </TestCase>
   <TestCase Name="4.1 Addressing entities - follow navigation property and call function" 
             Rule="odataRelativeUri">
-    <Input>Categories(1)/Products/AllOrders</Input>
+    <Input>Categories(1)/Products/AllOrders()</Input>
   </TestCase>
   <!-- parser cannot distinguish between entityColNavigationProperty and entityNavigationProperty, so it will pick the wrong branch and never reach the keyPredicate -->
   <TestCase Name="4.1.1 Canonical URL" 
@@ -417,11 +443,83 @@
             Rule="odataRelativeUri">
     <Input>Categories(1)/$links/Products</Input>
   </TestCase>
+  <TestCase Name="4.3.1 Call unbound action" 
+            Rule="odataRelativeUri">
+    <Input>Activation</Input>
+  </TestCase>
+  <TestCase Name="4.3.1 Call unbound action with container" 
+            Rule="odataRelativeUri">
+    <Input>Container.Activation()</Input>
+  </TestCase>
+  <TestCase Name="4.3.1 Call bound action" 
+            Rule="odataRelativeUri">
+    <Input>LeaveRequests(4)/Rejection</Input>
+  </TestCase>
+  <TestCase Name="4.3.1 Call bound action with container" 
+            Rule="odataRelativeUri">
+    <Input>LeaveRequests(4)/Container.Rejection()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call unbound function" 
+            Rule="odataRelativeUri">
+    <Input>BestProduct()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call unbound complex function" 
+            Rule="odataRelativeUri">
+    <Input>MostPopularAddress()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call unbound complex collection function" 
+            Rule="odataRelativeUri">
+    <Input>MostPopularAddresses()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call unbound primitive function" 
+            Rule="odataRelativeUri">
+    <Input>MostPopularName()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call unbound primitive function" 
+            Rule="odataRelativeUri">
+    <Input>MostPopularName()/$value</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call unbound primitive collection function" 
+            Rule="odataRelativeUri">
+    <Input>MostPopularNames()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call bound complex function" 
+            Rule="odataRelativeUri">
+    <Input>Customers/MostPopularAddress()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call bound complex collection function" 
+            Rule="odataRelativeUri">
+    <Input>Customers/MostPopularAddresses()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call bound complex collection function" 
+            Rule="odataRelativeUri">
+    <Input>Customers/MostPopularAddresses()/$count</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call bound primitive function" 
+            Rule="odataRelativeUri">
+    <Input>Customers/MostPopularName()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call bound primitive function" 
+            Rule="odataRelativeUri">
+    <Input>Customers/MostPopularName()/$value</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call bound primitive collection function" 
+            Rule="odataRelativeUri">
+    <Input>Customers/MostPopularNames()</Input>
+  </TestCase>
+  <TestCase Name="4.3.2 Call bound primitive collection function" 
+            Rule="odataRelativeUri">
+    <Input>Customers/MostPopularNames()/$count</Input>
+  </TestCase>
   <TestCase Name="4.4 Addressing a Property - primitive" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/ID</Input>
   </TestCase>
   <TestCase Name="4.4 Addressing a Property - complex" 
+            Rule="odataRelativeUri">
+    <Input>Categories(1)/Address</Input>
+  </TestCase>
+  <TestCase Name="4.4 Addressing a Property - complex path" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Address/Street</Input>
   </TestCase>
@@ -445,9 +543,25 @@
             Rule="odataRelativeUri">
     <Input>Categories(1)/Address/Street/$value</Input>
   </TestCase>
-  <TestCase Name="4.5x Addressing a Media Resource" 
+  <TestCase Name="4.5 Addressing a Media Resource" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/$value</Input>
+  </TestCase>
+  <TestCase Name="4.6 Addressing entities - entity set with $count" 
+            Rule="odataRelativeUri">
+    <Input>Products/$count</Input>
+  </TestCase>
+  <TestCase Name="4.6 Addressing entities - entity set navigation with $count" 
+            Rule="odataRelativeUri">
+    <Input>Products(1)/Items/$count</Input>
+  </TestCase>
+  <TestCase Name="4.6 Addressing entities - collection property with $count" 
+            Rule="odataRelativeUri">
+    <Input>Products(1)/Addresses/$count</Input>
+  </TestCase>
+  <TestCase Name="4.6 Addressing entities - collection property with $count" 
+            Rule="odataRelativeUri">
+    <Input>Products(1)/Sizes/$count</Input>
   </TestCase>
   <!-- TODO: subtype queries
   <TestCase Name="4.x Inheritance - set of subtypes" 
@@ -477,11 +591,11 @@
     <Input>Size eq true</Input>
   </TestCase>
   <TestCase Name="5.1.1.1.1 Equals - Literal" 
-            Rule="literalExpr">
+            Rule="primitiveLiteral">
     <Input>4.0</Input>
   </TestCase>
   <TestCase Name="5.1.1.1.1 Equals - Literal" 
-            Rule="literalExpr">
+            Rule="primitiveLiteral">
     <Input>'Huge'</Input>
   </TestCase>
   <TestCase Name="5.1.1.1.1 Equals" 
@@ -523,6 +637,10 @@
   <TestCase Name="5.1.1.1.10 Logical Operator Examples" 
             Rule="eqExpr">
     <Input>Name eq 'Milk'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.10 Logical Operator Examples" 
+            Rule="eqExpr">
+    <Input>Supplier/Name eq 'Milk'</Input>
   </TestCase>
   <TestCase Name="5.1.1.2.1 Addition" 
             Rule="addExpr">
@@ -678,6 +796,41 @@
             Rule="boolCastExpr">
     <Input>cast(Category,Edm.Boolean)</Input>
   </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="anyExpr">
+    <Input>any()</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="anyExpr">
+    <Input>any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="anyMethodCallExpr">
+    <Input>Products/any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="boolMethodCallExpr">
+    <Input>Products/any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="methodCallExpr">
+    <Input>Products/any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="boolMethodCallExpr">
+    <Input>Supplier/Products/any(lambda:true)</Input>
+  </TestCase>
+  <!-- TODO: endless recursion: Trace attribute
+  <TestCase Name="5.1.1.x any()"
+            Rule="boolMethodCallExpr"
+            Trace="true">
+    <Input>Products/any(lambda:lambda/Items)</Input>
+  </TestCase>
+  -->
+  <TestCase Name="5.1.1.x all()"
+            Rule="allMethodCallExpr">
+    <Input>Products/all(lambda:true)</Input>
+  </TestCase>
   <TestCase Name="5.1.2 Expand - single navigation property" 
             Rule="expand">
     <Input>$expand=Items</Input>
@@ -711,8 +864,8 @@
     <Input>$select=Address/Street</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - qualifiedEntityTypeName" 
-            Rule="qualifiedEntityTypeName">
-    <Input>Namespace.BestSellingProduct</Input>
+            Rule="select">
+    <Input>$select=Model.PreferredSupplier/Name</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - tricky" 
             Rule="select">
@@ -720,7 +873,11 @@
   </TestCase>
   <TestCase Name="5.1.3 Select - actions by container" 
             Rule="select">
-    <Input>$select=Container.ActionName,Container2.*</Input>
+    <Input>$select=Container.ActionName,Container.MostPopularName,Container2.*</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - actions and functions with signature" 
+            Rule="select">
+    <Input>$select=Container.ActionName(Model.PreferredSupplier),Container.MostPopularName(Edm.String,Edm.GeographyPoint,Model.NameKind)</Input>
   </TestCase>
   <TestCase Name="5.1.4 OrderBy" 
             Rule="orderby">
@@ -775,36 +932,37 @@
             Rule="queryOptions">
       <Input>$orderby=Name&amp;securitytoken=0412312321</Input>
   </TestCase>
-  <!--TODO: function call with complex, colComplex, colPrimitive -->
-  <!--TODO: JSON types, e.g. string literal with double quotes -->
-  <!--TODO: URL-encoding: attribute PercentEncode="true" on <Input> -->
-  <!--TODO: function name matches actionCall rule, not function call rule -->
+  <!--TODO: URL-encoding: optional attribute <Input Encode="URL"> -->
   <TestCase Name="function with complex parameter - no properties" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex?complex={}</Input>
+    <Input>ProductsByComplex()?complex={}</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - one property" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex?complex={"Name":"Value"}</Input>
+    <Input>ProductsByComplex()?complex={"Name":"Value"}</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - one property" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex?complex={"__metadata":{"type":"Model.Customer"},"Name":"Value"}</Input>
+    <Input>ProductsByComplex()?complex={"__metadata":{"type":"Model.Customer"},"Name":"Value"}</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - three properties" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex?complex={"Name":false,"Price":3.14e0,"Rating":null}</Input>
+    <Input>ProductsByComplex()?complex={"Name":false,"Price":3.14e0,"Rating":null}</Input>
   </TestCase>
   <TestCase Name="function with collection of primitive - zero" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor?colors=[]</Input>
+    <Input>ProductsByColor()?colors=[]</Input>
   </TestCase>
   <TestCase Name="function with collection of primitive - one" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor?colors=["red"]</Input>
+    <Input>ProductsByColor()?colors=["red"]</Input>
   </TestCase>
   <TestCase Name="function with collection of primitive - two" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor?colors=["red","green"]</Input>
+    <Input>ProductsByColor()?colors=["red","green"]</Input>
+  </TestCase>
+  <TestCase Name="function with complex parameter - complex and collection properties" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByComplex()?complex={"Names":["Fred","George"],"Address":{"Street":"MyWay"}}</Input>
   </TestCase>
 </TestSuite>
