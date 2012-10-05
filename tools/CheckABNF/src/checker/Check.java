@@ -94,7 +94,7 @@ public class Check {
 			try {
 				p.setStartRule(ruleID(tc.Rule()));
 				p.setInputString(tc.Input());
-				p.enableTrace(false);
+				p.enableTrace(tc.Trace());
 
 				Result r = p.parse();
 
