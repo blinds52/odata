@@ -563,12 +563,14 @@
             Rule="odataRelativeUri">
     <Input>Products(1)/Sizes/$count</Input>
   </TestCase>
-  <!-- TODO: subtype queries
   <TestCase Name="4.x Inheritance - set of subtypes" 
             Rule="odataRelativeUri">
-    <Input>Customers(1)/Model.Customer</Input>
+    <Input>Products/Model.BestSellingProduct(1)</Input>
   </TestCase>
-  -->
+  <TestCase Name="4.x Inheritance - set of subtypes" 
+            Rule="odataRelativeUri">
+    <Input>Products(1)/Model.BestSellingProduct</Input>
+  </TestCase>
   <TestCase Name="5.1.1 Filter" 
             Rule="filter">
     <Input>$filter=true</Input>
@@ -782,12 +784,22 @@
             Rule="ceilingMethodCallExpr">
     <Input>ceiling(Price)</Input>
   </TestCase>
-  <!-- TODO: 5.1.1.4.26 one-parameter isof --> 
+  <!-- TODO: 5.1.1.4.26 one-parameter isof
+  <TestCase Name="5.1.1.4.26 isof(1)" Trace="true"
+            Rule="isofExpr">
+    <Input>isof(Model.Customer)</Input>
+  </TestCase>
+  -->
   <TestCase Name="5.1.1.4.26 isof(2)" 
             Rule="isofExpr">
     <Input>isof(Category,Model.Customer)</Input>
   </TestCase>
-  <!-- TODO: 5.1.1.4.26 one-parameter cast --> 
+  <!-- TODO: 5.1.1.4.26 one-parameter cast 
+  <TestCase Name="5.1.1.4.27 cast(1)" Trace="true" 
+            Rule="castExpr">
+    <Input>cast(Model.Customer)</Input>
+  </TestCase>
+  --> 
   <TestCase Name="5.1.1.4.27 cast(2)" 
             Rule="castExpr">
     <Input>cast(Category,Model.Customer)</Input>
@@ -827,7 +839,7 @@
     <Input>Products/any(lambda:lambda/Items)</Input>
   </TestCase>
   -->
-  <TestCase Name="5.1.1.x all()"
+  <TestCase Name="5.1.1.x all()" 
             Rule="allMethodCallExpr">
     <Input>Products/all(lambda:true)</Input>
   </TestCase>
@@ -932,7 +944,14 @@
             Rule="queryOptions">
       <Input>$orderby=Name&amp;securitytoken=0412312321</Input>
   </TestCase>
-  <!--TODO: URL-encoding: optional attribute <Input Encode="URL"> -->
+  <TestCase Name="complex parameter value - no properties" 
+            Rule="complexInUri">
+    <Input>{}</Input>
+  </TestCase>
+  <TestCase Name="function with complex parameter - no properties" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByComplex()?complex=%7B%7D</Input>
+  </TestCase>
   <TestCase Name="function with complex parameter - no properties" 
             Rule="odataRelativeUri">
     <Input>ProductsByComplex()?complex={}</Input>
@@ -964,5 +983,70 @@
   <TestCase Name="function with complex parameter - complex and collection properties" 
             Rule="odataRelativeUri">
     <Input>ProductsByComplex()?complex={"Names":["Fred","George"],"Address":{"Street":"MyWay"}}</Input>
+  </TestCase>
+  <!-- Geography and Geometry types -->
+  <TestCase Name="GeographyCollection" 
+            Rule="geographyCollection">
+    <Input>geography'SRID=0;Collection(LineString(142.1 64.1,3.14 2.78))'</Input>
+  </TestCase>
+  <TestCase Name="GeographyLineString" 
+            Rule="geographyLineString">
+    <Input>geography'SRID=0;LineString(142.1 64.1,3.14 2.78)'</Input>
+  </TestCase>
+  <TestCase Name="GeographyMultiLineString" 
+            Rule="geographyMultiLineString">
+    <Input>geography'SRID=0;MultiLineString((142.1 64.1,3.14 2.78),(142.1 64.1,3.14 2.78))'</Input>
+  </TestCase>
+  <TestCase Name="GeographyMultiPoint" 
+            Rule="geographyMultiPoint">
+    <Input>geography'SRID=0;MultiPoint()'</Input>
+  </TestCase>
+  <TestCase Name="GeographyMultiPoint" 
+            Rule="geographyMultiPoint">
+    <Input>geography'SRID=0;MultiPoint((142.1 64.1),(1 2))'</Input>
+  </TestCase>
+  <TestCase Name="GeographyMultiPolygon" 
+            Rule="geographyMultiPolygon">
+    <Input>geography'SRID=0;MultiPolygon(((1 1,1 1),(1 1,2 2,3 3,1 1)))'</Input>
+  </TestCase>
+  <TestCase Name="GeographyPoint" 
+            Rule="geographyPoint">
+    <Input>geography'SRID=0;Point(142.1 64.1)'</Input>
+  </TestCase>
+  <TestCase Name="GeographyPolygon" 
+            Rule="geographyPolygon">
+    <Input>geography'SRID=0;Polygon((1 1,1 1),(1 1,2 2,3 3,1 1))'</Input>
+  </TestCase>
+  <TestCase Name="GeometryCollection" 
+            Rule="geometryCollection">
+    <Input>geometry'SRID=0;Collection(LineString(142.1 64.1,3.14 2.78))'</Input>
+  </TestCase>
+  <TestCase Name="GeometryLineString" 
+            Rule="geometryLineString">
+    <Input>geometry'SRID=0;LineString(142.1 64.1,3.14 2.78)'</Input>
+  </TestCase>
+  <TestCase Name="GeometryMultiLineString" 
+            Rule="geometryMultiLineString">
+    <Input>geometry'SRID=0;MultiLineString((142.1 64.1,3.14 2.78),(142.1 64.1,3.14 2.78))'</Input>
+  </TestCase>
+  <TestCase Name="GeometryMultiPoint" 
+            Rule="geometryMultiPoint">
+    <Input>geometry'SRID=0;MultiPoint()'</Input>
+  </TestCase>
+  <TestCase Name="GeometryMultiPoint" 
+            Rule="geometryMultiPoint">
+    <Input>geometry'SRID=0;MultiPoint((142.1 64.1),(1 2))'</Input>
+  </TestCase>
+  <TestCase Name="GeometryMultiPolygon" 
+            Rule="geometryMultiPolygon">
+    <Input>geometry'SRID=0;MultiPolygon(((1 1,1 1),(1 1,2 2,3 3,1 1)))'</Input>
+  </TestCase>
+  <TestCase Name="GeometryPoint" 
+            Rule="geometryPoint">
+    <Input>geometry'SRID=0;Point(142.1 64.1)'</Input>
+  </TestCase>
+  <TestCase Name="GeometryPolygon" 
+            Rule="geometryPolygon">
+    <Input>geometry'SRID=0;Polygon((1 1,1 1),(1 1,2 2,3 3,1 1))'</Input>
   </TestCase>
 </TestSuite>
