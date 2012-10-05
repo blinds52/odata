@@ -198,7 +198,7 @@ ODATA-112
 
 
 Note on moving issues to Proposed state:
-> Ram suggests that issues be moved to Proposed state only when their proposals are fully defined, where the latter means, that the proposals have sufficient details in them such that the editors can apply the resolutions directly to the specification without requiring significant additional invention or interpretation. This is particularly important as we press forward and delve into deeper issues. During the TC meeting this week, as we process issues, let’s review issues in Proposed state and back them out of Proposed if they don’t fit this criteria.
+> Ram suggests that issues be moved to Proposed state only when their proposals are fully defined, where the latter means, that the proposals have sufficient details in them such that the editors can apply the resolutions directly to the specification without requiring significant additional invention or interpretation. This is particularly important as we press forward and delve into deeper issues. During the TC meeting this week, as we process issues, let's review issues in Proposed state and back them out of Proposed if they don't fit this criteria.
 
 ####6.3.1 [ODATA-102](https://tools.oasis-open.org/issues/browse/ODATA-102)####
 
