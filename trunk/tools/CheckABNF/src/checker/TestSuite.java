@@ -48,7 +48,8 @@ public class TestSuite {
 		private String name;
 		private String rule;
 		private String input;
-		private int failAt;
+		private boolean trace = false;
+		private int failAt = 0;
 
 		public String Name() {
 			return name;
@@ -60,6 +61,10 @@ public class TestSuite {
 
 		public String Input() {
 			return input;
+		}
+
+		public boolean Trace() {
+			return trace;
 		}
 
 		public int FailAt() {
@@ -105,6 +110,10 @@ public class TestSuite {
 				tc.name = tcEl.getAttribute("Name");
 				tc.rule = tcEl.getAttribute("Rule");
 
+				String trace = tcEl.getAttribute("Trace");
+				if (trace.equals("true"))
+					tc.trace = true;
+
 				String failAt = tcEl.getAttribute("FailAt");
 				if (failAt.length() > 0)
 					tc.failAt = Integer.parseInt(failAt);
@@ -147,7 +156,7 @@ public class TestSuite {
 		}
 		return ts;
 	}
-
+	
 	public TestSuite clone(String name) {
 		TestSuite ts = new TestSuite();
 		ts.constraints = this.constraints;
