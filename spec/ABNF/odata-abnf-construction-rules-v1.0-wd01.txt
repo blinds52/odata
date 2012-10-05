@@ -173,8 +173,8 @@ other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
 
 ; Punctuation
 SQUOTE = %x27              
-;EQ = %x3D              
-;SEMI = %x3B              
+EQ = %x3D              
+SEMI = %x3B              
 COMMA = %x2C
 sign = "+" / "-"
 star = "*"
@@ -272,21 +272,61 @@ time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" 
      ; the above is an approximation of the rules for an xml duration.
      ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema-2 for more information
  
-geographyCollection      = "{TODO2}"       ; Format specific
-geographyLineString      = "{TODO3}"       ; Format specific
-geographyMultiLineString = "{TODO4}"       ; Format specific
-geographyMultiPoint      = "{TODO5}"       ; Format specific
-geographyMultiPolygon    = "{TODO6}"       ; Format specific
-geographyPoint           = "{TODO7}"       ; Format specific
-geographyPolygon         = "{TODO8}"       ; Format specific
+geographyCollection   = geographyPrefix fullCollectionLiteral SQUOTE
+fullCollectionLiteral = sridLiteral collectionLiteral
+collectionLiteral     = "Collection(" geoLiteral *( COMMA geoLiteral ) ")"
+geoLiteral            = collectionLiteral
+                      / lineStringLiteral
+                      / multiPointLiteral
+                      / multiLineStringLiteral
+                      / multiPolygonLiteral
+                      / pointLiteral
+                      / polygonLiteral
 
-geometryCollection      = "{TODO10}"       ; Format specific
-geometryLineString      = "{TODO11}"       ; Format specific
-geometryMultiLineString = "{TODO12}"       ; Format specific
-geometryMultiPoint      = "{TODO13}"       ; Format specific
-geometryMultiPolygon    = "{TODO14}"       ; Format specific
-geometryPoint           = "{TODO15}"       ; Format specific
-geometryPolygon         = "{TODO16}"       ; Format specific
+geographyLineString   = geographyPrefix fullLineStringLiteral SQUOTE
+fullLineStringLiteral = sridLiteral lineStringLiteral
+lineStringLiteral     = "LineString" lineStringData
+lineStringData        = "(" positionLiteral 1*( COMMA positionLiteral ) ")"
+
+geographyMultiLineString   = geographyPrefix fullMultiLineStringLiteral SQUOTE
+fullMultiLineStringLiteral = sridLiteral multiLineStringLiteral
+multiLineStringLiteral     = "MultiLineString(" [ lineStringData *( COMMA lineStringData ) ] ")"
+
+geographyMultiPoint   = geographyPrefix fullMultiPointLiteral SQUOTE
+fullMultiPointLiteral = sridLiteral multiPointLiteral
+multiPointLiteral     = "MultiPoint(" [ pointData *( COMMA pointData ) ] ")"
+
+geographyMultiPolygon   = geographyPrefix fullMultiPolygonLiteral SQUOTE
+fullMultiPolygonLiteral = sridLiteral multiPolygonLiteral
+multiPolygonLiteral     = "MultiPolygon(" [ polygonData *( COMMA polygonData ) ] ")"
+
+geographyPoint   = geographyPrefix fullPointLiteral SQUOTE
+fullPointLiteral = sridLiteral pointLiteral
+sridLiteral      = "SRID" EQ 1*5DIGIT SEMI
+pointLiteral     ="Point" pointData
+pointData        = "(" positionLiteral ")"
+positionLiteral  = double SP double  ; longitude, then latitude
+
+geographyPolygon   = geographyPrefix fullPolygonLiteral SQUOTE
+fullPolygonLiteral = sridLiteral polygonLiteral
+polygonLiteral     = "Polygon" polygonData
+polygonData        = "(" ringLiteral   *( COMMA ringLiteral ) ")"
+ringLiteral        = "(" positionLiteral *( COMMA positionLiteral ) ")"
+                   ; Within each ringLiteral, the first and last positionLiteral elements MUST be an exact syntactic match to each other.
+                   ; Within the polygonData, the ringLiterals MUST specify their points in appropriate winding order. 
+                   ; In order of traversal, points to the left side of the ring are interpreted as being in the polygon.
+
+geometryCollection      = geometryPrefix fullCollectionLiteral      SQUOTE
+geometryLineString      = geometryPrefix fullLineStringLiteral      SQUOTE
+geometryMultiLineString = geometryPrefix fullMultiLineStringLiteral SQUOTE
+geometryMultiPoint      = geometryPrefix fullMultiPointLiteral      SQUOTE
+geometryMultiPolygon    = geometryPrefix fullMultiPolygonLiteral    SQUOTE
+geometryPoint           = geometryPrefix fullPointLiteral           SQUOTE
+geometryPolygon         = geometryPrefix fullPolygonLiteral         SQUOTE
+
+geographyPrefix = "geography" SQUOTE
+geometryPrefix  = "geometry" SQUOTE
+
 
 ; Names and identifiers
 odataIdentifier             = identifierLeadingCharacter *478identifierCharacter
@@ -388,8 +428,12 @@ resourcePath = [ entityContainerName "." ] entitySetName [ collectionNavigation 
              / primitiveColFunctionCall [ collectionPath ] 
              / primitiveFunctionCall    [ singlePath ] 
 
-collectionNavigation = keyPredicate [ singleNavigation ]
-                     / [ "/" qualifiedEntityTypeName ] collectionPath
+;collectionNavigation = keyPredicate [ singleNavigation ]
+;                     / [ "/" qualifiedEntityTypeName ] collectionPath
+collectionNavigation = [ "/" qualifiedEntityTypeName ]
+                       ( keyPredicate [ singleNavigation ]
+                       / collectionPath
+                       )
 
 keyPredicate     = simpleKey / compoundKey
 simpleKey        = "(" primitiveLiteral ")"
@@ -409,6 +453,7 @@ singleNavigation = [ "/" qualifiedEntityTypeName ]
                          / entityNavigationProperty    [ singleNavigation ]
                          )
                    / boundOperation 
+                   / ""     ; for casting after key access
                    )
 
 collectionPath = count / boundOperation
