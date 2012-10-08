@@ -313,7 +313,7 @@ Discussion:
 **No objections**. 
 
 ODATA-32
-: "Allow filtering of expanded to-many navigation properties" is **new**. 
+: "Allow filtering of expanded to-many navigation properties" is **open**. 
 
 Note:
 > Time allocated for issue processing is through, thus skip to next item 7
