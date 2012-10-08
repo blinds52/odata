@@ -102,7 +102,7 @@ Answers (tentative) as extracted from chat trace and aggregated:
 ###6.1 Applied resolutions###
 
 Mike: 
->I **move** we accept the applied resolutions to ODATA-166, ODATA-115, ODATA-114, ODATA-106, ODATA-101, ODATA-98, ODATA-97, ODATA-47, ODATA-46 and ODATA-45. **Stefan seconds**.
+>I **move** we accept the applied resolutions to ODATA-116, ODATA-115, ODATA-114, ODATA-106, ODATA-101, ODATA-98, ODATA-97, ODATA-47, ODATA-46 and ODATA-45. **Stefan seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
 
