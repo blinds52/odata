@@ -604,6 +604,16 @@
             Rule="eqExpr">
     <Input>Size eq 4.0</Input>
   </TestCase>
+  <TestCase Name="5.1.1.1.1 Equals" 
+            Rule="eqExpr">
+    <Input>Street eq 'Hugo'</Input>
+  </TestCase>
+  <!-- TODO: complex path
+  <TestCase Name="5.1.1.1.1 Equals" 
+            Rule="eqExpr">
+    <Input>Address/Street eq 'Hugo'</Input>
+  </TestCase>
+  -->
   <TestCase Name="5.1.1.1.2 Not Equals" 
             Rule="neExpr">
     <Input>true ne false</Input>
@@ -691,6 +701,10 @@
   <TestCase Name="5.1.1.4.3 startswith" 
             Rule="startswithMethodCallExpr">
     <Input>startswith(CompanyName,'Futterkiste')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.4.3 startswith" 
+            Rule="startswithMethodCallExpr">
+    <Input>startswith(Supplier/Name,'Futterkiste')</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.4 length" 
             Rule="lengthMethodCallExpr">
@@ -832,6 +846,10 @@
             Rule="boolMethodCallExpr">
     <Input>Supplier/Products/any(lambda:true)</Input>
   </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="lambdaPredicatePrefixExpr">
+    <Input>$it/</Input>
+  </TestCase>
   <!-- TODO: endless recursion: Trace attribute
   <TestCase Name="5.1.1.x any()"
             Rule="boolMethodCallExpr"
@@ -842,6 +860,10 @@
   <TestCase Name="5.1.1.x all()" 
             Rule="allMethodCallExpr">
     <Input>Products/all(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x all()" 
+            Rule="allMethodCallExpr">
+    <Input>EmailAddresses/all(lambda:true)</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - single navigation property" 
             Rule="expand">
