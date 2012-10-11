@@ -399,7 +399,7 @@ ODATA-134
 ###7.1 Review of the projected Timeline [[TL_REF][TL_REF]]###
 
 Context:
-> Reminder – October 20th, 2012: TC completes end-to-end review of the core specifications and files any remaining issues. Let's discuss this.
+> Reminder - October 20th, 2012: TC completes end-to-end review of the core specifications and files any remaining issues. Let's discuss this.
 
 Discussion:
 
