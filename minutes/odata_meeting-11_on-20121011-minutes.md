@@ -4,7 +4,7 @@ Author:	Stefan Drees <stefan@drees.name>
 
 # OData Conference Call #11, Thursday, 11 Oct 2012,  0800 - 0900 PT #
 
-Meeting chaired by: Barabara Hartel
+Meeting chaired by: Barbara Hartel
 
 
 ## 1. Roll call##
@@ -241,11 +241,6 @@ ODATA-131
 
 ODATA-137
 : "Normalize percent-encoded values in URIs before applying ABNF rules" [component: OData ABNF Construction Rules] is **new**. 
-
-Discussion:
-
-* MemberZ states
-
 
 Mike: 
 >I **move** to resolve ODATA-137 as proposed, requiring that URLs be partially decoded.. **Andrew seconds**.
