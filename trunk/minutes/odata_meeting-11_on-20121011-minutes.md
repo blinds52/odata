@@ -230,8 +230,6 @@ Mike:
 
 **No further discussion**. **No objections**. The **amended motion passes**.
 
-**No further discussion**. **No objections**. The **motion passes**.
-
 ODATA-131
 : "Canonical URL for media resources" [components: OData ABNF Construction Rules, OData URL Conventions] is **proposed as amended** with no objections. 
 
