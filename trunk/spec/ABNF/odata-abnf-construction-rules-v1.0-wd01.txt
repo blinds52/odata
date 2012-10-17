@@ -1,7 +1,16 @@
 ; odata-v1.0-abnf for URI conventions
-; TODO: and action request payloads? They are specified in the core part, not a format specification
+;
+; The following rules assume that URIs have been percent-encoding normalized as
+; described in section 6.2.2.2 of RFC3986 (http://tools.ietf.org/html/rfc3986#section-6.2.2) 
+; before applying the grammar to them, i.e. all characters in the unreserved set 
+; (see rule "unreserved" below) are plain literals and not percent-encoded. 
+; In addition the characters SPACE, HTAB, DQUOTE, ":", "{", "}", "[", and "]" must 
+; also be stated as plain literals and not percent-encoded when occuring in the
+; query part of a URI.
+ 
+; TODO: action request payloads: They are specified in the core part, not one of the format specifications
 
-odataUri = scheme "://" host [ ":" port ] serviceRoot [ "$metadata" / "$batch" / odataRelativeUri ]  
+odataUri = "http" [ "s" ] "://" host [ ":" port ] serviceRoot [ "$metadata" / "$batch" / odataRelativeUri ]  
 
 serviceRoot = "/" *( segment-nz "/" )
 
@@ -24,7 +33,6 @@ systemQueryOption = expand
                   / skiptoken
 
 ; TODO: case-sensitivity of system query option names (ODATA-117)
-; TODO: use peWS = "%20" / "%09" instead in URL fragments (ODATA-127) 
 expand       = "$expand=" expandClause 
 expandClause = expandItem *( "," expandItem )
 expandItem   =        [ qualifiedEntityTypeName "/" ] navigationProperty 
@@ -110,8 +118,7 @@ WSP    = SP / HTAB
 ;              / path-absolute
 ;              / path-noscheme
 ;              / path-empty
-; TODO: restrict to http[s]? (ODATA-128)
-scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+;scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 ;authority     = [ userinfo "@" ] host [ ":" port ]
 ;userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
 host          = IP-literal / IPv4address / reg-name
@@ -173,11 +180,11 @@ other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
 
 ; Punctuation
 SQUOTE = %x27              
-EQ = %x3D              
-SEMI = %x3B              
-COMMA = %x2C
-sign = "+" / "-"
-star = "*"
+EQ     = %x3D              
+SEMI   = %x3B              
+COMMA  = %x2C
+sign   = "+" / "-"
+star   = "*"
 
 ; Unrepresentable numeric values
 nan              = %x4e.61.4e ; NaN (upper lower upper case)
@@ -247,15 +254,14 @@ dateTimeBody = year "-" month "-" day "T"
                ) 
 dateTimeOffsetBody = dateTimeBody ( "Z" / sign hour ":" minute )
 
-decimal = decimalBody [ "M" ]
+decimal     = decimalBody [ "M" ]
 decimalBody = [sign] 1*DIGIT ["." 1*DIGIT]
-            ; / [sign] "." 1*DIGIT ;TODO: allow also this pattern?
-doubleBody = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
-           / nanInfinity
-double = doubleBody [ "D" ]
-singleBody = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
-           / nanInfinity
-single = singleBody [ "F" ]
+double      = doubleBody [ "D" ]
+doubleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
+            / nanInfinity
+single      = singleBody [ "F" ]
+singleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
+            / nanInfinity
 
 guid = "guid" SQUOTE 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG SQUOTE
 
@@ -265,7 +271,7 @@ int16 = [ sign ] 1*5DIGIT ; numbers in the range from -32768 to 32767
 int32 = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
 int64 = [ sign ] 1*19DIGIT [ "L" ] ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
-string           = SQUOTE *( unreserved / pct-encoded / SQUOTE-in-string ) SQUOTE ; TODO; was SQUOTE *UTF8-char SQUOTE, but that's not sufficient for use in URLs
+string           = SQUOTE *( unreserved / pct-encoded / SQUOTE-in-string ) SQUOTE ; TODO: was SQUOTE *UTF8-char SQUOTE, but that's not sufficient for use in URLs
 SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal in quotes
 
 time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ] SQUOTE
@@ -428,11 +434,10 @@ resourcePath = [ entityContainerName "." ] entitySetName [ collectionNavigation 
              / primitiveColFunctionCall [ collectionPath ] 
              / primitiveFunctionCall    [ singlePath ] 
 
-;collectionNavigation = keyPredicate [ singleNavigation ]
-;                     / [ "/" qualifiedEntityTypeName ] collectionPath
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
                        ( keyPredicate [ singleNavigation ]
                        / collectionPath
+                       / ""     ; for restricting to a derived entity type
                        )
 
 keyPredicate     = simpleKey / compoundKey
@@ -518,8 +523,9 @@ parameterValue = primitiveLiteral     ; note this is a Uri literal, not a JSON l
                / complexColInUri
                / primitiveColInUri
 
-; The following rules define a URL-encoded JSON format for function parameters
-; TODO: duplicate rules for unencoded action request body format
+; The following rules define a JSON format for function and action parameters
+; Note that the query part ofa URL needs to be partially percent-decoded before
+; applying these rules, see comment at the top of this file
 complexInUri = begin-object
                    [ ( complexTypeMetadataInUri  
                      / primitivePropertyInUri 
@@ -543,22 +549,16 @@ primitiveColInUri = begin-array
                     [ primitiveLiteralInJSON *( value-separator primitiveLiteralInJSON ) ] 
                     end-array
 
-begin-object    = "{" 
-end-object      = "}"
-;begin-object-pe = "%7B"
-;end-object-pe   = "%7D"
+begin-object = "{" 
+end-object   = "}"
 
-begin-array    = "[" 
-end-array      = "]" 
-;begin-array-pe = "%5B"
-;end-array-pe   = "%5D"
+begin-array = "[" 
+end-array   = "]" 
 
-quotation-mark    = DQUOTE
-;quotation-mark-pe = "%22"
-value-separator = COMMA
+quotation-mark  = DQUOTE
 name-separator  = ":"
+value-separator = COMMA
 
-; TODO: use -pe alternative
 complexTypeMetadataInUri = quotation-mark "__metadata" quotation-mark
                            name-separator
                            begin-object
@@ -580,7 +580,7 @@ primitiveLiteralInJSON = stringInJSON
                        / %x66.61.6c.73.65 ; false
                        / %x6e.75.6c.6c    ; null
 stringInJSON = quotation-mark *charInJSON quotation-mark
-charInJSON = pchar   ; TODO: more specific, following RFC4627?
+charInJSON = pchar   ; TODO: more specific, following RFC4627
 ;         char = unescaped /
 ;                escape (
 ;                    %x22 /          ; "    quotation mark  U+0022
@@ -632,7 +632,7 @@ commonExpr = primitiveLiteral
            / castExpr 
            / functionCall ; TODO: rather boundFunctionExpr?
 
-boolCommonExpr = boolean  
+boolCommonExpr = boolean
                / firstBoolPrimitiveMemExpr  ; TODO: why "Primitive"?
                / boolPrimitiveMemberExpr    ; TODO: why "Primitive"?
                / eqExpr 
@@ -650,6 +650,7 @@ boolCommonExpr = boolean
                / boolParenExpr 
                / boolFunctionCall ; TODO: rather boolBoundFunctionExpr?
 
+; TODO: should allow a path
 firstBoolPrimitiveMemExpr = [ qualifiedEntityTypeName "/"] 
                             primitiveProperty ; with a binary property
 
@@ -803,7 +804,7 @@ ceilingMethodCallExpr     = "ceiling"     *WSP "(" *WSP commonExpr *WSP ")"
 parenExpr     = "(" *WSP commonExpr     *WSP ")"
 boolParenExpr = "(" *WSP boolCommonExpr *WSP ")"
 
-; TODO: case-insensitive? (ODATA-117)
+; TODO: case-sensitive (ODATA-117)
 andExpr = boolCommonExpr 1*WSP "and" 1*WSP boolCommonExpr
 orExpr  = boolCommonExpr 1*WSP "or"  1*WSP boolCommonExpr
 
@@ -822,7 +823,7 @@ modExpr = commonExpr 1*WSP "mod" 1*WSP commonExpr
 
 negateExpr = "-" *WSP commonExpr
 
-; TODO: case-insensitive? (ODATA-117)
+; TODO: case-sensitive (ODATA-117)
 notExpr = "not" 1*WSP boolCommonExpr
 
 ; TODO: isn't this rather singleNavigation (once the leading slash has been removed)?
