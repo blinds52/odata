@@ -1,9 +1,4 @@
-This ABNF checker uses Java APG 1.0 from 
-http://www.coasttocoastresearch.com/apg/docs/docjava
-with a small modification, so you need to get the variant from 
-https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/tools/#_trunk_tools_
-
-Open both the apg and CheckABNF projects in your Eclipse workspace.
+This ABNF checker uses Java APG 1.0 from http://www.coasttocoastresearch.com/apg/docs/docjava.
 
 The project contains two linked files:
  - odata-abnf-current.abnf
@@ -15,10 +10,10 @@ and point the linked files to where they reside in your file system.
 The project uses a custom build step to generate src/OData/OData.java from the
 linked file odata-abnf-current.abnf. 
 
-The default run configuration Check executes all test cases in the linked file
+The default run configuration "Check" executes all test cases in the linked file
 odata-abnf-testcases.xml.
 
-The second run configuration CheckTest executes the JUnit self-test of CheckABNF. 
+The second run configuration "CheckTest" executes the JUnit self-test of CheckABNF. 
 It uses the included test case file TestCases.xml 
 
 The schema for the test case XML files is TestCases.xsd. Add it to
@@ -29,6 +24,14 @@ as
  - Location: CheckABNF/TestCases.xsd
  - Key type: Namespace name
  - Key:      http://docs.oasis-open.org/odata/ns/testcases
+ 
+While you're at it, also make sure that in
+
+   Window -> Preferences -> Run/Debug -> Launching
+
+in the bottom-most group "Launch Operation" the first radio button 
+"Always launch the previously launched application" is selected. 
+This allows you to use F11 in the XML editor to re-run all test cases.
  
 Each test case has a name, a start rule for the parser, and an input string to 
 parse. It may specify the position at which the parser is expected to fail:
@@ -71,6 +74,3 @@ sequences; in this example between navigation properties with cardinality 1 and 
 If the parser successfully matches an entityNavigationProperty, it will trigger a
 callback that will check whether the matched character sequence is identical to one
 of the given <Match>es. If not, the parser will continue with the next alternative.
-
-This "backing out" of otherwise successful matches is the above mentioned modification
-to the original Java APG.

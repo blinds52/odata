@@ -187,12 +187,12 @@ abstract class Opcode {
 					data.match = true;
 					data.offset = offset + returnLength;
 				} 
-				// TODO: RHA modified from here
+				// RHA modified from here
 				else if (returnLength == -2) {
 					data.match = false;
 					data.offset = offset;
 				}
-				// TODO: RHA modified to here
+                // RHA modified to here
 			}
 
 			if(data.ast != null && data.inPredicate == 0){

@@ -2,7 +2,7 @@ package com.coasttocoastresearch.examples.mailbox;
 
 import com.coasttocoastresearch.apg.Grammar;
 import java.io.PrintStream;
-/** This class has been generated automatically from an SABNF grammer by
+/** This class has been generated automatically from an SABNF grammar by
  * Java APG, the {@link com.coasttocoastresearch.apg.Generator} class.<br>
  * It is an extension of the {@link com.coasttocoastresearch.apg.Grammar}
  * class containing additional members and enums not found
