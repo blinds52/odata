@@ -8,7 +8,9 @@
 ; also be stated as plain literals and not percent-encoded when occuring in the
 ; query part of a URI.
  
-; TODO: action request payloads: They are specified in the core part, not one of the format specifications
+; TODO: action request payloads (ODATA-80)
+
+; TODO: reorder rules top-down
 
 odataUri = "http" [ "s" ] "://" host [ ":" port ] serviceRoot [ "$metadata" / "$batch" / odataRelativeUri ]  
 
@@ -509,11 +511,10 @@ boundComplexColFuncCall   = complexColFunctionCall
 boundPrimitiveFuncCall    = primitiveFunctionCall
 boundPrimitiveColFuncCall = primitiveColFunctionCall
 
-functionParameters      = "(" [ functionParameter *( "," functionParameter ) ] ")"
-functionParameter       = functionParameterName "=" ( primitiveParameterValue / parameterAlias )
-functionParameterName   = odataIdentifier;
-primitiveParameterValue = primitiveLiteral
-parameterAlias          = "@" odataIdentifier
+functionParameters    = "(" [ functionParameter *( "," functionParameter ) ] ")"
+functionParameter     = functionParameterName "=" ( primitiveLiteral / parameterAlias )
+functionParameterName = odataIdentifier
+parameterAlias        = "@" odataIdentifier
 
 aliasAndValue         = parameterAlias        "=" parameterValue
 parameterNameAndValue = functionParameterName "=" parameterValue
@@ -572,7 +573,7 @@ typeNVPInUri = quotation-mark "type" quotation-mark
 primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark 
                          name-separator 
                          primitiveLiteralInJSON
-; TODO: not complete
+; TODO: not complete 
 ; JSON syntay [ RFC4627 ]                 
 primitiveLiteralInJSON = stringInJSON
                        / numberInJSON
@@ -613,12 +614,9 @@ collectionPropertyInUri = ( quotation-mark primitiveColProperty quotation-mark
                             complexColInUri
                           )
                 
-;------------------------------------------------------------------------------
-; Here be dragons! 
-;------------------------------------------------------------------------------
-
 commonExpr = primitiveLiteral
-           / firstMemberExpr 
+           / firstMemberExpr
+           / functionExpr
            / boolCommonExpr 
            / methodCallExpr 
            / parenExpr 
@@ -628,13 +626,11 @@ commonExpr = primitiveLiteral
            / divExpr 
            / modExpr 
            / negateExpr 
-           / memberExpr 
            / castExpr 
-           / functionCall ; TODO: rather boundFunctionExpr?
 
 boolCommonExpr = boolean
-               / firstBoolPrimitiveMemExpr  ; TODO: why "Primitive"?
-               / boolPrimitiveMemberExpr    ; TODO: why "Primitive"?
+               / boolFirstMemberExpr
+               / boolFunctionExpr
                / eqExpr 
                / neExpr 
                / ltExpr  
@@ -648,87 +644,70 @@ boolCommonExpr = boolean
                / boolCastExpr  
                / boolMethodCallExpr  
                / boolParenExpr 
-               / boolFunctionCall ; TODO: rather boolBoundFunctionExpr?
 
-; TODO: should allow a path
-firstBoolPrimitiveMemExpr = [ qualifiedEntityTypeName "/"] 
-                            primitiveProperty ; with a binary property
-
-boolPrimitiveMemberExpr = commonExpr "/" [ qualifiedEntityTypeName "/" ] primitivePropertyPath
-
-memberExpr = primitivePropertyPath 
-           / complexPropertyPath 
-           / entityNavigationProperty [ singleNavigationExpr ] 
-           / commonExpr "/" [ qualifiedEntityTypeName "/" ] entityColNavigationProperty [ collectionNavigationExpr ] 
-           / collectionPropertyPath [ anyExpr / allExpr ] ; TODO: this alternative seems unnecessary as anyExpr and allExpr are reachable via boolCommonExpr and thus commonExpr
-
-firstMemberExpr = [ qualifiedEntityTypeName "/"]
-                  [ lambdaPredicatePrefixExpr ] ; A lambdaPredicatePrefixExpr is only defined inside a 
-                                                ; lambdaPredicateExpr. A lambdaPredicatePrefixExpr is required   
-                                                ; inside a lambdaPredicateExpr.
-                  entityColNavigationProperty [ collectionNavigationExpr ] 
-                / entityNavigationProperty [ singleNavigationExpr ] 
-                / primitivePropertyPath 
-                / complexPropertyPath 
-                / collectionPropertyPath [ anyExpr / allExpr ] ; TODO: seems to be unnecessary as any/all are reachable via (bool)commonExpr
-
-functionCall = entityFunctionCall  
-             / entityColFunctionCall
-             / complexFunctionCall  
-             / complexColFunctionCall 
-             / primitiveFunctionCall 
-             / primitiveColFunctionCall
-
-boolFunctionCall = primitiveFunctionCall ; with the added restriction that the return type is Edm.Boolean
-
+boolFirstMemberExpr = firstMemberExpr ; with the added restriction that the return type is Edm.Boolean
+firstMemberExpr     = [ lambdaPredicatePrefixExpr ]  ; only allowed inside a lambdaPredicateExpr
+                      memberExpr
+                  
+memberExpr = [ qualifiedEntityTypeName "/" ]
+             ( entityColNavigationProperty [ collectionNavigationExpr ] 
+             / entityNavigationProperty    [ singleNavigationExpr ] 
+             / complexColProperty          [ collectionPathExpr ]
+             / complexProperty             [ complexPathExpr ] 
+             / primitiveColProperty        [ collectionPathExpr ]
+             / primitiveProperty           [ singlePathExpr ]
+             / streamProperty 
+             / boundFunctionExpr 
+             )
+                   
 lambdaPredicatePrefixExpr = inscopeVariableExpr "/"
+inscopeVariableExpr       = implicitVariableExpr / lambdaVariableExpr
+implicitVariableExpr      = "$it" ; references the unnamed outer variable of the query
+lambdaVariableExpr        = odataIdentifier
 
-inscopeVariableExpr  = implicitVariableExpr / lambdaVariableExpr
-implicitVariableExpr = "$it" ; references the unnamed outer variable of the query
-lambdaVariableExpr   = odataIdentifier
-
-primitivePropertyPath  = [ "/" qualifiedEntityTypeName ] "/" ( primitiveKeyProperty / primitiveNonKeyProperty ) [ value ]
-collectionPropertyPath = [ "/" qualifiedEntityTypeName ] "/" ( primitiveColProperty / complexColProperty ) [ boundOperation ]
-complexPropertyPath    = [ "/" qualifiedEntityTypeName ] "/" complexProperty 
-                         [ primitivePropertyPath  
-                         / complexPropertyPath 
-                         / collectionPropertyPath 
-                         / boundOperation
-                         ] 
-
-collectionNavigationExpr = "/" [ qualifiedEntityTypeName "/" ] 
+collectionNavigationExpr = count
+                         / "/" [ qualifiedEntityTypeName "/" ] 
                            ( boundFunctionExpr 
-                           / anyExpr ; TODO: this alternative seems unnecessary as anyExpr and allExpr are reachable via boolCommonExpr and thus commonExpr
+                           / anyExpr
                            / allExpr 
                            )
 
-singleNavigationExpr = [ "/" qualifiedEntityTypeName ]
-                       ( "/" entityColNavigationProperty [ collectionNavigationExpr ] 
-                       / "/" entityNavigationProperty [ singleNavigationExpr ] 
-                       / primitivePropertyPath 
-                       / complexPropertyPath 
-                       / collectionPropertyPath [ anyExpr / allExpr ] 
-                       / "/" streamProperty 
-                       / boundFunctionExpr 
-                       )
-        
-; TODO: should probably replace functionCall in commonExpr
-boundFunctionExpr = [ "/" qualifiedEntityTypeName ] "/" 
-                    ( boundEntityColFuncCall [ singleNavigationExpr ] 
-                    / boundEntityFuncCall [ collectionNavigationExpr ] 
-                    / boundPrimitiveFuncCall [ boundFunctionExpr ] 
-                    / boundPrimitiveColFuncCall [ boundFunctionExpr ] 
-                    / boundComplexFuncCall [ complexPropertyPath / boundFunctionExpr ] 
-                    / boundComplexColFuncCall [ boundFunctionExpr ]
-                    )
-                    ; boundOperation segments can only be composed if the type of the previous segment matches 
-                    ; the type of the first parameter of the action or function being called.
-                    ; NOTE: the qualifiedEntityTypeName is only permitted if the previous segment is an Entity or Collection of Entities.
-                    ; TOOD: roll this restriction into the ABNF
+singleNavigationExpr = "/" memberExpr
 
-;boolBoundFunctionExpr = boundFunctionExpr
-                         ; with the added restriction that the boolBoundFunctionExpr MUST return a boolean value
+collectionPathExpr = count 
+                   / "/" boundFunctionExpr
+                   / "/" anyExpr
+                   / "/" allExpr
  
+complexPathExpr = "/" [ qualifiedComplexTypeName "/" ]
+                  ( primitiveProperty [ singlePathExpr ]
+                  / complexProperty   [ complexPathExpr ]
+                  / boundFunctionExpr
+                  )
+
+singlePathExpr = "/" boundFunctionExpr
+
+boolFunctionExpr  = functionExpr ; with the added restriction that the return type is Edm.Boolean
+boundFunctionExpr = functionExpr ; boundFunction segments can only be composed if the type of the    
+                                 ; previous segment matches the type of the first function parameter
+                                     
+functionExpr = [ operationQualifier ] 
+               ( entityColFunction    functionExprParameters [ collectionNavigationExpr ] 
+               / entityFunction       functionExprParameters [ singleNavigationExpr ] 
+               / complexColFunction   functionExprParameters [ collectionPathExpr ]
+               / complexFunction      functionExprParameters [ complexPathExpr ] 
+               / primitiveColFunction functionExprParameters [ collectionPathExpr ] 
+               / primitiveFunction    functionExprParameters [ singlePathExpr ] 
+               )
+
+functionExprParameters = "(" [ functionExprParameter *( "," functionExprParameter ) ] ")"
+; TODO: allow firstMemberExpr also as parameter values
+functionExprParameter  = functionParameterName "=" parameterValue
+
+anyExpr = "any(" [ lambdaVariableExpr ":" lambdaPredicateExpr ] ")"
+allExpr = "all(" lambdaVariableExpr ":" lambdaPredicateExpr ")"
+lambdaPredicateExpr = boolCommonExpr ; containing at least one lambdaPredicatePrefixExpr
+
 methodCallExpr = boolMethodCallExpr 
                / indexOfMethodCallExpr 
                / toLowerMethodCallExpr 
@@ -760,46 +739,32 @@ boolMethodCallExpr = endsWithMethodCallExpr
                    / startsWithMethodCallExpr 
                    / substringOfMethodCallExpr                                          
                    / intersectsMethodCallExpr 
-                   / anyMethodCallExpr 
-                   / allMethodCallExpr
 
-allMethodCallExpr = pathExpression-collection "/" allExpr
-anyMethodCallExpr = pathExpression-collection "/" anyExpr
-
-pathExpression-collection = *( entityNavigationProperty "/" )
-                             ( entityColNavigationProperty 
-                             / complexColProperty 
-                             / primitiveColProperty) ; TODO: check if other path segments can be "prepended" by other rules
-
-anyExpr = "any(" [ lambdaVariableExpr ":" lambdaPredicateExpr ] ")"
-allExpr = "all(" lambdaVariableExpr ":" lambdaPredicateExpr ")"
-lambdaPredicateExpr = boolCommonExpr
-
-substringOfMethodCallExpr = "substringof" *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
-startsWithMethodCallExpr  = "startswith"  *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
-endsWithMethodCallExpr    = "endswith"    *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
-lengthMethodCallExpr      = "length"      *WSP "(" *WSP commonExpr *WSP ")"
-indexOfMethodCallExpr     = "indexof"     *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
-substringMethodCallExpr   = "substring"   *WSP "(" *WSP commonExpr "," commonExpr [ "," commonExpr *WSP ] ")"
-toLowerMethodCallExpr     = "tolower"     *WSP "(" *WSP commonExpr *WSP ")"
-toUpperMethodCallExpr     = "toupper"     *WSP "(" *WSP commonExpr *WSP ")"
-trimMethodCallExpr        = "trim"        *WSP "(" *WSP commonExpr *WSP ")"
-concatMethodCallExpr      = "concat"      *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
-yearMethodCallExpr        = "year"        *WSP "(" *WSP commonExpr *WSP ")"
-yearsMethodCallExpr       = "years"       *WSP "(" *WSP commonExpr *WSP ")"
-monthMethodCallExpr       = "month"       *WSP "(" *WSP commonExpr *WSP ")"
-monthsMethodCallExpr      = "months"      *WSP "(" *WSP commonExpr *WSP ")"
-dayMethodCallExpr         = "day"         *WSP "(" *WSP commonExpr *WSP ")"
-daysMethodCallExpr        = "days"        *WSP "(" *WSP commonExpr *WSP ")"
-hourMethodCallExpr        = "hour"        *WSP "(" *WSP commonExpr *WSP ")"
-hoursMethodCallExpr       = "hours"       *WSP "(" *WSP commonExpr *WSP ")"
-minuteMethodCallExpr      = "minute"      *WSP "(" *WSP commonExpr *WSP ")"
-minutesMethodCallExpr     = "minutes"     *WSP "(" *WSP commonExpr *WSP ")"
-secondMethodCallExpr      = "second"      *WSP "(" *WSP commonExpr *WSP ")"
-secondsMethodCallExpr     = "seconds"     *WSP "(" *WSP commonExpr *WSP ")"
-roundMethodCallExpr       = "round"       *WSP "(" *WSP commonExpr *WSP ")"
-floorMethodCallExpr       = "floor"       *WSP "(" *WSP commonExpr *WSP ")"
-ceilingMethodCallExpr     = "ceiling"     *WSP "(" *WSP commonExpr *WSP ")"
+substringOfMethodCallExpr = "substringof" "(" *WSP commonExpr "," commonExpr *WSP ")"
+startsWithMethodCallExpr  = "startswith"  "(" *WSP commonExpr "," commonExpr *WSP ")"
+endsWithMethodCallExpr    = "endswith"    "(" *WSP commonExpr "," commonExpr *WSP ")"
+lengthMethodCallExpr      = "length"      "(" *WSP commonExpr *WSP ")"
+indexOfMethodCallExpr     = "indexof"     "(" *WSP commonExpr "," commonExpr *WSP ")"
+substringMethodCallExpr   = "substring"   "(" *WSP commonExpr "," commonExpr [ "," commonExpr *WSP ] ")"
+toLowerMethodCallExpr     = "tolower"     "(" *WSP commonExpr *WSP ")"
+toUpperMethodCallExpr     = "toupper"     "(" *WSP commonExpr *WSP ")"
+trimMethodCallExpr        = "trim"        "(" *WSP commonExpr *WSP ")"
+concatMethodCallExpr      = "concat"      "(" *WSP commonExpr "," commonExpr *WSP ")"
+yearMethodCallExpr        = "year"        "(" *WSP commonExpr *WSP ")"
+yearsMethodCallExpr       = "years"       "(" *WSP commonExpr *WSP ")"
+monthMethodCallExpr       = "month"       "(" *WSP commonExpr *WSP ")"
+monthsMethodCallExpr      = "months"      "(" *WSP commonExpr *WSP ")"
+dayMethodCallExpr         = "day"         "(" *WSP commonExpr *WSP ")"
+daysMethodCallExpr        = "days"        "(" *WSP commonExpr *WSP ")"
+hourMethodCallExpr        = "hour"        "(" *WSP commonExpr *WSP ")"
+hoursMethodCallExpr       = "hours"       "(" *WSP commonExpr *WSP ")"
+minuteMethodCallExpr      = "minute"      "(" *WSP commonExpr *WSP ")"
+minutesMethodCallExpr     = "minutes"     "(" *WSP commonExpr *WSP ")"
+secondMethodCallExpr      = "second"      "(" *WSP commonExpr *WSP ")"
+secondsMethodCallExpr     = "seconds"     "(" *WSP commonExpr *WSP ")"
+roundMethodCallExpr       = "round"       "(" *WSP commonExpr *WSP ")"
+floorMethodCallExpr       = "floor"       "(" *WSP commonExpr *WSP ")"
+ceilingMethodCallExpr     = "ceiling"     "(" *WSP commonExpr *WSP ")"
 
 parenExpr     = "(" *WSP commonExpr     *WSP ")"
 boolParenExpr = "(" *WSP boolCommonExpr *WSP ")"
@@ -827,14 +792,13 @@ negateExpr = "-" *WSP commonExpr
 notExpr = "not" 1*WSP boolCommonExpr
 
 ; TODO: isn't this rather singleNavigation (once the leading slash has been removed)?
-isofExpr     = "isof" *WSP "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
-castExpr     = "cast" *WSP "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
-boolCastExpr = "cast" *WSP "(" *WSP [ commonExpr "," ] "Edm.Boolean"     *WSP ")"
+isofExpr     = "isof" "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
+castExpr     = "cast" "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
+boolCastExpr = "cast" "(" *WSP [ commonExpr "," ] "Edm.Boolean"     *WSP ")"
 
-; TODO: what are these? They are not mentioned in the URL conventions
-getTotalOffsetMinutesExpr = "gettotaloffsetminutes" *WSP "(" *WSP commonExpr *WSP ")" 
-distanceMethodCallExpr    = "geo.distance"          *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
-geoLengthMethodCallExpr   = "geo.length"            *WSP "(" *WSP commonExpr *WSP ")"
-intersectsMethodCallExpr  = "geo.intersects"        *WSP "(" *WSP commonExpr "," commonExpr *WSP ")"
+getTotalOffsetMinutesExpr = "gettotaloffsetminutes" "(" *WSP commonExpr *WSP ")" 
+distanceMethodCallExpr    = "geo.distance"          "(" *WSP commonExpr "," commonExpr *WSP ")"
+geoLengthMethodCallExpr   = "geo.length"            "(" *WSP commonExpr *WSP ")"
+intersectsMethodCallExpr  = "geo.intersects"        "(" *WSP commonExpr "," commonExpr *WSP ")"
 
 ; End of odata-v1.0-abnf
