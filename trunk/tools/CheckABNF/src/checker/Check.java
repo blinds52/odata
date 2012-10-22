@@ -94,9 +94,8 @@ public class Check {
 			try {
 				p.setStartRule(ruleID(tc.Rule()));
 				p.setInputString(tc.Input());
-				p.enableTrace(tc.Trace());
 
-				Result r = p.parse();
+				Result r = parse(p, ts, tc.Trace(), out);
 
 				if (r.success() && tc.FailAt() == TestSuite.NOWHERE) {
 					out.println("OK: " + tc.Name() + ": " + tc.Input() + " is "
@@ -127,17 +126,7 @@ public class Check {
 					err.println(tc.Rule() + "\n");
 
 					// parse again with trace enabled
-					trace = err;
-					Trace t = p.enableTrace(true);
-					t.setOut(err);
-					// TODO: add recursive disabling to Java APG?
-					for (String rule : ts.DisableTrace()) {
-						t.enableRule(false, ruleID(rule));
-					}
-					p.parse();
-					err.println();
-					err.flush();
-					trace = null;
+					parse(p, ts, true, err);
 				}
 			} catch (InvalidRuleName e) {
 				failures++;
@@ -145,6 +134,8 @@ public class Check {
 						+ "\n");
 			} catch (Exception e) {
 				failures++;
+				err.println("\nERROR: " + tc.Name() + ": " + e.getMessage()
+						+ "\n");
 				e.printStackTrace(err);
 			}
 		}
@@ -158,6 +149,28 @@ public class Check {
 			err.println("\n" + failures + " of " + ts.TestCases().size()
 					+ " test cases failed\n");
 		}
+	}
+
+	private Result parse(Parser p, TestSuite ts, boolean doTrace, PrintStream ps)
+			throws Exception {
+		Trace t = p.enableTrace(doTrace);
+		if (doTrace) {
+			trace = ps;
+			t.setOut(trace);
+			// TODO: add recursive disabling to Java APG?
+			for (String rule : ts.DisableTrace()) {
+				t.enableRule(false, ruleID(rule));
+			}
+		}
+
+		Result r = p.parse();
+
+		if (doTrace) {
+			trace.println();
+			trace.flush();
+			trace = null;
+		}
+		return r;
 	}
 
 	int ruleID(String ruleName) {
