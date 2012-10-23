@@ -1,22 +1,133 @@
+;------------------------------------------------------------------------------
 ; odata-v1.0-abnf for URI conventions
-;
+;------------------------------------------------------------------------------
 ; The following rules assume that URIs have been percent-encoding normalized as
-; described in section 6.2.2.2 of RFC3986 (http://tools.ietf.org/html/rfc3986#section-6.2.2) 
-; before applying the grammar to them, i.e. all characters in the unreserved set 
-; (see rule "unreserved" below) are plain literals and not percent-encoded. 
+; described in section 6.2.2.2 of RFC3986 
+; (http://tools.ietf.org/html/rfc3986#section-6.2.2) 
+; before applying the grammar to them, i.e. all characters in the unreserved 
+; set (see rule "unreserved" below) are plain literals and not percent-encoded. 
 ; In addition the characters SPACE, HTAB, DQUOTE, ":", "{", "}", "[", and "]" must 
 ; also be stated as plain literals and not percent-encoded when occuring in the
 ; query part of a URI.
- 
-; TODO: action request payloads (ODATA-80)
-
-; TODO: reorder rules top-down
+;------------------------------------------------------------------------------
+; Contents
+; --------
+; 1. Resource Path
+; 2. Query Options
+; 3. Expressions
+; 4. JSON format for function and action parameters
+; 5. Names and identifiers
+; 6. Literal Data Values
+; 7. Punctuation
+;
+; A. URI syntax [RFC3986]
+; B. ABNF core definitions [RFC5234]
+; C. UTF-8 syntax [RFC3629]
+;------------------------------------------------------------------------------
 
 odataUri = "http" [ "s" ] "://" host [ ":" port ] serviceRoot [ "$metadata" / "$batch" / odataRelativeUri ]  
 
 serviceRoot = "/" *( segment-nz "/" )
 
 odataRelativeUri = resourcePath [ "?" queryOptions ]
+
+;------------------------------------------------------------------------------
+; 1. Resource Path
+;------------------------------------------------------------------------------
+
+resourcePath = [ entityContainerName "." ] entitySetName [ collectionNavigation ] 
+             / actionCall 
+             / entityColFunctionCall    [ collectionNavigation ] 
+             / entityFunctionCall       [ singleNavigation ] 
+             / complexColFunctionCall   [ collectionPath ] 
+             / complexFunctionCall      [ complexPath ] 
+             / primitiveColFunctionCall [ collectionPath ] 
+             / primitiveFunctionCall    [ singlePath ] 
+
+collectionNavigation = [ "/" qualifiedEntityTypeName ]
+                       ( keyPredicate [ singleNavigation ]
+                       / collectionPath
+                       / ""     ; for restricting to a derived entity type
+                       )
+
+keyPredicate     = simpleKey / compoundKey
+simpleKey        = "(" keyPropertyValue ")"
+compoundKey      = "(" keyValuePair *("," keyValuePair) ")"
+keyValuePair     = primitiveKeyProperty "=" keyPropertyValue
+keyPropertyValue = primitiveLiteral
+
+singleNavigation = [ "/" qualifiedEntityTypeName ] 
+                   ( value  ; for addressing media resources - TODO: remove (ODATA-131)
+                   / links "/" navigationProperty 
+                   / "/" ( entityColNavigationProperty [ collectionNavigation ]
+                         / entityNavigationProperty    [ singleNavigation ]
+                         / complexColProperty          [ collectionPath ]
+                         / complexProperty             [ complexPath ]
+                         / primitiveColProperty        [ collectionPath ]
+                         / primitiveProperty           [ singlePath ]
+                         / streamProperty 
+                         )
+                   / boundOperation 
+                   / ""     ; for casting after key access
+                   )
+
+collectionPath = count / boundOperation
+singlePath     = value / boundOperation
+
+complexPath    = [ "/" qualifiedComplexTypeName ] 
+                 ( "/" ( complexProperty   [ complexPath ]
+                       / primitiveProperty [ singlePath ]
+                       ) 
+                 / boundOperation
+                 )
+
+count = "/$count" 
+value = "/$value"
+links = "/$links"
+
+; boundOperation segments can only be composed if the type of the previous segment 
+; matches the type of the first parameter of the action or function being called.
+boundOperation = "/" ( boundActionCall
+                     / boundEntityColFuncCall    [ collectionNavigation ] 
+                     / boundEntityFuncCall       [ singleNavigation ] 
+                     / boundComplexColFuncCall   [ collectionPath ] 
+                     / boundComplexFuncCall      [ complexPath ]
+                     / boundPrimitiveColFuncCall [ collectionPath ] 
+                     / boundPrimitiveFuncCall    [ singlePath ] 
+                     )
+
+actionCall      = [ operationQualifier ] action [ "()" ]
+boundActionCall = actionCall
+                  ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
+                  ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
+
+; The following boundXxxFuncCall rules have the added restrictions that
+;  - the function MUST support binding, and 
+;  - the binding parameter type MUST match the type of resource identified by the 
+;    Uri immediately preceding (to the left) of the boundXxxFuncCall, and
+;  - the functionParameters MUST NOT include the bindingParameter.
+boundEntityFuncCall       = entityFunctionCall
+boundEntityColFuncCall    = entityColFunctionCall
+boundComplexFuncCall      = complexFunctionCall
+boundComplexColFuncCall   = complexColFunctionCall
+boundPrimitiveFuncCall    = primitiveFunctionCall
+boundPrimitiveColFuncCall = primitiveColFunctionCall
+
+entityFunctionCall       = [ operationQualifier ] entityFunction       functionParameters
+entityColFunctionCall    = [ operationQualifier ] entityColFunction    functionParameters
+complexFunctionCall      = [ operationQualifier ] complexFunction      functionParameters
+complexColFunctionCall   = [ operationQualifier ] complexColFunction   functionParameters
+primitiveFunctionCall    = [ operationQualifier ] primitiveFunction    functionParameters
+primitiveColFunctionCall = [ operationQualifier ] primitiveColFunction functionParameters
+
+functionParameters    = "(" [ functionParameter *( "," functionParameter ) ] ")"
+functionParameter     = functionParameterName "=" ( parameterAlias / primitiveLiteral )
+functionParameterName = odataIdentifier
+parameterAlias        = "@" odataIdentifier
+
+;------------------------------------------------------------------------------
+; 2. Query Options
+;------------------------------------------------------------------------------
 
 queryOptions = queryOption *("&" queryOption)        
 queryOption  = systemQueryOption  
@@ -62,7 +173,7 @@ inlinecount = "$inlinecount=" ( "allpages" / "none" )
 
 select       = "$select=" selectClause
 selectClause = selectItem *( COMMA selectItem )
-selectItem   = star  
+selectItem   = STAR  
              / allOperationsInContainer 
              / [ qualifiedEntityTypeName "/" ] 
                ( ( navigationProperty [ "/" selectItem ] ) 
@@ -70,550 +181,38 @@ selectItem   = star
                / qualifiedActionName  
                / qualifiedFunctionName  
                )
-allOperationsInContainer = operationQualifier star                 
+allOperationsInContainer = operationQualifier STAR                 
 operationQualifier       = [ namespace "." ] entityContainerName "."
 
+; The parameterTypeNames are required to uniquely identify the action or function
+; only if it has overloads.
 qualifiedActionName   = [ operationQualifier ] action   [ "(" parameterTypeNames ")" ]
 qualifiedFunctionName = [ operationQualifier ] function [ "(" parameterTypeNames ")" ]
-                                                ; the parameterTypeNames are required to uniquely identify the Function
-                                                ; only if the Function in question has overloads.
 
+; The types of all the parameters to the corresponding function import 
+; in the order they are declared in the function import.
 parameterTypeNames = [ parameterTypeName *( "," parameterTypeName ) ]
-                                                ; the types of all the parameters to the corresponding functionImport 
-                                                ; in the order they are declared in the function import
 parameterTypeName  = qualifiedTypeName 
 
 skiptoken = "$skiptoken=" 1*( unreserved / pct-encoded / other-delims /  ":" / "@" / "$" / "=" ) ; everything except "&"
+
+aliasAndValue         = parameterAlias        "=" parameterValue
+parameterNameAndValue = functionParameterName "=" parameterValue
+
+parameterValue = primitiveLiteral
+               / complexInUri  
+               / complexColInUri
+               / primitiveColInUri
 
 customQueryOption = customName [ "=" customValue ]
 customName        =  ( unreserved / pct-encoded / other-delims / ":" / "@" )       ; MUST NOT start with "$"
                     *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" ) ; MUST NOT contain "="
 customValue       = *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" / "=" ) ; everything except "&"
 
-; ABNF core definitions [RFC5234]
-ALPHA  = %x41-5A / %x61-7A 
-DIGIT  = %x30-39 
-HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F" 
-DQUOTE = %x22
-SP     = %x20 
-HTAB   = %x09 
-WSP    = SP / HTAB 
-;LWSP = *(WSP / CRLF WSP) 
-;VCHAR = %x21-7E 
-;CHAR = %x01-7F
-;LOCTET = %x00-FF 
-;CR     = %x0D 
-;LF     = %x0A 
-;CRLF   = CR LF
-;BIT = "0" / "1" 
+;------------------------------------------------------------------------------
+; 3. Expressions
+;------------------------------------------------------------------------------
 
-; URI syntax [RFC3986]
-;URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
-;hier-part     = "//" authority path-abempty
-;              / path-absolute
-;              / path-rootless
-;              / path-empty
-;URI-reference = URI / relative-ref
-;absolute-URI  = scheme ":" hier-part [ "?" query ]
-;relative-ref  = relative-part [ "?" query ] [ "#" fragment ]
-;relative-part = "//" authority path-abempty
-;              / path-absolute
-;              / path-noscheme
-;              / path-empty
-;scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-;authority     = [ userinfo "@" ] host [ ":" port ]
-;userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
-host          = IP-literal / IPv4address / reg-name
-port          = *DIGIT
-IP-literal    = "[" ( IPv6address / IPvFuture  ) "]"
-IPvFuture     = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
-IPv6address   =                            6( h16 ":" ) ls32
-                 /                       "::" 5( h16 ":" ) ls32
-                 / [               h16 ] "::" 4( h16 ":" ) ls32
-                 / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
-                 / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
-                 / [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
-                 / [ *4( h16 ":" ) h16 ] "::"              ls32
-                 / [ *5( h16 ":" ) h16 ] "::"              h16
-                 / [ *6( h16 ":" ) h16 ] "::"
-h16           = 1*4HEXDIG
-ls32          = ( h16 ":" h16 ) / IPv4address
-IPv4address   = dec-octet "." dec-octet "." dec-octet "." dec-octet
-dec-octet     = "1" 2DIGIT            ; 100-199
-              / "2" %x30-34 DIGIT     ; 200-249
-              / "25" %x30-35          ; 250-255
-              / %x31-39 DIGIT         ; 10-99
-              / DIGIT                 ; 0-9
-reg-name      = *( unreserved / pct-encoded / sub-delims )
-;path          = path-abempty    ; begins with "/" or is empty
-;              / path-absolute   ; begins with "/" but not "//"
-;              / path-noscheme   ; begins with a non-colon segment
-;              / path-rootless   ; begins with a segment
-;              / path-empty      ; zero characters
-;path-abempty  = *( "/" segment )
-;path-absolute = "/" [ segment-nz *( "/" segment ) ]
-;path-noscheme = segment-nz-nc *( "/" segment )
-;path-rootless = segment-nz *( "/" segment )
-;path-empty    = ""
-;segment       = *pchar
-segment-nz    = 1*pchar
-;segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" ) ; non-zero-length segment without any colon ":"
-pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
-;query         = *( pchar / "/" / "?" )
-;fragment      = *( pchar / "/" / "?" )
-pct-encoded   = "%" HEXDIG HEXDIG
-unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
-;reserved      = gen-delims / sub-delims
-;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-sub-delims    = "&" / "=" / "$" / other-delims
-other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
-
-; UTF-8 syntax [RFC3629]
-;UTF8-octets = *( UTF8-char )
-;UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
-;UTF8-1      = %x00-7F
-;UTF8-2      = %xC2-DF UTF8-tail
-;UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
-;              %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
-;UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
-;              %xF4 %x80-8F 2( UTF8-tail )
-;UTF8-tail   = %x80-BF
-
-; Punctuation
-SQUOTE = %x27              
-EQ     = %x3D              
-SEMI   = %x3B              
-COMMA  = %x2C
-sign   = "+" / "-"
-star   = "*"
-
-; Unrepresentable numeric values
-nan              = %x4e.61.4e ; NaN (upper lower upper case)
-positiveInfinity = %x49.4e.46 ; INF (all upper case)
-negativeInfinity = "-" positiveInfinity ; -INF (all upper case)
-nanInfinity      = nan / negativeInfinity / positiveInfinity
-
-; Dates and times
-oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
-zeroToFiftyNine = ( "0" / "1" / "2" / "3" / "4" / "5" ) DIGIT
-year  = 4DIGIT;
-month = "0" oneToNine
-      / "1" ( "0" / "1" / "2" )
-day   = ( "0" / "1" / "2" ) oneToNine
-      / "3" ( "0" / "1" )
-hour   = ( "0" / "1" ) DIGIT
-       / "2" ( "1" / "2" / "3" ) 
-minute = zeroToFiftyNine
-second = zeroToFiftyNine       
-fractionalSeconds = 1*DIGIT
-
-; Literal data values
-primitiveLiteral = null 
-                 / decimal 
-                 / single 
-                 / double 
-                 / sbyte 
-                 / byte 
-                 / int16 
-                 / int32 
-                 / int64 
-                 / binary 
-                 / dateTime 
-                 / dateTimeOffset 
-                 / guid 
-                 / string 
-                 / time 
-                 / boolean 
-                 / geographyCollection 
-                 / geographyLineString 
-                 / geographyMultiLineString 
-                 / geographyMultiPoint 
-                 / geographyMultiPolygon 
-                 / geographyPoint 
-                 / geographyPolygon 
-                 / geometryCollection 
-                 / geometryLineString 
-                 / geometryMultiLineString 
-                 / geometryMultiPoint 
-                 / geometryMultiPolygon 
-                 / geometryPoint 
-                 / geometryPolygon 
-
-null = %x6e.75.6c.6c            ; null (all lower case)
-       [ "'" qualifiedTypeName "'" ] 
-       ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
-       ; Knowing the type is useful for function overload resolution purposes 
-                                                
-binary = ( %d88 / "binary" ) SQUOTE *(2HEXDIG) SQUOTE ; note: "X" is case sensitive "binary" is not hence using the character code.
-boolean = ( "true" / "1" ) / ( "false" / "0" )
-
-dateTime       = "datetime" SQUOTE dateTimeBody SQUOTE
-dateTimeOffset = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
-dateTimeBody = year "-" month "-" day "T" 
-               ( hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
-               / "24:00" [ ":00" ] ; the first instant of the following day
-               ) 
-dateTimeOffsetBody = dateTimeBody ( "Z" / sign hour ":" minute )
-
-decimal     = decimalBody [ "M" ]
-decimalBody = [sign] 1*DIGIT ["." 1*DIGIT]
-double      = doubleBody [ "D" ]
-doubleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
-            / nanInfinity
-single      = singleBody [ "F" ]
-singleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
-            / nanInfinity
-
-guid = "guid" SQUOTE 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG SQUOTE
-
-byte  = 1*3DIGIT ; numbers in the range from 0 to 255
-sbyte = [ sign ] 1*3DIGIT ; numbers in the range from -128 to 127
-int16 = [ sign ] 1*5DIGIT ; numbers in the range from -32768 to 32767        
-int32 = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
-int64 = [ sign ] 1*19DIGIT [ "L" ] ; numbers in the range from -9223372036854775808 to 9223372036854775807
-
-string           = SQUOTE *( unreserved / pct-encoded / SQUOTE-in-string ) SQUOTE ; TODO: was SQUOTE *UTF8-char SQUOTE, but that's not sufficient for use in URLs
-SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal in quotes
-
-time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ] SQUOTE
-     ; the above is an approximation of the rules for an xml duration.
-     ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema-2 for more information
- 
-geographyCollection   = geographyPrefix fullCollectionLiteral SQUOTE
-fullCollectionLiteral = sridLiteral collectionLiteral
-collectionLiteral     = "Collection(" geoLiteral *( COMMA geoLiteral ) ")"
-geoLiteral            = collectionLiteral
-                      / lineStringLiteral
-                      / multiPointLiteral
-                      / multiLineStringLiteral
-                      / multiPolygonLiteral
-                      / pointLiteral
-                      / polygonLiteral
-
-geographyLineString   = geographyPrefix fullLineStringLiteral SQUOTE
-fullLineStringLiteral = sridLiteral lineStringLiteral
-lineStringLiteral     = "LineString" lineStringData
-lineStringData        = "(" positionLiteral 1*( COMMA positionLiteral ) ")"
-
-geographyMultiLineString   = geographyPrefix fullMultiLineStringLiteral SQUOTE
-fullMultiLineStringLiteral = sridLiteral multiLineStringLiteral
-multiLineStringLiteral     = "MultiLineString(" [ lineStringData *( COMMA lineStringData ) ] ")"
-
-geographyMultiPoint   = geographyPrefix fullMultiPointLiteral SQUOTE
-fullMultiPointLiteral = sridLiteral multiPointLiteral
-multiPointLiteral     = "MultiPoint(" [ pointData *( COMMA pointData ) ] ")"
-
-geographyMultiPolygon   = geographyPrefix fullMultiPolygonLiteral SQUOTE
-fullMultiPolygonLiteral = sridLiteral multiPolygonLiteral
-multiPolygonLiteral     = "MultiPolygon(" [ polygonData *( COMMA polygonData ) ] ")"
-
-geographyPoint   = geographyPrefix fullPointLiteral SQUOTE
-fullPointLiteral = sridLiteral pointLiteral
-sridLiteral      = "SRID" EQ 1*5DIGIT SEMI
-pointLiteral     ="Point" pointData
-pointData        = "(" positionLiteral ")"
-positionLiteral  = double SP double  ; longitude, then latitude
-
-geographyPolygon   = geographyPrefix fullPolygonLiteral SQUOTE
-fullPolygonLiteral = sridLiteral polygonLiteral
-polygonLiteral     = "Polygon" polygonData
-polygonData        = "(" ringLiteral   *( COMMA ringLiteral ) ")"
-ringLiteral        = "(" positionLiteral *( COMMA positionLiteral ) ")"
-                   ; Within each ringLiteral, the first and last positionLiteral elements MUST be an exact syntactic match to each other.
-                   ; Within the polygonData, the ringLiterals MUST specify their points in appropriate winding order. 
-                   ; In order of traversal, points to the left side of the ring are interpreted as being in the polygon.
-
-geometryCollection      = geometryPrefix fullCollectionLiteral      SQUOTE
-geometryLineString      = geometryPrefix fullLineStringLiteral      SQUOTE
-geometryMultiLineString = geometryPrefix fullMultiLineStringLiteral SQUOTE
-geometryMultiPoint      = geometryPrefix fullMultiPointLiteral      SQUOTE
-geometryMultiPolygon    = geometryPrefix fullMultiPolygonLiteral    SQUOTE
-geometryPoint           = geometryPrefix fullPointLiteral           SQUOTE
-geometryPolygon         = geometryPrefix fullPolygonLiteral         SQUOTE
-
-geographyPrefix = "geography" SQUOTE
-geometryPrefix  = "geometry" SQUOTE
-
-
-; Names and identifiers
-odataIdentifier             = identifierLeadingCharacter *478identifierCharacter
-identifierLeadingCharacter  = ALPHA / "_"            ; TODO: Any character from the Unicode classes L or Nl
-identifierCharacter         = ALPHA / DIGIT / "_"    ; TODO: Any character from the Unicode classes L, Nl, Nd, Mn, Mc, Pc or Cf
-
-namespace     = namespacePart *("." namespacePart)
-namespacePart = odataIdentifier
-
-entitySetName       = odataIdentifier
-entityTypeName      = odataIdentifier
-complexTypeName     = odataIdentifier 
-enumerationTypeName = odataIdentifier
-
-qualifiedTypeName = qualifiedEntityTypeName 
-                  / qualifiedComplexTypeName
-                  / qualifiedEnumerationTypeName
-                  / primitiveTypeName 
-                  / "collection(" 
-                    ( qualifiedEntityTypeName 
-                    / qualifiedComplexTypeName
-                    / qualifiedEnumerationTypeName 
-                    / primitiveTypeName 
-                    ) ")"
-qualifiedEntityTypeName      = namespace "." entityTypeName
-qualifiedComplexTypeName     = namespace "." complexTypeName
-qualifiedEnumerationTypeName = namespace "." enumerationTypeName
-
-; TODO: case-sensitivity of Edm type names (ODATA-77)
-primitiveTypeName = ["edm."] ( "binary" 
-                             / "boolean" 
-                             / "byte" 
-                             / "datetime" 
-                             / "datetimeoffset" 
-                             / "decimal" 
-                             / "double" 
-                             / "single" 
-                             / "float" 
-                             / "guid" 
-                             / "int16" 
-                             / "int32" 
-                             / "int64" 
-                             / "sbyte" 
-                             / "stream" 
-                             / "string" 
-                             / "time" 
-                             / abstractSpatialTypeName [ concreteSpatialTypeName ] 
-                             )
-abstractSpatialTypeName = "Geography" 
-                        / "Geometry"      
-concreteSpatialTypeName = "Collection" 
-                        / "Linestring" 
-                        / "MultiLineString" 
-                        / "MultiPoint" 
-                        / "MultiPolygon" 
-                        / "Point" 
-                        / "Polygon" 
-
-property = primitiveProperty  
-         / primitiveColProperty 
-         / complexProperty 
-         / complexColProperty 
-         / streamProperty
-primitiveProperty       = primitiveKeyProperty / primitiveNonKeyProperty
-primitiveKeyProperty    = odataIdentifier
-primitiveNonKeyProperty = odataIdentifier
-primitiveColProperty    = odataIdentifier
-complexProperty         = odataIdentifier
-complexColProperty      = odataIdentifier
-streamProperty          = odataIdentifier
-
-navigationProperty          = entityNavigationProperty / entityColNavigationProperty  
-entityNavigationProperty    = odataIdentifier
-entityColNavigationProperty = odataIdentifier
-
-entityContainerName = odataIdentifier
-
-action = odataIdentifier
-
-function = entityFunction 
-         / entityColFunction 
-         / complexFunction 
-         / complexColFunction 
-         / primitiveFunction 
-         / primitiveColFunction
-entityFunction       = odataIdentifier
-entityColFunction    = odataIdentifier
-complexFunction      = odataIdentifier
-complexColFunction   = odataIdentifier
-primitiveFunction    = odataIdentifier
-primitiveColFunction = odataIdentifier
-
-resourcePath = [ entityContainerName "." ] entitySetName [ collectionNavigation ] 
-             / actionCall 
-             / entityColFunctionCall    [ collectionNavigation ] 
-             / entityFunctionCall       [ singleNavigation ] 
-             / complexColFunctionCall   [ collectionPath ] 
-             / complexFunctionCall      [ complexPath ] 
-             / primitiveColFunctionCall [ collectionPath ] 
-             / primitiveFunctionCall    [ singlePath ] 
-
-collectionNavigation = [ "/" qualifiedEntityTypeName ]
-                       ( keyPredicate [ singleNavigation ]
-                       / collectionPath
-                       / ""     ; for restricting to a derived entity type
-                       )
-
-keyPredicate     = simpleKey / compoundKey
-simpleKey        = "(" primitiveLiteral ")"
-compoundKey      = "(" keyValuePair *("," keyValuePair) ")"
-keyValuePair     = primitiveKeyProperty "=" keyPropertyValue
-keyPropertyValue = primitiveLiteral
-
-singleNavigation = [ "/" qualifiedEntityTypeName ] 
-                   ( value  ; for addressing media resources
-                   / links "/" navigationProperty 
-                   / "/" ( streamProperty 
-                         / primitiveColProperty        [ collectionPath ]
-                         / primitiveProperty           [ singlePath ]
-                         / complexColProperty          [ collectionPath ]
-                         / complexProperty             [ complexPath ]
-                         / entityColNavigationProperty [ collectionNavigation ]
-                         / entityNavigationProperty    [ singleNavigation ]
-                         )
-                   / boundOperation 
-                   / ""     ; for casting after key access
-                   )
-
-collectionPath = count / boundOperation
-singlePath     = value / boundOperation
-complexPath    = [ "/" qualifiedComplexTypeName ] 
-                 ( "/" ( primitiveProperty [ singlePath ]
-                       / complexProperty   [ complexPath ]
-                       ) 
-                 / boundOperation
-                 )
-
-count = "/$count" 
-value = "/$value"
-links = "/$links"
-
-; boundOperation segments can only be composed if the type of the previous segment matches 
-; the type of the first parameter of the action or function being called.
-boundOperation = "/" ( boundActionCall
-                     / boundEntityColFuncCall    [ collectionNavigation ] 
-                     / boundEntityFuncCall       [ singleNavigation ] 
-                     / boundComplexColFuncCall   [ collectionPath ] 
-                     / boundComplexFuncCall      [ complexPath ]
-                     / boundPrimitiveColFuncCall [ collectionPath ] 
-                     / boundPrimitiveFuncCall    [ singlePath ] 
-                     )
-
-actionCall      = [ operationQualifier ] action [ "()" ]
-boundActionCall = actionCall
-                  ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
-                  ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
-
-entityFunctionCall       = [ operationQualifier ] entityFunction       functionParameters
-entityColFunctionCall    = [ operationQualifier ] entityColFunction    functionParameters
-complexFunctionCall      = [ operationQualifier ] complexFunction      functionParameters
-complexColFunctionCall   = [ operationQualifier ] complexColFunction   functionParameters
-primitiveFunctionCall    = [ operationQualifier ] primitiveFunction    functionParameters
-primitiveColFunctionCall = [ operationQualifier ] primitiveColFunction functionParameters
-
-; The following boundXxxFuncCall rules have the added restrictions that
-;  - the Function MUST support binding, and 
-;  - the binding parameter type MUST match the type of resource identified by the 
-;    Uri immediately preceding (to the left) of the boundXxxFuncCall, and
-;  - the functionParameters MUST NOT include the bindingParameter.
-boundEntityFuncCall       = entityFunctionCall
-boundEntityColFuncCall    = entityColFunctionCall
-boundComplexFuncCall      = complexFunctionCall
-boundComplexColFuncCall   = complexColFunctionCall
-boundPrimitiveFuncCall    = primitiveFunctionCall
-boundPrimitiveColFuncCall = primitiveColFunctionCall
-
-functionParameters    = "(" [ functionParameter *( "," functionParameter ) ] ")"
-functionParameter     = functionParameterName "=" ( primitiveLiteral / parameterAlias )
-functionParameterName = odataIdentifier
-parameterAlias        = "@" odataIdentifier
-
-aliasAndValue         = parameterAlias        "=" parameterValue
-parameterNameAndValue = functionParameterName "=" parameterValue
-
-parameterValue = primitiveLiteral     ; note this is a Uri literal, not a JSON literal
-               / complexInUri  
-               / complexColInUri
-               / primitiveColInUri
-
-; The following rules define a JSON format for function and action parameters
-; Note that the query part ofa URL needs to be partially percent-decoded before
-; applying these rules, see comment at the top of this file
-complexInUri = begin-object
-                   [ ( complexTypeMetadataInUri  
-                     / primitivePropertyInUri 
-                     / complexPropertyInUri 
-                     / collectionPropertyInUri  
-                     )
-                    *( value-separator 
-                       ( primitivePropertyInUri 
-                       / complexPropertyInUri 
-                       / collectionPropertyInUri  
-                       ) 
-                     )
-                   ]  
-                   end-object
-
-complexColInUri = begin-array 
-                  [ complexInUri *( value-separator complexInUri ) ] 
-                  end-array
-                  
-primitiveColInUri = begin-array 
-                    [ primitiveLiteralInJSON *( value-separator primitiveLiteralInJSON ) ] 
-                    end-array
-
-begin-object = "{" 
-end-object   = "}"
-
-begin-array = "[" 
-end-array   = "]" 
-
-quotation-mark  = DQUOTE
-name-separator  = ":"
-value-separator = COMMA
-
-complexTypeMetadataInUri = quotation-mark "__metadata" quotation-mark
-                           name-separator
-                           begin-object
-                           [ typeNVPInUri ]
-                           end-object
-
-typeNVPInUri = quotation-mark "type" quotation-mark
-               name-separator
-               quotation-mark qualifiedTypeName quotation-mark
-
-primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark 
-                         name-separator 
-                         primitiveLiteralInJSON
-; TODO: not complete 
-; JSON syntay [ RFC4627 ]                 
-primitiveLiteralInJSON = stringInJSON
-                       / numberInJSON
-                       / %x74.72.75.65    ; true 
-                       / %x66.61.6c.73.65 ; false
-                       / %x6e.75.6c.6c    ; null
-stringInJSON = quotation-mark *charInJSON quotation-mark
-charInJSON = pchar   ; TODO: more specific, following RFC4627
-;         char = unescaped /
-;                escape (
-;                    %x22 /          ; "    quotation mark  U+0022
-;                    %x5C /          ; \    reverse solidus U+005C
-;                    %x2F /          ; /    solidus         U+002F
-;                    %x62 /          ; b    backspace       U+0008
-;                    %x66 /          ; f    form feed       U+000C
-;                    %x6E /          ; n    line feed       U+000A
-;                    %x72 /          ; r    carriage return U+000D
-;                    %x74 /          ; t    tab             U+0009
-;                    %x75 4HEXDIG )  ; uXXXX                U+XXXX
-;         escape = %x5C              ; \
-;         quotation-mark = %x22      ; "
-;         unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
-numberInJSON  = [ "-" ] int [ frac ] [ exp ]
-int           = "0" / ( oneToNine *DIGIT )
-frac          = "." 1*DIGIT
-exp           = "e" [ "-" / "+" ] 1*DIGIT
-
-complexPropertyInUri = quotation-mark complexProperty quotation-mark 
-                       name-separator 
-                       complexInUri
-                            
-collectionPropertyInUri = ( quotation-mark primitiveColProperty quotation-mark 
-                            name-separator 
-                            primitiveColInUri 
-                          ) 
-                        / ( quotation-mark complexColProperty quotation-mark 
-                            name-separator 
-                            complexColInUri
-                          )
-                
 commonExpr = primitiveLiteral
            / firstMemberExpr
            / functionExpr
@@ -701,7 +300,7 @@ functionExpr = [ operationQualifier ]
                )
 
 functionExprParameters = "(" [ functionExprParameter *( "," functionExprParameter ) ] ")"
-; TODO: allow firstMemberExpr also as parameter values
+; TODO: allow firstMemberExpr also as parameter values (ODATA-155)
 functionExprParameter  = functionParameterName "=" parameterValue
 
 anyExpr = "any(" [ lambdaVariableExpr ":" lambdaPredicateExpr ] ")"
@@ -801,4 +400,457 @@ distanceMethodCallExpr    = "geo.distance"          "(" *WSP commonExpr "," comm
 geoLengthMethodCallExpr   = "geo.length"            "(" *WSP commonExpr *WSP ")"
 intersectsMethodCallExpr  = "geo.intersects"        "(" *WSP commonExpr "," commonExpr *WSP ")"
 
+;------------------------------------------------------------------------------
+; 4. JSON format for function and action parameters
+;------------------------------------------------------------------------------
+; Note: the query part of a URL needs to be partially percent-decoded before
+; applying these rules, see comment at the top of this file
+
+; TODO: action request payloads (ODATA-80)
+
+complexInUri = begin-object
+                   [ ( complexTypeMetadataInUri  
+                     / primitivePropertyInUri 
+                     / complexPropertyInUri 
+                     / collectionPropertyInUri  
+                     )
+                    *( value-separator 
+                       ( primitivePropertyInUri 
+                       / complexPropertyInUri 
+                       / collectionPropertyInUri  
+                       ) 
+                     )
+                   ]  
+                   end-object
+
+complexColInUri = begin-array 
+                  [ complexInUri *( value-separator complexInUri ) ] 
+                  end-array
+                  
+primitiveColInUri = begin-array 
+                    [ primitiveLiteralInJSON *( value-separator primitiveLiteralInJSON ) ] 
+                    end-array
+
+begin-object = "{" 
+end-object   = "}"
+
+begin-array = "[" 
+end-array   = "]" 
+
+quotation-mark  = DQUOTE
+name-separator  = ":"
+value-separator = COMMA
+
+complexTypeMetadataInUri = quotation-mark "__metadata" quotation-mark
+                           name-separator
+                           begin-object
+                           [ typeNVPInUri ]
+                           end-object
+
+typeNVPInUri = quotation-mark "type" quotation-mark
+               name-separator
+               quotation-mark qualifiedTypeName quotation-mark
+
+primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark 
+                         name-separator 
+                         primitiveLiteralInJSON
+; TODO: not complete 
+; JSON syntay [ RFC4627 ]                 
+primitiveLiteralInJSON = stringInJSON
+                       / numberInJSON
+                       / %x74.72.75.65    ; true 
+                       / %x66.61.6c.73.65 ; false
+                       / %x6e.75.6c.6c    ; null
+stringInJSON = quotation-mark *charInJSON quotation-mark
+charInJSON = pchar   ; TODO: more specific, following RFC4627
+;         char = unescaped /
+;                escape (
+;                    %x22 /          ; "    quotation mark  U+0022
+;                    %x5C /          ; \    reverse solidus U+005C
+;                    %x2F /          ; /    solidus         U+002F
+;                    %x62 /          ; b    backspace       U+0008
+;                    %x66 /          ; f    form feed       U+000C
+;                    %x6E /          ; n    line feed       U+000A
+;                    %x72 /          ; r    carriage return U+000D
+;                    %x74 /          ; t    tab             U+0009
+;                    %x75 4HEXDIG )  ; uXXXX                U+XXXX
+;         escape = %x5C              ; \
+;         quotation-mark = %x22      ; "
+;         unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
+numberInJSON  = [ "-" ] int [ frac ] [ exp ]
+int           = "0" / ( oneToNine *DIGIT )
+frac          = "." 1*DIGIT
+exp           = "e" [ "-" / "+" ] 1*DIGIT
+
+complexPropertyInUri = quotation-mark complexProperty quotation-mark 
+                       name-separator 
+                       complexInUri
+                            
+collectionPropertyInUri = ( quotation-mark primitiveColProperty quotation-mark 
+                            name-separator 
+                            primitiveColInUri 
+                          ) 
+                        / ( quotation-mark complexColProperty quotation-mark 
+                            name-separator 
+                            complexColInUri
+                          )
+                
+;------------------------------------------------------------------------------
+; 5. Names and identifiers
+;------------------------------------------------------------------------------
+
+qualifiedTypeName = qualifiedEntityTypeName 
+                  / qualifiedComplexTypeName
+                  / qualifiedEnumerationTypeName
+                  / primitiveTypeName 
+                  / "collection(" 
+                    ( qualifiedEntityTypeName 
+                    / qualifiedComplexTypeName
+                    / qualifiedEnumerationTypeName 
+                    / primitiveTypeName 
+                    ) ")"
+
+qualifiedEntityTypeName      = namespace "." entityTypeName
+qualifiedComplexTypeName     = namespace "." complexTypeName
+qualifiedEnumerationTypeName = namespace "." enumerationTypeName
+
+namespace     = namespacePart *("." namespacePart)
+namespacePart = odataIdentifier
+
+entitySetName       = odataIdentifier
+entityTypeName      = odataIdentifier
+complexTypeName     = odataIdentifier 
+enumerationTypeName = odataIdentifier
+
+odataIdentifier             = identifierLeadingCharacter *478identifierCharacter
+identifierLeadingCharacter  = ALPHA / "_"            ; TODO: Any character from the Unicode classes L or Nl
+identifierCharacter         = ALPHA / DIGIT / "_"    ; TODO: Any character from the Unicode classes L, Nl, Nd, Mn, Mc, Pc or Cf
+
+; TODO: case-sensitivity of Edm type names (ODATA-77)
+primitiveTypeName = ["edm."] ( "binary" 
+                             / "boolean" 
+                             / "byte" 
+                             / "datetime" 
+                             / "datetimeoffset" 
+                             / "decimal" 
+                             / "double" 
+                             / "single" 
+                             / "float" 
+                             / "guid" 
+                             / "int16" 
+                             / "int32" 
+                             / "int64" 
+                             / "sbyte" 
+                             / "stream" 
+                             / "string" 
+                             / "time" 
+                             / abstractSpatialTypeName [ concreteSpatialTypeName ] 
+                             )
+abstractSpatialTypeName = "Geography" 
+                        / "Geometry"      
+concreteSpatialTypeName = "Collection" 
+                        / "Linestring" 
+                        / "MultiLineString" 
+                        / "MultiPoint" 
+                        / "MultiPolygon" 
+                        / "Point" 
+                        / "Polygon" 
+
+property = primitiveProperty  
+         / primitiveColProperty 
+         / complexProperty 
+         / complexColProperty 
+         / streamProperty
+
+primitiveProperty       = primitiveKeyProperty / primitiveNonKeyProperty
+primitiveKeyProperty    = odataIdentifier
+primitiveNonKeyProperty = odataIdentifier
+primitiveColProperty    = odataIdentifier
+complexProperty         = odataIdentifier
+complexColProperty      = odataIdentifier
+streamProperty          = odataIdentifier
+
+navigationProperty          = entityNavigationProperty / entityColNavigationProperty  
+entityNavigationProperty    = odataIdentifier
+entityColNavigationProperty = odataIdentifier
+
+entityContainerName = odataIdentifier
+
+action = odataIdentifier
+
+function = entityFunction 
+         / entityColFunction 
+         / complexFunction 
+         / complexColFunction 
+         / primitiveFunction 
+         / primitiveColFunction
+         
+entityFunction       = odataIdentifier
+entityColFunction    = odataIdentifier
+complexFunction      = odataIdentifier
+complexColFunction   = odataIdentifier
+primitiveFunction    = odataIdentifier
+primitiveColFunction = odataIdentifier
+
+;------------------------------------------------------------------------------
+; 6. Literal Data Values
+;------------------------------------------------------------------------------
+
+primitiveLiteral = null 
+                 / decimal 
+                 / single 
+                 / double 
+                 / sbyte 
+                 / byte 
+                 / int16 
+                 / int32 
+                 / int64 
+                 / binary 
+                 / dateTime 
+                 / dateTimeOffset 
+                 / guid 
+                 / string 
+                 / time 
+                 / boolean 
+                 / geographyCollection 
+                 / geographyLineString 
+                 / geographyMultiLineString 
+                 / geographyMultiPoint 
+                 / geographyMultiPolygon 
+                 / geographyPoint 
+                 / geographyPolygon 
+                 / geometryCollection 
+                 / geometryLineString 
+                 / geometryMultiLineString 
+                 / geometryMultiPoint 
+                 / geometryMultiPolygon 
+                 / geometryPoint 
+                 / geometryPolygon 
+
+null = %x6e.75.6c.6c            ; null (all lower case)
+       [ "'" qualifiedTypeName "'" ] 
+       ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
+       ; Knowing the type is useful for function overload resolution purposes 
+                                                
+binary = ( %d88 / "binary" ) SQUOTE *(2HEXDIG) SQUOTE ; note: "X" is case sensitive "binary" is not hence using the character code.
+boolean = ( "true" / "1" ) / ( "false" / "0" )
+
+decimal     = decimalBody [ "M" ]
+decimalBody = [sign] 1*DIGIT ["." 1*DIGIT]
+double      = doubleBody [ "D" ]
+doubleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
+            / nanInfinity
+single      = singleBody [ "F" ]
+singleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
+            / nanInfinity
+
+; Unrepresentable numeric values
+nan              = %x4e.61.4e ; NaN (upper lower upper case)
+positiveInfinity = %x49.4e.46 ; INF (all upper case)
+negativeInfinity = "-" positiveInfinity ; -INF (all upper case)
+nanInfinity      = nan / negativeInfinity / positiveInfinity
+
+guid = "guid" SQUOTE 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG SQUOTE
+
+byte  = 1*3DIGIT ; numbers in the range from 0 to 255
+sbyte = [ sign ] 1*3DIGIT ; numbers in the range from -128 to 127
+int16 = [ sign ] 1*5DIGIT ; numbers in the range from -32768 to 32767        
+int32 = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
+int64 = [ sign ] 1*19DIGIT [ "L" ] ; numbers in the range from -9223372036854775808 to 9223372036854775807
+
+string           = SQUOTE *( unreserved / pct-encoded / SQUOTE-in-string ) SQUOTE ; TODO: was SQUOTE *UTF8-char SQUOTE, but that's not sufficient for use in URLs
+SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal in quotes
+
+; dates and times
+dateTime       = "datetime" SQUOTE dateTimeBody SQUOTE
+dateTimeOffset = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
+dateTimeBody = year "-" month "-" day "T" 
+               ( hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
+               / "24:00" [ ":00" ] ; the first instant of the following day
+               ) 
+dateTimeOffsetBody = dateTimeBody ( "Z" / sign hour ":" minute )
+
+time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ] SQUOTE
+     ; the above is an approximation of the rules for an xml duration.
+     ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema-2 for more information
+ 
+oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
+zeroToFiftyNine = ( "0" / "1" / "2" / "3" / "4" / "5" ) DIGIT
+year  = 4DIGIT;
+month = "0" oneToNine
+      / "1" ( "0" / "1" / "2" )
+day   = ( "0" / "1" / "2" ) oneToNine
+      / "3" ( "0" / "1" )
+hour   = ( "0" / "1" ) DIGIT
+       / "2" ( "1" / "2" / "3" ) 
+minute = zeroToFiftyNine
+second = zeroToFiftyNine       
+fractionalSeconds = 1*DIGIT
+
+geographyCollection   = geographyPrefix fullCollectionLiteral SQUOTE
+fullCollectionLiteral = sridLiteral collectionLiteral
+collectionLiteral     = "Collection(" geoLiteral *( COMMA geoLiteral ) ")"
+geoLiteral            = collectionLiteral
+                      / lineStringLiteral
+                      / multiPointLiteral
+                      / multiLineStringLiteral
+                      / multiPolygonLiteral
+                      / pointLiteral
+                      / polygonLiteral
+
+geographyLineString   = geographyPrefix fullLineStringLiteral SQUOTE
+fullLineStringLiteral = sridLiteral lineStringLiteral
+lineStringLiteral     = "LineString" lineStringData
+lineStringData        = "(" positionLiteral 1*( COMMA positionLiteral ) ")"
+
+geographyMultiLineString   = geographyPrefix fullMultiLineStringLiteral SQUOTE
+fullMultiLineStringLiteral = sridLiteral multiLineStringLiteral
+multiLineStringLiteral     = "MultiLineString(" [ lineStringData *( COMMA lineStringData ) ] ")"
+
+geographyMultiPoint   = geographyPrefix fullMultiPointLiteral SQUOTE
+fullMultiPointLiteral = sridLiteral multiPointLiteral
+multiPointLiteral     = "MultiPoint(" [ pointData *( COMMA pointData ) ] ")"
+
+geographyMultiPolygon   = geographyPrefix fullMultiPolygonLiteral SQUOTE
+fullMultiPolygonLiteral = sridLiteral multiPolygonLiteral
+multiPolygonLiteral     = "MultiPolygon(" [ polygonData *( COMMA polygonData ) ] ")"
+
+geographyPoint   = geographyPrefix fullPointLiteral SQUOTE
+fullPointLiteral = sridLiteral pointLiteral
+sridLiteral      = "SRID=" 1*5DIGIT SEMI
+pointLiteral     ="Point" pointData
+pointData        = "(" positionLiteral ")"
+positionLiteral  = double SP double  ; longitude, then latitude
+
+geographyPolygon   = geographyPrefix fullPolygonLiteral SQUOTE
+fullPolygonLiteral = sridLiteral polygonLiteral
+polygonLiteral     = "Polygon" polygonData
+polygonData        = "(" ringLiteral   *( COMMA ringLiteral ) ")"
+ringLiteral        = "(" positionLiteral *( COMMA positionLiteral ) ")"
+                   ; Within each ringLiteral, the first and last positionLiteral elements MUST be an exact syntactic match to each other.
+                   ; Within the polygonData, the ringLiterals MUST specify their points in appropriate winding order. 
+                   ; In order of traversal, points to the left side of the ring are interpreted as being in the polygon.
+
+geometryCollection      = geometryPrefix fullCollectionLiteral      SQUOTE
+geometryLineString      = geometryPrefix fullLineStringLiteral      SQUOTE
+geometryMultiLineString = geometryPrefix fullMultiLineStringLiteral SQUOTE
+geometryMultiPoint      = geometryPrefix fullMultiPointLiteral      SQUOTE
+geometryMultiPolygon    = geometryPrefix fullMultiPolygonLiteral    SQUOTE
+geometryPoint           = geometryPrefix fullPointLiteral           SQUOTE
+geometryPolygon         = geometryPrefix fullPolygonLiteral         SQUOTE
+
+geographyPrefix = "geography" SQUOTE
+geometryPrefix  = "geometry" SQUOTE
+
+;------------------------------------------------------------------------------
+; 7. Punctuation
+;------------------------------------------------------------------------------
+
+SQUOTE = %x27              
+SEMI   = %x3B              
+COMMA  = %x2C
+sign   = "+" / "-"
+STAR   = "*"
+
+;------------------------------------------------------------------------------
+; A. URI syntax [RFC3986]
+;------------------------------------------------------------------------------
+
+;URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
+;hier-part     = "//" authority path-abempty
+;              / path-absolute
+;              / path-rootless
+;              / path-empty
+;URI-reference = URI / relative-ref
+;absolute-URI  = scheme ":" hier-part [ "?" query ]
+;relative-ref  = relative-part [ "?" query ] [ "#" fragment ]
+;relative-part = "//" authority path-abempty
+;              / path-absolute
+;              / path-noscheme
+;              / path-empty
+;scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+;authority     = [ userinfo "@" ] host [ ":" port ]
+;userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
+host          = IP-literal / IPv4address / reg-name
+port          = *DIGIT
+IP-literal    = "[" ( IPv6address / IPvFuture  ) "]"
+IPvFuture     = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
+IPv6address   =                            6( h16 ":" ) ls32
+                 /                       "::" 5( h16 ":" ) ls32
+                 / [               h16 ] "::" 4( h16 ":" ) ls32
+                 / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+                 / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+                 / [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
+                 / [ *4( h16 ":" ) h16 ] "::"              ls32
+                 / [ *5( h16 ":" ) h16 ] "::"              h16
+                 / [ *6( h16 ":" ) h16 ] "::"
+h16           = 1*4HEXDIG
+ls32          = ( h16 ":" h16 ) / IPv4address
+IPv4address   = dec-octet "." dec-octet "." dec-octet "." dec-octet
+dec-octet     = "1" 2DIGIT            ; 100-199
+              / "2" %x30-34 DIGIT     ; 200-249
+              / "25" %x30-35          ; 250-255
+              / %x31-39 DIGIT         ; 10-99
+              / DIGIT                 ; 0-9
+reg-name      = *( unreserved / pct-encoded / sub-delims )
+;path          = path-abempty    ; begins with "/" or is empty
+;              / path-absolute   ; begins with "/" but not "//"
+;              / path-noscheme   ; begins with a non-colon segment
+;              / path-rootless   ; begins with a segment
+;              / path-empty      ; zero characters
+;path-abempty  = *( "/" segment )
+;path-absolute = "/" [ segment-nz *( "/" segment ) ]
+;path-noscheme = segment-nz-nc *( "/" segment )
+;path-rootless = segment-nz *( "/" segment )
+;path-empty    = ""
+;segment       = *pchar
+segment-nz    = 1*pchar
+;segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" ) ; non-zero-length segment without any colon ":"
+pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
+;query         = *( pchar / "/" / "?" )
+;fragment      = *( pchar / "/" / "?" )
+pct-encoded   = "%" HEXDIG HEXDIG
+unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+;reserved      = gen-delims / sub-delims
+;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+sub-delims    = "&" / "=" / "$" / other-delims
+other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
+
+;------------------------------------------------------------------------------
+; B. ABNF core definitions [RFC5234]
+;------------------------------------------------------------------------------
+ALPHA  = %x41-5A / %x61-7A 
+DIGIT  = %x30-39 
+HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F" 
+DQUOTE = %x22
+SP     = %x20 
+HTAB   = %x09 
+WSP    = SP / HTAB 
+;LWSP = *(WSP / CRLF WSP) 
+;VCHAR = %x21-7E 
+;CHAR = %x01-7F
+;LOCTET = %x00-FF 
+;CR     = %x0D 
+;LF     = %x0A 
+;CRLF   = CR LF
+;BIT = "0" / "1" 
+
+;------------------------------------------------------------------------------
+; C. UTF-8 syntax [RFC3629]
+;------------------------------------------------------------------------------
+
+;UTF8-octets = *( UTF8-char )
+;UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
+;UTF8-1      = %x00-7F
+;UTF8-2      = %xC2-DF UTF8-tail
+;UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
+;              %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
+;UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
+;              %xF4 %x80-8F 2( UTF8-tail )
+;UTF8-tail   = %x80-BF
+
+;------------------------------------------------------------------------------
 ; End of odata-v1.0-abnf
+;------------------------------------------------------------------------------
+
