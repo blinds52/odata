@@ -83,8 +83,9 @@
     <Match>Sizes</Match>
   </Constraint>
   <Constraint Rule="primitiveFunction">
-    <Match>MostPopularName</Match>
     <Match>Available</Match>
+    <Match>MostPopularName</Match>
+    <Match>PhoneticallySimilar</Match>
   </Constraint>
   <Constraint Rule="primitiveKeyProperty">
     <Match>ID</Match>
@@ -359,15 +360,7 @@
             Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/</Input>
   </TestCase>
-  <TestCase Name="2 URL Components - metadata URL" 
-            Rule="odataUri">
-    <Input>http://services.odata.org/OData/OData.svc/$metadata</Input>
-  </TestCase>
-  <TestCase Name="2 URL Components - batch URL" 
-            Rule="odataUri">
-    <Input>http://services.odata.org/OData/OData.svc/$batch</Input>
-  </TestCase>
-  <TestCase Name="Service Root directly at server root" 
+  <TestCase Name="2 URL Components - service root directly at server root" 
             Rule="odataUri">
     <Input>http://My.Org:80/</Input>
   </TestCase>
@@ -383,247 +376,279 @@
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products?$top=2&amp;$orderby=Name</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - entity set" 
+  <TestCase Name="4.1 - metadata URL" 
+            Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$metadata</Input>
+  </TestCase>
+  <TestCase Name="4.2 - batch URL" 
+            Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$batch</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - entity set" 
             Rule="entitySetName">
     <Input>Products</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - entity set" 
+  <TestCase Name="4.3 Addressing entities - entity set" 
             Rule="odataRelativeUri">
     <Input>Products</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - entity set" 
+  <TestCase Name="4.3 Addressing entities - entity set" 
             Rule="odataRelativeUri">
     <Input>Container.Products</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - no entity set after container" 
+  <TestCase Name="4.3 Addressing entities - no entity set after container" 
             Rule="odataRelativeUri"
             FailAt="10">
     <Input>Container.('foo')</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - no container before entity set" 
+  <TestCase Name="4.3 Addressing entities - no container before entity set" 
             Rule="odataRelativeUri"
             FailAt="0">
     <Input>.Products('foo')</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - function call" 
+  <TestCase Name="4.3 Addressing entities - function call" 
             Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=2)</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - function call with alias" 
+  <TestCase Name="4.3 Addressing entities - function call with alias" 
             Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=@cat)?@cat=2</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - function call with alias" 
+  <TestCase Name="4.3 Addressing entities - function call with alias" 
             Rule="odataRelativeUri">
     <Input>ProductsByCategoryId()?categoryId=2</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - service operation parameter" 
+  <TestCase Name="4.3 Addressing entities - service operation parameter" 
             Rule="parameterNameAndValue">
     <Input>color='red'</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - service operation call" 
+  <TestCase Name="4.3 Addressing entities - service operation call" 
             Rule="odataRelativeUri">
     <Input>ProductsByColor()?color='red'</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - service operation call" 
+  <TestCase Name="4.3 Addressing entities - service operation call" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/ProductsByColor()?color='red'</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - single entity (short)" 
+  <TestCase Name="4.3 Addressing entities - single entity (short)" 
             Rule="resourcePath">
     <Input>Categories(1)</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - single entity (long)" 
+  <TestCase Name="4.3 Addressing entities - single entity (long)" 
             Rule="resourcePath">
     <Input>Categories(ID=1)</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - single entity (wrong)" 
+  <TestCase Name="4.3 Addressing entities - single entity (wrong)" 
             Rule="resourcePath"
             FailAt="14">
     <Input>Categories(ID=wrong)</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - single entity (multi-part key)" 
+  <TestCase Name="4.3 Addressing entities - single entity (multi-part key)" 
             Rule="resourcePath">
     <Input>OrderItems(OrderID=1,ItemID='a')</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - single entity (wrong multi-part key)" 
+  <TestCase Name="4.3 Addressing entities - single entity (wrong multi-part key)" 
             Rule="resourcePath"
             FailAt="20">
     <Input>OrderItems(OrderID=1;ItemID='a')</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - bound operation on entity set" 
+  <TestCase Name="4.3 Addressing entities - bound operation on entity set" 
             Rule="resourcePath">
     <Input>Products/MostExpensive()</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - follow navigation property" 
+  <TestCase Name="4.3 Addressing entities - follow navigation property" 
             Rule="resourcePath">
     <Input>Products(1)/Supplier</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - follow navigation property and call function" 
+  <TestCase Name="4.3 Addressing entities - follow navigation property and call function" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products/AllOrders()</Input>
   </TestCase>
-  <TestCase Name="4.1 Addressing entities - follow navigation property and call function" 
+  <TestCase Name="4.3 Addressing entities - follow navigation property and call function" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products/MostExpensive()</Input>
   </TestCase>
-  <TestCase Name="4.1.1 Canonical URL" 
+  <TestCase Name="4.3.1 Canonical URL" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products(1)</Input>
   </TestCase>
-  <TestCase Name="4.2 Addressing Links between Entities" 
+  <TestCase Name="4.4 Addressing Links between Entities" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/$links/Products</Input>
   </TestCase>
-  <TestCase Name="4.2 Addressing Links between Entities - count" 
+  <TestCase Name="4.4 Addressing Links between Entities - count" 
             Rule="odataRelativeUri"
             FailAt="29">
     <Input>Categories(1)/$links/Products/$count</Input>
   </TestCase>
-  <TestCase Name="4.2 Addressing Links between Entities" 
+  <TestCase Name="4.4 Addressing Links between Entities" 
             Rule="odataRelativeUri"
             FailAt="29">
     <Input>Categories(1)/$links/Products(2)</Input>
   </TestCase>
-  <TestCase Name="4.2 Addressing Links between Entities" 
+  <TestCase Name="4.4 Addressing Links between Entities" 
             Rule="odataRelativeUri"
             FailAt="29">
     <Input>Categories(1)/$links/Products(2)/$count</Input>
   </TestCase>
-  <TestCase Name="4.3.1 Call unbound action" 
+  <TestCase Name="4.5.1 Call unbound action" 
             Rule="odataRelativeUri">
     <Input>Activation</Input>
   </TestCase>
-  <TestCase Name="4.3.1 Call unbound action with container" 
+  <TestCase Name="4.5.1 Call unbound action with container" 
             Rule="odataRelativeUri">
     <Input>Container.Activation()</Input>
   </TestCase>
-  <TestCase Name="4.3.1 Call bound action" 
+  <TestCase Name="4.5.1 Call bound action" 
             Rule="odataRelativeUri">
     <Input>LeaveRequests(4)/Rejection</Input>
   </TestCase>
-  <TestCase Name="4.3.1 Call bound action with container" 
+  <TestCase Name="4.5.1 Call bound action with container" 
             Rule="odataRelativeUri">
     <Input>LeaveRequests(4)/Container.Rejection()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call unbound function" 
+  <TestCase Name="4.5.2 Call unbound function" 
             Rule="odataRelativeUri">
     <Input>BestProduct()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call unbound complex function" 
+  <TestCase Name="4.5.2 Call unbound complex function" 
             Rule="odataRelativeUri">
     <Input>MostPopularAddress()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call unbound complex collection function" 
+  <TestCase Name="4.5.2 Call unbound complex collection function" 
             Rule="odataRelativeUri">
     <Input>MostPopularAddresses()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call unbound primitive function" 
+  <TestCase Name="4.5.2 Call unbound primitive function" 
             Rule="odataRelativeUri">
     <Input>MostPopularName()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call unbound primitive function" 
+  <TestCase Name="4.5.2 Call unbound primitive function" 
             Rule="odataRelativeUri">
     <Input>MostPopularName()/$value</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call unbound primitive collection function" 
+  <TestCase Name="4.5.2 Call unbound primitive collection function" 
             Rule="odataRelativeUri">
     <Input>MostPopularNames()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound complex function" 
+  <TestCase Name="4.5.2 Call bound complex function" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularAddress()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound complex collection function" 
+  <TestCase Name="4.5.2 Call bound complex collection function" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularAddresses()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound complex collection function" 
+  <TestCase Name="4.5.2 Call bound complex collection function" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularAddresses()/$count</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound complex collection function - multiple" 
+  <TestCase Name="4.5.2 Call bound complex collection function - multiple" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularAddresses()/MostPopularNames()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound primitive function" 
+  <TestCase Name="4.5.2 Call bound primitive function" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularName()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound primitive function" 
+  <TestCase Name="4.5.2 Call bound primitive function" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularName()/$value</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound primitive collection function" 
+  <TestCase Name="4.5.2 Call bound primitive collection function" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularNames()</Input>
   </TestCase>
-  <TestCase Name="4.3.2 Call bound primitive collection function" 
+  <TestCase Name="4.5.2 Call bound primitive collection function" 
             Rule="odataRelativeUri">
     <Input>Customers/MostPopularNames()/$count</Input>
   </TestCase>
-  <TestCase Name="4.4 Addressing a Property - primitive" 
+  <TestCase Name="4.6 Addressing a Property - primitive" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/ID</Input>
   </TestCase>
-  <TestCase Name="4.4 Addressing a Property - complex" 
+  <TestCase Name="4.6 Addressing a Property - complex" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Address</Input>
   </TestCase>
-  <TestCase Name="4.4 Addressing a Property - complex path" 
+  <TestCase Name="4.6 Addressing a Property - complex path" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Address/Street</Input>
   </TestCase>
-  <TestCase Name="4.4 Addressing a Property - stream" 
+  <TestCase Name="4.6 Addressing a Property - stream" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Thumbnail</Input>
   </TestCase>
-  <TestCase Name="4.4 Addressing a Property - collection of primitive" 
+  <TestCase Name="4.6 Addressing a Property - collection of primitive" 
             Rule="odataRelativeUri">
     <Input>Suppliers(1)/EmailAddresses</Input>
   </TestCase>
-  <TestCase Name="4.4 Addressing a Property - collection of complex" 
+  <TestCase Name="4.6 Addressing a Property - collection of complex" 
             Rule="odataRelativeUri">
     <Input>Suppliers(1)/Addresses</Input>
   </TestCase>
-  <TestCase Name="4.5 Addressing a Property Value" 
+  <TestCase Name="4.7 Addressing a Property Value" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/ID/$value</Input>
   </TestCase>
-  <TestCase Name="4.5 Addressing a Property Value - illegal suffix" 
+  <TestCase Name="4.7 Addressing a Property Value - illegal suffix" 
             Rule="odataRelativeUri"
             FailAt="23">
     <Input>Categories(1)/ID/$value/foo</Input>
   </TestCase>
-  <TestCase Name="4.5 Addressing a Property Value - complex" 
+  <TestCase Name="4.7 Addressing a Property Value - complex" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Address/Street/$value</Input>
   </TestCase>
-  <TestCase Name="4.5 Addressing a Media Resource - not required by V4" 
+  <TestCase Name="4.7 Addressing a Media Resource - not required by V4" 
             Rule="odataRelativeUri"
             FailAt="14">
     <Input>Categories(1)/$value</Input>
   </TestCase>
-  <TestCase Name="4.6 Addressing entities - entity set with $count" 
+  <TestCase Name="4.8 Addressing entities - entity set with $count" 
             Rule="odataRelativeUri">
     <Input>Products/$count</Input>
   </TestCase>
-  <TestCase Name="4.6 Addressing entities - $count not last segment" 
+  <TestCase Name="4.8 Addressing entities - $count not last segment" 
             Rule="odataRelativeUri"
             FailAt="15">
     <Input>Products/$count/foo</Input>
   </TestCase>
-  <TestCase Name="4.6 Addressing entities - entity set navigation with $count" 
+  <TestCase Name="4.8 Addressing entities - entity set navigation with $count" 
             Rule="odataRelativeUri">
     <Input>Products(1)/Items/$count</Input>
   </TestCase>
-  <TestCase Name="4.6 Addressing entities - collection property with $count" 
+  <TestCase Name="4.8 Addressing entities - collection property with $count" 
             Rule="odataRelativeUri">
     <Input>Products(1)/Addresses/$count</Input>
   </TestCase>
-  <TestCase Name="4.6 Addressing entities - collection property with $count" 
+  <TestCase Name="4.8 Addressing entities - collection property with $count" 
             Rule="odataRelativeUri">
     <Input>Products(1)/Sizes/$count</Input>
+  </TestCase>
+  <TestCase Name="4.8 Addressing the Count - in $filter with navigation" 
+            Rule="gtExpr">
+    <Input>Products/$count gt 0</Input>
+  </TestCase>
+  <TestCase Name="4.8 Addressing the Count - in $filter with complex collection" 
+            Rule="gtExpr">
+    <Input>Addresses/$count gt 0</Input>
+  </TestCase>
+  <TestCase Name="4.8 Addressing the Count - in $filter with primitive collection" 
+            Rule="gtExpr">
+    <Input>Sizes/$count gt 0</Input>
+  </TestCase>
+  <TestCase Name="4.8 Addressing the Count - collection navigation property with $count in $orderby" 
+            Rule="orderby">
+    <Input>$orderby=Products/$count</Input>
+  </TestCase>
+  <TestCase Name="4.8 Addressing the Count - collection property with $count in $orderby" 
+            Rule="orderby">
+    <Input>$orderby=Addresses/$count</Input>
+  </TestCase>
+  <TestCase Name="4.8 Addressing the Count - collection property with $count in $orderby" 
+            Rule="orderby">
+    <Input>$orderby=Sizes/$count</Input>
   </TestCase>
   <TestCase Name="4.x Inheritance - set of subtypes" 
             Rule="odataRelativeUri">
@@ -1334,5 +1359,9 @@
   <TestCase Name="Functions in commonExpr - complex JSON parameter" 
             Rule="commonExpr">
     <Input>Available(complex={"Name":"Value"})</Input>
+  </TestCase>
+  <TestCase Name="Functions in commonExpr - property as parameter" 
+            Rule="commonExpr">
+    <Input>PhoneticallySimilar(Word1=Name,Word2=Supplier/Name)</Input>
   </TestCase>
 </TestSuite>
