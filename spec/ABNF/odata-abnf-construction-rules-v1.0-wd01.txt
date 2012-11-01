@@ -5,10 +5,11 @@
 ; described in section 6.2.2.2 of RFC3986 
 ; (http://tools.ietf.org/html/rfc3986#section-6.2.2) 
 ; before applying the grammar to them, i.e. all characters in the unreserved 
-; set (see rule "unreserved" below) are plain literals and not percent-encoded. 
-; In addition the characters SPACE, HTAB, DQUOTE, ":", "{", "}", "[", and "]" must 
-; also be stated as plain literals and not percent-encoded when occuring in the
-; query part of a URI.
+; set (see rule "unreserved" below) are plain literals and NOT percent-encoded. 
+;
+; In addition the characters in rule "unencoded" (see section 7. Punctuation)
+; must also be stated as plain literals and not percent-encoded when occurring
+; in the resourcePath or queryOptions part of a URI.
 ;------------------------------------------------------------------------------
 ; Contents
 ; --------
@@ -54,7 +55,7 @@ collectionNavigation = [ "/" qualifiedEntityTypeName ]
 
 keyPredicate     = simpleKey / compoundKey
 simpleKey        = "(" keyPropertyValue ")"
-compoundKey      = "(" keyValuePair *("," keyValuePair) ")"
+compoundKey      = "(" keyValuePair *( COMMA keyValuePair ) ")"
 keyValuePair     = primitiveKeyProperty "=" keyPropertyValue
 keyPropertyValue = primitiveLiteral
 
@@ -82,9 +83,9 @@ complexPath    = [ "/" qualifiedComplexTypeName ]
                  / boundOperation
                  )
 
-count = "/$count" 
-value = "/$value"
-links = "/$links"
+count = "/" %x24.63.6f.75.6e.74 ; $count
+links = "/" %x24.6c.69.6e.6b.73 ; $links
+value = "/" %x24.76.61.6c.75.65 ; $value
 
 ; boundOperation segments can only be composed if the type of the previous segment 
 ; matches the type of the first parameter of the action or function being called.
@@ -100,12 +101,12 @@ boundOperation = "/" ( boundActionCall
 actionCall      = [ operationQualifier ] action [ "()" ]
 boundActionCall = actionCall
                   ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
-                  ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
+                  ; and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
 
 ; The following boundXxxFuncCall rules have the added restrictions that
 ;  - the function MUST support binding, and 
 ;  - the binding parameter type MUST match the type of resource identified by the 
-;    Uri immediately preceding (to the left) of the boundXxxFuncCall, and
+;    URI immediately preceding (to the left) of the boundXxxFuncCall, and
 ;  - the functionParameters MUST NOT include the bindingParameter.
 boundEntityFuncCall       = entityFunctionCall
 boundEntityColFuncCall    = entityColFunctionCall
@@ -121,7 +122,7 @@ complexColFunctionCall   = [ operationQualifier ] complexColFunction   functionP
 primitiveFunctionCall    = [ operationQualifier ] primitiveFunction    functionParameters
 primitiveColFunctionCall = [ operationQualifier ] primitiveColFunction functionParameters
 
-functionParameters    = "(" [ functionParameter *( "," functionParameter ) ] ")"
+functionParameters    = "(" [ functionParameter *( COMMA functionParameter ) ] ")"
 functionParameter     = functionParameterName "=" ( parameterAlias / primitiveLiteral )
 functionParameterName = odataIdentifier
 parameterAlias        = "@" odataIdentifier
@@ -130,7 +131,7 @@ parameterAlias        = "@" odataIdentifier
 ; 2. Query Options
 ;------------------------------------------------------------------------------
 
-queryOptions = queryOption *("&" queryOption)        
+queryOptions = queryOption *( "&" queryOption )        
 queryOption  = systemQueryOption  
              / aliasAndValue 
              / parameterNameAndValue
@@ -146,33 +147,37 @@ systemQueryOption = expand
                   / select 
                   / skiptoken
 
-; TODO: case-sensitivity of system query option names (ODATA-117)
-expand       = "$expand=" expandClause 
-expandClause = expandItem *( "," expandItem )
+expand       = %x24.65.78.70.61.6e.64 "=" expandClause ; $expand 
+expandClause = expandItem *( COMMA expandItem )
 expandItem   =        [ qualifiedEntityTypeName "/" ] navigationProperty 
                *( "/" [ qualifiedEntityTypeName "/" ] navigationProperty ) 
 
-filter = "$filter=" boolCommonExpr
+filter = %x24.66.69.6c.74.65.72 "=" boolCommonExpr ; $filter
 
-; TODO: case-sensitivity of asc and desc (ODATA-117)        
-orderby = "$orderby=" commonExpr [ 1*WSP ( "asc" / "desc" ) ]    
-             *( COMMA commonExpr [ 1*WSP ( "asc" / "desc" ) ] )
+orderby       = %x24.6f.72.64.65.72.62.79 "=" orderbyClause ; $orderby
+orderbyClause = orderbyItem *( COMMA orderbyItem )
+orderbyItem   = commonExpr [ 1*WSP orderAscDesc ]
+orderAscDesc  = ( %x61.73.63    ; asc
+                / %x64.65.73.63 ; desc
+                )
 
-skip = "$skip=" 1*DIGIT
-top  = "$top="  1*DIGIT
+skip = %x24.73.6b.69.70 "=" 1*DIGIT ; $skip
+top  = %x24.74.6f.70    "=" 1*DIGIT ; $top
 
-format = "$format=" ( "json" 
-                    / "atom"
-                    / "xml" 
-                    / 1*( pchar / "/" ) ; <a data service specific value 
-                    )                   ; indicating a format specific to
-                                        ; the specific data service> or
-                                        ; <An IANA-defined [IANA-MMT] 
-                                        ; content type>
+format = %x24.66.6f.72.6d.61.74 "=" ; $format
+         ( %x61.74.6f.6d ; atom
+         / %x6a.73.6f.6e ; json 
+         / %x78.6d.6c    ; xml 
+         / 1*( pchar / "/" ) ; <a data service specific value indicating a
+         )                   ; format specific to the specific data service> or
+                             ; <An IANA-defined [IANA-MMT] content type>
                           
-inlinecount = "$inlinecount=" ( "allpages" / "none" )
+inlinecount = %x24.69.6e.6c.69.6e.65.63.6f.75.6e.74 "=" ; $inlinecount 
+              ( %x61.6c.6c.70.61.67.65.73               ; allpages 
+              / %x6e.6f.6e.65                           ; none 
+              )
 
-select       = "$select=" selectClause
+select       = %x24.73.65.6c.65.63.74 "=" selectClause ; $select
 selectClause = selectItem *( COMMA selectItem )
 selectItem   = STAR  
              / allOperationsInContainer 
@@ -192,10 +197,11 @@ qualifiedFunctionName = [ operationQualifier ] function [ "(" parameterTypeNames
 
 ; The types of all the parameters to the corresponding function import 
 ; in the order they are declared in the function import.
-parameterTypeNames = [ parameterTypeName *( "," parameterTypeName ) ]
+parameterTypeNames = [ parameterTypeName *( COMMA parameterTypeName ) ]
 parameterTypeName  = qualifiedTypeName 
 
-skiptoken = "$skiptoken=" 1*( unreserved / pct-encoded / other-delims /  ":" / "@" / "$" / "=" ) ; everything except "&"
+skiptoken = %x24.73.6b.69.70.74.6f.6b.65.6e "=" ; $skiptoken 
+            1*( unreserved / pct-encoded / other-delims /  ":" / "@" / "$" / "=" ) ; everything except "&"
 
 aliasAndValue         = parameterAlias        "=" parameterValue
 parameterNameAndValue = functionParameterName "=" parameterValue
@@ -214,41 +220,39 @@ customValue       = *( unreserved / pct-encoded / other-delims / ":" / "@" / "$"
 ; 3. Expressions
 ;------------------------------------------------------------------------------
 
-commonExpr = primitiveLiteral
-           / firstMemberExpr
-           / functionExpr
-           / boolCommonExpr 
-           / methodCallExpr 
-           / parenExpr 
-           / addExpr 
-           / subExpr 
-           / mulExpr 
-           / divExpr 
-           / modExpr 
-           / negateExpr 
-           / castExpr 
+; TODO: is a boolCommonExpr also a commonExpr? To e.g. sort by Boolean?
+commonExpr = ( primitiveLiteral
+             / firstMemberExpr
+             / functionExpr
+             / negateExpr 
+             / methodCallExpr 
+             / parenExpr 
+             / castExpr 
+             ) 
+             [ addExpr 
+             / subExpr 
+             / mulExpr 
+             / divExpr 
+             / modExpr
+             ]  
 
-boolCommonExpr = boolean
-               / boolFirstMemberExpr
-               / boolFunctionExpr
-               / eqExpr 
-               / neExpr 
-               / ltExpr  
-               / leExpr  
-               / gtExpr 
-               / geExpr  
-               / notExpr  
-               / andExpr 
-               / orExpr 
-               / isofExpr 
-               / boolCastExpr  
-               / boolMethodCallExpr  
-               / boolParenExpr 
+boolCommonExpr = ( isofExpr 
+                 / boolMethodCallExpr 
+                 / notExpr  
+                 / commonExpr
+                   [ eqExpr 
+                   / neExpr 
+                   / ltExpr  
+                   / leExpr  
+                   / gtExpr 
+                   / geExpr  
+                   ]
+                 / boolParenExpr
+                 ) [ andExpr / orExpr ] 
 
-boolFirstMemberExpr = firstMemberExpr ; with the added restriction that the return type is Edm.Boolean
-firstMemberExpr     = [ lambdaPredicatePrefixExpr ]  ; only allowed inside a lambdaPredicateExpr
-                      memberExpr
-                  
+firstMemberExpr = [ lambdaPredicatePrefixExpr ]  ; only allowed inside a lambdaPredicateExpr
+                  memberExpr
+
 memberExpr = [ qualifiedEntityTypeName "/" ]
              ( entityColNavigationProperty [ collectionNavigationExpr ] 
              / entityNavigationProperty    [ singleNavigationExpr ] 
@@ -287,7 +291,6 @@ complexPathExpr = "/" [ qualifiedComplexTypeName "/" ]
 
 singlePathExpr = "/" boundFunctionExpr
 
-boolFunctionExpr  = functionExpr ; with the added restriction that the return type is Edm.Boolean
 boundFunctionExpr = functionExpr ; boundFunction segments can only be composed if the type of the    
                                  ; previous segment matches the type of the first function parameter
                                      
@@ -300,16 +303,15 @@ functionExpr = [ operationQualifier ]
                / primitiveFunction    functionExprParameters [ singlePathExpr ] 
                )
 
-functionExprParameters = "(" [ functionExprParameter *( "," functionExprParameter ) ] ")"
-; TODO: allow firstMemberExpr also as parameter values (ODATA-155)
+functionExprParameters = "(" [ functionExprParameter *( COMMA functionExprParameter ) ] ")"
 functionExprParameter  = functionParameterName "=" ( parameterValue / firstMemberExpr )
 
+; TODO: case-sensitive (ODATA-117)
 anyExpr = "any(" [ lambdaVariableExpr ":" lambdaPredicateExpr ] ")"
 allExpr = "all(" lambdaVariableExpr ":" lambdaPredicateExpr ")"
 lambdaPredicateExpr = boolCommonExpr ; containing at least one lambdaPredicatePrefixExpr
 
-methodCallExpr = boolMethodCallExpr 
-               / indexOfMethodCallExpr 
+methodCallExpr = indexOfMethodCallExpr 
                / toLowerMethodCallExpr 
                / toUpperMethodCallExpr  
                / trimMethodCallExpr 
@@ -340,16 +342,18 @@ boolMethodCallExpr = endsWithMethodCallExpr
                    / substringOfMethodCallExpr                                          
                    / intersectsMethodCallExpr 
 
-substringOfMethodCallExpr = "substringof" "(" *WSP commonExpr "," commonExpr *WSP ")"
-startsWithMethodCallExpr  = "startswith"  "(" *WSP commonExpr "," commonExpr *WSP ")"
-endsWithMethodCallExpr    = "endswith"    "(" *WSP commonExpr "," commonExpr *WSP ")"
+; TODO: case-sensitive (ODATA-117)
+substringOfMethodCallExpr = "substringof" "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+startsWithMethodCallExpr  = "startswith"  "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+endsWithMethodCallExpr    = "endswith"    "(" *WSP commonExpr COMMA commonExpr *WSP ")"
 lengthMethodCallExpr      = "length"      "(" *WSP commonExpr *WSP ")"
-indexOfMethodCallExpr     = "indexof"     "(" *WSP commonExpr "," commonExpr *WSP ")"
-substringMethodCallExpr   = "substring"   "(" *WSP commonExpr "," commonExpr [ "," commonExpr *WSP ] ")"
+indexOfMethodCallExpr     = "indexof"     "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+substringMethodCallExpr   = "substring"   "(" *WSP commonExpr COMMA commonExpr [ COMMA commonExpr *WSP ] ")"
 toLowerMethodCallExpr     = "tolower"     "(" *WSP commonExpr *WSP ")"
 toUpperMethodCallExpr     = "toupper"     "(" *WSP commonExpr *WSP ")"
 trimMethodCallExpr        = "trim"        "(" *WSP commonExpr *WSP ")"
-concatMethodCallExpr      = "concat"      "(" *WSP commonExpr "," commonExpr *WSP ")"
+concatMethodCallExpr      = "concat"      "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+
 yearMethodCallExpr        = "year"        "(" *WSP commonExpr *WSP ")"
 yearsMethodCallExpr       = "years"       "(" *WSP commonExpr *WSP ")"
 monthMethodCallExpr       = "month"       "(" *WSP commonExpr *WSP ")"
@@ -362,29 +366,36 @@ minuteMethodCallExpr      = "minute"      "(" *WSP commonExpr *WSP ")"
 minutesMethodCallExpr     = "minutes"     "(" *WSP commonExpr *WSP ")"
 secondMethodCallExpr      = "second"      "(" *WSP commonExpr *WSP ")"
 secondsMethodCallExpr     = "seconds"     "(" *WSP commonExpr *WSP ")"
+
 roundMethodCallExpr       = "round"       "(" *WSP commonExpr *WSP ")"
 floorMethodCallExpr       = "floor"       "(" *WSP commonExpr *WSP ")"
 ceilingMethodCallExpr     = "ceiling"     "(" *WSP commonExpr *WSP ")"
 
-parenExpr     = "(" *WSP commonExpr     *WSP ")"
+getTotalOffsetMinutesExpr = "gettotaloffsetminutes" "(" *WSP commonExpr *WSP ")" 
+
+distanceMethodCallExpr    = "geo.distance"   "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+geoLengthMethodCallExpr   = "geo.length"     "(" *WSP commonExpr *WSP ")"
+intersectsMethodCallExpr  = "geo.intersects" "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+
 boolParenExpr = "(" *WSP boolCommonExpr *WSP ")"
+parenExpr     = "(" *WSP commonExpr     *WSP ")"
 
 ; TODO: case-sensitive (ODATA-117)
-andExpr = boolCommonExpr 1*WSP "and" 1*WSP boolCommonExpr
-orExpr  = boolCommonExpr 1*WSP "or"  1*WSP boolCommonExpr
+andExpr = 1*WSP "and" 1*WSP boolCommonExpr
+orExpr  = 1*WSP "or"  1*WSP boolCommonExpr
 
-eqExpr = commonExpr 1*WSP "eq" 1*WSP commonExpr     
-neExpr = commonExpr 1*WSP "ne" 1*WSP commonExpr
-ltExpr = commonExpr 1*WSP "lt" 1*WSP commonExpr
-leExpr = commonExpr 1*WSP "le" 1*WSP commonExpr
-gtExpr = commonExpr 1*WSP "gt" 1*WSP commonExpr
-geExpr = commonExpr 1*WSP "ge" 1*WSP commonExpr
+eqExpr = 1*WSP "eq" 1*WSP commonExpr     
+neExpr = 1*WSP "ne" 1*WSP commonExpr
+ltExpr = 1*WSP "lt" 1*WSP commonExpr
+leExpr = 1*WSP "le" 1*WSP commonExpr
+gtExpr = 1*WSP "gt" 1*WSP commonExpr
+geExpr = 1*WSP "ge" 1*WSP commonExpr
 
-addExpr = commonExpr 1*WSP "add" 1*WSP commonExpr
-subExpr = commonExpr 1*WSP "sub" 1*WSP commonExpr
-mulExpr = commonExpr 1*WSP "mul" 1*WSP commonExpr
-divExpr = commonExpr 1*WSP "div" 1*WSP commonExpr
-modExpr = commonExpr 1*WSP "mod" 1*WSP commonExpr
+addExpr = 1*WSP "add" 1*WSP commonExpr
+subExpr = 1*WSP "sub" 1*WSP commonExpr
+mulExpr = 1*WSP "mul" 1*WSP commonExpr
+divExpr = 1*WSP "div" 1*WSP commonExpr
+modExpr = 1*WSP "mod" 1*WSP commonExpr
 
 negateExpr = "-" *WSP commonExpr
 
@@ -392,19 +403,13 @@ negateExpr = "-" *WSP commonExpr
 notExpr = "not" 1*WSP boolCommonExpr
 
 ; TODO: isn't this rather singleNavigation (once the leading slash has been removed)?
-isofExpr     = "isof" "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
-castExpr     = "cast" "(" *WSP [ commonExpr "," ] qualifiedTypeName *WSP ")"
-boolCastExpr = "cast" "(" *WSP [ commonExpr "," ] "Edm.Boolean"     *WSP ")"
-
-getTotalOffsetMinutesExpr = "gettotaloffsetminutes" "(" *WSP commonExpr *WSP ")" 
-distanceMethodCallExpr    = "geo.distance"          "(" *WSP commonExpr "," commonExpr *WSP ")"
-geoLengthMethodCallExpr   = "geo.length"            "(" *WSP commonExpr *WSP ")"
-intersectsMethodCallExpr  = "geo.intersects"        "(" *WSP commonExpr "," commonExpr *WSP ")"
+isofExpr = "isof" "(" *WSP [ commonExpr COMMA ] qualifiedTypeName *WSP ")"
+castExpr = "cast" "(" *WSP [ commonExpr COMMA ] qualifiedTypeName *WSP ")"
 
 ;------------------------------------------------------------------------------
 ; 4. JSON format for function and action parameters
 ;------------------------------------------------------------------------------
-; Note: the query part of a URL needs to be partially percent-decoded before
+; Note: the query part of a URI needs to be partially percent-decoded before
 ; applying these rules, see comment at the top of this file
 
 ; TODO: action request payloads (ODATA-80)
@@ -659,8 +664,9 @@ int16 = [ sign ] 1*5DIGIT ; numbers in the range from -32768 to 32767
 int32 = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
 int64 = [ sign ] 1*19DIGIT [ "L" ] ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
-string           = SQUOTE *( unreserved / pct-encoded / SQUOTE-in-string ) SQUOTE ; TODO: was SQUOTE *UTF8-char SQUOTE, but that's not sufficient for use in URLs
-SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal in quotes
+string           = SQUOTE *( pchar-no-SQUOTE / SQUOTE-in-string / unencoded ) SQUOTE
+pchar-no-SQUOTE  = unreserved / pct-encoded / "!" / "$" / "&" / "(" / ")" / "*" / "+" / "," / ";" / "=" / ":" / "@" 
+SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal
 
 ; dates and times
 dateTime       = "datetime" SQUOTE dateTimeBody SQUOTE
@@ -747,6 +753,8 @@ geometryPrefix  = "geometry" SQUOTE
 ; 7. Punctuation
 ;------------------------------------------------------------------------------
 
+unencoded = SP / HTAB / DQUOTE / ":" / "{" / "}" / "[" / "]" 
+
 SQUOTE = %x27              
 SEMI   = %x3B              
 COMMA  = %x2C
@@ -815,7 +823,7 @@ unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ;reserved      = gen-delims / sub-delims
 ;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
 ;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-sub-delims    = "&" / "=" / "$" / other-delims
+sub-delims    = "$" / "&" / "=" / other-delims
 other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
 
 ;------------------------------------------------------------------------------
