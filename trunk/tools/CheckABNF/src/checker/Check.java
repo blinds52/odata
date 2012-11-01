@@ -134,8 +134,8 @@ public class Check {
 						+ "\n");
 			} catch (Exception e) {
 				failures++;
-				err.println("\nERROR: " + tc.Name() + ": " + e.getMessage()
-						+ "\n");
+				err.println("\nERROR: " + tc.Name() + ": " + tc.Input()
+						+ ": " + e.getMessage() + "\n");
 				e.printStackTrace(err);
 			}
 		}
