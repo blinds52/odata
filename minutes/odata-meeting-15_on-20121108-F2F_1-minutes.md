@@ -299,9 +299,39 @@ Diane: $expand will cause multiple delta queries to be returned to process the s
 
 _(Proposed to start tomorrow's meeting with JSON Format)_
 
-_(Rest of agenda draft will be uploaded sometime after the meeting)_
+##6 Agenda for tomorrow##
 
-##6 AOB##
+09:00 EST Review and approve agenda for day 2
+
+09:10 EST Review action items
+
+09:30 EST Discuss new proposals: New JSON Format
+
+10:30 EST Break
+
+10:45 EST Discuss new proposals:  Relationship Simplification
+
+12:30 EST Lunch
+
+01:30 EST Async
+
+02:00 EST Simple Type
+
+02:30 EST Enums,
+
+03:00 EST Break
+
+03:15 EST Scoping and URL Issues 32/36/38/73
+
+03:45 EST Review TC timeline and next steps 
+
+04:30 EST AOBand wrap up 
+
+06:00 EST End
+
+Susan on action item iii.#0003: Come up with examples / usecases (and proposals) for open types and document annotation for JSON extensions document
+
+##7 AOB##
 
 None. 
 
