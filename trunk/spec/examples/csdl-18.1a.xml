@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
+>
+  <edmx:DataServices DataServiceVersion="4.0">
+    <edm:Schema xmlns:edm="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="ODataDemo">
+      <edm:EntityType Name="Product" HasStream="true">
+        <edm:Key>
+          <edm:PropertyRef Name="ID" />
+        </edm:Key>
+        <edm:Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <edm:Property Name="Name" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="Description" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="ReleaseDate" Type="Edm.DateTime" Nullable="false" />
+        <edm:Property Name="DiscontinuedDate" Type="Edm.DateTime" Nullable="true" />
+        <edm:Property Name="Rating" Type="Edm.Int32" Nullable="false" />
+        <edm:Property Name="Price" Type="Edm.Decimal" Nullable="false" />
+        <edm:NavigationProperty Name="Category"
+          Relationship="ODataDemo.Product_Category_Category_Products" FromRole="Product_Category"
+          ToRole="Category_Products" />
+        <edm:NavigationProperty Name="Supplier"
+          Relationship="ODataDemo.Product_Supplier_Supplier_Products" FromRole="Product_Supplier"
+          ToRole="Supplier_Products" />
+      </edm:EntityType>
+      <edm:EntityType Name="Category">
+        <edm:Key>
+          <edm:PropertyRef Name="ID" />
+        </edm:Key>
+        <edm:Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <edm:Property Name="Name" Type="Edm.String" Nullable="true" />
+        <edm:NavigationProperty Name="Products"
+          Relationship="ODataDemo.Product_Category_Category_Products" FromRole="Category_Products"
+          ToRole="Product_Category" />
+      </edm:EntityType>
+      <edm:EntityType Name="Supplier">
+        <edm:Key>
+          <edm:PropertyRef Name="ID" />
+        </edm:Key>
+        <edm:Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <edm:Property Name="Name" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="Address" Type="ODataDemo.Address" Nullable="false" />
+        <edm:Property Name="Concurrency" Type="Edm.Int32" Nullable="false"
+          ConcurrencyMode="Fixed" />
+        <edm:NavigationProperty Name="Products"
+          Relationship="ODataDemo.Product_Supplier_Supplier_Products" FromRole="Supplier_Products"
+          ToRole="Product_Supplier" />
+      </edm:EntityType>
+      <edm:EntityType Name="Country">
+        <edm:Key>
+          <edm:PropertyRef Name="Name" />
+        </edm:Key>
+        <edm:Property Name="Name" Type="String" />
+      </edm:EntityType>
+      <edm:ComplexType Name="Address">
+        <edm:Property Name="Street" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="City" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="State" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="ZipCode" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="Country" Type="Edm.String" Nullable="true" />
+      </edm:ComplexType>
+      <edm:TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
+        <edm:ValueAnnotation Term="Org.Odata.Measurements.V1.Units" String="Centimeters" />
+      </edm:TypeDefinition>
+      <edm:TypeDefinition Name="Weight" UnderlyingType="Edm.String">
+        <edm:ValueAnnotation Term="Org.Odata.Measurements.V1.Units" String="Kilograms" />
+      </edm:TypeDefinition>
+      <edm:ComplexType Name="Size">
+        <edm:Property Name="Height" Type="Self.Length" />
+        <edm:Property Name="Weight" Type="Self.Weight" />
+      </edm:ComplexType>
+      <edm:Association Name="Supplier_Country">
+        <edm:End Role="Supplier" Type="ODataDemo.Supplier" Multiplicity="*" />
+        <edm:End Role="Country" Type="ODataDemo.Country" Multiplicity="1" />
+        <edm:ReferentialConstraint>
+          <edm:Principal Role="Country">
+            <edm:PropertyRef Name="Name" />
+          </edm:Principal>
+          <edm:Dependent Role="Supplier">
+            <edm:PropertyRef Name="Address/Country" />
+          </edm:Dependent>
+        </edm:ReferentialConstraint>
+      </edm:Association>
+      <edm:Association Name="Product_Category_Category_Products">
+        <edm:End Role="Product_Category" Type="ODataDemo.Product" Multiplicity="*" />
+        <edm:End Role="Category_Products" Type="ODataDemo.Category" Multiplicity="0..1" />
+      </edm:Association>
+      <edm:Association Name="Product_Supplier_Supplier_Products">
+        <edm:End Role="Product_Supplier" Type="ODataDemo.Product" Multiplicity="*" />
+        <edm:End Role="Supplier_Products" Type="ODataDemo.Supplier" Multiplicity="0..1" />
+      </edm:Association>
+      <edm:EntityContainer Name="DemoService" IsDefaultEntityContainer="true">
+        <edm:EntitySet Name="Products" EntityType="ODataDemo.Product" />
+        <edm:EntitySet Name="Categories" EntityType="ODataDemo.Category" />
+        <edm:EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier" />
+        <edm:AssociationSet Name="Products_Category_Categories" Association="ODataDemo.Product_Category_Category_Products">
+          <edm:End Role="Product_Category" EntitySet="Products" />
+          <edm:End Role="Category_Products" EntitySet="Categories" />
+        </edm:AssociationSet>
+        <edm:AssociationSet Name="Products_Supplier_Suppliers" Association="ODataDemo.Product_Supplier_Supplier_Products">
+          <edm:End Role="Product_Supplier" EntitySet="Products" />
+          <edm:End Role="Supplier_Products" EntitySet="Suppliers" />
+        </edm:AssociationSet>
+        <edm:FunctionImport Name="GetProductsByRating" EntitySet="Products"
+          ReturnType="Collection(ODataDemo.Product)"
+        >
+          <edm:Parameter Name="rating" Type="Edm.Int32" DefaultValue="4" />
+        </edm:FunctionImport>
+      </edm:EntityContainer>
+    </edm:Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
