@@ -165,7 +165,7 @@ abstract class Opcode {
 				// pre-branch user callback
 				returnLength = callback.preBranch(data.offset);
 				if(returnLength >= 0){
-					// callback function has performed a terminal node operation
+					// callback function has performed a terminal node operation, overrides parse
 					if(returnLength > (data.inputString.length - data.offset)){
 						throw new Exception("Rnm Opcode["+ name
 							+"] error: returned phrase length["+ returnLength
@@ -174,7 +174,15 @@ abstract class Opcode {
 					}
 					data.match = true;
 					data.offset += returnLength;
-				} else {child.execute(data);}// ignore callback function result
+				} 
+				// RHA modified from here
+                else if (returnLength == -2) {
+                	// override parser, rejecting any possible phrase match
+					data.match = false;
+					data.offset = offset;
+                }
+                // RHA modified to here
+				else {child.execute(data);}// ignore callback function result
 			} else {child.execute(data);}// no callback function - normal traversal of child subtree
 			
 			if(callback != null && returnLength < 0){
@@ -189,6 +197,7 @@ abstract class Opcode {
 				} 
 				// RHA modified from here
 				else if (returnLength == -2) {
+                	// override parser, reject matched phrase
 					data.match = false;
 					data.offset = offset;
 				}
