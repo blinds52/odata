@@ -271,11 +271,11 @@
   </TestCase>
   <TestCase Name="Null: qualified" 
             Rule="null">
-    <Input>null'double'</Input>
+    <Input>null'Double'</Input>
   </TestCase>
   <TestCase Name="String" 
             Rule="string">
-    <Input>'ABCDEFGHIHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~!$&amp;('')*+,;=:@&#032;&#009;":{}[]'</Input>
+    <Input>'ABCDEFGHIHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~!$&amp;('')*+,;=:@ ":{}[]'</Input>
   </TestCase>
   <TestCase Name="Resource Path - Entity Set" 
             Rule="resourcePath">
@@ -919,7 +919,7 @@
   </TestCase>
   <TestCase Name="5.1.1.4.6 substring" 
             Rule="commonExpr">
-    <Input>substring(CompanyName,5)</Input>
+    <Input>substring(CompanyName, 5)</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.6 substring with length" 
             Rule="commonExpr">
@@ -939,7 +939,7 @@
   </TestCase>
   <TestCase Name="5.1.1.4.10 concat" 
             Rule="commonExpr">
-    <Input>concat(CompanyName,Name)</Input>
+    <Input>concat(CompanyName, Name)</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.10 concat" 
             Rule="commonExpr">
@@ -1031,11 +1031,24 @@
   </TestCase>
   <TestCase Name="5.1.1.x any()"
             Rule="anyExpr">
+    <Input>any( )</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="anyExpr">
     <Input>any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any()"
+            Rule="anyExpr">
+    <Input>any( lambda : true )</Input>
   </TestCase>
   <TestCase Name="5.1.1.x any()"
             Rule="commonExpr">
     <Input>Products/any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x any() - requires a path prefix"
+            Rule="boolCommonExpr"
+            FailAt="3">
+    <Input>any()</Input>
   </TestCase>
   <TestCase Name="5.1.1.x any()"
             Rule="commonExpr">
@@ -1064,6 +1077,20 @@
   <TestCase Name="5.1.1.x lambdaPredicateExpr"
             Rule="boolCommonExpr">
     <Input>lambda/Name eq $it/Name</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x all()" 
+            Rule="boolCommonExpr">
+    <Input>Products/all(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x all() - requires path prefix" 
+            Rule="boolCommonExpr"
+            FailAt="3">
+    <Input>all(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.x all() - must contain a lambda expression" 
+            Rule="boolCommonExpr"
+            FailAt="13">
+    <Input>Products/all()</Input>
   </TestCase>
   <TestCase Name="5.1.1.x all()" 
             Rule="commonExpr">
