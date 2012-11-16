@@ -1,17 +1,14 @@
 This ABNF checker uses Java APG 1.0 from http://www.coasttocoastresearch.com/apg/docs/docjava.
 
 The project contains two linked files:
- - odata-abnf-current.abnf
- - odata-abnf-testcases.xml
-Get the latest version of these files from 
-https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/#_trunk_spec_ABNF_
-and point the linked files to where they reside in your file system.
+ - abnf.txt
+ - abnf-testcases.xml
+Point the linked files to your ABNF and your test cases.
 
-The project uses a custom build step to generate src/OData/OData.java from the
-linked file odata-abnf-current.abnf. 
+The project uses a custom build step to generate the java class
+src/grammar/GrammarUnderTest.java from the linked file abnf.txt using Java APG. 
 
-The default run configuration "Check" executes all test cases in the linked file
-odata-abnf-testcases.xml.
+The default run configuration "Check" executes all test cases in the linked file abnf-testcases.xml.
 
 The second run configuration "CheckTest" executes the JUnit self-test of CheckABNF. 
 It uses the included test case file TestCases.xml 
