@@ -1,5 +1,8 @@
 package checker;
 
+import grammar.GrammarUnderTest;
+import grammar.GrammarUnderTest.RuleNames;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashSet;
@@ -14,8 +17,6 @@ import com.coasttocoastresearch.apg.Parser.RuleCallback;
 import com.coasttocoastresearch.apg.Statistics;
 import com.coasttocoastresearch.apg.Trace;
 
-import OData.OData;
-import OData.OData.RuleNames;
 
 public class Check {
 
@@ -77,7 +78,7 @@ public class Check {
 
 	public void run(TestSuite ts, PrintStream out, PrintStream err) {
 		int failures = 0;
-		Parser p = new Parser(OData.getInstance());
+		Parser p = new Parser(GrammarUnderTest.getInstance());
 		Statistics s = p.enableStatistics(true);
 		s.enableCumulate(true);
 
@@ -141,10 +142,10 @@ public class Check {
 		}
 		if (failures == 0) {
 			int coveredRules = coveredRules(s, ts, out);
-			int coverage = (100 * coveredRules) / OData.ruleCount;
+			int coverage = (100 * coveredRules) / GrammarUnderTest.ruleCount;
 			out.println("\nAll " + ts.TestCases().size()
 					+ " test cases passed, " + coveredRules + " of "
-					+ OData.ruleCount + " rules covered (" + coverage + "%)");
+					+ GrammarUnderTest.ruleCount + " rules covered (" + coverage + "%)");
 		} else {
 			err.println("\n" + failures + " of " + ts.TestCases().size()
 					+ " test cases failed\n");
@@ -175,7 +176,7 @@ public class Check {
 
 	int ruleID(String ruleName) {
 		try {
-			return OData.RuleNames.valueOf(
+			return GrammarUnderTest.RuleNames.valueOf(
 					ruleName.toUpperCase().replace('-', '_')).ruleID();
 		} catch (IllegalArgumentException e) {
 			throw new Check.InvalidRuleName("unknown rule " + ruleName);
@@ -204,10 +205,10 @@ public class Check {
 					matchedRuleNames.add(words[5]);
 			}
 
-			if (matchedRuleNames.size() < OData.RuleNames.values().length) {
+			if (matchedRuleNames.size() < GrammarUnderTest.RuleNames.values().length) {
 				out.println("\nUncovered rules:");
 				unMatchedRules = 0;
-				for (RuleNames r : OData.RuleNames.values()) {
+				for (RuleNames r : GrammarUnderTest.RuleNames.values()) {
 					if (!matchedRuleNames.contains(r.ruleName())) {
 						if (unMatchedRules < ts.MaxUncoveredRules())
 							out.println("  " + r.ruleName());
