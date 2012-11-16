@@ -1,9 +1,12 @@
 ;------------------------------------------------------------------------------
 ; odata-v1.0-abnf for URI conventions
 ;------------------------------------------------------------------------------
+; This grammar uses the ABNF defined in RFC5234 with one extension: literals 
+; enclosed in single quotes (e.g. '$metadata') are treated case-sensitive. 
+;
 ; The following rules assume that URIs have been percent-encoding normalized as
 ; described in section 6.2.2.2 of RFC3986 
-; (http://tools.ietf.org/html/rfc3986#section-6.2.2) 
+; (http://tools.ietf.org/html/rfc3986#section-6.2.2)
 ; before applying the grammar to them, i.e. all characters in the unreserved 
 ; set (see rule "unreserved" below) are plain literals and NOT percent-encoded. 
 ;
@@ -28,7 +31,7 @@
 
 odataUri = ( "https" / "http" ) "://" host [ ":" port ] 
            serviceRoot 
-           [ "$metadata" / "$batch" / odataRelativeUri ]  
+           [ '$metadata' / '$batch' / odataRelativeUri ]  
 
 serviceRoot = "/" *( segment-nz "/" )
 
@@ -56,7 +59,7 @@ collectionNavigation = [ "/" qualifiedEntityTypeName ]
 keyPredicate     = simpleKey / compoundKey
 simpleKey        = "(" keyPropertyValue ")"
 compoundKey      = "(" keyValuePair *( COMMA keyValuePair ) ")"
-keyValuePair     = primitiveKeyProperty "=" keyPropertyValue
+keyValuePair     = primitiveKeyProperty EQ keyPropertyValue
 keyPropertyValue = primitiveLiteral
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
@@ -83,9 +86,9 @@ complexPath    = [ "/" qualifiedComplexTypeName ]
                  / boundOperation
                  )
 
-count = "/" %x24.63.6f.75.6e.74 ; $count
-links = "/" %x24.6c.69.6e.6b.73 ; $links
-value = "/" %x24.76.61.6c.75.65 ; $value
+count = '/$count'
+links = '/$links'
+value = '/$value'
 
 ; boundOperation segments can only be composed if the type of the previous segment 
 ; matches the type of the first parameter of the action or function being called.
@@ -123,7 +126,7 @@ primitiveFunctionCall    = [ operationQualifier ] primitiveFunction    functionP
 primitiveColFunctionCall = [ operationQualifier ] primitiveColFunction functionParameters
 
 functionParameters    = "(" [ functionParameter *( COMMA functionParameter ) ] ")"
-functionParameter     = functionParameterName "=" ( parameterAlias / primitiveLiteral )
+functionParameter     = functionParameterName EQ ( parameterAlias / primitiveLiteral )
 functionParameterName = odataIdentifier
 parameterAlias        = "@" odataIdentifier
 
@@ -147,46 +150,37 @@ systemQueryOption = expand
                   / select 
                   / skiptoken
 
-expand       = %x24.65.78.70.61.6e.64 "=" expandClause ; $expand 
-expandClause = expandItem *( COMMA expandItem )
-expandItem   =        [ qualifiedEntityTypeName "/" ] navigationProperty 
-               *( "/" [ qualifiedEntityTypeName "/" ] navigationProperty ) 
+expand     = '$expand' EQ expandItem *( COMMA expandItem )
+expandItem =        [ qualifiedEntityTypeName "/" ] navigationProperty 
+             *( "/" [ qualifiedEntityTypeName "/" ] navigationProperty ) 
 
-filter = %x24.66.69.6c.74.65.72 "=" boolCommonExpr ; $filter
+filter = '$filter' EQ boolCommonExpr
 
-orderby       = %x24.6f.72.64.65.72.62.79 "=" orderbyClause ; $orderby
-orderbyClause = orderbyItem *( COMMA orderbyItem )
-orderbyItem   = commonExpr [ 1*WSP orderAscDesc ]
-orderAscDesc  = ( %x61.73.63    ; asc
-                / %x64.65.73.63 ; desc
-                )
+orderby     = '$orderby' EQ orderbyItem *( COMMA orderbyItem )
+orderbyItem = commonExpr [ RWS ( 'asc' / 'desc' ) ]
 
-skip = %x24.73.6b.69.70 "=" 1*DIGIT ; $skip
-top  = %x24.74.6f.70    "=" 1*DIGIT ; $top
+skip = '$skip' EQ 1*DIGIT
+top  = '$top'  EQ 1*DIGIT
 
-format = %x24.66.6f.72.6d.61.74 "=" ; $format
-         ( %x61.74.6f.6d ; atom
-         / %x6a.73.6f.6e ; json 
-         / %x78.6d.6c    ; xml 
+format = '$format' EQ
+         ( 'atom'
+         / 'json' 
+         / 'xml' 
          / 1*( pchar / "/" ) ; <a data service specific value indicating a
          )                   ; format specific to the specific data service> or
                              ; <An IANA-defined [IANA-MMT] content type>
                           
-inlinecount = %x24.69.6e.6c.69.6e.65.63.6f.75.6e.74 "=" ; $inlinecount 
-              ( %x61.6c.6c.70.61.67.65.73               ; allpages 
-              / %x6e.6f.6e.65                           ; none 
-              )
+inlinecount = '$inlinecount' EQ ( 'allpages' / 'none' )
 
-select       = %x24.73.65.6c.65.63.74 "=" selectClause ; $select
-selectClause = selectItem *( COMMA selectItem )
-selectItem   = STAR  
-             / allOperationsInContainer 
-             / [ qualifiedEntityTypeName "/" ] 
-               ( ( navigationProperty [ "/" selectItem ] ) 
-               / *( ( complexProperty / complexColProperty ) "/" ) property 
-               / qualifiedActionName  
-               / qualifiedFunctionName  
-               )
+select     = '$select' EQ selectItem *( COMMA selectItem )
+selectItem = STAR  
+           / allOperationsInContainer 
+           / [ qualifiedEntityTypeName "/" ] 
+             ( ( navigationProperty [ "/" selectItem ] ) 
+             / *( ( complexProperty / complexColProperty ) "/" ) property 
+             / qualifiedActionName  
+             / qualifiedFunctionName  
+             )
 allOperationsInContainer = operationQualifier STAR                 
 operationQualifier       = [ namespace "." ] entityContainerName "."
 
@@ -200,21 +194,21 @@ qualifiedFunctionName = [ operationQualifier ] function [ "(" parameterTypeNames
 parameterTypeNames = [ parameterTypeName *( COMMA parameterTypeName ) ]
 parameterTypeName  = qualifiedTypeName 
 
-skiptoken = %x24.73.6b.69.70.74.6f.6b.65.6e "=" ; $skiptoken 
-            1*( unreserved / pct-encoded / other-delims /  ":" / "@" / "$" / "=" ) ; everything except "&"
+skiptoken = '$skiptoken' EQ 
+            1*( unreserved / pct-encoded / other-delims /  "'" / ":" / "@" / "$" / "=" ) ; everything except "&" and ";"
 
-aliasAndValue         = parameterAlias        "=" parameterValue
-parameterNameAndValue = functionParameterName "=" parameterValue
+aliasAndValue         = parameterAlias        EQ parameterValue
+parameterNameAndValue = functionParameterName EQ parameterValue
 
 parameterValue = primitiveLiteral
                / complexInUri  
                / complexColInUri
                / primitiveColInUri
 
-customQueryOption = customName [ "=" customValue ]
-customName        =  ( unreserved / pct-encoded / other-delims / ":" / "@" )       ; MUST NOT start with "$"
-                    *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" ) ; MUST NOT contain "="
-customValue       = *( unreserved / pct-encoded / other-delims / ":" / "@" / "$" / "=" ) ; everything except "&"
+customQueryOption = customName [ EQ customValue ]
+customName        =  ( unreserved / pct-encoded / other-delims /  "'" / ":" )                   ; MUST NOT start with "$" or "@"
+                    *( unreserved / pct-encoded / other-delims /  "'" / ":" / "@" / "$" )       ; MUST NOT contain "="
+customValue       = *( unreserved / pct-encoded / other-delims /  "'" / ":" / "@" / "$" / "=" ) ; everything except "&" and ";"
 
 ;------------------------------------------------------------------------------
 ; 3. Expressions
@@ -304,11 +298,10 @@ functionExpr = [ operationQualifier ]
                )
 
 functionExprParameters = "(" [ functionExprParameter *( COMMA functionExprParameter ) ] ")"
-functionExprParameter  = functionParameterName "=" ( parameterValue / firstMemberExpr )
+functionExprParameter  = functionParameterName EQ ( parameterValue / firstMemberExpr )
 
-; TODO: case-sensitive (ODATA-117)
-anyExpr = "any(" [ lambdaVariableExpr ":" lambdaPredicateExpr ] ")"
-allExpr = "all(" lambdaVariableExpr ":" lambdaPredicateExpr ")"
+anyExpr = 'any' "(" BWS [ lambdaVariableExpr BWS ":" BWS lambdaPredicateExpr ] BWS ")"
+allExpr = 'all' "(" BWS   lambdaVariableExpr BWS ":" BWS lambdaPredicateExpr   BWS ")"
 lambdaPredicateExpr = boolCommonExpr ; containing at least one lambdaPredicatePrefixExpr
 
 methodCallExpr = indexOfMethodCallExpr 
@@ -342,69 +335,65 @@ boolMethodCallExpr = endsWithMethodCallExpr
                    / substringOfMethodCallExpr                                          
                    / intersectsMethodCallExpr 
 
-; TODO: case-sensitive (ODATA-117)
-substringOfMethodCallExpr = "substringof" "(" *WSP commonExpr COMMA commonExpr *WSP ")"
-startsWithMethodCallExpr  = "startswith"  "(" *WSP commonExpr COMMA commonExpr *WSP ")"
-endsWithMethodCallExpr    = "endswith"    "(" *WSP commonExpr COMMA commonExpr *WSP ")"
-lengthMethodCallExpr      = "length"      "(" *WSP commonExpr *WSP ")"
-indexOfMethodCallExpr     = "indexof"     "(" *WSP commonExpr COMMA commonExpr *WSP ")"
-substringMethodCallExpr   = "substring"   "(" *WSP commonExpr COMMA commonExpr [ COMMA commonExpr *WSP ] ")"
-toLowerMethodCallExpr     = "tolower"     "(" *WSP commonExpr *WSP ")"
-toUpperMethodCallExpr     = "toupper"     "(" *WSP commonExpr *WSP ")"
-trimMethodCallExpr        = "trim"        "(" *WSP commonExpr *WSP ")"
-concatMethodCallExpr      = "concat"      "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+substringOfMethodCallExpr = 'substringof' "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
+startsWithMethodCallExpr  = 'startswith'  "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
+endsWithMethodCallExpr    = 'endswith'    "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
+lengthMethodCallExpr      = 'length'      "(" BWS commonExpr BWS ")"
+indexOfMethodCallExpr     = 'indexof'     "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
+substringMethodCallExpr   = 'substring'   "(" BWS commonExpr BWS COMMA BWS commonExpr [ BWS COMMA BWS commonExpr BWS ] ")"
+toLowerMethodCallExpr     = 'tolower'     "(" BWS commonExpr BWS ")"
+toUpperMethodCallExpr     = 'toupper'     "(" BWS commonExpr BWS ")"
+trimMethodCallExpr        = 'trim'        "(" BWS commonExpr BWS ")"
+concatMethodCallExpr      = 'concat'      "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
 
-yearMethodCallExpr        = "year"        "(" *WSP commonExpr *WSP ")"
-yearsMethodCallExpr       = "years"       "(" *WSP commonExpr *WSP ")"
-monthMethodCallExpr       = "month"       "(" *WSP commonExpr *WSP ")"
-monthsMethodCallExpr      = "months"      "(" *WSP commonExpr *WSP ")"
-dayMethodCallExpr         = "day"         "(" *WSP commonExpr *WSP ")"
-daysMethodCallExpr        = "days"        "(" *WSP commonExpr *WSP ")"
-hourMethodCallExpr        = "hour"        "(" *WSP commonExpr *WSP ")"
-hoursMethodCallExpr       = "hours"       "(" *WSP commonExpr *WSP ")"
-minuteMethodCallExpr      = "minute"      "(" *WSP commonExpr *WSP ")"
-minutesMethodCallExpr     = "minutes"     "(" *WSP commonExpr *WSP ")"
-secondMethodCallExpr      = "second"      "(" *WSP commonExpr *WSP ")"
-secondsMethodCallExpr     = "seconds"     "(" *WSP commonExpr *WSP ")"
+yearMethodCallExpr        = 'year'        "(" BWS commonExpr BWS ")"
+yearsMethodCallExpr       = 'years'       "(" BWS commonExpr BWS ")"
+monthMethodCallExpr       = 'month'       "(" BWS commonExpr BWS ")"
+monthsMethodCallExpr      = 'months'      "(" BWS commonExpr BWS ")"
+dayMethodCallExpr         = 'day'         "(" BWS commonExpr BWS ")"
+daysMethodCallExpr        = 'days'        "(" BWS commonExpr BWS ")"
+hourMethodCallExpr        = 'hour'        "(" BWS commonExpr BWS ")"
+hoursMethodCallExpr       = 'hours'       "(" BWS commonExpr BWS ")"
+minuteMethodCallExpr      = 'minute'      "(" BWS commonExpr BWS ")"
+minutesMethodCallExpr     = 'minutes'     "(" BWS commonExpr BWS ")"
+secondMethodCallExpr      = 'second'      "(" BWS commonExpr BWS ")"
+secondsMethodCallExpr     = 'seconds'     "(" BWS commonExpr BWS ")"
 
-roundMethodCallExpr       = "round"       "(" *WSP commonExpr *WSP ")"
-floorMethodCallExpr       = "floor"       "(" *WSP commonExpr *WSP ")"
-ceilingMethodCallExpr     = "ceiling"     "(" *WSP commonExpr *WSP ")"
+roundMethodCallExpr       = 'round'       "(" BWS commonExpr BWS ")"
+floorMethodCallExpr       = 'floor'       "(" BWS commonExpr BWS ")"
+ceilingMethodCallExpr     = 'ceiling'     "(" BWS commonExpr BWS ")"
 
-getTotalOffsetMinutesExpr = "gettotaloffsetminutes" "(" *WSP commonExpr *WSP ")" 
+getTotalOffsetMinutesExpr = 'gettotaloffsetminutes' "(" BWS commonExpr BWS ")" 
 
-distanceMethodCallExpr    = "geo.distance"   "(" *WSP commonExpr COMMA commonExpr *WSP ")"
-geoLengthMethodCallExpr   = "geo.length"     "(" *WSP commonExpr *WSP ")"
-intersectsMethodCallExpr  = "geo.intersects" "(" *WSP commonExpr COMMA commonExpr *WSP ")"
+distanceMethodCallExpr    = 'geo.distance'   "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
+geoLengthMethodCallExpr   = 'geo.length'     "(" BWS commonExpr BWS ")"
+intersectsMethodCallExpr  = 'geo.intersects' "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
 
-boolParenExpr = "(" *WSP boolCommonExpr *WSP ")"
-parenExpr     = "(" *WSP commonExpr     *WSP ")"
+boolParenExpr = "(" BWS boolCommonExpr BWS ")"
+parenExpr     = "(" BWS commonExpr     BWS ")"
 
-; TODO: case-sensitive (ODATA-117)
-andExpr = 1*WSP "and" 1*WSP boolCommonExpr
-orExpr  = 1*WSP "or"  1*WSP boolCommonExpr
+andExpr = RWS 'and' RWS boolCommonExpr
+orExpr  = RWS 'or'  RWS boolCommonExpr
 
-eqExpr = 1*WSP "eq" 1*WSP commonExpr     
-neExpr = 1*WSP "ne" 1*WSP commonExpr
-ltExpr = 1*WSP "lt" 1*WSP commonExpr
-leExpr = 1*WSP "le" 1*WSP commonExpr
-gtExpr = 1*WSP "gt" 1*WSP commonExpr
-geExpr = 1*WSP "ge" 1*WSP commonExpr
+eqExpr = RWS 'eq' RWS commonExpr     
+neExpr = RWS 'ne' RWS commonExpr
+ltExpr = RWS 'lt' RWS commonExpr
+leExpr = RWS 'le' RWS commonExpr
+gtExpr = RWS 'gt' RWS commonExpr
+geExpr = RWS 'ge' RWS commonExpr
 
-addExpr = 1*WSP "add" 1*WSP commonExpr
-subExpr = 1*WSP "sub" 1*WSP commonExpr
-mulExpr = 1*WSP "mul" 1*WSP commonExpr
-divExpr = 1*WSP "div" 1*WSP commonExpr
-modExpr = 1*WSP "mod" 1*WSP commonExpr
+addExpr = RWS 'add' RWS commonExpr
+subExpr = RWS 'sub' RWS commonExpr
+mulExpr = RWS 'mul' RWS commonExpr
+divExpr = RWS 'div' RWS commonExpr
+modExpr = RWS 'mod' RWS commonExpr
 
-negateExpr = "-" *WSP commonExpr
+negateExpr = "-" BWS commonExpr
 
-; TODO: case-sensitive (ODATA-117)
-notExpr = "not" 1*WSP boolCommonExpr
+notExpr = 'not' RWS boolCommonExpr
 
-; TODO: isn't this rather singleNavigation (once the leading slash has been removed)?
-isofExpr = "isof" "(" *WSP [ commonExpr COMMA ] qualifiedTypeName *WSP ")"
-castExpr = "cast" "(" *WSP [ commonExpr COMMA ] qualifiedTypeName *WSP ")"
+isofExpr = 'isof' "(" BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS ")"
+castExpr = 'cast' "(" BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS ")"
 
 ;------------------------------------------------------------------------------
 ; 4. JSON format for function and action parameters
@@ -437,15 +426,15 @@ primitiveColInUri = begin-array
                     [ primitiveLiteralInJSON *( value-separator primitiveLiteralInJSON ) ] 
                     end-array
 
-begin-object = "{" 
-end-object   = "}"
+begin-object = BWS "{" BWS
+end-object   = BWS "}" BWS
 
-begin-array = "[" 
-end-array   = "]" 
+begin-array = BWS "[" BWS 
+end-array   = BWS "]" BWS
 
 quotation-mark  = DQUOTE
-name-separator  = ":"
-value-separator = COMMA
+name-separator  = BWS ":" BWS
+value-separator = BWS COMMA BWS
 
 complexTypeMetadataInUri = quotation-mark "__metadata" quotation-mark
                            name-separator
@@ -460,15 +449,15 @@ typeNVPInUri = quotation-mark "type" quotation-mark
 primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark 
                          name-separator 
                          primitiveLiteralInJSON
-; TODO: not complete 
+
 ; JSON syntay [ RFC4627 ]                 
 primitiveLiteralInJSON = stringInJSON
                        / numberInJSON
-                       / %x74.72.75.65    ; true 
-                       / %x66.61.6c.73.65 ; false
-                       / %x6e.75.6c.6c    ; null
+                       / 'true' 
+                       / 'false'
+                       / 'null'
 stringInJSON = quotation-mark *charInJSON quotation-mark
-charInJSON = pchar   ; TODO: more specific, following RFC4627
+charInJSON   = pchar / "/" / "?" ; only these are allowed in the query part of a URL
 ;         char = unescaped /
 ;                escape (
 ;                    %x22 /          ; "    quotation mark  U+0022
@@ -481,7 +470,6 @@ charInJSON = pchar   ; TODO: more specific, following RFC4627
 ;                    %x74 /          ; t    tab             U+0009
 ;                    %x75 4HEXDIG )  ; uXXXX                U+XXXX
 ;         escape = %x5C              ; \
-;         quotation-mark = %x22      ; "
 ;         unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
 numberInJSON  = [ "-" ] int [ frac ] [ exp ]
 int           = "0" / ( oneToNine *DIGIT )
@@ -509,7 +497,7 @@ qualifiedTypeName = qualifiedEntityTypeName
                   / qualifiedComplexTypeName
                   / qualifiedEnumerationTypeName
                   / primitiveTypeName 
-                  / "collection(" 
+                  / 'Collection' "(" 
                     ( qualifiedEntityTypeName 
                     / qualifiedComplexTypeName
                     / qualifiedEnumerationTypeName 
@@ -520,7 +508,7 @@ qualifiedEntityTypeName      = namespace "." entityTypeName
 qualifiedComplexTypeName     = namespace "." complexTypeName
 qualifiedEnumerationTypeName = namespace "." enumerationTypeName
 
-namespace     = namespacePart *("." namespacePart)
+namespace     = namespacePart *( "." namespacePart )
 namespacePart = odataIdentifier
 
 entitySetName       = odataIdentifier
@@ -532,35 +520,34 @@ odataIdentifier             = identifierLeadingCharacter *478identifierCharacter
 identifierLeadingCharacter  = ALPHA / "_"            ; TODO: Any character from the Unicode classes L or Nl
 identifierCharacter         = ALPHA / DIGIT / "_"    ; TODO: Any character from the Unicode classes L, Nl, Nd, Mn, Mc, Pc or Cf
 
-; TODO: case-sensitivity of Edm type names (ODATA-77)
-primitiveTypeName = ["edm."] ( "binary" 
-                             / "boolean" 
-                             / "byte" 
-                             / "datetime" 
-                             / "datetimeoffset" 
-                             / "decimal" 
-                             / "double" 
-                             / "single" 
-                             / "float" 
-                             / "guid" 
-                             / "int16" 
-                             / "int32" 
-                             / "int64" 
-                             / "sbyte" 
-                             / "stream" 
-                             / "string" 
-                             / "time" 
+primitiveTypeName = ['Edm.'] ( 'Binary'
+                             / 'Boolean'
+                             / 'Byte'
+                             / 'DateTime' 
+                             / 'DateTimeOffset' 
+                             / 'Decimal'
+                             / 'Double'
+                             / 'Single'
+                             / 'Float'
+                             / 'Guid' 
+                             / 'Int16'
+                             / 'Int32'
+                             / 'Int64'
+                             / 'SByte'
+                             / 'Stream'
+                             / 'String'
+                             / 'Time'
                              / abstractSpatialTypeName [ concreteSpatialTypeName ] 
                              )
-abstractSpatialTypeName = "Geography" 
-                        / "Geometry"      
-concreteSpatialTypeName = "Collection" 
-                        / "Linestring" 
-                        / "MultiLineString" 
-                        / "MultiPoint" 
-                        / "MultiPolygon" 
-                        / "Point" 
-                        / "Polygon" 
+abstractSpatialTypeName = 'Geography'
+                        / 'Geometry'
+concreteSpatialTypeName = 'Collection'
+                        / 'LineString'
+                        / 'MultiLineString'
+                        / 'MultiPoint'
+                        / 'MultiPolygon'
+                        / 'Point'
+                        / 'Polygon'
 
 property = primitiveProperty  
          / primitiveColProperty 
@@ -633,28 +620,22 @@ primitiveLiteral = null
                  / geometryPoint 
                  / geometryPolygon 
 
-null = %x6e.75.6c.6c            ; null (all lower case)
-       [ "'" qualifiedTypeName "'" ] 
+null = 'null' [ SQUOTE qualifiedTypeName SQUOTE ] 
        ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
        ; Knowing the type is useful for function overload resolution purposes 
                                                 
-binary = ( %d88 / "binary" ) SQUOTE *(2HEXDIG) SQUOTE ; note: "X" is case sensitive "binary" is not hence using the character code.
+binary  = ( 'X' / "binary" ) SQUOTE *(2HEXDIG) SQUOTE ; Note: 'X' is case sensitive, "binary" is not
 boolean = ( "true" / "1" ) / ( "false" / "0" )
 
-decimal     = decimalBody [ "M" ]
-decimalBody = [sign] 1*DIGIT ["." 1*DIGIT]
-double      = doubleBody [ "D" ]
-doubleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
+decimal     = decimalBody [ "m" ]
+decimalBody = [SIGN] 1*DIGIT ["." 1*DIGIT]
+double      = doubleBody [ "d" ]
+doubleBody  = decimalBody [ "e" [SIGN] 1*DIGIT ] ; TODO: restrict range
             / nanInfinity
-single      = singleBody [ "F" ]
-singleBody  = decimalBody [ "E" [sign] 1*DIGIT ] ; TODO: restrict range
+single      = singleBody [ "f" ]
+singleBody  = decimalBody [ "e" [SIGN] 1*DIGIT ] ; TODO: restrict range
             / nanInfinity
-
-; Unrepresentable numeric values
-nan              = %x4e.61.4e ; NaN (upper lower upper case)
-positiveInfinity = %x49.4e.46 ; INF (all upper case)
-negativeInfinity = "-" positiveInfinity ; -INF (all upper case)
-nanInfinity      = nan / negativeInfinity / positiveInfinity
+nanInfinity = 'NaN' / '-INF' / 'INF'
 
 guid = "guid" SQUOTE 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG SQUOTE
 
@@ -665,7 +646,7 @@ int32 = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
 int64 = [ sign ] 1*19DIGIT [ "L" ] ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
 string           = SQUOTE *( pchar-no-SQUOTE / SQUOTE-in-string / unencoded ) SQUOTE
-pchar-no-SQUOTE  = unreserved / pct-encoded / "!" / "$" / "&" / "(" / ")" / "*" / "+" / "," / ";" / "=" / ":" / "@" 
+pchar-no-SQUOTE  = unreserved / pct-encoded / other-delims / "$" / "&" / ";" / "=" / ":" / "@" 
 SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal
 
 ; dates and times
@@ -724,7 +705,7 @@ multiPolygonLiteral     = "MultiPolygon(" [ polygonData *( COMMA polygonData ) ]
 
 geographyPoint   = geographyPrefix fullPointLiteral SQUOTE
 fullPointLiteral = sridLiteral pointLiteral
-sridLiteral      = "SRID=" 1*5DIGIT SEMI
+sridLiteral      = "SRID" EQ 1*5DIGIT SEMI
 pointLiteral     ="Point" pointData
 pointData        = "(" positionLiteral ")"
 positionLiteral  = double SP double  ; longitude, then latitude
@@ -753,12 +734,18 @@ geometryPrefix  = "geometry" SQUOTE
 ; 7. Punctuation
 ;------------------------------------------------------------------------------
 
-unencoded = SP / HTAB / DQUOTE / ":" / "{" / "}" / "[" / "]" 
+unencoded           = DQUOTE / unencoded-no-DQUOTE
+unencoded-no-DQUOTE = SP / ":" / "{" / "}" / "[" / "]" 
 
-SQUOTE = %x27              
-SEMI   = %x3B              
-COMMA  = %x2C
-sign   = "+" / "-"
+OWS = *( SP / HTAB )  ; "optional" whitespace 
+RWS = 1*( SP / HTAB ) ; "required" whitespace 
+BWS = OWS             ; "bad" whitespace 
+
+SQUOTE = "'"              
+SEMI   = ";"              
+COMMA  = ","
+EQ     = "="
+SIGN   = "+" / "-"
 STAR   = "*"
 
 ;------------------------------------------------------------------------------
@@ -823,8 +810,8 @@ unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ;reserved      = gen-delims / sub-delims
 ;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
 ;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-sub-delims    = "$" / "&" / "=" / other-delims
-other-delims  = "!" / "'" / "(" / ")" / "*" / "+" / "," / ";"
+sub-delims    = "$" / "&" / "=" / ";" / "'" / other-delims
+other-delims  = "!" / "(" / ")" / "*" / "+" / ","
 
 ;------------------------------------------------------------------------------
 ; B. ABNF core definitions [RFC5234]
@@ -835,7 +822,7 @@ HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
 DQUOTE = %x22
 SP     = %x20 
 HTAB   = %x09 
-WSP    = SP / HTAB 
+;WSP    = SP / HTAB 
 ;LWSP = *(WSP / CRLF WSP) 
 ;VCHAR = %x21-7E 
 ;CHAR = %x01-7F
@@ -862,4 +849,3 @@ WSP    = SP / HTAB
 ;------------------------------------------------------------------------------
 ; End of odata-v1.0-abnf
 ;------------------------------------------------------------------------------
-
