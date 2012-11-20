@@ -20,7 +20,6 @@
   <xs:group name="GSchemaBodyElements">
     <xs:choice>
       <xs:element name="Using" type="edm:TUsing" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Association" type="edm:TAssociation" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="ComplexType" type="edm:TComplexType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="EntityType" type="edm:TEntityType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="TypeDefinition" type="edm:TTypeDefinition" minOccurs="0" maxOccurs="unbounded" />
@@ -135,14 +134,6 @@
     <xs:attribute name="Namespace" type="edm:TNamespaceName" use="required" />
     <xs:attribute name="Alias" type="edm:TSimpleIdentifier" use="required" />
   </xs:complexType>
-  <xs:complexType name="TAssociation">
-    <xs:sequence>
-      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:element name="End" type="edm:TAssociationEnd"  minOccurs="2" maxOccurs="2" />
-      <xs:element name="ReferentialConstraint" type="edm:TConstraint" minOccurs="0" maxOccurs="1" />
-    </xs:sequence>
-    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-  </xs:complexType>
   <xs:complexType name="TComplexType">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
@@ -154,37 +145,25 @@
     </xs:sequence>
     <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
   </xs:complexType>
-  <xs:complexType name="TConstraint">
-    <xs:sequence>
-      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:element name="Principal" type="edm:TReferentialConstraintRoleElement" minOccurs="1" maxOccurs="1" />
-      <xs:element name="Dependent" type="edm:TDependentReferentialConstraintRoleElement" minOccurs="1" maxOccurs="1" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="TReferentialConstraintRoleElement">
-    <xs:sequence>
-      <xs:element name="PropertyRef" type="edm:TPropertyRef" minOccurs="1" maxOccurs="unbounded" />
-    </xs:sequence>
-    <xs:attribute name="Role" type="edm:TSimpleIdentifier" use="required" />
-  </xs:complexType>
-  <xs:complexType name="TDependentReferentialConstraintRoleElement">
+  <xs:complexType name="TReferentialConstraint">
     <xs:sequence>
       <xs:element name="PropertyRef" type="edm:TDependentPropertyRef" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
-    <xs:attribute name="Role" type="edm:TSimpleIdentifier" use="required" />
   </xs:complexType>
   <xs:complexType name="TNavigationProperty">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+      <xs:element name="ReferentialConstraint" type="edm:TReferentialConstraint" minOccurs="0" maxOccurs="1" />
+      <xs:element name="OnDelete" type="edm:TOnAction" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="Relationship" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="ToRole" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="FromRole" type="edm:TSimpleIdentifier" use="required" />
+    <xs:attribute name="Type" type="edm:TPropertyType" use="required" />
+    <xs:attribute name="Nullable" type="xs:boolean" use="optional" />
+    <xs:attribute name="Partner" type="edm:TSimpleIdentifier" use="optional" />
     <xs:attribute name="ContainsTarget" type="xs:boolean" use="optional" />
   </xs:complexType>
   <xs:complexType name="TEntityType">
@@ -547,20 +526,6 @@
   <!-- 
         base types  
     -->
-  <xs:complexType name="TAssociationEnd">
-    <xs:sequence>
-      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:group ref="edm:TOperations" minOccurs="0" maxOccurs="unbounded" />
-    </xs:sequence>
-    <xs:attribute name="Type" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="Role" type="edm:TSimpleIdentifier" use="optional" />
-    <xs:attribute name="Multiplicity" type="edm:TMultiplicity" use="optional" />
-  </xs:complexType>
-  <xs:group name="TOperations">
-    <xs:choice>
-      <xs:element name="OnDelete" type="edm:TOnAction" maxOccurs="1" minOccurs="0" />
-    </xs:choice>
-  </xs:group>
   <xs:complexType name="TOnAction">
     <xs:sequence>
       <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
@@ -714,6 +679,15 @@
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+                <xs:element name="NavigationPropertyBinding" minOccurs="0" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
+                    </xs:sequence>
+                    <xs:attribute name="Path" type="edm:TPath" use="required" />
+                    <xs:attribute name="EntitySet" type="edm:TSimpleIdentifier" use="required" />
+                  </xs:complexType>
+                </xs:element>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                   <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
                   <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
@@ -722,27 +696,17 @@
               <xs:attributeGroup ref="edm:TEntitySetAttributes" />
             </xs:complexType>
           </xs:element>
-          <xs:element name="AssociationSet">
+          <xs:element name="Entity">
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                <xs:element name="End" minOccurs="0" maxOccurs="2">
-                  <!-- 
-                       1. The number of Ends has to match with ones defined in AssociationType 
-                       2. Value for attribute Name should match the defined ones and EntitySet should be of the 
-                          defined Entity Type in AssociationType 
-                    -->
-                  <xs:complexType>
-                    <xs:sequence>
-                      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
-                    </xs:sequence>
-                    <xs:attribute name="Role" type="edm:TSimpleIdentifier" use="optional" />
-                    <xs:attribute name="EntitySet" type="edm:TSimpleIdentifier" use="required" />
-                  </xs:complexType>
-                </xs:element>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                </xs:choice>
               </xs:sequence>
               <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-              <xs:attribute name="Association" type="edm:TQualifiedName" use="required" />
+              <xs:attribute name="Type" type="edm:TQualifiedName" use="required" />
             </xs:complexType>
           </xs:element>
           <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" />
@@ -759,6 +723,7 @@
     -->
   <xs:simpleType name="TNamespaceName">
     <xs:restriction base="edm:TQualifiedName">
+    <!-- TODO: really restricted length? -->
       <xs:maxLength value="512" />
     </xs:restriction>
   </xs:simpleType>
@@ -778,7 +743,7 @@
   </xs:simpleType>
   <xs:simpleType name="TSimpleIdentifier">
     <xs:restriction base="xs:string">
-      <xs:maxLength value="480" />
+      <xs:maxLength value="479" />
       <!-- The below pattern represents the allowed identifiers in ECMA specification -->
       <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
     </xs:restriction>
@@ -829,13 +794,6 @@
     <xs:restriction base="xs:token">
       <xs:enumeration value="Cascade" />
       <xs:enumeration value="None" />
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TMultiplicity">
-    <xs:restriction base="xs:token">
-      <xs:enumeration value="0..1" />
-      <xs:enumeration value="1" />
-      <xs:enumeration value="*" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TConcurrencyMode">

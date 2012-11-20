@@ -15,12 +15,13 @@
         <Property Name="DiscontinuedDate" Type="Edm.DateTime" Nullable="true" />
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
         <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
-        <NavigationProperty Name="Category"
-          Relationship="ODataDemo.Product_Category_Category_Products" FromRole="Product_Category"
-          ToRole="Category_Products" />
-        <NavigationProperty Name="Supplier"
-          Relationship="ODataDemo.Product_Supplier_Supplier_Products" FromRole="Product_Supplier"
-          ToRole="Supplier_Products" />
+        <NavigationProperty Name="Category" Type="ODataDemo.Category"
+          Nullable="false" Partner="Products"
+        >
+          <OnDelete Action="Cascade" />
+        </NavigationProperty>
+        <NavigationProperty Name="Supplier" Type="ODataDemo.Supplier"
+          Partner="Products" />
       </EntityType>
       <EntityType Name="Category">
         <Key>
@@ -28,9 +29,8 @@
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
         <Property Name="Name" Type="Edm.String" Nullable="true" />
-        <NavigationProperty Name="Products"
-          Relationship="ODataDemo.Product_Category_Category_Products" FromRole="Category_Products"
-          ToRole="Product_Category" />
+        <NavigationProperty Name="Products" Partner="Category"
+          Type="Collection(ODataDemo.Product)" />
       </EntityType>
       <EntityType Name="Supplier">
         <Key>
@@ -41,9 +41,13 @@
         <Property Name="Address" Type="ODataDemo.Address" Nullable="false" />
         <Property Name="Concurrency" Type="Edm.Int32" Nullable="false"
           ConcurrencyMode="Fixed" />
-        <NavigationProperty Name="Products"
-          Relationship="ODataDemo.Product_Supplier_Supplier_Products" FromRole="Supplier_Products"
-          ToRole="Product_Supplier" />
+        <NavigationProperty Name="Products" Partner="Supplier"
+          Type="Collection(ODataDemo.Product)" />
+        <NavigationProperty Name="Country" Type="ODataDemo.Country">
+          <ReferentialConstraint>
+            <PropertyRef Name="Address/Country" />
+          </ReferentialConstraint>
+        </NavigationProperty>
       </EntityType>
       <EntityType Name="Country">
         <Key>
@@ -58,48 +62,19 @@
         <Property Name="ZipCode" Type="Edm.String" Nullable="true" />
         <Property Name="Country" Type="Edm.String" Nullable="true" />
       </ComplexType>
-      <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
-        <ValueAnnotation Term="Org.Odata.Measurements.V1.Units" String="Centimeters" />
-      </TypeDefinition>
-      <TypeDefinition Name="Weight" UnderlyingType="Edm.String">
-        <ValueAnnotation Term="Org.Odata.Measurements.V1.Units" String="Kilograms" />
-      </TypeDefinition>
-      <ComplexType Name="Size">
-        <Property Name="Height" Type="Self.Length" />
-        <Property Name="Weight" Type="Self.Weight" />
-      </ComplexType>
-      <Association Name="Supplier_Country">
-        <End Role="Supplier" Type="ODataDemo.Supplier" Multiplicity="*" />
-        <End Role="Country" Type="ODataDemo.Country" Multiplicity="1" />
-        <ReferentialConstraint>
-          <Principal Role="Country">
-            <PropertyRef Name="Name" />
-          </Principal>
-          <Dependent Role="Supplier">
-            <PropertyRef Name="Address/Country" />
-          </Dependent>
-        </ReferentialConstraint>
-      </Association>
-      <Association Name="Product_Category_Category_Products">
-        <End Role="Product_Category" Type="ODataDemo.Product" Multiplicity="*" />
-        <End Role="Category_Products" Type="ODataDemo.Category" Multiplicity="0..1" />
-      </Association>
-      <Association Name="Product_Supplier_Supplier_Products">
-        <End Role="Product_Supplier" Type="ODataDemo.Product" Multiplicity="*" />
-        <End Role="Supplier_Products" Type="ODataDemo.Supplier" Multiplicity="0..1" />
-      </Association>
       <EntityContainer Name="DemoService" IsDefaultEntityContainer="true">
-        <EntitySet Name="Products" EntityType="ODataDemo.Product" />
-        <EntitySet Name="Categories" EntityType="ODataDemo.Category" />
-        <EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier" />
-        <AssociationSet Name="Products_Category_Categories" Association="ODataDemo.Product_Category_Category_Products">
-          <End Role="Product_Category" EntitySet="Products" />
-          <End Role="Category_Products" EntitySet="Categories" />
-        </AssociationSet>
-        <AssociationSet Name="Products_Supplier_Suppliers" Association="ODataDemo.Product_Supplier_Supplier_Products">
-          <End Role="Product_Supplier" EntitySet="Products" />
-          <End Role="Supplier_Products" EntitySet="Suppliers" />
-        </AssociationSet>
+        <EntitySet Name="Products" EntityType="ODataDemo.Product">
+          <NavigationPropertyBinding Path="Category" EntitySet="Products" />
+          <NavigationPropertyBinding Path="Supplier" EntitySet="Suppliers" />
+        </EntitySet>
+        <EntitySet Name="Categories" EntityType="ODataDemo.Category">
+          <NavigationPropertyBinding Path="Products" EntitySet="Products" />
+        </EntitySet>
+        <EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier">
+          <NavigationPropertyBinding Path="Products" EntitySet="Products" />
+        </EntitySet>
+        <Entity Name="Contoso" Type="Self.Supplier" />
+        <EntitySet Name="Countries" EntityType="ODataDemo.Country" />
         <FunctionImport Name="GetProductsByRating" EntitySet="Products"
           ReturnType="Collection(ODataDemo.Product)"
         >
