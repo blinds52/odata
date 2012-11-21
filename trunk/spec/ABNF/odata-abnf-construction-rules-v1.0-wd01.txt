@@ -42,6 +42,7 @@ odataRelativeUri = resourcePath [ "?" queryOptions ]
 ;------------------------------------------------------------------------------
 
 resourcePath = [ entityContainerName "." ] entitySetName [ collectionNavigation ] 
+             / [ [ namespace "." ] entityContainerName "." ] namedEntity [ singleNavigation ]
              / actionCall 
              / entityColFunctionCall    [ collectionNavigation ] 
              / entityFunctionCall       [ singleNavigation ] 
@@ -508,10 +509,12 @@ qualifiedEntityTypeName      = namespace "." entityTypeName
 qualifiedComplexTypeName     = namespace "." complexTypeName
 qualifiedEnumerationTypeName = namespace "." enumerationTypeName
 
+; an alias is just a single-part namespace
 namespace     = namespacePart *( "." namespacePart )
 namespacePart = odataIdentifier
 
 entitySetName       = odataIdentifier
+namedEntity         = odataIdentifier          
 entityTypeName      = odataIdentifier
 complexTypeName     = odataIdentifier 
 enumerationTypeName = odataIdentifier
