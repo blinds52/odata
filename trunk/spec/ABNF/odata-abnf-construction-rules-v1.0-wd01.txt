@@ -143,17 +143,27 @@ queryOption  = systemQueryOption
 
 systemQueryOption = expand 
                   / filter 
+                  / format 
                   / orderby 
                   / skip 
                   / top 
-                  / format 
                   / inlinecount 
                   / select 
                   / skiptoken
 
-expand     = '$expand' EQ expandItem *( COMMA expandItem )
-expandItem =        [ qualifiedEntityTypeName "/" ] navigationProperty 
-             *( "/" [ qualifiedEntityTypeName "/" ] navigationProperty ) 
+expand       = '$expand' EQ expandItem *( COMMA expandItem )
+expandItem   = [ qualifiedEntityTypeName "/" ] navigationProperty 
+               [ "(" expandOption *( SEMI expandOption ) ")" ]
+expandOption = filter
+             / select 
+             / orderby
+             / skip 
+             / top 
+             / inlinecount
+             / expand
+             / levels
+             
+levels = '$levels' EQ ( 1*DIGIT / 'max' )
 
 filter = '$filter' EQ boolCommonExpr
 
@@ -177,8 +187,10 @@ select     = '$select' EQ selectItem *( COMMA selectItem )
 selectItem = STAR  
            / allOperationsInContainer 
            / [ qualifiedEntityTypeName "/" ] 
-             ( ( navigationProperty [ "/" selectItem ] ) 
-             / *( ( complexProperty / complexColProperty ) "/" ) property 
+             ( navigationProperty  
+             / *( ( complexProperty / complexColProperty ) "/"
+                  [ qualifiedComplexTypeName "/" ] 
+                ) property 
              / qualifiedActionName  
              / qualifiedFunctionName  
              )
