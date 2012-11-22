@@ -2,8 +2,10 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
 >
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1"/>
   <edmx:DataServices DataServiceVersion="4.0">
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="ODataDemo">
+      <Using Namespace="Org.OData.Measures.V1" Alias="UoM"/>
       <EntityType Name="Product" HasStream="true">
         <Key>
           <PropertyRef Name="ID" />
@@ -14,7 +16,10 @@
         <Property Name="ReleaseDate" Type="Edm.DateTime" Nullable="false" />
         <Property Name="DiscontinuedDate" Type="Edm.DateTime" Nullable="true" />
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
-        <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="Price" Type="Edm.Decimal" Nullable="false">
+          <ValueAnnotation Term="UoM.ISOCurrency" Path="Currency"/>
+        </Property>
+        <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="3"/>
         <NavigationProperty Name="Category" Type="ODataDemo.Category"
           Nullable="false" Partner="Products"
         >
@@ -75,7 +80,7 @@
         </EntitySet>
         <Entity Name="Contoso" Type="Self.Supplier" />
         <EntitySet Name="Countries" EntityType="ODataDemo.Country" />
-        <FunctionImport Name="GetProductsByRating" EntitySet="Products"
+        <FunctionImport Name="ProductsByRating" EntitySet="Products"
           ReturnType="Collection(ODataDemo.Product)"
         >
           <Parameter Name="rating" Type="Edm.Int32" DefaultValue="4" />
