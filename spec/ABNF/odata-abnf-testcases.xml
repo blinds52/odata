@@ -27,6 +27,11 @@
     <Match>Address</Match>
     <Match>AddressWithLocation</Match>
   </Constraint>
+  <Constraint Rule="customName">
+    <Match>!deltatoken</Match>
+    <Match>!special</Match>
+    <Match>search</Match>
+  </Constraint>
   <Constraint Rule="entityColFunction">
     <Match>AllOrders</Match>
     <Match>ProductsByColor</Match>
@@ -36,12 +41,13 @@
     <Match>Items</Match>
     <Match>Products</Match>
   </Constraint>
-  <Constraint Rule="entityContainerName">
+  <Constraint Rule="entityContainer">
     <Match>Container</Match>
     <Match>Container2</Match>
   </Constraint>
   <Constraint Rule="entityColFunction">
     <Match>ProductsByComplex</Match>
+    <Match>ProductsByCustomerRef</Match>
   </Constraint>
   <Constraint Rule="entityFunction">
     <Match>MostExpensive</Match>
@@ -66,6 +72,7 @@
     <Match>Customer</Match>
     <Match>BestSellingProduct</Match>
     <Match>PreferredSupplier</Match>
+    <Match>VipCustomer</Match>
   </Constraint>
   <Constraint Rule="enumerationTypeName">
     <Match>NameKind</Match>
@@ -446,6 +453,10 @@
   <TestCase Name="4.3 Addressing entities - single entity (short)" 
             Rule="resourcePath">
     <Input>Categories(1)</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (short)" 
+            Rule="odataRelativeUri">
+    <Input>Customers(1)</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (long)" 
             Rule="resourcePath">
@@ -1235,10 +1246,6 @@
   </TestCase>
   <TestCase Name="function with complex parameter - no properties" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex()?complex=%7B%7D</Input>
-  </TestCase>
-  <TestCase Name="function with complex parameter - no properties" 
-            Rule="odataRelativeUri">
     <Input>ProductsByComplex()?complex={}</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - one property" 
@@ -1268,6 +1275,18 @@
   <TestCase Name="function with complex parameter - complex and collection properties" 
             Rule="odataRelativeUri">
     <Input>ProductsByComplex()?complex={"Names":["Fred","George"],"Address":{"Street":"MyWay"}}</Input>
+  </TestCase>
+  <TestCase Name="function with reference type parameter" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCustomerRef()?customer=KEY(Customers(1))</Input>
+  </TestCase>
+  <TestCase Name="function with reference type parameter - type cast" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCustomerRef()?customer=KEY(Customers(1)/Model.VipCustomer)</Input>
+  </TestCase>
+  <TestCase Name="function with reference type parameter - array" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCustomerRef()?customer=["KEY(Customers(1))"]</Input>
   </TestCase>
   <!-- Geography and Geometry types -->
   <TestCase Name="GeographyCollection" 
@@ -1467,12 +1486,39 @@
             Rule="commonExpr">
     <Input>Products/ProductsByColor(colors=["red","green","blue"])</Input>
   </TestCase>
+  <TestCase Name="Functions in commonExpr - collection parameter in JSON with whitespace" 
+            Rule="commonExpr">
+    <Input>Products/ProductsByColor(colors=[ "red", "green" , "blue" ])</Input>
+  </TestCase>
   <TestCase Name="Functions in commonExpr - complex JSON parameter" 
             Rule="commonExpr">
     <Input>Available(complex={"Name":"Value"})</Input>
   </TestCase>
+  <TestCase Name="Functions in commonExpr - complex JSON parameter with whitespace" 
+            Rule="commonExpr">
+    <Input>Available(complex={ "Name" : "Value" })</Input>
+  </TestCase>
   <TestCase Name="Functions in commonExpr - property as parameter" 
             Rule="commonExpr">
     <Input>PhoneticallySimilar(Word1=Name,Word2=Supplier/Name)</Input>
+  </TestCase>
+  <TestCase Name="Functions in commonExpr - property as parameter" 
+            Rule="commonExpr">
+    <Input>PhoneticallySimilar(Word1=Name,Word2=Supplier/Name)</Input>
+  </TestCase>
+  <TestCase Name="Action request body - compact" 
+            Rule="actionRequestBody">
+    <Input>{"quantity":2,"discountCode":"BLACKFRIDAY"}</Input>
+  </TestCase>
+  <TestCase Name="Action request body - with whitespace" 
+            Rule="actionRequestBody">
+    <Input>
+{
+   "quantity": 2,&#x0D;
+   "discountCode": "BLACKFRIDAY",
+   "customerRef" : "KEY(Customers(1))",
+   "multiLineText" : "First \"line\",\nand second line!" 
+}
+    </Input>
   </TestCase>
 </TestSuite>

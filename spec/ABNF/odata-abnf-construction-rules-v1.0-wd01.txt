@@ -41,8 +41,8 @@ odataRelativeUri = resourcePath [ "?" queryOptions ]
 ; 1. Resource Path
 ;------------------------------------------------------------------------------
 
-resourcePath = [ entityContainerName "." ] entitySetName [ collectionNavigation ] 
-             / [ [ namespace "." ] entityContainerName "." ] namedEntity [ singleNavigation ]
+resourcePath = [ entityContainer "." ] entitySetName [ collectionNavigation ] 
+             / [ [ namespace "." ] entityContainer "." ] namedEntity [ singleNavigation ]
              / actionCall 
              / entityColFunctionCall    [ collectionNavigation ] 
              / entityFunctionCall       [ singleNavigation ] 
@@ -176,7 +176,7 @@ top  = '$top'  EQ 1*DIGIT
 format = '$format' EQ
          ( 'atom'
          / 'json' 
-         / 'xml' 
+         / 'xml'
          / 1*( pchar / "/" ) ; <a data service specific value indicating a
          )                   ; format specific to the specific data service> or
                              ; <An IANA-defined [IANA-MMT] content type>
@@ -195,7 +195,7 @@ selectItem = STAR
              / qualifiedFunctionName  
              )
 allOperationsInContainer = operationQualifier STAR                 
-operationQualifier       = [ namespace "." ] entityContainerName "."
+operationQualifier       = [ namespace "." ] entityContainer "."
 
 ; The parameterTypeNames are required to uniquely identify the action or function
 ; only if it has overloads.
@@ -213,10 +213,17 @@ skiptoken = '$skiptoken' EQ
 aliasAndValue         = parameterAlias        EQ parameterValue
 parameterNameAndValue = functionParameterName EQ parameterValue
 
-parameterValue = primitiveLiteral
-               / complexInUri  
+parameterValue = complexInUri  
                / complexColInUri
+               / entityReference
+               / entityRefColInUri
+               / primitiveLiteral
                / primitiveColInUri
+               
+entityReference = 'KEY(' 
+                  [ entityContainer "." ] entitySetName keyPredicate
+                  [ "/" qualifiedEntityTypeName ]
+                  ")"                
 
 customQueryOption = customName [ EQ customValue ]
 customName        =  ( unreserved / pct-encoded / other-delims /  "'" / ":" )                   ; MUST NOT start with "$" or "@"
@@ -414,8 +421,10 @@ castExpr = 'cast' "(" BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS ")"
 ; Note: the query part of a URI needs to be partially percent-decoded before
 ; applying these rules, see comment at the top of this file
 
-; TODO: action request payloads (ODATA-80)
-
+complexColInUri = begin-array 
+                  [ complexInUri *( value-separator complexInUri ) ] 
+                  end-array
+                  
 complexInUri = begin-object
                    [ ( complexTypeMetadataInUri  
                      / primitivePropertyInUri 
@@ -431,24 +440,23 @@ complexInUri = begin-object
                    ]  
                    end-object
 
-complexColInUri = begin-array 
-                  [ complexInUri *( value-separator complexInUri ) ] 
-                  end-array
-                  
+collectionPropertyInUri = ( quotation-mark primitiveColProperty quotation-mark 
+                            name-separator 
+                            primitiveColInUri 
+                          ) 
+                        / ( quotation-mark complexColProperty quotation-mark 
+                            name-separator 
+                            complexColInUri
+                          )
+
 primitiveColInUri = begin-array 
                     [ primitiveLiteralInJSON *( value-separator primitiveLiteralInJSON ) ] 
                     end-array
-
-begin-object = BWS "{" BWS
-end-object   = BWS "}" BWS
-
-begin-array = BWS "[" BWS 
-end-array   = BWS "]" BWS
-
-quotation-mark  = DQUOTE
-name-separator  = BWS ":" BWS
-value-separator = BWS COMMA BWS
-
+                    
+complexPropertyInUri = quotation-mark complexProperty quotation-mark 
+                       name-separator 
+                       complexInUri
+                            
 complexTypeMetadataInUri = quotation-mark "__metadata" quotation-mark
                            name-separator
                            begin-object
@@ -463,45 +471,64 @@ primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark
                          name-separator 
                          primitiveLiteralInJSON
 
-; JSON syntay [ RFC4627 ]                 
+entityRefColInUri = begin-array
+                    [ entityRefInJSON *( value-separator entityRefInJSON ) ]
+                    end-array
+entityRefInJSON   = DQUOTE entityReference DQUOTE                                        
+                                        
+; JSON syntax: adapted to URI restrictions from [RFC4627]                 
+begin-object = BWS "{" BWS
+end-object   = BWS "}" BWS
+
+begin-array = BWS "[" BWS 
+end-array   = BWS "]" BWS
+
+quotation-mark  = DQUOTE
+name-separator  = BWS ":" BWS
+value-separator = BWS COMMA BWS
+
 primitiveLiteralInJSON = stringInJSON
                        / numberInJSON
                        / 'true' 
                        / 'false'
                        / 'null'
-stringInJSON = quotation-mark *charInJSON quotation-mark
-charInJSON   = pchar / "/" / "?" ; only these are allowed in the query part of a URL
-;         char = unescaped /
-;                escape (
-;                    %x22 /          ; "    quotation mark  U+0022
-;                    %x5C /          ; \    reverse solidus U+005C
-;                    %x2F /          ; /    solidus         U+002F
-;                    %x62 /          ; b    backspace       U+0008
-;                    %x66 /          ; f    form feed       U+000C
-;                    %x6E /          ; n    line feed       U+000A
-;                    %x72 /          ; r    carriage return U+000D
-;                    %x74 /          ; t    tab             U+0009
-;                    %x75 4HEXDIG )  ; uXXXX                U+XXXX
-;         escape = %x5C              ; \
-;         unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
-numberInJSON  = [ "-" ] int [ frac ] [ exp ]
-int           = "0" / ( oneToNine *DIGIT )
-frac          = "." 1*DIGIT
-exp           = "e" [ "-" / "+" ] 1*DIGIT
 
-complexPropertyInUri = quotation-mark complexProperty quotation-mark 
-                       name-separator 
-                       complexInUri
-                            
-collectionPropertyInUri = ( quotation-mark primitiveColProperty quotation-mark 
-                            name-separator 
-                            primitiveColInUri 
-                          ) 
-                        / ( quotation-mark complexColProperty quotation-mark 
-                            name-separator 
-                            complexColInUri
-                          )
-                
+stringInJSON = quotation-mark *charInJSON quotation-mark
+charInJSON   = pchar / "/" / "?"   ; only these are allowed in the query part of a URL
+             / unencoded-no-special ; these are allowed per processing rule
+             / escape ( DQUOTE 
+                      / escape
+                      / "/"         ; solidus         U+002F
+                      / 'b'         ; backspace       U+0008                
+                      / 'f'         ; form feed       U+000C
+                      / 'n'         ; line feed       U+000A
+                      / 'r'         ; carriage return U+000D
+                      / 't'         ; tab             U+0009
+                      / 'u' 4HEXDIG ;                 U+XXXX
+                      )
+escape       = "\"                  ; reverse solidus U+005C
+
+numberInJSON = [ "-" ] int [ frac ] [ exp ]
+int          = "0" / ( oneToNine *DIGIT )
+frac         = "." 1*DIGIT
+exp          = "e" [ "-" / "+" ] 1*DIGIT
+
+; TODO: move this to separate ABNF and cite original JSON syntax [RFC4627]?
+;  - pro: request body is less restrictive than URI, so xxxInUri rules are too restrictive
+;  - con: would require duplicating xxxInUri rules to just add BVWS
+;  - pro: will require duplicating these rules for JSON format anyway, roll action in there  
+actionRequestBody    = BVWS begin-object BVWS 
+                       actionParameter *( value-separator BVWS actionParameter ) 
+                       BVWS end-object BVWS 
+actionParameter      = actionParameterName name-separator actionParameterValue 
+actionParameterName  = quotation-mark odataIdentifier quotation-mark 
+actionParameterValue = complexInUri  
+                     / complexColInUri
+                     / entityRefInJSON
+                     / entityRefColInURI
+                     / primitiveLiteralInJSON
+                     / primitiveColInUri
+
 ;------------------------------------------------------------------------------
 ; 5. Names and identifiers
 ;------------------------------------------------------------------------------
@@ -582,7 +609,7 @@ navigationProperty          = entityNavigationProperty / entityColNavigationProp
 entityNavigationProperty    = odataIdentifier
 entityColNavigationProperty = odataIdentifier
 
-entityContainerName = odataIdentifier
+entityContainer = odataIdentifier
 
 action = odataIdentifier
 
@@ -749,12 +776,13 @@ geometryPrefix  = "geometry" SQUOTE
 ; 7. Punctuation
 ;------------------------------------------------------------------------------
 
-unencoded           = DQUOTE / unencoded-no-DQUOTE
-unencoded-no-DQUOTE = SP / ":" / "{" / "}" / "[" / "]" 
+unencoded            = DQUOTE / escape / unencoded-no-special
+unencoded-no-special = SP / ":" / "{" / "}" / "[" / "]"
 
-OWS = *( SP / HTAB )  ; "optional" whitespace 
-RWS = 1*( SP / HTAB ) ; "required" whitespace 
-BWS = OWS             ; "bad" whitespace 
+OWS  = *( SP / HTAB )     ; "optional" whitespace 
+RWS  = 1*( SP / HTAB )    ; "required" whitespace 
+BWS  = OWS                ; "bad" whitespace 
+BVWS = *( CR / LF / BWS ) ; "bad" vertical whitespace 
 
 SQUOTE = "'"              
 SEMI   = ";"              
@@ -842,8 +870,8 @@ HTAB   = %x09
 ;VCHAR = %x21-7E 
 ;CHAR = %x01-7F
 ;LOCTET = %x00-FF 
-;CR     = %x0D 
-;LF     = %x0A 
+CR     = %x0D 
+LF     = %x0A 
 ;CRLF   = CR LF
 ;BIT = "0" / "1" 
 
