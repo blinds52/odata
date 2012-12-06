@@ -131,19 +131,19 @@
   </Constraint>
     
   <TestCase Name="URI with IPv4 address, path and trailing slash"
-            Rule="odataURI">
+            Rule="odataUri">
     <Input>http://127.0.0.1:8080/MyService/</Input>
   </TestCase>
   <TestCase Name="URI with IPv6 address, path and trailing slash"
-            Rule="odataURI">
+            Rule="odataUri">
     <Input>https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:8080/MyService/</Input>
   </TestCase>
   <TestCase Name="URI with IPvFuture address, path and trailing slash"
-            Rule="odataURI">
+            Rule="odataUri">
     <Input>https://[v7.0]/MyService/</Input>
   </TestCase>
   <TestCase Name="URI without schema separator" 
-            Rule="odataURI" 
+            Rule="odataUri" 
             FailAt="4">
     <Input>http//My.Org/</Input>
   </TestCase>
@@ -177,22 +177,14 @@
     <Input>1753-01-01T00:00:00.000000000000</Input>
   </TestCase>
   <TestCase Name="DateTime: Midnight this day" 
-            Rule="dateTimeBody">
+            Rule="dateTimeBody"
+            FailAt="12">
     <Input>2011-12-31T24:00</Input>
   </TestCase>
   <TestCase Name="DateTime: Midnight this day with seconds" 
-            Rule="dateTimeBody">
-    <Input>2011-12-31T24:00:00</Input>
-  </TestCase>
-  <TestCase Name="DateTime: Midnight this day" 
             Rule="dateTimeBody"
             FailAt="12">
-    <Input>2011-12-31T24:01</Input>
-  </TestCase>
-  <TestCase Name="DateTime: Midnight this day" 
-            Rule="dateTimeBody"
-            FailAt="16">
-    <Input>2011-12-31T24:00:01</Input>
+    <Input>2011-12-31T24:00:00</Input>
   </TestCase>
   <TestCase Name="DateTime in URL" 
             Rule="dateTime">
@@ -207,7 +199,8 @@
     <Input>datetimeoffset'2012-09-03T12:53Z'</Input>
   </TestCase>
   <TestCase Name="DateTimeOffset in URL: Midnight" 
-            Rule="dateTimeOffset">
+            Rule="dateTimeOffset"
+            FailAt="27">
     <Input>datetimeoffset'2012-09-03T24:00-03:00'</Input>
   </TestCase>
   <TestCase Name="Decimal" 

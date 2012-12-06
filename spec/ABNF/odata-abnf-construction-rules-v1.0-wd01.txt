@@ -30,7 +30,7 @@
 ;------------------------------------------------------------------------------
 
 odataUri = ( "https" / "http" ) "://" host [ ":" port ] 
-           serviceRoot 
+           serviceRoot
            [ '$metadata' / '$batch' / odataRelativeUri ]  
 
 serviceRoot = "/" *( segment-nz "/" )
@@ -457,13 +457,13 @@ complexPropertyInUri = quotation-mark complexProperty quotation-mark
                        name-separator 
                        complexInUri
                             
-complexTypeMetadataInUri = quotation-mark "__metadata" quotation-mark
+complexTypeMetadataInUri = quotation-mark '__metadata' quotation-mark
                            name-separator
                            begin-object
                            [ typeNVPInUri ]
                            end-object
 
-typeNVPInUri = quotation-mark "type" quotation-mark
+typeNVPInUri = quotation-mark 'type' quotation-mark
                name-separator
                quotation-mark qualifiedTypeName quotation-mark
 
@@ -693,11 +693,9 @@ SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string litera
 
 ; dates and times
 dateTime       = "datetime" SQUOTE dateTimeBody SQUOTE
-dateTimeOffset = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
-dateTimeBody = year "-" month "-" day "T" 
-               ( hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
-               / "24:00" [ ":00" ] ; the first instant of the following day
-               ) 
+dateTimeBody   = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
+
+dateTimeOffset     = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
 dateTimeOffsetBody = dateTimeBody ( "Z" / sign hour ":" minute )
 
 time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ] SQUOTE
