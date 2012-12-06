@@ -200,6 +200,7 @@ ODATA-185
 : "Nullable attribute should be required to be false for collection valued navigation properties." [component: OData CSDL] is **Proposed**.
 
 Discussion:
+
 * Mike suggests to send this issue back to open state
 * All agree
 
@@ -229,6 +230,7 @@ ODATA-138
 : "Remove sections 12 Model Functions and 10.4 Row Types including the subsections" [component: OData CSDL] is **Proposed**.
 
 Discussion:
+
 * Mike suggests to send this issue back into open state
 
 **No further discussion**. **No objections**. 
@@ -306,6 +308,7 @@ Mike:
 **One objection by Andrew**
 
 Discussion:
+
 * Andrew states, that if he is the only one objecting, the motion may pass 
 * Ram asks if other than Andrew anyone has an opinion against the motion ?
 
