@@ -5,7 +5,6 @@
   <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1"/>
   <edmx:DataServices DataServiceVersion="4.0">
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="ODataDemo">
-      <Using Namespace="Org.OData.Measures.V1" Alias="UoM"/>
       <EntityType Name="Product" HasStream="true">
         <Key>
           <PropertyRef Name="ID" />
@@ -17,7 +16,7 @@
         <Property Name="DiscontinuedDate" Type="Edm.DateTime" Nullable="true" />
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
         <Property Name="Price" Type="Edm.Decimal" Nullable="false">
-          <ValueAnnotation Term="UoM.ISOCurrency" Path="Currency"/>
+          <ValueAnnotation Term="Org.OData.Measures.V1.ISOCurrency" Path="Currency"/>
         </Property>
         <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="3"/>
         <NavigationProperty Name="Category" Type="ODataDemo.Category"
@@ -69,14 +68,14 @@
       </ComplexType>
       <EntityContainer Name="DemoService" IsDefaultEntityContainer="true">
         <EntitySet Name="Products" EntityType="ODataDemo.Product">
-          <NavigationPropertyBinding Path="Category" EntitySet="ODataDemo.DemoService.Products" />
-          <NavigationPropertyBinding Path="Supplier" EntitySet="ODataDemo.DemoService.Suppliers" />
+          <NavigationPropertyBinding Path="Category" EntitySet="Products" />
+          <NavigationPropertyBinding Path="Supplier" EntitySet="Suppliers" />
         </EntitySet>
         <EntitySet Name="Categories" EntityType="ODataDemo.Category">
-          <NavigationPropertyBinding Path="Products" EntitySet="ODataDemo.DemoService.Products" />
+          <NavigationPropertyBinding Path="Products" EntitySet="Products" />
         </EntitySet>
         <EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier">
-          <NavigationPropertyBinding Path="Products" EntitySet="ODataDemo.DemoService.Products" />
+          <NavigationPropertyBinding Path="Products" EntitySet="Products" />
         </EntitySet>
         <Entity Name="Contoso" Type="Self.Supplier" />
         <EntitySet Name="Countries" EntityType="ODataDemo.Country" />
