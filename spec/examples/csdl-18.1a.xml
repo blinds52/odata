@@ -2,6 +2,7 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
 >
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1"/>
   <edmx:DataServices DataServiceVersion="4.0">
     <edm:Schema xmlns:edm="http://docs.oasis-open.org/odata/ns/csdl/4.0"
       Namespace="ODataDemo"
@@ -16,7 +17,10 @@
         <edm:Property Name="ReleaseDate" Type="Edm.DateTime" Nullable="false" />
         <edm:Property Name="DiscontinuedDate" Type="Edm.DateTime" Nullable="true" />
         <edm:Property Name="Rating" Type="Edm.Int32" Nullable="false" />
-        <edm:Property Name="Price" Type="Edm.Decimal" Nullable="false" />
+        <edm:Property Name="Price" Type="Edm.Decimal" Nullable="false" >
+          <edm:ValueAnnotation Term="Org.OData.Measures.V1.ISOCurrency" Path="Currency"/>
+        </edm:Property>
+        <edm:Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="3"/>
         <edm:NavigationProperty Name="Category" Type="ODataDemo.Category"
           Nullable="false" Partner="Products"
         >
