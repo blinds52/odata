@@ -426,19 +426,19 @@ complexColInUri = begin-array
                   end-array
                   
 complexInUri = begin-object
-                   [ ( complexTypeMetadataInUri  
-                     / primitivePropertyInUri 
-                     / complexPropertyInUri 
-                     / collectionPropertyInUri  
-                     )
-                    *( value-separator 
-                       ( primitivePropertyInUri 
-                       / complexPropertyInUri 
-                       / collectionPropertyInUri  
-                       ) 
-                     )
-                   ]  
-                   end-object
+               [ ( complexTypeMetadataInUri  
+                 / primitivePropertyInUri 
+                 / complexPropertyInUri 
+                 / collectionPropertyInUri  
+                 )
+                 *( value-separator 
+                    ( primitivePropertyInUri 
+                    / complexPropertyInUri 
+                    / collectionPropertyInUri  
+                    ) 
+                  )
+               ]  
+               end-object
 
 collectionPropertyInUri = ( quotation-mark primitiveColProperty quotation-mark 
                             name-separator 
@@ -457,13 +457,9 @@ complexPropertyInUri = quotation-mark complexProperty quotation-mark
                        name-separator 
                        complexInUri
                             
-complexTypeMetadataInUri = quotation-mark '__metadata' quotation-mark
-                           name-separator
-                           begin-object
-                           [ typeNVPInUri ]
-                           end-object
+complexTypeMetadataInUri = typeNVPInUri
 
-typeNVPInUri = quotation-mark 'type' quotation-mark
+typeNVPInUri = quotation-mark 'odata.type' quotation-mark
                name-separator
                quotation-mark qualifiedTypeName quotation-mark
 
@@ -679,13 +675,15 @@ singleBody  = decimalBody [ "e" [SIGN] 1*DIGIT ] ; TODO: restrict range
             / nanInfinity
 nanInfinity = 'NaN' / '-INF' / 'INF'
 
-guid = "guid" SQUOTE 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG SQUOTE
+guid     = "guid" SQUOTE guidBody SQUOTE
+guidBody = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
 
 byte  = 1*3DIGIT ; numbers in the range from 0 to 255
 sbyte = [ sign ] 1*3DIGIT ; numbers in the range from -128 to 127
 int16 = [ sign ] 1*5DIGIT ; numbers in the range from -32768 to 32767        
 int32 = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
-int64 = [ sign ] 1*19DIGIT [ "L" ] ; numbers in the range from -9223372036854775808 to 9223372036854775807
+int64 = int64Body [ "L" ] 
+int64Body = [ sign ] 1*19DIGIT ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
 string           = SQUOTE *( pchar-no-SQUOTE / SQUOTE-in-string / unencoded ) SQUOTE
 pchar-no-SQUOTE  = unreserved / pct-encoded / other-delims / "$" / "&" / ";" / "=" / ":" / "@" 
@@ -698,7 +696,8 @@ dateTimeBody   = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." f
 dateTimeOffset     = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
 dateTimeOffsetBody = dateTimeBody ( "Z" / sign hour ":" minute )
 
-time = "time" SQUOTE [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ] SQUOTE
+time     = "time" SQUOTE timeBody SQUOTE 
+timeBody = [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
      ; the above is an approximation of the rules for an xml duration.
      ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema-2 for more information
  
