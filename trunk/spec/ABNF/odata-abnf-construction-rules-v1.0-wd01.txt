@@ -141,7 +141,8 @@ queryOption  = systemQueryOption
              / parameterNameAndValue
              / customQueryOption  
 
-systemQueryOption = expand 
+systemQueryOption = aggregate
+                  / expand 
                   / filter 
                   / format 
                   / orderby 
@@ -150,6 +151,27 @@ systemQueryOption = expand
                   / inlinecount 
                   / select 
                   / skiptoken
+
+aggregate         = '$aggregate' EQ aggregateCommand *( SEMI aggregateCommand )
+aggregateCommand  = aggregateClause 
+                  / filter 
+                  / expand 
+aggregateClause   = aggregateList [ RWS "$groupby" RWS groupbyList ]
+                  / '$groupby' RWS groupbyList
+aggregateList     = aggregateItem *( COMMA aggregateItem )
+aggregateItem     = property [ RWS "as" RWS dynamicProperty ]
+                  / aggregateFunction "(" property ")" [ RWS 'as' RWS dynamicProperty ]
+                  / 'count(' [ property / navigationProperty ]  ')' RWS 'as' RWS dynamicProperty
+                  / 'countDistinct(' ( property / navigationProperty ) ')' RWS 'as' RWS dynamicProperty
+                  / *( navigationProperty "/" ) "(" aggregateList ")"
+                  / *( navigationProperty "/" ) property
+                  / *( navigationProperty "/" ) aggregateFunction "(" property ")" 
+groupbyList       = groupbyItem *( COMMA groupbyItem )
+groupbyItem       = property
+                  / navigationProperty "/(" groupbyList ")"
+                  / navigationProperty "/" groupbyItem 
+dynamicProperty   = odataIdentifier
+aggregateFunction = 'sum' / 'min' / 'max' / 'average'
 
 expand       = '$expand' EQ expandItem *( COMMA expandItem )
 expandItem   = [ qualifiedEntityTypeName "/" ] navigationProperty 
