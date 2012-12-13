@@ -40,6 +40,7 @@
   <Constraint Rule="entityColNavigationProperty">
     <Match>Items</Match>
     <Match>Products</Match>
+    <Match>Sales</Match>
   </Constraint>
   <Constraint Rule="entityContainer">
     <Match>Container</Match>
@@ -55,6 +56,7 @@
   </Constraint>
   <Constraint Rule="entityNavigationProperty">
     <Match>Category</Match>
+    <Match>Currency</Match>
     <Match>Customer</Match>
     <Match>Product</Match>
     <Match>Supplier</Match>
@@ -108,6 +110,7 @@
     <Match>PhoneticallySimilar</Match>
   </Constraint>
   <Constraint Rule="primitiveKeyProperty">
+    <Match>Code</Match>
     <Match>ID</Match>
     <Match>ItemID</Match>
     <Match>OrderID</Match>
@@ -115,10 +118,12 @@
   </Constraint>
   <Constraint Rule="primitiveNonKeyProperty">
     <Match>AccountRepresentative</Match>
+    <Match>Amount</Match>
     <Match>BirthDate</Match>
     <Match>City</Match>
     <Match>CompanyName</Match>
     <Match>Completed</Match>
+    <Match>Country</Match>
     <Match>eyeColor</Match>
     <Match>LifeTime</Match>
     <Match>Line</Match>
@@ -1549,5 +1554,151 @@
    "multiLineText" : "First \"line\",\nand second line!" 
 }
     </Input>
+  </TestCase>
+  <!-- Aggregation -->
+  <TestCase Name="Aggregation - basic" 
+            Rule="queryOptions">
+    <Input>$aggregate=Amount</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - group by" 
+            Rule="queryOptions">
+    <Input>$aggregate=Amount $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - group by" 
+            Rule="queryOptions">
+    <Input>$aggregate=$groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - group by path" 
+            Rule="queryOptions">
+    <Input>$aggregate=$groupby Customer/Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - group by path with scoping" 
+            Rule="queryOptions">
+    <Input>$aggregate=$groupby Customer/(Name,ID)</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - group by path with scoping" 
+            Rule="queryOptions">
+    <Input>$aggregate=$groupby Customer/(Name,ID),Product/Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - group by path with scoping" 
+            Rule="queryOptions">
+    <Input>$aggregate=$groupby Customer/Country,Product/Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - group by path with scoping" 
+            Rule="queryOptions">
+    <Input>$aggregate=Amount $groupby Customer/Country,Product/Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/Amount $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/(Amount) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/(Amount,Quantity) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/Amount $groupby Name,Sales/Currency/Code</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path" 
+            Rule="queryOptions">
+    <Input>$aggregate=$groupby Country,Sales/Product/Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with function" 
+            Rule="queryOptions">
+    <Input>$aggregate=sum(Amount) $groupby Customer/Country</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with function and alias" 
+            Rule="queryOptions">
+    <Input>$aggregate=average(Amount) as AverageAmount $groupby Customer/Country</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with function and alias" 
+            Rule="queryOptions">
+    <Input>$aggregate=Amount as TotalAmount $groupby Customer/Country</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with functions and aliases" 
+            Rule="queryOptions">
+    <Input>$aggregate=min(Amount) as MinAmount,max(Amount) as MaxAmount $groupby Customer/Country</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with functions and scoping" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/(average(Amount) as AvgAmt) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with functions and scoping" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/(sum(Amount),average(Amount) as AvgAmt,Amount as TotalAmount) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with functions and scoping" 
+            Rule="queryOptions">
+    <Input>$aggregate=Product/Sales/(sum(Amount),average(Amount) as AvgAmt,Amount as TotalAmount) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with multiple scopes" 
+            Rule="queryOptions">
+    <Input>$aggregate=Product/Sales/(sum(Amount),average(Amount) as AvgAmt,Amount as TotalAmount),Sales/(sum(Amount),average(Amount) as AvgAmt,Amount as TotalAmount) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path and function" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/(sum(Amount)) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path and function" 
+            Rule="queryOptions">
+    <Input>$aggregate=Product/Sales/(sum(Amount)) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path and function - simplified" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/sum(Amount) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with path and function - simplified" 
+            Rule="queryOptions">
+    <Input>$aggregate=Product/Sales/sum(Amount) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - aggregate with functions and scoping" 
+            Rule="queryOptions"
+            FailAt="24">
+    <Input>$aggregate=Sales/Amount as AggregateAmount</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - count" 
+            Rule="queryOptions">
+    <Input>$aggregate=count() as SalesCount $groupby Product/Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - count" 
+            Rule="queryOptions">
+    <Input>$aggregate=count(Sales) as SalesCount $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - count" 
+            Rule="queryOptions">
+    <Input>$aggregate=count(Name) as SalesCount $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - count" 
+            Rule="queryOptions"
+            FailAt="19">
+    <Input>$aggregate=count() $groupby Product/Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - countDistinct" 
+            Rule="queryOptions">
+    <Input>$aggregate=Sales/(countDistinct(Product) as DistinctProducts) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - countDistinct" 
+            Rule="queryOptions">
+    <Input>$aggregate=countDistinct(Name) as NameCount</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - countDistinct" 
+            Rule="queryOptions"
+            FailAt="40">
+    <Input>$aggregate=Sales/(countDistinct(Product)) $groupby Name</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - countDistinct" 
+            Rule="queryOptions"
+            FailAt="30">
+    <Input>$aggregate=countDistinct(Name)</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - countDistinct" 
+            Rule="queryOptions"
+            FailAt="25">
+    <Input>$aggregate=countDistinct()</Input>
   </TestCase>
 </TestSuite>
