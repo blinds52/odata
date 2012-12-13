@@ -74,8 +74,13 @@
     <Match>PreferredSupplier</Match>
     <Match>VipCustomer</Match>
   </Constraint>
+  <Constraint Rule="enumerationMember">
+    <Match>Solid</Match>
+    <Match>Yellow</Match>
+  </Constraint>
   <Constraint Rule="enumerationTypeName">
     <Match>NameKind</Match>
+    <Match>Pattern</Match>
   </Constraint>
   <Constraint Rule="lambdaVariableExpr">
     <Match>lambda</Match>
@@ -85,8 +90,9 @@
     <Match>NamedEntity</Match>
   </Constraint>
   <Constraint Rule="namespacePart">
-    <Match>Namespace</Match>
     <Match>Model</Match>
+    <Match>Namespace</Match>
+    <Match>Sales</Match>
   </Constraint>
   <Constraint Rule="primitiveColFunction">
     <Match>MostPopularNames</Match>
@@ -113,6 +119,7 @@
     <Match>City</Match>
     <Match>CompanyName</Match>
     <Match>Completed</Match>
+    <Match>eyeColor</Match>
     <Match>LifeTime</Match>
     <Match>Line</Match>
     <Match>Location</Match>
@@ -120,11 +127,11 @@
     <Match>Price</Match>
     <Match>Quantity</Match>
     <Match>Rating</Match>
-    <Match>Rating</Match>
     <Match>ReleaseDate</Match>
     <Match>SalesArea</Match>
     <Match>Spokesperson</Match>
     <Match>Street</Match>
+    <Match>style</Match>
   </Constraint>
   <Constraint Rule="streamProperty">
     <Match>Thumbnail</Match>
@@ -457,7 +464,7 @@
   </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (wrong)" 
             Rule="resourcePath"
-            FailAt="14">
+            FailAt="19">
     <Input>Categories(ID=wrong)</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (multi-part key)" 
@@ -1280,6 +1287,35 @@
   <TestCase Name="function with reference type parameter - array" 
             Rule="odataRelativeUri">
     <Input>ProductsByCustomerRef()?customer=["KEY(Customers(1))"]</Input>
+  </TestCase>
+  <!-- Enumeration types -->
+  <TestCase Name="Enumeration value in URI" 
+            Rule="enum">
+    <Input>Sales.Pattern'Yellow'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value in URI - multiple flag values" 
+            Rule="enum">
+    <Input>Sales.Pattern'Solid,Yellow'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value - in filter" 
+            Rule="filter">
+    <Input>$filter=style eq Sales.Pattern'Yellow'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value - in filter with has" 
+            Rule="filter">
+    <Input>$filter=style has Sales.Pattern'Yellow'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value - undefined value as numeric constant" 
+            Rule="filter">
+    <Input>$filter=style has Sales.Pattern'32'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value - undefined value as numeric constant" 
+            Rule="odataRelativeUri">
+    <Input>Products?$filter=style eq Sales.Pattern'Yellow,32'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value - undefined value as numeric constant" 
+            Rule="odataRelativeUri">
+    <Input>Products?$filter=style eq cast(eyeColor,Sales.Pattern)</Input>
   </TestCase>
   <!-- Geography and Geometry types -->
   <TestCase Name="GeographyCollection" 
