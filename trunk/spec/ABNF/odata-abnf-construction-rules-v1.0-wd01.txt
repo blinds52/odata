@@ -259,7 +259,8 @@ boolCommonExpr = ( isofExpr
                    / ltExpr  
                    / leExpr  
                    / gtExpr 
-                   / geExpr  
+                   / geExpr 
+                   / hasExpr 
                    ]
                  / boolParenExpr
                  ) [ andExpr / orExpr ] 
@@ -401,6 +402,8 @@ ltExpr = RWS 'lt' RWS commonExpr
 leExpr = RWS 'le' RWS commonExpr
 gtExpr = RWS 'gt' RWS commonExpr
 geExpr = RWS 'ge' RWS commonExpr
+
+hasExpr = RWS 'has' RWS commonExpr
 
 addExpr = RWS 'add' RWS commonExpr
 subExpr = RWS 'sub' RWS commonExpr
@@ -553,6 +556,7 @@ namedEntity         = odataIdentifier
 entityTypeName      = odataIdentifier
 complexTypeName     = odataIdentifier 
 enumerationTypeName = odataIdentifier
+enumerationMember   = odataIdentifier
 
 odataIdentifier             = identifierLeadingCharacter *478identifierCharacter
 identifierLeadingCharacter  = ALPHA / "_"            ; TODO: Any character from the Unicode classes L or Nl
@@ -643,6 +647,7 @@ primitiveLiteral = null
                  / string 
                  / time 
                  / boolean 
+                 / enum
                  / geographyCollection 
                  / geographyLineString 
                  / geographyMultiLineString 
@@ -689,7 +694,6 @@ string           = SQUOTE *( pchar-no-SQUOTE / SQUOTE-in-string / unencoded ) SQ
 pchar-no-SQUOTE  = unreserved / pct-encoded / other-delims / "$" / "&" / ";" / "=" / ":" / "@" 
 SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal
 
-; dates and times
 dateTime       = "datetime" SQUOTE dateTimeBody SQUOTE
 dateTimeBody   = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
 
@@ -713,6 +717,10 @@ hour   = ( "0" / "1" ) DIGIT
 minute = zeroToFiftyNine
 second = zeroToFiftyNine       
 fractionalSeconds = 1*DIGIT
+
+enum      = qualifiedEnumerationTypeName SQUOTE enumBody SQUOTE
+enumBody  = enumValue *( COMMA enumValue )
+enumValue = enumerationMember / int64Body
 
 geographyCollection   = geographyPrefix fullCollectionLiteral SQUOTE
 fullCollectionLiteral = sridLiteral collectionLiteral
