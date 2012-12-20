@@ -119,7 +119,7 @@ Discussion:
 
 * Andrew states, that xs:dateTimeStamp, derived from xs:dateTime, requires timezone.
 
-MemberA:
+Mike:
 >I **move** we resolve ODATA-11 as proposed. **Andrew seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
