@@ -298,7 +298,7 @@ ODATA-196
 Note:
 >Time slot for issue processing gone. Skip all remaining agenda sub items of 5.
 
-##6 Third F2F meeting Jan 30 – 31, 2013 [8:50am PT]
+##6 Third F2F meeting Jan 30 - 31, 2013
 
 ###6.1 Any questions
 
