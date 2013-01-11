@@ -35,7 +35,7 @@
       <xs:enumeration value="Binary" />
       <xs:enumeration value="Boolean" />
       <xs:enumeration value="Byte" />
-      <xs:enumeration value="DateTime" />
+      <xs:enumeration value="Date" />
       <xs:enumeration value="DateTimeOffset" />
       <xs:enumeration value="Time" />
       <xs:enumeration value="Decimal" />
@@ -230,6 +230,7 @@
     <!-- EntitySet and EntitySetPath are mutually exclusive. -->
     <xs:attribute name="EntitySet" type="edm:TSimpleIdentifier" use="optional" />
     <xs:attribute name="EntitySetPath" type="edm:TPath" use="optional" />
+    <xs:attributeGroup ref="edm:TFacetAttributes" />
   </xs:complexType>  
   <xs:complexType name="TEntityKeyElement">
     <xs:sequence>
@@ -295,9 +296,8 @@
           <xs:element name="Decimal" type="edm:TDecimalConstantExpression" minOccurs="0" />
           <xs:element name="Bool" type="edm:TBoolConstantExpression" minOccurs="0" />
           <xs:element name="Time" type="edm:TTimeConstantExpression" minOccurs="0" />
-          <xs:element name="DateTime" type="edm:TDateTimeConstantExpression" minOccurs="0" />
+          <xs:element name="Date" type="edm:TDateConstantExpression" minOccurs="0" />
           <xs:element name="DateTimeOffset" type="edm:TDateTimeOffsetConstantExpression" minOccurs="0" />
-          <xs:element name="EnumMemberReference" type="edm:TEnumMemberReferenceExpression" minOccurs="0" />
           <xs:element name="Null" type="edm:TNullExpression" minOccurs="0" />
           <xs:element name="Path" type="edm:TPathExpression" minOccurs="0" />
           <xs:element name="If" type="edm:TIfExpression" minOccurs="0" />
@@ -305,12 +305,7 @@
           <xs:element name="Collection" type="edm:TCollectionExpression" minOccurs="0" />
           <xs:element name="AssertType" type="edm:TAssertTypeExpression" minOccurs="0" />
           <xs:element name="IsType" type="edm:TIsTypeExpression" minOccurs="0" />
-          <xs:element name="FunctionReference" type="edm:TFunctionReferenceExpression" minOccurs="0" />
-          <xs:element name="EntitySetReference" type="edm:TEntitySetReferenceExpression" minOccurs="0" />
-          <xs:element name="ParameterReference" type="edm:TParameterReferenceExpression" minOccurs="0" />
           <xs:element name="Apply" type="edm:TApplyExpression" minOccurs="0" />
-          <xs:element name="PropertyReference" type="edm:TPropertyReferenceExpression" minOccurs="0" />
-          <xs:element name="ValueTermReference" type="edm:TValueTermReferenceExpression" minOccurs="0" />
           <xs:element name="LabeledElement" type="edm:TLabeledElement" minOccurs="0" />
           <xs:element name="LabeledElementReference" type="edm:TLabeledElementReferenceExpression" minOccurs="0" />
         </xs:choice>
@@ -326,7 +321,7 @@
     <xs:attribute name="Decimal" type="xs:decimal" use="optional" />
     <xs:attribute name="Bool" type="xs:boolean" use="optional" />
     <xs:attribute name="Time" type="xs:time" use="optional" />
-    <xs:attribute name="DateTime" type="xs:dateTime" use="optional" />
+    <xs:attribute name="Date" type="xs:date" use="optional" />
     <xs:attribute name="DateTimeOffset" type="xs:dateTime" use="optional" />
     <xs:attribute name="Path" type="edm:TPath" use="optional" />
   </xs:attributeGroup>
@@ -375,19 +370,14 @@
       <xs:extension base="xs:time"/>
     </xs:simpleContent>
   </xs:complexType>
-  <xs:complexType name="TDateTimeConstantExpression">
+  <xs:complexType name="TDateConstantExpression">
     <xs:simpleContent>
-      <xs:extension base="xs:dateTime"/>
+      <xs:extension base="xs:date"/>
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TDateTimeOffsetConstantExpression">
     <xs:simpleContent>
       <xs:extension base="xs:dateTime"/>
-    </xs:simpleContent>
-  </xs:complexType>
-  <xs:complexType name="TEnumMemberReferenceExpression">
-    <xs:simpleContent>
-      <xs:extension base="edm:TPath"/>
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TNullExpression">
@@ -458,57 +448,12 @@
     <xs:attribute name="Type" type="edm:TWrappedFunctionType" use="optional" />
     <xs:attributeGroup ref="edm:TFacetAttributes" />
   </xs:complexType>
-  <xs:complexType name="TFunctionReferenceExpression">
-    <xs:sequence>
-      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:choice maxOccurs="unbounded">
-        <!-- Parameter is used to complete function signature: type only. -->
-        <xs:element name="Parameter" maxOccurs="unbounded">
-          <xs:complexType>
-            <xs:choice maxOccurs="unbounded">
-              <xs:choice minOccurs="0" maxOccurs="1">
-                <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
-                <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
-              </xs:choice>
-            </xs:choice>
-            <xs:attribute name="Type" type="edm:TWrappedFunctionType" use="optional" />
-          </xs:complexType>
-        </xs:element>
-      </xs:choice>
-    </xs:sequence>
-    <xs:attribute name="Function" type="edm:TQualifiedName" use="required" />
-  </xs:complexType>
-  <xs:complexType name="TEntitySetReferenceExpression">
-    <xs:simpleContent>
-      <xs:extension base="edm:TPath"/>
-    </xs:simpleContent>
-  </xs:complexType>
-  <xs:complexType name="TParameterReferenceExpression">
-    <xs:simpleContent>
-      <xs:extension base="edm:TSimpleIdentifier"/>
-    </xs:simpleContent>
-  </xs:complexType>
   <xs:complexType name="TApplyExpression">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:group ref="edm:GExpression" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Function" type="edm:TQualifiedName" use="optional" />
-  </xs:complexType>
-  <xs:complexType name="TPropertyReferenceExpression">
-    <xs:sequence>
-      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1"/>
-    </xs:sequence>
-    <xs:attribute name="Property" type="edm:TSimpleIdentifier" use="required" />
-  </xs:complexType>
-  <xs:complexType name="TValueTermReferenceExpression">
-    <xs:sequence>
-      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1"/>
-    </xs:sequence>
-    <xs:attribute name="Term" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="Qualifier" type="xs:string" use="optional" />
   </xs:complexType>
   <xs:complexType name="TLabeledElement">
     <xs:sequence>
@@ -583,6 +528,8 @@
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="Type" type="edm:TWrappedFunctionType" use="optional" />
+    <xs:attribute name="Nullable" type="xs:boolean" use="optional" />
+    <xs:attribute name="DefaultValue" type="xs:string" use="optional" />
     <xs:attributeGroup ref="edm:TFacetAttributes" />
   </xs:complexType>
   <xs:complexType name="TFunctionImportParameter">
@@ -597,14 +544,9 @@
   </xs:complexType>
 
   <xs:attributeGroup name="TFacetAttributes">
-    <xs:attribute name="Nullable" type="xs:boolean" use="optional" />
-    <xs:attribute name="DefaultValue" type="xs:string" use="optional" />
     <xs:attribute name="MaxLength" type="edm:TMaxLengthFacet" use="optional" />
-    <xs:attribute name="FixedLength" type="edm:TIsFixedLengthFacet" use="optional" />
     <xs:attribute name="Precision" type="edm:TPrecisionFacet" use="optional" />
     <xs:attribute name="Scale" type="edm:TScaleFacet" use="optional" />
-    <xs:attribute name="Unicode" type="edm:TIsUnicodeFacet" use="optional" />
-    <xs:attribute name="Collation" type="edm:TCollationFacet" use="optional" />
     <xs:attribute name="SRID" type="edm:TSridFacet" use="optional" />
   </xs:attributeGroup>
 
@@ -643,6 +585,7 @@
     <xs:attribute name="IsComposable" type="xs:boolean" use="optional" default="false" />
     <xs:attribute name="IsSideEffecting" type="xs:boolean" use="optional" />
     <xs:attribute name="IsBindable" type="xs:boolean" use="optional" default="false" />
+    <xs:attribute name="IsAlwaysBindable" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TTypeAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
