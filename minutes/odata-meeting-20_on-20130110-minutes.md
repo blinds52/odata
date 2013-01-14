@@ -1,8 +1,6 @@
-Title:	Meeting minutes of OASIS OData TC's Conference Call #20
-Date:	Thursday, 10 Jan 2013, 0800 - 0900 PT    
-Author:	Stefan Drees <stefan@drees.name>  
-
 # OData Conference Call #20, Thursday, 10 Jan 2013,  0800 - 0900 PT
+
+**Note**: For explanations of conventions and other formal aspects common to OData TC meeting minutes which are used in this document please cf. "[Formal Aspects of Meeting Minutes](https://www.oasis-open.org/committees/download.php/47885/formal-aspects-meeting-minutes-v1.html)". 
 
 Meeting chaired by Ram Jeyaraman
 
@@ -26,7 +24,9 @@ Agenda approved as published.
 
 ## 4. Review of [Action Items](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php) (AI) and Progress
 
-**Note on the format**: The ownership of action items is noted `[owner: Given Family]` and as indicated by [AI-List-Tool](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php) retrieved `2013-01-09 11:00 +01:00`.
+###List of ongoing actions before the meeting
+
+**Retrieval time stamp**: `2013-01-09 11:00 +01:00`.
 
 AI#0005
 : "Come up with a first milestine for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2013-01-10)
@@ -95,18 +95,6 @@ None.
 
 ##5 Review of [Issues List](https://tools.oasis-open.org/issues/secure/IssueNavigator.jspa?reset=true&mode=hide&pid=10103&sorter/field=issuekey&sorter/order=ASC) (IL) and Progress
 
-**Note on the format**: We minute an issue state progression as an ordered triple consisting of:
-
-1. The initial issue summary (including its status **before** the meeting)
-2. Discussion content and decisions i.e. **formally required motion text** potentially _overriding a proposed solution (of the issue's instance in JIRA)_ at the time of the meeting.
-3. The resulting issue summary (including its updated status _plus eventual modifications linking to the motion text_  **after** the meeting)
-
-The rationale behind this is: a) to **document the initial status** - _which may well deviate from the (tentative) status set inside the instance in JIRA at that time_, b) to **optimize the transfer of changes resulting from the discussion back into the issue's instance inside JIRA** (if dictated by the accepted motion) and last but not least c) to **ease the lookup** for the reader.
-
-The value of the main status is one (_and only one_) from the set (**New**, **Open**, **Deferred**, **Proposed**, **Resolved**, **Applied** or **Closed**) as documented in "[Best Practices for Issue Handling](https://www.oasis-open.org/committees/download.php/47021/Best%20Practices%20for%20Issue%20Handling%20v9.docx)", where the states and transitions are further explained as they have been adopted by the TC.
-
-A step by step recipe on how to apply these resolutions to new revisions of work products is given in "[How to Apply Resolved Issues](https://www.oasis-open.org/committees/download.php/47018/How%20to%20Apply%20Resolved%20Issues.docx)" and shall assist the editors performing the many formally necessary (but often _purely mechanical_) steps needing attention along the way.
-
 ###5.1 Issues in Applied state
 
 None.
@@ -164,7 +152,7 @@ Ralf:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-84
-: "Define which system query options should be supported per URL pattern" [component: OData URL Conventions] is **Proposed as amended in motion text**.
+: "Define which system query options should be supported per URL pattern" [component: OData URL Conventions] is **Proposed as amended in the motion text**.
 
 #####5.2.1.4 [ODATA-72](https://tools.oasis-open.org/issues/browse/ODATA-72)
 
@@ -197,7 +185,7 @@ Mike:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-71
-: "Improve addition and subtraction Arithmetic Operators to handle time-related data types" [component: OData URL Conventions] is **Proposed as amended in the motion**.
+: "Improve addition and subtraction Arithmetic Operators to handle time-related data types" [component: OData URL Conventions] is **Proposed as amended in the motion text**.
 
 ###5.3 Issues in Proposed state (carried over from Dec 6, 2012 TC meeting)
 
