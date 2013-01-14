@@ -587,8 +587,9 @@ identifierCharacter         = ALPHA / DIGIT / "_"    ; TODO: Any character from 
 primitiveTypeName = ['Edm.'] ( 'Binary'
                              / 'Boolean'
                              / 'Byte'
-                             / 'DateTime' 
-                             / 'DateTimeOffset' 
+                             / 'Date' 
+                             / 'DateTimeOffset'
+                             / 'DayTimeDuration' 
                              / 'Decimal'
                              / 'Double'
                              / 'Single'
@@ -663,8 +664,9 @@ primitiveLiteral = null
                  / int32 
                  / int64 
                  / binary 
-                 / dateTime 
+                 / date
                  / dateTimeOffset 
+                 / dayTimeDuration
                  / guid 
                  / string 
                  / time 
@@ -716,16 +718,21 @@ string           = SQUOTE *( pchar-no-SQUOTE / SQUOTE-in-string / unencoded ) SQ
 pchar-no-SQUOTE  = unreserved / pct-encoded / other-delims / "$" / "&" / ";" / "=" / ":" / "@" 
 SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal
 
-dateTime       = "datetime" SQUOTE dateTimeBody SQUOTE
-dateTimeBody   = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
+date     = "date" SQUOTE dateBody SQUOTE
+dateBody = year "-" month "-" day
 
 dateTimeOffset     = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
-dateTimeOffsetBody = dateTimeBody ( "Z" / sign hour ":" minute )
+dateTimeOffsetBody = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / sign hour ":" minute )
+
+dayTimeDuration     = "daytimeduration" SQUOTE dayTimeDurationBody SQUOTE
+dayTimeDurationBody = [ sign ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
+     ; the above is an approximation of the rules for an xml dayTimeDuration.
+     ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
 time     = "time" SQUOTE timeBody SQUOTE 
 timeBody = [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
      ; the above is an approximation of the rules for an xml duration.
-     ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema-2 for more information
+     ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema11-2#duration for more information
  
 oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
 zeroToFiftyNine = ( "0" / "1" / "2" / "3" / "4" / "5" ) DIGIT
