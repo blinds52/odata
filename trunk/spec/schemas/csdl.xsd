@@ -37,6 +37,7 @@
       <xs:enumeration value="Byte" />
       <xs:enumeration value="Date" />
       <xs:enumeration value="DateTimeOffset" />
+      <xs:enumeration value="DayTimeDuration" />
       <xs:enumeration value="Time" />
       <xs:enumeration value="Decimal" />
       <xs:enumeration value="Double" />
@@ -114,16 +115,6 @@
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
-  <!--TODO: seems to be unnecessary
-  <xs:complexType name="TXmlOrText" mixed="true">
-    <xs:annotation>
-      <xs:documentation>This type allows pretty much any content</xs:documentation>
-    </xs:annotation>
-    <xs:sequence>
-      <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded" />
-    </xs:sequence>
-  </xs:complexType>
-  -->
   <!-- 
         types of the top level elements 
     -->
@@ -298,6 +289,7 @@
           <xs:element name="Time" type="edm:TTimeConstantExpression" minOccurs="0" />
           <xs:element name="Date" type="edm:TDateConstantExpression" minOccurs="0" />
           <xs:element name="DateTimeOffset" type="edm:TDateTimeOffsetConstantExpression" minOccurs="0" />
+          <xs:element name="DayTimeDuration" type="edm:TDayTimeDurationConstantExpression" minOccurs="0" />
           <xs:element name="Null" type="edm:TNullExpression" minOccurs="0" />
           <xs:element name="Path" type="edm:TPathExpression" minOccurs="0" />
           <xs:element name="If" type="edm:TIfExpression" minOccurs="0" />
@@ -322,7 +314,10 @@
     <xs:attribute name="Bool" type="xs:boolean" use="optional" />
     <xs:attribute name="Time" type="xs:time" use="optional" />
     <xs:attribute name="Date" type="xs:date" use="optional" />
+    <!-- TODO: should be xs:dateTimeStamp, but I can't find an XSD for XMLSchema 2012 -->
     <xs:attribute name="DateTimeOffset" type="xs:dateTime" use="optional" />
+    <!-- TODO: should be xs:dayTimeDuration, but I can't find an XSD for XMLSchema 2012 -->
+    <xs:attribute name="DayTimeDuration" type="xs:duration" use="optional" />
     <xs:attribute name="Path" type="edm:TPath" use="optional" />
   </xs:attributeGroup>
   <xs:complexType name="TStringConstantExpression">
@@ -377,7 +372,14 @@
   </xs:complexType>
   <xs:complexType name="TDateTimeOffsetConstantExpression">
     <xs:simpleContent>
+      <!-- TODO: should be xs:dateTimeStamp, but I can't find an XSD for XMLSchema 2012 -->
       <xs:extension base="xs:dateTime"/>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TDayTimeDurationConstantExpression">
+    <xs:simpleContent>
+      <!-- TODO: should be xs:dayTimeDuration, but I can't find an XSD for XMLSchema 2012 -->
+      <xs:extension base="xs:duration"/>
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TNullExpression">
