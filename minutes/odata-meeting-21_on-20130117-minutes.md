@@ -180,7 +180,7 @@ Mike:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-187
-: "Need to remove references to associations and associationsets from protocol doc" [component: OData Protocol] is **Proposed** with no objections. 
+: "Need to remove references to associations and associationsets from protocol doc" [component: OData Protocol] is **Resolved** with no objections. 
 
 ###5.3 Issues in Proposed state (carried over from Dec 13, 2012 TC meeting)
 
@@ -197,7 +197,7 @@ Mike:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-172
-: "EntitySet may be qualified with namespace or alias and EntityContainer" [component: OData ABNF Construction Rules] is **Proposed** with no objections. 
+: "EntitySet may be qualified with namespace or alias and EntityContainer" [component: OData ABNF Construction Rules] is **Resolved** with no objections. 
 
 ###5.4 Issues in Proposed state (carried over from Jan 10, 2013 TC meeting)
 
@@ -232,7 +232,7 @@ Ralf:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-60
-: "Allow complex properties or components of complex properties as key parts" [component: OData CSDL] is **Proposed** with no objections. 
+: "Allow complex properties or components of complex properties as key parts" [component: OData CSDL] is **Resolved** with no objections. 
 
 **Note**:
 >Time slot for issue processing gone. Skip all remaining agenda sub items of 5.
