@@ -223,23 +223,23 @@
             Rule="decimalBody">
     <Input>3.14</Input>
   </TestCase>
-  <TestCase Name="DayTimeDuration in body" 
-            Rule="dayTimeDurationBody">
+  <TestCase Name="Duration in body" 
+            Rule="durationBody">
     <Input>P6DT23H59M59.9999S</Input>
   </TestCase>
-  <TestCase Name="DayTimeDuration in body: no years allowed" 
-            Rule="dayTimeDurationBody"
+  <TestCase Name="Duration in body: no years allowed" 
+            Rule="durationBody"
             FailAt="2">
     <Input>P1Y6DT23H59M59.9999S</Input>
   </TestCase>
-  <TestCase Name="DayTimeDuration in body: no months allowed" 
-            Rule="dayTimeDurationBody"
+  <TestCase Name="Duration in body: no months allowed" 
+            Rule="durationBody"
             FailAt="2">
     <Input>P1M6DT23H59M59.9999S</Input>
   </TestCase>
-  <TestCase Name="DayTimeDuration in URL" 
-            Rule="dayTimeDuration">
-    <Input>daytimeduration'P6DT23H59M59.9999S'</Input>
+  <TestCase Name="Duration in URL" 
+            Rule="duration">
+    <Input>duration'P6DT23H59M59.9999S'</Input>
   </TestCase>
   <TestCase Name="Decimal: integer" 
             Rule="decimalBody">
@@ -353,30 +353,22 @@
             FailAt="28">
     <Input>guid'01234567-89ab-cdef-456789abcdef'</Input>
   </TestCase>
-  <TestCase Name="Time: a year and a day" 
-            Rule="TIME">
-    <Input>time'P1Y1D'</Input>
+  <TestCase Name="TimeOfDay" 
+            Rule="timeOfDay">
+    <Input>timeofday'11:22:33'</Input>
   </TestCase>
-  <TestCase Name="Time: plus a year and a day" 
-            Rule="TIME">
-    <Input>time'+P1Y1D'</Input>
+  <TestCase Name="TimeOfDay: no seconds" 
+            Rule="timeOfDay">
+    <Input>timeofday'11:22'</Input>
   </TestCase>
-  <TestCase Name="Time: a month before" 
-            Rule="TIME">
-    <Input>time'-P1M'</Input>
+  <TestCase Name="TimeOfDay: fractional seconds" 
+            Rule="timeOfDay">
+    <Input>timeofday'11:22:33.4444444'</Input>
   </TestCase>
-  <TestCase Name="Time: twelve seconds" 
-            Rule="TIME">
-    <Input>time'PT12S'</Input>
-  </TestCase>
-  <TestCase Name="Time: two hours, ten minutes and three point one seconds" 
-            Rule="TIME">
-    <Input>time'PT2H10M3.1S'</Input>
-  </TestCase>
-  <TestCase Name="Time: not time on the clock" 
-            Rule="TIME"
-            FailAt="5">
-    <Input>time'11:22:33'</Input>
+  <TestCase Name="TimeOfDay: 24:00" 
+            Rule="timeOfDay"
+            FailAt="11">
+    <Input>timeofday'24:00:00'</Input>
   </TestCase>
   <TestCase Name="Identifier" 
             Rule="odataIdentifier">
@@ -399,6 +391,10 @@
   <TestCase Name="Entity Set" 
             Rule="resourcePath">
     <Input>Container.Products</Input>
+  </TestCase>
+  <TestCase Name="Entity Set" 
+            Rule="resourcePath">
+    <Input>Namespace.Container.Products</Input>
   </TestCase>
   <!-- 
   	Test cases for example URLs in OData URI  
@@ -1007,17 +1003,9 @@
             Rule="commonExpr">
     <Input>year(BirthDate)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.12 years" 
-            Rule="commonExpr">
-    <Input>years(LifeTime)</Input>
-  </TestCase>
   <TestCase Name="5.1.1.4.13" 
             Rule="commonExpr">
     <Input>month(BirthDate)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.4.14" 
-            Rule="commonExpr">
-    <Input>months(LifeTime)</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.15" 
             Rule="commonExpr">

@@ -41,8 +41,8 @@ odataRelativeUri = resourcePath [ "?" queryOptions ]
 ; 1. Resource Path
 ;------------------------------------------------------------------------------
 
-resourcePath = [ entityContainer "." ] entitySetName [ collectionNavigation ] 
-             / [ [ namespace "." ] entityContainer "." ] namedEntity [ singleNavigation ]
+resourcePath = [ containerQualifier ] entitySetName [ collectionNavigation ] 
+             / [ containerQualifier ] namedEntity   [ singleNavigation ]
              / actionCall 
              / entityColFunctionCall    [ collectionNavigation ] 
              / entityFunctionCall       [ singleNavigation ] 
@@ -61,7 +61,7 @@ keyPredicate     = simpleKey / compoundKey
 simpleKey        = "(" keyPropertyValue ")"
 compoundKey      = "(" keyValuePair *( COMMA keyValuePair ) ")"
 keyValuePair     = primitiveKeyProperty EQ keyPropertyValue
-keyPropertyValue = primitiveLiteral
+keyPropertyValue = primitiveLiteral ; restricted to characters that are valid in a URI path segment
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
                    ( links "/" navigationProperty 
@@ -102,7 +102,7 @@ boundOperation = "/" ( boundActionCall
                      / boundPrimitiveFuncCall    [ singlePath ] 
                      )
 
-actionCall      = [ operationQualifier ] action [ "()" ]
+actionCall      = [ containerQualifier ] action [ "()" ]
 boundActionCall = actionCall
                   ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
                   ; and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
@@ -119,12 +119,12 @@ boundComplexColFuncCall   = complexColFunctionCall
 boundPrimitiveFuncCall    = primitiveFunctionCall
 boundPrimitiveColFuncCall = primitiveColFunctionCall
 
-entityFunctionCall       = [ operationQualifier ] entityFunction       functionParameters
-entityColFunctionCall    = [ operationQualifier ] entityColFunction    functionParameters
-complexFunctionCall      = [ operationQualifier ] complexFunction      functionParameters
-complexColFunctionCall   = [ operationQualifier ] complexColFunction   functionParameters
-primitiveFunctionCall    = [ operationQualifier ] primitiveFunction    functionParameters
-primitiveColFunctionCall = [ operationQualifier ] primitiveColFunction functionParameters
+entityFunctionCall       = [ containerQualifier ] entityFunction       functionParameters
+entityColFunctionCall    = [ containerQualifier ] entityColFunction    functionParameters
+complexFunctionCall      = [ containerQualifier ] complexFunction      functionParameters
+complexColFunctionCall   = [ containerQualifier ] complexColFunction   functionParameters
+primitiveFunctionCall    = [ containerQualifier ] primitiveFunction    functionParameters
+primitiveColFunctionCall = [ containerQualifier ] primitiveColFunction functionParameters
 
 functionParameters    = "(" [ functionParameter *( COMMA functionParameter ) ] ")"
 functionParameter     = functionParameterName EQ ( parameterAlias / primitiveLiteral )
@@ -216,13 +216,13 @@ selectItem = STAR
              / qualifiedActionName  
              / qualifiedFunctionName  
              )
-allOperationsInContainer = operationQualifier STAR                 
-operationQualifier       = [ namespace "." ] entityContainer "."
+allOperationsInContainer = containerQualifier STAR                 
+containerQualifier       = [ namespace "." ] entityContainer "."
 
 ; The parameterTypeNames are required to uniquely identify the action or function
 ; only if it has overloads.
-qualifiedActionName   = [ operationQualifier ] action   [ "(" parameterTypeNames ")" ]
-qualifiedFunctionName = [ operationQualifier ] function [ "(" parameterTypeNames ")" ]
+qualifiedActionName   = [ containerQualifier ] action   [ "(" parameterTypeNames ")" ]
+qualifiedFunctionName = [ containerQualifier ] function [ "(" parameterTypeNames ")" ]
 
 ; The types of all the parameters to the corresponding function import 
 ; in the order they are declared in the function import.
@@ -331,7 +331,7 @@ singlePathExpr = "/" boundFunctionExpr
 boundFunctionExpr = functionExpr ; boundFunction segments can only be composed if the type of the    
                                  ; previous segment matches the type of the first function parameter
                                      
-functionExpr = [ operationQualifier ] 
+functionExpr = [ containerQualifier ] 
                ( entityColFunction    functionExprParameters [ collectionNavigationExpr ] 
                / entityFunction       functionExprParameters [ singleNavigationExpr ] 
                / complexColFunction   functionExprParameters [ collectionPathExpr ]
@@ -355,9 +355,7 @@ methodCallExpr = indexOfMethodCallExpr
                / concatMethodCallExpr 
                / lengthMethodCallExpr 
                / yearMethodCallExpr 
-               / yearsMethodCallExpr 
                / monthMethodCallExpr 
-               / monthsMethodCallExpr 
                / dayMethodCallExpr 
                / daysMethodCallExpr 
                / hourMethodCallExpr 
@@ -394,9 +392,7 @@ trimMethodCallExpr        = 'trim'        "(" BWS commonExpr BWS ")"
 concatMethodCallExpr      = 'concat'      "(" BWS commonExpr BWS COMMA BWS commonExpr BWS ")"
 
 yearMethodCallExpr        = 'year'        "(" BWS commonExpr BWS ")"
-yearsMethodCallExpr       = 'years'       "(" BWS commonExpr BWS ")"
 monthMethodCallExpr       = 'month'       "(" BWS commonExpr BWS ")"
-monthsMethodCallExpr      = 'months'      "(" BWS commonExpr BWS ")"
 dayMethodCallExpr         = 'day'         "(" BWS commonExpr BWS ")"
 daysMethodCallExpr        = 'days'        "(" BWS commonExpr BWS ")"
 hourMethodCallExpr        = 'hour'        "(" BWS commonExpr BWS ")"
@@ -598,9 +594,9 @@ primitiveTypeName = ['Edm.'] ( 'Binary'
                              / 'Byte'
                              / 'Date' 
                              / 'DateTimeOffset'
-                             / 'DayTimeDuration' 
                              / 'Decimal'
                              / 'Double'
+                             / 'Duration' 
                              / 'Guid' 
                              / 'Int16'
                              / 'Int32'
@@ -609,7 +605,7 @@ primitiveTypeName = ['Edm.'] ( 'Binary'
                              / 'Single'
                              / 'Stream'
                              / 'String'
-                             / 'Time'
+                             / 'TimeOfDay'
                              / abstractSpatialTypeName [ concreteSpatialTypeName ] 
                              )
 abstractSpatialTypeName = 'Geography'
@@ -674,10 +670,10 @@ primitiveLiteral = null
                  / binary 
                  / date
                  / dateTimeOffset 
-                 / dayTimeDuration
+                 / duration
                  / guid 
                  / string 
-                 / time 
+                 / timeOfDay 
                  / boolean 
                  / enum
                  / geographyCollection 
@@ -732,15 +728,13 @@ dateBody = year "-" month "-" day
 dateTimeOffset     = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
 dateTimeOffsetBody = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / sign hour ":" minute )
 
-dayTimeDuration     = "daytimeduration" SQUOTE dayTimeDurationBody SQUOTE
-dayTimeDurationBody = [ sign ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
+duration     = "duration" SQUOTE durationBody SQUOTE
+durationBody = [ sign ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
      ; the above is an approximation of the rules for an xml dayTimeDuration.
      ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
-time     = "time" SQUOTE timeBody SQUOTE 
-timeBody = [ sign ] "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
-     ; the above is an approximation of the rules for an xml duration.
-     ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema11-2#duration for more information
+timeOfDay     = "timeofday" SQUOTE timeOfDayBody SQUOTE 
+timeOfDayBody = hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
  
 oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
 zeroToFiftyNine = ( "0" / "1" / "2" / "3" / "4" / "5" ) DIGIT
