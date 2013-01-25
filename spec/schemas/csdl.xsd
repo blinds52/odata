@@ -37,8 +37,8 @@
       <xs:enumeration value="Byte" />
       <xs:enumeration value="Date" />
       <xs:enumeration value="DateTimeOffset" />
-      <xs:enumeration value="DayTimeDuration" />
-      <xs:enumeration value="Time" />
+      <xs:enumeration value="Duration" />
+      <xs:enumeration value="TimeOfDay" />
       <xs:enumeration value="Decimal" />
       <xs:enumeration value="Double" />
       <xs:enumeration value="Single" />
@@ -138,7 +138,7 @@
   </xs:complexType>
   <xs:complexType name="TReferentialConstraint">
     <xs:sequence>
-      <xs:element name="PropertyRef" type="edm:TDependentPropertyRef" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="PropertyRef" type="edm:TPropertyRef" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TNavigationProperty">
@@ -229,9 +229,6 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TPropertyRef">
-    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-  </xs:complexType>
-  <xs:complexType name="TDependentPropertyRef">
     <xs:attribute name="Name" type="edm:TPath" use="required" />
   </xs:complexType>
   <xs:group name="GEmptyElementExtensibility">
@@ -286,10 +283,10 @@
           <xs:element name="Guid" type="edm:TGuidConstantExpression" minOccurs="0" />
           <xs:element name="Decimal" type="edm:TDecimalConstantExpression" minOccurs="0" />
           <xs:element name="Bool" type="edm:TBoolConstantExpression" minOccurs="0" />
-          <xs:element name="Time" type="edm:TTimeConstantExpression" minOccurs="0" />
+          <xs:element name="TimeOfDay" type="edm:TTimeOfDayConstantExpression" minOccurs="0" />
           <xs:element name="Date" type="edm:TDateConstantExpression" minOccurs="0" />
           <xs:element name="DateTimeOffset" type="edm:TDateTimeOffsetConstantExpression" minOccurs="0" />
-          <xs:element name="DayTimeDuration" type="edm:TDayTimeDurationConstantExpression" minOccurs="0" />
+          <xs:element name="Duration" type="edm:TDurationConstantExpression" minOccurs="0" />
           <xs:element name="Null" type="edm:TNullExpression" minOccurs="0" />
           <xs:element name="Path" type="edm:TPathExpression" minOccurs="0" />
           <xs:element name="If" type="edm:TIfExpression" minOccurs="0" />
@@ -312,12 +309,12 @@
     <xs:attribute name="Guid" type="edm:TGuidLiteral" use="optional" />
     <xs:attribute name="Decimal" type="xs:decimal" use="optional" />
     <xs:attribute name="Bool" type="xs:boolean" use="optional" />
-    <xs:attribute name="Time" type="xs:time" use="optional" />
+    <xs:attribute name="TimeOfDay" type="xs:time" use="optional" />
     <xs:attribute name="Date" type="xs:date" use="optional" />
     <!-- TODO: should be xs:dateTimeStamp, but I can't find an XSD for XMLSchema 2012 -->
     <xs:attribute name="DateTimeOffset" type="xs:dateTime" use="optional" />
     <!-- TODO: should be xs:dayTimeDuration, but I can't find an XSD for XMLSchema 2012 -->
-    <xs:attribute name="DayTimeDuration" type="xs:duration" use="optional" />
+    <xs:attribute name="Duration" type="xs:duration" use="optional" />
     <xs:attribute name="Path" type="edm:TPath" use="optional" />
   </xs:attributeGroup>
   <xs:complexType name="TStringConstantExpression">
@@ -360,7 +357,7 @@
       <xs:extension base="xs:boolean"/>
     </xs:simpleContent>
   </xs:complexType>
-  <xs:complexType name="TTimeConstantExpression">
+  <xs:complexType name="TTimeOfDayConstantExpression">
     <xs:simpleContent>
       <xs:extension base="xs:time"/>
     </xs:simpleContent>
@@ -376,7 +373,7 @@
       <xs:extension base="xs:dateTime"/>
     </xs:simpleContent>
   </xs:complexType>
-  <xs:complexType name="TDayTimeDurationConstantExpression">
+  <xs:complexType name="TDurationConstantExpression">
     <xs:simpleContent>
       <!-- TODO: should be xs:dayTimeDuration, but I can't find an XSD for XMLSchema 2012 -->
       <xs:extension base="xs:duration"/>
