@@ -24,7 +24,7 @@
       <xs:element name="EntityType" type="edm:TEntityType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="TypeDefinition" type="edm:TTypeDefinition" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="EnumType" type="edm:TEnumType" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="ValueTerm" type="edm:TValueTerm" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Term" type="edm:TTerm" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Annotations" type="edm:TAnnotations" minOccurs="0" maxOccurs="unbounded" />
       <xs:element ref="edm:EntityContainer" minOccurs="1" maxOccurs="1" />
     </xs:choice>
@@ -64,6 +64,22 @@
       <xs:enumeration value="Int64" />
       <xs:enumeration value="String" />
       <xs:enumeration value="SByte" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TAppliesTo">
+    <!-- TODO: allow comma-separated lists of the following names --> 
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Annotations" />
+      <xs:enumeration value="ComplexType" />
+      <xs:enumeration value="EntitySet" />
+      <xs:enumeration value="EntityType" />
+      <xs:enumeration value="EnumType" />
+      <xs:enumeration value="FunctionImport" />
+      <xs:enumeration value="NavigationProperty" />
+      <xs:enumeration value="Parameter" />
+      <xs:enumeration value="Property" />
+      <xs:enumeration value="Term" />
+      <!-- TODO: here some interesting targets are missing, e.g. EnumType Member -->
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TMax">
@@ -130,8 +146,7 @@
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="Property" type="edm:TComplexTypeProperty" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
@@ -147,8 +162,7 @@
       <xs:element name="ReferentialConstraint" type="edm:TReferentialConstraint" minOccurs="0" maxOccurs="1" />
       <xs:element name="OnDelete" type="edm:TOnAction" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
@@ -164,8 +178,7 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="Property" type="edm:TEntityProperty" minOccurs="0" maxOccurs="unbounded" />
         <xs:element name="NavigationProperty" type="edm:TNavigationProperty" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
@@ -184,8 +197,7 @@
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="Member" type="edm:TEnumTypeMember" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TTypeAttributes" />
@@ -243,28 +255,16 @@
   <xs:complexType name="TAnnotations">
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Target" type="edm:TPath" use="required" />
     <xs:attribute name="Qualifier" type="xs:string" use="optional" />
   </xs:complexType>
-  <xs:complexType name="TValueAnnotation">
+  <xs:complexType name="TAnnotation">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
-    </xs:sequence>
-    <xs:attribute name="Term" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="Qualifier" type="xs:string" use="optional" />
-    <xs:attributeGroup ref="edm:GInlineExpressions" />
-  </xs:complexType>
-  <xs:complexType name="TTypeAnnotation">
-    <xs:sequence>
-      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="PropertyValue" type="edm:TPropertyValue" minOccurs="0" maxOccurs="unbounded" />
-      </xs:choice>
     </xs:sequence>
     <xs:attribute name="Term" type="edm:TQualifiedName" use="required" />
     <xs:attribute name="Qualifier" type="xs:string" use="optional" />
@@ -480,8 +480,7 @@
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
         <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TCommonPropertyAttributes" />
@@ -490,8 +489,7 @@
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
         <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TCommonPropertyAttributes" />
@@ -500,8 +498,7 @@
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
         <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
@@ -515,28 +512,27 @@
     <xs:attribute name="Collation" type="edm:TCollationFacet" use="optional" />
     <xs:attribute name="SRID" type="edm:TSridFacet" use="optional" />
   </xs:complexType>
-  <xs:complexType name="TValueTerm">
+  <xs:complexType name="TTerm">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
         <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="Type" type="edm:TWrappedFunctionType" use="optional" />
     <xs:attribute name="Nullable" type="xs:boolean" use="optional" />
     <xs:attribute name="DefaultValue" type="xs:string" use="optional" />
+    <xs:attribute name="AppliesTo" type="edm:TAppliesTo" use="optional" />
     <xs:attributeGroup ref="edm:TFacetAttributes" />
   </xs:complexType>
   <xs:complexType name="TFunctionImportParameter">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TFunctionImportParameterAttributes" />
@@ -610,8 +606,7 @@
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                   <xs:element name="ReturnType" type="edm:TFunctionImportReturnType" minOccurs="0" maxOccurs="1" />
                   <xs:element name="Parameter" type="edm:TFunctionImportParameter" minOccurs="0" maxOccurs="unbounded" />
-                  <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-                  <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
                 </xs:choice>
               </xs:sequence>
               <xs:attributeGroup ref="edm:TFunctionImportAttributes" />
@@ -631,8 +626,7 @@
                   </xs:complexType>
                 </xs:element>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
-                  <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-                  <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
                 </xs:choice>
               </xs:sequence>
               <xs:attributeGroup ref="edm:TEntitySetAttributes" />
@@ -643,16 +637,14 @@
               <xs:sequence>
                 <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
-                  <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" minOccurs="0" maxOccurs="unbounded" />
-                  <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
                 </xs:choice>
               </xs:sequence>
               <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
               <xs:attribute name="Type" type="edm:TQualifiedName" use="required" />
             </xs:complexType>
           </xs:element>
-          <xs:element name="ValueAnnotation" type="edm:TValueAnnotation" />
-          <xs:element name="TypeAnnotation" type="edm:TTypeAnnotation" />
+          <xs:element name="Annotation" type="edm:TAnnotation" />
         </xs:choice>
       </xs:sequence>
       <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />

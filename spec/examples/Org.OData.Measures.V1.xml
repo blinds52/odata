@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Alias="Self"
-  Namespace="Org.OData.Measures.V1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="4.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
 >
-  <Documentation>
-    <Summary>Terms describing monetary amounts and measured quantities</Summary>
-  </Documentation>
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1" />
+  <edmx:DataServices DataServiceVersion="4.0">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Alias="Self"
+      Namespace="Org.OData.Measures.V1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
+    >
+      <Documentation>
+        <Summary>Terms describing monetary amounts and measured quantities</Summary>
+      </Documentation>
 
-  <Using Alias="Core" Namespace="Org.OData.Core.V1" />
+      <Using Alias="Core" Namespace="Org.OData.Core.V1" />
 
 
-  <ValueTerm Name="ISOCurrency" Type="String">
-    <Documentation>
-      <Summary>The currency for this monetary amount as an ISO 4217 currency code</Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-  </ValueTerm>
+      <Term Name="ISOCurrency" Type="String" AppliesTo="Property">
+        <Documentation>
+          <Summary>The currency for this monetary amount as an ISO 4217 currency code
+          </Summary>
+        </Documentation>
+      </Term>
 
-  <ValueTerm Name="Scale" Type="Byte">
-    <Documentation>
-      <Summary>
-        The number of significant decimal places in the scale part
-        (less than or  equal to the number declared in the Scale facet)
-      </Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-    <ValueAnnotation Term="Core.RequiresType" String="Edm.Decimal" />
-  </ValueTerm>
+      <Term Name="Scale" Type="Byte" AppliesTo="Property">
+        <Documentation>
+          <Summary>
+            The number of significant decimal places in the scale part
+            (less than or equal to the number declared in the Scale facet)
+          </Summary>
+        </Documentation>
+        <Annotation Term="Core.RequiresType" String="Edm.Decimal" />
+      </Term>
 
-  <ValueTerm Name="Unit" Type="String">
-    <Documentation>
-      <Summary>The unit of measure for this measured quantity</Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-  </ValueTerm>
+      <Term Name="Unit" Type="String" AppliesTo="Property">
+        <Documentation>
+          <Summary>The unit of measure for this measured quantity</Summary>
+        </Documentation>
+      </Term>
 
-</Schema>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
