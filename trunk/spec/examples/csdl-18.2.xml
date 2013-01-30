@@ -4,18 +4,18 @@
   xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
 >
   <Using Alias="Vocabulary1" Namespace="Vocabulary1" />
-  <ValueTerm Name="Caption" Type="Edm.String" DefaultValue="Put Caption Here" />
-  <ValueTerm Name="Tags" Type="Collection(String)" />
+  <Term Name="Caption" Type="Edm.String" DefaultValue="Put Caption Here" />
+  <Term Name="Tags" Type="Collection(String)" />
   <EntityContainer Name="Model1Container">
     <EntitySet Name="CustomerSet" EntityType="Model1.Customer" />
     <EntitySet Name="OrderSet" EntityType="Model1.Order" />
   </EntityContainer>
   <Annotations Target="Self.Customer">
-    <ValueAnnotation Term="Vocabulary1.EMail">
+    <Annotation Term="Vocabulary1.EMail">
       <Null />
-    </ValueAnnotation>
-    <ValueAnnotation Term="AccountID" Path="AccountNumber" />
-    <ValueAnnotation Term="Title" String="Customer Info" />
+    </Annotation>
+    <Annotation Term="AccountID" Path="AccountNumber" />
+    <Annotation Term="Title" String="Customer Info" />
   </Annotations>
   <EntityType Name="Customer">
     <Key>
@@ -27,19 +27,21 @@
     <Property Name="AccountNumber" Type="Edm.Int32" Nullable="true" />
     <Property Name="Address" Type="Self.Address" Nullable="false" />
     <NavigationProperty Name="Orders" Type="Collection(Self.Order)" />
-    <TypeAnnotation Term="Vocabulary1.Person">
-      <PropertyValue Property="DisplayName">
-        <Apply Function="String.Concat">
-          <Path>FirstName</Path>
-          <Path>LastName</Path>
-        </Apply>
-      </PropertyValue>
-    </TypeAnnotation>
-    <ValueAnnotation Term="Self.Tags">
+    <Annotation Term="Vocabulary1.Person">
+      <Record>
+        <PropertyValue Property="DisplayName">
+          <Apply Function="String.Concat">
+            <Path>FirstName</Path>
+            <Path>LastName</Path>
+          </Apply>
+        </PropertyValue>
+      </Record>
+    </Annotation>
+    <Annotation Term="Self.Tags">
       <Collection>
         <String>MasterData</String>
       </Collection>
-    </ValueAnnotation>
+    </Annotation>
   </EntityType>
   <EntityType Name="Order">
     <Key>
@@ -71,10 +73,10 @@
     <Property Name="Position" Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
   </ComplexType>
   <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
-    <ValueAnnotation Term="Org.OData.Measures.V1.Unit" String="Centimeters" />
+    <Annotation Term="Org.OData.Measures.V1.Unit" String="Centimeters" />
   </TypeDefinition>
   <TypeDefinition Name="Weight" UnderlyingType="Edm.String">
-    <ValueAnnotation Term="Org.OData.Measures.V1.Unit" String="Kilograms" />
+    <Annotation Term="Org.OData.Measures.V1.Unit" String="Kilograms" />
   </TypeDefinition>
   <ComplexType Name="Size">
     <Property Name="Width" Type="Self.Length" />

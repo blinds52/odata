@@ -1,154 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Alias="Self"
-  Namespace="Org.OData.Core.V1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="4.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
 >
-  <Documentation>
-    <Summary>Core terms needed to write vocabularies</Summary>
-  </Documentation>
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1" />
+  <edmx:DataServices DataServiceVersion="4.0">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Alias="Self"
+      Namespace="Org.OData.Core.V1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
+    >
+      <Documentation>
+        <Summary>Core terms needed to write vocabularies</Summary>
+      </Documentation>
 
-  <!-- Applicability of terms -->
-  <ValueTerm Name="AppliesToAssociationSet" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to AssociationSet
-        elements
-      </Summary>
-    </Documentation>
-  </ValueTerm>
+      <TypeDefinition Name="Tag" UnderlyingType="Boolean">
+        <Documentation>
+          <Summary>
+            This is the type to use for all tagging terms
+          </Summary>
+        </Documentation>
+      </TypeDefinition>
 
-  <ValueTerm Name="AppliesToEntitySet" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to EntitySet
-        elements
-      </Summary>
-    </Documentation>
-  </ValueTerm>
+      <Term Name="RequiresType" Type="Edm.String" AppliesTo="Term">
+        <Documentation>
+          <Summary>
+            Properties and value terms annotated with this annotation MUST have a
+            type that is identical to or derived from the given type name.
+          </Summary>
+        </Documentation>
+      </Term>
 
-  <ValueTerm Name="AppliesToEntityType" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to EntityType
-        elements
-      </Summary>
-    </Documentation>
-  </ValueTerm>
+      <!-- Value restrictions for terms -->
+      <Term Name="IsPropertyPath" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Property,Term">
+        <Documentation>
+          <Summary>
+            Properties and value terms annotated with this term MUST contain
+            a
+            property path that identifies a property in scope of the annotation
+          </Summary>
+        </Documentation>
+        <Annotation Term="Core.RequiresType" String="Edm.String" />
+      </Term>
 
-  <ValueTerm Name="AppliesToComplexType" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to ComplexType
-        elements
-      </Summary>
-    </Documentation>
-  </ValueTerm>
+      <Term Name="IsNavigationPropertyPath" Type="Edm.Boolean"
+        DefaultValue="true" AppliesTo="Property,Term"
+      >
+        <Documentation>
+          <Summary>
+            Properties and value terms annotated with this term MUST contain
+            a
+            property path that identifies a navigation property in scope of the annotation
+          </Summary>
+        </Documentation>
+        <Annotation Term="Core.RequiresType" String="Edm.String" />
+      </Term>
 
-  <ValueTerm Name="AppliesToProperty" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to Property
-        elements of entity or complex types
-      </Summary>
-    </Documentation>
-  </ValueTerm>
+      <Term Name="IsURI" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Property,Term">
+        <Documentation>
+          <Summary>
+            Properties and value terms annotated with this term MUST contain
+            a valid
+            URI
+          </Summary>
+        </Documentation>
+        <Annotation Term="Core.RequiresType" String="Edm.String" />
+      </Term>
 
-  <ValueTerm Name="AppliesToNavigationProperty" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to NavigationProperty
-        elements of entity types
-      </Summary>
-    </Documentation>
-  </ValueTerm>
+      <Term Name="IsMimeType" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Property,Term">
+        <Documentation>
+          <Summary>
+            Properties and value terms annotated with this term MUST contain
+            a valid
+            MIME type
+          </Summary>
+        </Documentation>
+        <Annotation Term="Core.RequiresType" String="Edm.String" />
+      </Term>
 
-  <ValueTerm Name="AppliesToParameter" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to FunctionImport
-        Parameter elements
-      </Summary>
-    </Documentation>
-  </ValueTerm>
+      <Term Name="IsLanguageDependent" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Property,Term">
+        <Documentation>
+          <Summary>
+            Properties and value terms annotated with this term are
+            language-dependent
+          </Summary>
+        </Documentation>
+        <Annotation Term="Core.RequiresType" String="Edm.String" />
+      </Term>
 
-  <ValueTerm Name="AppliesToValueTerm" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Terms annotated with this annotation can be applied to ValueTerm
-        elements
-      </Summary>
-    </Documentation>
-  </ValueTerm>
-
-  <ValueTerm Name="RequiresType" Type="Edm.String" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Properties and value terms annotated with this annotation MUST have a type
-        that is identical to or derived from the given type name.
-      </Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-    <ValueAnnotation Term="Core.AppliesToValueTerm" />
-  </ValueTerm>
-
-  <!-- Value restrictions for terms -->
-  <ValueTerm Name="IsPropertyPath" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Properties and value terms annotated with this term MUST contain
-        a property path that identifies a property in scope of the annotation
-      </Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-    <ValueAnnotation Term="Core.AppliesToValueTerm" />
-    <ValueAnnotation Term="Core.RequiresType" String="Edm.String" />
-  </ValueTerm>
-
-  <ValueTerm Name="IsNavigationPropertyPath" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Properties and value terms annotated with this term MUST contain
-        a property path that identifies a navigation property in scope of the annotation
-      </Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-    <ValueAnnotation Term="Core.AppliesToValueTerm" />
-    <ValueAnnotation Term="Core.RequiresType" String="Edm.String" />
-  </ValueTerm>
-
-  <ValueTerm Name="IsURI" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Properties and value terms annotated with this term MUST contain
-        a valid URI
-      </Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-    <ValueAnnotation Term="Core.AppliesToValueTerm" />
-    <ValueAnnotation Term="Core.RequiresType" String="Edm.String" />
-  </ValueTerm>
-
-  <ValueTerm Name="IsMimeType" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Properties and value terms annotated with this term MUST contain
-        a valid MIME type
-      </Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-    <ValueAnnotation Term="Core.AppliesToValueTerm" />
-    <ValueAnnotation Term="Core.RequiresType" String="Edm.String" />
-  </ValueTerm>
-
-  <ValueTerm Name="IsLanguageDependent" Type="Edm.Boolean" DefaultValue="true">
-    <Documentation>
-      <Summary>
-        Properties and value terms annotated with this term are language-dependent
-      </Summary>
-    </Documentation>
-    <ValueAnnotation Term="Core.AppliesToProperty" />
-    <ValueAnnotation Term="Core.AppliesToValueTerm" />
-    <ValueAnnotation Term="Core.RequiresType" String="Edm.String" />
-  </ValueTerm>
-
-</Schema>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
