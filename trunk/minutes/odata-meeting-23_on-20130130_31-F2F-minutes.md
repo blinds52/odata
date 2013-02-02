@@ -33,30 +33,11 @@ Discussion:
 
 Agenda for Day One approved as published with the above amendements. 
 
-##4 Review of [Action Items](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php) (AI) and Progress
+##4 Review of [Action Items](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php) (AI) and Progress [AIH]
 
-###List of ongoing actions before the meeting
+Context:
+> See the "[List of Open Action Items Before the Meeting][AI_REF]" section in the appendix.
 
-**Retrieval time stamp**: `2013-01-29 21:05 +01:00`.
-
-AI#0005
-: "Come up with a first milestine for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2013-01-31)
-
-AI#0006
-: "Come up with estimate for first milestone for XML data extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2013-01-31)
-
-AI#0007
-: "Come up with estimate for first milestone for JSON data extension" [owner: Susan Malaika] is **Ongoing** (Note: Due 2013-01-31)
-
-AI#0018
-: "Prepare Working Draft 01 (WD01) version of OData Extension for Temporal Data" [owner: Andrew Eisenberg] is **Ongoing**
-
-AI#0019
-: "Prepare Working Draft 01 (WD01) version of OData Extension for XML Data" [owner: Andrew Eisenberg] is **Ongoing**
-
-AI#0020
-: "Prepare Working Draft 01 (WD01) version of OData Extension for JSON Data" [owner: Susan Malaika] is **Ongoing**
-  
 
 ###4.1 Action items due by 2013-01-31 (end of day)
 
@@ -115,14 +96,19 @@ Discussion:
 * All agree, that Stefan will open an issue on this in JIRA.
 * Mike proposes to accept the paper as base document and notes, that the addressed issues are already noted in the document.
 
-**Update**: Issue [ODATA-221](https://tools.oasis-open.org/issues/browse/ODATA-221) has been created with summary "Flatten the message elemtn in the JSON Error Represention (Section 4.18 Representing Errors in a Response)" [OData JSON Format] is **New**.
+**Update**: Issue [ODATA-221](https://tools.oasis-open.org/issues/browse/ODATA-221) has been created with summary "Flatten the message elemtn in the JSON Error Represention (Section 4.18 Representing Errors in a Response)" [component: OData JSON Format].
 
 Hubert: 
 >I **move** to accept the new JSON format document as presented. **Stefan seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
 
-##6 Progress Issues
+##6 Progress Issues (Day One)[IPH_D1]
+
+**Notes**:
+
+* Issues in this section (6) have partly been progressed out of sequence, but have been noted here to better group by components impacted as a service for the reader.
+* There is an "[Index of Issues Processed During the Meeting][IP_REF]" section in the appendix.
 
 ###6.1 OData JSON Format [GM1]
 
@@ -217,17 +203,17 @@ Ralf:
 
 Discussion of motion:
 
-* Mike states, that it also needs to be applied to ATOM, so the issue should be left Open
+* Mike states, that it also needs to be applied to ATOM, so the issue should be not considered fully applied.
 
 Mike: 
->I **move** to amend motion to leave the issue open and note that it's been resolved in json but needs to be resolved in atom.d. **Hubert seconds**.
+>I **move** to amend motion to leave the issue in the resolved state and note that it's been applied in json but needs to be applied in atom. **Hubert seconds**.
 
 **No further discussion**. **No objections**. The **amendment passes**.
 
 **No further discussion**. **No objections**. The **motion passes as amended**.
 
 ODATA-169
-: "Representation of named entities in the service document" [components: OData JSON Format, OData ATOM Format] is **Open** with no objections. 
+: "Representation of named entities in the service document" [components: OData JSON Format, OData ATOM Format] is **Resolved as noted in the motion** with no objections. 
 
 ###6.3 OData ABNF Construction Rules, OData ATOM Format, OData JSON Format, OData Protocol
 
@@ -236,11 +222,9 @@ ODATA-169
 ODATA-96
 : "Need to define semantics, serialization format, etc. for Enums" [components: OData ABNF Construction Rules, OData ATOM Format, OData JSON Format, OData Protocol] is **Resolved**. 
 
-State is now **Resolved**
-
 Discussion:
 
-* Ralf states, that ODATA-96 will remain open, until other formats/work products also have been updated
+* Ralf states, that ODATA-96 will remain in the resolved state, until other formats/work products also have been updated
 
 ODATA-96
 : "Need to define semantics, serialization format, etc. for Enums" [components: OData ABNF Construction Rules, OData ATOM Format, OData JSON Format, OData Protocol] is **Resolved** with no objections. 
@@ -270,14 +254,18 @@ Ralf:
 ODATA-139
 : "New system query option $search for free-text search within an entity set" [components: OData ABNF Construction Rules, OData Protocol, OData URL Conventions] is **Resolved** with no objections. 
 
-**Update**: Issue [ODATA-222](https://tools.oasis-open.org/issues/browse/ODATA-222) has been created with summary "free-text search within a property" [OData URL Conventions] is **New**.
+**Update**: Issue [ODATA-222](https://tools.oasis-open.org/issues/browse/ODATA-222) has been created with summary "free-text search within a property" [component: OData URL Conventions].
 
-**Update**: Issue [ODATA-223](https://tools.oasis-open.org/issues/browse/ODATA-223) has been created with summary "Specify Service behavior for not implemented functionality" [Unknown] is **New**.
+**Update**: Issue [ODATA-223](https://tools.oasis-open.org/issues/browse/ODATA-223) has been created with summary "Specify Service behavior for not implemented functionality" [components: OData ATOM Format, OData Batch Processing Format, OData CSDL, OData Extension for Data Aggregation, OData Extension for JSON Data, OData Extension for Temporal Data, OData Extension for XML Data, OData JSON Format, OData Protocol, OData URL Conventions].
 
 ####6.4.2 [ODATA-3](https://tools.oasis-open.org/issues/browse/ODATA-3)
 
 ODATA-3
 : "Use CQL standard for query instead of odata-specific filter query protocol" [component: OData Protocol] is **New**. 
+
+Discussion:
+
+* Ralf proposes to close this issue since we have resolved ODATA-139 as proposed, which addresses free-text search (conformance level 0).
 
 Ralf: 
 >I **move** to close ODATA-3 without action. **Mike seconds**.
@@ -290,7 +278,7 @@ ODATA-3
 ###6.5 Issues belonging to Annotations and References
 
 Context:
-> Ralf has provided a discussion paper for review on Jan 25, 2013: [CSDL References](https://www.oasis-open.org/committees/download.php/48026/CSDL%20References%202013-01-25.doc)  
+> Ralf has provided a discussion paper for review on Jan 25, 2013: [CSDL References](https://www.oasis-open.org/committees/download.php/48026/CSDL%20References%202013-01-25.doc), which describes an interpretation of the CSDL elements Reference, Using, AnnotationsReference, and the @Extends attribute of the element that allows a number of new use cases, including cross-service navigation, annoting services not owned by the annotation author, and reuse of types and annotations across services.   
 
 Discussion:
 
@@ -303,14 +291,13 @@ Discussion:
 * All agree, that there is intent to build up common vocabularies describing the annotations possible, for eg. helping with capabilities navigation.
 * All agree to go through the issues in the order listed into the document
 
-**Update**: Issue [ODATA-224](https://tools.oasis-open.org/issues/browse/ODATA-224) has been created with summary "Fill out Capabilities sections of an OData Service" [component: OData Protocol] is **New**.
+**Update**: Issue [ODATA-224](https://tools.oasis-open.org/issues/browse/ODATA-224) has been created with summary "Fill out Capabilities sections of an OData Service" [component: OData Protocol].
 
-**Update**: Issue [ODATA-225](https://tools.oasis-open.org/issues/browse/ODATA-225) has been created with summary "Define Functions in Schema; reference in Container using FunctionImport." [component: OData CSDL] is **New**.
+**Update**: Issue [ODATA-225](https://tools.oasis-open.org/issues/browse/ODATA-225) has been created with summary "Define Functions in Schema; reference in Container using FunctionImport." [component: OData CSDL].
 
-**Update**: Issue [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-226) has been created with summary "Clarify that the root of the Path attribute of a <PropertyValue> element is rooted at the containing entity" [component: OData CSDL] is **New**.
+**Update**: Issue [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-226) has been created with summary "Clarify that the root of the Path attribute of a <PropertyValue> element is rooted at the containing entity" [component: OData CSDL].
 
-**Note**:
-> Issues in this section 6.5 have partly been progressed out of sequence, but have been noted here to better group by components impacted as a service for the reader.
+**Update**: The updated version of the presented discussion paper "[CSDL References](https://www.oasis-open.org/committees/download.php/48103/CSDL%20References%202013-01-30.doc)" has been uploaded.
 
 ####6.5.1 OData CSDL
 
@@ -397,6 +384,8 @@ Ralf:
 
 ODATA-205
 : "Merge TypeAnnotation and ValueAnnotation into Annotation" [component: OData CSDL] is **Resolved** with no objections. 
+
+**Update**: The vocabulary drafts for Core, Atom and Measures have been published in SVN (revision 168) in folder [svn:/odata/trunc/spec/vocabularies/](https://tools.oasis-open.org/version-control/svn/odata/trunk/spec/vocabularies/) after the meeting. 
 
 #####6.5.1.7 [ODATA-213](https://tools.oasis-open.org/issues/browse/ODATA-213)
 
@@ -518,7 +507,7 @@ Ralf:
 ODATA-12
 : "create a data type for property names" [component: OData CSDL] is **Resolved** with no objections. 
 
-**Update**: Issue [ODATA-227](https://tools.oasis-open.org/issues/browse/ODATA-227) has been created with summary "Support of symbolic names in annotations" [component: OData CSDL] is **New**.
+**Update**: Issue [ODATA-227](https://tools.oasis-open.org/issues/browse/ODATA-227) has been created with summary "Support of symbolic names in annotations" [component: OData CSDL].
 
 #####6.5.1.15 [ODATA-197](https://tools.oasis-open.org/issues/browse/ODATA-197)
 
@@ -611,8 +600,8 @@ Discussion:
 * Mike mentions the other open question (minor) w.r.t. representation of flattened results in ATOM format, where he chose to indicate the set as an attribute to the id element. It might become a set element, but he just picked this alternative.
 * All agree.
 * Mike suggests to give all members time to go over the document so that maybe tomorrow a motion may lead to acceptance of the proposal.
-* Gerald asks about why the ids invented for flattening are named entryID and not entityID.
-* All agree on entityRef as abetter name, so it is not confused with a key
+* Gerald asks about why the ids invented for flattening are named entryID and not entityID, which starts a discussion on finding a better name.
+* All finally agree on "entityRef" as the name, better describing these references sent in place of Entities for occurences 2 to N, so the information is not confused with a key
 
 **Update**: The document has been split as a result of the discussion. The current revision of the separated part "[Entity References in OData](https://www.oasis-open.org/committees/download.php/48083/Entity%20References%202013-1-31.docx)" has been uploaded by Mike during meeting day two. 
 
@@ -655,10 +644,12 @@ Discussion:
 
 Agenda for Day Two approved as published with the above amendements.
 
-##11 Process Issues (Part 2)
+##11 Process Issues (Day Two)[IPH_D2]
 
-**Note**:
-> Issues in section 11 have partly been progressed out of sequence, but have been noted here to better group by components impacted as a service for the reader.
+**Notes**:
+
+* Issues in this section (11) have partly been progressed out of sequence, but have been noted here to better group by components impacted as a service for the reader.
+* There is an "[Index of Issues Processed During the Meeting][IP_REF]" section in the appendix.
 
 ###11.1 Public Comments
 
@@ -672,7 +663,16 @@ Discussion:
 * All discuss the comment.
 * A JIRA issue for a minor improvement will be created to account for the identified issue and track its resolution.
 
-**Update**: Issue [ODATA-232](https://tools.oasis-open.org/issues/browse/ODATA-232) has been created with summary "Enhance description of normalization procedures (public comment c201301e00001)" [component: OData ABNF Conrstruction Rules] is **New**.
+**Update**: Issue [ODATA-232](https://tools.oasis-open.org/issues/browse/ODATA-232) has been created with summary "Enhance description of normalization procedures (public comment c201301e00001)" [component: OData ABNF Construction Rules].
+
+####11.1.2 [ODATA-232](https://tools.oasis-open.org/issues/browse/ODATA-232)
+
+ODATA-232
+: "Enhance description of normalization procedures (public comment c201301e00001)" [component: OData ABNF Construction Rules] is **New**. 
+
+ODATA-232
+: "Enhance description of normalization procedures (public comment c201301e00001)" [component: OData ABNF Construction Rules] is **Open** with no objections.
+
 
 ###11.2 OData ABNF Construction Rules, OData CSDL, OData Protocol
 
@@ -754,7 +754,7 @@ Stefan:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-233
-: "Change $batch response code from 202 Accepted to 200 OK" [component: OData Protocol] **Resolved** with no objections.
+: "Change $batch response code from 202 Accepted to 200 OK" [component: OData Protocol] is **Resolved** with no objections.
 
 ###11.5 OData CSDL, OData Protocol, OData URL Conventions
 
@@ -800,10 +800,10 @@ ODATA-199
 ####11.7.1 [ODATA-164](https://tools.oasis-open.org/issues/browse/ODATA-164)
 
 ODATA-164
-: "$expand should be allowed to return only ids for already seen objects" [component: OData Extension for Data Aggregation] is **New**. 
+: "Consider syntax and rules around client specifying custom aggregation functions for rollups" [component: OData Extension for Data Aggregation] is **New**. 
 
 ODATA-164
-: "$expand should be allowed to return only ids for already seen objects" [component: OData Extension for Data Aggregation] is **Open** with no objections. 
+: "Consider syntax and rules around client specifying custom aggregation functions for rollups" [component: OData Extension for Data Aggregation] is **Open** with no objections. 
 
 
 ##12 OData Extension for Temporal Data
@@ -846,13 +846,10 @@ Wrap-Up:
 * The plan is to stop all issues not in classes A, B or C from having any impact on the first core version 4.0
 * Also planned is to not have i.e. avoid the need for a second woring draft (WD2).
 * Ram and Stefan will clarify which version targets will be introduced into JIRA to implement the proposal to NOT look at class D issues submitted and opened by the TC after 2013-02-07 w.r.t. target version 4.0
-* Current plan is to alias WD1 (current) onto 4.0 and add 4.1 and 5.0 as additional fix version targets
+* Current plan is to alias WD1 (current) onto 4.0 as V4.0_WD01 and add 4.1 and 5.0 as additional fix version targets (eg. as V4.1_WD01 and V5.0_WD01).
 
-**Update**: 
-> A new action item has been created: 
-
-[AI#0028](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3559)
-: "Introduce fix target versions 4.0, minor and next major into JIRA" [owner: Ram Jeyaraman] is **Ongoing** (Note: Due 2013-02-07)
+**Update**: A new action item has been created: [AI#0028](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3559)
+: "Introduce fix target versions 4.0, minor and next major into JIRA" [owner: Ram Jeyaraman] whith due date 2013-02-07.
 
 ##14 Async discussion
 
@@ -866,7 +863,7 @@ Discussion:
 * Martin walks through the proposal "[Choreography for Asynchrones Requests](https://www.oasis-open.org/committees/download.php/48081/AsyncODataProposal.ppt)"
 * Base is the (current) RFC draft "[Prefer Header for HTTP, draft-snell-http-prefer-18](http://www.rfc-editor.org/internet-drafts/draft-snell-http-prefer-18.txt)", J Snell, 2013-01-07 (Expires: 2013-07-11).
 
-**Update**: Issue [ODATA-233](https://tools.oasis-open.org/issues/browse/ODATA-233) has been created with summary "Change $batch response code from 202 Accepted to 200 OK" [component: OData Protocol] is **New**.
+**Update**: Issue [ODATA-233](https://tools.oasis-open.org/issues/browse/ODATA-233) has been created with summary "Change $batch response code from 202 Accepted to 200 OK" [component: OData Protocol].
 
 
 ##15 OData Extension for Data Aggregation Work Product
@@ -894,6 +891,10 @@ Discussion:
 * Mike suggestst to fix issues and then propose the document accordingly
 * All agree
 
+**Update**: The vocabulary drafts for [Core](https://tools.oasis-open.org/version-control/svn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.xml), [Atom](https://tools.oasis-open.org/version-control/svn/odata/trunk/spec/vocabularies/Org.OData.Atom.V1.xml) and [Measures](https://tools.oasis-open.org/version-control/svn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.xml) have been published in SVN (revision 168) in folder [svn:/odata/trunc/spec/vocabularies/](https://tools.oasis-open.org/version-control/svn/odata/trunk/spec/vocabularies/) after the meeting. 
+
+**Update**: Ralf has suggested a new corresponding JIRA component label "Vocabularies" to associate issues with these work products after the meeting. 
+
 
 ##17 Next Meeting
 
@@ -906,6 +907,79 @@ None.
 ### Face to Face Meeting adjourned on 1705 CET
 
 # Appendices
+
+## List of Open Action Items Before the Meeting [AI_REF]
+
+**Retrieval time stamp**: `2013-01-29 21:05 +01:00`.
+
+AI#0005
+: "Come up with a first milestine for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2013-01-31)
+
+AI#0006
+: "Come up with estimate for first milestone for XML data extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2013-01-31)
+
+AI#0007
+: "Come up with estimate for first milestone for JSON data extension" [owner: Susan Malaika] is **Ongoing** (Note: Due 2013-01-31)
+
+AI#0018
+: "Prepare Working Draft 01 (WD01) version of OData Extension for Temporal Data" [owner: Andrew Eisenberg] is **Ongoing**
+
+AI#0019
+: "Prepare Working Draft 01 (WD01) version of OData Extension for XML Data" [owner: Andrew Eisenberg] is **Ongoing**
+
+AI#0020
+: "Prepare Working Draft 01 (WD01) version of OData Extension for JSON Data" [owner: Susan Malaika] is **Ongoing**
+
+**Note**: The actual action item processing is documented in section [4][AIH] and subsections thereof.
+
+## Index of Issues Processed During the Meeting [IP_REF]
+
+**Note**: The actual issue processing is documented in sections [6][IPH_D1] (for Day One) or [11][IPH_D2] (for Day Two). The below index has two main parts: First come the public comments, second the JIRA issues. Each list of issues is sorted by ascending issue number. Noted are the ID, the summary and the reference to the relevant subsection where the issue progression has been documented:
+
+Public Comments:
+
+* [c201301e00001](https://lists.oasis-open.org/archives/odata-comment/201301/msg00001.html) "Query String parsing in URIs" cf. section [11.1.1][c201301e00001].
+
+JIRA Issues:
+
+* [ODATA-3](https://tools.oasis-open.org/issues/browse/ODATA-3) "Use CQL standard for query instead of odata-specific filter query protocol" cf. section [6.4.2][odata-3].
+* [ODATA-12](https://tools.oasis-open.org/issues/browse/ODATA-12) "create a data type for property names" cf. section [6.5.1.14][odata-12].
+* [ODATA-16](https://tools.oasis-open.org/issues/browse/ODATA-16) "Define an Edm.AnyType to allow functions to apply to entity sets of any entity type" cf. section [6.5.1.12][odata-16].
+* [ODATA-25](https://tools.oasis-open.org/issues/browse/ODATA-25) "Support Obtaining Changes (Deltas) from a result." cf. section [6.5.4.1][odata-25].
+* [ODATA-31](https://tools.oasis-open.org/issues/browse/ODATA-31) "Section 9.1.3: Describe call choreography for 202 Accepted (Async responses)" cf. section [11.4.1][odata-31].
+* [ODATA-33](https://tools.oasis-open.org/issues/browse/ODATA-33) "Allow $filter and $select to refer to annotations as if they were properties" cf. section [6.5.3.1][odata-33].
+* [ODATA-90](https://tools.oasis-open.org/issues/browse/ODATA-90) "Section 2.1: define suffix ';odata=xxx' for application/json and the possible values for xxx" cf. section [6.1.2][odata-90].
+* [ODATA-91](https://tools.oasis-open.org/issues/browse/ODATA-91) "2.1: explicitly state which format the server will return in response to each given set of headers" cf. section [6.1.1][odata-91].
+* [ODATA-93](https://tools.oasis-open.org/issues/browse/ODATA-93) "3.4: add introductory paragraph" cf. section [6.1.3][odata-93].
+* [ODATA-96](https://tools.oasis-open.org/issues/browse/ODATA-96) "Need to define semantics, serialization format, etc. for Enums" cf. section [6.3.1][odata-96].
+* [ODATA-99](https://tools.oasis-open.org/issues/browse/ODATA-99) "3.9 Advertisement for a Function or Action: add example and refer to ABNF rules" cf. section [6.1.4][odata-99].
+* [ODATA-100](https://tools.oasis-open.org/issues/browse/ODATA-100) "5.1 Response Body: explain security reasons leading to the object wrapper" cf. section [6.1.6][odata-100].
+* [ODATA-105](https://tools.oasis-open.org/issues/browse/ODATA-105) "Support instance annotations on errors in JSON" cf. section [6.1.5][odata-105].
+* [ODATA-108](https://tools.oasis-open.org/issues/browse/ODATA-108) "Define rules for the target of an annotation that supports implicit casting of relationships" cf. section [6.5.1.11][odata-108].
+* [ODATA-109](https://tools.oasis-open.org/issues/browse/ODATA-109) "Define rules for specifying annotations within annotations" cf. section [6.5.1.10][odata-109].
+* [ODATA-126](https://tools.oasis-open.org/issues/browse/ODATA-126) "Metadata as an OData service" cf. section [11.5.1][odata-126].
+* [ODATA-139](https://tools.oasis-open.org/issues/browse/ODATA-139) "New system query option $search for free-text search within an entity set" cf. section [6.4.1][odata-139].
+* [ODATA-164](https://tools.oasis-open.org/issues/browse/ODATA-164) "Consider syntax and rules around client specifying custom aggregation functions for rollups" cf. section [11.7.1][odata-164].
+* [ODATA-169](https://tools.oasis-open.org/issues/browse/ODATA-169) "Representation of named entities in the service document" cf. section [6.2.1][odata-169].
+* [ODATA-172](https://tools.oasis-open.org/issues/browse/ODATA-172) "EntitySet may be qualified with namespace or alias and EntityContainer" cf. section [6.5.2.1][odata-172].
+* [ODATA-180](https://tools.oasis-open.org/issues/browse/ODATA-180) "Remove Extends attribute from EntityContainer element" cf. section [6.5.1.5][odata-180].
+* [ODATA-181](https://tools.oasis-open.org/issues/browse/ODATA-181) "Referencing/reusing a model element from a different schema does not require to 'include'" cf. section [6.5.1.4][odata-181].
+* [ODATA-182](https://tools.oasis-open.org/issues/browse/ODATA-182) "Define the term 'model'" cf. section [6.5.1.3][odata-182].
+* [ODATA-193](https://tools.oasis-open.org/issues/browse/ODATA-193) "Allow function imports to return entities from a different service" cf. section [6.5.1.2][odata-193].
+* [ODATA-195](https://tools.oasis-open.org/issues/browse/ODATA-195) "Simplify entity set qualification rules for NavigationPropertyBinding" cf. section [6.5.1.1][odata-195].
+* [ODATA-197](https://tools.oasis-open.org/issues/browse/ODATA-197) "Define standard functions for edm:Apply element" cf. section [6.5.1.15][odata-197].
+* [ODATA-198](https://tools.oasis-open.org/issues/browse/ODATA-198) "Allow Type='Any' and Type='Collection(Any)' for NavigationProperty elements" cf. section [6.5.1.13][odata-198].
+* [ODATA-199](https://tools.oasis-open.org/issues/browse/ODATA-199) "$expand should be allowed to return only ids for already seen objects" cf. section [11.6.1][odata-199].
+* [ODATA-205](https://tools.oasis-open.org/issues/browse/ODATA-205) "Merge TypeAnnotation and ValueAnnotation into Annotation" cf. section [6.5.1.6][odata-205].
+* [ODATA-213](https://tools.oasis-open.org/issues/browse/ODATA-213) "Allow all dynamic expressions of the appropriate type within edm:Collection expressions" cf. section [6.5.1.7][odata-213].
+* [ODATA-225](https://tools.oasis-open.org/issues/browse/ODATA-225) "Define Functions in Schema; reference in Container using FunctionImport." cf. section [6.5.1.8][odata-225].
+* [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-225) "Clarify that the root of the Path attribute of a &lt;PropertyValue&gt; element is rooted at the containing entity" cf. section [6.5.1.9][odata-225].
+* [ODATA-229](https://tools.oasis-open.org/issues/browse/ODATA-229) "Allow annotations to target all model elements" cf. section [11.3.2][odata-229].
+* [ODATA-230](https://tools.oasis-open.org/issues/browse/ODATA-230) "Support use of parameter aliases in $filter and $orderby" cf. section [11.2.1][odata-230].
+* [ODATA-231](https://tools.oasis-open.org/issues/browse/ODATA-231) "Define how to specify enumeration values in annotations" cf. section [11.3.1][odata-231].
+* [ODATA-232](https://tools.oasis-open.org/issues/browse/ODATA-232) "Enhance description of normalization procedures (public comment c201301e00001)" cf. section [11.1.2][odata-232].
+* [ODATA-233](https://tools.oasis-open.org/issues/browse/ODATA-233) "Change $batch response code from 202 Accepted to 200 OK" cf. section [11.4.2][odata-233].
+
 ## Timeline Reference [TL_REF]
   
 Draft timeline for OData core Work Products:
