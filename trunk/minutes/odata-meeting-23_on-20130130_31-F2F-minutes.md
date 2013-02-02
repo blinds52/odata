@@ -1,7 +1,7 @@
 #OData meeting in Z&uuml;rich, Switzerland #23 F2F, Wednesday, 30 Jan 2013, 0900 - 1800 CET and Thursday, 31 Jan 2013, 0900 - 1800 CET
 
 
-**Note**: For explanations of conventions and other formal aspects common to OData TC meeting minutes which are used in this document please cf. "[Formal Aspects of Meeting Minutes](https://www.oasis-open.org/committees/download.php/48078/formal-aspects-meeting-minutes-v1.html)". 
+**Note**: For explanations of conventions and other formal aspects common to OData TC meeting minutes which are used in this document please cf. "[Formal Aspects of Meeting Minutes](https://www.oasis-open.org/committees/download.php/48109/formal-aspects-meeting-minutes-v1.html)". 
 
 #Day One
 
