@@ -278,7 +278,7 @@ ODATA-3
 ###6.5 Issues belonging to Annotations and References
 
 Context:
-> Ralf has provided a discussion paper for review on Jan 25, 2013: [CSDL References](https://www.oasis-open.org/committees/download.php/48026/CSDL%20References%202013-01-25.doc), which describes an interpretation of the CSDL elements Reference, Using, AnnotationsReference, and the @Extends attribute of the element that allows a number of new use cases, including cross-service navigation, annoting services not owned by the annotation author, and reuse of types and annotations across services.   
+> Ralf has provided a discussion paper for review on Jan 25, 2013: [CSDL References (2013-01-25)](https://www.oasis-open.org/committees/download.php/48026/CSDL%20References%202013-01-25.doc), which describes an interpretation of the CSDL elements Reference, Using, AnnotationsReference, and the @Extends attribute of the element that allows a number of new use cases, including cross-service navigation, annoting services not owned by the annotation author, and reuse of types and annotations across services.   
 
 Discussion:
 
@@ -295,7 +295,7 @@ Discussion:
 
 **Update**: Issue [ODATA-225](https://tools.oasis-open.org/issues/browse/ODATA-225) has been created with summary "Define Functions in Schema; reference in Container using FunctionImport." [component: OData CSDL].
 
-**Update**: Issue [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-226) has been created with summary "Clarify that the root of the Path attribute of a <PropertyValue> element is rooted at the containing entity" [component: OData CSDL].
+**Update**: Issue [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-226) has been created with summary "Clarify that the root of the Path attribute of a &lt;PropertyValue&gt; element is rooted at the containing entity" [component: OData CSDL].
 
 **Update**: The updated version of the presented discussion paper "[CSDL References](https://www.oasis-open.org/committees/download.php/48103/CSDL%20References%202013-01-30.doc)" has been uploaded.
 
@@ -413,10 +413,10 @@ Ralf:
 ODATA-225
 : "Define Functions in Schema; reference in Container using FunctionImport." [component: OData CSDL] is **Resolved** with no objections. 
 
-#####6.5.1.9 [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-225)
+#####6.5.1.9 [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-226)
 
 ODATA-226
-: "Clarify that the root of the Path attribute of a <PropertyValue> element is rooted at the containing entity" [component: OData CSDL] is **New**. 
+: "Clarify that the root of the Path attribute of a &lt;PropertyValue&gt; element is rooted at the containing entity" [component: OData CSDL] is **New**. 
 
 Ralf: 
 >I **move** to resolve ODATA-226 as propsed. **Stefan seconds**.
@@ -424,7 +424,7 @@ Ralf:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-226
-: "Clarify that the root of the Path attribute of a <PropertyValue> element is rooted at the containing entity" [component: OData CSDL] is **Resolved** with no objections. 
+: "Clarify that the root of the Path attribute of a &lt;PropertyValue&gt; element is rooted at the containing entity" [component: OData CSDL] is **Resolved** with no objections. 
 
 #####6.5.1.10 [ODATA-109](https://tools.oasis-open.org/issues/browse/ODATA-109)
 
@@ -689,7 +689,7 @@ Mike:
 ODATA-230
 : "Support use of parameter aliases in $filter and $orderby" [components: OData ABNF Construction Rules, OData CSDL, OData Protocol] is **Resolved** with no objections. 
 
-###11.3 OData CSDL
+###11.3 OData CSDL [odatacsdl_11.3]
 
 ####11.3.1 [ODATA-231](https://tools.oasis-open.org/issues/browse/ODATA-231)
 
@@ -697,7 +697,7 @@ ODATA-231
 : "Define how to specify enumeration values in annotations" [component: OData CSDL] is **New**. 
 
 Mike: 
->I **move** we resolve ODATA-231 as proposed by adding an "EnumMember" attribute to the <PropertyValue> element and an <EnumMember> child element for PropertyValue. **Hubert seconds**.
+>I **move** we resolve ODATA-231 as proposed by adding an "EnumMember" attribute to the &lt;PropertyValue&gt; element and an &lt;EnumMember&gt; child element for PropertyValue. **Hubert seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
 
@@ -722,7 +722,7 @@ Ralf:
 ODATA-229
 : "Allow annotations to target all model elements" [component: OData CSDL] is **Resolved** with no objections. 
 
-###11.4 OData Protocol
+###11.4 OData Protocol [odataprotocol_11.4]
 
 ####11.4.1 [ODATA-31](https://tools.oasis-open.org/issues/browse/ODATA-31)
 
@@ -808,7 +808,7 @@ ODATA-164
 
 ##12 OData Extension for Temporal Data
 
-###12.1 Discuss proposal 
+###12.1 Discuss proposal [discussproposal_12.1]
 
 Context:
 > Latest revision from 2012-07-27 "[OData Extension for Temporal Data](https://www.oasis-open.org/committees/download.php/46565/20120727%20OData%20Extension%20for%20Temploral%20Data.pdf)"
@@ -868,7 +868,7 @@ Discussion:
 
 ##15 OData Extension for Data Aggregation Work Product
 
-###15.1 Review and accept the latest draft. 
+###15.1 Review and accept the latest draft. [reviewandacceptthelatestdraft_15.1] 
 
 Context:
 > OData Extension for Data Aggregation Version 1.0 Working Draft 01
@@ -900,7 +900,7 @@ Discussion:
 
 **Note**: Due to resource issues the members agree to meet again by call on 2013-02-07.
 
-##18 AOB 
+##18 AOB [aob_18]
 
 None. 
  
@@ -973,7 +973,7 @@ JIRA Issues:
 * [ODATA-205](https://tools.oasis-open.org/issues/browse/ODATA-205) "Merge TypeAnnotation and ValueAnnotation into Annotation" cf. section [6.5.1.6][odata-205].
 * [ODATA-213](https://tools.oasis-open.org/issues/browse/ODATA-213) "Allow all dynamic expressions of the appropriate type within edm:Collection expressions" cf. section [6.5.1.7][odata-213].
 * [ODATA-225](https://tools.oasis-open.org/issues/browse/ODATA-225) "Define Functions in Schema; reference in Container using FunctionImport." cf. section [6.5.1.8][odata-225].
-* [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-225) "Clarify that the root of the Path attribute of a &lt;PropertyValue&gt; element is rooted at the containing entity" cf. section [6.5.1.9][odata-225].
+* [ODATA-226](https://tools.oasis-open.org/issues/browse/ODATA-226) "Clarify that the root of the Path attribute of a &lt;PropertyValue&gt; element is rooted at the containing entity" cf. section [6.5.1.9][odata-226].
 * [ODATA-229](https://tools.oasis-open.org/issues/browse/ODATA-229) "Allow annotations to target all model elements" cf. section [11.3.2][odata-229].
 * [ODATA-230](https://tools.oasis-open.org/issues/browse/ODATA-230) "Support use of parameter aliases in $filter and $orderby" cf. section [11.2.1][odata-230].
 * [ODATA-231](https://tools.oasis-open.org/issues/browse/ODATA-231) "Define how to specify enumeration values in annotations" cf. section [11.3.1][odata-231].
