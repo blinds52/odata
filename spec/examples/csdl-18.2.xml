@@ -1,87 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="Model1"
-  Alias="Self" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
->
-  <Using Alias="Vocabulary1" Namespace="Vocabulary1" />
-  <Term Name="Caption" Type="Edm.String" DefaultValue="Put Caption Here" />
-  <Term Name="Tags" Type="Collection(String)" />
-  <EntityContainer Name="Model1Container">
-    <EntitySet Name="CustomerSet" EntityType="Model1.Customer" />
-    <EntitySet Name="OrderSet" EntityType="Model1.Order" />
-  </EntityContainer>
-  <Annotations Target="Self.Customer">
-    <Annotation Term="Vocabulary1.EMail">
-      <Null />
-    </Annotation>
-    <Annotation Term="AccountID" Path="AccountNumber" />
-    <Annotation Term="Title" String="Customer Info" />
-  </Annotations>
-  <EntityType Name="Customer">
-    <Key>
-      <PropertyRef Name="CustomerId" />
-    </Key>
-    <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
-    <Property Name="FirstName" Type="Edm.String" Nullable="true" />
-    <Property Name="LastName" Type="Edm.String" Nullable="true" />
-    <Property Name="AccountNumber" Type="Edm.Int32" Nullable="true" />
-    <Property Name="Address" Type="Self.Address" Nullable="false" />
-    <NavigationProperty Name="Orders" Type="Collection(Self.Order)" />
-    <Annotation Term="Vocabulary1.Person">
-      <Record>
-        <PropertyValue Property="DisplayName">
-          <Apply Function="String.Concat">
-            <Path>FirstName</Path>
-            <Path>LastName</Path>
-          </Apply>
-        </PropertyValue>
-      </Record>
-    </Annotation>
-    <Annotation Term="Self.Tags">
-      <Collection>
-        <String>MasterData</String>
-      </Collection>
-    </Annotation>
-  </EntityType>
-  <EntityType Name="Order">
-    <Key>
-      <PropertyRef Name="OrderId" />
-    </Key>
-    <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
-    <Property Name="OrderDate" Type="Edm.Int32" Nullable="true" />
-    <Property Name="Description" Type="Edm.String" Nullable="true" />
-    <NavigationProperty Name="Customer" Type="Self.Customer" Nullable="false" />
-    <NavigationProperty Name="Product" Type="Self.Product" Nullable="false" />
-  </EntityType>
-  <EntityType Name="SalesOrder" BaseType="Self.Order">
-    <Property Name="Paid" Type="Edm.Boolean" Nullable="false" />
-  </EntityType>
-  <EntityType OpenType="true" Name="Product">
-    <Key>
-      <PropertyRef Name="ProductId" />
-    </Key>
-    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
-    <Property Name="Name" Type="Edm.String" Nullable="false" />
-    <Property Name="Description" Type="Edm.String" Nullable="true" />
-    <Property Name="Size" Type="Self.Size" Nullable="true" />
-  </EntityType>
-  <ComplexType Name="Address">
-    <Property Name="Street" Type="Edm.String" Nullable="false" />
-    <Property Name="City" Type="Edm.String" Nullable="false" />
-    <Property Name="State" Type="Edm.String" Nullable="false" />
-    <Property Name="Zip" Type="Edm.String" Nullable="false" />
-    <Property Name="Position" Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
-  </ComplexType>
-  <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
-    <Annotation Term="Org.OData.Measures.V1.Unit" String="Centimeters" />
-  </TypeDefinition>
-  <TypeDefinition Name="Weight" UnderlyingType="Edm.String">
-    <Annotation Term="Org.OData.Measures.V1.Unit" String="Kilograms" />
-  </TypeDefinition>
-  <ComplexType Name="Size">
-    <Property Name="Width" Type="Self.Length" />
-    <Property Name="Depth" Type="Self.Length" />
-    <Property Name="Height" Type="Self.Length" />
-    <Property Name="Weight" Type="Self.Weight" />
-  </ComplexType>
-</Schema>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="4.0">
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1" />
+  <edmx:Reference Url="http://somewhere/Vocabulary/V1" />
+  <edmx:DataServices DataServiceVersion="4.0">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="Model1"
+      Alias="Self"
+    >
+      <Using Alias="Vocabulary1" Namespace="Some.Vocabulary.V1" />
+      <EntityContainer Name="Model1Container">
+        <EntitySet Name="CustomerSet" EntityType="Model1.Customer" />
+        <EntitySet Name="OrderSet" EntityType="Model1.Order" />
+      </EntityContainer>
+      <Annotations Target="Self.Customer">
+        <Annotation Term="Vocabulary1.EMail">
+          <Null />
+        </Annotation>
+        <Annotation Term="AccountID" Path="AccountNumber" />
+        <Annotation Term="Title" String="Customer Info" />
+      </Annotations>
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="CustomerId" />
+        </Key>
+        <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="FirstName" Type="Edm.String" Nullable="true" />
+        <Property Name="LastName" Type="Edm.String" Nullable="true" />
+        <Property Name="AccountNumber" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Address" Type="Self.Address" Nullable="false" />
+        <NavigationProperty Name="Orders" Type="Collection(Self.Order)" />
+        <Annotation Term="Vocabulary1.Person">
+          <Record>
+            <PropertyValue Property="DisplayName">
+              <Apply Function="odata.concat">
+                <Path>FirstName</Path>
+                <Path>LastName</Path>
+              </Apply>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Self.Tags">
+          <Collection>
+            <String>MasterData</String>
+          </Collection>
+        </Annotation>
+      </EntityType>
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="OrderId" />
+        </Key>
+        <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="OrderDate" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="Customer" Type="Self.Customer"
+          Nullable="false" />
+        <NavigationProperty Name="Product" Type="Self.Product"
+          Nullable="false" />
+      </EntityType>
+      <EntityType Name="SalesOrder" BaseType="Self.Order">
+        <Property Name="Paid" Type="Edm.Boolean" Nullable="false" />
+      </EntityType>
+      <EntityType OpenType="true" Name="Product">
+        <Key>
+          <PropertyRef Name="ProductId" />
+        </Key>
+        <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" />
+        <Property Name="Size" Type="Self.Size" Nullable="true" />
+      </EntityType>
+      <ComplexType Name="Address">
+        <Property Name="Street" Type="Edm.String" Nullable="false" />
+        <Property Name="City" Type="Edm.String" Nullable="false" />
+        <Property Name="State" Type="Edm.String" Nullable="false" />
+        <Property Name="Zip" Type="Edm.String" Nullable="false" />
+        <Property Name="Position" Type="Edm.GeographyPoint" Nullable="false"
+          SRID="4326" />
+      </ComplexType>
+      <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
+        <Annotation Term="Org.OData.Measures.V1.Unit" String="Centimeters" />
+      </TypeDefinition>
+      <TypeDefinition Name="Weight" UnderlyingType="Edm.String">
+        <Annotation Term="Org.OData.Measures.V1.Unit" String="Kilograms" />
+      </TypeDefinition>
+      <ComplexType Name="Size">
+        <Property Name="Width" Type="Self.Length" />
+        <Property Name="Depth" Type="Self.Length" />
+        <Property Name="Height" Type="Self.Length" />
+        <Property Name="Weight" Type="Self.Weight" />
+      </ComplexType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
