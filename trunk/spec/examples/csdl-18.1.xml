@@ -2,9 +2,10 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="4.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
 >
-  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1"/>
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1" />
   <edmx:DataServices DataServiceVersion="4.0">
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="ODataDemo">
+      <Using Namespace="Org.OData.Measures.V1" Alias="UoM" />
       <EntityType Name="Product" HasStream="true">
         <Key>
           <PropertyRef Name="ID" />
@@ -16,9 +17,9 @@
         <Property Name="DiscontinuedDate" Type="Edm.Date" Nullable="true" />
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
         <Property Name="Price" Type="Edm.Decimal" Nullable="false">
-          <Annotation Term="Org.OData.Measures.V1.ISOCurrency" Path="Currency"/>
+          <Annotation Term="Org.OData.Measures.V1.ISOCurrency" Path="Currency" />
         </Property>
-        <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="3"/>
+        <Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="3" />
         <NavigationProperty Name="Category" Type="ODataDemo.Category"
           Nullable="false" Partner="Products"
         >
@@ -66,9 +67,12 @@
         <Property Name="ZipCode" Type="Edm.String" Nullable="true" />
         <Property Name="Country" Type="Edm.String" Nullable="true" />
       </ComplexType>
+      <Function Name="ProductsByRating" ReturnType="Collection(ODataDemo.Product)">
+        <Parameter Name="Rating" Type="Edm.Int32" DefaultValue="4" />
+      </Function>
       <EntityContainer Name="DemoService" IsDefaultEntityContainer="true">
         <EntitySet Name="Products" EntityType="ODataDemo.Product">
-          <NavigationPropertyBinding Path="Category" EntitySet="Products" />
+          <NavigationPropertyBinding Path="Category" EntitySet="Categories" />
           <NavigationPropertyBinding Path="Supplier" EntitySet="Suppliers" />
         </EntitySet>
         <EntitySet Name="Categories" EntityType="ODataDemo.Category">
@@ -79,11 +83,7 @@
         </EntitySet>
         <Entity Name="Contoso" Type="Self.Supplier" />
         <EntitySet Name="Countries" EntityType="ODataDemo.Country" />
-        <FunctionImport Name="ProductsByRating" EntitySet="Products"
-          ReturnType="Collection(ODataDemo.Product)"
-        >
-          <Parameter Name="rating" Type="Edm.Int32" DefaultValue="4" />
-        </FunctionImport>
+        <FunctionImport Function="ODataDemo.ProductsByRating" EntitySet="Products" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
