@@ -295,7 +295,7 @@
           <xs:element name="Path" type="edm:TPathExpression" minOccurs="0" />
           <xs:element name="PropertyPath" type="edm:TPathExpression" minOccurs="0" />
           <xs:element name="NavigationPropertyPath" type="edm:TPathExpression" minOccurs="0" />
-          <xs:element name="EnumMember" type="edm:TSimpleIdentifierList" minOccurs="0" />
+          <xs:element name="EnumMember" type="edm:TQualifiedNameList" minOccurs="0" />
           <xs:element name="If" type="edm:TIfExpression" minOccurs="0" />
           <xs:element name="Record" type="edm:TRecordExpression" minOccurs="0" />
           <xs:element name="Collection" type="edm:TCollectionExpression" minOccurs="0" />
@@ -323,7 +323,7 @@
     <xs:attribute name="Path" type="edm:TPathWithTermCast" use="optional" />
     <xs:attribute name="PropertyPath" type="edm:TPathWithTermCast" use="optional" />
     <xs:attribute name="NavigationPropertyPath" type="edm:TPathWithTermCast" use="optional" />
-    <xs:attribute name="EnumMember" type="edm:TSimpleIdentifierList" use="optional" />
+    <xs:attribute name="EnumMember" type="edm:TQualifiedNameList" use="optional" />
   </xs:attributeGroup>
   <xs:complexType name="TStringConstantExpression">
     <xs:simpleContent>
@@ -580,8 +580,8 @@
     <xs:attribute name="IsAlwaysBindable" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TFunctionImportAttributes">
+    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="Function" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="optional" />
     <xs:attribute name="EntitySet" type="edm:TQualifiedName" use="optional" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TTypeAttributes">
@@ -661,6 +661,9 @@
       <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="TQualifiedNameList">
+    <xs:list itemType="edm:TQualifiedName"/>
+  </xs:simpleType>
   <xs:simpleType name="TPath">
     <xs:restriction base="xs:string">
       <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '/' for path segment separation and
@@ -684,9 +687,6 @@
       <!-- The below pattern represents the allowed identifiers in ECMA specification -->
       <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
     </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TSimpleIdentifierList">
-    <xs:list itemType="edm:TSimpleIdentifier"/>
   </xs:simpleType>
   <xs:simpleType name="TPropertyType">
     <xs:union memberTypes="edm:EDMSimpleType edm:TQualifiedName">
