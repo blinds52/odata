@@ -207,6 +207,7 @@ inlinecount = '$inlinecount' EQ ( 'allpages' / 'none' )
 
 select     = '$select' EQ selectItem *( COMMA selectItem )
 selectItem = STAR  
+           / '$ref'
            / allOperationsInContainer 
            / [ qualifiedEntityTypeName "/" ] 
              ( navigationProperty  
@@ -719,7 +720,7 @@ int64 = int64Body [ "L" ]
 int64Body = [ sign ] 1*19DIGIT ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
 string           = SQUOTE *( pchar-no-SQUOTE / SQUOTE-in-string / unencoded ) SQUOTE
-pchar-no-SQUOTE  = unreserved / pct-encoded / other-delims / "$" / "&" / ";" / "=" / ":" / "@" 
+pchar-no-SQUOTE  = unreserved / pct-encoded / other-delims / "$" / "&" / ";" / "=" / ":" / "@" ; also no percent-encoded single quote
 SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal
 
 date     = "date" SQUOTE dateBody SQUOTE
@@ -812,6 +813,7 @@ geometryPrefix  = "geometry" SQUOTE
 ; 7. Punctuation
 ;------------------------------------------------------------------------------
 
+; TODO: SQUOTE must also be normalized before parsing
 unencoded            = DQUOTE / escape / unencoded-no-special
 unencoded-no-special = SP / ":" / "{" / "}" / "[" / "]"
 
