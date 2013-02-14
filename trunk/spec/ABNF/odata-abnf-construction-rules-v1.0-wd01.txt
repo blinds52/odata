@@ -43,13 +43,13 @@ odataRelativeUri = resourcePath [ "?" queryOptions ]
 
 resourcePath = [ containerQualifier ] entitySetName [ collectionNavigation ] 
              / [ containerQualifier ] namedEntity   [ singleNavigation ]
-             / actionCall 
-             / entityColFunctionCall    [ collectionNavigation ] 
-             / entityFunctionCall       [ singleNavigation ] 
-             / complexColFunctionCall   [ collectionPath ] 
-             / complexFunctionCall      [ complexPath ] 
-             / primitiveColFunctionCall [ collectionPath ] 
-             / primitiveFunctionCall    [ singlePath ] 
+             / actionImportCall 
+             / entityColFunctionImportCall    [ collectionNavigation ] 
+             / entityFunctionImportCall       [ singleNavigation ] 
+             / complexColFunctionImportCall   [ collectionPath ] 
+             / complexFunctionImportCall      [ complexPath ] 
+             / primitiveColFunctionImportCall [ collectionPath ] 
+             / primitiveFunctionImportCall    [ singlePath ] 
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
                        ( keyPredicate [ singleNavigation ]
@@ -102,34 +102,37 @@ boundOperation = "/" ( boundActionCall
                      / boundPrimitiveFuncCall    [ singlePath ] 
                      )
 
-actionCall      = [ containerQualifier ] action [ "()" ]
-boundActionCall = actionCall
-                  ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
-                  ; and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
+actionImportCall = [ containerQualifier ] actionImport [ "()" ]
+boundActionCall  = namespace "." action [ "()" ]
+                   ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
+                   ; and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
 
 ; The following boundXxxFuncCall rules have the added restrictions that
 ;  - the function MUST support binding, and 
 ;  - the binding parameter type MUST match the type of resource identified by the 
 ;    URI immediately preceding (to the left) of the boundXxxFuncCall, and
 ;  - the functionParameters MUST NOT include the bindingParameter.
-boundEntityFuncCall       = entityFunctionCall
-boundEntityColFuncCall    = entityColFunctionCall
-boundComplexFuncCall      = complexFunctionCall
-boundComplexColFuncCall   = complexColFunctionCall
-boundPrimitiveFuncCall    = primitiveFunctionCall
-boundPrimitiveColFuncCall = primitiveColFunctionCall
+boundEntityFuncCall       = namespace "." entityFunction       functionParameters
+boundEntityColFuncCall    = namespace "." entityColFunction    functionParameters
+boundComplexFuncCall      = namespace "." complexFunction      functionParameters
+boundComplexColFuncCall   = namespace "." complexColFunction   functionParameters
+boundPrimitiveFuncCall    = namespace "." primitiveFunction    functionParameters
+boundPrimitiveColFuncCall = namespace "." primitiveColFunction functionParameters
 
-entityFunctionCall       = [ containerQualifier ] entityFunction       functionParameters
-entityColFunctionCall    = [ containerQualifier ] entityColFunction    functionParameters
-complexFunctionCall      = [ containerQualifier ] complexFunction      functionParameters
-complexColFunctionCall   = [ containerQualifier ] complexColFunction   functionParameters
-primitiveFunctionCall    = [ containerQualifier ] primitiveFunction    functionParameters
-primitiveColFunctionCall = [ containerQualifier ] primitiveColFunction functionParameters
+entityFunctionImportCall       = [ containerQualifier ] entityFunctionImport       functionParameters
+entityColFunctionImportCall    = [ containerQualifier ] entityColFunctionImport    functionParameters
+complexFunctionImportCall      = [ containerQualifier ] complexFunctionImport      functionParameters
+complexColFunctionImportCall   = [ containerQualifier ] complexColFunctionImport   functionParameters
+primitiveFunctionImportCall    = [ containerQualifier ] primitiveFunctionImport    functionParameters
+primitiveColFunctionImportCall = [ containerQualifier ] primitiveColFunctionImport functionParameters
 
 functionParameters    = "(" [ functionParameter *( COMMA functionParameter ) ] ")"
 functionParameter     = functionParameterName EQ ( parameterAlias / primitiveLiteral )
 functionParameterName = odataIdentifier
 parameterAlias        = "@" odataIdentifier
+
+containerQualifier = namespace "." entityContainer "."
+
 
 ;------------------------------------------------------------------------------
 ; 2. Query Options
@@ -208,7 +211,7 @@ inlinecount = '$inlinecount' EQ ( 'allpages' / 'none' )
 select     = '$select' EQ selectItem *( COMMA selectItem )
 selectItem = STAR  
            / '$ref'
-           / allOperationsInContainer 
+           / allOperationsInSchema 
            / [ qualifiedEntityTypeName "/" ] 
              ( navigationProperty  
              / *( ( complexProperty / complexColProperty ) "/"
@@ -217,16 +220,15 @@ selectItem = STAR
              / qualifiedActionName  
              / qualifiedFunctionName  
              )
-allOperationsInContainer = containerQualifier STAR                 
-containerQualifier       = [ namespace "." ] entityContainer "."
+allOperationsInSchema = namespace "." STAR                 
 
 ; The parameterTypeNames are required to uniquely identify the action or function
 ; only if it has overloads.
-qualifiedActionName   = [ containerQualifier ] action   [ "(" parameterTypeNames ")" ]
-qualifiedFunctionName = [ containerQualifier ] function [ "(" parameterTypeNames ")" ]
+qualifiedActionName   = namespace "." action   [ "(" parameterTypeNames ")" ]
+qualifiedFunctionName = namespace "." function [ "(" parameterTypeNames ")" ]
 
-; The types of all the parameters to the corresponding function import 
-; in the order they are declared in the function import.
+; The types of all the parameters to the corresponding function 
+; in the order they are declared in the function.
 parameterTypeNames = [ parameterTypeName *( COMMA parameterTypeName ) ]
 parameterTypeName  = qualifiedTypeName 
 
@@ -332,7 +334,7 @@ singlePathExpr = "/" boundFunctionExpr
 boundFunctionExpr = functionExpr ; boundFunction segments can only be composed if the type of the    
                                  ; previous segment matches the type of the first function parameter
                                      
-functionExpr = [ containerQualifier ] 
+functionExpr = namespace "."
                ( entityColFunction    functionExprParameters [ collectionNavigationExpr ] 
                / entityFunction       functionExprParameters [ singleNavigationExpr ] 
                / complexColFunction   functionExprParameters [ collectionPathExpr ]
@@ -366,6 +368,7 @@ methodCallExpr = indexOfMethodCallExpr
                / secondMethodCallExpr 
                / secondsMethodCallExpr
                / dateMethodCallExpr 
+               / timeMethodCallExpr 
                / roundMethodCallExpr 
                / floorMethodCallExpr 
                / ceilingMethodCallExpr 
@@ -403,6 +406,7 @@ minutesMethodCallExpr     = 'minutes'     "(" BWS commonExpr BWS ")"
 secondMethodCallExpr      = 'second'      "(" BWS commonExpr BWS ")"
 secondsMethodCallExpr     = 'seconds'     "(" BWS commonExpr BWS ")"
 dateMethodCallExpr        = 'date'        "(" BWS commonExpr BWS ")"
+timeMethodCallExpr        = 'time'        "(" BWS commonExpr BWS ")"
 
 roundMethodCallExpr       = 'round'       "(" BWS commonExpr BWS ")"
 floorMethodCallExpr       = 'floor'       "(" BWS commonExpr BWS ")"
@@ -639,7 +643,8 @@ entityColNavigationProperty = odataIdentifier
 
 entityContainer = odataIdentifier
 
-action = odataIdentifier
+action       = odataIdentifier
+actionImport = odataIdentifier
 
 function = entityFunction 
          / entityColFunction 
@@ -654,6 +659,14 @@ complexFunction      = odataIdentifier
 complexColFunction   = odataIdentifier
 primitiveFunction    = odataIdentifier
 primitiveColFunction = odataIdentifier
+
+entityFunctionImport       = odataIdentifier
+entityColFunctionImport    = odataIdentifier
+complexFunctionImport      = odataIdentifier
+complexColFunctionImport   = odataIdentifier
+primitiveFunctionImport    = odataIdentifier
+primitiveColFunctionImport = odataIdentifier
+
 
 ;------------------------------------------------------------------------------
 ; 6. Literal Data Values
