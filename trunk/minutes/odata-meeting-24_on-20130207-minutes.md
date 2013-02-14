@@ -47,7 +47,7 @@ Discussion:
 ####4.1.1 [AI#0028](https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3559)
 
 AI#0028
-: "Come up with a first milestone for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2013-02-07)
+: "Introduce fix target versions 4.0, minor and next major into JIRA" [owner: Ram Jeyaraman] is **Ongoing** (Note: Due 2013-02-07)
 
 Discussion:
 
@@ -55,7 +55,7 @@ Discussion:
 * Due date will be shifted for one week, due date now set to 2013-02-14. 
 
 AI#0028
-: "Come up with a first milestone for the temporal extension" [owner: Andrew Eisenberg] is **Ongoing** (Note: Due 2013-02-14)
+: "Introduce fix target versions 4.0, minor and next major into JIRA" [owner: Ram Jeyaraman] is **Ongoing** (Note: Due 2013-02-14)
 
 ###4.2 Action items NOT due by 2013-02-07 (end of day) but MAY be ready for closure
 
@@ -288,7 +288,7 @@ Regrets from Martin and Hubert
 
 None. 
  
-### Meeting adjourned on 0900 PT FIXME
+### Meeting adjourned on 0900 PT
 
 # Appendices
 
