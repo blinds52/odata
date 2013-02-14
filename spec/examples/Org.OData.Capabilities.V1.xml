@@ -2,12 +2,9 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="4.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
 >
-  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1" />
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Core" />
   <edmx:DataServices DataServiceVersion="4.0">
-    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Alias="Self"
-      Namespace="Org.OData.Communication.V1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
-    >
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="Org.OData.Communication.V1" Alias="Self">
       <Documentation>
         <Summary>
           The Capabilities vocabulary aims to provide a way for service authors to describe
@@ -76,7 +73,7 @@
             </Summary>
           </Documentation>
         </Property>
-        <Property Name="NonInsertableProperties" Type="Collection(Edm.String)"
+        <Property Name="NonInsertableProperties" Type="Collection(Edm.PropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -85,9 +82,8 @@
               will ignore their values.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
-        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.String)"
+        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -95,7 +91,6 @@
               These navigation properties do not allow InsertLink requests.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
       </ComplexType>
 
@@ -115,7 +110,7 @@
             </Summary>
           </Documentation>
         </Property>
-        <Property Name="NonUpdatableProperties" Type="Collection(Edm.String)"
+        <Property Name="NonUpdatableProperties" Type="Collection(Edm.PropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -125,9 +120,8 @@
               They do not allow UpdateValue and DeleteValue requests.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
-        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.String)"
+        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -135,7 +129,6 @@
               These navigation properties do not allow UpdateLink requests.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
       </ComplexType>
 
@@ -155,7 +148,7 @@
             </Summary>
           </Documentation>
         </Property>
-        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.String)"
+        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -163,19 +156,18 @@
               These navigation properties do not allow DeleteLink requests.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
       </ComplexType>
 
 
-      <Term Name="Countable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="Countable" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Documentation>
           <Summary>Entity set supports /$count path suffix and $inlinecount=allpages
             system query option</Summary>
         </Documentation>
       </Term>
 
-      <Term Name="Queryable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="Queryable" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Documentation>
           <Summary>
             If true, the entity set can be directly queried as a top level set.
@@ -184,25 +176,25 @@
         </Documentation>
       </Term>
 
-      <Term Name="ClientPagable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="ClientPagable" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Documentation>
           <Summary>Entity set supports $top and $skip</Summary>
         </Documentation>
       </Term>
 
-      <Term Name="Expandable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="NavigationProperty">
+      <Term Name="Expandable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
         <Documentation>
           <Summary>Supports $expand system query option</Summary>
         </Documentation>
       </Term>
 
-      <Term Name="Navigable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="NavigationProperty">
+      <Term Name="Navigable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
         <Documentation>
           <Summary>Can be used in resource paths</Summary>
         </Documentation>
       </Term>
 
-      <Term Name="IndexableByKey" Type="Edm.Boolean" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="IndexableByKey" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Documentation>
           <Summary>
             Entities in this set can be addressed by key value(s) according to OData URL conventions
@@ -210,15 +202,15 @@
         </Documentation>
       </Term>
 
-      <Term Name="BatchSupported" Type="Edm.Boolean" DefaultValue="true" AppliesTo="EntityContainer">
+      <Term Name="BatchSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
         <Documentation>
           <Summary>Entity container supports $batch requests</Summary>
         </Documentation>
       </Term>
 
-      <Term Name="QueryFunctions" Type="Collection(Edm.String)">
+      <Term Name="FilterFunctions" Type="Collection(Edm.String)" AppliesTo="EntityContainer EntitySet">
         <Documentation>
-          <Summary>List of supported query functions</Summary>
+          <Summary>List of functions supported in $filter</Summary>
         </Documentation>
       </Term>
 
@@ -237,7 +229,7 @@
             </Summary>
           </Documentation>
         </Property>
-        <Property Name="RequiredProperties" Type="Collection(Edm.String)"
+        <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -246,9 +238,8 @@
               (Properties of derived types are not supported).
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
-        <Property Name="NonFilterableProperties" Type="Collection(Edm.String)"
+        <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -256,7 +247,6 @@
               These properties cannot be used in $filter expressions.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
       </ComplexType>
 
@@ -275,7 +265,7 @@
             </Summary>
           </Documentation>
         </Property>
-        <Property Name="AscendingOnlyProperties" Type="Collection(Edm.String)"
+        <Property Name="AscendingOnlyProperties" Type="Collection(Edm.PropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -283,9 +273,8 @@
               These properties can only be used for sorting in Ascending order.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
-        <Property Name="DescendingOnlyProperties" Type="Collection(Edm.String)"
+        <Property Name="DescendingOnlyProperties" Type="Collection(Edm.PropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -294,7 +283,7 @@
             </Summary>
           </Documentation>
         </Property>
-        <Property Name="UnsortableProperties" Type="Collection(Edm.String)"
+        <Property Name="UnsortableProperties" Type="Collection(Edm.PropertyPath)"
           Nullable="true"
         >
           <Documentation>
@@ -302,7 +291,6 @@
               These properties cannot be used in $orderby expressions.
             </Summary>
           </Documentation>
-          <Annotation Term="Core.IsPropertyPath" />
         </Property>
       </ComplexType>
 

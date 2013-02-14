@@ -2,22 +2,21 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="4.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
 >
-  <edmx:Reference Url="http://tinyurl.com/Org-OData-Measures-V1" />
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Core" />
   <edmx:DataServices DataServiceVersion="4.0">
-    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Alias="Self"
-      Namespace="Org.OData.Communication.V1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/csdl/4.0 ../schemas/csdl.xsd"
-    >
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="Org.OData.Communication.V1" Alias="Self">
       <Documentation>
         <Summary>
           Terms for annotating communication-relevant information inspired by
-          - RFC6350 vCard (http://tools.ietf.org/html/rfc6350)
+          - RFC6350 vCard
+          (http://tools.ietf.org/html/rfc6350)
           - RFC5545 iCalendar (http://tools.ietf.org/html/rfc5545)
-          - RFC5322 Internet Message Format (http://tools.ietf.org/html/rfc5322)
+          - RFC5322 Internet
+          Message Format (http://tools.ietf.org/html/rfc5322)
         </Summary>
       </Documentation>
 
-      <Using Alias="Core" Namespace="OData.Core.V1" />
+      <Using Alias="Core" Namespace="Org.OData.Core.V1" />
 
       <Term Name="Contact" Type="Self.ContactData" AppliesTo="EntityType">
         <Documentation>
@@ -39,7 +38,7 @@
         <Property Name="note" Type="String" Nullable="true" />
         <Property Name="birthDate" Type="DateTimeOffset" Nullable="true" />
         <Property Name="photoUri" Type="String" Nullable="true">
-          <Annotation Term="Core.IsUri" />
+          <Annotation Term="Core.IsURL" />
         </Property>
 
         <Property Name="orgName" Type="String" Nullable="true" />
@@ -48,10 +47,8 @@
         <Property Name="jobTitle" Type="String" Nullable="true" />
 
         <Property Name="addresses" Type="Collection(Self.Address)" Nullable="true" />
-        <Property Name="phoneNumbers" Type="Collection(Self.PhoneNumber)"
-          Nullable="true" />
-        <Property Name="emailAddresses" Type="Collection(Self.EmailAddress)"
-          Nullable="true" />
+        <Property Name="phoneNumbers" Type="Collection(Self.PhoneNumber)" Nullable="true" />
+        <Property Name="emailAddresses" Type="Collection(Self.EmailAddress)" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="Address">
@@ -62,20 +59,17 @@
         <Property Name="country" Type="String" Nullable="true" />
         <Property Name="poBox" Type="String" Nullable="true" />
         <Property Name="formattedAddress" Type="String" Nullable="true" />
-        <Property Name="kind" Type="Collection(Self.ContactInformationKind)"
-          Nullable="true" />
+        <Property Name="kind" Type="Collection(Self.ContactInformationKind)" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="PhoneNumber">
         <Property Name="number" Type="String" />
-        <Property Name="kind" Type="Collection(Self.ContactInformationKind)"
-          Nullable="true" />
+        <Property Name="kind" Type="Collection(Self.ContactInformationKind)" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="EmailAddress">
         <Property Name="address" Type="String" />
-        <Property Name="kind" Type="Collection(Self.ContactInformationKind)"
-          Nullable="true" />
+        <Property Name="kind" Type="Collection(Self.ContactInformationKind)" Nullable="true" />
       </ComplexType>
 
       <EnumType Name="ContactInformationKind">

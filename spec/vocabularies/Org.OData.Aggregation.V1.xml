@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx/4.0" Version="4.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://docs.oasis-open.org/odata/ns/edmx/4.0 ../schemas/edmx.xsd"
+>
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Core" />
+  <edmx:DataServices DataServiceVersion="4.0">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/csdl/4.0" Namespace="Org.OData.Aggregation.V1" Alias="Self">
+      <Documentation>
+        <Summary>The following annotations allow to describe which data in a given entity
+          model can be aggregated, and
+          how.
+        </Summary>
+      </Documentation>
+
+      <Using Namespace="Org.OData.Core.V1" Alias="Core" />
+
+      <!-- Alternative 1 -->
+      <Term Name="AllowsAggregateQueries" Type="Edm.Boolean" AppliesTo="EntitySet">
+        <Documentation>
+          <Summary>
+            This entity set accepts the $aggregate query option
+          </Summary>
+        </Documentation>
+      </Term>
+
+      <Term Name="Aggregatable" Type="Self.AggregatableType" AppliesTo="Property" />
+      <ComplexType Name="AggregatableType">
+        <Property Name="DefaultAggregrationFunction" Type="Edm.String" Nullable="true" />
+        <Property Name="AcceptedAggregrationFunctions" Type="Collection(Edm.String)" Nullable="true" />
+      </ComplexType>
+
+      <Term Name="Groupable" Type="AggregationGroupableType" AppliesTo="Property" />
+      <ComplexType Name="GroupableType">
+        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" />
+      </ComplexType>
+
+
+      <!-- Alternative 2 -->
+      <Term Name="SupportsAggregation" Type="Self.SupportsAggregationType" AppliesTo="EntitySet">
+        <Documentation>
+          <Summary>
+            This entity set supports the $aggregate query option
+          </Summary>
+        </Documentation>
+      </Term>
+
+      <ComplexType Name="SupportsAggregationType">
+        <Documentation>
+          <Summary>
+            AggregatableProperties contains the list of property names that can
+            be used in the $aggregate query
+            option.
+            GroupableProperties contains the list of property names that can be
+            used in the $select query option
+            in conjunction with $aggregate.
+          </Summary>
+        </Documentation>
+        <Property Name="AggregatableProperties" Type="Collection(Self.AggregatableProperty)" />
+        <Property Name="GroupableProperties" Type="Collection(Self.GroupableProperty)" />
+      </ComplexType>
+
+      <ComplexType Name="AggregatableProperty">
+        <Property Name="Name" Type="Edm.PropertyPath" />
+        <Property Name="DefaultAggregrationFunction" Type="String" Nullable="true" />
+        <Property Name="AcceptedAggregrationFunctions" Type="Collection(Edm.String)" Nullable="true" />
+      </ComplexType>
+
+      <ComplexType Name="GroupableProperty">
+        <Property Name="Name" Type="Edm.PropertyPath" />
+        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" />
+      </ComplexType>
+
+    </Schema>
+
+  </edmx:DataServices>
+</edmx:Edmx>
