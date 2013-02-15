@@ -160,6 +160,7 @@
     <Match>Spokesperson</Match>
     <Match>Street</Match>
     <Match>style</Match>
+    <Match>Title</Match>
   </Constraint>
   <Constraint Rule="streamProperty">
     <Match>Thumbnail</Match>
@@ -1066,124 +1067,152 @@
             Rule="commonExpr">
     <Input>time(ReleaseDate)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.23" 
+  <TestCase Name="5.1.1.4.23 - gettotaloffsetminutes" 
             Rule="commonExpr">
-    <Input>now()</Input>
+    <Input>gettotaloffsetminutes(ReleaseDate)</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.24" 
             Rule="commonExpr">
-    <Input>maxdatetime()</Input>
+    <Input>now()</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.25" 
             Rule="commonExpr">
-    <Input>mindatetime()</Input>
+    <Input>maxdatetime()</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.26" 
             Rule="commonExpr">
-    <Input>round(Price)</Input>
+    <Input>mindatetime()</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.27" 
             Rule="commonExpr">
-    <Input>floor(Price)</Input>
+    <Input>round(Price)</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.28" 
             Rule="commonExpr">
+    <Input>floor(Price)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.4.29" 
+            Rule="commonExpr">
     <Input>ceiling(Price)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.29 isof(1)"
+  <TestCase Name="5.1.1.4.30 isof(1)"
             Rule="isofExpr">
     <Input>isof(Model.Customer)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.29 isof(2)" 
+  <TestCase Name="5.1.1.4.30 isof(2)" 
             Rule="isofExpr">
     <Input>isof(Category,Model.Customer)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.30 cast(1)"
+  <TestCase Name="5.1.1.4.31 cast(1)"
             Rule="commonExpr">
     <Input>cast(Model.Customer)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.30 cast(2)" 
+  <TestCase Name="5.1.1.4.31 cast(2)" 
             Rule="commonExpr">
     <Input>cast(Category,Model.Customer)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.30 cast(2)" 
+  <TestCase Name="5.1.1.4.31 cast(2)" 
             Rule="commonExpr">
     <Input>cast(Category,Edm.Boolean)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.4.32 geo.distance" 
+            Rule="commonExpr">
+    <Input>geo.distance(Supplier/Location,Product/Location)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.4.33 geo.intersects" 
+            Rule="boolCommonExpr">
+    <Input>geo.intersects(Supplier/SalesArea,Product/Location)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.4.34 geo.length" 
+            Rule="commonExpr">
+    <Input>geo.length(Line)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.4.34 geo.length" 
+            Rule="commonExpr">
+    <Input>geo.length(geography'SRID=0;LineString(142.1 64.1,3.14 2.78)')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.5 any()"
             Rule="anyExpr">
     <Input>any()</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="anyExpr">
     <Input>any( )</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="anyExpr">
     <Input>any(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="anyExpr">
     <Input>any( lambda : true )</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="commonExpr">
     <Input>Products/any(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any() - requires a path prefix"
+  <TestCase Name="5.1.1.5 any() - requires a path prefix"
             Rule="boolCommonExpr"
             FailAt="3">
     <Input>any()</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="commonExpr">
     <Input>Supplier/Products/any(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="lambdaPredicatePrefixExpr">
     <Input>$it/</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="firstMemberExpr">
     <Input>$it/Completed</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="firstMemberExpr">
     <Input>lambda/Completed</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="commonExpr">
     <Input>Products/any(lambda:lambda/Completed)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x any()"
+  <TestCase Name="5.1.1.5 any()"
             Rule="commonExpr">
     <Input>Products/any(lambda:$it/Completed)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x lambdaPredicateExpr"
+  <TestCase Name="5.1.1.5 lambdaPredicateExpr"
             Rule="boolCommonExpr">
     <Input>lambda/Name eq $it/Name</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x all()" 
+  <TestCase Name="5.1.1.5 all()" 
             Rule="boolCommonExpr">
     <Input>Products/all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x all() - requires path prefix" 
+  <TestCase Name="5.1.1.5 all() - requires path prefix" 
             Rule="boolCommonExpr"
             FailAt="3">
     <Input>all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x all() - must contain a lambda expression" 
+  <TestCase Name="5.1.1.5 all() - must contain a lambda expression" 
             Rule="boolCommonExpr"
             FailAt="13">
     <Input>Products/all()</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x all()" 
+  <TestCase Name="5.1.1.5 all()" 
             Rule="commonExpr">
     <Input>Products/all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.x all()" 
+  <TestCase Name="5.1.1.5 all()" 
             Rule="commonExpr">
     <Input>EmailAddresses/all(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.7 aliases" 
+            Rule="queryOptions">
+    <Input>$filter=substringof(@word,Title)&amp;@word='Black'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.7 aliases" 
+            Rule="queryOptions">
+    <Input>$filter=Title eq @title&amp;@title='Wizard of Oz'</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - single navigation property" 
             Rule="expand">
@@ -1443,26 +1472,6 @@
   <TestCase Name="GeometryPolygon" 
             Rule="geometryPolygon">
     <Input>geometry'SRID=0;Polygon((1 1,1 1),(1 1,2 2,3 3,1 1))'</Input>
-  </TestCase>
-  <TestCase Name="geo.distance" 
-            Rule="commonExpr">
-    <Input>geo.distance(Supplier/Location,Product/Location)</Input>
-  </TestCase>
-  <TestCase Name="geo.intersects" 
-            Rule="boolCommonExpr">
-    <Input>geo.intersects(Supplier/SalesArea,Product/Location)</Input>
-  </TestCase>
-  <TestCase Name="geo.length" 
-            Rule="commonExpr">
-    <Input>geo.length(Line)</Input>
-  </TestCase>
-  <TestCase Name="geo.length" 
-            Rule="commonExpr">
-    <Input>geo.length(geography'SRID=0;LineString(142.1 64.1,3.14 2.78)')</Input>
-  </TestCase>
-  <TestCase Name="totalOffset" 
-            Rule="commonExpr">
-    <Input>gettotaloffsetminutes(ReleaseDate)</Input>
   </TestCase>
   <TestCase Name="Functions in commonExpr" 
             Rule="commonExpr">
