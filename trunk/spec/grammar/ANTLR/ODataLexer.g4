@@ -217,7 +217,7 @@ Minutes_LLC : Minute_LLC 's' ;
 Second_LLC : 'second' ;
 Seconds_LLC : Second_LLC 's' ;
 Date_LLC : 'date' ;
-
+Time_LLC : 'time' ;
 Round_LLC : 'round' ;
 Floor_LLC : 'floor' ;
 Ceiling_LLC : 'ceiling' ;
