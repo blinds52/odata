@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------------
  * data-v1.0-abnf for URI conventions transformed into ANTLRv4 syntax from 
  * https://sdrees@tools.oasis-open.org:443/version-control/svn/odata/ in there
- * /trunk/spec/ABNF/odata-abnf-construction-rules-v1.0-wd01.txt rev 182
- * last modified 2013-02-14 13:31:06 +0000 (from svn info)
+ * /trunk/spec/ABNF/odata-abnf-construction-rules-v1.0-wd01.txt rev 187
+ * last modified 2013-02-15 15:23:03 +0000 (from svn info)
  * ----------------------------------------------------------------------------
  * From the normative ABNF file:
  * This grammar uses the ABNF defined in RFC5234 with one extension: literals
@@ -288,6 +288,7 @@ customValue       : ( Unreserved | PctEncoded | OtherDelims |  SQ | COLON | AT_S
 
 // TODO: is a boolCommonExpr also a commonExpr? To e.g. sort by Boolean?
 commonExpr : ( primitiveLiteral
+             | parameterAlias
              | firstMemberExpr
              | functionExpr
              | negateExpr 
