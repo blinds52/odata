@@ -1,5 +1,8 @@
 /* ----------------------------------------------------------------------------
- * data-v1.0-abnf for URI conventions transformed into ANTLRv4 syntax
+ * data-v1.0-abnf for URI conventions transformed into ANTLRv4 syntax from 
+ * https://sdrees@tools.oasis-open.org:443/version-control/svn/odata/ in there
+ * /trunk/spec/ABNF/odata-abnf-construction-rules-v1.0-wd01.txt rev 182
+ * last modified 2013-02-14 13:31:06 +0000 (from svn info)
  * ----------------------------------------------------------------------------
  * From the normative ABNF file:
  * This grammar uses the ABNF defined in RFC5234 with one extension: literals
@@ -63,13 +66,13 @@ odataRelativeUri : resourcePath ( QUESTION queryOptions )?;
  */
 resourcePath : ( containerQualifier )? entitySetName ( collectionNavigation )? 
              | ( containerQualifier )? namedEntity   ( singleNavigation )?
-             | actionCall 
-             | entityColFunctionCall    ( collectionNavigation )? 
-             | entityFunctionCall       ( singleNavigation )? 
-             | complexColFunctionCall   ( collectionPath )? 
-             | complexFunctionCall      ( complexPath )? 
-             | primitiveColFunctionCall ( collectionPath )? 
-             | primitiveFunctionCall    ( singlePath )? ;
+             | actionImportCall 
+             | entityColFunctionImportCall    ( collectionNavigation )? 
+             | entityFunctionImportCall       ( singleNavigation )? 
+             | complexColFunctionImportCall   ( collectionPath )? 
+             | complexFunctionImportCall      ( complexPath )? 
+             | primitiveColFunctionImportCall ( collectionPath )? 
+             | primitiveFunctionImportCall    ( singlePath )? ;
 
 collectionNavigation : ( SLASH qualifiedEntityTypeName )?
                        ( keyPredicate ( singleNavigation )?
@@ -122,9 +125,9 @@ boundOperation : SLASH ( boundActionCall
                      | boundPrimitiveFuncCall    ( singlePath )? 
                      );
 
-actionCall      : ( containerQualifier )? action ( OP CP )?;
-// COMMENT_ANTLR: Case insensitive DQuotes around empty parenthesis pair. Why?
-boundActionCall : actionCall;
+// COMMENT_ANTLR: DQ not SQ around empty parenthesis pairs and dot. Why?
+actionImportCall : ( containerQualifier )? actionImport ( OP CP )? ;
+boundActionCall  : namespace DOT action ( OP CP )? ;
                   // with the added restriction that the binding parameter MUST be either an entity or collection of entities
                   // and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
 
@@ -133,24 +136,27 @@ boundActionCall : actionCall;
 //  - the binding parameter type MUST match the type of resource identified by the 
 //    URI immediately preceding (to the left) of the boundXxxFuncCall, and
 //  - the functionParameters MUST NOT include the bindingParameter.
-boundEntityFuncCall       : entityFunctionCall;
-boundEntityColFuncCall    : entityColFunctionCall;
-boundComplexFuncCall      : complexFunctionCall;
-boundComplexColFuncCall   : complexColFunctionCall;
-boundPrimitiveFuncCall    : primitiveFunctionCall;
-boundPrimitiveColFuncCall : primitiveColFunctionCall;
+boundEntityFuncCall       : namespace DOT entityFunction       functionParameters ;
+boundEntityColFuncCall    : namespace DOT entityColFunction    functionParameters ;
+boundComplexFuncCall      : namespace DOT complexFunction      functionParameters ;
+boundComplexColFuncCall   : namespace DOT complexColFunction   functionParameters ;
+boundPrimitiveFuncCall    : namespace DOT primitiveFunction    functionParameters ;
+boundPrimitiveColFuncCall : namespace DOT primitiveColFunction functionParameters ;
 
-entityFunctionCall       : ( containerQualifier )? entityFunction       functionParameters;
-entityColFunctionCall    : ( containerQualifier )? entityColFunction    functionParameters;
-complexFunctionCall      : ( containerQualifier )? complexFunction      functionParameters;
-complexColFunctionCall   : ( containerQualifier )? complexColFunction   functionParameters;
-primitiveFunctionCall    : ( containerQualifier )? primitiveFunction    functionParameters;
-primitiveColFunctionCall : ( containerQualifier )? primitiveColFunction functionParameters;
+entityFunctionImportCall       : ( containerQualifier )? entityFunctionImport       functionParameters ;
+entityColFunctionImportCall    : ( containerQualifier )? entityColFunctionImport    functionParameters ;
+complexFunctionImportCall      : ( containerQualifier )? complexFunctionImport      functionParameters ;
+complexColFunctionImportCall   : ( containerQualifier )? complexColFunctionImport   functionParameters ;
+primitiveFunctionImportCall    : ( containerQualifier )? primitiveFunctionImport    functionParameters ;
+primitiveColFunctionImportCall : ( containerQualifier )? primitiveColFunctionImport functionParameters ;
 
-functionParameters    : OP ( functionParameter ( COMMA functionParameter )* )? CP;
-functionParameter     : functionParameterName EQ ( parameterAlias | primitiveLiteral );
-functionParameterName : odataIdentifier;
-parameterAlias        : AT_SIGN odataIdentifier;
+functionParameters    : OP ( functionParameter ( COMMA functionParameter )* )? CP ;
+functionParameter     : functionParameterName EQ ( parameterAlias | primitiveLiteral ) ;
+functionParameterName : odataIdentifier ;
+parameterAlias        : AT_SIGN odataIdentifier ;
+
+containerQualifier : namespace DOT entityContainer DOT ;
+
 /* ----------------------------------------------------------------------------
  * 2. Query Options
  * ----------------------------------------------------------------------------
@@ -223,14 +229,15 @@ format : ODataSignal_FORMAT EQ
          | Json_LLC 
          | Xml_LLC
          | ( pChar | SLASH )+ // <a data service specific value indicating a
-         );                 // format specific to the specific data service> or
-                            // <An IANA-defined [IANA-MMT] content type>
+         ) ;                  // format specific to the specific data service> or
+                              // <An IANA-defined [IANA-MMT] content type>
                           
-inlinecount : ODataSignal_INLINECOUNT EQ ( AllPages_LLC | None_LLC );
+inlinecount : ODataSignal_INLINECOUNT EQ ( AllPages_LLC | None_LLC ) ;
 
-select     : ODataSignal_SELECT EQ selectItem ( COMMA selectItem )*;
+select     : ODataSignal_SELECT EQ selectItem ( COMMA selectItem )* ;
 selectItem : STAR  
-           | allOperationsInContainer 
+           | '$ref'
+           | allOperationsInSchema 
            | ( qualifiedEntityTypeName SLASH )? 
              ( navigationProperty  
              | ( ( complexProperty | complexColProperty ) SLASH
@@ -238,19 +245,19 @@ selectItem : STAR
                 )* property 
              | qualifiedActionName  
              | qualifiedFunctionName  
-             );
-allOperationsInContainer : containerQualifier STAR;              
-containerQualifier       : ( namespace DOT )? entityContainer DOT;
+             ) ;
+
+allOperationsInSchema : namespace DOT STAR ;
 
 // The parameterTypeNames are required to uniquely identify the action or function
 // only if it has overloads.
-qualifiedActionName   : ( containerQualifier )? action   ( OP parameterTypeNames CP )?;
-qualifiedFunctionName : ( containerQualifier )? function ( OP parameterTypeNames CP )?;
+qualifiedActionName   : namespace "." action ( OP parameterTypeNames CP )? ;
+qualifiedFunctionName : namespace "." function ( OP parameterTypeNames CP )? ;
 
-// The types of all the parameters to the corresponding function import 
-// in the order they are declared in the function import.
-parameterTypeNames : ( parameterTypeName ( COMMA parameterTypeName )* )?;
-parameterTypeName  : qualifiedTypeName; 
+// The types of all the parameters to the corresponding function 
+// in the order they are declared in the function.
+parameterTypeNames : ( parameterTypeName ( COMMA parameterTypeName )* )? ;
+parameterTypeName  : qualifiedTypeName ; 
 
 skiptoken : ODataSignal_SKIPTOKEN EQ 
             ( Unreserved | PctEncoded | OtherDelims |  SQ | COLON | AT_SIGN | DOLLAR | EQ )+; // everything except "&" and ";"
@@ -350,26 +357,27 @@ complexPathExpr : SLASH ( qualifiedComplexTypeName SLASH )?
                   | boundFunctionExpr
                   );
 
-singlePathExpr : SLASH boundFunctionExpr;
+singlePathExpr : SLASH boundFunctionExpr ;
 
-boundFunctionExpr : functionExpr; // boundFunction segments can only be composed if the type of the    
-                                  // previous segment matches the type of the first function parameter
+boundFunctionExpr : functionExpr ; // boundFunction segments can only be composed if the type of the    
+                                   // previous segment matches the type of the first function parameter
                                      
-functionExpr : ( containerQualifier )? 
+functionExpr : namespace DOT  
                ( entityColFunction    functionExprParameters ( collectionNavigationExpr )? 
                | entityFunction       functionExprParameters ( singleNavigationExpr )? 
                | complexColFunction   functionExprParameters ( collectionPathExpr )?
                | complexFunction      functionExprParameters ( complexPathExpr )?
                | primitiveColFunction functionExprParameters ( collectionPathExpr )? 
                | primitiveFunction    functionExprParameters ( singlePathExpr )? 
-               );
+               ) 
+             ;
 
-functionExprParameters : OP ( functionExprParameter ( COMMA functionExprParameter )* )? CP;
-functionExprParameter  : functionParameterName EQ ( parameterValue | firstMemberExpr );
+functionExprParameters : OP ( functionExprParameter ( COMMA functionExprParameter )* )? CP ;
+functionExprParameter  : functionParameterName EQ ( parameterValue | firstMemberExpr ) ;
 
-anyExpr : Any_LLC OP ( XWS )* ( lambdaVariableExpr  ( XWS )* COLON  ( XWS )* lambdaPredicateExpr )?  ( XWS )* CP;
-allExpr : All_LLC OP  ( XWS )*   lambdaVariableExpr  ( XWS )* COLON  ( XWS )* lambdaPredicateExpr    ( XWS )* CP;
-lambdaPredicateExpr : boolCommonExpr; // containing at least one lambdaPredicatePrefixExpr
+anyExpr : Any_LLC OP ( XWS )* ( lambdaVariableExpr  ( XWS )* COLON  ( XWS )* lambdaPredicateExpr )?  ( XWS )* CP ;
+allExpr : All_LLC OP  ( XWS )*   lambdaVariableExpr  ( XWS )* COLON  ( XWS )* lambdaPredicateExpr    ( XWS )* CP ;
+lambdaPredicateExpr : boolCommonExpr ; // containing at least one lambdaPredicatePrefixExpr
 
 methodCallExpr : indexOfMethodCallExpr 
                | toLowerMethodCallExpr 
@@ -388,6 +396,7 @@ methodCallExpr : indexOfMethodCallExpr
                | minutesMethodCallExpr 
                | secondMethodCallExpr 
                | secondsMethodCallExpr
+               | timeMethodCallExpr
                | dateMethodCallExpr 
                | roundMethodCallExpr 
                | floorMethodCallExpr 
@@ -410,64 +419,65 @@ endsWithMethodCallExpr    : EndsWith_LLC    OP  ( XWS )* commonExpr  ( XWS )* CO
 lengthMethodCallExpr      : Length_LLC      OP  ( XWS )* commonExpr  ( XWS )* CP;
 indexOfMethodCallExpr     : IndexOf_LLC     OP  ( XWS )* commonExpr  ( XWS )* COMMA  ( XWS )* commonExpr  ( XWS )* CP;
 substringMethodCallExpr   : Substring_LLC   OP  ( XWS )* commonExpr  ( XWS )* COMMA  ( XWS )* commonExpr (  ( XWS )* COMMA  ( XWS )* commonExpr  ( XWS )* )? CP;
-toLowerMethodCallExpr     : ToLower_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP;
-toUpperMethodCallExpr     : ToUpper_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP;
-trimMethodCallExpr        : Trim_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP;
+toLowerMethodCallExpr     : ToLower_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP ;
+toUpperMethodCallExpr     : ToUpper_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP ;
+trimMethodCallExpr        : Trim_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP ;
 concatMethodCallExpr      : Concat_LLC      OP  ( XWS )* commonExpr  ( XWS )* COMMA  ( XWS )* commonExpr  ( XWS )* CP;
 
-yearMethodCallExpr        : Year_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP;
-monthMethodCallExpr       : Month_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP;
-dayMethodCallExpr         : Day_LLC         OP  ( XWS )* commonExpr  ( XWS )* CP;
-daysMethodCallExpr        : Days_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP;
-hourMethodCallExpr        : Hour_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP;
-hoursMethodCallExpr       : Hours_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP;
-minuteMethodCallExpr      : Minute_LLC      OP  ( XWS )* commonExpr  ( XWS )* CP;
-minutesMethodCallExpr     : Minutes_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP;
-secondMethodCallExpr      : Second_LLC      OP  ( XWS )* commonExpr  ( XWS )* CP;
-secondsMethodCallExpr     : Seconds_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP;
-dateMethodCallExpr        : Date_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP;
+yearMethodCallExpr        : Year_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP ;
+monthMethodCallExpr       : Month_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP ;
+dayMethodCallExpr         : Day_LLC         OP  ( XWS )* commonExpr  ( XWS )* CP ;
+daysMethodCallExpr        : Days_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP ;
+hourMethodCallExpr        : Hour_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP ;
+hoursMethodCallExpr       : Hours_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP ;
+minuteMethodCallExpr      : Minute_LLC      OP  ( XWS )* commonExpr  ( XWS )* CP ;
+minutesMethodCallExpr     : Minutes_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP ;
+secondMethodCallExpr      : Second_LLC      OP  ( XWS )* commonExpr  ( XWS )* CP ;
+secondsMethodCallExpr     : Seconds_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP ;
+timeMethodCallExpr        : Time_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP ;
+dateMethodCallExpr        : Date_LLC        OP  ( XWS )* commonExpr  ( XWS )* CP ;
 
-roundMethodCallExpr       : Round_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP;
-floorMethodCallExpr       : Floor_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP;
-ceilingMethodCallExpr     : Ceiling_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP;
+roundMethodCallExpr       : Round_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP ;
+floorMethodCallExpr       : Floor_LLC       OP  ( XWS )* commonExpr  ( XWS )* CP ;
+ceilingMethodCallExpr     : Ceiling_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP ;
 
-getTotalOffsetMinutesExpr : GetTotalOffsetMinutes_LLC OP  ( XWS )* commonExpr  ( XWS )* CP; 
+getTotalOffsetMinutesExpr : GetTotalOffsetMinutes_LLC OP  ( XWS )* commonExpr  ( XWS )* CP ; 
 
 distanceMethodCallExpr    : GeoDotDistance_LLC   OP  ( XWS )* commonExpr  ( XWS )* COMMA  ( XWS )* commonExpr  ( XWS )* CP;
 geoLengthMethodCallExpr   : GeoLength_LLC     OP  ( XWS )* commonExpr  ( XWS )* CP;
 intersectsMethodCallExpr  : GeoDotIntersects_LLC OP  ( XWS )* commonExpr  ( XWS )* COMMA  ( XWS )* commonExpr  ( XWS )* CP;
 
-minDateTimeExpr : MinDateTime_LLC OP  ( XWS )* CP;
-maxDateTimeExpr : MaxDateTime_LLC OP  ( XWS )* CP;
-nowDateTimeExpr : Now_LLC OP  ( XWS )* CP;
+minDateTimeExpr : MinDateTime_LLC OP  ( XWS )* CP ;
+maxDateTimeExpr : MaxDateTime_LLC OP  ( XWS )* CP ;
+nowDateTimeExpr : Now_LLC OP  ( XWS )* CP ;
 
-boolParenExpr : OP  ( XWS )* boolCommonExpr  ( XWS )* CP;
-parenExpr     : OP  ( XWS )* commonExpr      ( XWS )* CP;
+boolParenExpr : OP  ( XWS )* boolCommonExpr  ( XWS )* CP ;
+parenExpr     : OP  ( XWS )* commonExpr      ( XWS )* CP ;
 
-andExpr : XWS And_LLC XWS boolCommonExpr;
-orExpr  : XWS Or_LLC  XWS boolCommonExpr;
+andExpr : XWS And_LLC XWS boolCommonExpr ;
+orExpr  : XWS Or_LLC  XWS boolCommonExpr ;
 
-eqExpr : XWS Eq_LLC XWS commonExpr;     
-neExpr : XWS Ne_LLC XWS commonExpr;
-ltExpr : XWS Lt_LLC XWS commonExpr;
-leExpr : XWS Le_LLC XWS commonExpr;
-gtExpr : XWS Gt_LLC XWS commonExpr;
-geExpr : XWS Ge_LLC XWS commonExpr;
+eqExpr : XWS Eq_LLC XWS commonExpr ;     
+neExpr : XWS Ne_LLC XWS commonExpr ;
+ltExpr : XWS Lt_LLC XWS commonExpr ;
+leExpr : XWS Le_LLC XWS commonExpr ;
+gtExpr : XWS Gt_LLC XWS commonExpr ;
+geExpr : XWS Ge_LLC XWS commonExpr ;
 
-hasExpr : XWS Has_LLC XWS commonExpr;
+hasExpr : XWS Has_LLC XWS commonExpr ;
 
-addExpr : XWS Add_LLC XWS commonExpr;
-subExpr : XWS Sub_LLC XWS commonExpr;
-mulExpr : XWS Mul_LLC XWS commonExpr;
-divExpr : XWS Div_LLC XWS commonExpr;
-modExpr : XWS Mod_LLC XWS commonExpr;
+addExpr : XWS Add_LLC XWS commonExpr ;
+subExpr : XWS Sub_LLC XWS commonExpr ;
+mulExpr : XWS Mul_LLC XWS commonExpr ;
+divExpr : XWS Div_LLC XWS commonExpr ;
+modExpr : XWS Mod_LLC XWS commonExpr ;
 
-negateExpr : MINUS  ( XWS )* commonExpr;
+negateExpr : MINUS  ( XWS )* commonExpr ;
 
-notExpr : Not_LLC XWS boolCommonExpr;
+notExpr : Not_LLC XWS boolCommonExpr ;
 
-isofExpr : IsOf_LLC OP  ( XWS )* ( commonExpr  ( XWS )* COMMA  ( XWS )* )? qualifiedTypeName  ( XWS )* CP;
-castExpr : Cast_LLC OP  ( XWS )* ( commonExpr  ( XWS )* COMMA  ( XWS )* )? qualifiedTypeName  ( XWS )* CP;
+isofExpr : IsOf_LLC OP  ( XWS )* ( commonExpr  ( XWS )* COMMA  ( XWS )* )? qualifiedTypeName  ( XWS )* CP ;
+castExpr : Cast_LLC OP  ( XWS )* ( commonExpr  ( XWS )* COMMA  ( XWS )* )? qualifiedTypeName  ( XWS )* CP ;
 /* ----------------------------------------------------------------------------
  * 4. JSON format for function and action parameters
  * ----------------------------------------------------------------------------
@@ -477,7 +487,8 @@ castExpr : Cast_LLC OP  ( XWS )* ( commonExpr  ( XWS )* COMMA  ( XWS )* )? quali
 
 complexColInUri : BeginArray 
                   ( complexInUri ( ValueSeparator complexInUri )* )? 
-                  EndArray;
+                  EndArray
+                ;
                   
 complexInUri : BeginObject
                ( ( complexTypeMetadataInUri  
@@ -666,21 +677,30 @@ entityColNavigationProperty : odataIdentifier;
 
 entityContainer : odataIdentifier;
 
-action : odataIdentifier;
+action : odataIdentifier ;
+actionImport : odataIdentifier ;
 
 function : entityFunction 
          | entityColFunction 
          | complexFunction 
          | complexColFunction 
          | primitiveFunction 
-         | primitiveColFunction;
+         | primitiveColFunction
+         ;
          
-entityFunction       : odataIdentifier;
-entityColFunction    : odataIdentifier;
-complexFunction      : odataIdentifier;
-complexColFunction   : odataIdentifier;
-primitiveFunction    : odataIdentifier;
-primitiveColFunction : odataIdentifier;
+entityFunction       : odataIdentifier ;
+entityColFunction    : odataIdentifier ;
+complexFunction      : odataIdentifier ;
+complexColFunction   : odataIdentifier ;
+primitiveFunction    : odataIdentifier ;
+primitiveColFunction : odataIdentifier ;
+
+entityFunctionImport       : odataIdentifier ;
+entityColFunctionImport    : odataIdentifier ;
+complexFunctionImport      : odataIdentifier ;
+complexColFunctionImport   : odataIdentifier ;
+primitiveFunctionImport    : odataIdentifier ;
+primitiveColFunctionImport : odataIdentifier ;
 
 /* ----------------------------------------------------------------------------
  * 6. Literal Data Values
@@ -701,7 +721,7 @@ primitiveLiteral : null_symbol
                  | dateTimeOffset 
                  | duration
                  | guid 
-                 | string 
+                 | aString 
                  | timeOfDay 
                  | boolean_symbol 
                  | enum_symbol
@@ -747,8 +767,17 @@ int32 : (SIGN)? ( DIGIT10 )+; // numbers in the range from -2147483648 to 214748
 int64 : int64Body (I64_POSTFIX)?;
 int64Body : (SIGN)? ( DIGIT19 )+; // numbers in the range from -9223372036854775808 to 9223372036854775807
 
-string           : SQ ( pCharNoSingleQuote | SingleQuoteEscapedInString | Unencoded )* SQ;
-pCharNoSingleQuote  : Unreserved | PctEncoded | OtherDelims | DOLLAR | AMPERSAND | SEMI | EQ | COLON | AT_SIGN; 
+aString           : SQ ( pCharNoSingleQuote | SingleQuoteEscapedInString | Unencoded )* SQ;
+pCharNoSingleQuote  : Unreserved 
+                    | PctEncoded 
+                    | OtherDelims 
+                    | DOLLAR 
+                    | AMPERSAND 
+                    | SEMI 
+                    | EQ 
+                    | COLON 
+                    | AT_SIGN 
+                    ; // also no percent-encoded single quote
 SingleQuoteEscapedInString : SQ SQ;  // two quotes represent one within string literal
 
 date     : Date_LAC SQ dateBody SQ;
@@ -892,7 +921,7 @@ OtherDelims  : EXCLAMATION | OP | CP | STAR | PLUS | COMMA;
  * 7. Punctuation
  * ----------------------------------------------------------------------------
  */
-
+// TODO: SQUOTE ie. SQ must also be normalized before parsing
 // see lexer grammar.
 
 /* ----------------------------------------------------------------------------
