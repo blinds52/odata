@@ -602,7 +602,7 @@ Mike:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-202
-: "Custom Mapping to Atom Elements not defined" [component: ATOM Format] is **Proposed as noted in the motion** with no objections.
+: "Custom Mapping to Atom Elements not defined" [component: ATOM Format] is **Resolved as noted in the motion** with no objections.
 
 
 ####5.2.2 OData Atom, OData JSON
@@ -618,7 +618,7 @@ Ralf:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-212
-: "Define request body format for Actions in Atom and JSON format specifications" [components: JSON Format, ATOM Format, Protocol] is **Proposed** with no objections.
+: "Define request body format for Actions in Atom and JSON format specifications" [components: JSON Format, ATOM Format, Protocol] is **Resolved** with no objections.
 
 ####5.2.2.2 [ODATA-221](https://tools.oasis-open.org/issues/browse/ODATA-221)
 
@@ -635,7 +635,7 @@ Stefan:
 **No further discussion**. **No objections**. The **motion passes**.
 
 ODATA-221
-: "Flatten the message element in the JSON Error Represention (Section 4.18 Representing Errors in a Response)" [component: JSON Format] is **Proposed as noted in the motion** with no objections.
+: "Flatten the message element in the JSON Error Represention (Section 4.18 Representing Errors in a Response)" [component: JSON Format] is **Resolved as noted in the motion** with no objections.
  
 ######5.2.2.2.1 End of Issue Processing [eoip]
 
