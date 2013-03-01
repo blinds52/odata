@@ -8,8 +8,8 @@
   <metadata:function metadata="#DemoService.GetTopProducts"
     target="http://services.odata.org/OData/OData.svc/Categories(0)/GetTopProducts()" title="GetTopProducts" />
 
-  <metadata:annotation term="UoM.ISOCurrency">USD</metadata:annotation>
-  <metadata:annotation term="com.contoso.PersonalInfo.PhoneNumbers" type="Collection(Edm.String)">
+  <metadata:annotation term="UoM.ISOCurrency" metadata:null="true" />
+  <metadata:annotation term="com.contoso.PersonalInfo.PhoneNumbers" metadata:type="Collection(Edm.String)">
     <data:element>
       (203)555-1718
     </data:element>
@@ -17,7 +17,7 @@
       (203)555-1719
     </data:element>
   </metadata:annotation>
-  <metadata:annotation term="com.contoso.Locations.Address" type="Locations.Address">
+  <metadata:annotation term="com.contoso.Locations.Address" metadata:type="Locations.Address">
     <data:StreetAddress>Obere Str. 578</data:StreetAddress>
     <data:City>Toronto</data:City>
     <data:Region metadata:null="true" />
@@ -26,6 +26,24 @@
   </metadata:annotation>
 
   <metadata:entity-ref ref="http://services.odata.org/OData/OData.svc/Orders(10643)" />
-  <!-- TODO: can entity references have navigation links with inlined feeds? -->
+
+  <metadata:link-entry source="http://DeltaService/Customers('BOTTM')" relationship="Orders"
+    target="http://DeltaService/Orders(10645)" when="2011-02-16T01:00:25Z" />
+
+  <metadata:link-entry source="http://DeltaService/Customers('BOTTM')" relationship="Orders"
+    target="http://DeltaService/Orders(10645)" />
+
+  <metadata:deleted-link-entry source="http://DeltaService/Customers('ALFKI')" relationship="Orders"
+    target="http://DeltaService/Orders(10643)" when="2011-02-16T01:00:25Z" />
+
+  <metadata:deleted-link-entry source="http://DeltaService/Customers('ALFKI')" relationship="Orders"
+    target="http://DeltaService/Orders(10643)" />
+
+  <!-- TODO: this is cheating - create schema for atom-tombstone and put example here -->
+  <author metadata:reason="changed" />
+  <author metadata:reason="deleted" />
+
+  <!-- TODO: this is cheating - create schema for AtomPub and add service document example (wouldn't hurt having one in the spec) -->
+  <metadata:entity title="Contoso" href="Contoso" />
 
 </feed>
