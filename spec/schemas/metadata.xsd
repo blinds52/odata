@@ -18,7 +18,7 @@
       <xs:choice minOccurs="1" maxOccurs="unbounded">
         <!-- TODO: can we make this less generous, so that e.g. metadata:type and metadata:null attributes are validated? -->
         <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" />
-        <xs:element name="annotation" type="metadata:TAnnotation" />
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:choice>
     </xs:complexType>
   </xs:element>
@@ -27,22 +27,24 @@
   <xs:attribute name="set" type="edm:TOptionallyQualifiedName" />
 
   <!-- markup for atom:entry and atom:feed -->
-  <xs:element name="annotation" type="metadata:TAnnotation" />
-  <xs:complexType name="TAnnotation" mixed="true">
-    <xs:sequence>
-      <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
-    </xs:sequence>
-    <xs:attribute name="term" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="type" type="edm:TPropertyType" use="optional" />
-    <xs:attribute name="target" type="edm:TSimpleIdentifier" use="optional" />
-  </xs:complexType>
+  <xs:element name="annotation">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" minOccurs="0"
+          maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="term" type="edm:TQualifiedName" use="required" />
+      <xs:attribute name="target" type="xs:string" use="optional" />
+      <xs:attribute ref="metadata:type" />
+      <xs:attribute ref="metadata:null" />
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="action">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="annotation" type="metadata:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
-      <!-- TODO: define pattern for -->
       <xs:attribute name="metadata" type="metadata:TActionFunctionMetadata" use="required" />
       <xs:attribute name="title" type="xs:string" use="required" />
       <xs:attribute name="target" type="xs:anyURI" use="required" />
@@ -52,9 +54,8 @@
   <xs:element name="function">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="annotation" type="metadata:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
-      <!-- TODO: define pattern for -->
       <xs:attribute name="metadata" type="metadata:TActionFunctionMetadata" use="required" />
       <xs:attribute name="title" type="xs:string" use="required" />
       <xs:attribute name="target" type="xs:anyURI" use="required" />
@@ -82,7 +83,23 @@
     </xs:complexType>
   </xs:element>
 
-  <!-- TODO: link-entry, deleted-link-entry -->
+  <xs:element name="link-entry">
+    <xs:complexType>
+      <xs:attribute name="source" type="xs:anyURI" use="required" />
+      <xs:attribute name="relationship" type="edm:TSimpleIdentifier" use="required" />
+      <xs:attribute name="target" type="xs:anyURI" use="required" />
+      <xs:attribute name="when" type="edm:dateTimeStamp" use="optional" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="deleted-link-entry">
+    <xs:complexType>
+      <xs:attribute name="source" type="xs:anyURI" use="required" />
+      <xs:attribute name="relationship" type="edm:TSimpleIdentifier" use="required" />
+      <xs:attribute name="target" type="xs:anyURI" use="required" />
+      <xs:attribute name="when" type="edm:dateTimeStamp" use="optional" />
+    </xs:complexType>
+  </xs:element>
 
   <!-- markup for data:* -->
   <xs:attribute name="type" type="edm:TPropertyType" />
@@ -91,17 +108,30 @@
   <!-- markup for atom:link -->
   <xs:element name="inline">
     <xs:complexType>
-      <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="1">
         <xs:element ref="atom:feed" minOccurs="1" maxOccurs="1" />
-      </xs:sequence>
+        <xs:element ref="atom:entry" minOccurs="1" maxOccurs="1" />
+      </xs:choice>
     </xs:complexType>
   </xs:element>
 
   <!-- markup for atom-tombstone -->
-  <!-- TODO: reason element for atom-tombstone -->
+  <xs:attribute name="reason">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="changed" />
+        <xs:enumeration value="deleted" />
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
 
   <!-- markup for app:workspace -->
-  <!-- TODO: entity for app:workspace -->
+  <xs:element name="entity">
+    <xs:complexType>
+      <xs:attribute name="title" type="edm:TOptionallyQualifiedName" />
+      <xs:attribute name="href" type="xs:anyURI" />
+    </xs:complexType>
+  </xs:element>
 
   <!-- payload format for property value, action and function responses -->
   <xs:element name="value">
@@ -109,10 +139,10 @@
       <xs:sequence>
         <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" minOccurs="0"
           maxOccurs="unbounded" />
-        <xs:element name="annotation" type="metadata:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
-      <xs:attribute name="type" type="edm:TPropertyType" />
-      <xs:attribute name="null" type="xs:boolean" />
+      <xs:attribute ref="metadata:type" />
+      <xs:attribute ref="metadata:null" />
     </xs:complexType>
   </xs:element>
 
@@ -122,14 +152,8 @@
       <xs:sequence>
         <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1" />
         <xs:element name="message" type="xs:string" minOccurs="1" maxOccurs="1" />
-        <xs:element name="innererror" minOccurs="0" maxOccurs="1">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded" />
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="annotation" type="metadata:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="innererror" type="xs:anyType" minOccurs="0" maxOccurs="1" />
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
