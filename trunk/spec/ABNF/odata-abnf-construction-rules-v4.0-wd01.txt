@@ -63,12 +63,10 @@ collectionNavigation = [ "/" qualifiedEntityTypeName ]
                        )
 
 keyPredicate     = simpleKey / compoundKey
-simpleKey        = key-begin keyPropertyValue key-end
-compoundKey      = key-begin keyValuePair *( COMMA keyValuePair ) key-end
+simpleKey        = "(" keyPropertyValue ")"
+compoundKey      = "(" keyValuePair *( COMMA keyValuePair ) ")"
 keyValuePair     = primitiveKeyProperty EQ keyPropertyValue
 keyPropertyValue = primitiveLiteral
-key-begin        = "(" ; TODO: add this? / "%28"
-key-end          = ")" ; TODO: add this? / "%29"
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
                    ( links "/" navigationProperty 
@@ -133,12 +131,10 @@ complexColFunctionImportCall   = [ containerQualifier ] complexColFunctionImport
 primitiveFunctionImportCall    = [ containerQualifier ] primitiveFunctionImport    functionParameters
 primitiveColFunctionImportCall = [ containerQualifier ] primitiveColFunctionImport functionParameters
 
-functionParameters    = parameter-begin [ functionParameter *( COMMA functionParameter ) ] parameter-end
+functionParameters    = "(" [ functionParameter *( COMMA functionParameter ) ] ")"
 functionParameter     = functionParameterName EQ ( parameterAlias / primitiveLiteral )
 functionParameterName = odataIdentifier
 parameterAlias        = "@" odataIdentifier
-parameter-begin       = "(" ; TODO: add this? / "%28"
-parameter-end         = ")" ; TODO: add this? / "%29"
 
 containerQualifier = namespace "." entityContainer "."
 
@@ -797,7 +793,7 @@ positionLiteral  = double SP double  ; longitude, then latitude
 geographyPolygon   = geographyPrefix fullPolygonLiteral SQUOTE
 fullPolygonLiteral = sridLiteral polygonLiteral
 polygonLiteral     = "Polygon" polygonData
-polygonData        = "(" ringLiteral   *( COMMA ringLiteral ) ")"
+polygonData        = "(" ringLiteral *( COMMA ringLiteral ) ")"
 ringLiteral        = "(" positionLiteral *( COMMA positionLiteral ) ")"
                    ; Within each ringLiteral, the first and last positionLiteral elements MUST be an exact syntactic match to each other.
                    ; Within the polygonData, the ringLiterals MUST specify their points in appropriate winding order. 
@@ -819,7 +815,7 @@ geometryPrefix  = "geometry" SQUOTE
 ; 7. Punctuation
 ;------------------------------------------------------------------------------
 
-OWS = *( SP / HTAB / "%20" / "%09" )   ; "optional" whitespace 
+OWS =  *( SP / HTAB / "%20" / "%09" )  ; "optional" whitespace 
 RWS = 1*( SP / HTAB / "%20" / "%09" )  ; "required" whitespace 
 BWS = OWS                              ; "bad" whitespace 
 

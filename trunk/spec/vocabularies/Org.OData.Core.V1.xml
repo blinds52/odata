@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
   <edmx:DataServices DataServiceVersion="4.0">
-    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Core.V1" Alias="Self">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Core.V1" Alias="Core">
       <Documentation>
         <Summary>Core terms needed to write vocabularies</Summary>
       </Documentation>
@@ -33,6 +33,20 @@
           </Summary>
         </Documentation>
         <Annotation Term="Core.RequiresType" String="Edm.String" />
+      </Term>
+
+      <Term Name="AcceptableMediaTypes" Type="Collection(String)" AppliesTo="EntityType Property">
+        <Documentation>
+          <Summary>Lists the MIME types acceptable for the annotated entity type marked with HasStream="true" or the
+            annotated named resource property
+          </Summary>
+        </Documentation>
+        <Annotation Term="Core.IsMediaType" />
+      </Term>
+
+      <Term Name="MediaType" Type="Edm.String" AppliesTo="Property">
+        <Annotation Term="Core.IsMediaType" />
+        <Annotation Term="Core.RequiresType" String="Edm.Binary" />
       </Term>
 
       <Term Name="IsMediaType" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">

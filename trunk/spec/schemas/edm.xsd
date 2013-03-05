@@ -12,25 +12,22 @@
   <xs:complexType name="TSchema">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:group ref="edm:GSchemaBodyElements" minOccurs="0" maxOccurs="unbounded" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Using" type="edm:TUsing" />
+        <xs:element name="ComplexType" type="edm:TComplexType" />
+        <xs:element name="EntityType" type="edm:TEntityType" />
+        <xs:element name="TypeDefinition" type="edm:TTypeDefinition" />
+        <xs:element name="EnumType" type="edm:TEnumType" />
+        <xs:element name="Action" type="edm:TAction" />
+        <xs:element name="Function" type="edm:TFunction" />
+        <xs:element name="Term" type="edm:TTerm" />
+        <xs:element name="Annotations" type="edm:TAnnotations" />
+        <xs:element name="EntityContainer" type="edm:TEntityContainer" />
+      </xs:choice>
     </xs:sequence>
     <xs:attribute name="Namespace" type="edm:TNamespaceName" use="optional" />
     <xs:attribute name="Alias" type="edm:TSimpleIdentifier" use="optional" />
   </xs:complexType>
-  <xs:group name="GSchemaBodyElements">
-    <xs:choice>
-      <xs:element name="Using" type="edm:TUsing" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="ComplexType" type="edm:TComplexType" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="EntityType" type="edm:TEntityType" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="TypeDefinition" type="edm:TTypeDefinition" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="EnumType" type="edm:TEnumType" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Action" type="edm:TAction" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Function" type="edm:TFunction" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Term" type="edm:TTerm" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Annotations" type="edm:TAnnotations" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element ref="edm:EntityContainer" minOccurs="1" maxOccurs="1" />
-    </xs:choice>
-  </xs:group>
   <!-- EDM SimpleType instances for use by EDM Instance documents-->
   <xs:simpleType name="EDMSimpleType">
     <xs:restriction base="xs:string">
@@ -266,7 +263,7 @@
   </xs:group>
 
   <!--
-        Vocabulary annotations.
+        vocabulary annotations
   -->
   <xs:complexType name="TAnnotations">
     <xs:sequence>
@@ -607,16 +604,6 @@
     <xs:attribute name="IsAlwaysBindable" type="xs:boolean" use="optional" default="false" />
     <xs:attribute name="IsComposable" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
-  <xs:attributeGroup name="TActionImportAttributes">
-    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="Action" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="EntitySet" type="edm:TOptionallyQualifiedName" use="optional" />
-  </xs:attributeGroup>
-  <xs:attributeGroup name="TFunctionImportAttributes">
-    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="Function" type="edm:TQualifiedName" use="required" />
-    <xs:attribute name="EntitySet" type="edm:TOptionallyQualifiedName" use="optional" />
-  </xs:attributeGroup>
   <xs:attributeGroup name="TTypeAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
   </xs:attributeGroup>
@@ -625,78 +612,93 @@
     <xs:attribute name="BaseType" type="edm:TQualifiedName" use="optional" />
     <xs:attribute name="Abstract" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
+  <!--
+        container constructs 
+    -->
+  <xs:complexType name="TEntityContainer">
+    <xs:sequence>
+      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="EntitySet" type="edm:TEntitySet"/>
+        <xs:element name="ActionImport" type="edm:TActionImport" />
+        <xs:element name="FunctionImport" type="edm:TFunctionImport" />
+        <xs:element name="Entity" type="edm:TEntity" />
+      </xs:choice>
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
+    <xs:attribute name="Extends" type ="edm:TSimpleIdentifier" use="optional" />
+    <xs:attribute name="IsDefaultEntityContainer" type ="xs:boolean" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="TEntitySet">
+    <xs:sequence>
+      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+      <xs:element name="NavigationPropertyBinding" type="edm:TNavigationPropertyBinding" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attributeGroup ref="edm:TEntitySetAttributes" />
+  </xs:complexType>
+  <xs:complexType name="TNavigationPropertyBinding">
+    <xs:sequence>
+      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attribute name="Path" type="edm:TPath" use="required" />
+    <xs:attribute name="EntitySet" type="edm:TOptionallyQualifiedName" use="required" />
+  </xs:complexType>
   <xs:attributeGroup name="TEntitySetAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="EntityType" type="edm:TQualifiedName" use="required" />
+    <xs:attribute name="IncludeInServiceDocument" type="xs:boolean" use="optional" default="true" />
   </xs:attributeGroup>
-  <xs:element name="EntityContainer">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="ActionImport">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
-              </xs:sequence>
-              <xs:attributeGroup ref="edm:TActionImportAttributes" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="FunctionImport">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
-              </xs:sequence>
-              <xs:attributeGroup ref="edm:TFunctionImportAttributes" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="EntitySet">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                <xs:element name="NavigationPropertyBinding" minOccurs="0" maxOccurs="unbounded">
-                  <xs:complexType>
-                    <xs:sequence>
-                      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
-                    </xs:sequence>
-                    <xs:attribute name="Path" type="edm:TPath" use="required" />
-                    <xs:attribute name="EntitySet" type="edm:TOptionallyQualifiedName" use="required" />
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
-              </xs:sequence>
-              <xs:attributeGroup ref="edm:TEntitySetAttributes" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="Entity">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-                <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
-              </xs:sequence>
-              <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-              <xs:attribute name="Type" type="edm:TQualifiedName" use="required" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-        <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
-      <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-      <xs:attribute name="Extends" type ="edm:TSimpleIdentifier" use="optional" />
-      <xs:attribute name="IsDefaultEntityContainer" type ="xs:boolean" use="optional" />
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="TEntity">
+    <xs:sequence>
+      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
+    <xs:attribute name="Type" type="edm:TQualifiedName" use="required" />
+  </xs:complexType>
+  <xs:complexType name="TActionImport">
+    <xs:sequence>
+      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Action" type="edm:TQualifiedName" use="required" />
+    <xs:attributeGroup ref="edm:TActionFunctionImportAttributes" />
+  </xs:complexType>
+  <xs:complexType name="TFunctionImport">
+    <xs:sequence>
+      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Function" type="edm:TQualifiedName" use="required" />
+    <xs:attributeGroup ref="edm:TActionFunctionImportAttributes" />
+  </xs:complexType>
+  <xs:attributeGroup name="TActionFunctionImportAttributes">
+    <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
+    <xs:attribute name="EntitySet" type="edm:TOptionallyQualifiedName" use="optional" />
+    <xs:attribute name="IncludeInServiceDocument" type="xs:boolean" use="optional" default="false" />
+  </xs:attributeGroup>
   <!-- 
-    general  (more or less) purpose simple types 
+        general purpose simple types 
     -->
-  <!-- TODO: length restrictions for names -->
   <xs:simpleType name="TNamespaceName">
-    <xs:union memberTypes="edm:TSimpleIdentifier edm:TQualifiedName" />
+    <xs:restriction base="edm:TOptionallyQualifiedName">
+      <xs:maxLength value="511" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TSimpleIdentifier">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="128" />
+      <!-- The below pattern represents the allowed identifiers in ECMA specification -->
+      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
+    </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TOptionallyQualifiedName">
-    <xs:union memberTypes="edm:TSimpleIdentifier edm:TQualifiedName" />
+    <xs:restriction base="xs:string">
+      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification  -->
+      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+    </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TQualifiedName">
     <xs:restriction base="xs:string">
@@ -716,19 +718,12 @@
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TPathWithTermCast">
-  <!-- Note: this pattern is overly generous: in fact at most one # is allowed per slash-separated segment -->
+    <!-- Note: this pattern is overly generous: in fact at most one # is allowed per slash-separated segment -->
     <xs:restriction base="xs:string">
       <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '/' for path segment separation and
            the '.' for namespace qualification inside the segments. It also allows using parens and commas to designate function signatures
            such as "Namespace1.Namespace2.Function1(String,Collection(Int32))/Parameter1".-->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([/\.#][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TSimpleIdentifier">
-    <xs:restriction base="xs:string">
-      <xs:maxLength value="479" />
-      <!-- The below pattern represents the allowed identifiers in ECMA specification -->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
+      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([/\.#@][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TPropertyType">

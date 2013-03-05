@@ -2,7 +2,7 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
   <edmx:Reference Url="http://tinyurl.com/Org-OData-Core" />
   <edmx:DataServices DataServiceVersion="4.0">
-    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Aggregation.V1" Alias="Self">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Aggregation.V1" Alias="Aggregation">
       <Documentation>
         <Summary>The following annotations allow to describe which data in a given entity
           model can be aggregated, and
@@ -21,20 +21,20 @@
         </Documentation>
       </Term>
 
-      <Term Name="Aggregatable" Type="Self.AggregatableType" AppliesTo="Property" />
+      <Term Name="Aggregatable" Type="Aggregation.AggregatableType" AppliesTo="Property" />
       <ComplexType Name="AggregatableType">
         <Property Name="DefaultAggregrationFunction" Type="Edm.String" Nullable="true" />
         <Property Name="AcceptedAggregrationFunctions" Type="Collection(Edm.String)" Nullable="true" />
       </ComplexType>
 
-      <Term Name="Groupable" Type="Self.AggregationGroupableType" AppliesTo="Property" />
+      <Term Name="Groupable" Type="Aggregation.AggregationGroupableType" AppliesTo="Property" />
       <ComplexType Name="GroupableType">
         <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" />
       </ComplexType>
 
 
       <!-- Alternative 2 -->
-      <Term Name="SupportsAggregation" Type="Self.SupportsAggregationType" AppliesTo="EntitySet">
+      <Term Name="SupportsAggregation" Type="Aggregation.SupportsAggregationType" AppliesTo="EntitySet">
         <Documentation>
           <Summary>
             This entity set supports the $aggregate query option
@@ -53,8 +53,8 @@
             in conjunction with $aggregate.
           </Summary>
         </Documentation>
-        <Property Name="AggregatableProperties" Type="Collection(Self.AggregatableProperty)" />
-        <Property Name="GroupableProperties" Type="Collection(Self.GroupableProperty)" />
+        <Property Name="AggregatableProperties" Type="Collection(Aggregation.AggregatableProperty)" />
+        <Property Name="GroupableProperties" Type="Collection(Aggregation.GroupableProperty)" />
       </ComplexType>
 
       <ComplexType Name="AggregatableProperty">
