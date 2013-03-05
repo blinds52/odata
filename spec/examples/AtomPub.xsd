@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- -*- rnc -*- # RELAX NG Compact Syntax Grammar for the Atom Protocol -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.w3.org/2007/app"
+  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+  <xs:import namespace="http://www.w3.org/2005/Atom" />
+  <!-- common:attrs -->
+  <xs:attributeGroup name="appCommonAttributes">
+    <xs:attributeGroup ref="app:undefinedAttribute" />
+  </xs:attributeGroup>
+  <xs:attributeGroup name="atomCommonAttributes">
+    <xs:attributeGroup ref="app:appCommonAttributes" />
+  </xs:attributeGroup>
+  <xs:attributeGroup name="undefinedAttribute">
+    <xs:anyAttribute namespace="##any" />
+  </xs:attributeGroup>
+  <xs:simpleType name="atomLanguageTag">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([A-Za-z]{1,8}(-[A-Za-z0-9]{1,8})*)?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="atomDateConstruct">
+    <xs:restriction base="xs:dateTime" />
+  </xs:simpleType>
+  <xs:attributeGroup name="atomDateConstruct">
+    <xs:attributeGroup ref="app:appCommonAttributes" />
+  </xs:attributeGroup>
+  <!-- app:service -->
+  <xs:element name="service">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="app:workspace" />
+        <xs:group ref="app:extensionElement" />
+      </xs:choice>
+      <xs:attributeGroup ref="app:appCommonAttributes" />
+    </xs:complexType>
+  </xs:element>
+  <!-- app:workspace -->
+  <xs:element name="workspace">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="atom:title" />
+        <xs:element ref="app:collection" />
+        <xs:group ref="app:extensionSansTitleElement" />
+      </xs:choice>
+      <xs:attributeGroup ref="app:appCommonAttributes" />
+    </xs:complexType>
+  </xs:element>
+  <!-- app:collection -->
+  <xs:element name="collection">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="atom:title" />
+        <xs:element ref="app:accept" />
+        <xs:group ref="app:extensionSansTitleElement" />
+      </xs:choice>
+      <xs:attributeGroup ref="app:appCommonAttributes" />
+      <xs:attribute name="href" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <!-- app:accept -->
+  <xs:element name="accept">
+    <xs:complexType mixed="true">
+      <xs:attributeGroup ref="app:appCommonAttributes" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="extensionSansTitleElement">
+    <xs:choice>
+      <xs:any namespace="http://docs.oasis-open.org/odata/ns/metadata" />
+      <xs:any namespace="##local" />
+    </xs:choice>
+  </xs:group>
+  <xs:group name="extensionElement">
+    <xs:choice>
+      <xs:any namespace="##other" />
+      <xs:any namespace="##local" />
+    </xs:choice>
+  </xs:group>
+  <xs:group name="undefinedContent">
+    <xs:sequence>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="app:anyForeignElement" />
+    </xs:sequence>
+  </xs:group>
+  <!-- Extensions -->
+  <xs:group name="anyElement">
+    <xs:sequence>
+      <xs:any processContents="skip" />
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="anyForeignElement">
+    <xs:choice>
+      <xs:any namespace="##other" processContents="skip" />
+      <xs:any namespace="##local" processContents="skip" />
+    </xs:choice>
+  </xs:group>
+  <xs:attributeGroup name="atomPlainTextConstruct">
+    <xs:attributeGroup ref="app:atomCommonAttributes" />
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="text" />
+          <xs:enumeration value="html" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="atomXHTMLTextConstruct" abstract="true">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="app:anyXHTML" />
+      <xs:anyAttribute processContents="skip" />
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="atomXHTMLTextConstruct">
+    <xs:attributeGroup ref="app:atomCommonAttributes" />
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="xhtml" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="atomTextConstruct" mixed="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="app:atomXHTMLTextConstruct" />
+    </xs:sequence>
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="text" />
+          <xs:enumeration value="html" />
+          <xs:enumeration value="xhtml" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attributeGroup ref="app:atomCommonAttributes" />
+  </xs:complexType>
+  <xs:group name="anyXHTML">
+    <xs:sequence>
+      <xs:any namespace="http://www.w3.org/1999/xhtml" processContents="skip" />
+    </xs:sequence>
+  </xs:group>
+</xs:schema>
+<!-- EOF -->
