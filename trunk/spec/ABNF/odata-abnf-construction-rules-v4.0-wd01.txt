@@ -59,6 +59,7 @@ resourcePath = [ containerQualifier ] entitySetName [ collectionNavigation ]
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
                        ( keyPredicate [ singleNavigation ]
                        / collectionPath
+                       / ref
                        / ""     ; for restricting to a derived entity type
                        )
 
@@ -69,8 +70,7 @@ keyValuePair     = primitiveKeyProperty EQ keyPropertyValue
 keyPropertyValue = primitiveLiteral
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
-                   ( links "/" navigationProperty 
-                   / "/" ( entityColNavigationProperty [ collectionNavigation ]
+                   ( "/" ( entityColNavigationProperty [ collectionNavigation ]
                          / entityNavigationProperty    [ singleNavigation ]
                          / complexColProperty          [ collectionPath ]
                          / complexProperty             [ complexPath ]
@@ -78,7 +78,8 @@ singleNavigation = [ "/" qualifiedEntityTypeName ]
                          / primitiveProperty           [ singlePath ]
                          / streamProperty 
                          )
-                   / boundOperation 
+                   / boundOperation
+                   / ref 
                    / ""     ; for casting after key access
                    )
 
@@ -93,7 +94,7 @@ complexPath    = [ "/" qualifiedComplexTypeName ]
                  )
 
 count = '/$count'
-links = '/$links'
+ref   = '/$ref'
 value = '/$value'
 
 ; boundOperation segments can only be composed if the type of the previous segment 
@@ -175,6 +176,7 @@ aggregateItem     = property [ RWS "as" RWS dynamicProperty ]
                   / *( navigationProperty "/" ) property
                   / *( navigationProperty "/" ) aggregateFunction "(" property ")" 
 groupbyList       = groupbyItem *( COMMA groupbyItem )
+; TODO: incomplete, should be ( complexProperty / navigationProperty ) twice below
 groupbyItem       = property
                   / navigationProperty "/(" groupbyList ")"
                   / navigationProperty "/" groupbyItem 
@@ -183,7 +185,9 @@ aggregateFunction = 'sum' / 'min' / 'max' / 'average'
 
 expand       = '$expand' EQ expandItem *( COMMA expandItem )
 expandItem   = [ qualifiedEntityTypeName "/" ] navigationProperty 
+               [ "/" qualifiedEntityTypeName ]
                [ "(" expandOption *( SEMI expandOption ) ")" ]
+               [ ref ]
 expandOption = filter
              / select 
              / orderby
@@ -215,7 +219,6 @@ inlinecount = '$inlinecount' EQ ( 'allpages' / 'none' )
 
 select     = '$select' EQ selectItem *( COMMA selectItem )
 selectItem = STAR  
-           / '$ref'
            / allOperationsInSchema 
            / [ qualifiedEntityTypeName "/" ] 
              ( navigationProperty  
@@ -295,6 +298,7 @@ boolCommonExpr = ( isofExpr
                  / boolParenExpr
                  ) [ andExpr / orExpr ] 
 
+; TODO: this may be too generous: did we intend to allow arbitrary member expressions as function parameters?
 firstMemberExpr = [ lambdaPredicatePrefixExpr ]  ; only allowed inside a lambdaPredicateExpr
                   memberExpr
 
@@ -368,6 +372,7 @@ methodCallExpr = indexOfMethodCallExpr
                / hourMethodCallExpr 
                / minuteMethodCallExpr 
                / secondMethodCallExpr 
+               / fractionalsecondsMethodCallExpr
                / totalsecondsMethodCallExpr
                / dateMethodCallExpr 
                / timeMethodCallExpr 
@@ -403,6 +408,7 @@ dayMethodCallExpr                = 'day'                "(" BWS commonExpr BWS "
 hourMethodCallExpr               = 'hour'               "(" BWS commonExpr BWS ")"
 minuteMethodCallExpr             = 'minute'             "(" BWS commonExpr BWS ")"
 secondMethodCallExpr             = 'second'             "(" BWS commonExpr BWS ")"
+fractionalsecondsMethodCallExpr  = 'fractionalseconds'  "(" BWS commonExpr BWS ")"
 totalsecondsMethodCallExpr       = 'totalseconds'       "(" BWS commonExpr BWS ")"
 dateMethodCallExpr               = 'date'               "(" BWS commonExpr BWS ")"
 timeMethodCallExpr               = 'time'               "(" BWS commonExpr BWS ")"
