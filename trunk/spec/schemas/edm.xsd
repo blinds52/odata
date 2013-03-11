@@ -130,7 +130,23 @@
     <xs:restriction base="xs:boolean" />
   </xs:simpleType>
   <xs:simpleType name="TCollationFacet">
-    <xs:restriction base="xs:string" />
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Binary" />
+      <xs:enumeration value="Boolean" />
+      <xs:enumeration value="Byte" />
+      <xs:enumeration value="Date" />
+      <xs:enumeration value="DateTimeOffset" />
+      <xs:enumeration value="Decimal" />
+      <xs:enumeration value="Double" />
+      <xs:enumeration value="Single" />
+      <xs:enumeration value="Guid" />
+      <xs:enumeration value="Int16" />
+      <xs:enumeration value="Int32" />
+      <xs:enumeration value="Int64" />
+      <xs:enumeration value="String" />
+      <xs:enumeration value="SByte" />
+      <xs:enumeration value="TimeOfDay" />
+    </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TSridFacet">
     <xs:union memberTypes="edm:TVariable xs:nonNegativeInteger  " />
@@ -165,7 +181,10 @@
   <xs:complexType name="TComplexType">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:element name="Property" type="edm:TComplexTypeProperty" minOccurs="0" maxOccurs="unbounded" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Property" type="edm:TComplexTypeProperty" />
+        <xs:element name="NavigationProperty" type="edm:TNavigationProperty" />
+      </xs:choice>
       <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
@@ -193,8 +212,8 @@
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:element name="Key" type="edm:TEntityKeyElement" minOccurs="0" maxOccurs="1" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Property" type="edm:TEntityProperty" minOccurs="0" maxOccurs="unbounded" />
-        <xs:element name="NavigationProperty" type="edm:TNavigationProperty" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Property" type="edm:TEntityProperty" />
+        <xs:element name="NavigationProperty" type="edm:TNavigationProperty" />
       </xs:choice>
       <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
@@ -413,9 +432,8 @@
   <xs:complexType name="TRecordExpression">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="PropertyValue" type="edm:TPropertyValue" minOccurs="0" maxOccurs="unbounded" />
-      </xs:choice>
+      <xs:element name="PropertyValue" type="edm:TPropertyValue" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Type" type="edm:TUnwrappedFunctionType" use="optional" />
   </xs:complexType>
@@ -423,6 +441,7 @@
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Property" type="edm:TSimpleIdentifier" use="required" />
     <xs:attributeGroup ref="edm:GInlineExpressions" />
@@ -431,6 +450,7 @@
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:group ref="edm:GExpression" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TAssertTypeExpression">
