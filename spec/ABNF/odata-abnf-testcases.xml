@@ -736,12 +736,7 @@
             Rule="odataRelativeUri">
     <Input>Categories(1)/Address/Street/$value</Input>
   </TestCase>
-  <TestCase Name="4.7 Addressing a Media Resource - not required by V4" 
-            Rule="odataRelativeUri"
-            FailAt="14">
-    <Input>Categories(1)/$value</Input>
-  </TestCase>
-  <TestCase Name="Named Stream Property - not required by V4" 
+  <TestCase Name="4.7 Named Stream Property - $value does not make sense here" 
             Rule="odataRelativeUri"
             FailAt="23">
     <Input>Categories(1)/Thumbnail/$value</Input>
@@ -814,6 +809,10 @@
   <TestCase Name="4.9 Inheritance - $expand" 
             Rule="odataRelativeUri">
     <Input>Categories?$expand=Products/Model.BestSellingProduct($select=Name)</Input>
+  </TestCase>
+  <TestCase Name="4.10 Addressing a Media Resource" 
+            Rule="odataRelativeUri">
+    <Input>Categories(1)/$value</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" 
             Rule="filter">
@@ -1201,6 +1200,10 @@
             Rule="commonExpr">
     <Input>geo.length(geography'SRID=0;LineString(142.1 64.1,3.14 2.78)')</Input>
   </TestCase>
+  <TestCase Name="5.1.1.4.33 search" 
+            Rule="commonExpr">
+    <Input>search(Name, 'food%20AND%20quality')</Input>
+  </TestCase>
   <TestCase Name="5.1.1.5 any()"
             Rule="anyExpr">
     <Input>any()</Input>
@@ -1376,11 +1379,73 @@
             Rule="queryOptions">
     <Input>$inlinecount=allpages</Input>
   </TestCase>
-  <TestCase Name="5.1.7 Format" 
+  <TestCase Name="5.1.7 Search - simple term" 
+            Rule="queryOptions">
+    <Input>$search=blue</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - simple phrase" 
+            Rule="queryOptions">
+    <Input>$search="blue%20green"</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - simple phrase" 
+            Rule="queryOptions">
+    <Input>$search="blue%20green%22</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - phrase with escaped double-quote" 
+            Rule="queryOptions">
+    <Input>$search="blue\"green"</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - phrase with escaped backslash" 
+            Rule="queryOptions">
+    <Input>$search="blue\\green"</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - phrase with unescaped double-quote" 
+            Rule="queryOptions"
+            FailAt="14">
+    <Input>$search="blue"green"</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - phrase with unescaped double-quote" 
+            Rule="queryOptions"
+            FailAt="16">
+    <Input>$search="blue%22green"</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - implicit AND" 
+            Rule="queryOptions">
+    <Input>$search=blue green</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - AND" 
+            Rule="queryOptions">
+    <Input>$search=blue AND green</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - OR" 
+            Rule="queryOptions">
+    <Input>$search=blue OR green</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - NOT" 
+            Rule="queryOptions">
+    <Input>$search=blue NOT green</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - only NOT" 
+            Rule="queryOptions">
+    <Input>$search=NOT blue</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - on entity set" 
+            Rule="odataUri">
+    <Input>http://serviceRoot/Products?$search=blue</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - on entity container" 
+            Rule="odataUri">
+    <Input>http://serviceRoot/Model.Container?$search=blue</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - on service" 
+            Rule="odataUri">
+    <Input>http://serviceRoot/?$search=blue</Input>
+  </TestCase>
+  <TestCase Name="5.1.8 Format" 
             Rule="queryOptions">
     <Input>$format=json&amp;$format=atom&amp;$format=xml&amp;$format=text/html</Input>
   </TestCase>
-  <TestCase Name="5.1.7 Format - media type" 
+  <TestCase Name="5.1.8 Format - media type" 
             Rule="queryOptions">
     <Input>$format=text/html</Input>
   </TestCase>
@@ -1696,6 +1761,16 @@
             Rule="commonExpr">
     <Input>Model.PhoneticallySimilar(Word1=Name,Word2=Supplier/Name)</Input>
   </TestCase>
+  <TestCase Name="Functions in filter - alias as parameter" 
+            Rule="queryOptions">
+    <Input>$filter=Model.PhoneticallySimilar(Word=@expression)&amp;@expression=5</Input>
+  </TestCase>
+  <!-- TODO: Hubert will open a ticket
+  <TestCase Name="Functions in filter - expression as parameter" 
+            Rule="queryOptions">
+    <Input>$filter=Model.PhoneticallySimilar(Number=5 add 3)</Input>
+  </TestCase>
+  -->
   <!-- Aggregation -->
   <TestCase Name="Aggregation - basic" 
             Rule="queryOptions">
