@@ -73,6 +73,7 @@
   </Constraint>
   <Constraint Rule="entityNavigationProperty">
     <Match>Category</Match>
+    <Match>Country</Match>
     <Match>Currency</Match>
     <Match>Customer</Match>
     <Match>Product</Match>
@@ -146,7 +147,6 @@
     <Match>City</Match>
     <Match>CompanyName</Match>
     <Match>Completed</Match>
-    <Match>Country</Match>
     <Match>eyeColor</Match>
     <Match>LifeTime</Match>
     <Match>Line</Match>
@@ -596,6 +596,14 @@
             Rule="resourcePath">
     <Input>NamedEntity</Input>
   </TestCase>
+  <TestCase Name="4.3 Addressing entities - single navigation property in complex type" 
+            Rule="resourcePath">
+    <Input>Customers(1)/Address/Country</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - collection navigation property in complex type" 
+            Rule="resourcePath">
+    <Input>Customers(1)/Address/Products</Input>
+  </TestCase>
   <TestCase Name="4.3.1 Canonical URL" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products(1)</Input>
@@ -848,9 +856,21 @@
             Rule="firstMemberExpr">
     <Input>Product/Supplier/Address/Street</Input>
   </TestCase>
+  <TestCase Name="5.1.1 Filter - member expressions - single-complex-single" 
+            Rule="firstMemberExpr">
+    <Input>Product/Supplier/Address/Country</Input>
+  </TestCase>
+  <TestCase Name="5.1.1 Filter - member expressions - single-complex-collection" 
+            Rule="firstMemberExpr">
+    <Input>Product/Supplier/Address/Products</Input>
+  </TestCase>
   <TestCase Name="5.1.1 Filter - member expressions - stream" 
             Rule="firstMemberExpr">
     <Input>Product/Thumbnail</Input>
+  </TestCase>
+  <TestCase Name="5.1.1 Filter - member expressions - stream" 
+            Rule="firstMemberExpr">
+    <Input>Address/Thumbnail</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter - member expressions - single-colComplex" 
             Rule="firstMemberExpr">
