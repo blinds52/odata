@@ -916,7 +916,7 @@ ODATA-247:
 
 ######6.w.x.y.z End of Issue Processing [eoip]
 
-All take the opportunity to thank Ralf for the huge amount of work he put into the revisions of the work products he prepared and delivered.
+All take the opportunity to thank Mike and Ralf for the huge amount of work they put into the revisions of the work products they prepared and delivered.
 
 Note:
 >Time slot for issue processing gone. Skip all remaining agenda sub items of 6.
