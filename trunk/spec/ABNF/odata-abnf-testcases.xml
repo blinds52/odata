@@ -434,11 +434,16 @@
             FailAt="2">
     <Input>No.Dot</Input>
   </TestCase>
-  <TestCase Name="Entity Set" 
+  <TestCase Name="Entity Set - in default entity container" 
             Rule="resourcePath">
     <Input>Products</Input>
   </TestCase>
-  <TestCase Name="Entity Set" 
+  <TestCase Name="Entity Set - entity container name must be qualified" 
+            Rule="resourcePath"
+            FailAt="9">
+    <Input>Container.Products</Input>
+  </TestCase>
+  <TestCase Name="Entity Set - with (qualified) entity container" 
             Rule="resourcePath">
     <Input>Namespace.Container.Products</Input>
   </TestCase>
@@ -464,6 +469,34 @@
   <TestCase Name="2 URL Components - resource path and query options" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products?$top=2&amp;$orderby=Name</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - single quotes" 
+            Rule="odataRelativeUri">
+    <Input>Customers('O''Neil')</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - single quotes" 
+            Rule="odataRelativeUri">
+    <Input>Customers(%27O%27%27Neil%27)</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - unquoted single quotes" 
+            Rule="odataRelativeUri"
+            FailAt="15">
+    <Input>Customers('O%27Neil')</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - parentheses" 
+            Rule="odataRelativeUri">
+    <Input>Customers%28%27O%27%27Neil%27%29</Input>
+  </TestCase>
+<!-- 
+-->
+  <TestCase Name="2 URL Components - encoded forward slash" 
+            Rule="odataUri">
+    <Input>http://host/service/Categories('Smartphone%2FTablet')</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - unencoded forward slash" 
+            Rule="odataRelativeUri"
+            FailAt="22">
+    <Input>Categories('Smartphone/Tablet')</Input>
   </TestCase>
   <TestCase Name="4.1 - metadata URL" 
             Rule="odataUri">
@@ -534,6 +567,10 @@
   <TestCase Name="4.3 Addressing entities - single entity (string)" 
             Rule="resourcePath">
     <Input>Categories('Tablet')</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (string)" 
+            Rule="resourcePath">
+    <Input>Categories('7''''%20Tablet')</Input>
   </TestCase>
   <!-- TODO: allow percent-encoding of parentheses?
   <TestCase Name="4.3 Addressing entities - single entity (string)" 
@@ -630,9 +667,14 @@
             FailAt="30">
     <Input>Categories(1)/Products(2)/$ref/$count</Input>
   </TestCase>
-  <TestCase Name="4.5.1 Call unbound action" 
+  <TestCase Name="4.5.1 Call unbound action via action import" 
             Rule="odataRelativeUri">
     <Input>Activation</Input>
+  </TestCase>
+  <TestCase Name="4.5.1 Call unbound action with container" 
+            Rule="odataRelativeUri"
+            FailAt="9">
+    <Input>Container.Activation()</Input>
   </TestCase>
   <TestCase Name="4.5.1 Call unbound action with container" 
             Rule="odataRelativeUri">
@@ -642,27 +684,50 @@
             Rule="odataRelativeUri">
     <Input>LeaveRequests(4)/Model.Rejection()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call unbound function" 
+  <TestCase Name="4.5.1 Call action at service root" 
+            Rule="odataRelativeUri"
+            FailAt="15">
+    <Input>Model.Rejection</Input>
+  </TestCase>
+  <TestCase Name="4.5.1 Call action at service root" 
+            Rule="odataRelativeUri"
+            FailAt="15">
+    <Input>Model.Rejection()</Input>
+  </TestCase>
+  <TestCase Name="4.5.2 Call function import" 
             Rule="odataRelativeUri">
     <Input>TheBestProduct()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call unbound complex function" 
+  <TestCase Name="4.5.2 Call function import - qualified" 
+            Rule="odataRelativeUri">
+    <Input>Model.Container.TheBestProduct</Input>
+  </TestCase>
+  <TestCase Name="4.5.2 Call function import - qualified" 
+            Rule="odataRelativeUri">
+    <Input>Model.Container.TheBestProduct?Size=3</Input>
+  </TestCase>
+  <TestCase Name="4.5.2 Call function import - only at service root" 
+            Rule="odataRelativeUri"
+            FailAt="25">
+    <Input>Categories/TheBestProduct()</Input>
+  </TestCase>
+  <TestCase Name="4.5.2 Call complex function import" 
             Rule="odataRelativeUri">
     <Input>TheMostPopularAddress()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call unbound complex collection function" 
+  <TestCase Name="4.5.2 Call complex collection function import" 
             Rule="odataRelativeUri">
     <Input>TheMostPopularAddresses()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call unbound primitive function" 
+  <TestCase Name="4.5.2 Call primitive function import" 
             Rule="odataRelativeUri">
     <Input>TheMostPopularName()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call unbound primitive function" 
+  <TestCase Name="4.5.2 Call primitive function import" 
             Rule="odataRelativeUri">
     <Input>TheMostPopularName()/$value</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call unbound primitive collection function" 
+  <TestCase Name="4.5.2 Call primitive collection function import" 
             Rule="odataRelativeUri">
     <Input>TheMostPopularNames()</Input>
   </TestCase>
@@ -1449,6 +1514,30 @@
             Rule="queryOptions">
     <Input>$search=NOT blue</Input>
   </TestCase>
+  <TestCase Name="5.1.7 Search - multiple" 
+            Rule="queryOptions">
+    <Input>$search=foo AND bar OR foo AND baz OR that AND bar OR that AND baz</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - multiple" 
+            Rule="queryOptions">
+    <Input>$search=(foo OR that) AND (bar OR baz)</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - grouping" 
+            Rule="queryOptions">
+    <Input>$search=foo AND (bar OR baz)</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - grouping" 
+            Rule="queryOptions">
+    <Input>$search=(foo AND bar) OR baz</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - grouping" 
+            Rule="queryOptions">
+    <Input>$search=(NOT foo) OR baz</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - grouping" 
+            Rule="queryOptions">
+    <Input>$search=(NOT foo)</Input>
+  </TestCase>
   <TestCase Name="5.1.7 Search - on entity set" 
             Rule="odataUri">
     <Input>http://serviceRoot/Products?$search=blue</Input>
@@ -1712,6 +1801,10 @@
   <TestCase Name="Functions in commonExpr - collectionNavigation" 
             Rule="commonExpr">
     <Input>Products/Model.ProductsByColor(color='green')/Model.BestSellingProduct/Model.MostPopularName()</Input>
+  </TestCase>
+  <TestCase Name="Functions in commonExpr - collectionNavigation" 
+            Rule="commonExpr">
+    <Input>Products/Model.ProductsByColor(color=@color)/Model.BestSellingProduct/Model.MostPopularName()</Input>
   </TestCase>
   <TestCase Name="Functions in commonExpr - collectionNavigation with all" 
             Rule="commonExpr">
