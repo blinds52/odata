@@ -105,51 +105,29 @@
   </xs:simpleType>
   <xs:simpleType name="TMax">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Max" />
+      <xs:enumeration value="max" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TVariable">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Variable" />
+      <xs:enumeration value="variable" />
     </xs:restriction>
   </xs:simpleType>
   <!-- Facets for Primitive types -->
   <xs:simpleType name="TMaxLengthFacet">
     <xs:union memberTypes="edm:TMax xs:nonNegativeInteger  " />
   </xs:simpleType>
-  <xs:simpleType name="TVariableScaleFacet">
-    <xs:restriction base="xs:boolean" />
-  </xs:simpleType>
   <xs:simpleType name="TPrecisionFacet">
     <xs:restriction base="xs:nonNegativeInteger" />
   </xs:simpleType>
   <xs:simpleType name="TScaleFacet">
-    <xs:restriction base="xs:nonNegativeInteger" />
+    <xs:union memberTypes="edm:TVariable xs:nonNegativeInteger" />
+  </xs:simpleType>
+  <xs:simpleType name="TSridFacet">
+    <xs:union memberTypes="edm:TVariable xs:nonNegativeInteger" />
   </xs:simpleType>
   <xs:simpleType name="TUnicodeFacet">
     <xs:restriction base="xs:boolean" />
-  </xs:simpleType>
-  <xs:simpleType name="TCollationFacet">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Binary" />
-      <xs:enumeration value="Boolean" />
-      <xs:enumeration value="Byte" />
-      <xs:enumeration value="Date" />
-      <xs:enumeration value="DateTimeOffset" />
-      <xs:enumeration value="Decimal" />
-      <xs:enumeration value="Double" />
-      <xs:enumeration value="Single" />
-      <xs:enumeration value="Guid" />
-      <xs:enumeration value="Int16" />
-      <xs:enumeration value="Int32" />
-      <xs:enumeration value="Int64" />
-      <xs:enumeration value="String" />
-      <xs:enumeration value="SByte" />
-      <xs:enumeration value="TimeOfDay" />
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TSridFacet">
-    <xs:union memberTypes="edm:TVariable xs:nonNegativeInteger  " />
   </xs:simpleType>
   <!--
         types at all levels
@@ -242,7 +220,6 @@
     <xs:sequence minOccurs ="1" maxOccurs="1">
       <xs:choice minOccurs="0" maxOccurs="1">
         <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
-        <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
         <xs:element name="TypeRef" type="edm:TTypeRef" minOccurs="0" maxOccurs="1" />
       </xs:choice>
     </xs:sequence>
@@ -255,12 +232,6 @@
     </xs:sequence>
     <xs:attribute name="Type" type="edm:TUnwrappedFunctionType" use="required" />
     <xs:attributeGroup ref="edm:TFacetAttributes" />
-  </xs:complexType>
-  <xs:complexType name="TReferenceType">
-    <xs:sequence>
-      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
-    </xs:sequence>
-    <xs:attribute name="Type" type="edm:TUnwrappedFunctionType" use="required" />
   </xs:complexType>
   <xs:complexType name="TActionFunctionReturnType">
     <xs:attribute name="Type" type="edm:TActionFunctionParameterAndReturnType" use="optional" />
@@ -458,10 +429,7 @@
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:choice maxOccurs="unbounded">
         <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
-        <xs:choice minOccurs="0" maxOccurs="1">
-          <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
-          <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
-        </xs:choice>
+        <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Type" type="edm:TWrappedFunctionType" use="optional" />
@@ -472,10 +440,7 @@
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:choice maxOccurs="unbounded">
         <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
-        <xs:choice minOccurs="0" maxOccurs="1">
-          <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
-          <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
-        </xs:choice>
+        <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Type" type="edm:TWrappedFunctionType" use="optional" />
@@ -537,10 +502,6 @@
   <xs:complexType name="TTerm">
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="CollectionType" type="edm:TCollectionType" minOccurs="0" maxOccurs="1" />
-        <xs:element name="ReferenceType" type="edm:TReferenceType" minOccurs="0" maxOccurs="1" />
-      </xs:choice>
       <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
@@ -584,13 +545,11 @@
     <xs:attribute name="MaxLength" type="edm:TMaxLengthFacet" use="optional" />
     <xs:attribute name="Precision" type="edm:TPrecisionFacet" use="optional" />
     <xs:attribute name="Scale" type="edm:TScaleFacet" use="optional" />
-    <xs:attribute name="VariableScale" type="edm:TVariableScaleFacet" use="optional" />
     <xs:attribute name="SRID" type="edm:TSridFacet" use="optional" />
   </xs:attributeGroup>
 
   <xs:attributeGroup name="TPropertyFacetAttributes">
     <xs:attribute name="Unicode" type="edm:TUnicodeFacet" use="optional" />
-    <xs:attribute name="Collation" type="edm:TCollationFacet" use="optional" />
   </xs:attributeGroup>
 
   <xs:attributeGroup name="TCommonPropertyAttributes">
@@ -778,11 +737,12 @@
       </xs:simpleType>
     </xs:union>
   </xs:simpleType>
+  <!-- TODO: why do we need the Wrapped/Unwrapped function types? -->
   <xs:simpleType name="TWrappedFunctionType">
     <xs:union memberTypes="edm:TQualifiedName">
       <xs:simpleType>
         <xs:restriction base="xs:token">
-          <xs:pattern value="(Collection|Ref)\([^\. \t]{1,}(\.[^\. \t]{1,}){0,}\)" />
+          <xs:pattern value="Collection\([^\. \t]{1,}(\.[^\. \t]{1,}){0,}\)" />
         </xs:restriction>
       </xs:simpleType>
     </xs:union>
