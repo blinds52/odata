@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO: Abstract base types -->
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"  
            xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" 
            targetNamespace="http://docs.oasis-open.org/odata/ns/edm">
@@ -276,34 +275,33 @@
     <xs:sequence>
       <!-- Logically this group means one of the expressions plus an arbitrary number of CSDL annotations,
            syntactically we have to make the inner sequence unbounded to allow elements in any order. -->
-      <xs:sequence maxOccurs="unbounded">
-        <xs:choice>
-          <xs:element name="String" type="edm:TStringConstantExpression" minOccurs="0" />
-          <xs:element name="Binary" type="edm:TBinaryConstantExpression" minOccurs="0" />
-          <xs:element name="Int" type="edm:TIntConstantExpression" minOccurs="0" />
-          <xs:element name="Float" type="edm:TFloatConstantExpression" minOccurs="0" />
-          <xs:element name="Guid" type="edm:TGuidConstantExpression" minOccurs="0" />
-          <xs:element name="Decimal" type="edm:TDecimalConstantExpression" minOccurs="0" />
-          <xs:element name="Bool" type="edm:TBoolConstantExpression" minOccurs="0" />
-          <xs:element name="TimeOfDay" type="edm:TTimeOfDayConstantExpression" minOccurs="0" />
-          <xs:element name="Date" type="edm:TDateConstantExpression" minOccurs="0" />
-          <xs:element name="DateTimeOffset" type="edm:TDateTimeOffsetConstantExpression" minOccurs="0" />
-          <xs:element name="Duration" type="edm:TDurationConstantExpression" minOccurs="0" />
-          <xs:element name="Null" type="edm:TNullExpression" minOccurs="0" />
-          <xs:element name="Path" type="edm:TPathExpression" minOccurs="0" />
-          <xs:element name="PropertyPath" type="edm:TPathExpression" minOccurs="0" />
-          <xs:element name="NavigationPropertyPath" type="edm:TPathExpression" minOccurs="0" />
-          <xs:element name="EnumMember" type="edm:TQualifiedNameList" minOccurs="0" />
-          <xs:element name="If" type="edm:TIfExpression" minOccurs="0" />
-          <xs:element name="Record" type="edm:TRecordExpression" minOccurs="0" />
-          <xs:element name="Collection" type="edm:TCollectionExpression" minOccurs="0" />
-          <xs:element name="AssertType" type="edm:TAssertTypeExpression" minOccurs="0" />
-          <xs:element name="IsType" type="edm:TIsTypeExpression" minOccurs="0" />
-          <xs:element name="Apply" type="edm:TApplyExpression" minOccurs="0" />
-          <xs:element name="LabeledElement" type="edm:TLabeledElement" minOccurs="0" />
-          <xs:element name="LabeledElementReference" type="edm:TLabeledElementReferenceExpression" minOccurs="0" />
-        </xs:choice>
-      </xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="String" type="edm:TStringConstantExpression" />
+        <xs:element name="Binary" type="edm:TBinaryConstantExpression" />
+        <xs:element name="Int" type="edm:TIntConstantExpression" />
+        <xs:element name="Float" type="edm:TFloatConstantExpression" />
+        <xs:element name="Guid" type="edm:TGuidConstantExpression" />
+        <xs:element name="Decimal" type="edm:TDecimalConstantExpression" />
+        <xs:element name="Bool" type="edm:TBoolConstantExpression" />
+        <xs:element name="TimeOfDay" type="edm:TTimeOfDayConstantExpression" />
+        <xs:element name="Date" type="edm:TDateConstantExpression" />
+        <xs:element name="DateTimeOffset" type="edm:TDateTimeOffsetConstantExpression" />
+        <xs:element name="Duration" type="edm:TDurationConstantExpression" />
+        <xs:element name="Null" type="edm:TNullExpression" />
+        <xs:element name="Path" type="edm:TPathExpression" />
+        <xs:element name="PropertyPath" type="edm:TPathExpression" />
+        <xs:element name="NavigationPropertyPath" type="edm:TPathExpression" />
+        <xs:element name="EnumMember" type="edm:TQualifiedNameList" />
+        <xs:element name="If" type="edm:TIfExpression" />
+        <xs:element name="Record" type="edm:TRecordExpression" />
+        <xs:element name="Collection" type="edm:TCollectionExpression" />
+        <xs:element name="AssertType" type="edm:TAssertTypeExpression" />
+        <xs:element name="IsType" type="edm:TIsTypeExpression" />
+        <xs:element name="Apply" type="edm:TApplyExpression" />
+        <xs:element name="LabeledElement" type="edm:TLabeledElement" />
+        <xs:element name="LabeledElementReference" type="edm:TLabeledElementReferenceExpression" />
+        <xs:element name="Url" type="edm:TUrlExpression" />
+      </xs:choice>
     </xs:sequence>
   </xs:group>
   <xs:attributeGroup name="GInlineExpressions">
@@ -314,8 +312,8 @@
     <xs:attribute name="Guid" type="edm:TGuidLiteral" use="optional" />
     <xs:attribute name="Decimal" type="xs:decimal" use="optional" />
     <xs:attribute name="Bool" type="xs:boolean" use="optional" />
-    <xs:attribute name="TimeOfDay" type="xs:time" use="optional" />
-    <xs:attribute name="Date" type="xs:date" use="optional" />
+    <xs:attribute name="TimeOfDay" type="edm:time" use="optional" />
+    <xs:attribute name="Date" type="edm:date" use="optional" />
     <xs:attribute name="DateTimeOffset" type="edm:dateTimeStamp" use="optional" />
     <xs:attribute name="Duration" type="edm:dayTimeDuration" use="optional" />
     <xs:attribute name="Path" type="edm:TPathWithTermCast" use="optional" />
@@ -365,12 +363,12 @@
   </xs:complexType>
   <xs:complexType name="TTimeOfDayConstantExpression">
     <xs:simpleContent>
-      <xs:extension base="xs:time"/>
+      <xs:extension base="edm:time"/>
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TDateConstantExpression">
     <xs:simpleContent>
-      <xs:extension base="xs:date"/>
+      <xs:extension base="edm:date"/>
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TDateTimeOffsetConstantExpression">
@@ -450,6 +448,13 @@
     <xs:sequence>
       <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
       <xs:group ref="edm:GExpression" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Function" type="edm:TClientFunction" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="TUrlExpression">
+    <xs:sequence>
+      <xs:element name="Documentation" type="edm:TDocumentation" minOccurs="0" maxOccurs="1" />
+      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
     <xs:attribute name="Function" type="edm:TClientFunction" use="optional" />
   </xs:complexType>
@@ -762,6 +767,17 @@
       <xs:enumeration value="None" />
       <xs:enumeration value="SetDefault" />
       <xs:enumeration value="SetNull" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- date and time without offset -->
+  <xs:simpleType name="date">
+    <xs:restriction base="xs:date">
+      <xs:pattern value="[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="time">
+    <xs:restriction base="xs:time">
+      <xs:pattern value="([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,12})?"/>
     </xs:restriction>
   </xs:simpleType>
   <!-- Copy of xs:dateTimeStamp from XML Schema 1.1, see http://www.w3.org/TR/xmlschema11-2/#dateTimeStamp -->
