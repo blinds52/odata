@@ -31,12 +31,10 @@
         types at all levels
     -->
   <xs:complexType name="TDocumentation">
-    <xs:annotation>
-      <xs:documentation>The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid under Schema, Type, Index and Relationship elements.</xs:documentation>
-    </xs:annotation>
     <xs:sequence>
       <xs:element name="Summary" type="edm:TText" minOccurs="0" maxOccurs="1" />
       <xs:element name="LongDescription" type="edm:TText" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="TText" mixed="true">
@@ -578,12 +576,23 @@
   <xs:simpleType name="TQualifiedNameList">
     <xs:list itemType="edm:TQualifiedName"/>
   </xs:simpleType>
+  <xs:simpleType name="TAnyType">
+    <xs:union memberTypes="edm:TPrimitiveType edm:TAbstractType edm:TQualifiedName">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification and the Collection() wrapper  -->
+          <xs:pattern value="Collection\([\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}\)" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="TAnySingleType">
+    <xs:union memberTypes="edm:TPrimitiveType edm:TQualifiedName" />
+  </xs:simpleType>
   <xs:simpleType name="TPath">
     <xs:restriction base="xs:string">
-      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '/' for path segment separation and
-           the '.' for namespace qualification inside the segments. It also allows using parens and commas to designate function signatures
-           such as "Namespace1.Namespace2.Function1(String,Collection(Int32))/Parameter1".-->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}\(\),]{0,}([/\.][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}\(\),]{0,}){0,}" />
+      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification and the '/' for path segment separation -->
+      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TPathWithTermCast">
@@ -594,23 +603,9 @@
     -->
     <xs:restriction base="xs:string">
       <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '/' for path segment separation and
-           the '.' for namespace qualification inside the segments. It also allows using parens and commas to designate function signatures
-           such as "Namespace1.Namespace2.Function1(String,Collection(Int32))/Parameter1".-->
-      <xs:pattern value="@{0,1}[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([/\.#@][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+           the '.' for namespace qualification inside the segments. -->
+      <xs:pattern value="@?[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./#@][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="TAnyType">
-    <xs:union memberTypes="edm:TPrimitiveType edm:TAbstractType edm:TQualifiedName">
-      <xs:simpleType>
-        <xs:restriction base="xs:token">
-          <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification and Collection() wrapper  -->
-          <xs:pattern value="Collection\([\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}\)" />
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:union>
-  </xs:simpleType>
-  <xs:simpleType name="TAnySingleType">
-    <xs:union memberTypes="edm:TPrimitiveType edm:TQualifiedName" />
   </xs:simpleType>
   <xs:simpleType name="TClientFunction">
     <xs:union memberTypes="edm:TQualifiedName">
@@ -663,7 +658,7 @@
       </xs:simpleType>
       <xs:simpleType>
         <xs:restriction base="xs:token">
-          <xs:pattern value="Edm\..*" />
+          <xs:pattern value="Edm\..+" />
         </xs:restriction>
       </xs:simpleType>
     </xs:union>
