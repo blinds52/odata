@@ -214,6 +214,7 @@ systemQueryOption = aggregate
                   / select 
                   / skiptoken
 
+; TODO: adapt to new syntax
 aggregate         = '$aggregate' EQ aggregateCommand *( SEMI aggregateCommand )
 aggregateCommand  = aggregateClause 
                   / filter 
@@ -229,10 +230,9 @@ aggregateItem     = property [ RWS "as" RWS dynamicProperty ]
                   / *( navigationProperty "/" ) property
                   / *( navigationProperty "/" ) aggregateFunction OPEN property CLOSE 
 groupbyList       = groupbyItem *( COMMA groupbyItem )
-; TODO: incomplete, should be ( complexProperty / navigationProperty ) twice below
 groupbyItem       = property
-                  / navigationProperty "/(" groupbyList CLOSE
-                  / navigationProperty [ "/" groupbyItem ] 
+                  / ( complexProperty / navigationProperty ) "/" OPEN groupbyList CLOSE
+                  / ( complexProperty / navigationProperty ) [ "/" groupbyItem ] 
 dynamicProperty   = odataIdentifier
 aggregateFunction = 'sum' / 'min' / 'max' / 'average'
 
@@ -283,7 +283,7 @@ searchAndExpr = RWS [ 'AND' RWS ] searchExpr
 
 searchTerm   = [ 'NOT' RWS ] ( searchPhrase / searchWord )
 searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
-searchWord   = 1*ALPHA ; TODO: any character from the Unicode classes L or Nl, 
+searchWord   = 1*ALPHA ; TODO: any character from the Unicode categories L or Nl, 
                        ;       but not the words AND, OR, and NOT
 
 select     = '$select' EQ selectItem *( COMMA selectItem )
@@ -371,7 +371,6 @@ boolCommonExpr = ( isofExpr
 firstMemberExpr = [ lambdaPredicatePrefixExpr ]  ; only allowed inside a lambdaPredicateExpr
                   memberExpr
 
-; TODO: do we allow bindable functions that take an Edm.Stream as input?
 memberExpr = [ qualifiedEntityTypeName "/" ]
              ( propertyPathExpr
              / boundFunctionExpr 
@@ -383,7 +382,7 @@ propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ]
                  / complexProperty             [ complexPathExpr ] 
                  / primitiveColProperty        [ collectionPathExpr ]
                  / primitiveProperty           [ singlePathExpr ]
-                 / streamProperty 
+                 / streamProperty              ; TODO: do we allow bindable functions that take an Edm.Stream as input?
                  )
                    
 lambdaPredicatePrefixExpr = inscopeVariableExpr "/"
@@ -405,7 +404,6 @@ collectionPathExpr = count
                    / "/" anyExpr
                    / "/" allExpr
  
-; TODO: navigation properties and stream properties missing 
 complexPathExpr = "/" [ qualifiedComplexTypeName "/" ]
                   ( propertyPathExpr 
                   / boundFunctionExpr 
@@ -660,8 +658,8 @@ enumerationTypeName = odataIdentifier
 enumerationMember   = odataIdentifier
 
 odataIdentifier             = identifierLeadingCharacter *127identifierCharacter
-identifierLeadingCharacter  = ALPHA / "_"            ; TODO: Any character from the Unicode classes L or Nl
-identifierCharacter         = ALPHA / DIGIT / "_"    ; TODO: Any character from the Unicode classes L, Nl, Nd, Mn, Mc, Pc or Cf
+identifierLeadingCharacter  = ALPHA / "_"            ; TODO: Any character from the Unicode categories L or Nl
+identifierCharacter         = ALPHA / DIGIT / "_"    ; TODO: Any character from the Unicode categories L, Nl, Nd, Mn, Mc, Pc or Cf
 
 primitiveTypeName = ['Edm.'] ( 'Binary'
                              / 'Boolean'
@@ -785,12 +783,13 @@ boolean = ( "true" / "1" ) / ( "false" / "0" )
 
 decimal     = decimalBody [ "m" ]
 decimalBody = [SIGN] 1*DIGIT ["." 1*DIGIT]
-double      = doubleBody [ "d" ]
+
+double      = doubleBody [ "d" ] / nanInfinity
 doubleBody  = decimalBody [ "e" [SIGN] 1*DIGIT ] ; TODO: restrict range
-            / nanInfinity
-single      = singleBody [ "f" ]
+
+single      = singleBody [ "f" ] / nanInfinity
 singleBody  = decimalBody [ "e" [SIGN] 1*DIGIT ] ; TODO: restrict range
-            / nanInfinity
+
 nanInfinity = 'NaN' / '-INF' / 'INF'
 
 guid     = "guid" SQUOTE guidBody SQUOTE
