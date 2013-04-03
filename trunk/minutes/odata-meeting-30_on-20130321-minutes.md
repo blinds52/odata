@@ -341,7 +341,7 @@ Note:
 
 Please use the time for the document review.
 
-###6.2 Next TC meeting will be 2013-04-03 during 8-10am PT.
+###6.2 Next TC meeting will be 2013-04-04 during 8-10am PT.
 
 Agreed. 
 
