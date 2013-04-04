@@ -225,7 +225,7 @@ ODATA-316:
 
 Discussion:
 
-* Mike and Mike suggest opening the issue, but work offline on it and jump to next issue during the meeting.
+* Mike and Ralf suggest opening the issue, but work offline on it and jump to next issue during the meeting.
 
 
 ODATA-316:
