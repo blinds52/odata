@@ -116,7 +116,16 @@ ODATA-337:
 : "Review results for OData JSON Format Version 4.0" [component: OData JSON Format] is **Resolved** with no objections.
 
 
-######7.1.2.1.1 End of Issue Processing [eoip]
+#####7.1.2.2 [ODATA-336](https://tools.oasis-open.org/issues/browse/ODATA-336)
+
+ODATA-336:
+: "Be more generous on accepting values for the $format query option" [components: OData ATOM Format, OData ABNF Construction Rules, OData JSON Format] is **New**.
+
+ODATA-336:
+: "Be more generous on accepting values for the $format query option" [components: OData ATOM Format, OData ABNF Construction Rules, OData JSON Format] is **Open** with no objections.
+
+
+######7.1.2.2.1 End of Issue Processing [eoip]
 
 Note:
 >Time slot for issue processing gone. Skip all remaining agenda sub items of 7.
@@ -163,6 +172,7 @@ None.
 JIRA Issues:
 
 * [ODATA-335](https://tools.oasis-open.org/issues/browse/ODATA-335) "Review results for OData ATOM Format Version 4.0" [7.1.1.1][odata-335]
+* [ODATA-336](https://tools.oasis-open.org/issues/browse/ODATA-336) "Be more generous on accepting values for the $format query option" [7.1.2.2][odata-336]
 * [ODATA-337](https://tools.oasis-open.org/issues/browse/ODATA-337) "Review results for OData JSON Format Version 4.0" [7.1.2.1][odata-337]
 
 ## Timeline Reference [TL_REF]
