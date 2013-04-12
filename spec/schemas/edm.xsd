@@ -122,8 +122,10 @@
   </xs:complexType>
   <xs:complexType name="TReferentialConstraint">
     <xs:sequence>
-      <xs:element name="PropertyRef" type="edm:TPropertyRef" minOccurs="1" maxOccurs="unbounded" />
+      <xs:group ref="edm:GEmptyElementExtensibility" minOccurs="0" maxOccurs="1" />
     </xs:sequence>
+    <xs:attribute name="Property" type="edm:TPath" use="required" />
+    <xs:attribute name="ReferencedProperty" type="edm:TPath" use="required" />
   </xs:complexType>
    <xs:complexType name="TOnDelete">
     <xs:sequence>
@@ -461,14 +463,12 @@
     <xs:attribute name="ReturnType" type="edm:TAnyType" use="optional" />
     <xs:attribute name="EntitySetPath" type="edm:TPath" use="optional" />
     <xs:attribute name="IsBindable" type="xs:boolean" use="optional" default="false" />
-    <xs:attribute name="IsAlwaysBindable" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TFunctionAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
     <xs:attribute name="ReturnType" type="edm:TAnyType" use="optional" />
     <xs:attribute name="EntitySetPath" type="edm:TPath" use="optional" />
     <xs:attribute name="IsBindable" type="xs:boolean" use="optional" default="false" />
-    <xs:attribute name="IsAlwaysBindable" type="xs:boolean" use="optional" default="false" />
     <xs:attribute name="IsComposable" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TTypeAttributes">
@@ -604,7 +604,7 @@
     <xs:restriction base="xs:string">
       <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '/' for path segment separation and
            the '.' for namespace qualification inside the segments. -->
-      <xs:pattern value="@?[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./#@][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+      <xs:pattern value="@?[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./#][@$]?[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TClientFunction">
@@ -748,7 +748,7 @@
   <!-- Copy of xs:dateTimeStamp from XML Schema 1.1, see http://www.w3.org/TR/xmlschema11-2/#dateTimeStamp -->
   <xs:simpleType name="dateTimeStamp">
     <xs:restriction base="xs:dateTime">
-      <xs:pattern value=".*(Z|(\+|-)[0-9][0-9]:[0-9][0-9])"/>
+      <xs:pattern value=".*([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,12})?(Z|(\+|-)[0-9][0-9]:[0-9][0-9])"/>
     </xs:restriction>
   </xs:simpleType>
   <!-- Copy of xs:dayTimeDuration from XML Schema 1.1, see http://www.w3.org/TR/xmlschema11-2/#dayTimeDuration -->
