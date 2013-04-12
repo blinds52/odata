@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
   <edmx:Reference Url="http://tinyurl.com/Org-OData-Core" />
   <edmx:DataServices>
@@ -12,63 +12,98 @@
 
       <Using Namespace="Org.OData.Core.V1" Alias="Core" />
 
-      <!-- Alternative 1 -->
-      <Term Name="AllowsAggregateQueries" Type="Edm.Boolean" AppliesTo="EntitySet">
+
+      <Term Name="SupportsApply" Type="Self.SupportsApplyType" AppliesTo="EntitySet EntityContainer">
         <Documentation>
           <Summary>
-            This entity set accepts the $aggregate query option
+            This entity set or container supports the $apply system query option
           </Summary>
         </Documentation>
       </Term>
 
-      <Term Name="Aggregatable" Type="Aggregation.AggregatableType" AppliesTo="Property" />
-      <ComplexType Name="AggregatableType">
-        <Property Name="DefaultAggregrationFunction" Type="Edm.String" Nullable="true" />
-        <Property Name="AcceptedAggregrationFunctions" Type="Collection(Edm.String)" Nullable="true" />
-      </ComplexType>
-
-      <Term Name="Groupable" Type="Aggregation.AggregationGroupableType" AppliesTo="Property" />
-      <ComplexType Name="GroupableType">
-        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" />
-      </ComplexType>
-
-
-      <!-- Alternative 2 -->
-      <Term Name="SupportsAggregation" Type="Aggregation.SupportsAggregationType" AppliesTo="EntitySet">
+      <ComplexType Name="SupportsApplyType">
         <Documentation>
           <Summary>
-            This entity set supports the $aggregate query option
-          </Summary>
-        </Documentation>
-      </Term>
-
-      <ComplexType Name="SupportsAggregationType">
-        <Documentation>
-          <Summary>
+            SupportsCount indicates whether the virtual property $count can be used
+            in the aggregate transformation
+            SupportedTransformations contains the list of transformations that can
+            be used in $apply
             AggregatableProperties contains the list of property names that can
-            be used in the $aggregate query
-            option.
+            be used in the aggregate transformation.
             GroupableProperties contains the list of property names that can be
-            used in the $select query option
-            in conjunction with $aggregate.
+            used in the groupby transformation.
           </Summary>
         </Documentation>
-        <Property Name="AggregatableProperties" Type="Collection(Aggregation.AggregatableProperty)" />
-        <Property Name="GroupableProperties" Type="Collection(Aggregation.GroupableProperty)" />
+        <Property Name="SupportsCount" Type="Edm.Boolean" DefaultValue="false" />
+        <Property Name="SupportedTransformations" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="AggregatableProperties" Type="Collection(Self.AggregatableProperty)" Nullable="true" />
+        <Property Name="GroupableProperties" Type="Collection(Self.GroupableProperty)" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="AggregatableProperty">
         <Property Name="Name" Type="Edm.PropertyPath" />
-        <Property Name="DefaultAggregrationFunction" Type="String" Nullable="true" />
-        <Property Name="AcceptedAggregrationFunctions" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="DefaultAggregrationFunction" Type="Edm.String" Nullable="true" />
+        <Property Name="SupportedAggregrationFunctions" Type="Collection(SupportedAggregationFunction)" Nullable="true" />
+        <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
       </ComplexType>
+
+      <ComplexType Name="SupportedAggregationFunction">
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="SupportedGroupingProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
+      </ComplexType>
+
+      <ComplexType Name="FloatingMeasure" BaseType="Self.AggregatableProperty">
+        <Property Name="Type" Type="Edm.String" />
+        <Property Name="InputProperties" Type="Collection(Edm.PropertyPath)" />
+      </ComplexType>
+
 
       <ComplexType Name="GroupableProperty">
         <Property Name="Name" Type="Edm.PropertyPath" />
-        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" />
+        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
       </ComplexType>
 
-    </Schema>
+      <Term Name="Hierarchy" Type="Self.HierarchyType" AppliesTo="EntitySet EntityContainer">
+        <Documentation>
+          <Summary>
+            This entity set or container contains hierarchical groupable properties
+          </Summary>
+        </Documentation>
+      </Term>
 
+      <ComplexType Name="HierarchyType" Abstract="true">
+        <Property Name="Name" Type="String" Nullable="false" />
+      </ComplexType>
+
+
+      <ComplexType Name="LeveledHierarchy" BaseType="Self.HierarchyType">
+        <!--Ordered list of properties in the hierarchy -->
+        <Property Name="Levels" Type="Collection(Edm.PropertyPath)" Nullable="false" />
+      </ComplexType>
+
+      <ComplexType Name="RecursiveHierarchy" BaseType="Self.HierarchyType">
+        <Property Name="NodeProperty" Type="Edm.PropertyPath" Nullable="false" />             
+        <Property Name="ParentNodeProperty" Type="Edm.PropertyPath" Nullable="true" />
+        <Property Name="HierarchyLevelProperty" Type="Edm.PropertyPath" Nullable="true" />
+        <Property Name="IsLeafProperty" Type="Edm.PropertyPath" Nullable="true">
+          <Annotation Term="Core.RequiresType" String="Edm.Boolean" />
+        </Property>
+      </ComplexType>
+
+      <Term Name="AvailableOnAggregates" Type="Self.AvailableOnAggregatesType" AppliesTo="Action Function">
+        <Documentation>
+          <Summary>
+            This Action or Function is available on aggregated entries, as long as
+            the RequiredProperties are still available.
+          </Summary>
+        </Documentation>
+      </Term>
+
+      <ComplexType Name="AvailableOnAggregatesType">
+        <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" />
+      </ComplexType>
+
+
+    </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
