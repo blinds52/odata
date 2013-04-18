@@ -1,21 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
-  <edmx:Reference Url="http://tinyurl.com/Org-OData-Core" />
+  <edmx:Reference Url="http://tinyurl.com/Org-OData-Core">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
+
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Aggregation.V1" Alias="Aggregation">
       <Documentation>
-        <Summary>The following annotations allow to describe which data in a given entity
+        <Summary>
+          The following annotations allow to describe which data in a given entity
           model can be aggregated, and how.
         </Summary>
       </Documentation>
 
-      <Using Namespace="Org.OData.Core.V1" Alias="Core" />
 
-
-      <Term Name="SupportsApply" Type="Self.SupportsApplyType" AppliesTo="EntitySet EntityContainer">
+      <Term Name="SupportsApply" Type="Aggregation.SupportsApplyType" AppliesTo="EntitySet EntityContainer">
         <Documentation>
           <Summary>
-            This entity set or container supports the $apply system query option.
+            This entity set or entity container supports the $apply system query
+            option.
           </Summary>
         </Documentation>
       </Term>
@@ -25,19 +28,25 @@
           <Summary>
             SupportsCount indicates whether the virtual property $count can be used
             in the aggregate transformation.
-            SupportedTransformations contains the list of transformations that can
+            SupportedTransformations
+            contains the list of transformations that can
             be used in $apply.
             AggregatableProperties contains the list of property names that can
-            be used in the aggregate transformation.
+            be used
+            in the aggregate transformation.
             GroupableProperties contains the list of property names that can be
             used in the groupby transformation.
+            SupportsMultipleRollupHierarchies indicates whether the server supports
+            more than one rollup hierarchy in a groupby transformation.
           </Summary>
         </Documentation>
-        <Property Name="SupportsCount" Type="Edm.Boolean" DefaultValue="false" />
-        <Property Name="SupportedTransformations" Type="Collection(Edm.String)" Nullable="true" />
-        <Property Name="AggregatableProperties" Type="Collection(Self.AggregatableProperty)" Nullable="true" />
-        <Property Name="GroupableProperties" Type="Collection(Self.GroupableProperty)" Nullable="true" />
+        <Property Name="SupportsCount" DefaultValue="true" Type="Edm.Boolean" />
+        <Property Name="SupportedTransformations" Nullable="true" Type="Collection(Edm.String)" />
+        <Property Name="AggregatableProperties" Nullable="true" Type="Collection(Aggregation.AggregatableProperty)" />
+        <Property Name="GroupableProperties" Nullable="true" Type="Collection(Aggregation.GroupableProperty)" />
+        <Property Name="SupportsMultipleRollupHierarchies" DefaultValue="true" Type="Edm.Boolean" />
       </ComplexType>
+
 
       <ComplexType Name="AggregatableProperty">
         <Property Name="Name" Type="Edm.PropertyPath" />
@@ -51,37 +60,37 @@
         <Property Name="SupportedGroupingProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
       </ComplexType>
 
-      <ComplexType Name="FloatingMeasure" BaseType="Self.AggregatableProperty">
-        <Property Name="Type" Type="Edm.String" />
-        <Property Name="InputProperties" Type="Collection(Edm.PropertyPath)" />
-      </ComplexType>
-
-
       <ComplexType Name="GroupableProperty">
         <Property Name="Name" Type="Edm.PropertyPath" />
         <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
       </ComplexType>
 
-      <Term Name="Hierarchy" Type="Self.HierarchyType" AppliesTo="EntitySet EntityContainer">
+
+      <Term Name="LeveledHierarchy" Type="Aggregation.LeveledHierarchyType" AppliesTo="EntityType">
         <Documentation>
           <Summary>
-            This entity set or container contains hierarchical groupable properties
+            Defines a leveled hierarchy.
           </Summary>
         </Documentation>
       </Term>
 
-      <ComplexType Name="HierarchyType" Abstract="true">
-        <Property Name="Name" Type="String" Nullable="false" />
-      </ComplexType>
-
-
-      <ComplexType Name="LeveledHierarchy" BaseType="Self.HierarchyType">
+      <ComplexType Name="LeveledHierarchyType">
         <!--Ordered list of properties in the hierarchy -->
         <Property Name="Levels" Type="Collection(Edm.PropertyPath)" Nullable="false" />
       </ComplexType>
 
-      <ComplexType Name="RecursiveHierarchy" BaseType="Self.HierarchyType">
-        <Property Name="NodeProperty" Type="Edm.PropertyPath" Nullable="false" />             
+
+
+      <Term Name="RecursiveHierarchy" Type="Aggregation.RecursiveHierarchyType" AppliesTo="EntityType">
+        <Documentation>
+          <Summary>
+            Defines a recursive hierarchy.
+          </Summary>
+        </Documentation>
+      </Term>
+
+      <ComplexType Name="RecursiveHierarchyType">
+        <Property Name="NodeProperty" Type="Edm.PropertyPath" Nullable="false" />
         <Property Name="ParentNodeProperty" Type="Edm.PropertyPath" Nullable="true" />
         <Property Name="HierarchyLevelProperty" Type="Edm.PropertyPath" Nullable="true" />
         <Property Name="IsLeafProperty" Type="Edm.PropertyPath" Nullable="true">
@@ -89,10 +98,11 @@
         </Property>
       </ComplexType>
 
-      <Term Name="AvailableOnAggregates" Type="Self.AvailableOnAggregatesType" AppliesTo="Action Function">
+
+      <Term Name="AvailableOnAggregates" Type="Aggregation.AvailableOnAggregatesType" AppliesTo="Action Function">
         <Documentation>
           <Summary>
-            This Action or Function is available on aggregated entries, as long as
+            This Action or Function is available on aggregated entities, as long as
             the RequiredProperties are still available.
           </Summary>
         </Documentation>
@@ -101,7 +111,6 @@
       <ComplexType Name="AvailableOnAggregatesType">
         <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" />
       </ComplexType>
-
 
     </Schema>
   </edmx:DataServices>
