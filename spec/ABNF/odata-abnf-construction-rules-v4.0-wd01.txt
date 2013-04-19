@@ -202,7 +202,7 @@ queryOption  = systemQueryOption
              / parameterNameAndValue
              / customQueryOption  
 
-systemQueryOption = aggregate
+systemQueryOption = apply
                   / expand 
                   / filter 
                   / format 
@@ -214,43 +214,77 @@ systemQueryOption = aggregate
                   / select 
                   / skiptoken
 
-; TODO: adapt to new syntax
-aggregate         = '$aggregate' EQ aggregateCommand *( SEMI aggregateCommand )
-aggregateCommand  = aggregateClause 
-                  / filter 
-                  / expand 
-aggregateClause   = aggregateList [ RWS "$groupby" RWS groupbyList ]
-                  / '$groupby' RWS groupbyList
-aggregateList     = aggregateItem *( COMMA aggregateItem )
-aggregateItem     = property [ RWS "as" RWS dynamicProperty ]
-                  / aggregateFunction OPEN property CLOSE [ RWS 'as' RWS dynamicProperty ]
-                  / 'count(' [ property / navigationProperty ]  ')' RWS 'as' RWS dynamicProperty
-                  / 'countDistinct(' ( property / navigationProperty ) ')' RWS 'as' RWS dynamicProperty
-                  / *( navigationProperty "/" ) OPEN aggregateList CLOSE
-                  / *( navigationProperty "/" ) property
-                  / *( navigationProperty "/" ) aggregateFunction OPEN property CLOSE 
-groupbyList       = groupbyItem *( COMMA groupbyItem )
-groupbyItem       = property
-                  / ( complexProperty / navigationProperty ) "/" OPEN groupbyList CLOSE
-                  / ( complexProperty / navigationProperty ) [ "/" groupbyItem ] 
-dynamicProperty   = odataIdentifier
-aggregateFunction = 'sum' / 'min' / 'max' / 'average'
+apply      = '$apply' EQ applyExpr
+applyExpr  = applyTrafo *( "/" applyTrafo )
+applyTrafo = aggregateTrafo
+           / bottomcountTrafo
+           / bottompercentTrafo
+           / bottomsumTrafo
+           / combineTrafo
+           / expandTrafo
+           / filterTrafo
+           / groupbyTrafo
+           / identityTrafo
+           / topcountTrafo
+           / toppercentTrafo
+           / topsumTrafo
 
-expand       = '$expand' EQ expandItem *( COMMA expandItem )
-expandItem   = [ qualifiedEntityTypeName "/" ] navigationProperty 
-               [ "/" qualifiedEntityTypeName ]
-               [ OPEN expandOption *( SEMI expandOption ) CLOSE ]
-               [ ref ]
-expandOption = filter
-             / search
-             / select 
-             / orderby
-             / skip 
-             / top 
-             / inlinecount
-             / expand
-             / levels
-             
+aggregateTrafo      = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
+aggregateParam      = ( '$count' / evalExpr / countOrPropertyWithPath )
+                      [ RWS 'with' RWS aggregationFunction ]
+                      *( RWS 'from' RWS propertyWithPath [ RWS 'with' RWS aggregationFunction ] )
+                      [ RWS 'as'   RWS odataIdentifier ]
+evalExpr            = 'eval' OPEN BWS commonExpr [ BWS COMMA BWS navigationPropertyWithPath ] BWS CLOSE
+aggregationFunction = 'sum' 
+                    / 'min' 
+                    / 'max' 
+                    / 'average' 
+                    / 'countdistinct' 
+                    / namespace "." odataIdentifier
+                    
+bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+
+combineTrafo = 'combine' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
+expandTrafo  = 'expand' OPEN BWS navigationPropertyWithPath BWS COMMA BWS boolCommonExpr BWS CLOSE
+
+filterTrafo  = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
+
+groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOSE
+groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
+groupbyElement = propertyWithPath / rollupSpec
+rollupSpec     = 'rollup' OPEN BWS 
+                  ( '$all' / propertyWithPath ) 
+                  1*( BWS COMMA BWS propertyWithPath ) 
+                  BWS CLOSE
+
+identityTrafo = 'identity'
+
+topcountTrafo   = 'topcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+toppercentTrafo = 'toppercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+topsumTrafo     = 'topsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+
+countOrPropertyWithPath    = *( ( complexProperty / navigationProperty ) "/" ) ( navigationProperty / property / '$count' )
+propertyWithPath           = *( ( complexProperty / navigationProperty ) "/" ) ( navigationProperty / property )
+navigationPropertyWithPath = *( ( complexProperty / navigationProperty ) "/" )   navigationProperty
+
+expand          = '$expand' EQ expandItem *( COMMA expandItem )
+expandItem      = [ qualifiedEntityTypeName "/" ] navigationProperty 
+                  [ "/" qualifiedEntityTypeName ]
+                  [ OPEN expandOption *( SEMI expandOption ) CLOSE ]
+                  [ ref ]
+expandRefOption = filter
+                / search
+                / skip 
+                / top 
+                / inlinecount
+expandOption    = expandRefOption
+                / select 
+                / orderby
+                / expand
+                / levels
+                
 levels = '$levels' EQ ( 1*DIGIT / 'max' )
 
 filter = '$filter' EQ boolCommonExpr
@@ -836,7 +870,7 @@ enum      = qualifiedEnumerationTypeName SQUOTE enumBody SQUOTE
 enumBody  = enumValue *( COMMA enumValue )
 enumValue = enumerationMember / int64Body
 
-geographyCollection   = geographyPrefix fullCollectionLiteral SQUOTE
+geographyCollection   = geographyPrefix SQUOTE fullCollectionLiteral SQUOTE
 fullCollectionLiteral = sridLiteral collectionLiteral
 collectionLiteral     = "Collection(" geoLiteral *( COMMA geoLiteral ) CLOSE
 geoLiteral            = collectionLiteral
@@ -847,31 +881,31 @@ geoLiteral            = collectionLiteral
                       / pointLiteral
                       / polygonLiteral
 
-geographyLineString   = geographyPrefix fullLineStringLiteral SQUOTE
+geographyLineString   = geographyPrefix SQUOTE fullLineStringLiteral SQUOTE
 fullLineStringLiteral = sridLiteral lineStringLiteral
 lineStringLiteral     = "LineString" lineStringData
 lineStringData        = OPEN positionLiteral 1*( COMMA positionLiteral ) CLOSE
 
-geographyMultiLineString   = geographyPrefix fullMultiLineStringLiteral SQUOTE
+geographyMultiLineString   = geographyPrefix SQUOTE fullMultiLineStringLiteral SQUOTE
 fullMultiLineStringLiteral = sridLiteral multiLineStringLiteral
 multiLineStringLiteral     = "MultiLineString(" [ lineStringData *( COMMA lineStringData ) ] CLOSE
 
-geographyMultiPoint   = geographyPrefix fullMultiPointLiteral SQUOTE
+geographyMultiPoint   = geographyPrefix SQUOTE fullMultiPointLiteral SQUOTE
 fullMultiPointLiteral = sridLiteral multiPointLiteral
 multiPointLiteral     = "MultiPoint(" [ pointData *( COMMA pointData ) ] CLOSE
 
-geographyMultiPolygon   = geographyPrefix fullMultiPolygonLiteral SQUOTE
+geographyMultiPolygon   = geographyPrefix SQUOTE fullMultiPolygonLiteral SQUOTE
 fullMultiPolygonLiteral = sridLiteral multiPolygonLiteral
 multiPolygonLiteral     = "MultiPolygon(" [ polygonData *( COMMA polygonData ) ] CLOSE
 
-geographyPoint   = geographyPrefix fullPointLiteral SQUOTE
+geographyPoint   = geographyPrefix SQUOTE fullPointLiteral SQUOTE
 fullPointLiteral = sridLiteral pointLiteral
 sridLiteral      = "SRID" EQ 1*5DIGIT SEMI
 pointLiteral     ="Point" pointData
 pointData        = OPEN positionLiteral CLOSE
 positionLiteral  = double SP double  ; longitude, then latitude
 
-geographyPolygon   = geographyPrefix fullPolygonLiteral SQUOTE
+geographyPolygon   = geographyPrefix SQUOTE fullPolygonLiteral SQUOTE
 fullPolygonLiteral = sridLiteral polygonLiteral
 polygonLiteral     = "Polygon" polygonData
 polygonData        = OPEN ringLiteral *( COMMA ringLiteral ) CLOSE
@@ -880,16 +914,16 @@ ringLiteral        = OPEN positionLiteral *( COMMA positionLiteral ) CLOSE
                    ; Within the polygonData, the ringLiterals MUST specify their points in appropriate winding order. 
                    ; In order of traversal, points to the left side of the ring are interpreted as being in the polygon.
 
-geometryCollection      = geometryPrefix fullCollectionLiteral      SQUOTE
-geometryLineString      = geometryPrefix fullLineStringLiteral      SQUOTE
-geometryMultiLineString = geometryPrefix fullMultiLineStringLiteral SQUOTE
-geometryMultiPoint      = geometryPrefix fullMultiPointLiteral      SQUOTE
-geometryMultiPolygon    = geometryPrefix fullMultiPolygonLiteral    SQUOTE
-geometryPoint           = geometryPrefix fullPointLiteral           SQUOTE
-geometryPolygon         = geometryPrefix fullPolygonLiteral         SQUOTE
+geometryCollection      = geometryPrefix SQUOTE fullCollectionLiteral      SQUOTE
+geometryLineString      = geometryPrefix SQUOTE fullLineStringLiteral      SQUOTE
+geometryMultiLineString = geometryPrefix SQUOTE fullMultiLineStringLiteral SQUOTE
+geometryMultiPoint      = geometryPrefix SQUOTE fullMultiPointLiteral      SQUOTE
+geometryMultiPolygon    = geometryPrefix SQUOTE fullMultiPolygonLiteral    SQUOTE
+geometryPoint           = geometryPrefix SQUOTE fullPointLiteral           SQUOTE
+geometryPolygon         = geometryPrefix SQUOTE fullPolygonLiteral         SQUOTE
 
-geographyPrefix = "geography" SQUOTE
-geometryPrefix  = "geometry" SQUOTE
+geographyPrefix = "geography"
+geometryPrefix  = "geometry" 
 
 
 ;------------------------------------------------------------------------------
