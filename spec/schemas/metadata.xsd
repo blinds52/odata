@@ -26,6 +26,10 @@
   <xs:attribute name="etag" type="xs:string" />
   <xs:attribute name="set" type="edm:TOptionallyQualifiedName" />
 
+  <!-- markup for app:service, atom:entry and atom:feed -->
+  <xs:attribute name="metadata" type="xs:anyURI" />
+  <xs:attribute name="metadata-etag" type="xs:string" />
+
   <!-- markup for atom:entry and atom:feed -->
   <xs:element name="annotation">
     <xs:complexType mixed="true">
@@ -126,6 +130,18 @@
   </xs:attribute>
 
   <!-- markup for app:workspace -->
+  <xs:attribute name="name" type="edm:TOptionallyQualifiedName" />
+
+  <xs:element name="service-document">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="atom:title" minOccurs="1" maxOccurs="1" />
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="href" type="xs:anyURI" />
+    </xs:complexType>
+  </xs:element>
+  
   <xs:element name="entity">
     <xs:complexType>
       <xs:sequence>
@@ -133,6 +149,7 @@
         <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
       <xs:attribute name="href" type="xs:anyURI" />
+      <xs:attribute ref="metadata:name" />
     </xs:complexType>
   </xs:element>
 
@@ -143,6 +160,7 @@
         <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
       <xs:attribute name="href" type="xs:anyURI" />
+      <xs:attribute ref="metadata:name" />
     </xs:complexType>
   </xs:element>
 
