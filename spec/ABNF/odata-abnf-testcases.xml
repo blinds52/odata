@@ -50,6 +50,7 @@
   </Constraint>
   <Constraint Rule="entityColNavigationProperty">
     <Match>Items</Match>
+    <Match>Orders</Match>
     <Match>Products</Match>
     <Match>Sales</Match>
   </Constraint>
@@ -1915,12 +1916,58 @@
             Rule="queryOptions">
     <Input>$filter=Model.PhoneticallySimilar(Word=@expression)&amp;@expression=5</Input>
   </TestCase>
-  <!-- TODO: Hubert will open a ticket
+  <!-- TODO: Hubert has opened a ticket
   <TestCase Name="Functions in filter - expression as parameter" 
             Rule="queryOptions">
     <Input>$filter=Model.PhoneticallySimilar(Number=5 add 3)</Input>
   </TestCase>
   -->
+  <TestCase Name="Metadata URL - Entity set" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers</Input>
+  </TestCase>  
+  <TestCase Name="Metadata URL - Entity set with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers&amp;$select=Address,Orders</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity set with type cast" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer</Input>
+  </TestCase>  
+  <TestCase Name="Metadata URL - Entity" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/@Element</Input>
+  </TestCase>  
+  <TestCase Name="Metadata URL - Entity with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/@Element&amp;$select=Address,Orders</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity with type cast" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer/@Element</Input>
+  </TestCase>  
+  <TestCase Name="Metadata URL - Individual value" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Edm.String</Input>
+  </TestCase>  
+  <TestCase Name="Metadata URL - Individual collection value" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Collection(Edm.String)</Input>
+  </TestCase>  
+  <TestCase Name="Metadata URL - Null value" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Edm.Null</Input>
+  </TestCase>  
+<!-- TODO: Metadata URL fragments
+  <TestCase Name="Metadata URL - Reference" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/Orders/$ref/@Element</Input>
+  </TestCase>  
+  -->
+  <TestCase Name="Metadata URL - Deltas" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/@Delta</Input>
+  </TestCase>  
   <!-- Aggregation -->
   <TestCase Name="Aggregation - basic" 
             Rule="queryOptions">
