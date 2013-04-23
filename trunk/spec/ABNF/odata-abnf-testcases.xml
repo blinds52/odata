@@ -1429,6 +1429,14 @@
             Rule="expand">
     <Input>$expand=Items($select=Quantity;$expand=Product($select=Name,Price))</Input>
   </TestCase>
+  <TestCase Name="5.1.2 Expand - navigation property in complex type" 
+            Rule="expand">
+    <Input>$expand=Address/Country</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - navigation property in collection of complex type" 
+            Rule="expand">
+    <Input>$expand=Addresses/Country</Input>
+  </TestCase>
   <TestCase Name="5.1.2 Expand - levels" 
             Rule="expand">
     <Input>$expand=Category($levels=4),Category($levels=max)</Input>
@@ -1444,6 +1452,10 @@
   <TestCase Name="5.1.3 Select - with property of complex property" 
             Rule="select">
     <Input>$select=Address/Street</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - with property of complex property" 
+            Rule="select">
+    <Input>$select=Address/Country</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - with cast and property of complex property" 
             Rule="select">
@@ -1463,7 +1475,7 @@
   </TestCase>
   <TestCase Name="5.1.3 Select - actions and functions with signature" 
             Rule="select">
-    <Input>$select=Model.ActionName(Model.PreferredSupplier),Model.MostPopularName(Edm.String,Edm.GeographyPoint,Model.NameKind)</Input>
+    <Input>$select=Model.ActionName(Supplier:Model.PreferredSupplier),Model.MostPopularName(Name:Edm.String,Location:Edm.GeographyPoint,Kind:Model.NameKind)</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - tricky" 
             Rule="select">

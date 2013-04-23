@@ -86,7 +86,9 @@
 
 odataUri = ( "https" / "http" ) "://" host [ ":" port ] 
            serviceRoot
-           [ '$metadata' / '$batch' / odataRelativeUri ]  
+           [ '$metadata' ; TODO: metadata fragment for metadata URL
+           / '$batch' 
+           / odataRelativeUri ]  
            [ [ namespace "." entityContainer ] "?" search ]  
 
 serviceRoot = "/" *( segment-nz "/" )
@@ -184,10 +186,10 @@ complexColFunctionImportCall   = [ containerQualifier ] complexColFunctionImport
 primitiveFunctionImportCall    = [ containerQualifier ] primitiveFunctionImport    [ functionParameters ]
 primitiveColFunctionImportCall = [ containerQualifier ] primitiveColFunctionImport [ functionParameters ]
 
-functionParameters    = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
-functionParameter     = functionParameterName EQ ( parameterAlias / primitiveLiteral )
-functionParameterName = odataIdentifier
-parameterAlias        = AT odataIdentifier
+functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
+functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
+parameterName      = odataIdentifier
+parameterAlias     = AT odataIdentifier
 
 containerQualifier = namespace "." entityContainer "."
 
@@ -270,18 +272,20 @@ propertyWithPath           = *( ( complexProperty / navigationProperty ) "/" ) (
 navigationPropertyWithPath = *( ( complexProperty / navigationProperty ) "/" )   navigationProperty
 
 expand          = '$expand' EQ expandItem *( COMMA expandItem )
-expandItem      = [ qualifiedEntityTypeName "/" ] navigationProperty 
+expandItem      = [ qualifiedEntityTypeName "/" ] 
+                  *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
+                  navigationProperty 
                   [ "/" qualifiedEntityTypeName ]
                   [ OPEN expandOption *( SEMI expandOption ) CLOSE ]
                   [ ref ]
 expandRefOption = filter
+                / orderby
                 / search
                 / skip 
                 / top 
                 / inlinecount
 expandOption    = expandRefOption
                 / select 
-                / orderby
                 / expand
                 / levels
                 
@@ -324,10 +328,8 @@ select     = '$select' EQ selectItem *( COMMA selectItem )
 selectItem = STAR  
            / allOperationsInSchema 
            / [ qualifiedEntityTypeName "/" ] 
-             ( navigationProperty  
-             / *( ( complexProperty / complexColProperty ) "/"
-                  [ qualifiedComplexTypeName "/" ] 
-                ) property 
+             ( *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
+               ( property / navigationProperty ) 
              / qualifiedActionName  
              / qualifiedFunctionName  
              )
@@ -335,18 +337,17 @@ allOperationsInSchema = namespace "." STAR
 
 ; The parameterTypeNames are required to uniquely identify the action or function
 ; only if it has overloads.
-qualifiedActionName   = namespace "." action   [ OPEN parameterTypeNames CLOSE ]
-qualifiedFunctionName = namespace "." function [ OPEN parameterTypeNames CLOSE ]
+qualifiedActionName   = namespace "." action   [ OPEN parameterNamesAndTypes CLOSE ]
+qualifiedFunctionName = namespace "." function [ OPEN parameterNamesAndTypes CLOSE ]
 
-; The types of all the parameters to the corresponding function 
-; in the order they are declared in the function.
-parameterTypeNames = [ parameterTypeName *( COMMA parameterTypeName ) ]
-parameterTypeName  = qualifiedTypeName 
+; The names of all parameters, suffixed with a colon and the parameter type 
+parameterNamesAndTypes = parameterNameAndType *( COMMA parameterNameAndType )
+parameterNameAndType   = parameterName ":" qualifiedTypeName 
 
 skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
 
-aliasAndValue         = parameterAlias        EQ parameterValue
-parameterNameAndValue = functionParameterName EQ parameterValue
+aliasAndValue         = parameterAlias EQ parameterValue
+parameterNameAndValue = parameterName  EQ parameterValue
 
 parameterValue = complexInUri  
                / complexColInUri
@@ -355,7 +356,7 @@ parameterValue = complexInUri
                / primitiveLiteral
                / primitiveColInUri
                
-entityReference = 'KEY(' 
+entityReference = 'KEY' OPEN 
                   [ entityContainer "." ] entitySetName keyPredicate
                   [ "/" qualifiedEntityTypeName ]
                   CLOSE                
@@ -458,7 +459,7 @@ functionExpr = namespace "."
                )
 
 functionExprParameters = OPEN [ functionExprParameter *( COMMA functionExprParameter ) ] CLOSE
-functionExprParameter  = functionParameterName EQ ( parameterValue / parameterAlias / firstMemberExpr )
+functionExprParameter  = parameterName EQ ( parameterValue / parameterAlias / firstMemberExpr )
 
 anyExpr = 'any' OPEN BWS [ lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr ] BWS CLOSE
 allExpr = 'all' OPEN BWS   lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr   BWS CLOSE

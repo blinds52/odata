@@ -141,7 +141,7 @@
       <xs:attribute name="href" type="xs:anyURI" />
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="entity">
     <xs:complexType>
       <xs:sequence>
@@ -172,6 +172,8 @@
           maxOccurs="unbounded" />
         <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
+      <xs:attribute ref="metadata:metadata" use="required" />
+      <xs:attribute ref="metadata:metadata-etag" />
       <xs:attribute ref="metadata:type" />
       <xs:attribute ref="metadata:null" />
     </xs:complexType>
@@ -183,6 +185,22 @@
       <xs:sequence>
         <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1" />
         <xs:element name="message" type="xs:string" minOccurs="1" maxOccurs="1" />
+        <xs:element name="target" type="xs:string" minOccurs="0" maxOccurs="1" />
+        <xs:element name="details" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="detail" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="code" type="xs:string" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="message" type="xs:string" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="target" type="xs:string" minOccurs="0" maxOccurs="1" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="innererror" type="xs:anyType" minOccurs="0" maxOccurs="1" />
         <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
