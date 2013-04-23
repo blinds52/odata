@@ -72,11 +72,12 @@
 ; Contents:
 ;   1. Resource Path
 ;   2. Query Options
-;   3. Expressions
-;   4. JSON format for function parameters
-;   5. Names and identifiers
-;   6. Literal Data Values
-;   7. Punctuation
+;   3. Metadata URL Fragments
+;   4. Expressions
+;   5. JSON format for function parameters
+;   6. Names and identifiers
+;   7. Literal Data Values
+;   8. Punctuation
 ;
 ;   A. URI syntax [RFC3986]
 ;   B. ABNF core definitions [RFC5234]
@@ -86,7 +87,7 @@
 
 odataUri = ( "https" / "http" ) "://" host [ ":" port ] 
            serviceRoot
-           [ '$metadata' ; TODO: metadata fragment for metadata URL
+           [ '$metadata' [ metadataFragment ]
            / '$batch' 
            / odataRelativeUri ]  
            [ [ namespace "." entityContainer ] "?" search ]  
@@ -367,7 +368,21 @@ customValue       = *( qchar-no-AMP )
 
 
 ;------------------------------------------------------------------------------
-; 3. Expressions
+; 3. Metadata URL Fragments
+;------------------------------------------------------------------------------
+
+; TODO
+metadataFragment = "#" 
+                   ( 'Edm.Null'
+                   / qualifiedTypeName
+                   / entitySetName [ "/" qualifiedEntityTypeName ] 
+                     [ '/@Delta'
+                     / [ '/@Element' ] [ "&" select ]
+                     ]
+                   )
+
+;------------------------------------------------------------------------------
+; 4. Expressions
 ;------------------------------------------------------------------------------
 
 ; TODO: is a boolCommonExpr also a commonExpr? To e.g. sort by Boolean?
@@ -565,7 +580,7 @@ castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CL
 
 
 ;------------------------------------------------------------------------------
-; 4. JSON format for function parameters
+; 5. JSON format for function parameters
 ;------------------------------------------------------------------------------
 ; Note: the query part of a URI needs to be partially percent-decoded before
 ; applying these rules, see comment at the top of this file
@@ -663,7 +678,7 @@ exp          = "e" [ "-" / "+" ] 1*DIGIT
 
 
 ;------------------------------------------------------------------------------
-; 5. Names and identifiers
+; 6. Names and identifiers
 ;------------------------------------------------------------------------------
 
 qualifiedTypeName = qualifiedEntityTypeName 
@@ -771,7 +786,7 @@ primitiveColFunctionImport = odataIdentifier
 
 
 ;------------------------------------------------------------------------------
-; 6. Literal Data Values
+; 7. Literal Data Values
 ;------------------------------------------------------------------------------
 
 primitiveLiteral = null 
@@ -928,7 +943,7 @@ geometryPrefix  = "geometry"
 
 
 ;------------------------------------------------------------------------------
-; 7. Punctuation
+; 8. Punctuation
 ;------------------------------------------------------------------------------
 
 OWS =  *( SP / HTAB / "%20" / "%09" )  ; "optional" whitespace 
