@@ -5,44 +5,39 @@
   </edmx:Reference>
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Communication.V1" Alias="Communication">
-      <Documentation>
-        <Summary>
+      <Annotation Term="Core.Description">
+        <String>
           Terms for annotating communication-relevant information inspired by
           - RFC6350 vCard
           (http://tools.ietf.org/html/rfc6350)
           - RFC5545 iCalendar (http://tools.ietf.org/html/rfc5545)
           - RFC5322 Internet
           Message Format (http://tools.ietf.org/html/rfc5322)
-        </Summary>
-      </Documentation>
+        </String>
+      </Annotation>
 
       <Term Name="Contact" Type="Communication.ContactData" AppliesTo="EntityType">
-        <Documentation>
-          <Summary>Annotation for easy integration into address books</Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Address book entry"/>
       </Term>
 
       <ComplexType Name="ContactData">
-        <Documentation>
-          <Summary>Address book entry</Summary>
-        </Documentation>
-        <Property Name="formattedName" Type="String" Nullable="true" />
-        <Property Name="givenName" Type="String" Nullable="true" />
-        <Property Name="additionalName" Type="String" Nullable="true" />
-        <Property Name="familyName" Type="String" Nullable="true" />
-        <Property Name="nickName" Type="String" Nullable="true" />
-        <Property Name="honorificPrefix" Type="String" Nullable="true" />
-        <Property Name="honorificSuffix" Type="String" Nullable="true" />
-        <Property Name="note" Type="String" Nullable="true" />
-        <Property Name="birthDate" Type="DateTimeOffset" Nullable="true" />
-        <Property Name="photoUri" Type="String" Nullable="true">
+        <Property Name="formattedName" Type="Edm.String" Nullable="true" />
+        <Property Name="givenName" Type="Edm.String" Nullable="true" />
+        <Property Name="additionalName" Type="Edm.String" Nullable="true" />
+        <Property Name="familyName" Type="Edm.String" Nullable="true" />
+        <Property Name="nickName" Type="Edm.String" Nullable="true" />
+        <Property Name="honorificPrefix" Type="Edm.String" Nullable="true" />
+        <Property Name="honorificSuffix" Type="Edm.String" Nullable="true" />
+        <Property Name="note" Type="Edm.String" Nullable="true" />
+        <Property Name="birthDate" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="photoUri" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.IsURL" />
         </Property>
 
-        <Property Name="orgName" Type="String" Nullable="true" />
-        <Property Name="orgUnit" Type="String" Nullable="true" />
-        <Property Name="orgRole" Type="String" Nullable="true" />
-        <Property Name="jobTitle" Type="String" Nullable="true" />
+        <Property Name="orgName" Type="Edm.String" Nullable="true" />
+        <Property Name="orgUnit" Type="Edm.String" Nullable="true" />
+        <Property Name="orgRole" Type="Edm.String" Nullable="true" />
+        <Property Name="jobTitle" Type="Edm.String" Nullable="true" />
 
         <Property Name="addresses" Type="Collection(Communication.Address)" Nullable="true" />
         <Property Name="phoneNumbers" Type="Collection(Communication.PhoneNumber)" Nullable="true" />
@@ -50,23 +45,23 @@
       </ComplexType>
 
       <ComplexType Name="Address">
-        <Property Name="street" Type="String" Nullable="true" />
-        <Property Name="locality" Type="String" Nullable="true" />
-        <Property Name="region" Type="String" Nullable="true" />
-        <Property Name="postalCode" Type="String" Nullable="true" />
-        <Property Name="country" Type="String" Nullable="true" />
-        <Property Name="poBox" Type="String" Nullable="true" />
-        <Property Name="formattedAddress" Type="String" Nullable="true" />
+        <Property Name="street" Type="Edm.String" Nullable="true" />
+        <Property Name="locality" Type="Edm.String" Nullable="true" />
+        <Property Name="region" Type="Edm.String" Nullable="true" />
+        <Property Name="postalCode" Type="Edm.String" Nullable="true" />
+        <Property Name="country" Type="Edm.String" Nullable="true" />
+        <Property Name="poBox" Type="Edm.String" Nullable="true" />
+        <Property Name="formattedAddress" Type="Edm.String" Nullable="true" />
         <Property Name="kind" Type="Collection(Communication.ContactInformationKind)" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="PhoneNumber">
-        <Property Name="number" Type="String" />
+        <Property Name="number" Type="Edm.String" />
         <Property Name="kind" Type="Collection(Communication.ContactInformationKind)" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="EmailAddress">
-        <Property Name="address" Type="String" />
+        <Property Name="address" Type="Edm.String" />
         <Property Name="kind" Type="Collection(Communication.ContactInformationKind)" Nullable="true" />
       </ComplexType>
 
@@ -78,66 +73,51 @@
       </EnumType>
 
       <Term Name="Event" Type="Communication.EventData" AppliesTo="EntityType">
-        <Documentation>
-          <Summary>Annotation for easy integration into calendars</Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Calendar entry"/>
       </Term>
 
       <ComplexType Name="EventData">
-        <Documentation>
-          <Summary>Calendar entry</Summary>
-        </Documentation>
-        <Property Name="summary" Type="String" Nullable="true" />
-        <Property Name="description" Type="String" Nullable="true" />
-        <Property Name="categories" Type="Collection(String)" Nullable="true" />
-        <Property Name="dtstart" Type="DateTimeOffset" Nullable="true" />
-        <Property Name="dtend" Type="DateTimeOffset" Nullable="true" />
-        <Property Name="duration" Type="Duration" Nullable="true" />
-        <Property Name="class" Type="String" Nullable="true" />
-        <Property Name="status" Type="String" Nullable="true" />
-        <Property Name="location" Type="String" Nullable="true" />
-        <Property Name="transp" Type="Boolean" Nullable="true" />
-        <Property Name="wholeday" Type="Boolean" Nullable="true" />
-        <Property Name="fbtype" Type="String" Nullable="true" />
+        <Property Name="summary" Type="Edm.String" Nullable="true" />
+        <Property Name="description" Type="Edm.String" Nullable="true" />
+        <Property Name="categories" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="dtstart" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="dtend" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="duration" Type="Edm.Duration" Nullable="true" />
+        <Property Name="class" Type="Edm.String" Nullable="true" />
+        <Property Name="status" Type="Edm.String" Nullable="true" />
+        <Property Name="location" Type="Edm.String" Nullable="true" />
+        <Property Name="transp" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="wholeday" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="fbtype" Type="Edm.String" Nullable="true" />
       </ComplexType>
 
       <Term Name="Task" Type="Communication.TaskData" AppliesTo="EntityType">
-        <Documentation>
-          <Summary>Annotation for easy integration into todo lists</Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Task list entry"/>
       </Term>
 
       <ComplexType Name="TaskData">
-        <Documentation>
-          <Summary>Todo list entry</Summary>
-        </Documentation>
-        <Property Name="summary" Type="String" Nullable="true" />
-        <Property Name="description" Type="String" Nullable="true" />
-        <Property Name="due" Type="DateTimeOffset" Nullable="true" />
-        <Property Name="completed" Type="DateTimeOffset" Nullable="true" />
-        <Property Name="percentcomplete" Type="Byte" Nullable="true" />
-        <Property Name="priority" Type="Byte" Nullable="true" />
+        <Property Name="summary" Type="Edm.String" Nullable="true" />
+        <Property Name="description" Type="Edm.String" Nullable="true" />
+        <Property Name="due" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="completed" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="percentcomplete" Type="Edm.Byte" Nullable="true" />
+        <Property Name="priority" Type="Edm.Byte" Nullable="true" />
       </ComplexType>
 
       <Term Name="Message" Type="Communication.MessageData" AppliesTo="EntityType">
-        <Documentation>
-          <Summary>Annotation for easy integration into messaging applications</Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Email message"/>
       </Term>
 
       <ComplexType Name="MessageData">
-        <Documentation>
-          <Summary>Message</Summary>
-        </Documentation>
-        <Property Name="from" Type="String" Nullable="true" />
-        <Property Name="sender" Type="String" Nullable="true" />
-        <Property Name="to" Type="Collection(String)" Nullable="true" />
-        <Property Name="cc" Type="Collection(String)" Nullable="true" />
-        <Property Name="bcc" Type="Collection(String)" Nullable="true" />
-        <Property Name="subject" Type="String" Nullable="true" />
-        <Property Name="body" Type="String" Nullable="true" />
-        <Property Name="keywords" Type="Collection(String)" Nullable="true" />
-        <Property Name="received" Type="DateTimeOffset" Nullable="true" />
+        <Property Name="from" Type="Edm.String" Nullable="true" />
+        <Property Name="sender" Type="Edm.String" Nullable="true" />
+        <Property Name="to" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="cc" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="bcc" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="subject" Type="Edm.String" Nullable="true" />
+        <Property Name="body" Type="Edm.String" Nullable="true" />
+        <Property Name="keywords" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="received" Type="Edm.DateTimeOffset" Nullable="true" />
       </ComplexType>
 
     </Schema>
