@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="TestV3" Alias="Self">
+      <EntityContainer Name="TestV3Container">
+        <EntitySet Name="Schemata" EntityType="TestV3.Schema">
+          <NavigationPropertyBinding EntitySet="Types" Path="EntityTypes" />
+        </EntitySet>
+        <EntitySet Name="Types" EntityType="TestV3.Type">
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Schema" />
+        </EntitySet>
+      </EntityContainer>
+      <EntityType Name="Schema">
+        <Key>
+          <PropertyRef Name="Namespace" />
+        </Key>
+        <Property Type="String" Name="Namespace" Nullable="false" />
+        <Property Type="String" Name="Alias" Nullable="false" />
+        <NavigationProperty Name="EntityTypes" Type="Collection(TestV3.EntityType)" />
+      </EntityType>
+      <EntityType Name="Type">
+        <Key>
+          <PropertyRef Name="Fullname" />
+        </Key>
+        <Property Type="String" Name="Fullname" Nullable="false" />
+        <Property Type="String" Name="Name" Nullable="false" />
+      </EntityType>
+      <EntityType Name="SttructuredType" BaseType="TestV3.Type">
+        <Property Type="Boolean" Name="Abstract" Nullable="true" />
+        <Property Type="Boolean" Name="OpenType" Nullable="true" />
+      </EntityType>
+      <EntityType Name="EntityType" BaseType="TestV3.SttructuredType">
+        <Property Type="Boolean" Name="HasStream" Nullable="true" />
+        <NavigationProperty Name="Schema" Type="TestV3.Schema" />
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

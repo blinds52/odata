@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="TestV3.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="TestV3TargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="TestV3" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="TestV3Container" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Schemata" EntityType="TestV3.Schema" />
+          <EntitySet Name="Types" EntityType="TestV3.Type" cg:GetterAccess="Internal" />
+          <AssociationSet Name="SchemaEntityType" Association="TestV3.SchemaEntityType">
+            <End Role="Schema" EntitySet="Schemata" />
+            <End Role="EntityType" EntitySet="Types" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Schema">
+          <Key>
+            <PropertyRef Name="Namespace" />
+          </Key>
+          <Property Type="String" Name="Namespace" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="Alias" Nullable="false" />
+          <NavigationProperty Name="EntityTypes" Relationship="TestV3.SchemaEntityType" FromRole="Schema" ToRole="EntityType" />
+        </EntityType>
+        <EntityType Name="Type" Abstract="true" cg:TypeAccess="Internal">
+          <Key>
+            <PropertyRef Name="Fullname" />
+          </Key>
+          <Property Type="String" Name="Fullname" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="Name" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EntityType" BaseType="TestV3.Type" >
+          <Property Type="Boolean" Name="HasStream" Nullable="true" />
+          <NavigationProperty Name="Schema" Relationship="TestV3.SchemaEntityType" FromRole="EntityType" ToRole="Schema" />
+        </EntityType>
+        <Association Name="SchemaEntityType">
+          <End Type="TestV3.Schema" Role="Schema" Multiplicity="1" />
+          <End Type="TestV3.EntityType" Role="EntityType" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="TestV3" />
+        <Alias Key="Target" Value="TestV3.Store" />
+        <EntityContainerMapping CdmEntityContainer="TestV3Container" StorageEntityContainer="TestV3TargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
