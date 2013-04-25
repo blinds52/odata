@@ -2,45 +2,36 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Core.V1" Alias="Core">
-      <Documentation>
-        <Summary>Core terms needed to write vocabularies</Summary>
-      </Documentation>
+      <Annotation Term="Core.Description">
+        <String>Core terms needed to write vocabularies</String>
+      </Annotation>
+
+      <Term Name="Description" Type="Edm.String">
+        <Annotation Term="Core.Description" String="A brief description of a model element" />
+      </Term>
+      
+      <Term Name="LongDescription" Type="Edm.String">
+        <Annotation Term="Core.Description" String="A lengthy description of a model element" />
+      </Term>
 
       <TypeDefinition Name="Tag" UnderlyingType="Edm.Boolean">
-        <Documentation>
-          <Summary>
-            This is the type to use for all tagging terms
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="This is the type to use for all tagging terms" />
       </TypeDefinition>
 
       <Term Name="RequiresType" Type="Edm.String" AppliesTo="Term">
-        <Documentation>
-          <Summary>
-            Properties and terms annotated with this annotation MUST have a
-            type that is identical to or derived
-            from the given type name.
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description"
+          String="Properties and terms annotated with this annotation MUST have a type that is identical to or derived from the given type name" />
       </Term>
 
       <!-- Value restrictions for terms -->
       <Term Name="IsURL" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">
-        <Documentation>
-          <Summary>
-            Properties and terms annotated with this term MUST contain
-            a valid URL
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid URL" />
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
-      <Term Name="AcceptableMediaTypes" Type="Collection(String)" AppliesTo="EntityType Property">
-        <Documentation>
-          <Summary>Lists the MIME types acceptable for the annotated entity type marked with HasStream="true" or the
-            annotated named resource property
-          </Summary>
-        </Documentation>
+      <Term Name="AcceptableMediaTypes" Type="Collection(Edm.String)" AppliesTo="EntityType Property">
+        <Annotation Term="Core.Description"
+          String="Lists the MIME types acceptable for the annotated entity type marked with HasStream=&quot;true&quot; or the annotated named resource property " />
         <Annotation Term="Core.IsMediaType" />
       </Term>
 
@@ -50,58 +41,36 @@
       </Term>
 
       <Term Name="IsMediaType" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">
-        <Documentation>
-          <Summary>
-            Properties and terms annotated with this term MUST contain
-            a valid MIME type
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid MIME type" />
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
       <Term Name="IsLanguageDependent" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">
-        <Documentation>
-          <Summary>
-            Properties and terms annotated with this term are
-            language-dependent
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Properties and terms annotated with this term are language-dependent" />
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
       <Term Name="IsSameAs" Type="Core.Tag" DefaultValue="true" AppliesTo="Term">
-        <Documentation>
-          <Summary>
-            Terms annotated with this term convey that the annotation target is "the same as" the term it is
-            annotated with.
-            Example: annotate Employee with Org.Schema.Person
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.LongDescription"
+          String="Terms annotated with this term convey that the annotation target is &quot;the same as&quot; the term it is annotated with. Example: annotate Employee with Org.Schema.Person" />
       </Term>
 
       <!-- Behavior-related terms -->
       <Term Name="OptimisticConcurrencyControl" Type="Core.OptimisticConcurrencyControlType" AppliesTo="EntitySet" />
       <ComplexType Name="OptimisticConcurrencyControlType">
-        <Documentation>
-          <Summary>If present, the annotated entity set uses optimistic concurrency control</Summary>
-          <LongDescription>If the ETag is computed from properties of entities of this set, these are listed in
-            ETagDependsOn
-          </LongDescription>
-        </Documentation>
-        <Property Name="ETagDependsOn" Type="Collection(Edm.PropertyPath)" Nullable="true" />
+        <Annotation Term="Core.Description" String="If present, the annotated entity set uses optimistic concurrency control" />
+        <Property Name="ETagDependsOn" Type="Collection(Edm.PropertyPath)" Nullable="true">
+          <Annotation Term="Core.Description" String="The ETag is computed from these properties" />
+        </Property>
       </ComplexType>
 
       <Term Name="StoreGeneratedPattern" Type="Core.StoreGeneratedPatternType" AppliesTo="Property" />
       <EnumType Name="StoreGeneratedPatternType">
         <Member Name="Identity">
-          <Documentation>
-            <Summary>A value is generated on insert and remains unchanged on update</Summary>
-          </Documentation>
+          <Annotation Term="Core.Description" String="A value is generated on insert and remains unchanged on update" />
         </Member>
         <Member Name="Computed">
-          <Documentation>
-            <Summary>A value is generated on both insert and update</Summary>
-          </Documentation>
+          <Annotation Term="Core.Description" String="A value is generated on both insert and update" />
         </Member>
       </EnumType>
 

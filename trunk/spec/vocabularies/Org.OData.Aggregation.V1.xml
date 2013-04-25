@@ -6,52 +6,37 @@
 
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Aggregation.V1" Alias="Aggregation">
-      <Documentation>
-        <Summary>
-          The following annotations allow to describe which data in a given entity
-          model can be aggregated, and how.
-        </Summary>
-      </Documentation>
+      <Annotation Term="Core.Description">
+        <String>
+          Terms to describe which data in a given entity model can be aggregated, and how
+        </String>
+      </Annotation>
 
 
-      <Term Name="SupportsApply" Type="Aggregation.SupportsApplyType" AppliesTo="EntitySet EntityContainer">
-        <Documentation>
-          <Summary>
-            This entity set or entity container supports the $apply system query
-            option.
-          </Summary>
-        </Documentation>
-      </Term>
-
+      <Term Name="SupportsApply" Type="Aggregation.SupportsApplyType" AppliesTo="EntitySet EntityContainer" />
       <ComplexType Name="SupportsApplyType">
-        <Documentation>
-          <Summary>
-            SupportsCount indicates whether the virtual property $count can be used
-            in the aggregate transformation.
-            SupportedTransformations
-            contains the list of transformations that can
-            be used in $apply.
-            AggregatableProperties contains the list of property names that can
-            be used
-            in the aggregate transformation.
-            GroupableProperties contains the list of property names that can be
-            used in the groupby transformation.
-            SupportsMultipleRollupHierarchies indicates whether the server supports
-            more than one rollup hierarchy in a groupby transformation.
-          </Summary>
-        </Documentation>
-        <Property Name="SupportsCount" DefaultValue="true" Type="Edm.Boolean" />
-        <Property Name="SupportedTransformations" Nullable="true" Type="Collection(Edm.String)" />
-        <Property Name="AggregatableProperties" Nullable="true" Type="Collection(Aggregation.AggregatableProperty)" />
-        <Property Name="GroupableProperties" Nullable="true" Type="Collection(Aggregation.GroupableProperty)" />
-        <Property Name="SupportsMultipleRollupHierarchies" DefaultValue="true" Type="Edm.Boolean" />
+        <Property Name="SupportsCount" DefaultValue="true" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="The virtual property $count can be used in the aggregate transformation" />
+        </Property>
+        <Property Name="SupportedTransformations" Nullable="true" Type="Collection(Edm.String)">
+          <Annotation Term="Core.Description" String="Transformations that can be used in $apply" />
+        </Property>
+        <Property Name="AggregatableProperties" Nullable="true" Type="Collection(Aggregation.AggregatableProperty)">
+          <Annotation Term="Core.Description" String="Properties that can be used in the aggregate transformation" />
+        </Property>
+        <Property Name="GroupableProperties" Nullable="true" Type="Collection(Aggregation.GroupableProperty)">
+          <Annotation Term="Core.Description" String="Properties that can be used in the groupby transformation" />
+        </Property>
+        <Property Name="SupportsMultipleRollupHierarchies" DefaultValue="true" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="The service supports more than one rollup hierarchy in a groupby transformation" />
+        </Property>
       </ComplexType>
-
 
       <ComplexType Name="AggregatableProperty">
         <Property Name="Name" Type="Edm.PropertyPath" />
         <Property Name="DefaultAggregrationFunction" Type="Edm.String" Nullable="true" />
-        <Property Name="SupportedAggregrationFunctions" Type="Collection(SupportedAggregationFunction)" Nullable="true" />
+        <Property Name="SupportedAggregrationFunctions" Type="Collection(Aggregation.SupportedAggregationFunction)"
+          Nullable="true" />
         <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
       </ComplexType>
 
@@ -67,26 +52,18 @@
 
 
       <Term Name="LeveledHierarchy" Type="Aggregation.LeveledHierarchyType" AppliesTo="EntityType">
-        <Documentation>
-          <Summary>
-            Defines a leveled hierarchy.
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Defines a leveled hierarchy" />
       </Term>
 
       <ComplexType Name="LeveledHierarchyType">
         <!--Ordered list of properties in the hierarchy -->
+        <!-- TODO: why do we need this complex type? We could define LeveledHierarchy with Type="Collection(Edm.PropertyPath)" -->
         <Property Name="Levels" Type="Collection(Edm.PropertyPath)" Nullable="false" />
       </ComplexType>
 
 
-
       <Term Name="RecursiveHierarchy" Type="Aggregation.RecursiveHierarchyType" AppliesTo="EntityType">
-        <Documentation>
-          <Summary>
-            Defines a recursive hierarchy.
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description" String="Defines a recursive hierarchy" />
       </Term>
 
       <ComplexType Name="RecursiveHierarchyType">
@@ -100,12 +77,8 @@
 
 
       <Term Name="AvailableOnAggregates" Type="Aggregation.AvailableOnAggregatesType" AppliesTo="Action Function">
-        <Documentation>
-          <Summary>
-            This Action or Function is available on aggregated entities, as long as
-            the RequiredProperties are still available.
-          </Summary>
-        </Documentation>
+        <Annotation Term="Core.Description"
+          String="This Action or Function is available on aggregated entities, as long as the RequiredProperties are still available" />
       </Term>
 
       <ComplexType Name="AvailableOnAggregatesType">
