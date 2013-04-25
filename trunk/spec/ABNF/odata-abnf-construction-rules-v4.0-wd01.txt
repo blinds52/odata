@@ -13,19 +13,19 @@
 ;   - Ralf Handl (ralf.handl@sap.com), SAP AG
 ;   - Michael Pizzo (mikep@microsoft.com), Microsoft
 ;
-; Additional artifacts:
+; Additional artifacts: 
 ;   This prose specification is one component of a Work Product which consists
 ;   of:
 ;   - OData Core Part 1: Protocol
 ;   - OData Core Part 2: URL Conventions
-;   - OData Core Part 3: Common Schema Definition Language
+;   - OData Core Part 3: Common Schema Defi  nition Language
 ;   - OData ABNF Construction Rules (this document)
 ;
 ; Related work:
 ;   This work product is related to the following two Work Products, each of 
 ;   which define alternate formats for OData payloads
 ;   - OData JSON Format
-;   - OData ATOM Format
+;   - OData Atom Format
 ;   This specification replaces or supersedes:
 ;   - None
 ;
@@ -258,7 +258,7 @@ groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOS
 groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
 groupbyElement = propertyWithPath / rollupSpec
 rollupSpec     = 'rollup' OPEN BWS 
-                  ( '$all' / propertyWithPath ) 
+                  ( '$all' / propertyWithPath )
                   1*( BWS COMMA BWS propertyWithPath ) 
                   BWS CLOSE
 
@@ -272,23 +272,26 @@ countOrPropertyWithPath    = *( ( complexProperty / navigationProperty ) "/" ) (
 propertyWithPath           = *( ( complexProperty / navigationProperty ) "/" ) ( navigationProperty / property )
 navigationPropertyWithPath = *( ( complexProperty / navigationProperty ) "/" )   navigationProperty
 
-expand          = '$expand' EQ expandItem *( COMMA expandItem )
-expandItem      = [ qualifiedEntityTypeName "/" ] 
-                  *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
-                  navigationProperty 
-                  [ "/" qualifiedEntityTypeName ]
-                  [ OPEN expandOption *( SEMI expandOption ) CLOSE ]
-                  [ ref ]
-expandRefOption = filter
-                / orderby
-                / search
-                / skip 
-                / top 
-                / inlinecount
-expandOption    = expandRefOption
-                / select 
-                / expand
-                / levels
+expand            = '$expand' EQ expandItem *( COMMA expandItem )
+expandItem        = [ qualifiedEntityTypeName "/" ] 
+                    *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
+                    navigationProperty 
+                    [ "/" qualifiedEntityTypeName ]
+                    [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
+                    / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
+                    /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
+                    ]
+expandCountOption = filter
+                  / search
+expandRefOption   = expandCountOption
+                  / orderby
+                  / skip 
+                  / top 
+                  / inlinecount
+expandOption      = expandRefOption
+                  / select 
+                  / expand
+                  / levels
                 
 levels = '$levels' EQ ( 1*DIGIT / 'max' )
 
@@ -301,14 +304,14 @@ skip = '$skip' EQ 1*DIGIT
 top  = '$top'  EQ 1*DIGIT
 
 format = '$format' EQ
-         ( 'atom'
-         / 'json' 
-         / 'xml'
-         / 1*( pchar / "/" ) ; <a data service specific value indicating a
-         )                   ; format specific to the specific data service> or
-                             ; <An IANA-defined [IANA-MMT] content type>
+         ( "atom"
+         / "json" 
+         / "xml"
+         / 1*pchar "/" 1*pchar ; <a data service specific value indicating a
+         )                     ; format specific to the specific data service> or
+                               ; <An IANA-defined [IANA-MMT] content type>
                           
-inlinecount = '$inlinecount' EQ ( 'allpages' / 'none' )
+inlinecount = '$count' EQ booleanValue
 
 search     = '$search' EQ BWS searchExpr
 searchExpr = ( OPEN BWS searchExpr BWS CLOSE
@@ -350,12 +353,13 @@ skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
 aliasAndValue         = parameterAlias EQ parameterValue
 parameterNameAndValue = parameterName  EQ parameterValue
 
-parameterValue = complexInUri  
-               / complexColInUri
-               / entityReference
+parameterValue = complexColInUri  
+               / complexInUri
                / entityRefColInUri
-               / primitiveLiteral
+               / entityReference
                / primitiveColInUri
+               / commonExpr
+               / primitiveLiteral
                
 entityReference = 'KEY' OPEN 
                   [ entityContainer "." ] entitySetName keyPredicate
@@ -371,21 +375,27 @@ customValue       = *( qchar-no-AMP )
 ; 3. Metadata URL Fragments
 ;------------------------------------------------------------------------------
 
-; TODO
 metadataFragment = "#" 
                    ( 'Edm.Null'
                    / qualifiedTypeName
                    / entitySetName [ "/" qualifiedEntityTypeName ] 
-                     [ '/@Delta'
-                     / [ '/@Element' ] [ "&" select ]
+                     *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
+                        "/" navigationProperty
+                      ) 
+                     [ delta
+                     / ref [ element ]
+                     / [ element ] [ "&" select ]
                      ]
                    )
+
+delta   = '/@Delta'                   
+element = '/@Element'                   
 
 ;------------------------------------------------------------------------------
 ; 4. Expressions
 ;------------------------------------------------------------------------------
 
-; TODO: is a boolCommonExpr also a commonExpr? To e.g. sort by Boolean?
+; TODO: a boolCommonExpr is also a commonExpr, e.g. sort by Boolean 
 commonExpr = ( primitiveLiteral
              / parameterAlias
              / firstMemberExpr
@@ -474,7 +484,7 @@ functionExpr = namespace "."
                )
 
 functionExprParameters = OPEN [ functionExprParameter *( COMMA functionExprParameter ) ] CLOSE
-functionExprParameter  = parameterName EQ ( parameterValue / parameterAlias / firstMemberExpr )
+functionExprParameter  = parameterName EQ ( parameterAlias / parameterValue )
 
 anyExpr = 'any' OPEN BWS [ lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr ] BWS CLOSE
 allExpr = 'all' OPEN BWS   lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr   BWS CLOSE
@@ -506,7 +516,6 @@ methodCallExpr = indexOfMethodCallExpr
                / minDateTimeMethodCallExpr
                / maxDateTimeMethodCallExpr
                / nowMethodCallExpr
-               / searchMethodCallExpr
 
 boolMethodCallExpr = endsWithMethodCallExpr 
                    / startsWithMethodCallExpr 
@@ -539,8 +548,6 @@ totalOffsetMinutesMethodCallExpr = 'totaloffsetminutes' OPEN BWS commonExpr BWS 
 minDateTimeMethodCallExpr = 'mindatetime(' BWS ')'
 maxDateTimeMethodCallExpr = 'maxdatetime(' BWS ')'
 nowMethodCallExpr         = 'now(' BWS ')'
-
-searchMethodCallExpr = 'search' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 roundMethodCallExpr   = 'round'   OPEN BWS commonExpr BWS CLOSE
 floorMethodCallExpr   = 'floor'   OPEN BWS commonExpr BWS CLOSE
@@ -790,14 +797,15 @@ primitiveColFunctionImport = odataIdentifier
 ;------------------------------------------------------------------------------
 
 primitiveLiteral = null 
-                 / decimal 
-                 / single 
-                 / double 
-                 / sbyte 
-                 / byte 
-                 / int16 
-                 / int32 
-                 / int64 
+                 / booleanValue 
+                 / decimalValue 
+                 / doubleValue 
+                 / singleValue 
+                 / sbyteValue 
+                 / byteValue 
+                 / int16Value 
+                 / int32Value 
+                 / int64Value 
                  / binary 
                  / date
                  / dateTimeOffset 
@@ -805,7 +813,6 @@ primitiveLiteral = null
                  / guid 
                  / string 
                  / timeOfDay 
-                 / boolean 
                  / enum
                  / geographyCollection 
                  / geographyLineString 
@@ -822,52 +829,47 @@ primitiveLiteral = null
                  / geometryPoint 
                  / geometryPolygon 
 
-null = 'null' [ SQUOTE qualifiedTypeName SQUOTE ] 
+null      = nullValue [ SQUOTE qualifiedTypeName SQUOTE ] 
+nullValue = 'null' 
        ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
        ; Knowing the type is useful for function overload resolution purposes 
                                                 
-binary  = ( 'X' / "binary" ) SQUOTE binaryBody SQUOTE ; Note: 'X' is case sensitive, "binary" is not
-binaryBody = *(2HEXDIG)
+binary      = ( 'X' / "binary" ) SQUOTE binaryValue SQUOTE ; Note: 'X' is case sensitive, "binary" is not
+binaryValue = *(2HEXDIG)
 
-boolean = ( "true" / "1" ) / ( "false" / "0" )
+booleanValue = "true" / "false"
 
-decimal     = decimalBody [ "m" ]
-decimalBody = [SIGN] 1*DIGIT ["." 1*DIGIT]
+decimalValue = [SIGN] 1*DIGIT ["." 1*DIGIT]
 
-double      = doubleBody [ "d" ] / nanInfinity
-doubleBody  = decimalBody [ "e" [SIGN] 1*DIGIT ] ; TODO: restrict range
-
-single      = singleBody [ "f" ] / nanInfinity
-singleBody  = decimalBody [ "e" [SIGN] 1*DIGIT ] ; TODO: restrict range
-
+doubleValue = decimalValue [ "e" [SIGN] 1*DIGIT ] / nanInfinity ; with restricted number range
+singleValue = doubleValue                                       ; with restricted number range
 nanInfinity = 'NaN' / '-INF' / 'INF'
 
-guid     = "guid" SQUOTE guidBody SQUOTE
-guidBody = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
+guid     = "guid" SQUOTE guidValue SQUOTE
+guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
 
-byte  = 1*3DIGIT ; numbers in the range from 0 to 255
-sbyte = [ sign ] 1*3DIGIT ; numbers in the range from -128 to 127
-int16 = [ sign ] 1*5DIGIT ; numbers in the range from -32768 to 32767        
-int32 = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
-int64 = int64Body [ "L" ] 
-int64Body = [ sign ] 1*19DIGIT ; numbers in the range from -9223372036854775808 to 9223372036854775807
+byteValue  = 1*3DIGIT           ; numbers in the range from 0 to 255
+sbyteValue = [ sign ] 1*3DIGIT  ; numbers in the range from -128 to 127
+int16Value = [ sign ] 1*5DIGIT  ; numbers in the range from -32768 to 32767        
+int32Value = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
+int64Value = [ sign ] 1*19DIGIT ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
 string           = SQUOTE *( SQUOTE-in-string / pchar-no-SQUOTE ) SQUOTE
 SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal
 
-date     = "date" SQUOTE dateBody SQUOTE
-dateBody = year "-" month "-" day
+date      = "date" SQUOTE dateValue SQUOTE
+dateValue = year "-" month "-" day
 
-dateTimeOffset     = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
-dateTimeOffsetBody = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / sign hour ":" minute )
+dateTimeOffset      = "datetimeoffset" SQUOTE dateTimeOffsetValue SQUOTE
+dateTimeOffsetValue = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / sign hour ":" minute )
 
-duration     = "duration" SQUOTE durationBody SQUOTE
-durationBody = [ sign ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
+duration      = "duration" SQUOTE durationValue SQUOTE
+durationValue = [ sign ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
      ; the above is an approximation of the rules for an xml dayTimeDuration.
      ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
-timeOfDay     = "timeofday" SQUOTE timeOfDayBody SQUOTE 
-timeOfDayBody = hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
+timeOfDay     = "timeofday" SQUOTE timeOfDayValue SQUOTE 
+timeOfDayValue = hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
  
 oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
 zeroToFiftyNine = ( "0" / "1" / "2" / "3" / "4" / "5" ) DIGIT
@@ -882,9 +884,9 @@ minute = zeroToFiftyNine
 second = zeroToFiftyNine       
 fractionalSeconds = 1*12DIGIT
 
-enum      = qualifiedEnumerationTypeName SQUOTE enumBody SQUOTE
-enumBody  = enumValue *( COMMA enumValue )
-enumValue = enumerationMember / int64Body
+enum            = qualifiedEnumerationTypeName SQUOTE enumValue SQUOTE
+enumValue       = singleEnumValue *( COMMA singleEnumValue )
+singleEnumValue = enumerationMember / int64Value
 
 geographyCollection   = geographyPrefix SQUOTE fullCollectionLiteral SQUOTE
 fullCollectionLiteral = sridLiteral collectionLiteral
@@ -919,7 +921,7 @@ fullPointLiteral = sridLiteral pointLiteral
 sridLiteral      = "SRID" EQ 1*5DIGIT SEMI
 pointLiteral     ="Point" pointData
 pointData        = OPEN positionLiteral CLOSE
-positionLiteral  = double SP double  ; longitude, then latitude
+positionLiteral  = doubleValue SP doubleValue  ; longitude, then latitude
 
 geographyPolygon   = geographyPrefix SQUOTE fullPolygonLiteral SQUOTE
 fullPolygonLiteral = sridLiteral polygonLiteral
