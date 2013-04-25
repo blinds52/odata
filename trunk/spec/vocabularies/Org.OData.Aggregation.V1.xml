@@ -3,17 +3,18 @@
   <edmx:Reference Uri="http://tinyurl.com/Org-OData-Core">
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
   </edmx:Reference>
-
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Aggregation.V1" Alias="Aggregation">
       <Annotation Term="Core.Description">
-        <String>
-          Terms to describe which data in a given entity model can be aggregated, and how
-        </String>
+        <String>Terms to describe which data in a given entity model can be aggregated, and how.</String>
       </Annotation>
 
+      <Term Name="SupportsApply" Type="Aggregation.SupportsApplyType" AppliesTo="EntitySet EntityContainer">
+        <Annotation Term="Core.Description">
+          <String>This entity set or entity container supports the $apply system query option.</String>
+        </Annotation>
+      </Term>
 
-      <Term Name="SupportsApply" Type="Aggregation.SupportsApplyType" AppliesTo="EntitySet EntityContainer" />
       <ComplexType Name="SupportsApplyType">
         <Property Name="SupportsCount" DefaultValue="true" Type="Edm.Boolean">
           <Annotation Term="Core.Description" String="The virtual property $count can be used in the aggregate transformation" />
@@ -35,8 +36,7 @@
       <ComplexType Name="AggregatableProperty">
         <Property Name="Name" Type="Edm.PropertyPath" />
         <Property Name="DefaultAggregrationFunction" Type="Edm.String" Nullable="true" />
-        <Property Name="SupportedAggregrationFunctions" Type="Collection(Aggregation.SupportedAggregationFunction)"
-          Nullable="true" />
+        <Property Name="SupportedAggregrationFunctions" Type="Collection(Aggregation.SupportedAggregationFunction)" Nullable="true" />
         <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
       </ComplexType>
 
@@ -50,20 +50,12 @@
         <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)" Nullable="true" />
       </ComplexType>
 
-
-      <Term Name="LeveledHierarchy" Type="Aggregation.LeveledHierarchyType" AppliesTo="EntityType">
-        <Annotation Term="Core.Description" String="Defines a leveled hierarchy" />
+      <Term Name="LeveledHierarchy" Type="Collection(Edm.PropertyPath)" AppliesTo="EntityType">
+        <Annotation Term="Core.Description" String="Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy " />
       </Term>
 
-      <ComplexType Name="LeveledHierarchyType">
-        <!--Ordered list of properties in the hierarchy -->
-        <!-- TODO: why do we need this complex type? We could define LeveledHierarchy with Type="Collection(Edm.PropertyPath)" -->
-        <Property Name="Levels" Type="Collection(Edm.PropertyPath)" Nullable="false" />
-      </ComplexType>
-
-
       <Term Name="RecursiveHierarchy" Type="Aggregation.RecursiveHierarchyType" AppliesTo="EntityType">
-        <Annotation Term="Core.Description" String="Defines a recursive hierarchy" />
+        <Annotation Term="Core.Description" String="Defines a recursive hierarchy." />
       </Term>
 
       <ComplexType Name="RecursiveHierarchyType">
@@ -75,10 +67,10 @@
         </Property>
       </ComplexType>
 
-
       <Term Name="AvailableOnAggregates" Type="Aggregation.AvailableOnAggregatesType" AppliesTo="Action Function">
-        <Annotation Term="Core.Description"
-          String="This Action or Function is available on aggregated entities, as long as the RequiredProperties are still available" />
+        <Annotation Term="Core.Description">
+          <String>This Action or Function is available on aggregated entities, as long as the RequiredProperties are still available. </String>
+        </Annotation>
       </Term>
 
       <ComplexType Name="AvailableOnAggregatesType">
