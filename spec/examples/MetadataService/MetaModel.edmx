@@ -96,7 +96,6 @@
             <End Role="Schema" EntitySet="Schemata" />
             <End Role="ValueTerm" EntitySet="Terms" />
           </AssociationSet>
-          <EntitySet Name="AnnotationsElements" EntityType="Edm.Metadata.AnnotationsElement" />
           <AssociationSet Name="ValueTermType" Association="Edm.Metadata.ValueTermType">
             <End Role="ValueTerm" EntitySet="Terms" />
             <End Role="Type" EntitySet="Types" />
@@ -115,17 +114,9 @@
             <End Role="EntitySet" EntitySet="EntitySets" />
           </AssociationSet>
           <EntitySet Name="Annotations" EntityType="Edm.Metadata.Annotation" />
-          <AssociationSet Name="ValueAnnotationValueTerm" Association="Edm.Metadata.ValueAnnotationValueTerm">
-            <End Role="ValueAnnotation" EntitySet="Annotations" />
-            <End Role="ValueTerm" EntitySet="Terms" />
-          </AssociationSet>
-          <AssociationSet Name="AnnotationsValueAnnotation" Association="Edm.Metadata.AnnotationsValueAnnotation">
-            <End Role="Annotations" EntitySet="AnnotationsElements" />
-            <End Role="ValueAnnotation" EntitySet="Annotations" />
-          </AssociationSet>
-          <AssociationSet Name="SchemaAnnotations" Association="Edm.Metadata.SchemaAnnotations">
-            <End Role="Schema" EntitySet="Schemata" />
-            <End Role="Annotations" EntitySet="AnnotationsElements" />
+          <AssociationSet Name="AnnotationUsesTerm" Association="Edm.Metadata.AnnotationUsesTerm">
+            <End Role="Annotation" EntitySet="Annotations" />
+            <End Role="Term" EntitySet="Terms" />
           </AssociationSet>
           <EntitySet Name="Functions" EntityType="Edm.Metadata.Function" />
           <EntitySet Name="Entities" EntityType="Edm.Metadata.Entity" />
@@ -209,6 +200,19 @@
             <End Role="NavigationProperty" EntitySet="NavigationProperties" />
             <End Role="EntityType" EntitySet="EntityTypes" />
           </AssociationSet>
+          <EntitySet Name="References" EntityType="Edm.Metadata.Reference" />
+          <AssociationSet Name="SchemaAnnotation" Association="Edm.Metadata.SchemaAnnotation">
+            <End Role="Schema" EntitySet="Schemata" />
+            <End Role="Annotation" EntitySet="Annotations" />
+          </AssociationSet>
+          <AssociationSet Name="AnnotatedWith" Association="Edm.Metadata.AnnotatedWith">
+            <End Role="Term" EntitySet="Terms" />
+            <End Role="Annotation" EntitySet="Annotations" />
+          </AssociationSet>
+          <AssociationSet Name="TypeAnnotation" Association="Edm.Metadata.TypeAnnotation">
+            <End Role="Type" EntitySet="Types" />
+            <End Role="Annotation" EntitySet="Annotations" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="EntityType">
           <Key>
@@ -229,18 +233,19 @@
         </EntityType>
         <EntityType Name="Schema">
           <Key>
-            <PropertyRef Name="Namespace" />
+            <PropertyRef Name="Fullname" />
           </Key>
+          <Property Type="String" Name="Fullname" Nullable="false" />
           <Property Type="String" Name="Namespace" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <NavigationProperty Name="EntityTypes" Relationship="Edm.Metadata.SchemaEntityType" FromRole="Schema" ToRole="EntityType" />
           <NavigationProperty Name="ComplexTypes" Relationship="Edm.Metadata.SchemaComplexType" FromRole="Schema" ToRole="ComplexType" />
           <NavigationProperty Name="EntityContainers" Relationship="Edm.Metadata.SchemaEntityContainer" FromRole="Schema" ToRole="EntityContainer" />
           <NavigationProperty Name="Terms" Relationship="Edm.Metadata.SchemaValueTerm" FromRole="Schema" ToRole="ValueTerm" />
-          <NavigationProperty Name="Annotations" Relationship="Edm.Metadata.SchemaAnnotations" FromRole="Schema" ToRole="Annotations" />
           <Property Type="String" Name="Alias" Nullable="false" />
           <NavigationProperty Name="Actions" Relationship="Edm.Metadata.SchemaAction" FromRole="Schema" ToRole="Action" />
           <NavigationProperty Name="Functions" Relationship="Edm.Metadata.SchemaFunction" FromRole="Schema" ToRole="Function" />
           <NavigationProperty Name="NamedEntities" Relationship="Edm.Metadata.SchemaEntity" FromRole="Schema" ToRole="Entity" />
+          <NavigationProperty Name="Annotations" Relationship="Edm.Metadata.SchemaAnnotation" FromRole="Schema" ToRole="Annotation" />
         </EntityType>
         <Association Name="SchemaEntityType">
           <End Type="Edm.Metadata.Schema" Role="Schema" Multiplicity="1" />
@@ -414,6 +419,7 @@
           </Key>
           <Property Type="String" Name="FullName" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Annotations" Relationship="Edm.Metadata.TypeAnnotation" FromRole="Type" ToRole="Annotation" />
         </EntityType>
         <Association Name="ParameterTypeType">
           <End Type="Edm.Metadata.ParameterType" Role="ParameterType" Multiplicity="*" />
@@ -447,23 +453,13 @@
           <Property Type="Boolean" Name="IsCollection" Nullable="false" />
           <NavigationProperty Name="Type" Relationship="Edm.Metadata.ValueTermType" FromRole="ValueTerm" ToRole="Type" />
           <Property Type="String" Name="DefaultValue" Nullable="false" />
+          <NavigationProperty Name="Applications" Relationship="Edm.Metadata.AnnotationUsesTerm" FromRole="Term" ToRole="Annotation" />
+          <NavigationProperty Name="Annotations" Relationship="Edm.Metadata.AnnotatedWith" FromRole="Term" ToRole="Annotation" />
         </EntityType>
         <Association Name="SchemaValueTerm">
           <End Type="Edm.Metadata.Schema" Role="Schema" Multiplicity="1" />
           <End Type="Edm.Metadata.Term" Role="ValueTerm" Multiplicity="*" />
         </Association>
-        <EntityType Name="AnnotationsElement">
-          <Documentation>
-            <Summary>This is actually a complex type</Summary>
-          </Documentation>
-          <Key>
-            <PropertyRef Name="is_complex_type" />
-          </Key>
-          <Property Type="Int32" Name="is_complex_type" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Target" Nullable="false" />
-          <NavigationProperty Name="Annotations" Relationship="Edm.Metadata.AnnotationsValueAnnotation" FromRole="Annotations" ToRole="ValueAnnotation" />
-          <NavigationProperty Name="Schema" Relationship="Edm.Metadata.SchemaAnnotations" FromRole="Annotations" ToRole="Schema" />
-        </EntityType>
         <Association Name="ValueTermType">
           <End Type="Edm.Metadata.Term" Role="ValueTerm" Multiplicity="*" />
           <End Type="Edm.Metadata.Type" Role="Type" Multiplicity="1" />
@@ -495,7 +491,7 @@
           </Key>
           <Property Type="String" Name="FullName" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Qualifier" Nullable="false" />
-          <NavigationProperty Name="Term" Relationship="Edm.Metadata.ValueAnnotationValueTerm" FromRole="ValueAnnotation" ToRole="ValueTerm" />
+          <NavigationProperty Name="Term" Relationship="Edm.Metadata.AnnotationUsesTerm" FromRole="Annotation" ToRole="Term" />
           <Property Type="String" Name="Value" Nullable="false" />
           <NavigationProperty Name="Target" >
             <Documentation>
@@ -503,17 +499,9 @@
             </Documentation>
           </NavigationProperty>
         </EntityType>
-        <Association Name="ValueAnnotationValueTerm">
-          <End Type="Edm.Metadata.Annotation" Role="ValueAnnotation" Multiplicity="*" />
-          <End Type="Edm.Metadata.Term" Role="ValueTerm" Multiplicity="1" />
-        </Association>
-        <Association Name="AnnotationsValueAnnotation">
-          <End Type="Edm.Metadata.AnnotationsElement" Role="Annotations" Multiplicity="1" />
-          <End Type="Edm.Metadata.Annotation" Role="ValueAnnotation" Multiplicity="*" />
-        </Association>
-        <Association Name="SchemaAnnotations">
-          <End Type="Edm.Metadata.Schema" Role="Schema" Multiplicity="1" />
-          <End Type="Edm.Metadata.AnnotationsElement" Role="Annotations" Multiplicity="*" />
+        <Association Name="AnnotationUsesTerm">
+          <End Type="Edm.Metadata.Annotation" Role="Annotation" Multiplicity="*" />
+          <End Type="Edm.Metadata.Term" Role="Term" Multiplicity="1" />
         </Association>
         <EntityType Name="TypeDefinition" Abstract="true" BaseType="Edm.Metadata.PrimitiveType">
           <Property Name="Facets" Type="Edm.Metadata.Facet" Nullable="false" />
@@ -660,6 +648,26 @@
         <Association Name="NavigationPropertyTargetEntityType">
           <End Type="Edm.Metadata.NavigationProperty" Role="NavigationProperty" Multiplicity="*" />
           <End Type="Edm.Metadata.EntityType" Role="EntityType" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Reference">
+          <Key>
+            <PropertyRef Name="Uri" />
+          </Key>
+          <Property Type="String" Name="Uri" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Include" Type="Edm.Metadata.ReferentialConstraint" Nullable="false" />
+          <Property Name="IncludeAnnotations" Type="Edm.Metadata.ReferentialConstraint" Nullable="false" />
+        </EntityType>
+        <Association Name="SchemaAnnotation">
+          <End Type="Edm.Metadata.Schema" Role="Schema" Multiplicity="1" />
+          <End Type="Edm.Metadata.Annotation" Role="Annotation" Multiplicity="*" />
+        </Association>
+        <Association Name="AnnotatedWith">
+          <End Type="Edm.Metadata.Term" Role="Term" Multiplicity="1" />
+          <End Type="Edm.Metadata.Annotation" Role="Annotation" Multiplicity="*" />
+        </Association>
+        <Association Name="TypeAnnotation">
+          <End Type="Edm.Metadata.Type" Role="Type" Multiplicity="1" />
+          <End Type="Edm.Metadata.Annotation" Role="Annotation" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
