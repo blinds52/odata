@@ -332,11 +332,17 @@ select     = '$select' EQ selectItem *( COMMA selectItem )
 selectItem = STAR  
            / allOperationsInSchema 
            / [ qualifiedEntityTypeName "/" ] 
-             ( *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
-               ( property / navigationProperty ) 
+             ( selectProperty
              / qualifiedActionName  
              / qualifiedFunctionName  
              )
+
+selectProperty = primitiveProperty  
+               / primitiveColProperty 
+               / navigationProperty
+               / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" selectProperty ]
+
+
 allOperationsInSchema = namespace "." STAR                 
 
 ; The parameterTypeNames are required to uniquely identify the action or function
@@ -382,11 +388,17 @@ metadataFragment = "#"
                      *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
                         "/" navigationProperty
                       ) 
-                     [ delta
-                     / ref [ element ]
-                     / [ element ] [ "&" select ]
-                     ]
+                     [ propertyList ]
+                     ( delta
+                     / [ ref ] [ element ]
+                     )
                    )
+
+propertyList     = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
+propertyListItem = primitiveProperty  
+                 / primitiveColProperty 
+                 / navigationProperty [ '+' ] [ propertyList ]
+                 / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" propertyListItem ]
 
 delta   = '/@Delta'                   
 element = '/@Element'                   

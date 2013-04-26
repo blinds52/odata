@@ -49,6 +49,7 @@
     <Match>AllProductsByCategoryId</Match>
   </Constraint>
   <Constraint Rule="entityColNavigationProperty">
+    <Match>DirectReports</Match>
     <Match>Items</Match>
     <Match>Orders</Match>
     <Match>Products</Match>
@@ -86,6 +87,7 @@
   <Constraint Rule="entitySetName">
     <Match>Categories</Match>
     <Match>Customers</Match>
+    <Match>Employees</Match>
     <Match>LeaveRequests</Match>
     <Match>Orders</Match>
     <Match>OrderItems</Match>
@@ -95,6 +97,7 @@
   </Constraint>
   <Constraint Rule="entityTypeName">
     <Match>Customer</Match>
+    <Match>Manager</Match>
     <Match>BestSellingProduct</Match>
     <Match>PreferredSupplier</Match>
     <Match>VipCustomer</Match>
@@ -153,6 +156,8 @@
     <Match>CompanyName</Match>
     <Match>Completed</Match>
     <Match>eyeColor</Match>
+    <Match>FirstName</Match>
+    <Match>LastName</Match>
     <Match>LifeTime</Match>
     <Match>Line</Match>
     <Match>Location</Match>
@@ -1498,6 +1503,10 @@
             Rule="select">
     <Input>$select=Address/Country</Input>
   </TestCase>
+  <TestCase Name="5.1.3 Select - with cast" 
+            Rule="select">
+    <Input>$select=Address/Model.AddressWithLocation</Input>
+  </TestCase>
   <TestCase Name="5.1.3 Select - with cast and property of complex property" 
             Rule="select">
     <Input>$select=Address/Model.AddressWithLocation/Location</Input>
@@ -1979,7 +1988,27 @@
   </TestCase>  
   <TestCase Name="Metadata URL - Entity set with $select" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers&amp;$select=Address,Orders</Input>
+    <Input>http://host/service/$metadata#Customers(Address,Orders)</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity set with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers(Address/Name,Orders)</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity set with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers(Address/Country)</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity set with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers(Address/Model.AddressWithLocation,Orders)</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity set with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers(Address/Name,Orders)</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity set with cast, $select and nested $expand" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Employees/Sales.Manager(Title,DirectReports+(FirstName,LastName))</Input>
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with type cast" 
             Rule="odataUri">
@@ -1999,7 +2028,7 @@
   </TestCase>  
   <TestCase Name="Metadata URL - Entity with $select" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/@Element&amp;$select=Address,Orders</Input>
+    <Input>http://host/service/$metadata#Customers(Address,Orders)/@Element</Input>
   </TestCase> 
   <TestCase Name="Metadata URL - Entity with type cast" 
             Rule="odataUri">
