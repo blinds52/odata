@@ -110,6 +110,9 @@
     <Match>NameKind</Match>
     <Match>Pattern</Match>
   </Constraint>
+  <Constraint Rule="keyPropertyAlias">
+    <Match>KeyAlias</Match>
+  </Constraint>
   <Constraint Rule="lambdaVariableExpr">
     <Match>lambda</Match>
   </Constraint>
@@ -488,6 +491,14 @@
   <TestCase Name="2 URL Components - resource path" 
             Rule="resourcePath">
     <Input>Categories(1)/Products</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - resource path" 
+            Rule="resourcePath">
+    <Input>Categories(1)/Products</Input>
+  </TestCase>
+  <TestCase Name="2 URL Components - key with alias" 
+            Rule="resourcePath">
+    <Input>Categories(KeyAlias=1)</Input>
   </TestCase>
   <TestCase Name="2 URL Components - query options" 
             Rule="queryOptions">
@@ -2005,6 +2016,10 @@
   <TestCase Name="Metadata URL - Entity set with $select" 
             Rule="odataUri">
     <Input>http://host/service/$metadata#Customers(Address/Name,Orders)</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity set with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers(.,Orders(ID))</Input>
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with cast, $select and nested $expand" 
             Rule="odataUri">

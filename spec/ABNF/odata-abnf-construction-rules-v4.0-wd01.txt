@@ -121,8 +121,9 @@ collectionNavigation = [ "/" qualifiedEntityTypeName ]
 keyPredicate     = simpleKey / compoundKey
 simpleKey        = OPEN keyPropertyValue CLOSE
 compoundKey      = OPEN keyValuePair *( COMMA keyValuePair ) CLOSE
-keyValuePair     = primitiveKeyProperty EQ keyPropertyValue
+keyValuePair     = ( primitiveKeyProperty / keyPropertyAlias ) EQ keyPropertyValue
 keyPropertyValue = primitiveLiteral
+keyPropertyAlias = odataIdentifier
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
                    ( "/" propertyPath
@@ -395,7 +396,8 @@ metadataFragment = "#"
                    )
 
 propertyList     = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
-propertyListItem = primitiveProperty  
+propertyListItem = "." ; all properties when $expand is not accompanied by $select
+                 / primitiveProperty  
                  / primitiveColProperty 
                  / navigationProperty [ '+' ] [ propertyList ]
                  / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" propertyListItem ]

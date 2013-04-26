@@ -16,28 +16,24 @@
           <EntitySet Name="Schemata" EntityType="Edm.Metadata.Schema" />
           <AssociationSet Name="SchemaEntityType" Association="Edm.Metadata.SchemaEntityType">
             <End Role="Schema" EntitySet="Schemata" />
-            <End Role="EntityType" EntitySet="Types" />
+            <End Role="EntityType" EntitySet="EntityTypes" />
           </AssociationSet>
           <EntitySet Name="Properties" EntityType="Edm.Metadata.Property" />
           <AssociationSet Name="EntityTypePrimitiveProperty" Association="Edm.Metadata.EntityTypePrimitiveProperty">
-            <End Role="EntityType" EntitySet="Types" />
+            <End Role="EntityType" EntitySet="EntityTypes" />
             <End Role="PrimitiveProperty" EntitySet="Properties" />
           </AssociationSet>
           <AssociationSet Name="ComplexPropertyComplexType" Association="Edm.Metadata.ComplexPropertyComplexType">
             <End Role="ComplexProperty" EntitySet="Properties" />
-            <End Role="ComplexType" EntitySet="Types" />
+            <End Role="ComplexType" EntitySet="ComplexTypes" />
           </AssociationSet>
           <EntitySet Name="EntitySets" EntityType="Edm.Metadata.EntitySet" />
           <EntitySet Name="EntityContainers" EntityType="Edm.Metadata.EntityContainer" />
           <AssociationSet Name="SchemaComplexType" Association="Edm.Metadata.SchemaComplexType">
             <End Role="Schema" EntitySet="Schemata" />
-            <End Role="ComplexType" EntitySet="Types" />
+            <End Role="ComplexType" EntitySet="ComplexTypes" />
           </AssociationSet>
           <EntitySet Name="NavigationProperties" EntityType="Edm.Metadata.NavigationProperty" />
-          <AssociationSet Name="EntityTypeNavigationProperty" Association="Edm.Metadata.EntityTypeNavigationProperty">
-            <End EntitySet="Types" Role="EntityType" />
-            <End EntitySet="NavigationProperties" Role="NavigationProperty" />
-          </AssociationSet>
           <AssociationSet Name="NavigationPropertyNavigationProperty" Association="Edm.Metadata.NavigationPropertyNavigationProperty">
             <End Role="NavigationProperty" EntitySet="NavigationProperties" />
             <End Role="NavigationProperty1" EntitySet="NavigationProperties" />
@@ -51,16 +47,16 @@
             <End Role="EntitySet" EntitySet="EntitySets" />
           </AssociationSet>
           <AssociationSet Name="EntityTypeEntityType" Association="Edm.Metadata.EntityTypeEntityType">
-            <End Role="EntityType" EntitySet="Types" />
-            <End Role="EntityType1" EntitySet="Types" />
+            <End Role="EntityType" EntitySet="EntityTypes" />
+            <End Role="EntityType1" EntitySet="EntityTypes" />
           </AssociationSet>
           <AssociationSet Name="ComplexTypeComplexType" Association="Edm.Metadata.ComplexTypeComplexType">
-            <End Role="ComplexType" EntitySet="Types" />
-            <End Role="ComplexType1" EntitySet="Types" />
+            <End Role="ComplexType" EntitySet="ComplexTypes" />
+            <End Role="ComplexType1" EntitySet="ComplexTypes" />
           </AssociationSet>
           <AssociationSet Name="EntitySetEntityType" Association="Edm.Metadata.EntitySetEntityType">
             <End Role="EntitySet" EntitySet="EntitySets" />
-            <End Role="EntityType" EntitySet="Types" />
+            <End Role="EntityType" EntitySet="EntityTypes" />
           </AssociationSet>
           <EntitySet Name="FunctionImports" EntityType="Edm.Metadata.FunctionImport" />
           <AssociationSet Name="EntityContainerFunctionImport" Association="Edm.Metadata.EntityContainerFunctionImport">
@@ -131,17 +127,8 @@
             <End Role="Schema" EntitySet="Schemata" />
             <End Role="Annotations" EntitySet="AnnotationsElements" />
           </AssociationSet>
-          <AssociationSet Name="StructuredTypeProperty" Association="Edm.Metadata.StructuredTypeProperty">
-            <End Role="StructuredType" EntitySet="Types" />
-            <End Role="Property" EntitySet="Properties" />
-          </AssociationSet>
-          <EntitySet Name="TypeDefinitions" EntityType="Edm.Metadata.TypeDefinition" />
           <EntitySet Name="Functions" EntityType="Edm.Metadata.Function" />
           <EntitySet Name="Entities" EntityType="Edm.Metadata.Entity" />
-          <AssociationSet Name="StructuredTypeNavigationProperty" Association="Edm.Metadata.StructuredTypeNavigationProperty">
-            <End Role="StructuredType" EntitySet="Types" />
-            <End Role="NavigationProperty" EntitySet="NavigationProperties" />
-          </AssociationSet>
           <EntitySet Name="Actions" EntityType="Edm.Metadata.Action" />
           <EntitySet Name="ActionImports" EntityType="Edm.Metadata.ActionImport" />
           <AssociationSet Name="EntityContainerNamedEntity" Association="Edm.Metadata.EntityContainerNamedEntity">
@@ -150,10 +137,10 @@
           </AssociationSet>
           <AssociationSet Name="NamedEntityEntityType" Association="Edm.Metadata.NamedEntityEntityType">
             <End Role="NamedEntity" EntitySet="Entities" />
-            <End Role="EntityType" EntitySet="Types" />
+            <End Role="EntityType" EntitySet="EntityTypes" />
           </AssociationSet>
           <AssociationSet Name="TypeDefinitionPrimitiveType" Association="Edm.Metadata.TypeDefinitionPrimitiveType">
-            <End Role="TypeDefinition" EntitySet="TypeDefinitions" />
+            <End Role="TypeDefinition" EntitySet="Types" />
             <End Role="PrimitiveType" EntitySet="Types" />
           </AssociationSet>
           <AssociationSet Name="FunctionFunctionImport" Association="Edm.Metadata.FunctionFunctionImport">
@@ -200,15 +187,45 @@
             <End Role="Function" EntitySet="Functions" />
             <End Role="ParameterType" EntitySet="ParameterTypes" />
           </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="EntityType" BaseType="Edm.Metadata.StructuredType">
+          <EntitySet Name="ComplexTypes" EntityType="Edm.Metadata.ComplexType" />
+          <EntitySet Name="EntityTypes" EntityType="Edm.Metadata.EntityType" />
+          <AssociationSet Name="ComplexTypeProperty" Association="Edm.Metadata.ComplexTypeProperty">
+            <End Role="ComplexType" EntitySet="ComplexTypes" />
+            <End Role="Property" EntitySet="Properties" />
+          </AssociationSet>
+          <AssociationSet Name="EntityTypeProperty" Association="Edm.Metadata.EntityTypeProperty">
+            <End Role="EntityType" EntitySet="EntityTypes" />
+            <End Role="Property" EntitySet="Properties" />
+          </AssociationSet>
+          <AssociationSet Name="ComplexTypeNavigationProperty" Association="Edm.Metadata.ComplexTypeNavigationProperty">
+            <End Role="ComplexType" EntitySet="ComplexTypes" />
+            <End Role="NavigationProperty" EntitySet="NavigationProperties" />
+          </AssociationSet>
+          <AssociationSet Name="EntityTypeNavigationProperty" Association="Edm.Metadata.EntityTypeNavigationProperty">
+            <End Role="EntityType" EntitySet="EntityTypes" />
+            <End Role="NavigationProperty" EntitySet="NavigationProperties" />
+          </AssociationSet>
+          <AssociationSet Name="NavigationPropertyTargetEntityType" Association="Edm.Metadata.NavigationPropertyTargetEntityType">
+            <End Role="NavigationProperty" EntitySet="NavigationProperties" />
+            <End Role="EntityType" EntitySet="EntityTypes" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="EntityType">
+          <Key>
+            <PropertyRef Name="Fullname" />
+          </Key>
           <NavigationProperty Name="Schema" Relationship="Edm.Metadata.SchemaEntityType" FromRole="EntityType" ToRole="Schema" />
           <NavigationProperty Name="KeyProperties" Relationship="Edm.Metadata.EntityTypePrimitiveProperty" FromRole="EntityType" ToRole="PrimitiveProperty" />
           <NavigationProperty Name="DerivedTypes" Relationship="Edm.Metadata.EntityTypeEntityType" FromRole="EntityType" ToRole="EntityType1" />
           <NavigationProperty Name="BaseType" Relationship="Edm.Metadata.EntityTypeEntityType" FromRole="EntityType1" ToRole="EntityType" />
           <NavigationProperty Name="EntitySets" Relationship="Edm.Metadata.EntitySetEntityType" FromRole="EntityType" ToRole="EntitySet" />
-          <Property Type="Boolean" Name="OpenType" Nullable="false" />
-          <Property Type="Boolean" Name="HasStream" Nullable="false" />
+          <Property Type="String" Name="Fullname" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="Boolean" Name="Abstract" Nullable="true" cg:SetterAccess="Protected" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <Property Type="String" Name="OpenType" Nullable="false" />
+          <Property Type="Boolean" Name="HasStream" Nullable="true" />
+          <NavigationProperty Name="Properties" Relationship="Edm.Metadata.EntityTypeProperty" FromRole="EntityType" ToRole="Property" />
+          <NavigationProperty Name="NavigationProperties" Relationship="Edm.Metadata.EntityTypeNavigationProperty" FromRole="EntityType" ToRole="NavigationProperty" />
         </EntityType>
         <EntityType Name="Schema">
           <Key>
@@ -223,7 +240,6 @@
           <Property Type="String" Name="Alias" Nullable="false" />
           <NavigationProperty Name="Actions" Relationship="Edm.Metadata.SchemaAction" FromRole="Schema" ToRole="Action" />
           <NavigationProperty Name="Functions" Relationship="Edm.Metadata.SchemaFunction" FromRole="Schema" ToRole="Function" />
-          <Property Name="Documentation" Type="Edm.Metadata.Documentation" Nullable="false" />
           <NavigationProperty Name="NamedEntities" Relationship="Edm.Metadata.SchemaEntity" FromRole="Schema" ToRole="Entity" />
         </EntityType>
         <Association Name="SchemaEntityType">
@@ -232,24 +248,33 @@
         </Association>
         <EntityType Name="Property" Abstract="true">
           <Key>
-            <PropertyRef Name="Name" />
+            <PropertyRef Name="Fullname" />
           </Key>
-          <Property Type="String" Name="Name" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="Fullname" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="Name" Nullable="false" />
           <Property Type="String" Name="Nullable" Nullable="false" />
           <Property Type="Boolean" Name="IsCollection" Nullable="false" />
-          <NavigationProperty Name="StructuredType" Relationship="Edm.Metadata.StructuredTypeProperty" FromRole="Property" ToRole="StructuredType" />
         </EntityType>
         <EntityType Name="PrimitiveProperty" BaseType="Edm.Metadata.Property">
-          <Property Type="String" Name="Facets" Nullable="false" />
           <NavigationProperty Name="Type" Relationship="Edm.Metadata.PrimitivePropertyPrimitiveType" FromRole="PrimitiveProperty" ToRole="PrimitiveType" />
+          <Property Name="Facets" Type="Edm.Metadata.Facet" Nullable="false" />
         </EntityType>
         <EntityType Name="ComplexProperty" BaseType="Edm.Metadata.Property">
           <NavigationProperty Name="Type" Relationship="Edm.Metadata.ComplexPropertyComplexType" FromRole="ComplexProperty" ToRole="ComplexType" />
         </EntityType>
-        <EntityType Name="ComplexType" BaseType="Edm.Metadata.StructuredType">
+        <EntityType Name="ComplexType">
+          <Key>
+            <PropertyRef Name="Fullname" />
+          </Key>
           <NavigationProperty Name="Schema" Relationship="Edm.Metadata.SchemaComplexType" FromRole="ComplexType" ToRole="Schema" />
           <NavigationProperty Name="DerivedTypes" Relationship="Edm.Metadata.ComplexTypeComplexType" FromRole="ComplexType" ToRole="ComplexType1" />
           <NavigationProperty Name="BaseType" Relationship="Edm.Metadata.ComplexTypeComplexType" FromRole="ComplexType1" ToRole="ComplexType" />
+          <Property Type="String" Name="Fullname" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="Boolean" Name="Abstract" Nullable="true" />
+          <Property Type="Boolean" Name="OpenType" Nullable="true" />
+          <NavigationProperty Name="Properties" Relationship="Edm.Metadata.ComplexTypeProperty" FromRole="ComplexType" ToRole="Property" />
+          <NavigationProperty Name="NavigationProperties" Relationship="Edm.Metadata.ComplexTypeNavigationProperty" FromRole="ComplexType" ToRole="NavigationProperty" />
         </EntityType>
         <Association Name="EntityTypePrimitiveProperty">
           <End Type="Edm.Metadata.EntityType" Role="EntityType" Multiplicity="1" />
@@ -295,14 +320,10 @@
           <Property Type="Boolean" Name="IsCollection" Nullable="false" />
           <NavigationProperty Name="Partner" Relationship="Edm.Metadata.NavigationPropertyNavigationProperty" FromRole="NavigationProperty" ToRole="NavigationProperty1" />
           <Property Type="Boolean" Name="ContainsTarget" Nullable="false" />
-          <NavigationProperty Name="Type" Relationship="Edm.Metadata.StructuredTypeNavigationProperty" FromRole="NavigationProperty" ToRole="StructuredType" />
           <Property Type="String" Name="OnDeleteAction" Nullable="false" />
           <Property Name="ReferentialConstraints" Type="Edm.Metadata.ReferentialConstraint" Nullable="false" />
+          <NavigationProperty Name="Type" Relationship="Edm.Metadata.NavigationPropertyTargetEntityType" FromRole="NavigationProperty" ToRole="EntityType" />
         </EntityType>
-        <Association Name="EntityTypeNavigationProperty">
-          <End Type="Edm.Metadata.EntityType" Multiplicity="1" Role="EntityType" />
-          <End Type="Edm.Metadata.NavigationProperty" Multiplicity="*" Role="NavigationProperty" />
-        </Association>
         <Association Name="NavigationPropertyNavigationProperty">
           <End Type="Edm.Metadata.NavigationProperty" Role="NavigationProperty" Multiplicity="0..1" />
           <End Type="Edm.Metadata.NavigationProperty" Role="NavigationProperty1" Multiplicity="0..1" />
@@ -372,10 +393,13 @@
           <End Type="Edm.Metadata.NavigationPropertyBinding" Role="NavigationPropertyBinding" Multiplicity="*" />
         </Association>
         <EntityType Name="ParameterType">
+          <Documentation>
+            <Summary>This is actually a complex type</Summary>
+          </Documentation>
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="is_complex_type" />
           </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="is_complex_type" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Boolean" Name="IsCollection" Nullable="false" />
           <NavigationProperty Name="Type" Relationship="Edm.Metadata.ParameterTypeType" FromRole="ParameterType" ToRole="Type" />
           <Property Name="Facets" Type="Edm.Metadata.Facet" Nullable="false" />
@@ -429,10 +453,13 @@
           <End Type="Edm.Metadata.Term" Role="ValueTerm" Multiplicity="*" />
         </Association>
         <EntityType Name="AnnotationsElement">
+          <Documentation>
+            <Summary>This is actually a complex type</Summary>
+          </Documentation>
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="is_complex_type" />
           </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="is_complex_type" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Target" Nullable="false" />
           <NavigationProperty Name="Annotations" Relationship="Edm.Metadata.AnnotationsValueAnnotation" FromRole="Annotations" ToRole="ValueAnnotation" />
           <NavigationProperty Name="Schema" Relationship="Edm.Metadata.SchemaAnnotations" FromRole="Annotations" ToRole="Schema" />
@@ -470,7 +497,11 @@
           <Property Type="String" Name="Qualifier" Nullable="false" />
           <NavigationProperty Name="Term" Relationship="Edm.Metadata.ValueAnnotationValueTerm" FromRole="ValueAnnotation" ToRole="ValueTerm" />
           <Property Type="String" Name="Value" Nullable="false" />
-          <Property Type="String" Name="Target_navigate_to_EdmEntityType" Nullable="false" />
+          <NavigationProperty Name="Target" >
+            <Documentation>
+              <Summary>Edm.EntityType</Summary>
+            </Documentation>
+          </NavigationProperty>
         </EntityType>
         <Association Name="ValueAnnotationValueTerm">
           <End Type="Edm.Metadata.Annotation" Role="ValueAnnotation" Multiplicity="*" />
@@ -484,21 +515,7 @@
           <End Type="Edm.Metadata.Schema" Role="Schema" Multiplicity="1" />
           <End Type="Edm.Metadata.AnnotationsElement" Role="Annotations" Multiplicity="*" />
         </Association>
-        <EntityType Name="StructuredType" BaseType="Edm.Metadata.Type" >
-          <NavigationProperty Name="Properties" Relationship="Edm.Metadata.StructuredTypeProperty" FromRole="StructuredType" ToRole="Property" />
-          <Property Type="String" Name="Abstract" Nullable="false" />
-          <NavigationProperty Name="NavigationProperties" Relationship="Edm.Metadata.StructuredTypeNavigationProperty" FromRole="StructuredType" ToRole="NavigationProperty" />
-        </EntityType>
-        <Association Name="StructuredTypeProperty">
-          <End Type="Edm.Metadata.StructuredType" Role="StructuredType" Multiplicity="1" />
-          <End Type="Edm.Metadata.Property" Role="Property" Multiplicity="*" />
-        </Association>
-        <EntityType Name="TypeDefinition" Abstract="true">
-          <Key>
-            <PropertyRef Name="FullName" />
-          </Key>
-          <Property Type="String" Name="FullName" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Name" Nullable="false" />
+        <EntityType Name="TypeDefinition" Abstract="true" BaseType="Edm.Metadata.PrimitiveType">
           <Property Name="Facets" Type="Edm.Metadata.Facet" Nullable="false" />
           <NavigationProperty Name="UnderlyingType" Relationship="Edm.Metadata.TypeDefinitionPrimitiveType" FromRole="TypeDefinition" ToRole="PrimitiveType" />
         </EntityType>
@@ -526,10 +543,6 @@
           <NavigationProperty Name="Type" Relationship="Edm.Metadata.NamedEntityEntityType" FromRole="NamedEntity" ToRole="EntityType" />
           <NavigationProperty Name="Schema" Relationship="Edm.Metadata.SchemaEntity" FromRole="Entity" ToRole="Schema" />
         </EntityType>
-        <Association Name="StructuredTypeNavigationProperty">
-          <End Type="Edm.Metadata.StructuredType" Role="StructuredType" Multiplicity="1" />
-          <End Type="Edm.Metadata.NavigationProperty" Role="NavigationProperty" Multiplicity="*" />
-        </Association>
         <EntityType Name="Action">
           <Key>
             <PropertyRef Name="FullName" />
@@ -627,6 +640,26 @@
         <Association Name="FunctionParameterType">
           <End Type="Edm.Metadata.Function" Role="Function" Multiplicity="1" />
           <End Type="Edm.Metadata.ParameterType" Role="ParameterType" Multiplicity="1" />
+        </Association>
+        <Association Name="ComplexTypeProperty">
+          <End Type="Edm.Metadata.ComplexType" Role="ComplexType" Multiplicity="1" />
+          <End Type="Edm.Metadata.Property" Role="Property" Multiplicity="*" />
+        </Association>
+        <Association Name="EntityTypeProperty">
+          <End Type="Edm.Metadata.EntityType" Role="EntityType" Multiplicity="1" />
+          <End Type="Edm.Metadata.Property" Role="Property" Multiplicity="*" />
+        </Association>
+        <Association Name="ComplexTypeNavigationProperty">
+          <End Type="Edm.Metadata.ComplexType" Role="ComplexType" Multiplicity="1" />
+          <End Type="Edm.Metadata.NavigationProperty" Role="NavigationProperty" Multiplicity="*" />
+        </Association>
+        <Association Name="EntityTypeNavigationProperty">
+          <End Type="Edm.Metadata.EntityType" Role="EntityType" Multiplicity="1" />
+          <End Type="Edm.Metadata.NavigationProperty" Role="NavigationProperty" Multiplicity="*" />
+        </Association>
+        <Association Name="NavigationPropertyTargetEntityType">
+          <End Type="Edm.Metadata.NavigationProperty" Role="NavigationProperty" Multiplicity="*" />
+          <End Type="Edm.Metadata.EntityType" Role="EntityType" Multiplicity="1" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
