@@ -4,7 +4,7 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Edm.Metadata" Alias="Metadata">
       <EntityType Name="EntityType" BaseType="Metadata.Type">
         <NavigationProperty Name="Schema" Type="Metadata.Schema" Nullable="false" />
-        <Property Type="Collection(Metadata.KeyProperty)" Name="Key" Nullable="false" />
+        <Property Type="Collection(Metadata.KeyProperty)" Name="Key" />
         <NavigationProperty Name="DerivedTypes" Type="Collection(Metadata.EntityType)" />
         <NavigationProperty Name="BaseType" Type="Metadata.EntityType" />
         <NavigationProperty Name="EntitySets" Type="Collection(Metadata.EntitySet)" />
@@ -40,7 +40,7 @@
       </EntityType>
       <EntityType Name="PrimitiveProperty" BaseType="Metadata.Property">
         <NavigationProperty Name="Type" Type="Metadata.PrimitiveType" Nullable="false" />
-        <Property Name="Facets" Type="Collection(Metadata.Facet)" Nullable="true" />
+        <Property Name="Facets" Type="Collection(Metadata.Facet)" />
       </EntityType>
       <EntityType Name="ComplexProperty" BaseType="Metadata.Property">
         <NavigationProperty Name="Type" Type="Metadata.ComplexType" Nullable="false" />
@@ -122,7 +122,7 @@
       </EntityType>
       <ComplexType Name="ParameterType">
         <Property Type="Edm.Boolean" Name="IsCollection" Nullable="false" />
-        <NavigationProperty Name="Type" Type="Metadata.Type" />
+        <NavigationProperty Name="Type" Type="Metadata.Type" Nullable="false" />
         <Property Name="Facets" Type="Collection(Metadata.Facet)" />
       </ComplexType>
       <EntityType Name="Type" Abstract="true">
@@ -172,10 +172,10 @@
         <Property Type="Edm.String" Name="Qualifier" Nullable="false" />
         <NavigationProperty Name="Term" Type="Metadata.Term" Nullable="false" />
         <Property Type="Edm.String" Name="Value" Nullable="false" />
-        <NavigationProperty Name="Target" Type="Edm.EntityType" />
+        <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" />
       </EntityType>
       <EntityType Name="TypeDefinition" Abstract="true" BaseType="Metadata.PrimitiveType">
-        <Property Name="Facets" Type="Collection(Metadata.Facet)" Nullable="true" />
+        <Property Name="Facets" Type="Collection(Metadata.Facet)" />
         <NavigationProperty Name="UnderlyingType" Type="Metadata.PrimitiveType" Nullable="false" />
       </EntityType>
       <EntityType Name="Function">
