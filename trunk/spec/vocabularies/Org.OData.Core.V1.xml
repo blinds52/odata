@@ -10,10 +10,15 @@
         <Annotation Term="Core.Description" String="A brief description of a model element" />
         <Annotation Term="Core.IsLanguageDependent" />
       </Term>
-      
+
       <Term Name="LongDescription" Type="Edm.String">
         <Annotation Term="Core.Description" String="A lengthy description of a model element" />
         <Annotation Term="Core.IsLanguageDependent" />
+      </Term>
+
+      <Term Name="IsLanguageDependent" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">
+        <Annotation Term="Core.Description" String="Properties and terms annotated with this term are language-dependent" />
+        <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
       <TypeDefinition Name="Tag" UnderlyingType="Edm.Boolean">
@@ -23,6 +28,11 @@
       <Term Name="RequiresType" Type="Edm.String" AppliesTo="Term">
         <Annotation Term="Core.Description"
           String="Properties and terms annotated with this annotation MUST have a type that is identical to or derived from the given type name" />
+      </Term>
+
+      <Term Name="IsSameAs" Type="Core.Tag" DefaultValue="true" AppliesTo="Term">
+        <Annotation Term="Core.Description"
+          String="Terms annotated with this term convey that the annotation target is &quot;the same as&quot; the term it is annotated with. Example: annotate Employee with Org.Schema.Person" />
       </Term>
 
       <!-- Value restrictions for terms -->
@@ -47,20 +57,11 @@
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
-      <Term Name="IsLanguageDependent" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">
-        <Annotation Term="Core.Description" String="Properties and terms annotated with this term are language-dependent" />
-        <Annotation Term="Core.RequiresType" String="Edm.String" />
-      </Term>
-
-      <Term Name="IsSameAs" Type="Core.Tag" DefaultValue="true" AppliesTo="Term">
-        <Annotation Term="Core.LongDescription"
-          String="Terms annotated with this term convey that the annotation target is &quot;the same as&quot; the term it is annotated with. Example: annotate Employee with Org.Schema.Person" />
-      </Term>
-
       <!-- Behavior-related terms -->
-      <Term Name="OptimisticConcurrencyControl" Type="Core.OptimisticConcurrencyControlType" AppliesTo="EntitySet" />
-      <ComplexType Name="OptimisticConcurrencyControlType">
+      <Term Name="OptimisticConcurrencyControl" Type="Core.OptimisticConcurrencyControlType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="If present, the annotated entity set uses optimistic concurrency control" />
+      </Term>
+      <ComplexType Name="OptimisticConcurrencyControlType">
         <Property Name="ETagDependsOn" Type="Collection(Edm.PropertyPath)" Nullable="true">
           <Annotation Term="Core.Description" String="The ETag is computed from these properties" />
         </Property>
@@ -75,9 +76,6 @@
           <Annotation Term="Core.Description" String="A value is generated on both insert and update" />
         </Member>
       </EnumType>
-
-
-      <!-- TODO: include Andrew's XML terms here -->
 
     </Schema>
   </edmx:DataServices>
