@@ -1,19 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx3="http://schemas.microsoft.com/ado/2009/11/edmx"
-  xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm" exclude-result-prefixes="edmx3 edm3"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
+  xmlns:edmx3="http://schemas.microsoft.com/ado/2009/11/edmx" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
+  exclude-result-prefixes="edmx1 edmx3 edm3"
 >
-  <xsl:strip-space elements="*" />
-  <xsl:output method="xml" indent="yes" />
+  <!--
+    This style sheet transforms OData 3.0 $metadata documents or VS2012 EDMX 3.0 documents into OData 4.0 EDMX documents.
+    Existing constructs that have an equivalent in V4 are automatically translated.
+    The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset.
+    The retired primitive type Edm.Time is translated into the Edm.Duration.
+    <edmx:Reference> elements automatically get an <edmx:Include> child element with an invalid Namespace attribute value. 
+    Change the Namespace attribute value appropriately.
 
-  <xsl:template match="edmx3:Edmx">
+    V4 features that are not available in V3 can be produced via the following workarounds.
+
+    To model navigation properties to the abstract V4 entity type Edm.EntityType create an entity type named V4_Edm_EntityType
+    and an identically named entity set to your model. This type will be ignored, and navigation to it will be replaced with
+    navigation to Edm.EntityType. Don't define referential constraints on associations to this dummy entity type.
+
+    To model properties that are collections of complex or primitive type in VS2012 Entity Modeler, enter #V4:Collection
+    into the LongDescription of the Documentation.
+
+    To model nullable complex properties, enter #V4:Nullable into the LongDescription of the Documentation.
+
+    To model properties with the new abstract or concrete Edm types, enter #V4:Type: followed by the desired type into the
+    LongDescription of the Documentation. The value after the second colon is taken literally, so you can use Collection(...)
+    for collection-valued properties. Use fully qualified types in the literal to produce valid V4 CSDL.
+
+    To model navigation properties in complex types, enter #V4:Navigation: followed by the target type into the LongDescription
+    of the Documentation. The value after the second colon is taken literally, so you can use Collection(...) for collection-valued
+    navigation properties. Use fully qualified types in the literal to produce valid V4 CSDL.
+  -->
+
+  <!-- TODO: ReferentialConstraint, OnDelete -->
+  <!-- TODO: FunctionImport, FunctionImport->Action/Function:for-each in Schema -->
+  <!-- TODO: NavigationPropertyBinding -->
+  <!-- TODO: Use Alias instead of Namespace as qualifier: #V4:Alias:xxx marker? where? -->
+  <!-- TODO: ValueAnnotation -> Annotation -->
+  <!-- TODO: TypeAnnotation -> Annotation with Record -->
+
+  <xsl:output method="xml" indent="yes" />
+  <xsl:strip-space elements="*" />
+
+  <xsl:template match="edmx1:Edmx|edmx3:Edmx">
     <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
       <edmx:Reference Uri="http://tinyurl.com/Org-OData-Core">
         <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
       </edmx:Reference>
-      <edmx:DataServices>
-        <xsl:apply-templates />
-      </edmx:DataServices>
+      <xsl:apply-templates />
     </edmx:Edmx>
+  </xsl:template>
+
+  <xsl:template match="edmx1:Reference">
+    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+      <xsl:attribute name="Uri">
+        <xsl:value-of select="@Url" />
+      </xsl:attribute>
+      <edmx:Include Namespace="Insert included namespace here" />
+    </edmx:Reference>
+  </xsl:template>
+
+  <xsl:template match="edmx1:DataServices|edmx3:ConceptualModels">
+    <edmx:DataServices xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+      <xsl:apply-templates />
+    </edmx:DataServices>
   </xsl:template>
 
   <xsl:template match="edm3:Schema">
@@ -24,10 +73,14 @@
   </xsl:template>
 
   <xsl:template match="edm3:EntityType">
-    <EntityType>
-      <xsl:copy-of select="@Name|@Abstract|@BaseType|@OpenType" />
-      <xsl:apply-templates />
-    </EntityType>
+    <xsl:if test="@Name != 'V4_Edm_EntityType'">
+      <EntityType>
+        <xsl:copy-of select="@Name|@Abstract|@BaseType|@OpenType" />
+        <xsl:apply-templates select="edm3:Key" />
+        <!-- TODO: add |edm3:ValueAnnotation|edm3:TypeAnnotation if necessary -->
+        <xsl:apply-templates select="edm3:Documentation|edm3:Property|edm3:NavigationProperty" />
+      </EntityType>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm3:Key">
@@ -50,17 +103,15 @@
     </ComplexType>
   </xsl:template>
 
-  <!-- TODO: properties (of complex types) may be marked as "navigation" properties -->
   <xsl:template match="edm3:Property">
     <xsl:choose>
-      <xsl:when test="starts-with(edm3:Documentation/edm3:LongDescription,'#V4:NavigationProperty:')">
-        <!-- Extract @Type and @Nullable from Documentation/LongDescription -->
-        <!-- TODO: Extract @Nullable -->
+      <xsl:when test="starts-with(edm3:Documentation/edm3:LongDescription,'#V4:Navigation:')">
         <NavigationProperty>
           <xsl:copy-of select="@Name" />
           <xsl:attribute name="Type">
-            <xsl:value-of select="substring(edm3:Documentation/edm3:LongDescription,24)" />
+            <xsl:value-of select="substring(edm3:Documentation/edm3:LongDescription,16)" />
           </xsl:attribute>
+          <xsl:copy-of select="@Nullable" />
         </NavigationProperty>
       </xsl:when>
       <xsl:otherwise>
@@ -68,14 +119,23 @@
           <!-- TODO: @Name first -->
           <xsl:attribute name="Type">
             <xsl:choose>
-              <!-- TODO: patch "Time" to "Edm.Duration -->
               <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Collection'">Collection(<xsl:value-of select="@Type" />)</xsl:when>
+              <xsl:when test="starts-with(edm3:Documentation/edm3:LongDescription,'#V4:Type:')"><xsl:value-of select="substring(edm3:Documentation/edm3:LongDescription,10)" /></xsl:when>
+              <xsl:when test="@Type='Time' or @Type='Edm.Time'">Edm.Duration</xsl:when>
+              <xsl:when test="@Type='DateTime' or @Type='Edm.DateTime'">Edm.DateTimeOffset</xsl:when>
               <xsl:when test="contains(@Type,'.')"><xsl:value-of select="@Type" /></xsl:when>
               <xsl:otherwise><xsl:value-of select="concat('Edm.',@Type)" /></xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
           <xsl:copy-of select="@Name" />
-          <xsl:if test="not(edm3:Documentation/edm3:LongDescription = '#V4:Collection')"><xsl:copy-of select="@Nullable" /></xsl:if>
+          <xsl:choose>
+            <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Nullable'">
+              <xsl:attribute name="Nullable">true</xsl:attribute>
+            </xsl:when>
+            <xsl:when test="not(edm3:Documentation/edm3:LongDescription = '#V4:Collection')">
+              <xsl:copy-of select="@Nullable" />
+            </xsl:when>
+          </xsl:choose>
           <xsl:copy-of select="@DefaultValue|@MaxLength|@Precision|@Scale|@Unicode|@SRID" />
           <xsl:apply-templates />
         </Property>
@@ -86,36 +146,27 @@
   <xsl:template match="edm3:NavigationProperty">
     <NavigationProperty>
       <xsl:copy-of select="@Name" />
-      <xsl:choose>
-        <xsl:when test="substring-before(edm3:Documentation/edm3:LongDescription,':') = '#V4'">
-          <!-- Extract @Type and @Nullable from Documentation/LongDescription -->
-          <!-- TODO: Extract @Nullable -->
-          <xsl:attribute name="Type">
-            <xsl:value-of select="substring-after(edm3:Documentation/edm3:LongDescription,':')" />
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <!-- Extract @Type and @Multiplicity from matching Association/End -->
-          <xsl:variable name="assoc">
-            <xsl:call-template name="substring-after-last">
-              <xsl:with-param name="input" select="@Relationship" />
-              <xsl:with-param name="marker" select="'.'" />
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:variable name="role" select="@ToRole" />
-          <xsl:variable name="type" select="//edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Type" />
-          <xsl:variable name="mult" select="//edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Multiplicity" />
-          <xsl:attribute name="Type">
-            <xsl:choose>
-              <xsl:when test="$mult='*'"><xsl:value-of select="concat('Collection(',$type,')')" /></xsl:when>
-              <xsl:otherwise><xsl:value-of select="$type" /></xsl:otherwise>
-            </xsl:choose>
-          </xsl:attribute>
-          <xsl:if test="$mult='1'">
-            <xsl:attribute name="Nullable">false</xsl:attribute>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
+      <!-- Extract @Type and @Multiplicity from matching Association/End -->
+      <xsl:variable name="assoc">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="input" select="@Relationship" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="role" select="@ToRole" />
+      <xsl:variable name="type" select="//edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Type" />
+      <xsl:variable name="mult" select="//edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Multiplicity" />
+      <xsl:attribute name="Type">
+        <xsl:choose>
+          <xsl:when test="contains($type,'.V4_Edm_EntityType') and $mult='*'">Collection(Edm.EntityType)</xsl:when>
+          <xsl:when test="contains($type,'.V4_Edm_EntityType')">Edm.EntityType</xsl:when>
+          <xsl:when test="$mult='*'"><xsl:value-of select="concat('Collection(',$type,')')" /></xsl:when>
+          <xsl:otherwise><xsl:value-of select="$type" /></xsl:otherwise>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:if test="$mult='1'">
+        <xsl:attribute name="Nullable">false</xsl:attribute>
+      </xsl:if>
       <xsl:apply-templates />
     </NavigationProperty>
   </xsl:template>
@@ -126,7 +177,6 @@
       <xsl:attribute name="UnderlyingType">
         <xsl:value-of select="concat('Edm.',@UnderlyingType)" />
       </xsl:attribute>
-      <!-- TODO: prefix UnderlyingType with Edm. -->
       <xsl:apply-templates />
     </EnumType>
   </xsl:template>
@@ -134,7 +184,6 @@
   <xsl:template match="edm3:Member">
     <Member>
       <xsl:copy-of select="@Name|@Value" />
-      <!-- TODO: prefix UnderlyingType with Edm. -->
       <xsl:apply-templates />
     </Member>
   </xsl:template>
@@ -147,10 +196,12 @@
   </xsl:template>
 
   <xsl:template match="edm3:EntitySet">
-    <EntitySet>
-      <xsl:copy-of select="@Name|@EntityType" />
-      <xsl:apply-templates />
-    </EntitySet>
+    <xsl:if test="@Name != 'V4_Edm_EntityType'">
+      <EntitySet>
+        <xsl:copy-of select="@Name|@EntityType" />
+        <xsl:apply-templates />
+      </EntitySet>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm3:Documentation">
@@ -174,10 +225,6 @@
       </Annotation>
     </xsl:if>
   </xsl:template>
-
-  <!-- TODO: NavigationPropertyBinding -->
-  <!-- TODO: FunctionImport, FunctionImport->Function:for-each in Schema -->
-  <!-- TODO: replace schema namespace with alias in type references? -->
 
   <xsl:template name="substring-after-last">
     <xsl:param name="input" />
