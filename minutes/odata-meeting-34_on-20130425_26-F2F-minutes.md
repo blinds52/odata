@@ -141,8 +141,8 @@ Hubert:
 
 **No further discussion**. **No objections**. The **motion passes**.
 
-ODATA-339:
-: "$inlinecount and $count, do we need both? Could we use $count in select clause as well?" [components: OData Protocol, OData ABNF Construction Rules] is **Resolved** with no objections.
+ODATA-323:
+: "InlineCount should just be boolean" [components: OData Protocol, OData ABNF Construction Rules] is **Resolved** with no objections.
 
 ### 4.4 JSON Formatting Issues:
 
