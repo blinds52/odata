@@ -914,7 +914,7 @@ Note:
 ODATA-247:
 : "More clearly define extensibility of Formats" [components: OData JSON Format, OData ATOM Format, OData Protocol] is **Closed** with no objections.
 
-######6.w.x.y.z End of Issue Processing [eoip]
+######6.6.8.1.1 End of Issue Processing [eoip]
 
 All take the opportunity to thank Mike and Ralf for the huge amount of work they put into the revisions of the work products they prepared and delivered.
 
