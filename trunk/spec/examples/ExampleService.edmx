@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="http://tinyurl.com/Org-OData-Core">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Example" Alias="Self">
+      <EntityContainer Name="ExampleContainer">
+        <EntitySet Name="Customers" EntityType="Example.Customer" />
+        <EntitySet Name="Suppliers" EntityType="Example.Supplier" />
+        <EntitySet Name="Products" EntityType="Example.Product" />
+        <EntitySet Name="Orders" EntityType="Example.Order" />
+        <EntitySet Name="Categories" EntityType="Example.Category" />
+        <EntitySet Name="OrderItems" EntityType="Example.OrderItem" />
+        <EntitySet Name="Sales" EntityType="Example.Sales" />
+        <EntitySet Name="Employees" EntityType="Example.Employee" />
+        <EntitySet Name="LeaveRequests" EntityType="Example.LeaveRequest" />
+        <EntitySet Name="Countries" EntityType="Example.Country" />
+        <EntitySet Name="Time" EntityType="Example.Time" />
+        <EntitySet Name="SalesOrganizations" EntityType="Example.SalesOrganization" />
+        <EntitySet Name="Currencies" EntityType="Example.Currency" />
+        <EntitySet Name="Cities" EntityType="Example.City" />
+      </EntityContainer>
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.String" Name="ID" Nullable="false" />
+        <NavigationProperty Name="Orders" Type="Collection(Example.Order)" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <Property Type="Edm.String" Name="CompanyName" Nullable="false" />
+        <Property Type="Edm.String" Name="BirthDate" Nullable="false" />
+        <Property Type="Edm.String" Name="CountryName" Nullable="false">
+          <Annotation Term="Core.Description">
+            <String>This is weird, given that we have a Country entity type</String>
+          </Annotation>
+        </Property>
+        <NavigationProperty Name="Sales" Type="Collection(Example.Sales)" />
+        <NavigationProperty Name="Country" Type="Example.Country" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Supplier">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.String" Name="ID" Nullable="false" />
+        <NavigationProperty Name="Products" Type="Collection(Example.Product)" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <Property Type="Edm.String" Name="EmailAddresses" Nullable="false" />
+        <Property Type="Collection(Example.Address)" Name="Addresses" />
+      </EntityType>
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.String" Name="ID" Nullable="false" />
+        <NavigationProperty Name="Category" Type="Example.Category" Nullable="false" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <NavigationProperty Name="Supplier" Type="Example.Supplier" Nullable="false" />
+        <Property Type="Edm.String" Name="Description" Nullable="false" />
+        <Property Type="Edm.String" Name="Thumbnail" Nullable="false" />
+        <Property Type="Collection(String)" Name="Sizes" />
+        <Property Type="Edm.String" Name="Rating" Nullable="false" />
+        <NavigationProperty Name="OrderItems" Type="Collection(Example.OrderItem)" />
+        <Property Type="Edm.String" Name="ReleaseDate" Nullable="false" />
+        <Property Type="Edm.String" Name="LifeTime" Nullable="false" />
+        <Property Type="Edm.String" Name="Color" Nullable="false" />
+        <Property Type="Edm.Decimal" Name="TaxRate" Nullable="false" />
+        <NavigationProperty Name="Sales" Type="Collection(Example.Sales)" />
+      </EntityType>
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.Int32" Name="ID" Nullable="false" />
+        <NavigationProperty Name="Items" Type="Collection(Example.OrderItem)" />
+        <Property Type="Edm.Boolean" Name="Completed" Nullable="false" />
+        <NavigationProperty Name="Customer" Type="Example.Customer" Nullable="false" />
+      </EntityType>
+      <EntityType Name="VipCustomer" BaseType="Example.Customer" />
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.Int32" Name="ID" Nullable="false" />
+        <NavigationProperty Name="Products" Type="Collection(Example.Product)" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <Property Type="Edm.String" Name="Thumbnail" Nullable="false" />
+      </EntityType>
+      <EntityType Name="OrderItem">
+        <Key>
+          <PropertyRef Name="OrderID" />
+          <PropertyRef Name="ItemID" />
+        </Key>
+        <Property Type="Edm.Int32" Name="OrderID" Nullable="false" />
+        <Property Type="Edm.String" Name="ItemID" Nullable="false" />
+        <NavigationProperty Name="Order" Type="Example.Order" Nullable="false" />
+        <Property Type="Edm.String" Name="Size" Nullable="false" />
+        <Property Type="Edm.Decimal" Name="Price" Nullable="false" />
+        <NavigationProperty Name="Product" Type="Example.Product" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Sales">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.Int32" Name="ID" Nullable="false" />
+        <Property Type="Edm.Decimal" Name="Amount" Nullable="false" />
+        <NavigationProperty Name="Time" Type="Example.Time" Nullable="false" />
+        <NavigationProperty Name="Currency" Type="Example.Currency" Nullable="false" />
+        <NavigationProperty Name="Customer" Type="Example.Customer" Nullable="false" />
+        <NavigationProperty Name="SalesOrganization" Type="Example.SalesOrganization" Nullable="false" />
+        <NavigationProperty Name="Product" Type="Example.Product" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Employee">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.String" Name="ID" Nullable="false" />
+        <Property Type="Edm.String" Name="FirstName" Nullable="false" />
+        <Property Type="Edm.String" Name="LastName" Nullable="false" />
+        <Property Type="Edm.String" Name="Title" Nullable="false" />
+        <NavigationProperty Name="TheManager" Type="Example.Manager" />
+      </EntityType>
+      <EntityType Name="LeaveRequest">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.Int32" Name="ID" Nullable="false" />
+      </EntityType>
+      <ComplexType Name="Address">
+        <Property Type="Edm.String" Name="Street" Nullable="false" />
+        <NavigationProperty Name="Country" Type="Example.Country" Nullable="false" />
+        <NavigationProperty Name="City" Type="Example.City" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="AddressWithLocation">
+        <Property Type="Edm.GeographyPoint" Name="Location" Nullable="false" />
+      </ComplexType>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="OrderID" />
+      <Annotation Term="Core.Description">
+        <String>TODO: many-to-many?</String>
+      </Annotation>
+      <EntityType Name="Country">
+        <Key>
+          <PropertyRef Name="Code" />
+        </Key>
+        <Property Type="Edm.String" Name="Code" Nullable="false" MaxLength="2" />
+        <NavigationProperty Name="Customers" Type="Collection(Example.Customer)" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <Property Type="Edm.String" Name="Continent" Nullable="false" />
+      </EntityType>
+      <EntityType Name="PreferredSupplier" BaseType="Example.Supplier">
+        <NavigationProperty Name="AccountRepresentative" Type="Example.Employee" Nullable="false" />
+        <Property Type="Edm.String" Name="EmployeeID" Nullable="false" />
+      </EntityType>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="EmployeeID" />
+      <EnumType Name="Pattern" IsFlags="true" UnderlyingType="Edm.">
+        <Member Name="Yellow" />
+        <Member Name="Solid" />
+      </EnumType>
+      <EntityType Name="Manager" BaseType="Example.Employee">
+        <NavigationProperty Name="Employees" Type="Collection(Example.Employee)" />
+      </EntityType>
+      <EntityType Name="Time">
+        <Key>
+          <PropertyRef Name="Date" />
+        </Key>
+        <Property Type="Edm.Date" Name="Date" Nullable="false" />
+        <Property Type="Edm.String" Name="Year" Nullable="false" MaxLength="4" />
+        <Property Type="Edm.String" Name="Quarter" Nullable="false" />
+        <Property Type="Edm.String" Name="Month" Nullable="false" />
+        <NavigationProperty Name="Sales" Type="Collection(Example.Sales)" />
+      </EntityType>
+      <EntityType Name="SalesOrganization">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.String" Name="ID" Nullable="false" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <NavigationProperty Name="Sales" Type="Collection(Example.Sales)" />
+        <NavigationProperty Name="Superordinate" Type="Example.SalesOrganization" />
+      </EntityType>
+      <EntityType Name="Currency">
+        <Key>
+          <PropertyRef Name="Code" />
+        </Key>
+        <Property Type="Edm.String" Name="Code" Nullable="false" MaxLength="3" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <NavigationProperty Name="Sales" Type="Collection(Example.Sales)" />
+        <Property Type="Edm.String" Name="Symbol" Nullable="false" />
+        <Property Type="Edm.Byte" Name="FractionalDigits" Nullable="false" />
+      </EntityType>
+      <EntityType Name="City">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.Guid" Name="ID" Nullable="false" />
+        <Property Type="Edm.String" Name="Name" Nullable="false" />
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
