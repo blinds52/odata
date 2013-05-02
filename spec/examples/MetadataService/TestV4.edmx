@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="http://tinyurl.com/Org-OData-Core">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="TestV3" Alias="Self">
       <EntityContainer Name="TestV3Container">
@@ -9,26 +12,62 @@
         <EntitySet Name="Types" EntityType="TestV3.Type">
           <NavigationPropertyBinding EntitySet="Schemata" Path="Schema" />
         </EntitySet>
+        <ActionImport Name="Approval" Action="TestV3.Approval" />
+        <FunctionImport Name="DoIt" Function="TestV3.DoIt" />
+        <FunctionImport Name="DoItForMany" Function="TestV3.DoItForMany" />
+        <FunctionImport Name="UnapprovedEntityTypes" EntitySet="Types" Function="TestV3.UnapprovedEntityTypes"
+          IncludeInServiceDocument="true" />
       </EntityContainer>
       <EntityType Name="Schema">
         <Key>
           <PropertyRef Name="Namespace" />
         </Key>
+        <Annotation Term="Core.Description">
+          <String>Summary</String>
+        </Annotation>
+        <Annotation Term="Core.LongDescription">
+          <String>Long description</String>
+        </Annotation>
         <Property Type="Edm.String" Name="Namespace" Nullable="false" />
         <Property Type="Edm.String" Name="Alias" Nullable="false" />
         <NavigationProperty Name="EntityTypes" Type="Collection(TestV3.EntityType)" />
       </EntityType>
+      <ComplexType Name="SomeComplex">
+        <Property Type="Edm.Binary" Name="SomeBinary" />
+        <NavigationProperty Name="BecomeNavigation" Type="TestV3.EntityType" />
+        <NavigationProperty Name="BecomeAlsoNavigation" Type="TestV3.EntityType" Nullable="false" />
+        <NavigationProperty Name="BecomeCollectionNavigation" Type="Collection(TestV3.EntityType)" />
+      </ComplexType>
       <EntityType Name="Type" Abstract="true">
         <Key>
           <PropertyRef Name="Fullname" />
         </Key>
+        <Property Type="TestV3.SomeComplex" Name="NullableComplex" Nullable="true" />
+        <Property Type="Collection(TestV3.SomeComplex)" Name="ComplexCollection" />
         <Property Type="Edm.String" Name="Fullname" Nullable="false" />
         <Property Type="Edm.String" Name="Name" Nullable="false" />
+        <Property Type="Edm.TimeOfDay" Name="WillBecomeTimeOfDay" Nullable="false" />
+        <Property Type="Edm.Duration" Name="WillBecomeDuration" Nullable="false" />
+        <Property Type="Edm.Duration" Name="WillBecomeAlsoDuration" Nullable="true" />
+        <Property Type="Edm.DateTimeOffset" Name="WillBecomeDateTimeOffset" Nullable="false" />
+        <Property Type="Edm.DateTimeOffset" Name="WillBecomeAlsoDateTimeOffset" Nullable="true" />
       </EntityType>
       <EntityType Name="EntityType" BaseType="TestV3.Type">
         <Property Type="Edm.Boolean" Name="HasStream" Nullable="true" />
-        <NavigationProperty Name="Schema" Type="TestV3.Schema" />
+        <NavigationProperty Name="Schema" Type="TestV3.Schema" Nullable="false" />
       </EntityType>
+      <Action Name="Approval" ReturnType="Edm.String" IsBindable="true">
+        <Parameter Name="lr" Type="TestV3.EntityType" />
+      </Action>
+      <Function Name="DoIt" ReturnType="Edm.String" IsBindable="true">
+        <Parameter Name="lr" Type="TestV3.EntityType" />
+      </Function>
+      <Function Name="DoItForMany" ReturnType="Collection(Edm.String)" IsBindable="true">
+        <Parameter Name="lrs" Type="Collection(TestV3.EntityType)" />
+      </Function>
+      <Function Name="UnapprovedEntityTypes" IsBindable="false">
+        <ReturnType Type="Collection(TestV3.EntityType)" />
+      </Function>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
