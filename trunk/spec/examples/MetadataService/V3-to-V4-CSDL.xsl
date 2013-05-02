@@ -8,7 +8,7 @@
     Existing constructs that have an equivalent in V4 are automatically translated.
     The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset.
     The retired primitive type Edm.Time is translated into the Edm.Duration.
-    <edmx:Reference> elements automatically get an <edmx:Include> child element with an invalid Namespace attribute value. 
+    <edmx:Reference> elements automatically get an <edmx:Include> child element with an invalid Namespace attribute value.
     Change the Namespace attribute value appropriately.
 
     V4 features that are not available in V3 can be produced via the following workarounds.
@@ -32,7 +32,6 @@
   -->
 
   <!-- TODO: ReferentialConstraint, OnDelete -->
-  <!-- TODO: FunctionImport, FunctionImport->Action/Function:for-each in Schema -->
   <!-- TODO: NavigationPropertyBinding -->
   <!-- TODO: Use Alias instead of Namespace as qualifier: #V4:Alias:xxx marker? where? -->
   <!-- TODO: ValueAnnotation -> Annotation -->
@@ -69,6 +68,7 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <xsl:copy-of select="@Namespace|@Alias" />
       <xsl:apply-templates />
+      <xsl:apply-templates select="edm3:EntityContainer/edm3:FunctionImport" mode="Schema" />
     </Schema>
   </xsl:template>
 
@@ -111,7 +111,9 @@
           <xsl:attribute name="Type">
             <xsl:value-of select="substring(edm3:Documentation/edm3:LongDescription,16)" />
           </xsl:attribute>
-          <xsl:copy-of select="@Nullable" />
+          <xsl:if test="not(starts-with(substring(edm3:Documentation/edm3:LongDescription,16),'Collection('))">
+            <xsl:copy-of select="@Nullable" />
+          </xsl:if>
         </NavigationProperty>
       </xsl:when>
       <xsl:otherwise>
@@ -154,8 +156,8 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:variable name="role" select="@ToRole" />
-      <xsl:variable name="type" select="//edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Type" />
-      <xsl:variable name="mult" select="//edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Multiplicity" />
+      <xsl:variable name="type" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Type" />
+      <xsl:variable name="mult" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Multiplicity" />
       <xsl:attribute name="Type">
         <xsl:choose>
           <xsl:when test="contains($type,'.V4_Edm_EntityType') and $mult='*'">Collection(Edm.EntityType)</xsl:when>
@@ -202,6 +204,61 @@
         <xsl:apply-templates />
       </EntitySet>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm3:FunctionImport">
+    <xsl:choose>
+      <xsl:when test="@IsSideEffecting='true'">
+        <ActionImport>
+          <xsl:copy-of select="@Name|@EntitySet" />
+          <xsl:attribute name="Action">
+            <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
+          </xsl:attribute>
+        </ActionImport>
+      </xsl:when>
+      <xsl:otherwise>
+        <FunctionImport>
+          <xsl:copy-of select="@Name|@EntitySet" />
+          <xsl:attribute name="Function">
+            <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
+          </xsl:attribute>
+          <xsl:if test="not(edm3:Parameter)">
+            <xsl:attribute name="IncludeInServiceDocument">true</xsl:attribute>
+          </xsl:if>
+        </FunctionImport>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="edm3:FunctionImport" mode="Schema">
+    <xsl:choose>
+      <xsl:when test="@IsSideEffecting='true'">
+        <Action>
+          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath|@IsBindable" />
+          <xsl:apply-templates />
+        </Action>
+      </xsl:when>
+      <xsl:otherwise>
+        <Function>
+          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath|@IsBindable|@IsComposable" />
+          <xsl:apply-templates />
+        </Function>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="edm3:Parameter">
+    <Parameter>
+      <xsl:copy-of select="@Name|@Type|@Nullable|@MaxLength|@Precision|@Scale|@SRID" />
+      <xsl:apply-templates />
+    </Parameter>
+  </xsl:template>
+
+  <xsl:template match="edm3:ReturnType">
+    <ReturnType>
+      <xsl:copy-of select="@Name|@Type|@Nullable|@MaxLength|@Precision|@Scale|@SRID" />
+      <xsl:apply-templates />
+    </ReturnType>
   </xsl:template>
 
   <xsl:template match="edm3:Documentation">
