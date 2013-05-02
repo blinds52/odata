@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Edm.Metadata" Alias="Metadata">
       <EntityType Name="EntityType" BaseType="Metadata.Type">
@@ -28,6 +28,7 @@
         <NavigationProperty Name="Actions" Type="Collection(Metadata.Action)" />
         <NavigationProperty Name="Functions" Type="Collection(Metadata.Function)" />
         <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
+      <NavigationProperty Name="TypeDefinitions" Type="Collection(Metadata.TypeDefinition)" />
       </EntityType>
       <EntityType Name="Property" Abstract="true">
         <Key>
@@ -37,10 +38,11 @@
         <Property Type="Edm.String" Name="Name" Nullable="false" />
         <Property Type="Edm.Boolean" Name="Nullable" Nullable="false" />
         <Property Type="Edm.Boolean" Name="IsCollection" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="PrimitiveProperty" BaseType="Metadata.Property">
         <NavigationProperty Name="Type" Type="Metadata.PrimitiveType" Nullable="false" />
-        <Property Name="Facets" Type="Collection(Metadata.Facet)" />
+        <Property Type="Collection(Metadata.Facet)" Name="Facets" />
       </EntityType>
       <EntityType Name="ComplexProperty" BaseType="Metadata.Property">
         <NavigationProperty Name="Type" Type="Metadata.ComplexType" Nullable="false" />
@@ -63,6 +65,7 @@
         <NavigationProperty Name="EntityType" Type="Metadata.EntityType" Nullable="false" />
         <NavigationProperty Name="NavigationPropertyBindings" Type="Collection(Metadata.NavigationPropertyBinding)" />
         <Property Type="Edm.String" Name="Name" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="EntityContainer">
         <Key>
@@ -76,6 +79,7 @@
         <NavigationProperty Name="FunctionImports" Type="Collection(Metadata.FunctionImport)" />
         <NavigationProperty Name="NamedEntities" Type="Collection(Metadata.Entity)" />
         <NavigationProperty Name="ActionImports" Type="Collection(Metadata.ActionImport)" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="NavigationProperty">
         <Key>
@@ -87,8 +91,9 @@
         <NavigationProperty Name="Partner" Type="Metadata.NavigationProperty" />
         <Property Type="Edm.Boolean" Name="ContainsTarget" Nullable="false" />
         <Property Type="Edm.String" Name="OnDeleteAction" Nullable="true" />
-        <Property Name="ReferentialConstraints" Type="Collection(Metadata.ReferentialConstraint)" />
+        <Property Type="Collection(Metadata.ReferentialConstraint)" Name="ReferentialConstraints" />
         <NavigationProperty Name="Type" Type="Metadata.EntityType" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="FunctionImport">
         <Key>
@@ -101,16 +106,18 @@
         <Property Type="Edm.String" Name="EntitySetPath" Nullable="true" />
         <NavigationProperty Name="Function" Type="Metadata.Function" Nullable="false" />
         <Property Type="Edm.Boolean" Name="IncludeInServiceDocument" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="Parameter">
         <Key>
           <PropertyRef Name="FullName" />
         </Key>
         <Property Type="Edm.String" Name="FullName" Nullable="false" />
-        <Property Name="Type" Type="Metadata.ParameterType" Nullable="false" />
+        <Property Type="Metadata.ParameterType" Name="Type" Nullable="false" />
         <Property Type="Edm.String" Name="Name" Nullable="false" />
         <Property Type="Edm.String" Name="DefaultValue" Nullable="true" />
         <Property Type="Edm.Boolean" Name="Nullable" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="NavigationPropertyBinding">
         <Key>
@@ -119,11 +126,12 @@
         <Property Type="Edm.String" Name="Path" Nullable="false" />
         <NavigationProperty Name="SourceEntitySet" Type="Metadata.EntitySet" Nullable="false" />
         <NavigationProperty Name="EntitySet" Type="Metadata.EntitySet" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <ComplexType Name="ParameterType">
         <Property Type="Edm.Boolean" Name="IsCollection" Nullable="false" />
         <NavigationProperty Name="Type" Type="Metadata.Type" Nullable="false" />
-        <Property Name="Facets" Type="Collection(Metadata.Facet)" />
+        <Property Type="Collection(Metadata.Facet)" Name="Facets" />
       </ComplexType>
       <EntityType Name="Type" Abstract="true">
         <Key>
@@ -163,6 +171,7 @@
         <Property Type="Edm.String" Name="Name" Nullable="false" />
         <Property Type="Edm.Int64" Name="Value" Nullable="false" />
         <NavigationProperty Name="EnumType" Type="Metadata.EnumType" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="Annotation">
         <Key>
@@ -173,10 +182,12 @@
         <NavigationProperty Name="Term" Type="Metadata.Term" Nullable="false" />
         <Property Type="Edm.String" Name="Value" Nullable="false" />
         <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="TypeDefinition" Abstract="true" BaseType="Metadata.PrimitiveType">
-        <Property Name="Facets" Type="Collection(Metadata.Facet)" />
+        <Property Type="Collection(Metadata.Facet)" Name="Facets" />
         <NavigationProperty Name="UnderlyingType" Type="Metadata.PrimitiveType" Nullable="false" />
+      <NavigationProperty Name="Schema" Type="Metadata.Schema" Nullable="false" />
       </EntityType>
       <EntityType Name="Function">
         <Key>
@@ -190,7 +201,8 @@
         <Property Type="Edm.Boolean" Name="IsBindable" Nullable="false" />
         <Property Type="Edm.String" Name="IsComposable" Nullable="false" />
         <Property Type="Edm.String" Name="EntitySetPath" Nullable="true" />
-        <Property Name="ReturnType" Type="Metadata.ParameterType" Nullable="false" />
+        <Property Type="Metadata.ParameterType" Name="ReturnType" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="Entity">
         <Key>
@@ -200,6 +212,7 @@
         <Property Type="Edm.String" Name="Name" Nullable="false" />
         <NavigationProperty Name="EntityContainer" Type="Metadata.EntityContainer" Nullable="false" />
         <NavigationProperty Name="Type" Type="Metadata.EntityType" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="Action">
         <Key>
@@ -212,7 +225,8 @@
         <NavigationProperty Name="Parameters" Type="Collection(Metadata.Parameter)" />
         <Property Type="Edm.Boolean" Name="IsBindable" Nullable="false" />
         <Property Type="Edm.String" Name="EntitySetPath" Nullable="true" />
-        <Property Name="ReturnType" Type="Metadata.ParameterType" Nullable="true" />
+        <Property Type="Metadata.ParameterType" Name="ReturnType" Nullable="true" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <EntityType Name="ActionImport">
         <Key>
@@ -223,6 +237,7 @@
         <NavigationProperty Name="Action" Type="Metadata.Action" Nullable="false" />
         <NavigationProperty Name="EntitySet" Type="Metadata.EntitySet" />
         <NavigationProperty Name="EntityContainer" Type="Metadata.EntityContainer" Nullable="false" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <ComplexType Name="ReferentialConstraint">
         <Property Type="Edm.String" Name="Property" Nullable="false" />
@@ -252,8 +267,9 @@
           <PropertyRef Name="Uri" />
         </Key>
         <Property Type="Edm.String" Name="Uri" Nullable="false" />
-        <Property Name="Include" Type="Collection(Metadata.Include)" />
-        <Property Name="IncludeAnnotations" Type="Collection(Metadata.IncludeAnnotations)" />
+        <Property Type="Collection(Metadata.Include)" Name="Include" />
+        <Property Type="Collection(Metadata.IncludeAnnotations)" Name="IncludeAnnotations" />
+      <NavigationProperty Name="Annotations" Type="Collection(Metadata.Annotation)" />
       </EntityType>
       <ComplexType Name="KeyProperty">
         <Property Type="Edm.String" Name="PropertyPath" Nullable="false" />
@@ -261,23 +277,113 @@
         <NavigationProperty Name="Property" Type="Metadata.PrimitiveProperty" Nullable="false"/>
       </ComplexType>
       <EntityContainer Name="MetadataContainer">
-        <EntitySet Name="Schemata" EntityType="Metadata.Schema" />
-        <EntitySet Name="Properties" EntityType="Metadata.Property" />
-        <EntitySet Name="EntitySets" EntityType="Metadata.EntitySet" />
-        <EntitySet Name="EntityContainers" EntityType="Metadata.EntityContainer" />
-        <EntitySet Name="NavigationProperties" EntityType="Metadata.NavigationProperty" />
-        <EntitySet Name="FunctionImports" EntityType="Metadata.FunctionImport" />
-        <EntitySet Name="Parameters" EntityType="Metadata.Parameter" />
-        <EntitySet Name="NavigationPropertyBindings" EntityType="Metadata.NavigationPropertyBinding" />
-        <EntitySet Name="Types" EntityType="Metadata.Type" />
-        <EntitySet Name="Terms" EntityType="Metadata.Term" />
-        <EntitySet Name="EnumTypeMembers" EntityType="Metadata.EnumTypeMember" />
-        <EntitySet Name="Annotations" EntityType="Metadata.Annotation" />
-        <EntitySet Name="Functions" EntityType="Metadata.Function" />
-        <EntitySet Name="Entities" EntityType="Metadata.Entity" />
-        <EntitySet Name="Actions" EntityType="Metadata.Action" />
-        <EntitySet Name="ActionImports" EntityType="Metadata.ActionImport" />
-        <EntitySet Name="References" EntityType="Metadata.Reference" />
+        <EntitySet Name="Schemata" EntityType="Metadata.Schema" >
+          <NavigationPropertyBinding EntitySet="Types" Path="EntityTypes" />
+        <NavigationPropertyBinding EntitySet="Types" Path="ComplexTypes" />
+          <NavigationPropertyBinding EntitySet="EntityContainers" Path="EntityContainers" />
+          <NavigationPropertyBinding EntitySet="Terms" Path="Terms" />
+          <NavigationPropertyBinding EntitySet="Actions" Path="Actions" />
+          <NavigationPropertyBinding EntitySet="Functions" Path="Functions" />
+          <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+          <NavigationPropertyBinding EntitySet="Types" Path="TypeDefinitions" />
+        </EntitySet>
+        <EntitySet Name="Properties" EntityType="Metadata.Property" >
+          <NavigationPropertyBinding EntitySet="Types" Path="Metadata.ComplexProperty/Type" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Metadata.PrimitiveProperty/Type" />
+        <NavigationPropertyBinding EntitySet="Types" Path="Metadata.EnumProperty/Type" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="EntitySets" EntityType="Metadata.EntitySet" >
+          <NavigationPropertyBinding EntitySet="EntityContainers" Path="EntityContainer" />
+        <NavigationPropertyBinding EntitySet="Types" Path="EntityType" />
+          <NavigationPropertyBinding EntitySet="NavigationPropertyBindings" Path="NavigationPropertyBindings" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="EntityContainers" EntityType="Metadata.EntityContainer" >
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Schema" />
+          <NavigationPropertyBinding EntitySet="EntitySets" Path="EntitySets" />
+          <NavigationPropertyBinding EntitySet="FunctionImports" Path="FunctionImports" />
+          <NavigationPropertyBinding EntitySet="Entities" Path="NamedEntities" />
+        <NavigationPropertyBinding EntitySet="ActionImports" Path="ActionImports" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="NavigationProperties" EntityType="Metadata.NavigationProperty" >
+          <NavigationPropertyBinding EntitySet="NavigationProperties" Path="Partner" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Type" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="FunctionImports" EntityType="Metadata.FunctionImport" >
+          <NavigationPropertyBinding EntitySet="EntityContainers" Path="EntityContainer" />
+          <NavigationPropertyBinding EntitySet="EntitySets" Path="EntitySet" />
+        <NavigationPropertyBinding EntitySet="Functions" Path="Function" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="Parameters" EntityType="Metadata.Parameter" >
+          <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="NavigationPropertyBindings" EntityType="Metadata.NavigationPropertyBinding" >
+          <NavigationPropertyBinding EntitySet="EntitySets" Path="SourceEntitySet" />
+        <NavigationPropertyBinding EntitySet="EntitySets" Path="EntitySet" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="Types" EntityType="Metadata.Type" >
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Metadata.EntityType/Schema" />
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Metadata.ComplexType/Schema" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Metadata.EntityType/DerivedTypes" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Metadata.EntityType/BaseType" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Metadata.ComplexType/DerivedTypes" />
+        <NavigationPropertyBinding EntitySet="Types" Path="Metadata.ComplexType/BaseType" />
+          <NavigationPropertyBinding EntitySet="EntitySets" Path="Metadata.EntityType/EntitySets" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Metadata.EnumType/UnderlyingType" />
+          <NavigationPropertyBinding EntitySet="EnumTypeMembers" Path="Metadata.EnumType/Members" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Metadata.TypeDefinition/UnderlyingType" />
+          <NavigationPropertyBinding EntitySet="Properties" Path="Metadata.ComplexType/Properties" />
+          <NavigationPropertyBinding EntitySet="Properties" Path="Metadata.EntityType/Properties" />
+          <NavigationPropertyBinding EntitySet="NavigationProperties" Path="Metadata.ComplexType/NavigationProperties" />
+          <NavigationPropertyBinding EntitySet="NavigationProperties" Path="Metadata.EntityType/NavigationProperties" />
+          <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Metadata.TypeDefinition/Schema" />
+        </EntitySet>
+        <EntitySet Name="Terms" EntityType="Metadata.Term" >
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Schema" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Type" />
+          <NavigationPropertyBinding EntitySet="Annotations" Path="Applications" />
+          <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="EnumTypeMembers" EntityType="Metadata.EnumTypeMember" >
+          <NavigationPropertyBinding EntitySet="Types" Path="EnumType" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="Annotations" EntityType="Metadata.Annotation" >
+          <NavigationPropertyBinding EntitySet="Terms" Path="Term" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="Functions" EntityType="Metadata.Function" >
+          <NavigationPropertyBinding EntitySet="FunctionImports" Path="FunctionImports" />
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Schema" />
+          <NavigationPropertyBinding EntitySet="Parameters" Path="Parameters" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="Entities" EntityType="Metadata.Entity" >
+          <NavigationPropertyBinding EntitySet="EntityContainers" Path="EntityContainer" />
+        <NavigationPropertyBinding EntitySet="Types" Path="Type" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="Actions" EntityType="Metadata.Action" >
+          <NavigationPropertyBinding EntitySet="ActionImports" Path="ActionImports" />
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Schema" />
+          <NavigationPropertyBinding EntitySet="Parameters" Path="Parameters" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="ActionImports" EntityType="Metadata.ActionImport" >
+          <NavigationPropertyBinding EntitySet="Actions" Path="Action" />
+        <NavigationPropertyBinding EntitySet="EntitySets" Path="EntitySet" />
+          <NavigationPropertyBinding EntitySet="EntityContainers" Path="EntityContainer" />
+        <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+        </EntitySet>
+        <EntitySet Name="References" EntityType="Metadata.Reference" >
+          <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
+      </EntitySet>
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
