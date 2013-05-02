@@ -32,7 +32,6 @@
   -->
 
   <!-- TODO: ReferentialConstraint, OnDelete -->
-  <!-- TODO: NavigationPropertyBinding -->
   <!-- TODO: Use Alias instead of Namespace as qualifier: #V4:Alias:xxx marker? where? -->
   <!-- TODO: ValueAnnotation -> Annotation -->
   <!-- TODO: TypeAnnotation -> Annotation with Record -->
@@ -202,7 +201,35 @@
       <EntitySet>
         <xsl:copy-of select="@Name|@EntityType" />
         <xsl:apply-templates />
+        <xsl:variable name="name" select="@Name" />
+        <xsl:apply-templates select="../edm3:AssociationSet/edm3:End[@EntitySet=$name]" mode="Binding">
+          <xsl:with-param name="entitytype" select="@EntityType" />
+        </xsl:apply-templates>
       </EntitySet>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm3:AssociationSet/edm3:End" mode="Binding">
+    <xsl:param name="entitytype" />
+    <xsl:variable name="role" select="@Role" />
+    <xsl:variable name="set" select="../edm3:End[not(@Role=$role)]/@EntitySet" />
+    <xsl:if test="$set!='V4_Edm_EntityType'">
+      <xsl:variable name="assoc" select="../@Association" />
+      <xsl:variable name="navprop"
+        select="../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
+      <xsl:if test="$navprop">
+        <xsl:variable name="namespace" select="../../../@Namespace" />
+        <xsl:variable name="typename"
+          select="../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
+        <xsl:variable name="type" select="concat($namespace,'.',$typename)" />
+        <NavigationPropertyBinding>
+          <xsl:attribute name="EntitySet"><xsl:value-of select="$set" /></xsl:attribute>
+          <xsl:attribute name="Path">
+          <xsl:if test="not($type=$entitytype)"><xsl:value-of select="concat($type,'/')" /></xsl:if>
+          <xsl:value-of select="$navprop" />
+        </xsl:attribute>
+        </NavigationPropertyBinding>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
