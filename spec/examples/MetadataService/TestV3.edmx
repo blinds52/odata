@@ -72,6 +72,8 @@
           <Key>
             <PropertyRef Name="Fullname" />
           </Key>
+          <Property Type="String" Name="SchemaNamespace" Nullable="false" />
+          <Property Type="String" Name="SchemaAlias" Nullable="false" />
           <Property Type="TestV3.SomeComplex" Name="NullableComplex">
             <Documentation>
               <LongDescription>#V4:Nullable</LongDescription>
@@ -100,8 +102,20 @@
             ToRole="Schema" />
         </EntityType>
         <Association Name="SchemaEntityType">
-          <End Type="TestV3.Schema" Role="Schema" Multiplicity="1" />
+          <End Type="TestV3.Schema" Role="Schema" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="TestV3.EntityType" Role="EntityType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Schema">
+              <PropertyRef Name="Namespace" />
+              <PropertyRef Name="Alias" />
+            </Principal>
+            <Dependent Role="EntityType">
+              <PropertyRef Name="SchemaNamespace" />
+              <PropertyRef Name="SchemaAlias" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
