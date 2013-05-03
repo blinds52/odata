@@ -31,10 +31,8 @@
     navigation properties. Use fully qualified types in the literal to produce valid V4 CSDL.
   -->
 
-  <!-- TODO: ReferentialConstraint, OnDelete -->
-  <!-- TODO: Use Alias instead of Namespace as qualifier: #V4:Alias:xxx marker? where? -->
-  <!-- TODO: ValueAnnotation -> Annotation -->
-  <!-- TODO: TypeAnnotation -> Annotation with Record -->
+  <!-- TODO: Use Alias instead of Namespace as qualifier -->
+  <!-- TODO: Annotations, ValueAnnotation -> Annotation, TypeAnnotation -> Annotation with Record -->
 
   <xsl:output method="xml" indent="yes" />
   <xsl:strip-space elements="*" />
@@ -84,11 +82,11 @@
 
   <xsl:template match="edm3:Key">
     <Key>
-      <xsl:apply-templates />
+      <xsl:apply-templates select="edm3:PropertyRef" mode="Key" />
     </Key>
   </xsl:template>
 
-  <xsl:template match="edm3:PropertyRef">
+  <xsl:template match="edm3:PropertyRef" mode="Key">
     <PropertyRef>
       <xsl:copy-of select="@Name" />
       <xsl:apply-templates />
@@ -117,7 +115,7 @@
       </xsl:when>
       <xsl:otherwise>
         <Property>
-          <!-- TODO: @Name first -->
+          <xsl:copy-of select="@Name" />
           <xsl:attribute name="Type">
             <xsl:choose>
               <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Collection'">Collection(<xsl:value-of select="@Type" />)</xsl:when>
@@ -128,7 +126,6 @@
               <xsl:otherwise><xsl:value-of select="concat('Edm.',@Type)" /></xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
-          <xsl:copy-of select="@Name" />
           <xsl:choose>
             <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Nullable'">
               <xsl:attribute name="Nullable">true</xsl:attribute>
@@ -168,8 +165,31 @@
       <xsl:if test="$mult='1'">
         <xsl:attribute name="Nullable">false</xsl:attribute>
       </xsl:if>
+      <xsl:apply-templates mode="NavProp"
+        select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/edm3:OnDelete" />
+      <xsl:apply-templates mode="NavProp"
+        select="../../edm3:Association[@Name=$assoc]/edm3:ReferentialConstraint/edm3:Principal[@Role=$role]" />
       <xsl:apply-templates />
     </NavigationProperty>
+  </xsl:template>
+
+  <xsl:template match="edm3:OnDelete" mode="NavProp">
+    <OnDelete>
+      <xsl:copy-of select="@Action" />
+      <xsl:apply-templates />
+    </OnDelete>
+  </xsl:template>
+
+  <xsl:template match="edm3:PropertyRef" mode="NavProp">
+    <xsl:variable name="index" select="position()" />
+    <ReferentialConstraint>
+      <xsl:attribute name="Property">
+        <xsl:value-of select="../../edm3:Dependent/edm3:PropertyRef[$index]/@Name" />
+      </xsl:attribute>
+      <xsl:attribute name="ReferencedProperty">
+        <xsl:value-of select="@Name" />
+      </xsl:attribute>
+    </ReferentialConstraint>
   </xsl:template>
 
   <xsl:template match="edm3:EnumType">
@@ -228,6 +248,7 @@
           <xsl:if test="not($type=$entitytype)"><xsl:value-of select="concat($type,'/')" /></xsl:if>
           <xsl:value-of select="$navprop" />
         </xsl:attribute>
+          <xsl:apply-templates />
         </NavigationPropertyBinding>
       </xsl:if>
     </xsl:if>

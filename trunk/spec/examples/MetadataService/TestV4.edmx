@@ -28,12 +28,12 @@
         <Annotation Term="Core.LongDescription">
           <String>Long description</String>
         </Annotation>
-        <Property Type="Edm.String" Name="Namespace" Nullable="false" />
-        <Property Type="Edm.String" Name="Alias" Nullable="false" />
+        <Property Name="Namespace" Type="Edm.String" Nullable="false" />
+        <Property Name="Alias" Type="Edm.String" Nullable="false" />
         <NavigationProperty Name="EntityTypes" Type="Collection(TestV3.EntityType)" />
       </EntityType>
       <ComplexType Name="SomeComplex">
-        <Property Type="Edm.Binary" Name="SomeBinary" />
+        <Property Name="SomeBinary" Type="Edm.Binary" />
         <NavigationProperty Name="BecomeNavigation" Type="TestV3.EntityType" />
         <NavigationProperty Name="BecomeAlsoNavigation" Type="TestV3.EntityType" Nullable="false" />
         <NavigationProperty Name="BecomeCollectionNavigation" Type="Collection(TestV3.EntityType)" />
@@ -42,19 +42,25 @@
         <Key>
           <PropertyRef Name="Fullname" />
         </Key>
-        <Property Type="TestV3.SomeComplex" Name="NullableComplex" Nullable="true" />
-        <Property Type="Collection(TestV3.SomeComplex)" Name="ComplexCollection" />
-        <Property Type="Edm.String" Name="Fullname" Nullable="false" />
-        <Property Type="Edm.String" Name="Name" Nullable="false" />
-        <Property Type="Edm.TimeOfDay" Name="WillBecomeTimeOfDay" Nullable="false" />
-        <Property Type="Edm.Duration" Name="WillBecomeDuration" Nullable="false" />
-        <Property Type="Edm.Duration" Name="WillBecomeAlsoDuration" Nullable="true" />
-        <Property Type="Edm.DateTimeOffset" Name="WillBecomeDateTimeOffset" Nullable="false" />
-        <Property Type="Edm.DateTimeOffset" Name="WillBecomeAlsoDateTimeOffset" Nullable="true" />
+        <Property Name="SchemaNamespace" Type="Edm.String" Nullable="false" />
+        <Property Name="SchemaAlias" Type="Edm.String" Nullable="false" />
+        <Property Name="NullableComplex" Type="TestV3.SomeComplex" Nullable="true" />
+        <Property Name="ComplexCollection" Type="Collection(TestV3.SomeComplex)" />
+        <Property Name="Fullname" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="WillBecomeTimeOfDay" Type="Edm.TimeOfDay" Nullable="false" />
+        <Property Name="WillBecomeDuration" Type="Edm.Duration" Nullable="false" />
+        <Property Name="WillBecomeAlsoDuration" Type="Edm.Duration" Nullable="true" />
+        <Property Name="WillBecomeDateTimeOffset" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="WillBecomeAlsoDateTimeOffset" Type="Edm.DateTimeOffset" Nullable="true" />
       </EntityType>
       <EntityType Name="EntityType" BaseType="TestV3.Type">
-        <Property Type="Edm.Boolean" Name="HasStream" Nullable="true" />
-        <NavigationProperty Name="Schema" Type="TestV3.Schema" Nullable="false" />
+        <Property Name="HasStream" Type="Edm.Boolean" Nullable="true" />
+        <NavigationProperty Name="Schema" Type="TestV3.Schema" Nullable="false">
+          <OnDelete Action="Cascade" />
+          <ReferentialConstraint Property="SchemaNamespace" ReferencedProperty="Namespace" />
+          <ReferentialConstraint Property="SchemaAlias" ReferencedProperty="Alias" />
+        </NavigationProperty>
       </EntityType>
       <Action Name="Approval" ReturnType="Edm.String" IsBindable="true">
         <Parameter Name="lr" Type="TestV3.EntityType" />
