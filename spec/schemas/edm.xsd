@@ -501,20 +501,20 @@
   <xs:simpleType name="TSimpleIdentifier">
     <xs:restriction base="xs:string">
       <xs:maxLength value="128" />
-      <!-- The below pattern represents the allowed identifiers in ECMA specification -->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
+      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification not starting with a $ -->
+      <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TOptionallyQualifiedName">
     <xs:restriction base="xs:string">
-      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification  -->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '.' for namespace qualification  -->
+      <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TQualifiedName">
     <xs:restriction base="xs:string">
-      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification  -->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){1,}" />
+      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '.' for namespace qualification  -->
+      <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){1,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TQualifiedNameList">
@@ -524,16 +524,16 @@
     <xs:union memberTypes="edm:TPrimitiveType edm:TAbstractType edm:TQualifiedName">
       <xs:simpleType>
         <xs:restriction base="xs:token">
-          <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification and the Collection() wrapper  -->
-          <xs:pattern value="Collection\([\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){1,}\)" />
+          <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '.' for namespace qualification and the Collection() wrapper  -->
+          <xs:pattern value="Collection\([\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){1,}\)" />
         </xs:restriction>
       </xs:simpleType>
     </xs:union>
   </xs:simpleType>
   <xs:simpleType name="TPath">
     <xs:restriction base="xs:string">
-      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification and the '/' for path segment separation -->
-      <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./][\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '.' for namespace qualification and the '/' for path segment separation -->
+      <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./][\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TPathWithTermCast">
@@ -543,9 +543,9 @@
           - at most one # is allowed per slash-separated segment 
     -->
     <xs:restriction base="xs:string">
-      <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '/' for path segment separation and
+      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '/' for path segment separation and
            the '.' for namespace qualification inside the segments. -->
-      <xs:pattern value="@?[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./#][@$]?[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+      <xs:pattern value="@?[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./#][@$]?[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TClientFunction">

@@ -1,5 +1,5 @@
 ;------------------------------------------------------------------------------
-; odata-abnf-v4.0-wd01
+; odata-abnf-v4.0
 ;------------------------------------------------------------------------------
 ;
 ; Technical Committee:
@@ -16,16 +16,22 @@
 ; Additional artifacts: 
 ;   This prose specification is one component of a Work Product which consists
 ;   of:
-;   - OData Core Part 1: Protocol
-;   - OData Core Part 2: URL Conventions
-;   - OData Core Part 3: Common Schema Defi  nition Language
-;   - OData ABNF Construction Rules (this document)
+;   - OData Version 4.0 Part 1: Protocol
+;   - OData Version 4.0 Part 2: URL Conventions
+;   - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
+;   - OData ABNF Construction Rules Version 4.0 (this document)
+;   - OData ABNF Test Cases
+;   - OData Core Vocabulary
+;   - OData Measures Vocabulary
+;   - OData Metadata Service Entity Model
+;   - OData EDMX XML Schema
+;   - OData EDM XML Schema
 ;
 ; Related work:
 ;   This work product is related to the following two Work Products, each of 
 ;   which define alternate formats for OData payloads
-;   - OData JSON Format
-;   - OData Atom Format
+;   - OData JSON Format Version 4.0
+;   - OData Atom Format Version 4.0
 ;   This specification replaces or supersedes:
 ;   - None
 ;
@@ -81,7 +87,6 @@
 ;
 ;   A. URI syntax [RFC3986]
 ;   B. ABNF core definitions [RFC5234]
-;   C. UTF-8 syntax [RFC3629]
 ;
 ;------------------------------------------------------------------------------
 
@@ -233,27 +238,35 @@ applyTrafo = aggregateTrafo
            / toppercentTrafo
            / topsumTrafo
 
-aggregateTrafo      = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
-aggregateParam      = ( '$count' / evalExpr / countOrPropertyWithPath )
-                      [ RWS 'with' RWS aggregationFunction ]
-                      *( RWS 'from' RWS propertyWithPath [ RWS 'with' RWS aggregationFunction ] )
-                      [ RWS 'as'   RWS odataIdentifier ]
-evalExpr            = 'eval' OPEN BWS commonExpr [ BWS COMMA BWS navigationPropertyWithPath ] BWS CLOSE
-aggregationFunction = 'sum' 
-                    / 'min' 
-                    / 'max' 
-                    / 'average' 
-                    / 'countdistinct' 
-                    / namespace "." odataIdentifier
-                    
+aggregateTrafo     = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
+aggregateParam     = ( aggregateExpr / propertyWithPath )
+                     [ RWS 'with' RWS aggregateOperation ]
+                     *( RWS 'from' RWS propertyWithPath [ RWS 'with' RWS aggregateOperation ] )
+aggregateExpr      = expandPath OPEN ( '$count' / commonExpr ) RWS 'as' RWS odataIdentifier CLOSE   
+                   / ( '$count' / commonExpr ) RWS 'as' RWS odataIdentifier
+aggregateOperation = 'sum' 
+                   / 'min' 
+                   / 'max' 
+                   / 'average' 
+                   / 'countdistinct' 
+                   / namespace "." odataIdentifier
+
+; TODO: do we allow aggregation of collections of complex or primitive type?                 
+propertyWithPath = [ qualifiedEntityTypeName "/" ] 
+                   *( complexProperty    [ "/" qualifiedComplexTypeName ] "/"
+                    / navigationProperty [ "/" qualifiedEntityTypeName  ] "/" 
+                    ) 
+                   ( navigationProperty [ "/" qualifiedEntityTypeName ] 
+                   / property 
+                   )
+
 bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 combineTrafo = 'combine' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
-expandTrafo  = 'expand' OPEN BWS navigationPropertyWithPath BWS COMMA BWS boolCommonExpr BWS CLOSE
-
-filterTrafo  = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
+expandTrafo  = 'expand'  OPEN BWS expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
+filterTrafo  = 'filter'  OPEN BWS boolCommonExpr BWS CLOSE
 
 groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOSE
 groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
@@ -269,19 +282,16 @@ topcountTrafo   = 'topcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS 
 toppercentTrafo = 'toppercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 topsumTrafo     = 'topsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
-countOrPropertyWithPath    = *( ( complexProperty / navigationProperty ) "/" ) ( navigationProperty / property / '$count' )
-propertyWithPath           = *( ( complexProperty / navigationProperty ) "/" ) ( navigationProperty / property )
-navigationPropertyWithPath = *( ( complexProperty / navigationProperty ) "/" )   navigationProperty
-
 expand            = '$expand' EQ expandItem *( COMMA expandItem )
-expandItem        = [ qualifiedEntityTypeName "/" ] 
-                    *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
-                    navigationProperty 
-                    [ "/" qualifiedEntityTypeName ]
+expandItem        = expandPath
                     [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                     /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
                     ]
+expandPath        = [ qualifiedEntityTypeName "/" ] 
+                    *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
+                    navigationProperty 
+                    [ "/" qualifiedEntityTypeName ]
 expandCountOption = filter
                   / search
 expandRefOption   = expandCountOption
@@ -326,22 +336,23 @@ searchAndExpr = RWS [ 'AND' RWS ] searchExpr
 
 searchTerm   = [ 'NOT' RWS ] ( searchPhrase / searchWord )
 searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
-searchWord   = 1*ALPHA ; TODO: any character from the Unicode categories L or Nl, 
-                       ;       but not the words AND, OR, and NOT
+searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L or Nl, 
+                       ; but not the words AND, OR, and NOT
 
-select     = '$select' EQ selectItem *( COMMA selectItem )
-selectItem = STAR  
-           / allOperationsInSchema 
-           / [ qualifiedEntityTypeName "/" ] 
-             ( selectProperty
-             / qualifiedActionName  
-             / qualifiedFunctionName  
-             )
-
+select         = '$select' EQ selectItem *( COMMA selectItem )
+selectItem     = STAR
+               / allOperationsInSchema 
+               / [ qualifiedEntityTypeName "/" ] 
+                 ( selectProperty
+                 / qualifiedActionName  
+                 / qualifiedFunctionName  
+                 )
 selectProperty = primitiveProperty  
                / primitiveColProperty 
                / navigationProperty
-               / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" selectProperty ]
+               / selectPath [ "/" selectProperty ]
+selectPath     = ( complexProperty / complexColProperty ) 
+                 [ "/" qualifiedComplexTypeName ]               
 
 
 allOperationsInSchema = namespace "." STAR                 
@@ -409,7 +420,7 @@ element = '/@Element'
 ; 4. Expressions
 ;------------------------------------------------------------------------------
 
-; TODO: a boolCommonExpr is also a commonExpr, e.g. sort by Boolean 
+; Note: a boolCommonExpr is also a commonExpr, e.g. sort by Boolean 
 commonExpr = ( primitiveLiteral
              / parameterAlias
              / firstMemberExpr
@@ -441,7 +452,6 @@ boolCommonExpr = ( isofExpr
                  / boolParenExpr
                  ) [ andExpr / orExpr ] 
 
-; TODO: this may be too generous: did we intend to allow arbitrary member expressions as function parameters?
 firstMemberExpr = [ lambdaPredicatePrefixExpr ]  ; only allowed inside a lambdaPredicateExpr
                   memberExpr
 
@@ -451,13 +461,13 @@ memberExpr = [ qualifiedEntityTypeName "/" ]
              )
              
 propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ] 
-                 / entityNavigationProperty    [ singleNavigationExpr ] 
-                 / complexColProperty          [ collectionPathExpr ]
-                 / complexProperty             [ complexPathExpr ] 
-                 / primitiveColProperty        [ collectionPathExpr ]
-                 / primitiveProperty           [ singlePathExpr ]
-                 / streamProperty              ; TODO: do we allow bindable functions that take an Edm.Stream as input?
-                 )
+                   / entityNavigationProperty    [ singleNavigationExpr ] 
+                   / complexColProperty          [ collectionPathExpr ]
+                   / complexProperty             [ complexPathExpr ] 
+                   / primitiveColProperty        [ collectionPathExpr ]
+                   / primitiveProperty           [ singlePathExpr ]
+                   / streamProperty
+                   )
                    
 lambdaPredicatePrefixExpr = inscopeVariableExpr "/"
 inscopeVariableExpr       = implicitVariableExpr / lambdaVariableExpr
@@ -728,9 +738,10 @@ complexTypeName     = odataIdentifier
 enumerationTypeName = odataIdentifier
 enumerationMember   = odataIdentifier
 
+; Note: this pattern is overly restrictive, the normative definition is type TSimpleIdentifier in OData EDM XML Schema
 odataIdentifier             = identifierLeadingCharacter *127identifierCharacter
-identifierLeadingCharacter  = ALPHA / "_"            ; TODO: Any character from the Unicode categories L or Nl
-identifierCharacter         = ALPHA / DIGIT / "_"    ; TODO: Any character from the Unicode categories L, Nl, Nd, Mn, Mc, Pc or Cf
+identifierLeadingCharacter  = ALPHA / "_"         ; plus Unicode characters from the categories L or Nl
+identifierCharacter         = ALPHA / "_" / DIGIT ; plus Unicode characters from the categories L, Nl, Nd, Mn, Mc, Pc, or Cf
 
 primitiveTypeName = ['Edm.'] ( 'Binary'
                              / 'Boolean'
@@ -1064,6 +1075,7 @@ qchar-no-AMP-DQUOTE   = qchar-unescaped
 ;------------------------------------------------------------------------------
 ; B. ABNF core definitions [RFC5234]
 ;------------------------------------------------------------------------------
+
 ALPHA  = %x41-5A / %x61-7A 
 DIGIT  = %x30-39 
 HEXDIG = DIGIT / A-to-F
@@ -1083,20 +1095,5 @@ HTAB   = %x09
 
 
 ;------------------------------------------------------------------------------
-; C. UTF-8 syntax [RFC3629]
-;------------------------------------------------------------------------------
-
-;UTF8-octets = *( UTF8-char )
-;UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
-;UTF8-1      = %x00-7F
-;UTF8-2      = %xC2-DF UTF8-tail
-;UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
-;              %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
-;UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
-;              %xF4 %x80-8F 2( UTF8-tail )
-;UTF8-tail   = %x80-BF
-
-
-;------------------------------------------------------------------------------
-; End of odata-abnf-v4.0-wd01
+; End of odata-abnf-v4.0
 ;------------------------------------------------------------------------------
