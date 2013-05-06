@@ -158,6 +158,7 @@
     <Match>City</Match>
     <Match>CompanyName</Match>
     <Match>Completed</Match>
+    <Match>Cost</Match>
     <Match>eyeColor</Match>
     <Match>FirstName</Match>
     <Match>LastName</Match>
@@ -171,6 +172,7 @@
     <Match>Quantity</Match>
     <Match>Rating</Match>
     <Match>ReleaseDate</Match>
+    <Match>Revenue</Match>
     <Match>SalesArea</Match>
     <Match>Shipped</Match>
     <Match>Spokesperson</Match>
@@ -1552,7 +1554,7 @@
   </TestCase>
   <TestCase Name="5.1.4 OrderBy mixed" 
             Rule="orderby">
-    <Input>$orderby=Name asc,Rating,Size desc</Input>
+    <Input>$orderby=Name asc,Rating,ReleaseDate desc</Input>
   </TestCase>
   <TestCase Name="5.1.5 Top and Skip" 
             Rule="queryOptions">
@@ -2003,7 +2005,7 @@
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with $select" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Address/Name,Orders)</Input>
+    <Input>http://host/service/$metadata#Customers(Address/Street,Orders)</Input>
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with $select" 
             Rule="odataUri">
@@ -2019,11 +2021,11 @@
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with $select" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(.,Orders(ID))</Input>
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(.,Orders(ID))</Input>
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with cast, $select and nested $expand" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Employees/Sales.Manager(Title,DirectReports+(FirstName,LastName))</Input>
+    <Input>http://host/service/$metadata#Employees(Title,DirectReports+(FirstName,LastName))</Input>
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with type cast" 
             Rule="odataUri">
@@ -2093,11 +2095,11 @@
   </TestCase>
   <TestCase Name="Aggregation - expression" 
             Rule="queryOptions">
-    <Input>$apply=aggregate(eval(Amount mul Product/TaxRate) as Tax)</Input>
+    <Input>$apply=aggregate(Amount mul Product/TaxRate as Tax)</Input>
   </TestCase>
-  <TestCase Name="Aggregation - expression with path" 
+  <TestCase Name="Aggregation - expression after path" 
             Rule="queryOptions">
-    <Input>$apply=aggregate(eval(Amount mul Product/TaxRate,Sales) as Tax)</Input>
+    <Input>$apply=aggregate(Sales(Amount mul Product/TaxRate as Tax))</Input>
   </TestCase>
   <TestCase Name="Aggregation - aggregation function" 
             Rule="queryOptions">
@@ -2105,11 +2107,12 @@
   </TestCase>
   <TestCase Name="Aggregation - aggregation function and alias" 
             Rule="queryOptions">
-    <Input>$apply=aggregate(Product with countdistinct as DistinctProducts)</Input>
+    <Input>$apply=aggregate(Product as DistinctProducts with countdistinct)</Input>
   </TestCase>
+  <!-- TODO: rethink placement of as after from and with -->
   <TestCase Name="Aggregation - aggregation function" 
             Rule="queryOptions">
-    <Input>$apply=aggregate(Amount from Time with average as DailyAverage)</Input>
+    <Input>$apply=aggregate(Amount as DailyAverage from Time with average)</Input>
   </TestCase>
   <TestCase Name="Aggregation - $count" 
             Rule="queryOptions">
@@ -2213,6 +2216,18 @@ GET SalesOrganizations?$filter=isleaf(SaM.SalesOrgHierarchy)
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
+    <Input>$apply=groupby((Name),aggregate(Sales(Amount as TotalAmount)))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" 
+            Rule="queryOptions">
+    <Input>$apply=groupby((Name),aggregate(Sales(Revenue sub Cost as Profit)))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" 
+            Rule="queryOptions">
+    <Input>$apply=groupby((Name),aggregate(Revenue sub Cost as Profit))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" 
+            Rule="queryOptions">
     <Input>$apply=groupby((Name,Sales/Currency/Code),aggregate(Sales/Amount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
@@ -2241,15 +2256,19 @@ GET SalesOrganizations?$filter=isleaf(SaM.SalesOrgHierarchy)
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales/$count as SalesCount,Sales/Amount as TotalAmount))</Input>
+    <Input>$apply=groupby((Name),aggregate(Sales($count as SalesCount)))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum,Amount with average as AvgAmt))</Input>
+    <Input>$apply=groupby((Name),aggregate(Sales/$count as SalesCount,Sales(Amount as TotalAmount)))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales/Amount with sum,Sales/Amount with average as AvgAmt))</Input>
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum,Amount as AvgAmt with average))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" 
+            Rule="queryOptions">
+    <Input>$apply=groupby((Name),aggregate(Sales/Amount with sum,Sales(Amount as AvgAmt) with average))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
