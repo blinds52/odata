@@ -77,8 +77,10 @@
     <Match>Category</Match>
     <Match>Continent</Match>
     <Match>Country</Match>
+    <Match>CountrySet</Match>
     <Match>Currency</Match>
     <Match>Customer</Match>
+    <Match>CustomerSet</Match>
     <Match>Product</Match>
     <Match>ProductGroup</Match>
     <Match>Supplier</Match>
@@ -146,6 +148,7 @@
   </Constraint>
   <Constraint Rule="primitiveKeyProperty">
     <Match>Code</Match>
+    <Match>Date</Match>
     <Match>ID</Match>
     <Match>ItemID</Match>
     <Match>OrderID</Match>
@@ -159,6 +162,7 @@
     <Match>CompanyName</Match>
     <Match>Completed</Match>
     <Match>Cost</Match>
+    <Match>CountryCode</Match>
     <Match>eyeColor</Match>
     <Match>FirstName</Match>
     <Match>LastName</Match>
@@ -2083,6 +2087,10 @@
             Rule="odataUri">
     <Input>http://host/service/$metadata#Customers/@Delta</Input>
   </TestCase>  
+  <TestCase Name="Query - on entity container" 
+            Rule="odataRelativeUri">
+    <Input>Model.Container?$select=CustomerSet,CountrySet&amp;$expand=CustomerSet($select=Name),CountrySet($select=Name)&amp;$filter=CustomerSet/CountryCode eq CountrySet/CountryCode and CountrySet/Name eq 'USA'</Input>
+  </TestCase>                
   <!-- Aggregation -->
   <TestCase Name="Aggregation - basic" 
             Rule="queryOptions">
@@ -2170,21 +2178,10 @@
             Rule="queryOptions">
     <Input>$apply=expand(Sales,Amount gt 3)</Input>
   </TestCase>
-  <!-- TODO: queries on entity container                   
-  <TestCase Name="Query - on entity container" 
-            Rule="odataRelativeUri">
-    <Input>SalesData?$expand=Customers($select=Name),Countries($select=Name)
-               &$filter=Customers/CountryCode eq Countries/CountryCode and
-                        Countries/Name eq 'USA'
-    </Input>
-  </TestCase>                
   <TestCase Name="Aggregation - on entity container" 
             Rule="odataRelativeUri">
-    <Input>SalesData?$apply=groupby((Products/Name,Time/Date),
-                               aggregate(Sales/Amount))
-    </Input>
+    <Input>Model.Container?$apply=groupby((Products/Name,Time/Date),aggregate(Sales/Amount))</Input>
   </TestCase>                
-  -->
   <!-- TODO: hierarchy functions in filter expressions
 GET SalesOrganizations?$filter=isdescendant(SaM.SalesOrgHierarchy,’EMEA’)
 GET SalesOrganizations?$filter=isdescendant(SaM.SalesOrgHierarchy,’EMEA’,1)
