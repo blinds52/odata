@@ -94,8 +94,9 @@ odataUri = ( "https" / "http" ) "://" host [ ":" port ]
            serviceRoot
            [ '$metadata' [ metadataFragment ]
            / '$batch' 
-           / odataRelativeUri ]  
-           [ [ namespace "." entityContainer ] "?" search ]  
+           / '?' search 
+           / odataRelativeUri 
+           ]  
 
 serviceRoot = "/" *( segment-nz "/" )
 
@@ -115,6 +116,7 @@ resourcePath = [ containerQualifier ] entitySetName [ collectionNavigation ]
              / complexFunctionImportCall      [ complexPath ] 
              / primitiveColFunctionImportCall [ collectionPath ] 
              / primitiveFunctionImportCall    [ singlePath ] 
+             / namespace "." entityContainer  
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
                        ( keyPredicate [ singleNavigation ]
