@@ -1,5 +1,5 @@
 ;------------------------------------------------------------------------------
-; odata-abnf-v4.0
+; odata-abnf-construction-rules
 ;------------------------------------------------------------------------------
 ;
 ; Technical Committee:
@@ -231,7 +231,7 @@ applyTrafo = aggregateTrafo
            / bottomcountTrafo
            / bottompercentTrafo
            / bottomsumTrafo
-           / combineTrafo
+           / concatTrafo
            / expandTrafo
            / filterTrafo
            / groupbyTrafo
@@ -240,20 +240,24 @@ applyTrafo = aggregateTrafo
            / toppercentTrafo
            / topsumTrafo
 
-aggregateTrafo     = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
-aggregateParam     = ( aggregateExpr / propertyWithPath )
-                     [ RWS 'with' RWS aggregateOperation ]
-                     *( RWS 'from' RWS propertyWithPath [ RWS 'with' RWS aggregateOperation ] )
-aggregateExpr      = expandPath OPEN ( '$count' / commonExpr ) RWS 'as' RWS odataIdentifier CLOSE   
-                   / ( '$count' / commonExpr ) RWS 'as' RWS odataIdentifier
-aggregateOperation = 'sum' 
-                   / 'min' 
-                   / 'max' 
-                   / 'average' 
-                   / 'countdistinct' 
-                   / namespace "." odataIdentifier
+aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
+aggregateParam  = expandPath OPEN aggregateExpr CLOSE   
+                / aggregateExpr
+                / propertyWithPath
+aggregateExpr   = ( '$count' 
+                  / commonExpr [ aggregateWith ] *( aggregateFrom ) 
+                  ) aggregateAs
+aggregateAs     = RWS 'as'   RWS odataIdentifier
+aggregateWith   = RWS 'with' RWS aggregateMethod        
+aggregateFrom   = RWS 'from' RWS propertyWithPath [ aggregateWith ]
+aggregateMethod = 'sum' 
+                / 'min' 
+                / 'max' 
+                / 'average' 
+                / 'countdistinct' 
+                / namespace "." odataIdentifier
 
-; TODO: do we allow aggregation of collections of complex or primitive type?                 
+; TODO: do we allow aggregation of primitive values in collections of complex or primitive type?                 
 propertyWithPath = [ qualifiedEntityTypeName "/" ] 
                    *( complexProperty    [ "/" qualifiedComplexTypeName ] "/"
                     / navigationProperty [ "/" qualifiedEntityTypeName  ] "/" 
@@ -266,9 +270,9 @@ bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExp
 bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
-combineTrafo = 'combine' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
-expandTrafo  = 'expand'  OPEN BWS expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
-filterTrafo  = 'filter'  OPEN BWS boolCommonExpr BWS CLOSE
+concatTrafo = 'concat' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
+expandTrafo = 'expand' OPEN BWS expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
+filterTrafo = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
 
 groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOSE
 groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
@@ -542,6 +546,7 @@ methodCallExpr = indexOfMethodCallExpr
                / minDateTimeMethodCallExpr
                / maxDateTimeMethodCallExpr
                / nowMethodCallExpr
+               / hierarchyMethodCallExpr 
 
 boolMethodCallExpr = endsWithMethodCallExpr 
                    / startsWithMethodCallExpr 
@@ -553,7 +558,7 @@ startsWithMethodCallExpr  = 'startswith'  OPEN BWS commonExpr BWS COMMA BWS comm
 endsWithMethodCallExpr    = 'endswith'    OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 lengthMethodCallExpr      = 'length'      OPEN BWS commonExpr BWS CLOSE
 indexOfMethodCallExpr     = 'indexof'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-substringMethodCallExpr   = 'substring'   OPEN BWS commonExpr BWS COMMA BWS commonExpr [ BWS COMMA BWS commonExpr BWS ] CLOSE
+substringMethodCallExpr   = 'substring'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
 toLowerMethodCallExpr     = 'tolower'     OPEN BWS commonExpr BWS CLOSE
 toUpperMethodCallExpr     = 'toupper'     OPEN BWS commonExpr BWS CLOSE
 trimMethodCallExpr        = 'trim'        OPEN BWS commonExpr BWS CLOSE
@@ -611,6 +616,18 @@ notExpr = 'not' RWS boolCommonExpr
 isofExpr = 'isof' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
 castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
 
+
+hierarchyMethodCallExpr = isrootExpr
+                        / isdescendantExpr
+                        / isancestorExpr
+                        / issiblingExpr
+                        / isleafExpr
+                        
+isrootExpr       = 'isroot'       OPEN BWS qualifiedHierarchyName BWS CLOSE
+isdescendantExpr = 'isdescendant' OPEN BWS qualifiedHierarchyName BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
+isancestorExpr   = 'isancestor'   OPEN BWS qualifiedHierarchyName BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
+issiblingExpr    = 'issibling'    OPEN BWS qualifiedHierarchyName BWS COMMA BWS commonExpr BWS CLOSE
+isleafExpr       = 'isleaf'       OPEN BWS qualifiedHierarchyName BWS CLOSE
 
 ;------------------------------------------------------------------------------
 ; 5. JSON format for function parameters
@@ -818,6 +835,7 @@ complexColFunctionImport   = odataIdentifier
 primitiveFunctionImport    = odataIdentifier
 primitiveColFunctionImport = odataIdentifier
 
+qualifiedHierarchyName = namespace '.' odataIdentifier
 
 ;------------------------------------------------------------------------------
 ; 7. Literal Data Values
@@ -1097,5 +1115,5 @@ HTAB   = %x09
 
 
 ;------------------------------------------------------------------------------
-; End of odata-abnf-v4.0
+; End of odata-abnf-construction-rules
 ;------------------------------------------------------------------------------
