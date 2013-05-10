@@ -8,7 +8,23 @@ Meeting chaired by Ram Jeyaraman
 
 ### 1.1 Members Present:
 
-        Dale Moberg (Axway Software)        Diane Downie (Citrix Systems)        Edmond Bourne (BlackBerry)        Jeffrey Turpin (Axway Software)        John Willson (Individual)        Ken Baclawski (Northeastern University)        Martin Zurmuehl (SAP AG)        Matthew Borges (SAP AG) a.k.a. Matt        Michael Pizzo (Microsoft) a.k.a. Mike        Nuno Linhares (SDL)        Patrick Durusau (Individual)        Ralf Handl (SAP AG)        Ram Jeyaraman (Microsoft)        Robert Richards (Mashery)        Stefan Drees (Individual)        Susan Malaika (IBM)        Ted Jones (Red Hat)
+        Dale Moberg (Axway Software)
+        Diane Downie (Citrix Systems)
+        Edmond Bourne (BlackBerry)
+        Jeffrey Turpin (Axway Software)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Nuno Linhares (SDL)
+        Patrick Durusau (Individual)
+        Ralf Handl (SAP AG)
+        Ram Jeyaraman (Microsoft)
+        Robert Richards (Mashery)
+        Stefan Drees (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
 
 Quorum achieved. Details cf. [normative attendance sheet for this meeting](https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=34196).
 
@@ -60,9 +76,7 @@ Discussion:
 * Ralf does not plan to submit new issues for now, as he filed a few already.
 * All seem to have put all known issues already into the system.
 * Patrick noticed when reading the JSON and ATOM format documents, that from an editorial standpoint the things returned seem to be named differently.
-* All agree to meet in the week of the 10th with the main meetings on 13th and 14th
 
- 
 ##6 Fifth TC face-to-face meeting
 
 ###6.1 Daterange of Meeting
@@ -78,6 +92,7 @@ Discussion:
 * Stefan also suggests the 10th although he does not know if the travel expenses will be covered, but he sees this as a week of intense daily collaboration which should be as early as possible after the end of public review 01.
 * Martin also prefers the early daterange to avoid any hastiness in final editing
 * Ed also prefers the week of the 10th
+* All agree to meet in the week of the 10th with the main meetings on June 13th and 14th
 
 ###6.2 Venue of Meeting
 
@@ -93,7 +108,7 @@ Discussion:
 Tentative planned participation:
 
 * In Person: Ed, John, Martin, Mike, Ralf, and Ram.
-* Remote: Dale, Ken, Stefan, and Susan. 
+* Remote: Dale, Ken, Stefan, and Susan.
 * Not known yet: Matt
 * Not participating: Ted
 
@@ -121,7 +136,12 @@ Discussion:
 
 ###8.1 Public Review Issues [pubreviss]
 
-###8.1.1 [ODATA-379](https://tools.oasis-open.org/issues/browse/ODATA-379)
+###8.1.1 [c201305e00000](https://lists.oasis-open.org/archives/odata-comment/201305/msg00000.html)
+
+Context:
+> We received the public Comment #20130500000 on 2013-05-08 with title "Specification of $count for 'Delta Responses'". To prepare processing a corresponding JIRA issue  [ODATA-379](https://tools.oasis-open.org/issues/browse/ODATA-379) has been created with summary "Ensure consistency and clear description in specification of $count for 'Delta Responses' (public comment c201305e00000)" [component: OData Protocol].
+
+###8.1.1.1 [ODATA-379](https://tools.oasis-open.org/issues/browse/ODATA-379)
 
 ODATA-379:
 : "Ensure consistency and clear description in specification of $count for 'Delta Responses' (public comment c201305e00000)" [component: OData Protocol] is  **New**.
@@ -133,11 +153,10 @@ Discussion:
 * Martin adds, that the client needs a hint, when he will have to check for the delta
 * Mike states, that we should clarify as to the documentation clarity question, that the count will include expanded entities.
 
-**No further discussion**. **No objections**. 
+**No further discussion**. **No objections**.
 
 ODATA-379:
 : "Ensure consistency and clear description in specification of $count for 'Delta Responses' (public comment c201305e00000)" [component: OData Protocol] is  **Open** with no objections.
-
 
 ###8.2 Issues in Proposed state (may be ripe for resolution)
 
@@ -151,8 +170,8 @@ ODATA-373:
 Discussion:
 
 * Mike kindly asks the editors to consider keeping the complexity and volume of the specs minimal.
- 
-Stefan: 
+
+Stefan:
 >I **move** to resolve ODATA-373 as proposed. **Ralf seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -165,7 +184,7 @@ ODATA-373:
 ODATA-370:
 : "Disallow Nullable facet for collection-valued properties" [component: OData CSDL] is **New**.
 
-Stefan: 
+Stefan:
 >I **move** to resolve ODATA-370 as proposed. **Ralf seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -185,7 +204,7 @@ Discussion:
 * Matt will check
 * All will wait for the outcone.
 
-**No further discussion**. **No objections**. 
+**No further discussion**. **No objections**.
 
 ODATA-364:
 : "Explicitly state that the restriction that a property MUST NOT have the same name as its containing type only applies to directly declared properties" [component: OData CSDL] is **Open** with no objections.
@@ -202,7 +221,7 @@ Discussion:
 * Ralf summarizes the issue and current proposal
 * Mike requests to put the semantics into the protocol document and the specifics into the format documents
 
-Ralf: 
+Ralf:
 >I **move** to resolve ODATA-371 as proposed. **Martin seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -219,7 +238,7 @@ Discussion:
 
 * Ralf summarizes the issue and current proposal
 
-Mike: 
+Mike:
 >I **move** we resolve ODATA-369 as proposed. **Ralf seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -236,7 +255,7 @@ Discussion:
 
 * Ralf summarizes the issue as stemming from colleagues review of CSD01 public review comments and current proposal
 
-Mike: 
+Mike:
 >I **move** we resolve ODATA-367 as proposed. **Ralf seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -256,7 +275,7 @@ Discussion:
 * Martin will remove the optional from the current proposal, rename isType expression and ensure while applying, that everything remains consistent.
 * Ralf already updated the issue with the outcome of the discussion.
 
-Martin: 
+Martin:
 >I **move** we resolve ODATA-365 as proposed. **Mike seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -288,7 +307,7 @@ Discussion:
 
 * Ralf summarizes the issue as often encountered scenario and current proposal
 
-Ralf: 
+Ralf:
 >I **move** to resolve ODATA-368 as proposed. **Stefan seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -307,7 +326,7 @@ Discussion:
 * All discuss if the proposal should be ammended or after application further refined.
 * Ralf will remove the optional from proposal and if the TC decides to change that a new issue might be opened.
 
-Ralf: 
+Ralf:
 >I **move** to resolve ODATA-366 as proposed. **Mike seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -330,7 +349,7 @@ Discussion:
 * Mike suggests to think about it the next days and thus move discussion on this issue to next week's meeting
 * Ralf seconds on discussing this further offline
 
-**No further discussion**. **No objections**. 
+**No further discussion**. **No objections**.
 
 ODATA-351:
 : "Define ID, ReadLink and EditLink in Part 1: Protocol, define representation in Atom and JSON" [components: OData JSON Format, OData ATOM Format, OData Protocol] is **Open** with no objections.
@@ -347,7 +366,7 @@ Discussion:
 * Ralf summarizes the issue and current proposal
 * Mike thinks this extension is very natural but also wants to ensure we do not go any step further like nested operations etc.
 
-Ralf: 
+Ralf:
 >I **move** to resolve ODATA-375 as proposed. **Mike seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -362,7 +381,7 @@ ODATA-375:
 ODATA-376:
 : "Navigation link representation for navigation properties of complex type instances" [component: OData JSON Format] is **New**.
 
-Ralf: 
+Ralf:
 >I **move** to resolve ODATA-376 as proposed. **Mike seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -381,7 +400,7 @@ Discussion:
 
 * Mike introduces the issue and curent proposal.
 
-Mike: 
+Mike:
 >I **move** to accept ODATA 378 as proposed. **Stefan seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -405,7 +424,7 @@ Discussion:
 * Martin agrees.
 * Stefan further suggests to insert a section in protocol (and similar in JSON and ATOM) named "Security Considerations" before the conformance section. With content starting like: "This section is meant to inform application developers, information providers, and users of the security limitations in Open Data version 4.0 as described by this document." And then refer to HTTP or (JSON or ATOM as applicable) will move that to a new issue.
 
-Martin: 
+Martin:
 >I **move** to resolve ODATA-301 as proposed, server should *consider* implementing basic auth. **Mike seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
@@ -455,7 +474,7 @@ AI#0020
 
 Public Comments:
 
-None.
+* [c201305e00000](https://lists.oasis-open.org/archives/odata-comment/201305/msg00000.html) "Specification of $count for 'Delta Responses'" [8.1.1][c201305e00000]
 
 JIRA Issues:
 
@@ -474,7 +493,7 @@ JIRA Issues:
 * [ODATA-375](https://tools.oasis-open.org/issues/browse/ODATA-375) "Allow querying collections of complex type instances similar to querying collections of entities" [8.2.4.1][odata-375]
 * [ODATA-376](https://tools.oasis-open.org/issues/browse/ODATA-376) "Navigation link representation for navigation properties of complex type instances" [8.2.5.1][odata-376]
 * [ODATA-378](https://tools.oasis-open.org/issues/browse/ODATA-378) "Support relative IRIs for ids in JSON" [8.2.6.1][odata-378]
-* [ODATA-379](https://tools.oasis-open.org/issues/browse/ODATA-379) "Ensure consistency and clear description in specification of $count for 'Delta Responses' (public comment c201305e00000)" [8.1.1][odata-379]
+* [ODATA-379](https://tools.oasis-open.org/issues/browse/ODATA-379) "Ensure consistency and clear description in specification of $count for 'Delta Responses' (public comment c201305e00000)" [8.1.1.1][odata-379]
 
 ## Timeline Reference [TL_REF]
 
