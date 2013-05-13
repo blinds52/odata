@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
   xmlns:edmx3="http://schemas.microsoft.com/ado/2009/11/edmx" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
-  exclude-result-prefixes="edmx1 edmx3 edm3"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" exclude-result-prefixes="edmx1 edmx3 edm3 m"
 >
   <!--
     This style sheet transforms OData 3.0 $metadata documents or VS2012 EDMX 3.0 documents into OData 4.0 EDMX documents.
@@ -51,7 +51,9 @@
       <xsl:attribute name="Uri">
         <xsl:value-of select="@Url" />
       </xsl:attribute>
-      <edmx:Include Namespace="Insert included namespace here" />
+      <!--
+        <edmx:Include Namespace="Insert included namespace here" />
+      -->
     </edmx:Reference>
   </xsl:template>
 
@@ -73,11 +75,17 @@
     <xsl:if test="@Name != 'V4_Edm_EntityType'">
       <EntityType>
         <xsl:copy-of select="@Name|@Abstract|@BaseType|@OpenType" />
-        <xsl:apply-templates select="edm3:Key" />
+        <xsl:apply-templates select="@m:HasStream|edm3:Key" />
         <!-- TODO: add |edm3:ValueAnnotation|edm3:TypeAnnotation if necessary -->
         <xsl:apply-templates select="edm3:Documentation|edm3:Property|edm3:NavigationProperty" />
       </EntityType>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="@m:HasStream">
+    <xsl:attribute name="HasStream">
+      <xsl:value-of select="." />
+    </xsl:attribute>
   </xsl:template>
 
   <xsl:template match="edm3:Key">
