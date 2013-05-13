@@ -8,72 +8,111 @@
       <Annotation Term="Core.Description">
         <String>
           Terms for annotating communication-relevant information inspired by
-          - RFC6350 vCard
-          (http://tools.ietf.org/html/rfc6350)
+          - RFC6350 vCard (http://tools.ietf.org/html/rfc6350)
           - RFC5545 iCalendar (http://tools.ietf.org/html/rfc5545)
-          - RFC5322 Internet
-          Message Format (http://tools.ietf.org/html/rfc5322)
+          - RFC5322 Internet Message Format (http://tools.ietf.org/html/rfc5322)
+          - RFC6351 xCard (XML Representation for vCard)
         </String>
       </Annotation>
 
       <Term Name="Contact" Type="Communication.ContactData" AppliesTo="EntityType">
-        <Annotation Term="Core.Description" String="Address book entry"/>
+        <Annotation Term="Core.Description" String="Address book entry" />
       </Term>
 
       <ComplexType Name="ContactData">
-        <Property Name="formattedName" Type="Edm.String" Nullable="true" />
-        <Property Name="givenName" Type="Edm.String" Nullable="true" />
-        <Property Name="additionalName" Type="Edm.String" Nullable="true" />
-        <Property Name="familyName" Type="Edm.String" Nullable="true" />
-        <Property Name="nickName" Type="Edm.String" Nullable="true" />
-        <Property Name="honorificPrefix" Type="Edm.String" Nullable="true" />
-        <Property Name="honorificSuffix" Type="Edm.String" Nullable="true" />
-        <Property Name="note" Type="Edm.String" Nullable="true" />
-        <Property Name="birthDate" Type="Edm.DateTimeOffset" Nullable="true" />
-        <Property Name="photoUri" Type="Edm.String" Nullable="true">
+        <Property Name="fn" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="Full name" />
+        </Property>
+        <Property Name="n" Type="Communication.Name" Nullable="true" />
+        <Property Name="nickname" Type="Edm.String" Nullable="true" />
+        <Property Name="photo" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.IsURL" />
         </Property>
+        <Property Name="bday" Type="Edm.Date" Nullable="true" />
+        <Property Name="anniversary" Type="Edm.Date" Nullable="true" />
+        <Property Name="gender" Type="Communication.Gender" Nullable="true" />
 
-        <Property Name="orgName" Type="Edm.String" Nullable="true" />
-        <Property Name="orgUnit" Type="Edm.String" Nullable="true" />
-        <Property Name="orgRole" Type="Edm.String" Nullable="true" />
-        <Property Name="jobTitle" Type="Edm.String" Nullable="true" />
+        <Property Name="title" Type="Edm.String" Nullable="true" />
+        <Property Name="role" Type="Edm.String" Nullable="true" />
+        <Property Name="org" Type="Edm.String" Nullable="true" />
+        <Property Name="orgunit" Type="Edm.String" Nullable="true" />
 
-        <Property Name="addresses" Type="Collection(Communication.Address)" Nullable="true" />
-        <Property Name="phoneNumbers" Type="Collection(Communication.PhoneNumber)" Nullable="true" />
-        <Property Name="emailAddresses" Type="Collection(Communication.EmailAddress)" Nullable="true" />
+        <Property Name="note" Type="Edm.String" Nullable="true" />
+
+        <Property Name="adr" Type="Collection(Communication.Address)" Nullable="true" />
+        <Property Name="tel" Type="Collection(Communication.PhoneNumber)" Nullable="true" />
+        <Property Name="email" Type="Collection(Communication.EmailAddress)" Nullable="true" />
+        <Property Name="geo" Type="Collection(Communication.GeoData)" Nullable="true" />
+      </ComplexType>
+
+      <ComplexType Name="Name">
+        <Property Name="surname" Type="Edm.String" Nullable="true" />
+        <Property Name="given" Type="Edm.String" Nullable="true" />
+        <Property Name="additional" Type="Edm.String" Nullable="true" />
+        <Property Name="prefix" Type="Edm.String" Nullable="true" />
+        <Property Name="suffix" Type="Edm.String" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="Address">
         <Property Name="street" Type="Edm.String" Nullable="true" />
-        <Property Name="locality" Type="Edm.String" Nullable="true" />
-        <Property Name="region" Type="Edm.String" Nullable="true" />
-        <Property Name="postalCode" Type="Edm.String" Nullable="true" />
+        <Property Name="locality" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="City or similar" />
+        </Property>
+        <Property Name="region" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="State, province, or similar" />
+        </Property>
+        <Property Name="code" Type="Edm.String" Nullable="true" />
         <Property Name="country" Type="Edm.String" Nullable="true" />
-        <Property Name="poBox" Type="Edm.String" Nullable="true" />
-        <Property Name="formattedAddress" Type="Edm.String" Nullable="true" />
-        <Property Name="kind" Type="Collection(Communication.ContactInformationKind)" Nullable="true" />
+        <Property Name="pobox" Type="Edm.String" Nullable="true" />
+        <Property Name="label" Type="Edm.String" Nullable="true" />
+        <Property Name="type" Type="Communication.ContactInformationType" Nullable="true" />
       </ComplexType>
 
       <ComplexType Name="PhoneNumber">
         <Property Name="number" Type="Edm.String" />
-        <Property Name="kind" Type="Collection(Communication.ContactInformationKind)" Nullable="true" />
+        <Property Name="type" Type="Communication.ContactInformationType" Nullable="true" />
       </ComplexType>
 
-      <ComplexType Name="EmailAddress">
+      <ComplexType Name="EmailAddressData">
         <Property Name="address" Type="Edm.String" />
-        <Property Name="kind" Type="Collection(Communication.ContactInformationKind)" Nullable="true" />
+        <Property Name="type" Type="Communication.ContactInformationType" Nullable="true" />
       </ComplexType>
 
-      <EnumType Name="ContactInformationKind">
-        <Member Name="work"></Member>
-        <Member Name="home"></Member>
-        <Member Name="other"></Member>
-        <Member Name="preferred"></Member>
+      <ComplexType Name="GeoData">
+        <Property Name="uri" Type="Edm.String">
+          <!-- This SHOULD use the "geo" URL schema defined in RFC5870 which encodes the same information as an Edm.GeographyPoint -->
+          <Annotation Term="Core.IsURL" />
+        </Property>
+        <Property Name="type" Type="Communication.ContactInformationType" Nullable="true" />
+      </ComplexType>
+
+      <EnumType Name="ContactInformationType" IsFlags="true">
+        <Member Name="work" />
+        <Member Name="home" />
+        <Member Name="other" />
+        <Member Name="preferred" />
+      </EnumType>
+
+      <EnumType Name="Gender">
+        <Member Name="M">
+          <Annotation Term="Core.Description" String="male" />
+        </Member>
+        <Member Name="F">
+          <Annotation Term="Core.Description" String="female" />
+        </Member>
+        <Member Name="O">
+          <Annotation Term="Core.Description" String="other" />
+        </Member>
+        <Member Name="N">
+          <Annotation Term="Core.Description" String="not applicable" />
+        </Member>
+        <Member Name="U">
+          <Annotation Term="Core.Description" String="unknown" />
+        </Member>
       </EnumType>
 
       <Term Name="Event" Type="Communication.EventData" AppliesTo="EntityType">
-        <Annotation Term="Core.Description" String="Calendar entry"/>
+        <Annotation Term="Core.Description" String="Calendar entry" />
       </Term>
 
       <ComplexType Name="EventData">
@@ -92,7 +131,7 @@
       </ComplexType>
 
       <Term Name="Task" Type="Communication.TaskData" AppliesTo="EntityType">
-        <Annotation Term="Core.Description" String="Task list entry"/>
+        <Annotation Term="Core.Description" String="Task list entry" />
       </Term>
 
       <ComplexType Name="TaskData">
@@ -105,7 +144,7 @@
       </ComplexType>
 
       <Term Name="Message" Type="Communication.MessageData" AppliesTo="EntityType">
-        <Annotation Term="Core.Description" String="Email message"/>
+        <Annotation Term="Core.Description" String="Email message" />
       </Term>
 
       <ComplexType Name="MessageData">
