@@ -198,18 +198,27 @@
       <xs:element name="TimeOfDay" type="edm:TTimeOfDayConstantExpression" />
       <!-- Dynamic Expressions -->
       <xs:element name="Apply" type="edm:TApplyExpression" />
-      <xs:element name="Cast" type="edm:TCastExpression" />
+      <xs:element name="Cast" type="edm:TCastOrIsOfExpression" />
       <xs:element name="Collection" type="edm:TCollectionExpression" />
       <xs:element name="If" type="edm:TIfExpression" />
-      <xs:element name="IsOf" type="edm:TIsOfExpression" />
-      <xs:element name="LabeledElement" type="edm:TLabeledElement" />
+      <xs:element name="Eq" type="edm:TTwoChildrenExpression" />
+      <xs:element name="Ne" type="edm:TTwoChildrenExpression" />
+      <xs:element name="Ge" type="edm:TTwoChildrenExpression" />
+      <xs:element name="Gt" type="edm:TTwoChildrenExpression" />
+      <xs:element name="Le" type="edm:TTwoChildrenExpression" />
+      <xs:element name="Lt" type="edm:TTwoChildrenExpression" />
+      <xs:element name="And" type="edm:TTwoChildrenExpression" />
+      <xs:element name="Or" type="edm:TTwoChildrenExpression" />
+      <xs:element name="Not" type="edm:TOneChildExpression" />
+      <xs:element name="IsOf" type="edm:TCastOrIsOfExpression" />
+      <xs:element name="LabeledElement" type="edm:TLabeledElementExpression" />
       <xs:element name="LabeledElementReference" type="edm:TLabeledElementReferenceExpression" />
       <xs:element name="Null" type="edm:TNullExpression" />
       <xs:element name="NavigationPropertyPath" type="edm:TPathExpression" />
       <xs:element name="Path" type="edm:TPathExpression" />
       <xs:element name="PropertyPath" type="edm:TPathExpression" />
       <xs:element name="Record" type="edm:TRecordExpression" />
-      <xs:element name="Url" type="edm:TUrlExpression" />
+      <xs:element name="Url" type="edm:TOneChildExpression" />
     </xs:choice>
   </xs:group>
   <xs:attributeGroup name="GInlineExpressions">
@@ -304,7 +313,7 @@
     </xs:sequence>
     <xs:attribute name="Function" type="edm:TClientFunction" use="optional" />
   </xs:complexType>
-  <xs:complexType name="TCastExpression">
+  <xs:complexType name="TCastOrIsOfExpression">
     <xs:sequence>
       <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
@@ -323,19 +332,23 @@
   <xs:complexType name="TIfExpression">
     <xs:sequence>
       <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
-      <!-- Test, IfTrue, IfFalse -->
-      <xs:group ref="edm:GExpression" minOccurs="3" maxOccurs="3" />
+      <!-- Condition, Then, optional Else -->
+      <xs:group ref="edm:GExpression" minOccurs="2" maxOccurs="3" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="TIsOfExpression">
+  <xs:complexType name="TOneChildExpression">
     <xs:sequence>
       <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
-    <xs:attribute name="Type" type="edm:TTypeName" use="optional" />
-    <xs:attributeGroup ref="edm:TFacetAttributes" />
   </xs:complexType>
-  <xs:complexType name="TLabeledElement">
+  <xs:complexType name="TTwoChildrenExpression">
+    <xs:sequence>
+      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
+      <xs:group ref="edm:GExpression" minOccurs="2" maxOccurs="2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLabeledElementExpression">
     <xs:sequence>
       <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
       <xs:group ref="edm:GExpression" minOccurs="0" maxOccurs="1" />
@@ -374,12 +387,6 @@
     </xs:sequence>
     <xs:attribute name="Property" type="edm:TSimpleIdentifier" use="required" />
     <xs:attributeGroup ref="edm:GInlineExpressions" />
-  </xs:complexType>
-  <xs:complexType name="TUrlExpression">
-    <xs:sequence>
-      <xs:element name="Annotation" type="edm:TAnnotation" minOccurs="0" maxOccurs="unbounded" />
-      <xs:group ref="edm:GExpression" minOccurs="1" maxOccurs="1" />
-    </xs:sequence>
   </xs:complexType>
   <!-- 
         attributes  
