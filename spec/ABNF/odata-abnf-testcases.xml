@@ -2183,11 +2183,11 @@
   </TestCase>
   <TestCase Name="Aggregation - aggregation function" 
             Rule="queryOptions">
-    <Input>$apply=aggregate(Amount as MaxAmount with max)</Input>
+    <Input>$apply=aggregate(Amount with max as MaxAmount)</Input>
   </TestCase>
   <TestCase Name="Aggregation - aggregation function and alias" 
             Rule="queryOptions">
-    <Input>$apply=aggregate(Product as DistinctProducts with countdistinct)</Input>
+    <Input>$apply=aggregate(Product with countdistinct as DistinctProducts)</Input>
   </TestCase>
   <TestCase Name="Aggregation - aggregation function" 
             Rule="queryOptions">
@@ -2199,8 +2199,8 @@
   </TestCase>
   <TestCase Name="Aggregation - $count does not allow with" 
             Rule="queryOptions"
-            FailAt="38">
-    <Input>$apply=aggregate($count as SalesCount with sum)</Input>
+            FailAt="24">
+    <Input>$apply=aggregate($count with sum as SalesCount)</Input>
   </TestCase>
   <TestCase Name="Aggregation - topcount" 
             Rule="queryOptions">
@@ -2332,19 +2332,19 @@
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount as TotalAmount with sum))</Input>
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum as TotalAmount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount as MinAmount with min))</Input>
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount with min as MinAmount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount as MaxAmount with max))</Input>
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount with max as MaxAmount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount as AverageAmount with average))</Input>
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount with average as AverageAmount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
@@ -2360,11 +2360,11 @@
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount as TotalAmount with sum,Amount as AvgAmt with average))</Input>
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum as TotalAmount,Amount with average as AvgAmt))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales(Amount as TotalAmount with sum),Sales(Amount as AvgAmt with average)))</Input>
+    <Input>$apply=groupby((Name),aggregate(Sales(Amount with sum as TotalAmount),Sales(Amount with average as AvgAmt)))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
@@ -2372,11 +2372,11 @@
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Product/ID,Product/Name,Time/Month),aggregate(Amount as SumAmount with sum))/groupby((Product/ID,Product/Name),aggregate(SumAmount as AverageAmount with average))</Input>
+    <Input>$apply=groupby((Product/ID,Product/Name,Time/Month),aggregate(Amount with sum as SumAmount))/groupby((Product/ID,Product/Name),aggregate(SumAmount with average as AverageAmount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
-    <Input>$apply=groupby((Product/ID,Product/Name),aggregate(Amount as MonthlyAverage with sum from Time/Month with average))</Input>
+    <Input>$apply=groupby((Product/ID,Product/Name),aggregate(Amount with sum as MonthlyAverage from Time/Month with average))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" 
             Rule="queryOptions">
