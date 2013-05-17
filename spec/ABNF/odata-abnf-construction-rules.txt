@@ -81,14 +81,18 @@
 ;   3. Metadata URL Fragments
 ;   4. Expressions
 ;   5. JSON format for function parameters
-;   6. Names and identifiers
-;   7. Literal Data Values
-;   8. Punctuation
+;   6. Header values
+;   7. Names and identifiers
+;   8. Literal Data Values
+;   9. Punctuation
 ;
 ;   A. URI syntax [RFC3986]
 ;   B. ABNF core definitions [RFC5234]
 ;
 ;------------------------------------------------------------------------------
+dummyStartRule = odataUri / preference ; just to please the test parser
+;------------------------------------------------------------------------------
+
 
 odataUri = ( "https" / "http" )                 ; Note: case-insensitive 
            "://" host [ ":" port ]
@@ -226,6 +230,7 @@ systemQueryOption = apply
                   / select 
                   / skiptoken
 
+; TODO: move $apply to separate ABNF for data aggregation
 apply      = '$apply' EQ applyExpr
 applyExpr  = applyTrafo *( "/" applyTrafo )
 applyTrafo = aggregateTrafo
@@ -395,7 +400,7 @@ customQueryOption = customName [ EQ customValue ]
 customName        = qchar-no-AMP-EQ-AT-DOLLAR *( qchar-no-AMP-EQ ) 
 customValue       = *( qchar-no-AMP )
 
-
+     
 ;------------------------------------------------------------------------------
 ; 3. Metadata URL Fragments
 ;------------------------------------------------------------------------------
@@ -422,6 +427,7 @@ propertyListItem = "." ; all properties when $expand is not accompanied by $sele
 
 delta   = '/@Delta'                   
 element = '/@Element'                   
+
 
 ;------------------------------------------------------------------------------
 ; 4. Expressions
@@ -459,8 +465,8 @@ boolCommonExpr = ( isofExpr
                  / boolParenExpr
                  ) [ andExpr / orExpr ] 
 
-firstMemberExpr = [ lambdaPredicatePrefixExpr ]  ; only allowed inside a lambdaPredicateExpr
-                  memberExpr
+firstMemberExpr = memberExpr
+                / inscopeVariableExpr [ "/" memberExpr ]
 
 memberExpr = [ qualifiedEntityTypeName "/" ]
              ( propertyPathExpr
@@ -476,9 +482,9 @@ propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ]
                    / streamProperty
                    )
                    
-lambdaPredicatePrefixExpr = inscopeVariableExpr "/"
-inscopeVariableExpr       = implicitVariableExpr / lambdaVariableExpr
-implicitVariableExpr      = "$it" ; references the unnamed outer variable of the query
+inscopeVariableExpr       = implicitVariableExpr 
+                          / lambdaVariableExpr ; only allowed inside a lambdaPredicateExpr
+implicitVariableExpr      = '$it'              ; references the unnamed outer variable of the query
 lambdaVariableExpr        = odataIdentifier
 
 collectionNavigationExpr = count
@@ -617,7 +623,7 @@ notExpr = 'not' RWS boolCommonExpr
 isofExpr = 'isof' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
 castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
 
-
+; TODO: move hierarchy functions to separate ABNF for data aggregation
 hierarchyMethodCallExpr = isrootExpr
                         / isdescendantExpr
                         / isancestorExpr
@@ -630,11 +636,13 @@ isancestorExpr   = 'isancestor'   OPEN BWS qualifiedHierarchyName BWS COMMA BWS 
 issiblingExpr    = 'issibling'    OPEN BWS qualifiedHierarchyName BWS COMMA BWS commonExpr BWS CLOSE
 isleafExpr       = 'isleaf'       OPEN BWS qualifiedHierarchyName BWS CLOSE
 
+
 ;------------------------------------------------------------------------------
 ; 5. JSON format for function parameters
 ;------------------------------------------------------------------------------
 ; Note: the query part of a URI needs to be partially percent-decoded before
 ; applying these rules, see comment at the top of this file
+;------------------------------------------------------------------------------
 
 complexColInUri = begin-array 
                   [ complexInUri *( value-separator complexInUri ) ] 
@@ -729,7 +737,40 @@ exp          = "e" [ "-" / "+" ] 1*DIGIT
 
 
 ;------------------------------------------------------------------------------
-; 6. Names and identifiers
+; 6. Header values
+;------------------------------------------------------------------------------
+
+preference = annotationsPreference
+           / maxpagesizePreference
+           ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
+           ; / token [ BWS "=" BWS word ] *( OWS ";" [ OWS parameter ] )
+           
+annotationsPreference = 'odata.include-annotations' EQ 
+                        DQUOTE annotationsList DQUOTE
+annotationsList       = annotationIdentifier *(COMMA annotationIdentifier)
+annotationIdentifier  = [ excludeOperator ]
+                        ( STAR 
+                        / namespace "." ( termName / STAR ) 
+                        ) 
+excludeOperator       = "-"
+           
+maxpagesizePreference = 'odata.maxpagesize' EQ oneToNine *DIGIT         
+           
+
+;parameter      = token [ BWS "=" BWS word ]
+;word           = token / quoted-string
+;token          = 1*tchar
+;tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
+;               / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+;               / DIGIT / ALPHA
+;quoted-string  = DQUOTE *( qdtext / quoted-pair ) DQUOTE
+;qdtext         = %x21 / %x23-5B / %x5D-7E / obs-text / OWS
+;obs-text       = %x80-FF
+;quoted-pair    = "\" ( HTAB / SP / VCHAR / obs-text )
+
+
+;------------------------------------------------------------------------------
+; 7. Names and identifiers
 ;------------------------------------------------------------------------------
 
 qualifiedTypeName = qualifiedEntityTypeName 
@@ -757,6 +798,7 @@ entityTypeName      = odataIdentifier
 complexTypeName     = odataIdentifier 
 enumerationTypeName = odataIdentifier
 enumerationMember   = odataIdentifier
+termName            = odataIdentifier
 
 ; Note: this pattern is overly restrictive, the normative definition is type TSimpleIdentifier in OData EDM XML Schema
 odataIdentifier             = identifierLeadingCharacter *127identifierCharacter
@@ -838,8 +880,9 @@ primitiveColFunctionImport = odataIdentifier
 
 qualifiedHierarchyName = namespace '.' odataIdentifier
 
+
 ;------------------------------------------------------------------------------
-; 7. Literal Data Values
+; 8. Literal Data Values
 ;------------------------------------------------------------------------------
 
 primitiveLiteral = null 
@@ -991,7 +1034,7 @@ geometryPrefix  = "geometry"
 
 
 ;------------------------------------------------------------------------------
-; 8. Punctuation
+; 9. Punctuation
 ;------------------------------------------------------------------------------
 
 OWS =  *( SP / HTAB / "%20" / "%09" )  ; "optional" whitespace 
