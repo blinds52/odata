@@ -193,6 +193,10 @@
     <Match>Thumbnail</Match>
   </Constraint>
     
+  <TestCase Name="Just to test the dummy start rule" 
+            Rule="dummyStartRule">
+    <Input>http://services.odata.org/</Input>
+  </TestCase>
   <TestCase Name="URI with IPv4 address, path and trailing slash"
             Rule="odataUri">
     <Input>http://127.0.0.1:8080/MyService/</Input>
@@ -377,6 +381,10 @@
   <TestCase Name="Null: qualified" 
             Rule="null">
     <Input>null'Double'</Input>
+  </TestCase>
+  <TestCase Name="Null: fully qualified" 
+            Rule="null">
+    <Input>null'Edm.Double'</Input>
   </TestCase>
   <TestCase Name="String" 
             Rule="string">
@@ -1374,10 +1382,6 @@
     <Input>Supplier/Products/any(lambda:true)</Input>
   </TestCase>
   <TestCase Name="5.1.1.5 any()"
-            Rule="lambdaPredicatePrefixExpr">
-    <Input>$it/</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()"
             Rule="firstMemberExpr">
     <Input>$it/Completed</Input>
   </TestCase>
@@ -1392,6 +1396,10 @@
   <TestCase Name="5.1.1.5 any()"
             Rule="commonExpr">
     <Input>Products/any(lambda:$it/Completed)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.5 lambdaPredicateExpr"
+            Rule="boolCommonExpr">
+    <Input>$it eq 'Hugo'</Input>
   </TestCase>
   <TestCase Name="5.1.1.5 lambdaPredicateExpr"
             Rule="boolCommonExpr">
@@ -2094,6 +2102,58 @@
             Rule="odataRelativeUri">
     <Input>Model.Container?$select=CustomerSet,CountrySet&amp;$expand=CustomerSet($select=Name),CountrySet($select=Name)&amp;$filter=CustomerSet/CountryCode eq CountrySet/CountryCode and CountrySet/Name eq 'USA'</Input>
   </TestCase>                
+  <TestCase Name="Preferences - include-annotations - all" 
+            Rule="preference">
+    <Input>odata.include-annotations="*"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - none" 
+            Rule="preference">
+    <Input>odata.include-annotations="-*"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - all in namespace" 
+            Rule="preference">
+    <Input>odata.include-annotations="Namespace.*"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - namespace must be suffixed with .*" 
+            Rule="annotationsPreference"
+            FailAt="36">
+    <Input>odata.include-annotations="Namespace"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - namespace must be suffixed with .*" 
+            Rule="annotationsPreference"
+            FailAt="37">
+    <Input>odata.include-annotations="Namespace."</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - nothing from namespace" 
+            Rule="preference">
+    <Input>odata.include-annotations="-Namespace.*"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - only a special term" 
+            Rule="preference">
+    <Input>odata.include-annotations="Namespace.SomeTerm"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - everything except a special term" 
+            Rule="preference">
+    <Input>odata.include-annotations="-Namespace.SomeTerm"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include-annotations - several" 
+            Rule="preference">
+    <Input>odata.include-annotations="Namespace.SomeTerm,Model.AnotherTerm,Namespace.*"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - maxpagesize - ok" 
+            Rule="preference">
+    <Input>odata.maxpagesize=50</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - maxpagesize - not zero" 
+            Rule="maxpagesizePreference"
+            FailAt="18">
+    <Input>odata.maxpagesize=0</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - maxpagesize - not negative" 
+            Rule="maxpagesizePreference"
+            FailAt="18">
+    <Input>odata.maxpagesize=-1</Input>
+  </TestCase>  
   <!-- Aggregation -->
   <TestCase Name="Aggregation - basic" 
             Rule="queryOptions">
