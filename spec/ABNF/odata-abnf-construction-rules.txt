@@ -250,9 +250,9 @@ aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggrega
 aggregateParam  = expandPath OPEN aggregateExpr CLOSE   
                 / aggregateExpr
                 / propertyWithPath
-aggregateExpr   = ( '$count' 
-                  / commonExpr [ aggregateWith ] *( aggregateFrom ) 
-                  ) aggregateAs
+aggregateExpr   = ( '$count'   aggregateAs 
+                  / commonExpr aggregateAs [ aggregateWith ] *( aggregateFrom ) 
+                  ) 
 aggregateAs     = RWS 'as'   RWS odataIdentifier
 aggregateWith   = RWS 'with' RWS aggregateMethod        
 aggregateFrom   = RWS 'from' RWS propertyWithPath [ aggregateWith ]
@@ -649,7 +649,7 @@ complexColInUri = begin-array
                   end-array
                   
 complexInUri = begin-object
-               [ ( complexTypeMetadataInUri  
+               [ ( annotationInUri 
                  / primitivePropertyInUri 
                  / complexPropertyInUri 
                  / collectionPropertyInUri  
@@ -680,11 +680,9 @@ complexPropertyInUri = quotation-mark complexProperty quotation-mark
                        name-separator 
                        complexInUri
                             
-complexTypeMetadataInUri = typeNVPInUri
-
-typeNVPInUri = quotation-mark 'odata.type' quotation-mark
-               name-separator
-               quotation-mark qualifiedTypeName quotation-mark
+annotationInUri = quotation-mark namespace "." termName quotation-mark
+                  name-separator
+                  ( complexInUri / complexColInUri / primitiveLiteralInJSON / primitiveColInUri )
 
 primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark 
                          name-separator 
