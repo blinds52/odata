@@ -1,167 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
-    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Edm.Metadata" Alias="Metadata">
-      <EntityType Name="EntityType" BaseType="Edm.Metadata.Type">
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
-        <Property Name="Key" Type="Collection(Edm.Metadata.KeyProperty)" />
-        <NavigationProperty Name="DerivedTypes" Type="Collection(Edm.Metadata.EntityType)" />
-        <NavigationProperty Name="BaseType" Type="Edm.Metadata.EntityType" />
-        <NavigationProperty Name="EntitySets" Type="Collection(Edm.Metadata.EntitySet)" />
-        <Property Name="Abstract" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="OpenType" Type="Edm.String" Nullable="false" />
-        <Property Name="HasStream" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Properties" Type="Collection(Edm.Metadata.Property)" />
-        <NavigationProperty Name="NavigationProperties" Type="Collection(Edm.Metadata.NavigationProperty)" />
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Edm.Metadata" Alias="Meta">
+      <EntityType Name="Reference">
+        <Key>
+          <PropertyRef Name="Uri" />
+        </Key>
+        <Property Name="Uri" Type="Edm.String" Nullable="false" />
+        <Property Name="Include" Type="Collection(Edm.Metadata.Include)" />
+        <Property Name="IncludeAnnotations" Type="Collection(Edm.Metadata.IncludeAnnotations)" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
+      <ComplexType Name="Include">
+        <Property Name="Namespace" Type="Edm.String" Nullable="false" />
+        <Property Name="Alias" Type="Edm.String" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" />
+      </ComplexType>
+      <ComplexType Name="IncludeAnnotations">
+        <Property Name="TargetNamespace" Type="Edm.String" />
+        <Property Name="TermNamespace" Type="Edm.String" />
+        <Property Name="Qualifier" Type="Edm.String" />
+      </ComplexType>
       <EntityType Name="Schema">
         <Key>
           <PropertyRef Name="Fullname" />
         </Key>
         <Property Name="Fullname" Type="Edm.String" Nullable="false" />
         <Property Name="Namespace" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="EntityTypes" Type="Collection(Edm.Metadata.EntityType)" />
-        <NavigationProperty Name="ComplexTypes" Type="Collection(Edm.Metadata.ComplexType)" />
-        <NavigationProperty Name="EntityContainers" Type="Collection(Edm.Metadata.EntityContainer)" />
-        <NavigationProperty Name="Terms" Type="Collection(Edm.Metadata.Term)" />
-        <Property Name="Alias" Type="Edm.String" Nullable="true" />
-        <NavigationProperty Name="Actions" Type="Collection(Edm.Metadata.Action)" />
-        <NavigationProperty Name="Functions" Type="Collection(Edm.Metadata.Function)" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-        <NavigationProperty Name="TypeDefinitions" Type="Collection(Edm.Metadata.TypeDefinition)" />
+        <Property Name="Alias" Type="Edm.String" />
+        <NavigationProperty Name="EntityTypes" Type="Collection(Edm.Metadata.EntityType)" Partner="Schema" />
+        <NavigationProperty Name="ComplexTypes" Type="Collection(Edm.Metadata.ComplexType)" Partner="Schema" />
+        <NavigationProperty Name="TypeDefinitions" Type="Collection(Edm.Metadata.TypeDefinition)" Partner="Schema" />
+        <NavigationProperty Name="EnumTypes" Type="Collection(Edm.Metadata.EnumType)" Partner="Schema" />
+        <NavigationProperty Name="Actions" Type="Collection(Edm.Metadata.Action)" Partner="Schema" />
+        <NavigationProperty Name="Functions" Type="Collection(Edm.Metadata.Function)" Partner="Schema" />
+        <NavigationProperty Name="EntityContainers" Type="Collection(Edm.Metadata.EntityContainer)" Partner="Schema" />
+        <NavigationProperty Name="Terms" Type="Collection(Edm.Metadata.Term)" Partner="Schema" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
-      <EntityType Name="Property" Abstract="true">
-        <Key>
-          <PropertyRef Name="Fullname" />
-        </Key>
-        <Property Name="Fullname" Type="Edm.String" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="Nullable" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="PrimitiveProperty" BaseType="Edm.Metadata.Property">
-        <NavigationProperty Name="Type" Type="Edm.Metadata.PrimitiveType" Nullable="false" />
-        <Property Name="Facets" Type="Collection(Edm.Metadata.Facet)" />
-      </EntityType>
-      <EntityType Name="ComplexProperty" BaseType="Edm.Metadata.Property">
-        <NavigationProperty Name="Type" Type="Edm.Metadata.ComplexType" Nullable="false" />
-      </EntityType>
-      <EntityType Name="ComplexType" BaseType="Edm.Metadata.Type">
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
-        <NavigationProperty Name="DerivedTypes" Type="Collection(Edm.Metadata.ComplexType)" />
-        <NavigationProperty Name="BaseType" Type="Edm.Metadata.ComplexType" />
-        <Property Name="Abstract" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="OpenType" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Properties" Type="Collection(Edm.Metadata.Property)" />
-        <NavigationProperty Name="NavigationProperties" Type="Collection(Edm.Metadata.NavigationProperty)" />
-      </EntityType>
-      <EntityType Name="EntitySet">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" />
-        <NavigationProperty Name="EntityType" Type="Edm.Metadata.EntityType" Nullable="false" />
-        <NavigationProperty Name="NavigationPropertyBindings" Type="Collection(Edm.Metadata.NavigationPropertyBinding)" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="EntityContainer">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="IsDefault" Type="Edm.Boolean" Nullable="true" />
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
-        <NavigationProperty Name="EntitySets" Type="Collection(Edm.Metadata.EntitySet)" />
-        <NavigationProperty Name="FunctionImports" Type="Collection(Edm.Metadata.FunctionImport)" />
-        <NavigationProperty Name="NamedEntities" Type="Collection(Edm.Metadata.Entity)" />
-        <NavigationProperty Name="ActionImports" Type="Collection(Edm.Metadata.ActionImport)" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="NavigationProperty">
-        <Key>
-          <PropertyRef Name="Name" />
-        </Key>
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="Nullable" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Partner" Type="Edm.Metadata.NavigationProperty" />
-        <Property Name="ContainsTarget" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="OnDeleteAction" Type="Edm.String" Nullable="true" />
-        <Property Name="ReferentialConstraints" Type="Collection(Edm.Metadata.ReferentialConstraint)" />
-        <NavigationProperty Name="Type" Type="Edm.Metadata.EntityType" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="FunctionImport">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" />
-        <NavigationProperty Name="EntitySet" Type="Edm.Metadata.EntitySet" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="EntitySetPath" Type="Edm.String" Nullable="true" />
-        <NavigationProperty Name="Function" Type="Edm.Metadata.Function" Nullable="false" />
-        <Property Name="IncludeInServiceDocument" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="Parameter">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <Property Name="Type" Type="Edm.Metadata.ParameterType" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="DefaultValue" Type="Edm.String" Nullable="true" />
-        <Property Name="Nullable" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="NavigationPropertyBinding">
-        <Key>
-          <PropertyRef Name="Path" />
-        </Key>
-        <Property Name="Path" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="SourceEntitySet" Type="Edm.Metadata.EntitySet" Nullable="false" />
-        <NavigationProperty Name="EntitySet" Type="Edm.Metadata.EntitySet" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <ComplexType Name="ParameterType">
-        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
-        <Property Name="Facets" Type="Collection(Edm.Metadata.Facet)" />
-      </ComplexType>
       <EntityType Name="Type" Abstract="true">
         <Key>
           <PropertyRef Name="FullName" />
         </Key>
         <Property Name="FullName" Type="Edm.String" Nullable="false" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
-      <EntityType Name="PrimitiveType" BaseType="Edm.Metadata.Type" />
+      <EntityType Name="EntityType" BaseType="Edm.Metadata.Type">
+        <Property Name="Key" Type="Collection(Edm.Metadata.KeyProperty)" />
+        <Property Name="Abstract" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="OpenType" Type="Edm.String" Nullable="false" />
+        <Property Name="HasStream" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="Properties" Type="Collection(Edm.Metadata.Property)" />
+        <NavigationProperty Name="NavigationProperties" Type="Collection(Edm.Metadata.NavigationProperty)" />
+        <NavigationProperty Name="BaseType" Type="Edm.Metadata.EntityType" Partner="DerivedTypes" />
+        <NavigationProperty Name="DerivedTypes" Type="Collection(Edm.Metadata.EntityType)" Partner="BaseType" />
+        <NavigationProperty Name="EntitySets" Type="Collection(Edm.Metadata.EntitySet)" Partner="EntityType" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="EntityTypes" />
+      </EntityType>
+      <ComplexType Name="KeyProperty">
+        <Property Name="PropertyPath" Type="Edm.String" Nullable="false" />
+        <Property Name="Alias" Type="Edm.String" />
+        <NavigationProperty Name="Property" Type="Edm.Metadata.PrimitiveProperty" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="ComplexType" BaseType="Edm.Metadata.Type">
+        <Property Name="Abstract" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="OpenType" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="Properties" Type="Collection(Edm.Metadata.Property)" />
+        <NavigationProperty Name="NavigationProperties" Type="Collection(Edm.Metadata.NavigationProperty)" />
+        <NavigationProperty Name="BaseType" Type="Edm.Metadata.ComplexType" Partner="DerivedTypes" />
+        <NavigationProperty Name="DerivedTypes" Type="Collection(Edm.Metadata.ComplexType)" Partner="BaseType" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="ComplexTypes" />
+      </EntityType>
       <EntityType Name="EnumType" BaseType="Edm.Metadata.Type">
         <Property Name="IsFlags" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="UnderlyingType" Type="Edm.Metadata.PrimitiveType" Nullable="false" />
-        <NavigationProperty Name="Members" Type="Collection(Edm.Metadata.EnumTypeMember)" />
-      </EntityType>
-      <EntityType Name="EnumProperty" BaseType="Edm.Metadata.Property">
-        <NavigationProperty Name="Type" Type="Edm.Metadata.EnumType" Nullable="false" />
-      </EntityType>
-      <EntityType Name="Term">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
-        <Property Name="DefaultValue" Type="Edm.String" Nullable="true" />
-        <NavigationProperty Name="Applications" Type="Collection(Edm.Metadata.Annotation)" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
+        <NavigationProperty Name="UnderlyingType" Type="Edm.Metadata.PrimitiveType" Nullable="false" Partner="EnumTypes" />
+        <NavigationProperty Name="Members" Type="Collection(Edm.Metadata.EnumTypeMember)" Partner="EnumType" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="EnumTypes" />
       </EntityType>
       <EntityType Name="EnumTypeMember">
         <Key>
@@ -170,88 +85,14 @@
         <Property Name="FullName" Type="Edm.String" Nullable="false" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="Value" Type="Edm.Int64" Nullable="false" />
-        <NavigationProperty Name="EnumType" Type="Edm.Metadata.EnumType" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
+        <NavigationProperty Name="EnumType" Type="Edm.Metadata.EnumType" Nullable="false" Partner="Members" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
-      <EntityType Name="Annotation">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <Property Name="Qualifier" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" />
-        <Property Name="Value" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="TypeDefinition" Abstract="true" BaseType="Edm.Metadata.PrimitiveType">
+      <EntityType Name="TypeDefinition" BaseType="Edm.Metadata.PrimitiveType">
         <Property Name="Facets" Type="Collection(Edm.Metadata.Facet)" />
-        <NavigationProperty Name="UnderlyingType" Type="Edm.Metadata.PrimitiveType" Nullable="false" />
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
+        <NavigationProperty Name="UnderlyingType" Type="Edm.Metadata.PrimitiveType" Nullable="false" Partner="TypeDefinitions" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="TypeDefinitions" />
       </EntityType>
-      <EntityType Name="Function">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="FunctionImports" Type="Collection(Edm.Metadata.FunctionImport)" />
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
-        <NavigationProperty Name="Parameters" Type="Collection(Edm.Metadata.Parameter)" />
-        <Property Name="IsBindable" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="IsComposable" Type="Edm.String" Nullable="false" />
-        <Property Name="EntitySetPath" Type="Edm.String" Nullable="true" />
-        <Property Name="ReturnType" Type="Edm.Metadata.ParameterType" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="Entity">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" />
-        <NavigationProperty Name="Type" Type="Edm.Metadata.EntityType" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="Action">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="ActionImports" Type="Collection(Edm.Metadata.ActionImport)" />
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
-        <NavigationProperty Name="Parameters" Type="Collection(Edm.Metadata.Parameter)" />
-        <Property Name="IsBindable" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="EntitySetPath" Type="Edm.String" Nullable="true" />
-        <Property Name="ReturnType" Type="Edm.Metadata.ParameterType" Nullable="true" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <EntityType Name="ActionImport">
-        <Key>
-          <PropertyRef Name="FullName" />
-        </Key>
-        <Property Name="FullName" Type="Edm.String" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Action" Type="Edm.Metadata.Action" Nullable="false" />
-        <NavigationProperty Name="EntitySet" Type="Edm.Metadata.EntitySet" />
-        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </EntityType>
-      <ComplexType Name="ReferentialConstraint">
-        <Property Name="Property" Type="Edm.String" Nullable="false" />
-        <Property Name="ReferencedProperty" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
-      </ComplexType>
-      <ComplexType Name="Include">
-        <Property Name="Namespace" Type="Edm.String" Nullable="false" />
-        <Property Name="Alias" Type="Edm.String" Nullable="true" />
-      </ComplexType>
-      <ComplexType Name="IncludeAnnotations">
-        <Property Name="Namespace" Type="Edm.String" Nullable="true" />
-        <Property Name="Qualifier" Type="Edm.String" Nullable="true" />
-      </ComplexType>
       <ComplexType Name="Facet">
         <Property Name="Name" Type="Edm.Metadata.FacetName" Nullable="false" />
         <Property Name="Value" Type="Edm.String" Nullable="false" />
@@ -263,20 +104,187 @@
         <Member Name="Scale" />
         <Member Name="SRID" />
       </EnumType>
-      <EntityType Name="Reference">
-        <Key>
-          <PropertyRef Name="Uri" />
-        </Key>
-        <Property Name="Uri" Type="Edm.String" Nullable="false" />
-        <Property Name="Include" Type="Collection(Edm.Metadata.Include)" />
-        <Property Name="IncludeAnnotations" Type="Collection(Edm.Metadata.IncludeAnnotations)" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
+      <EntityType Name="PrimitiveType" BaseType="Edm.Metadata.Type">
+        <NavigationProperty Name="TypeDefinitions" Type="Collection(Edm.Metadata.TypeDefinition)" Partner="UnderlyingType" />
+        <NavigationProperty Name="EnumTypes" Type="Collection(Edm.Metadata.EnumType)" Partner="UnderlyingType" />
       </EntityType>
-      <ComplexType Name="KeyProperty">
-        <Property Name="PropertyPath" Type="Edm.String" Nullable="false" />
-        <Property Name="Alias" Type="Edm.String" Nullable="true" />
-        <NavigationProperty Name="Property" Type="Edm.Metadata.PrimitiveProperty" Nullable="false" />
+      <EntityType Name="Property" Abstract="true">
+        <Key>
+          <PropertyRef Name="Fullname" />
+        </Key>
+        <Property Name="Fullname" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Nullable" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="PrimitiveProperty" BaseType="Edm.Metadata.Property">
+        <Property Name="Facets" Type="Collection(Edm.Metadata.Facet)" />
+        <NavigationProperty Name="Type" Type="Edm.Metadata.PrimitiveType" Nullable="false" />
+      </EntityType>
+      <EntityType Name="EnumProperty" BaseType="Edm.Metadata.Property">
+        <NavigationProperty Name="Type" Type="Edm.Metadata.EnumType" Nullable="false" />
+      </EntityType>
+      <EntityType Name="ComplexProperty" BaseType="Edm.Metadata.Property">
+        <NavigationProperty Name="Type" Type="Edm.Metadata.ComplexType" Nullable="false" />
+      </EntityType>
+      <EntityType Name="NavigationProperty">
+        <Key>
+          <PropertyRef Name="Fullname" />
+        </Key>
+        <Property Name="Fullname" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Nullable" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ContainsTarget" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="OnDeleteAction" Type="Edm.String" />
+        <Property Name="ReferentialConstraints" Type="Collection(Edm.Metadata.ReferentialConstraint)" />
+        <NavigationProperty Name="Type" Type="Edm.Metadata.EntityType" Nullable="false" />
+        <NavigationProperty Name="Partner" Type="Edm.Metadata.NavigationProperty" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <ComplexType Name="ReferentialConstraint">
+        <Property Name="Property" Type="Edm.String" Nullable="false" />
+        <Property Name="ReferencedProperty" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </ComplexType>
+      <EntityType Name="Action">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="IsBindable" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="EntitySetPath" Type="Edm.String" />
+        <Property Name="ReturnType" Type="Edm.Metadata.ParameterType" />
+        <NavigationProperty Name="Parameters" Type="Collection(Edm.Metadata.Parameter)" />
+        <NavigationProperty Name="ActionImports" Type="Collection(Edm.Metadata.ActionImport)" Partner="Action" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="Actions" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="Function">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="IsBindable" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsComposable" Type="Edm.String" Nullable="false" />
+        <Property Name="EntitySetPath" Type="Edm.String" />
+        <Property Name="ReturnType" Type="Edm.Metadata.ParameterType" Nullable="false" />
+        <NavigationProperty Name="Parameters" Type="Collection(Edm.Metadata.Parameter)" />
+        <NavigationProperty Name="FunctionImports" Type="Collection(Edm.Metadata.FunctionImport)" Partner="Function" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="Functions" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="Parameter">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Type" Type="Edm.Metadata.ParameterType" Nullable="false" />
+        <Property Name="Nullable" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="DefaultValue" Type="Edm.String" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <ComplexType Name="ParameterType">
+        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Facets" Type="Collection(Edm.Metadata.Facet)" />
+        <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="Term">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="DefaultValue" Type="Edm.String" />
+        <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
+        <NavigationProperty Name="Applications" Type="Collection(Edm.Metadata.Annotation)" Partner="Term" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="Terms" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="Annotation">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Qualifier" Type="Edm.String" Nullable="false" />
+        <Property Name="Value" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" Partner="Applications" />
+        <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" Partner="Annotation" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="EntityContainer">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="IsDefault" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="EntitySets" Type="Collection(Edm.Metadata.EntitySet)" Partner="EntityContainer" />
+        <NavigationProperty Name="FunctionImports" Type="Collection(Edm.Metadata.FunctionImport)" Partner="EntityContainer" />
+        <NavigationProperty Name="NamedEntities" Type="Collection(Edm.Metadata.Entity)" Partner="EntityContainer" />
+        <NavigationProperty Name="ActionImports" Type="Collection(Edm.Metadata.ActionImport)" Partner="EntityContainer" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="EntityContainers" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="EntitySet">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="EntityType" Type="Edm.Metadata.EntityType" Nullable="false" Partner="EntitySets" />
+        <NavigationProperty Name="NavigationPropertyBindings" Type="Collection(Edm.Metadata.NavigationPropertyBinding)" Partner="SourceEntitySet" />
+        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" Partner="EntitySets" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="NavigationPropertyBinding">
+        <Key>
+          <PropertyRef Name="Path" />
+        </Key>
+        <Property Name="Path" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="EntitySet" Type="Edm.Metadata.EntitySet" Nullable="false" />
+        <NavigationProperty Name="SourceEntitySet" Type="Edm.Metadata.EntitySet" Nullable="false" Partner="NavigationPropertyBindings" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="Entity">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Type" Type="Edm.Metadata.EntityType" Nullable="false" />
+        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" Partner="NamedEntities" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="ActionImport">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Action" Type="Edm.Metadata.Action" Nullable="false" Partner="ActionImports" />
+        <NavigationProperty Name="EntitySet" Type="Edm.Metadata.EntitySet" />
+        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" Partner="ActionImports" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
+      <EntityType Name="FunctionImport">
+        <Key>
+          <PropertyRef Name="FullName" />
+        </Key>
+        <Property Name="FullName" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="IncludeInServiceDocument" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="EntitySetPath" Type="Edm.String" />
+        <NavigationProperty Name="Function" Type="Edm.Metadata.Function" Nullable="false" Partner="FunctionImports" />
+        <NavigationProperty Name="EntitySet" Type="Edm.Metadata.EntitySet" />
+        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" Partner="FunctionImports" />
+        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+      </EntityType>
       <EntityContainer Name="MetadataContainer">
         <EntitySet Name="Schemata" EntityType="Edm.Metadata.Schema">
           <NavigationPropertyBinding EntitySet="Types" Path="EntityTypes" />
@@ -287,6 +295,7 @@
           <NavigationPropertyBinding EntitySet="Functions" Path="Functions" />
           <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
           <NavigationPropertyBinding EntitySet="Types" Path="TypeDefinitions" />
+          <NavigationPropertyBinding EntitySet="Types" Path="EnumTypes" />
         </EntitySet>
         <EntitySet Name="Properties" EntityType="Edm.Metadata.Property">
           <NavigationPropertyBinding EntitySet="Types" Path="Edm.Metadata.ComplexProperty/Type" />
@@ -336,14 +345,17 @@
           <NavigationPropertyBinding EntitySet="Types" Path="Edm.Metadata.ComplexType/BaseType" />
           <NavigationPropertyBinding EntitySet="EntitySets" Path="Edm.Metadata.EntityType/EntitySets" />
           <NavigationPropertyBinding EntitySet="Types" Path="Edm.Metadata.EnumType/UnderlyingType" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Edm.Metadata.PrimitiveType/EnumTypes" />
           <NavigationPropertyBinding EntitySet="EnumTypeMembers" Path="Edm.Metadata.EnumType/Members" />
           <NavigationPropertyBinding EntitySet="Types" Path="Edm.Metadata.TypeDefinition/UnderlyingType" />
+          <NavigationPropertyBinding EntitySet="Types" Path="Edm.Metadata.PrimitiveType/TypeDefinitions" />
           <NavigationPropertyBinding EntitySet="Properties" Path="Edm.Metadata.ComplexType/Properties" />
           <NavigationPropertyBinding EntitySet="Properties" Path="Edm.Metadata.EntityType/Properties" />
           <NavigationPropertyBinding EntitySet="NavigationProperties" Path="Edm.Metadata.ComplexType/NavigationProperties" />
           <NavigationPropertyBinding EntitySet="NavigationProperties" Path="Edm.Metadata.EntityType/NavigationProperties" />
           <NavigationPropertyBinding EntitySet="Annotations" Path="Annotations" />
           <NavigationPropertyBinding EntitySet="Schemata" Path="Edm.Metadata.TypeDefinition/Schema" />
+          <NavigationPropertyBinding EntitySet="Schemata" Path="Edm.Metadata.EnumType/Schema" />
         </EntitySet>
         <EntitySet Name="Terms" EntityType="Edm.Metadata.Term">
           <NavigationPropertyBinding EntitySet="Schemata" Path="Schema" />
