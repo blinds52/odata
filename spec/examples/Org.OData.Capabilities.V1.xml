@@ -51,39 +51,46 @@
           - Deletability
         </String>
       </Annotation>
+      
+      <Term Name="SupportedFormats" Type="Collection(Edm.String)">
+        <Annotation Term="Core.Description" String="Media types of supported formats, including format parameters" />
+        <Annotation Term="Core.IsMediaType" />
+      </Term>
+      
+      <Term Name="ConformanceLevel" Type="Capabilities.ConformanceLevelType" AppliesTo="EntityContainer" />
+      <EnumType Name="ConformanceLevelType">
+        <Member Name="Minimal"/>
+        <Member Name="Intermediate"/>
+        <Member Name="Advanced" />
+      </EnumType>
 
       <Term Name="InsertRestrictions" Type="Capabilities.InsertRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on insert operations" />
       </Term>
-
       <ComplexType Name="InsertRestrictionsType">
         <Property Name="Insertable" Type="Edm.Boolean">
           <Annotation Term="Core.Description" String="Entities can be inserted" />
         </Property>
         <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="true">
-          <Annotation Term="Core.Description" String="These navigation properties do not allow InsertLink requests" />
+          <Annotation Term="Core.Description" String="These navigation properties do not allow deep inserts" />
         </Property>
       </ComplexType>
-
 
       <Term Name="UpdateRestrictions" Type="Capabilities.UpdateRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on update operations" />
       </Term>
-
       <ComplexType Name="UpdateRestrictionsType">
         <Property Name="Updatable" Type="Edm.Boolean">
           <Annotation Term="Core.Description" String="Entities can be updated" />
         </Property>
         <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="true">
-          <Annotation Term="Core.Description" String="These navigation properties do not allow UpdateLink requests" />
+          <Annotation Term="Core.Description" String="These navigation properties do not allow rebinding" />
         </Property>
       </ComplexType>
-
 
       <Term Name="DeleteRestrictions" Type="Capabilities.DeleteRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on delete operations" />
       </Term>
-
       <ComplexType Name="DeleteRestrictionsType">
         <Property Name="Deletable" Type="Edm.Boolean">
           <Annotation Term="Core.Description" String="Entities can be deleted" />
@@ -93,22 +100,30 @@
         </Property>
       </ComplexType>
 
-
+      <!-- TODO: morph this into CountRestrictions and specify properties where -->
       <Term Name="Countable" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports /$count path suffix and $count=true system query option" />
       </Term>
 
-
-      <Term Name="ClientPagable" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Supports $top and $skip" />
+      <!-- ClientPagingRestrictions: CannotSkip, CannotTop, default false -->
+      <Term Name="CanTop" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Supports $top" />
       </Term>
 
+      <Term Name="CanSkip" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Supports $skip" />
+      </Term>
+
+      <!-- not needed because service can fake expansion by putting the deferred-link into the next-link
       <Term Name="Expandable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
         <Annotation Term="Core.Description" String=">Supports $expand system query option" />
       </Term>
+      -->
+      
+      <!-- TODO: copy delta annotation here -->
 
       <Term Name="Navigable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
-        <Annotation Term="Core.Description" String="Can be used in resource paths" />
+        <Annotation Term="Core.Description" String="Supports navigation paths according to OData URL conventions" />
       </Term>
 
       <Term Name="IndexableByKey" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
@@ -131,14 +146,13 @@
       <Term Name="FilterRestrictions" Type="Capabilities.FilterRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on $filter expressions" />
       </Term>
-
       <ComplexType Name="FilterRestrictionsType">
         <Property Name="Filterable" Type="Edm.Boolean">
           <Annotation Term="Core.Description" String="$filter is supported" />
         </Property>
         <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
           <Annotation Term="Core.Description"
-            String="These properties must be specified in the $filter clause. (Properties of derived types are not supported)" />
+            String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
         </Property>
         <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
           <Annotation Term="Core.Description" String="These properties cannot be used in $filter expressions" />
