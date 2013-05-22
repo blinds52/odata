@@ -116,7 +116,7 @@
           <xsl:attribute name="Type">
             <xsl:value-of select="substring(edm3:Documentation/edm3:LongDescription,16)" />
           </xsl:attribute>
-          <xsl:if test="not(starts-with(substring(edm3:Documentation/edm3:LongDescription,16),'Collection('))">
+          <xsl:if test="not(starts-with(substring(edm3:Documentation/edm3:LongDescription,16),'Collection(') or @Nullable='true')">
             <xsl:copy-of select="@Nullable" />
           </xsl:if>
         </NavigationProperty>
@@ -126,7 +126,12 @@
           <xsl:copy-of select="@Name" />
           <xsl:attribute name="Type">
             <xsl:choose>
-              <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Collection'">Collection(<xsl:value-of select="@Type" />)</xsl:when>
+              <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Collection'">
+                <xsl:choose>
+                  <xsl:when test="contains(@Type,'.')">Collection(<xsl:value-of select="@Type" />)</xsl:when>
+                  <xsl:when test="not(contains(@Type,'.'))">Collection(Edm.<xsl:value-of select="@Type" />)</xsl:when>
+                </xsl:choose>
+              </xsl:when>
               <xsl:when test="starts-with(edm3:Documentation/edm3:LongDescription,'#V4:Type:')"><xsl:value-of select="substring(edm3:Documentation/edm3:LongDescription,10)" /></xsl:when>
               <xsl:when test="@Type='Time' or @Type='Edm.Time'">Edm.Duration</xsl:when>
               <xsl:when test="@Type='DateTime' or @Type='Edm.DateTime'">Edm.DateTimeOffset</xsl:when>
@@ -135,10 +140,8 @@
             </xsl:choose>
           </xsl:attribute>
           <xsl:choose>
-            <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Nullable'">
-              <xsl:attribute name="Nullable">true</xsl:attribute>
-            </xsl:when>
-            <xsl:when test="not(edm3:Documentation/edm3:LongDescription = '#V4:Collection')">
+            <xsl:when test="edm3:Documentation/edm3:LongDescription = '#V4:Nullable'" />
+            <xsl:when test="not(edm3:Documentation/edm3:LongDescription = '#V4:Collection' or @Nullable='true')">
               <xsl:copy-of select="@Nullable" />
             </xsl:when>
           </xsl:choose>
@@ -153,6 +156,7 @@
     <NavigationProperty>
       <xsl:copy-of select="@Name" />
       <!-- Extract @Type and @Multiplicity from matching Association/End -->
+      <xsl:variable name="relation" select="@Relationship" />
       <xsl:variable name="assoc">
         <xsl:call-template name="substring-after-last">
           <xsl:with-param name="input" select="@Relationship" />
@@ -172,6 +176,13 @@
       </xsl:attribute>
       <xsl:if test="$mult='1'">
         <xsl:attribute name="Nullable">false</xsl:attribute>
+      </xsl:if>
+      <xsl:variable name="partner"
+        select="../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$role]/@Name" />
+      <xsl:if test="$partner">
+        <xsl:attribute name="Partner">
+          <xsl:value-of select="$partner" />
+        </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates mode="NavProp"
         select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/edm3:OnDelete" />
@@ -203,9 +214,11 @@
   <xsl:template match="edm3:EnumType">
     <EnumType>
       <xsl:copy-of select="@Name|@IsFlags" />
-      <xsl:attribute name="UnderlyingType">
-        <xsl:value-of select="concat('Edm.',@UnderlyingType)" />
-      </xsl:attribute>
+      <xsl:if test="@UnderlyingType">
+        <xsl:attribute name="UnderlyingType">
+          <xsl:value-of select="concat('Edm.',@UnderlyingType)" />
+        </xsl:attribute>
+      </xsl:if>
       <xsl:apply-templates />
     </EnumType>
   </xsl:template>
@@ -244,7 +257,7 @@
     <xsl:if test="$set!='V4_Edm_EntityType'">
       <xsl:variable name="assoc" select="../@Association" />
       <xsl:variable name="navprop"
-        select="../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
+        select="../../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
       <xsl:if test="$navprop">
         <xsl:variable name="namespace" select="../../../@Namespace" />
         <xsl:variable name="typename"
