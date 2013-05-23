@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
-  xmlns:edmx3="http://schemas.microsoft.com/ado/2009/11/edmx" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm"
-  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" exclude-result-prefixes="edmx1 edmx3 edm3 m"
+  xmlns:edmx3="http://schemas.microsoft.com/ado/2009/11/edmx" xmlns:edm3="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+  exclude-result-prefixes="edmx1 edmx3 edm3 m"
 >
   <!--
     This style sheet transforms OData 3.0 $metadata documents or VS2012 EDMX 3.0 documents into OData 4.0 EDMX documents.
@@ -16,6 +16,9 @@
     To model navigation properties to the abstract V4 entity type Edm.EntityType create an entity type named V4_Edm_EntityType
     and an identically named entity set to your model. This type will be ignored, and navigation to it will be replaced with
     navigation to Edm.EntityType. Don't define referential constraints on associations to this dummy entity type.
+
+    To model partner attributes for unidirectional relationships enter #V4:Partner: followed by the value of the Partner attribute
+    into the LongDescription of the Documentation of the navigation property.
 
     To model properties that are collections of complex or primitive type in VS2012 Entity Modeler, enter #V4:Collection
     into the LongDescription of the Documentation.
@@ -177,17 +180,21 @@
       <xsl:if test="$mult='1'">
         <xsl:attribute name="Nullable">false</xsl:attribute>
       </xsl:if>
-      <xsl:variable name="partner"
-        select="../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$role]/@Name" />
-      <xsl:if test="$partner">
-        <xsl:attribute name="Partner">
-          <xsl:value-of select="$partner" />
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:apply-templates mode="NavProp"
-        select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/edm3:OnDelete" />
-      <xsl:apply-templates mode="NavProp"
-        select="../../edm3:Association[@Name=$assoc]/edm3:ReferentialConstraint/edm3:Principal[@Role=$role]" />
+      <xsl:variable name="partner" select="../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$role]/@Name" />
+      <xsl:choose>
+        <xsl:when test="$partner">
+          <xsl:attribute name="Partner">
+            <xsl:value-of select="$partner" />
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="starts-with(edm3:Documentation/edm3:LongDescription,'#V4:Partner:')">
+          <xsl:attribute name="Partner">
+            <xsl:value-of select="substring(edm3:Documentation/edm3:LongDescription,13)" />
+          </xsl:attribute>
+        </xsl:when>
+      </xsl:choose>
+      <xsl:apply-templates mode="NavProp" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/edm3:OnDelete" />
+      <xsl:apply-templates mode="NavProp" select="../../edm3:Association[@Name=$assoc]/edm3:ReferentialConstraint/edm3:Principal[@Role=$role]" />
       <xsl:apply-templates />
     </NavigationProperty>
   </xsl:template>
@@ -256,12 +263,10 @@
     <xsl:variable name="set" select="../edm3:End[not(@Role=$role)]/@EntitySet" />
     <xsl:if test="$set!='V4_Edm_EntityType'">
       <xsl:variable name="assoc" select="../@Association" />
-      <xsl:variable name="navprop"
-        select="../../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
+      <xsl:variable name="navprop" select="../../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
       <xsl:if test="$navprop">
         <xsl:variable name="namespace" select="../../../@Namespace" />
-        <xsl:variable name="typename"
-          select="../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
+        <xsl:variable name="typename" select="../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
         <xsl:variable name="type" select="concat($namespace,'.',$typename)" />
         <NavigationPropertyBinding>
           <xsl:attribute name="EntitySet"><xsl:value-of select="$set" /></xsl:attribute>
@@ -329,6 +334,9 @@
       <xsl:apply-templates />
     </ReturnType>
   </xsl:template>
+
+  <xsl:template match="edm3:Association" />
+  <xsl:template match="edm3:AssociationSet" />
 
   <xsl:template match="edm3:Documentation">
     <xsl:apply-templates />
