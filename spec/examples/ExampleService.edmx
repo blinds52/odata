@@ -42,7 +42,7 @@
         </EntitySet>
         <EntitySet Name="Employees" EntityType="Model.Employee">
           <NavigationPropertyBinding EntitySet="Employees" Path="Model.Manager/Employees" />
-          <NavigationPropertyBinding EntitySet="Employees" Path="TheManager" />
+          <NavigationPropertyBinding EntitySet="Employees" Path="Manager" />
           <NavigationPropertyBinding EntitySet="LeaveRequests" Path="Model.Manager/Inbox" />
           <NavigationPropertyBinding EntitySet="LeaveRequests" Path="LeaveRequests" />
         </EntitySet>
@@ -70,7 +70,7 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Orders" Type="Collection(Model.Order)" />
+        <NavigationProperty Name="Orders" Type="Collection(Model.Order)" Partner="Customer" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="CompanyName" Type="Edm.String" Nullable="false" />
         <Property Name="BirthDate" Type="Edm.String" Nullable="false" />
@@ -79,8 +79,8 @@
             <String>This is weird, given that we have a Country entity type</String>
           </Annotation>
         </Property>
-        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" />
-        <NavigationProperty Name="Country" Type="Model.Country" Nullable="false" />
+        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" Partner="Customer" />
+        <NavigationProperty Name="Country" Type="Model.Country" Nullable="false" Partner="Customers" />
         <Property Name="ContactName" Type="Edm.String" Nullable="false" />
         <Property Name="ContactTitle" Type="Edm.String" Nullable="false" />
         <Property Name="Fax" Type="Edm.String" Nullable="false" />
@@ -93,9 +93,9 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Products" Type="Collection(Model.Product)" />
+        <NavigationProperty Name="Products" Type="Collection(Model.Product)" Partner="Supplier" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="EmailAddresses" Type="Edm.String" Nullable="false" />
+        <Property Name="EmailAddresses" Type="Collection(Edm.String)" />
         <Property Name="Addresses" Type="Collection(Model.Address)" />
       </EntityType>
       <EntityType Name="Product">
@@ -103,29 +103,29 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Category" Type="Model.Category" Nullable="false" />
+        <NavigationProperty Name="Category" Type="Model.Category" Nullable="false" Partner="Products" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Supplier" Type="Model.Supplier" Nullable="false" />
+        <NavigationProperty Name="Supplier" Type="Model.Supplier" Nullable="false" Partner="Products" />
         <Property Name="Description" Type="Edm.String" Nullable="false" />
         <Property Name="Thumbnail" Type="Edm.String" Nullable="false" />
         <Property Name="Sizes" Type="Collection(Edm.String)" />
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
-        <NavigationProperty Name="OrderItems" Type="Collection(Model.OrderItem)" />
+        <NavigationProperty Name="OrderItems" Type="Collection(Model.OrderItem)" Partner="Product" />
         <Property Name="ReleaseDate" Type="Edm.String" Nullable="false" />
         <Property Name="DiscontinuedDate" Type="Edm.String" Nullable="false" />
         <Property Name="LifeTime" Type="Edm.String" Nullable="false" />
         <Property Name="Color" Type="Edm.String" Nullable="false" />
         <Property Name="TaxRate" Type="Edm.Decimal" Nullable="false" />
-        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" />
+        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" Partner="Product" />
       </EntityType>
       <EntityType Name="Order">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <NavigationProperty Name="Items" Type="Collection(Model.OrderItem)" />
+        <NavigationProperty Name="Items" Type="Collection(Model.OrderItem)" Partner="Order" />
         <Property Name="Completed" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Customer" Type="Model.Customer" Nullable="false" />
+        <NavigationProperty Name="Customer" Type="Model.Customer" Nullable="false" Partner="Orders" />
         <Property Name="ShippingAddress" Type="Model.Address" Nullable="false" />
       </EntityType>
       <EntityType Name="VipCustomer" BaseType="Model.Customer" />
@@ -134,7 +134,7 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <NavigationProperty Name="Products" Type="Collection(Model.Product)" />
+        <NavigationProperty Name="Products" Type="Collection(Model.Product)" Partner="Category" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="Thumbnail" Type="Edm.String" Nullable="false" />
       </EntityType>
@@ -145,13 +145,13 @@
         </Key>
         <Property Name="OrderID" Type="Edm.Int32" Nullable="false" />
         <Property Name="ItemID" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Order" Type="Model.Order" Nullable="false">
+        <NavigationProperty Name="Order" Type="Model.Order" Nullable="false" Partner="Items">
           <OnDelete Action="Cascade" />
           <ReferentialConstraint Property="OrderID" ReferencedProperty="ID" />
         </NavigationProperty>
         <Property Name="Size" Type="Edm.String" Nullable="false" />
         <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
-        <NavigationProperty Name="Product" Type="Model.Product" Nullable="false" />
+        <NavigationProperty Name="Product" Type="Model.Product" Nullable="false" Partner="OrderItems" />
         <NavigationProperty Name="Currency" Type="Model.Currency" Nullable="false" />
       </EntityType>
       <EntityType Name="Sales">
@@ -160,11 +160,11 @@
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
         <Property Name="Amount" Type="Edm.Decimal" Nullable="false" />
-        <NavigationProperty Name="Time" Type="Model.Time" Nullable="false" />
-        <NavigationProperty Name="Currency" Type="Model.Currency" Nullable="false" />
-        <NavigationProperty Name="Customer" Type="Model.Customer" Nullable="false" />
-        <NavigationProperty Name="SalesOrganization" Type="Model.SalesOrganization" Nullable="false" />
-        <NavigationProperty Name="Product" Type="Model.Product" Nullable="false" />
+        <NavigationProperty Name="Time" Type="Model.Time" Nullable="false" Partner="Sales" />
+        <NavigationProperty Name="Currency" Type="Model.Currency" Nullable="false" Partner="Sales" />
+        <NavigationProperty Name="Customer" Type="Model.Customer" Nullable="false" Partner="Sales" />
+        <NavigationProperty Name="SalesOrganization" Type="Model.SalesOrganization" Nullable="false" Partner="Sales" />
+        <NavigationProperty Name="Product" Type="Model.Product" Nullable="false" Partner="Sales" />
       </EntityType>
       <EntityType Name="Employee" HasStream="true">
         <Key>
@@ -174,16 +174,16 @@
         <Property Name="FirstName" Type="Edm.String" Nullable="false" />
         <Property Name="LastName" Type="Edm.String" Nullable="false" />
         <Property Name="Title" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Manager" Type="Model.Manager" />
-        <NavigationProperty Name="LeaveRequests" Type="Collection(Model.LeaveRequest)" />
+        <NavigationProperty Name="Manager" Type="Model.Manager" Partner="Employees" />
+        <NavigationProperty Name="LeaveRequests" Type="Collection(Model.LeaveRequest)" Partner="Employee" />
       </EntityType>
       <EntityType Name="LeaveRequest">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <NavigationProperty Name="Manager" Type="Model.Manager" Nullable="false" />
-        <NavigationProperty Name="Employee" Type="Model.Employee" Nullable="false" />
+        <NavigationProperty Name="Manager" Type="Model.Manager" Nullable="false" Partner="Inbox" />
+        <NavigationProperty Name="Employee" Type="Model.Employee" Nullable="false" Partner="LeaveRequests" />
       </EntityType>
       <ComplexType Name="Address">
         <Property Name="Street" Type="Edm.String" Nullable="false" />
@@ -203,7 +203,7 @@
           <PropertyRef Name="Code" />
         </Key>
         <Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="2" />
-        <NavigationProperty Name="Customers" Type="Collection(Model.Customer)" />
+        <NavigationProperty Name="Customers" Type="Collection(Model.Customer)" Partner="Country" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="Continent" Type="Edm.String" Nullable="false" />
       </EntityType>
@@ -218,8 +218,8 @@
         <Member Name="Solid" />
       </EnumType>
       <EntityType Name="Manager" BaseType="Model.Employee">
-        <NavigationProperty Name="Employees" Type="Collection(Model.Employee)" />
-        <NavigationProperty Name="Inbox" Type="Collection(Model.LeaveRequest)" />
+        <NavigationProperty Name="Employees" Type="Collection(Model.Employee)" Partner="Manager" />
+        <NavigationProperty Name="Inbox" Type="Collection(Model.LeaveRequest)" Partner="Manager" />
       </EntityType>
       <EntityType Name="Time">
         <Key>
@@ -229,7 +229,7 @@
         <Property Name="Year" Type="Edm.String" Nullable="false" MaxLength="4" />
         <Property Name="Quarter" Type="Edm.String" Nullable="false" />
         <Property Name="Month" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" />
+        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" Partner="Time" />
       </EntityType>
       <EntityType Name="SalesOrganization">
         <Key>
@@ -237,7 +237,7 @@
         </Key>
         <Property Name="ID" Type="Edm.String" Nullable="false" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" />
+        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" Partner="SalesOrganization" />
         <NavigationProperty Name="Superordinate" Type="Model.SalesOrganization" />
       </EntityType>
       <EntityType Name="Currency">
@@ -246,7 +246,7 @@
         </Key>
         <Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="3" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" />
+        <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" Partner="Currency" />
         <Property Name="Symbol" Type="Edm.String" Nullable="false" />
         <Property Name="FractionalDigits" Type="Edm.Byte" Nullable="false" />
       </EntityType>
