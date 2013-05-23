@@ -51,16 +51,16 @@
           - Deletability
         </String>
       </Annotation>
-      
+
       <Term Name="SupportedFormats" Type="Collection(Edm.String)">
         <Annotation Term="Core.Description" String="Media types of supported formats, including format parameters" />
         <Annotation Term="Core.IsMediaType" />
       </Term>
-      
+
       <Term Name="ConformanceLevel" Type="Capabilities.ConformanceLevelType" AppliesTo="EntityContainer" />
       <EnumType Name="ConformanceLevelType">
-        <Member Name="Minimal"/>
-        <Member Name="Intermediate"/>
+        <Member Name="Minimal" />
+        <Member Name="Intermediate" />
         <Member Name="Advanced" />
       </EnumType>
 
@@ -100,27 +100,18 @@
         </Property>
       </ComplexType>
 
-      <!-- TODO: morph this into CountRestrictions and specify properties where -->
+      <!-- TODO: morph this into CountRestrictions and specify properties where /$count cannot be appended in $filter -->
       <Term Name="Countable" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports /$count path suffix and $count=true system query option" />
       </Term>
 
-      <!-- ClientPagingRestrictions: CannotSkip, CannotTop, default false -->
+      <!-- TODO: ClientPagingRestrictions: CannotSkip, CannotTop, default false -->
       <Term Name="CanTop" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports $top" />
       </Term>
-
       <Term Name="CanSkip" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports $skip" />
       </Term>
-
-      <!-- not needed because service can fake expansion by putting the deferred-link into the next-link
-      <Term Name="Expandable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
-        <Annotation Term="Core.Description" String=">Supports $expand system query option" />
-      </Term>
-      -->
-      
-      <!-- TODO: copy delta annotation here -->
 
       <Term Name="Navigable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
         <Annotation Term="Core.Description" String="Supports navigation paths according to OData URL conventions" />
@@ -142,7 +133,6 @@
         <Annotation Term="Core.Description" String="List of functions supported in $filter" />
       </Term>
 
-
       <Term Name="FilterRestrictions" Type="Capabilities.FilterRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on $filter expressions" />
       </Term>
@@ -151,19 +141,16 @@
           <Annotation Term="Core.Description" String="$filter is supported" />
         </Property>
         <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
-          <Annotation Term="Core.Description"
-            String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
+          <Annotation Term="Core.Description" String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
         </Property>
         <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
           <Annotation Term="Core.Description" String="These properties cannot be used in $filter expressions" />
         </Property>
       </ComplexType>
 
-
       <Term Name="SortRestrictions" Type="Capabilities.SortRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on $orderby expressions" />
       </Term>
-
       <ComplexType Name="SortRestrictionsType">
         <Property Name="Sortable" Type="Edm.Boolean">
           <Annotation Term="Core.Description" String="$orderby is supported" />
@@ -179,6 +166,20 @@
         </Property>
       </ComplexType>
 
+      <Term Name="ChangeTracking" Type="Core.ChangeTrackingType" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Change tracking capabilities of this entity set" />
+      </Term>
+      <ComplexType Name="ChangeTrackingType">
+        <Property Name="Supported" Type="Edm.Boiolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preferenc" />
+        </Property>
+        <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
+          <Annotation Term="Core.Description" String="Change tracking supports filters on these properties" />
+        </Property>
+        <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="true">
+          <Annotation Term="Core.Description" String="Change tracking supports these properties expanded" />
+        </Property>
+      </ComplexType>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
