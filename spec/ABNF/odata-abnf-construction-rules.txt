@@ -385,14 +385,11 @@ skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
 aliasAndValue         = parameterAlias EQ parameterValue
 parameterNameAndValue = parameterName  EQ parameterValue
 
-parameterValue = complexColInUri  
-               / complexInUri
-               / entityRefColInUri
+parameterValue = arrayOrObject
                / entityReference
-               / primitiveColInUri
                / commonExpr
                / primitiveLiteral
-               
+
 entityReference = 'KEY' OPEN 
                   [ entityContainer "." ] entitySetName keyPredicate
                   [ "/" qualifiedEntityTypeName ]
@@ -414,10 +411,8 @@ metadataFragment = "#"
                      *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
                         "/" navigationProperty
                       ) 
-                     [ propertyList ]
-                     ( delta
-                     / [ ref ] [ element ]
-                     )
+                     ( ref / [ propertyList ] [ delta ] ) 
+                     [ element ]
                    )
 
 propertyList     = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
@@ -438,6 +433,7 @@ element = '/@Element'
 ; Note: a boolCommonExpr is also a commonExpr, e.g. sort by Boolean 
 commonExpr = ( primitiveLiteral
              / parameterAlias
+             / arrayOrObject
              / firstMemberExpr
              / functionExpr
              / negateExpr 
@@ -646,6 +642,11 @@ isleafExpr       = 'isleaf'       OPEN BWS qualifiedHierarchyName BWS CLOSE
 ; applying these rules, see comment at the top of this file
 ;------------------------------------------------------------------------------
 
+arrayOrObject = complexColInUri  
+              / complexInUri
+              / entityRefColInUri
+              / primitiveColInUri
+               
 complexColInUri = begin-array 
                   [ complexInUri *( value-separator complexInUri ) ] 
                   end-array
