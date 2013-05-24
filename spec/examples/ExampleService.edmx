@@ -4,12 +4,12 @@
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
   </edmx:Reference>
   <edmx:DataServices>
-    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Model" Alias="TheAlias">
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Model" Alias="ODataDemo">
       <EntityContainer Name="Container">
         <EntitySet Name="Customers" EntityType="Model.Customer">
           <NavigationPropertyBinding EntitySet="Orders" Path="Orders" />
           <NavigationPropertyBinding EntitySet="Sales" Path="Sales" />
-          <NavigationPropertyBinding EntitySet="Countries" Path="Country" />
+          <NavigationPropertyBinding EntitySet="Countries" Path="Address/Country" />
         </EntitySet>
         <EntitySet Name="Suppliers" EntityType="Model.Supplier">
           <NavigationPropertyBinding EntitySet="Products" Path="Products" />
@@ -50,9 +50,7 @@
           <NavigationPropertyBinding EntitySet="Employees" Path="Manager" />
           <NavigationPropertyBinding EntitySet="Employees" Path="Employee" />
         </EntitySet>
-        <EntitySet Name="Countries" EntityType="Model.Country">
-          <NavigationPropertyBinding EntitySet="Customers" Path="Customers" />
-        </EntitySet>
+        <EntitySet Name="Countries" EntityType="Model.Country"/>
         <EntitySet Name="Time" EntityType="Model.Time">
           <NavigationPropertyBinding EntitySet="Sales" Path="Sales" />
         </EntitySet>
@@ -80,7 +78,6 @@
           </Annotation>
         </Property>
         <NavigationProperty Name="Sales" Type="Collection(Model.Sales)" Partner="Customer" />
-        <NavigationProperty Name="Country" Type="Model.Country" Nullable="false" Partner="Customers" />
         <Property Name="ContactName" Type="Edm.String" Nullable="false" />
         <Property Name="ContactTitle" Type="Edm.String" Nullable="false" />
         <Property Name="Fax" Type="Edm.String" Nullable="false" />
@@ -200,7 +197,6 @@
           <PropertyRef Name="Code" />
         </Key>
         <Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="2" />
-        <NavigationProperty Name="Customers" Type="Collection(Model.Customer)" Partner="Country" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="Continent" Type="Edm.String" Nullable="false" />
       </EntityType>
