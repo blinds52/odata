@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:metadata="http://docs.oasis-open.org/odata/ns/metadata" xmlns:data="http://docs.oasis-open.org/odata/ns/data"
-  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" targetNamespace="http://docs.oasis-open.org/odata/ns/metadata"
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:metadata="http://docs.oasis-open.org/odata/ns/metadata" xmlns:data="http://docs.oasis-open.org/odata/ns/data" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
+  targetNamespace="http://docs.oasis-open.org/odata/ns/metadata"
 >
   <xs:annotation>
     <xs:documentation xml:lang="en">
@@ -32,10 +32,7 @@
   <!-- markup for atom:entry and atom:feed -->
   <xs:element name="annotation">
     <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" minOccurs="0"
-          maxOccurs="unbounded" />
-      </xs:sequence>
+      <xs:group ref="metadata:GValue" minOccurs="0" maxOccurs="unbounded"/>
       <xs:attribute name="term" type="edm:TQualifiedName" use="required" />
       <xs:attribute name="target" type="xs:string" use="optional" />
       <xs:attribute ref="metadata:type" />
@@ -67,8 +64,7 @@
 
   <xs:simpleType name="TActionFunctionMetadata">
     <xs:restriction base="xs:string">
-      <xs:pattern
-        value="#[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){1,}" />
+      <xs:pattern value="#[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){1,}" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -167,53 +163,67 @@
 
   <!-- markup for app:workspace -->
   <xs:attribute name="name" type="edm:TOptionallyQualifiedName" />
-  
+
   <xs:element name="entity">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="atom:title" minOccurs="1" maxOccurs="1" />
         <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
-      <xs:attribute name="href" type="xs:anyURI"  use="required"/>
-      <xs:attribute ref="metadata:name" use="optional"/>
+      <xs:attribute name="href" type="xs:anyURI" use="required" />
+      <xs:attribute ref="metadata:name" use="optional" />
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="function-import">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="atom:title" minOccurs="1" maxOccurs="1" />
         <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
-      <xs:attribute name="href" type="xs:anyURI" use="required"/>
-      <xs:attribute ref="metadata:name" use="optional"/>
+      <xs:attribute name="href" type="xs:anyURI" use="required" />
+      <xs:attribute ref="metadata:name" use="optional" />
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="service-document">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="atom:title" minOccurs="1" maxOccurs="1" />
         <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
-      <xs:attribute name="href" type="xs:anyURI" use="required"/>
+      <xs:attribute name="href" type="xs:anyURI" use="required" />
     </xs:complexType>
   </xs:element>
 
   <!-- payload format for property value, action and function responses -->
   <xs:element name="value">
     <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" minOccurs="0"
-          maxOccurs="unbounded" />
-        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
-      </xs:sequence>
-      <xs:attribute ref="metadata:metadata" use="required" />
-      <xs:attribute ref="metadata:metadata-etag" />
+      <xs:group ref="metadata:GValue" minOccurs="0" maxOccurs="unbounded"/>
       <xs:attribute ref="metadata:type" />
       <xs:attribute ref="metadata:null" />
+      <xs:attribute ref="metadata:metadata" use="required" />
+      <xs:attribute ref="metadata:metadata-etag" />
     </xs:complexType>
   </xs:element>
+
+  <xs:group name="GValue">
+    <xs:choice>
+      <xs:element ref="atom:link" />
+      <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" />
+      <xs:element ref="metadata:annotation" />
+      <xs:element name="element" type="metadata:TElement" minOccurs="0" maxOccurs="unbounded" />
+    </xs:choice>
+  </xs:group>
+
+  <xs:complexType name="TElement" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="atom:link" />
+      <xs:any namespace="http://docs.oasis-open.org/odata/ns/data" processContents="lax" />
+      <xs:element ref="metadata:annotation" />
+    </xs:choice>
+    <xs:attribute ref="metadata:type" use="optional" />
+  </xs:complexType>
 
   <!-- payload format for error responses -->
   <xs:element name="error">
