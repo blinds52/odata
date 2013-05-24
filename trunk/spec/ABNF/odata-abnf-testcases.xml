@@ -956,7 +956,7 @@
   </TestCase>
   <TestCase Name="5.1.1 Filter: no spaces" 
             Rule="filter"
-            FailAt="8">
+            FailAt="9">
     <Input>$filter= true</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" 
@@ -1428,13 +1428,21 @@
             Rule="commonExpr">
     <Input>EmailAddresses/all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.6 $it"
+  <TestCase Name="5.1.1.6.1 primitive literal"
+            Rule="filter">
+    <Input>$filter=ReleaseDate gt date'2013-05-24'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.6.4 $it"
             Rule="filter">
     <Input>$filter=endswith($it,'.com')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.6 $it with entity reference"
+  <TestCase Name="5.1.1.6.4 $it with alias for entity reference"
             Rule="queryOptions">
     <Input>$filter=$it eq @ref&amp;@ref={"odata.ref":"http://host/service/ZqV5t"}</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.6.4 $it with entity reference"
+            Rule="queryOptions">
+    <Input>$filter=$it eq {"odata.ref":"http://host/service/ZqV5t"}</Input>
   </TestCase>
   <TestCase Name="5.1.1.8 aliases" 
             Rule="queryOptions">
@@ -2046,6 +2054,10 @@
   <TestCase Name="Metadata URL - Entity set with $select" 
             Rule="odataUri">
     <Input>http://host/service/$metadata#Customers/Model.VipCustomer(.,Orders(ID))</Input>
+  </TestCase> 
+  <TestCase Name="Metadata URL - Entity with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(.,Orders(ID))/@Element</Input>
   </TestCase> 
   <TestCase Name="Metadata URL - Entity set with cast, $select and nested $expand" 
             Rule="odataUri">
