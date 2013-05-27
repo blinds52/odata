@@ -163,6 +163,7 @@
     <Match>BirthDate</Match>
     <Match>City</Match>
     <Match>CompanyName</Match>
+    <Match>ContactName</Match>
     <Match>Completed</Match>
     <Match>Cost</Match>
     <Match>CountryCode</Match>
@@ -698,6 +699,18 @@
   <TestCase Name="4.3.1 Canonical URL" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/Products(1)</Input>
+  </TestCase>
+  <TestCase Name="4.3.4 $entity with OData URL" 
+            Rule="odataRelativeUri">
+    <Input>$entity?$id=http://host/path</Input>
+  </TestCase>
+  <TestCase Name="4.3.4 $entity with URN" 
+            Rule="odataRelativeUri">
+    <Input>$entity?$id=urn:some:id</Input>
+  </TestCase>
+  <TestCase Name="4.3.4 $entity with OData URL, $select and $expand" 
+            Rule="odataRelativeUri">
+    <Input>$entity?$id=http://myservice/Customers('ALFKI')&amp;$select=CompanyName,ContactName&amp;$expand=Orders</Input>
   </TestCase>
   <TestCase Name="4.4 Addressing Links between Entities" 
             Rule="odataRelativeUri">
@@ -1685,11 +1698,11 @@
   </TestCase>
   <TestCase Name="5.1.7 Search - on entity container" 
             Rule="odataUri">
-    <Input>http://serviceRoot/Model.Container?$search=blue</Input>
+    <Input>http://serviceRoot/Model.Container/$all?$search=blue</Input>
   </TestCase>
   <TestCase Name="5.1.7 Search - on service" 
             Rule="odataUri">
-    <Input>http://serviceRoot/?$search=blue</Input>
+    <Input>http://serviceRoot/$all?$search=blue</Input>
   </TestCase>
   <TestCase Name="5.1.8 Format" 
             Rule="queryOptions">
