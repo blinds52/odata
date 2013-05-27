@@ -104,7 +104,6 @@ serviceRoot = "/" *( segment-nz "/" )
 
 odataRelativeUri = '$batch'                           ; Note: case-sensitive!
                  / '$metadata' [ metadataFragment ]
-                 / [ namespace "." entityContainer "/" ] '$all' [ "?" queryOptions ] ; TODO: do we require $search here?
                  / '$entity' "?" entityOptions  
                  / resourcePath [ "?" queryOptions ]
 
@@ -122,7 +121,8 @@ resourcePath = [ containerQualifier ] entitySetName [ collectionNavigation ]
              / complexFunctionImportCall      [ complexPath ] 
              / primitiveColFunctionImportCall [ collectionPath ] 
              / primitiveFunctionImportCall    [ singlePath ] 
-             / namespace "." entityContainer
+             / namespace "." entityContainer  [ '/$all' ]
+             / '$all'
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
                        ( keyPredicate [ singleNavigation ]
@@ -221,9 +221,8 @@ queryOption  = systemQueryOption
              / parameterNameAndValue
              / customQueryOption  
              
-entityOptions = entityOption *( "&" entityOption )
-entityOption  = id
-              / expand 
+entityOptions = *( entityOption "&" ) id *( "&" entityOption )
+entityOption  = expand 
               / format
               / select
               / customQueryOption
