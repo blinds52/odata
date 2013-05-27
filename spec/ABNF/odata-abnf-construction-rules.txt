@@ -87,25 +87,26 @@
 ;   9. Punctuation
 ;
 ;   A. URI syntax [RFC3986]
-;   B. ABNF core definitions [RFC5234]
+;   B. IRI syntax [RFC3986]
+;   C. ABNF core definitions [RFC5234]
 ;
 ;------------------------------------------------------------------------------
 dummyStartRule = odataUri / preference ; just to please the test parser
 ;------------------------------------------------------------------------------
 
 
-odataUri = ( "https" / "http" )                 ; Note: case-insensitive 
+odataUri = ( "https" / "http" )                       ; Note: case-insensitive 
            "://" host [ ":" port ]
            serviceRoot
-           [ '$batch'                           ; Note: case-sensitive!
-           / '$metadata' [ metadataFragment ]
-           / '?' search 
-           / odataRelativeUri 
-           ]  
+           [ odataRelativeUri ]  
 
 serviceRoot = "/" *( segment-nz "/" )
 
-odataRelativeUri = resourcePath [ "?" queryOptions ]
+odataRelativeUri = '$batch'                           ; Note: case-sensitive!
+                 / '$metadata' [ metadataFragment ]
+                 / [ namespace "." entityContainer "/" ] '$all' [ "?" queryOptions ] ; TODO: do we require $search here?
+                 / '$entity' "?" entityOptions  
+                 / resourcePath [ "?" queryOptions ]
 
 
 ;------------------------------------------------------------------------------
@@ -121,7 +122,7 @@ resourcePath = [ containerQualifier ] entitySetName [ collectionNavigation ]
              / complexFunctionImportCall      [ complexPath ] 
              / primitiveColFunctionImportCall [ collectionPath ] 
              / primitiveFunctionImportCall    [ singlePath ] 
-             / namespace "." entityContainer  
+             / namespace "." entityContainer
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
                        ( keyPredicate [ singleNavigation ]
@@ -219,6 +220,15 @@ queryOption  = systemQueryOption
              / aliasAndValue 
              / parameterNameAndValue
              / customQueryOption  
+             
+entityOptions = entityOption *( "&" entityOption )
+entityOption  = id
+              / expand 
+              / format
+              / select
+              / customQueryOption
+
+id = '$id' EQ IRI-in-query       
 
 systemQueryOption = apply
                   / expand 
@@ -1135,10 +1145,22 @@ pct-encoded-unescaped = "%" ( "0" / "1" /   "3" / "4" /   "6" / "8" / "9" / A-to
 
 qchar-no-AMP-DQUOTE   = qchar-unescaped 
                       / escape ( escape / quotation-mark )
-                     
+                 
+                 
+;------------------------------------------------------------------------------
+; B. IRI syntax [RFC3987]
+;------------------------------------------------------------------------------
+; Note: the IRI-in-query syntax rule stated here is an over-genenrous stub.
+; Valid values are all strings that satisfy the rules in RFC3987 AND where the 
+; characters "&" and "#" have been percent-encoded to make them valid URL query
+; parameter values. 
+;------------------------------------------------------------------------------
+
+IRI-in-query = 1*qchar-no-AMP
+
                       
 ;------------------------------------------------------------------------------
-; B. ABNF core definitions [RFC5234]
+; C. ABNF core definitions [RFC5234]
 ;------------------------------------------------------------------------------
 
 ALPHA  = %x41-5A / %x61-7A 
