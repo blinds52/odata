@@ -288,21 +288,24 @@
         <Property Name="Fullname" Type="Edm.String" Nullable="false" />
         <Property Name="Qualifier" Type="Edm.String" Nullable="false" />
         <Property Name="Value" Type="Meta.AnnotationExpression" Nullable="false" />
+        <Property Name="Annotations" Type="Collection(Meta.SecondaryAnnotation)" />
         <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" Partner="Applications" />
         <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" Partner="Annotation" />
-        <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
       <ComplexType Name="AnnotationExpression" Abstract="true" />
-      <ComplexType Name="AnnotatableExpression" BaseType="Meta.AnnotationExpression" Abstract="true">
-        <!-- TODO:
-          <Property Name="Annotations" Type="Collection(Meta.AnnotationExpressionAnnotation)" />
-        -->
-      </ComplexType>
       <ComplexType Name="ConstantExpression" BaseType="Meta.AnnotationExpression">
         <Property Name="Value" Type="Edm.PrimitiveType" Nullable="false" />
       </ComplexType>
       <TypeDefinition Name="QualifiedName" UnderlyingType="Edm.String" />
       <TypeDefinition Name="SimpleIdentifier" UnderlyingType="Edm.String" />
+      <ComplexType Name="AnnotatableExpression" BaseType="Meta.AnnotationExpression" Abstract="true">
+        <Property Name="Annotations" Type="Collection(Meta.SecondaryAnnotation)" />
+      </ComplexType>
+      <ComplexType Name="SecondaryAnnotation" BaseType="Meta.AnnotatableExpression">
+        <Property Name="Qualifier" Type="Edm.String" Nullable="false" />
+        <Property Name="Value" Type="Meta.AnnotationExpression" Nullable="false" />
+        <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" Partner="Applications" />
+      </ComplexType>
       <ComplexType Name="Apply" BaseType="Meta.AnnotatableExpression">
         <Property Name="Function" Type="Meta.QualifiedName" Nullable="false" />
         <Property Name="Values" Type="Collection(Meta.AnnotationExpression)" />
