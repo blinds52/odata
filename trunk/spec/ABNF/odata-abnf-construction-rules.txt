@@ -125,11 +125,10 @@ resourcePath = [ containerQualifier ] entitySetName [ collectionNavigation ]
              / '$all'
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
-                       ( keyPredicate [ singleNavigation ]
+                       [ keyPredicate [ singleNavigation ]
                        / collectionPath
                        / ref
-                       / ""     ; for restricting to a derived entity type
-                       )
+                       ]
 
 keyPredicate     = simpleKey / compoundKey
 simpleKey        = OPEN keyPropertyValue CLOSE
@@ -139,12 +138,11 @@ keyPropertyValue = primitiveLiteral
 keyPropertyAlias = odataIdentifier
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
-                   ( "/" propertyPath
+                   [ "/" propertyPath
                    / boundOperation
                    / ref 
                    / value  ; request the media resource of a media entity 
-                   / ""     ; type cast after key access
-                   )
+                   ]
 
 propertyPath = entityColNavigationProperty [ collectionNavigation ]
              / entityNavigationProperty    [ singleNavigation ]
