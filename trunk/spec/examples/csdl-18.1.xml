@@ -65,7 +65,6 @@
       <EntityContainer Name="DemoService" IsDefaultEntityContainer="true">
         <EntitySet Name="Products" EntityType="ODataDemo.Product">
           <NavigationPropertyBinding Path="Category" EntitySet="Categories" />
-          <NavigationPropertyBinding Path="Supplier" EntitySet="Suppliers" />
         </EntitySet>
         <EntitySet Name="Categories" EntityType="ODataDemo.Category">
           <NavigationPropertyBinding Path="Products" EntitySet="Products" />
@@ -82,7 +81,9 @@
             </Record>
           </Annotation>
         </EntitySet>
-        <Entity Name="Contoso" Type="Self.Supplier" />
+        <Entity Name="Contoso" Type="Self.Supplier">
+          <NavigationPropertyBinding Path="Products" EntitySet="Products" />
+        </Entity>
         <EntitySet Name="Countries" EntityType="ODataDemo.Country" />
         <FunctionImport Name="ProductsByRating" EntitySet="Products" Function="ODataDemo.ProductsByRating" />
       </EntityContainer>
