@@ -14,10 +14,10 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="true" />
-        <Property Name="Description" Type="Edm.String" Nullable="true" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
         <Property Name="ReleaseDate" Type="Edm.Date" Nullable="false" />
-        <Property Name="DiscontinuedDate" Type="Edm.Date" Nullable="true" />
+        <Property Name="DiscontinuedDate" Type="Edm.Date" />
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
         <Property Name="Price" Type="Edm.Decimal" Nullable="false">
           <Annotation Term="Org.OData.Measures.V1.ISOCurrency" Path="Currency" />
@@ -33,7 +33,7 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="true" />
+        <Property Name="Name" Type="Edm.String" />
         <NavigationProperty Name="Products" Partner="Category" Type="Collection(ODataDemo.Product)" />
       </EntityType>
       <EntityType Name="Supplier">
@@ -41,26 +41,27 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="true" />
+        <Property Name="Name" Type="Edm.String" />
         <Property Name="Address" Type="ODataDemo.Address" Nullable="false" />
         <Property Name="Concurrency" Type="Edm.Int32" Nullable="false" />
         <NavigationProperty Name="Products" Partner="Supplier" Type="Collection(ODataDemo.Product)" />
-        <NavigationProperty Name="Country" Type="ODataDemo.Country">
-          <ReferentialConstraint Property="Address/Country" ReferencedProperty="Name" />
-        </NavigationProperty>
       </EntityType>
       <EntityType Name="Country">
         <Key>
-          <PropertyRef Name="Name" />
+          <PropertyRef Name="Code" />
         </Key>
+        <Property Name="Code" Type="Edm.String" Nullable="false" />
         <Property Name="Name" Type="Edm.String" />
       </EntityType>
       <ComplexType Name="Address">
-        <Property Name="Street" Type="Edm.String" Nullable="true" />
-        <Property Name="City" Type="Edm.String" Nullable="true" />
-        <Property Name="State" Type="Edm.String" Nullable="true" />
-        <Property Name="ZipCode" Type="Edm.String" Nullable="true" />
-        <Property Name="Country" Type="Edm.String" Nullable="true" />
+        <Property Name="Street" Type="Edm.String" />
+        <Property Name="City" Type="Edm.String" />
+        <Property Name="State" Type="Edm.String" />
+        <Property Name="ZipCode" Type="Edm.String" />
+        <Property Name="CountryName" Type="Edm.String" />
+        <NavigationProperty Name="Country" Type="ODataDemo.Country">
+          <ReferentialConstraint Property="CountryName" ReferencedProperty="Name" />
+        </NavigationProperty>
       </ComplexType>
       <Function Name="ProductsByRating" ReturnType="Collection(ODataDemo.Product)">
         <Parameter Name="Rating" Type="Edm.Int32" DefaultValue="4" />
@@ -74,6 +75,7 @@
         </EntitySet>
         <EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier">
           <NavigationPropertyBinding Path="Products" EntitySet="Products" />
+          <NavigationPropertyBinding Path="Address/Country" EntitySet="Countries" />
           <Annotation Term="Core.OptimisticConcurrencyControl">
             <Record>
               <PropertyValue Property="ETagDependsOn">
