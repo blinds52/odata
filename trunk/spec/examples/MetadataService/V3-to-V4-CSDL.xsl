@@ -166,9 +166,10 @@
           <xsl:with-param name="marker" select="'.'" />
         </xsl:call-template>
       </xsl:variable>
-      <xsl:variable name="role" select="@ToRole" />
-      <xsl:variable name="type" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Type" />
-      <xsl:variable name="mult" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/@Multiplicity" />
+      <xsl:variable name="fromrole" select="@FromRole" />
+      <xsl:variable name="torole" select="@ToRole" />
+      <xsl:variable name="type" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$torole]/@Type" />
+      <xsl:variable name="mult" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$torole]/@Multiplicity" />
       <xsl:attribute name="Type">
         <xsl:choose>
           <xsl:when test="contains($type,'.V4_Edm_EntityType') and $mult='*'">Collection(Edm.EntityType)</xsl:when>
@@ -180,7 +181,7 @@
       <xsl:if test="$mult='1'">
         <xsl:attribute name="Nullable">false</xsl:attribute>
       </xsl:if>
-      <xsl:variable name="partner" select="../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$role]/@Name" />
+      <xsl:variable name="partner" select="../../edm3:EntityType/edm3:NavigationProperty[@Relationship=$relation and @FromRole=$torole]/@Name" />
       <xsl:choose>
         <xsl:when test="$partner">
           <xsl:attribute name="Partner">
@@ -193,8 +194,8 @@
           </xsl:attribute>
         </xsl:when>
       </xsl:choose>
-      <xsl:apply-templates mode="NavProp" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$role]/edm3:OnDelete" />
-      <xsl:apply-templates mode="NavProp" select="../../edm3:Association[@Name=$assoc]/edm3:ReferentialConstraint/edm3:Principal[@Role=$role]" />
+      <xsl:apply-templates mode="NavProp" select="../../edm3:Association[@Name=$assoc]/edm3:End[@Role=$fromrole]/edm3:OnDelete" />
+      <xsl:apply-templates mode="NavProp" select="../../edm3:Association[@Name=$assoc]/edm3:ReferentialConstraint/edm3:Principal[@Role=$torole]" />
       <xsl:apply-templates />
     </NavigationProperty>
   </xsl:template>
