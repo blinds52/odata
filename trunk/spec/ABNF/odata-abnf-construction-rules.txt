@@ -227,17 +227,18 @@ entityOption  = expand
 
 id = '$id' EQ IRI-in-query       
 
-systemQueryOption = apply
-                  / expand 
+systemQueryOption = expand 
                   / filter 
                   / format 
-                  / orderby 
-                  / skip 
-                  / top 
+                  / id
                   / inlinecount 
+                  / orderby 
                   / search
                   / select 
+                  / skip 
                   / skiptoken
+                  / top 
+                  / apply
 
 ; TODO: move $apply to separate ABNF for data aggregation
 apply      = '$apply' EQ applyExpr
@@ -422,7 +423,7 @@ metadataFragment = "#"
                      *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
                         "/" navigationProperty
                       ) 
-                     [ propertyList ] [ '/@Delta'  ] [ element ]
+                     [ propertyList ] [ '/@delta'  ] [ element ]
                    )
 
 propertyList     = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
@@ -432,7 +433,7 @@ propertyListItem = "." ; all properties when $expand is not accompanied by $sele
                  / navigationProperty [ '+' ] [ propertyList ]
                  / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" propertyListItem ]
 
-element = '/@Element'                   
+element = '/@element'                   
 
 
 ;------------------------------------------------------------------------------
