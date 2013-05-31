@@ -30,7 +30,9 @@
         </Annotation>
         <Property Name="Namespace" Type="Edm.String" Nullable="false" />
         <Property Name="Alias" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="EntityTypes" Type="Collection(TestV3.EntityType)" />
+        <NavigationProperty Name="EntityTypes" Type="Collection(TestV3.EntityType)" Partner="Schema">
+          <OnDelete Action="Cascade" />
+        </NavigationProperty>
       </EntityType>
       <ComplexType Name="SomeComplex">
         <Property Name="SomeBinary" Type="Edm.Binary" />
@@ -44,20 +46,19 @@
         </Key>
         <Property Name="SchemaNamespace" Type="Edm.String" Nullable="false" />
         <Property Name="SchemaAlias" Type="Edm.String" Nullable="false" />
-        <Property Name="NullableComplex" Type="TestV3.SomeComplex" Nullable="true" />
+        <Property Name="NullableComplex" Type="TestV3.SomeComplex" />
         <Property Name="ComplexCollection" Type="Collection(TestV3.SomeComplex)" />
         <Property Name="Fullname" Type="Edm.String" Nullable="false" />
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="WillBecomeTimeOfDay" Type="Edm.TimeOfDay" Nullable="false" />
         <Property Name="WillBecomeDuration" Type="Edm.Duration" Nullable="false" />
-        <Property Name="WillBecomeAlsoDuration" Type="Edm.Duration" Nullable="true" />
+        <Property Name="WillBecomeAlsoDuration" Type="Edm.Duration" />
         <Property Name="WillBecomeDateTimeOffset" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="WillBecomeAlsoDateTimeOffset" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="WillBecomeAlsoDateTimeOffset" Type="Edm.DateTimeOffset" />
       </EntityType>
       <EntityType Name="EntityType" BaseType="TestV3.Type">
-        <Property Name="HasStream" Type="Edm.Boolean" Nullable="true" />
-        <NavigationProperty Name="Schema" Type="TestV3.Schema" Nullable="false">
-          <OnDelete Action="Cascade" />
+        <Property Name="HasStream" Type="Edm.Boolean" />
+        <NavigationProperty Name="Schema" Type="TestV3.Schema" Nullable="false" Partner="EntityTypes">
           <ReferentialConstraint Property="SchemaNamespace" ReferencedProperty="Namespace" />
           <ReferentialConstraint Property="SchemaAlias" ReferencedProperty="Alias" />
         </NavigationProperty>
