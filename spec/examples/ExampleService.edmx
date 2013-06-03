@@ -7,59 +7,59 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Model" Alias="ODataDemo">
       <EntityContainer Name="Container">
         <EntitySet Name="Customers" EntityType="Model.Customer">
-          <NavigationPropertyBinding EntitySet="Orders" Path="Orders" />
-          <NavigationPropertyBinding EntitySet="Sales" Path="Sales" />
-          <NavigationPropertyBinding EntitySet="Countries" Path="Address/Country" />
+          <NavigationPropertyBinding Target="Orders" Path="Orders" />
+          <NavigationPropertyBinding Target="Sales" Path="Sales" />
+          <NavigationPropertyBinding Target="Countries" Path="Address/Country" />
         </EntitySet>
         <EntitySet Name="Suppliers" EntityType="Model.Supplier">
-          <NavigationPropertyBinding EntitySet="Products" Path="Products" />
-          <NavigationPropertyBinding EntitySet="Employees" Path="Model.PreferredSupplier/AccountRepresentative" />
+          <NavigationPropertyBinding Target="Products" Path="Products" />
+          <NavigationPropertyBinding Target="Employees" Path="Model.PreferredSupplier/AccountRepresentative" />
         </EntitySet>
         <EntitySet Name="Products" EntityType="Model.Product">
-          <NavigationPropertyBinding EntitySet="Categories" Path="Category" />
-          <NavigationPropertyBinding EntitySet="Suppliers" Path="Supplier" />
-          <NavigationPropertyBinding EntitySet="OrderItems" Path="OrderItems" />
-          <NavigationPropertyBinding EntitySet="Sales" Path="Sales" />
+          <NavigationPropertyBinding Target="Categories" Path="Category" />
+          <NavigationPropertyBinding Target="Suppliers" Path="Supplier" />
+          <NavigationPropertyBinding Target="OrderItems" Path="OrderItems" />
+          <NavigationPropertyBinding Target="Sales" Path="Sales" />
         </EntitySet>
         <EntitySet Name="Orders" EntityType="Model.Order">
-          <NavigationPropertyBinding EntitySet="OrderItems" Path="Items" />
-          <NavigationPropertyBinding EntitySet="Customers" Path="Customer" />
+          <NavigationPropertyBinding Target="OrderItems" Path="Items" />
+          <NavigationPropertyBinding Target="Customers" Path="Customer" />
         </EntitySet>
         <EntitySet Name="Categories" EntityType="Model.Category">
-          <NavigationPropertyBinding EntitySet="Products" Path="Products" />
+          <NavigationPropertyBinding Target="Products" Path="Products" />
         </EntitySet>
         <EntitySet Name="OrderItems" EntityType="Model.OrderItem">
-          <NavigationPropertyBinding EntitySet="Orders" Path="Order" />
-          <NavigationPropertyBinding EntitySet="Products" Path="Product" />
-          <NavigationPropertyBinding EntitySet="Currencies" Path="Currency" />
+          <NavigationPropertyBinding Target="Orders" Path="Order" />
+          <NavigationPropertyBinding Target="Products" Path="Product" />
+          <NavigationPropertyBinding Target="Currencies" Path="Currency" />
         </EntitySet>
         <EntitySet Name="Sales" EntityType="Model.Sales">
-          <NavigationPropertyBinding EntitySet="Time" Path="Time" />
-          <NavigationPropertyBinding EntitySet="Currencies" Path="Currency" />
-          <NavigationPropertyBinding EntitySet="Customers" Path="Customer" />
-          <NavigationPropertyBinding EntitySet="SalesOrganizations" Path="SalesOrganization" />
-          <NavigationPropertyBinding EntitySet="Products" Path="Product" />
+          <NavigationPropertyBinding Target="Time" Path="Time" />
+          <NavigationPropertyBinding Target="Currencies" Path="Currency" />
+          <NavigationPropertyBinding Target="Customers" Path="Customer" />
+          <NavigationPropertyBinding Target="SalesOrganizations" Path="SalesOrganization" />
+          <NavigationPropertyBinding Target="Products" Path="Product" />
         </EntitySet>
         <EntitySet Name="Employees" EntityType="Model.Employee">
-          <NavigationPropertyBinding EntitySet="Employees" Path="Model.Manager/Employees" />
-          <NavigationPropertyBinding EntitySet="Employees" Path="Manager" />
-          <NavigationPropertyBinding EntitySet="LeaveRequests" Path="Model.Manager/Inbox" />
-          <NavigationPropertyBinding EntitySet="LeaveRequests" Path="LeaveRequests" />
+          <NavigationPropertyBinding Target="Employees" Path="Model.Manager/Employees" />
+          <NavigationPropertyBinding Target="Employees" Path="Manager" />
+          <NavigationPropertyBinding Target="LeaveRequests" Path="Model.Manager/Inbox" />
+          <NavigationPropertyBinding Target="LeaveRequests" Path="LeaveRequests" />
         </EntitySet>
         <EntitySet Name="LeaveRequests" EntityType="Model.LeaveRequest">
-          <NavigationPropertyBinding EntitySet="Employees" Path="Manager" />
-          <NavigationPropertyBinding EntitySet="Employees" Path="Employee" />
+          <NavigationPropertyBinding Target="Employees" Path="Manager" />
+          <NavigationPropertyBinding Target="Employees" Path="Employee" />
         </EntitySet>
         <EntitySet Name="Countries" EntityType="Model.Country"/>
         <EntitySet Name="Time" EntityType="Model.Time">
-          <NavigationPropertyBinding EntitySet="Sales" Path="Sales" />
+          <NavigationPropertyBinding Target="Sales" Path="Sales" />
         </EntitySet>
         <EntitySet Name="SalesOrganizations" EntityType="Model.SalesOrganization">
-          <NavigationPropertyBinding EntitySet="Sales" Path="Sales" />
-          <NavigationPropertyBinding EntitySet="SalesOrganizations" Path="Superordinate" />
+          <NavigationPropertyBinding Target="Sales" Path="Sales" />
+          <NavigationPropertyBinding Target="SalesOrganizations" Path="Superordinate" />
         </EntitySet>
         <EntitySet Name="Currencies" EntityType="Model.Currency">
-          <NavigationPropertyBinding EntitySet="Sales" Path="Sales" />
+          <NavigationPropertyBinding Target="Sales" Path="Sales" />
         </EntitySet>
         <EntitySet Name="Cities" EntityType="Model.City" />
       </EntityContainer>
@@ -108,8 +108,8 @@
         <Property Name="Sizes" Type="Collection(Edm.String)" />
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
         <NavigationProperty Name="OrderItems" Type="Collection(Model.OrderItem)" Partner="Product" />
-        <Property Name="ReleaseDate" Type="Edm.String" Nullable="false" />
-        <Property Name="DiscontinuedDate" Type="Edm.String" Nullable="false" />
+        <Property Name="ReleaseDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="DiscontinuedDate" Type="Edm.Date"     />
         <Property Name="LifeTime" Type="Edm.String" Nullable="false" />
         <Property Name="Color" Type="Edm.String" Nullable="false" />
         <Property Name="TaxRate" Type="Edm.Decimal" Nullable="false" />
