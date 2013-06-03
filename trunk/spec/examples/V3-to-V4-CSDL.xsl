@@ -270,7 +270,7 @@
         <xsl:variable name="typename" select="../../../*/edm3:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
         <xsl:variable name="type" select="concat($namespace,'.',$typename)" />
         <NavigationPropertyBinding>
-          <xsl:attribute name="EntitySet"><xsl:value-of select="$set" /></xsl:attribute>
+          <xsl:attribute name="Target"><xsl:value-of select="$set" /></xsl:attribute>
           <xsl:attribute name="Path">
           <xsl:if test="not($type=$entitytype)"><xsl:value-of select="concat($type,'/')" /></xsl:if>
           <xsl:value-of select="$navprop" />
