@@ -12,9 +12,8 @@
         <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
       <ComplexType Name="Include">
-        <Property Name="Namespace" Type="Edm.String" Nullable="false" />
         <Property Name="Alias" Type="Edm.String" />
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" />
       </ComplexType>
       <ComplexType Name="IncludeAnnotations">
         <Property Name="TargetNamespace" Type="Edm.String" />
@@ -28,7 +27,7 @@
         <Property Name="Fullname" Type="Edm.String" Nullable="false" />
         <Property Name="Namespace" Type="Edm.String" Nullable="false" />
         <Property Name="Alias" Type="Edm.String" />
-        <NavigationProperty Name="Document" Type="Edm.Metadata.Reference" />
+        <NavigationProperty Name="Reference" Type="Edm.Metadata.Reference" />
         <NavigationProperty Name="Types" Type="Collection(Edm.Metadata.Type)" Partner="Schema" />
         <NavigationProperty Name="Actions" Type="Collection(Edm.Metadata.Action)" Partner="Schema" />
         <NavigationProperty Name="Functions" Type="Collection(Edm.Metadata.Function)" Partner="Schema" />
@@ -294,13 +293,16 @@
       <ComplexType Name="Constant" BaseType="Meta.AnnotationExpression">
         <Property Name="Value" Type="Edm.PrimitiveType" Nullable="false" />
       </ComplexType>
+      <ComplexType Name="LabeledElementReference" BaseType="Meta.AnnotationExpression">
+        <Property Name="Element" Type="Meta.SimpleIdentifier" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="NavigationPropertyPath" BaseType="Meta.AnnotationExpression">
+        <Property Name="Value" Type="Edm.String" Nullable="false" />
+      </ComplexType>
       <ComplexType Name="Path" BaseType="Meta.AnnotationExpression">
         <Property Name="Value" Type="Edm.String" Nullable="false" />
       </ComplexType>
       <ComplexType Name="PropertyPath" BaseType="Meta.AnnotationExpression">
-        <Property Name="Value" Type="Edm.String" Nullable="false" />
-      </ComplexType>
-      <ComplexType Name="NavigationPropertyPath" BaseType="Meta.AnnotationExpression">
         <Property Name="Value" Type="Edm.String" Nullable="false" />
       </ComplexType>
       <ComplexType Name="AnnotatableExpression" BaseType="Meta.AnnotationExpression" Abstract="true">
@@ -341,9 +343,6 @@
       </ComplexType>
       <ComplexType Name="LabeledElement" BaseType="Meta.UnaryExpression">
         <Property Name="Name" Type="Meta.SimpleIdentifier" Nullable="false" />
-      </ComplexType>
-      <ComplexType Name="LabeledElementReference" BaseType="Meta.AnnotationExpression">
-        <Property Name="Element" Type="Meta.SimpleIdentifier" Nullable="false" />
       </ComplexType>
       <ComplexType Name="Null" BaseType="Meta.AnnotatableExpression" />
       <ComplexType Name="BinaryExpression" BaseType="Meta.AnnotatableExpression" Abstract="true">
