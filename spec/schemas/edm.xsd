@@ -39,8 +39,8 @@
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
-    <xs:attribute name="HasStream" type="xs:boolean" use="optional" default="false" />
     <xs:attribute name="OpenType" type="xs:boolean" use="optional" default="false" />
+    <xs:attribute name="HasStream" type="xs:boolean" use="optional" default="false" />
   </xs:complexType>
   <xs:complexType name="TEntityKeyElement">
     <xs:sequence>
@@ -60,6 +60,7 @@
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="edm:TDerivableTypeAttributes" />
+    <xs:attribute name="OpenType" type="xs:boolean" use="optional" default="false" />
   </xs:complexType>
   <xs:complexType name="TProperty">
     <xs:sequence>
@@ -445,7 +446,7 @@
         <xs:element name="EntitySet" type="edm:TEntitySet"/>
         <xs:element name="ActionImport" type="edm:TActionImport" />
         <xs:element name="FunctionImport" type="edm:TFunctionImport" />
-        <xs:element name="Entity" type="edm:TEntity" />
+        <xs:element name="SingletonEntity" type="edm:TSingletonEntity" />
         <xs:element name="Annotation" type="edm:TAnnotation" />
       </xs:choice>
     </xs:sequence>
@@ -471,7 +472,7 @@
     <xs:attribute name="EntityType" type="edm:TQualifiedName" use="required" />
     <xs:attribute name="IncludeInServiceDocument" type="xs:boolean" use="optional" default="true" />
   </xs:attributeGroup>
-  <xs:complexType name="TEntity">
+  <xs:complexType name="TSingletonEntity">
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="NavigationPropertyBinding" type="edm:TNavigationPropertyBinding" />
@@ -479,7 +480,7 @@
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="Type" type="edm:TQualifiedName" use="required" />
+    <xs:attribute name="EntityType" type="edm:TQualifiedName" use="required" />
   </xs:complexType>
   <xs:complexType name="TActionImport">
     <xs:sequence>
@@ -632,7 +633,7 @@
           <xs:enumeration value="Annotations" />
           <xs:enumeration value="Documentation" />
           <xs:enumeration value="ComplexType" />
-          <xs:enumeration value="Entity" />
+          <xs:enumeration value="SingletonEntity" />
           <xs:enumeration value="EntityContainer" />
           <xs:enumeration value="EntitySet" />
           <xs:enumeration value="EntityType" />
