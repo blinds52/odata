@@ -1,0 +1,182 @@
+;------------------------------------------------------------------------------
+; odata-aggregation-abnf
+;------------------------------------------------------------------------------
+;
+; Technical Committee:
+;   OASIS Open Data Protocol (OData) TC
+;
+; Chairs:
+;   - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+;   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+;
+; Editors:
+;   - Ralf Handl (ralf.handl@sap.com), SAP AG
+;   - Hubert Heijkers (hubert.heijkers@nl.ibm.com), IBM
+;   - Gerald Krause (gerald.krause@sap.com), SAP AG
+;   - Michael Pizzo (mikep@microsoft.com), Microsoft
+;   - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
+;
+; Additional artifacts: 
+;   This prose specification is one component of a Work Product that consists
+;   of:
+;   - OData Extension for Data Aggregation Version 4.0 (this document)
+;   - OData Aggregation Vocabulary
+;
+; Related work:
+;   This specification is related to:
+;   - OData Version 4.0 Part 1: Protocol
+;   - OData Version 4.0 Part 2: URL Conventions
+;   - OData Version 4.0 Part 3: CSDL
+;   - OData ABNF Construction Rules Version 4.0
+;   - OData Core Vocabulary
+;   - OData Measures Vocabulary
+;   - OData JSON Format Version 4.0
+;   This specification replaces or supersedes:
+;   - None
+;
+; Declared XML namespaces:
+;   - None
+;
+; Abstract:
+;   This specification adds basic grouping and aggregation functionality (e.g.
+;   sum, min, and max) to the Open Data Protocol (OData) without changing any
+;   of the base principles of OData.
+;
+; Status:
+;   This Working Draft (WD) has been produced by one or more TC Members; it has
+;   not yet been voted on by the TC or approved as a Committee Draft (Committee
+;   Specification Draft or a Committee Note Draft). The OASIS document Approval
+;   Process begins officially with a TC vote to approve a WD as a Committee
+;   Draft. A TC may approve a Working Draft, revise it, and re-approve it any
+;   number of times as a Committee Draft.
+;
+;
+; Overview:
+;   This grammar uses the ABNF defined in RFC5234 with one extension: literals 
+;   enclosed in single quotes (e.g. '$metadata') are treated case-sensitive. 
+;
+;   The following rules assume that URIs have been percent-encoding normalized
+;   as described in section 6.2.2.2 of RFC3986 
+;   (http://tools.ietf.org/html/rfc3986#section-6.2.2.2)
+;   before applying the grammar to them, i.e. all characters in the unreserved 
+;   set (see rule "unreserved" below) are plain literals and NOT
+;   percent-encoded. 
+;
+;   For characters outside the unreserved set the rules explicitly state 
+;   whether the percent-encoded representation is treated identical to the
+;   plain literal representation.
+; 
+;   One prominent example is the single quote that delimits OData primitive  
+;   type literals: %27 and ' are treated identically, so a single quote within 
+;   a string literal is "encoded" as two consecutive single quotes in either
+;   literal or percent-encoded representation.
+;
+; Contents:
+;   1. Query Option $apply
+;
+;------------------------------------------------------------------------------
+dummyStartRule = odataUri / preference ; just to please the test parser
+;------------------------------------------------------------------------------
+
+; TODO: make this possible in Java APG
+; systemQueryOption =/ apply
+
+apply      = '$apply' EQ applyExpr
+applyExpr  = applyTrafo *( "/" applyTrafo )
+applyTrafo = aggregateTrafo
+           / bottomcountTrafo
+           / bottompercentTrafo
+           / bottomsumTrafo
+           / concatTrafo
+           / expandTrafo
+           / filterTrafo
+           / groupbyTrafo
+           / identityTrafo
+           / topcountTrafo
+           / toppercentTrafo
+           / topsumTrafo
+
+aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
+aggregateParam  = expandPath OPEN aggregateExpr CLOSE   
+                / aggregateExpr
+                / propertyWithPath
+aggregateExpr   = ( '$count'                     aggregateAs 
+                  / commonExpr [ aggregateWith ] aggregateAs *( aggregateFrom ) 
+                  ) 
+aggregateAs     = RWS 'as'   RWS odataIdentifier
+aggregateWith   = RWS 'with' RWS aggregateMethod        
+aggregateFrom   = RWS 'from' RWS propertyWithPath [ aggregateWith ]
+aggregateMethod = 'sum' 
+                / 'min' 
+                / 'max' 
+                / 'average' 
+                / 'countdistinct' 
+                / namespace "." odataIdentifier
+
+; TODO: do we allow aggregation of primitive values in collections of complex or primitive type?                 
+propertyWithPath = [ qualifiedEntityTypeName "/" ] 
+                   *( complexProperty    [ "/" qualifiedComplexTypeName ] "/"
+                    / navigationProperty [ "/" qualifiedEntityTypeName  ] "/" 
+                    ) 
+                   ( navigationProperty [ "/" qualifiedEntityTypeName ] 
+                   / structuralProperty 
+                   )
+
+structuralProperty = primitiveProperty  
+                   / primitiveColProperty 
+                   / complexProperty 
+                   / complexColProperty 
+                   / streamProperty
+
+bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+
+concatTrafo = 'concat' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
+expandTrafo = 'expand' OPEN BWS expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
+filterTrafo = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
+
+groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOSE
+groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
+groupbyElement = propertyWithPath / rollupSpec
+rollupSpec     = 'rollup' OPEN BWS 
+                  ( '$all' / propertyWithPath )
+                  1*( BWS COMMA BWS propertyWithPath ) 
+                  BWS CLOSE
+
+identityTrafo = 'identity'
+
+topcountTrafo   = 'topcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+toppercentTrafo = 'toppercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+topsumTrafo     = 'topsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+
+expand            = '$expand' EQ expandItem *( COMMA expandItem )
+expandItem        = expandPath
+                    [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
+                    / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
+                    /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
+                    ]
+expandPath        = [ qualifiedEntityTypeName "/" ] 
+                    *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
+                    navigationProperty 
+                    [ "/" qualifiedEntityTypeName ]
+expandCountOption = filter
+                  / search
+expandRefOption   = expandCountOption
+                  / orderby
+                  / skip 
+                  / top 
+                  / inlinecount
+expandOption      = expandRefOption
+                  / select 
+                  / expand
+                  / levels
+                  
+                  
+; TODO: do we need this?                  
+qualifiedHierarchyName = namespace '.' odataIdentifier
+
+
+;------------------------------------------------------------------------------
+; End of odata-aggregation-abnf
+;------------------------------------------------------------------------------

@@ -238,71 +238,6 @@ systemQueryOption = expand
                   / skip 
                   / skiptoken
                   / top 
-                  / apply
-
-; TODO: move $apply to separate ABNF for data aggregation
-apply      = '$apply' EQ applyExpr
-applyExpr  = applyTrafo *( "/" applyTrafo )
-applyTrafo = aggregateTrafo
-           / bottomcountTrafo
-           / bottompercentTrafo
-           / bottomsumTrafo
-           / concatTrafo
-           / expandTrafo
-           / filterTrafo
-           / groupbyTrafo
-           / identityTrafo
-           / topcountTrafo
-           / toppercentTrafo
-           / topsumTrafo
-
-aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
-aggregateParam  = expandPath OPEN aggregateExpr CLOSE   
-                / aggregateExpr
-                / propertyWithPath
-aggregateExpr   = ( '$count'                     aggregateAs 
-                  / commonExpr [ aggregateWith ] aggregateAs *( aggregateFrom ) 
-                  ) 
-aggregateAs     = RWS 'as'   RWS odataIdentifier
-aggregateWith   = RWS 'with' RWS aggregateMethod        
-aggregateFrom   = RWS 'from' RWS propertyWithPath [ aggregateWith ]
-aggregateMethod = 'sum' 
-                / 'min' 
-                / 'max' 
-                / 'average' 
-                / 'countdistinct' 
-                / namespace "." odataIdentifier
-
-; TODO: do we allow aggregation of primitive values in collections of complex or primitive type?                 
-propertyWithPath = [ qualifiedEntityTypeName "/" ] 
-                   *( complexProperty    [ "/" qualifiedComplexTypeName ] "/"
-                    / navigationProperty [ "/" qualifiedEntityTypeName  ] "/" 
-                    ) 
-                   ( navigationProperty [ "/" qualifiedEntityTypeName ] 
-                   / property 
-                   )
-
-bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-
-concatTrafo = 'concat' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
-expandTrafo = 'expand' OPEN BWS expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
-filterTrafo = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
-
-groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOSE
-groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
-groupbyElement = propertyWithPath / rollupSpec
-rollupSpec     = 'rollup' OPEN BWS 
-                  ( '$all' / propertyWithPath )
-                  1*( BWS COMMA BWS propertyWithPath ) 
-                  BWS CLOSE
-
-identityTrafo = 'identity'
-
-topcountTrafo   = 'topcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-toppercentTrafo = 'toppercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-topsumTrafo     = 'topsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 expand            = '$expand' EQ expandItem *( COMMA expandItem )
 expandItem        = expandPath
@@ -414,7 +349,7 @@ customValue       = *( qchar-no-AMP )
 
 metadataFragment = "#" 
                    ( 'Edm.Null'
-                   / '$ref' [ entity ]
+                   / '@ref' [ entity ]
                    / '@deletedEntity'
                    / '@link'
                    / '@deletedLink'
@@ -561,7 +496,6 @@ methodCallExpr = indexOfMethodCallExpr
                / minDateTimeMethodCallExpr
                / maxDateTimeMethodCallExpr
                / nowMethodCallExpr
-               / hierarchyMethodCallExpr 
 
 boolMethodCallExpr = endsWithMethodCallExpr 
                    / startsWithMethodCallExpr 
@@ -630,19 +564,6 @@ notExpr = 'not' RWS boolCommonExpr
 
 isofExpr = 'isof' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
 castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
-
-; TODO: move hierarchy functions to separate ABNF for data aggregation
-hierarchyMethodCallExpr = isrootExpr
-                        / isdescendantExpr
-                        / isancestorExpr
-                        / issiblingExpr
-                        / isleafExpr
-                        
-isrootExpr       = 'isroot'       OPEN BWS qualifiedHierarchyName BWS CLOSE
-isdescendantExpr = 'isdescendant' OPEN BWS qualifiedHierarchyName BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
-isancestorExpr   = 'isancestor'   OPEN BWS qualifiedHierarchyName BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
-issiblingExpr    = 'issibling'    OPEN BWS qualifiedHierarchyName BWS COMMA BWS commonExpr BWS CLOSE
-isleafExpr       = 'isleaf'       OPEN BWS qualifiedHierarchyName BWS CLOSE
 
 
 ;------------------------------------------------------------------------------
@@ -845,12 +766,6 @@ concreteSpatialTypeName = 'Collection'
                         / 'Point'
                         / 'Polygon'
 
-property = primitiveProperty  
-         / primitiveColProperty 
-         / complexProperty 
-         / complexColProperty 
-         / streamProperty
-
 primitiveProperty       = primitiveKeyProperty / primitiveNonKeyProperty
 primitiveKeyProperty    = odataIdentifier
 primitiveNonKeyProperty = odataIdentifier
@@ -888,8 +803,6 @@ complexFunctionImport      = odataIdentifier
 complexColFunctionImport   = odataIdentifier
 primitiveFunctionImport    = odataIdentifier
 primitiveColFunctionImport = odataIdentifier
-
-qualifiedHierarchyName = namespace '.' odataIdentifier
 
 
 ;------------------------------------------------------------------------------
