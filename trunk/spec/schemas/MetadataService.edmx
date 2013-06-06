@@ -68,6 +68,10 @@
         <NavigationProperty Name="BaseType" Type="Edm.Metadata.ComplexType" Partner="DerivedTypes" />
         <NavigationProperty Name="DerivedTypes" Type="Collection(Edm.Metadata.ComplexType)" Partner="BaseType" />
       </EntityType>
+      <EntityType Name="PrimitiveType" BaseType="Edm.Metadata.Type">
+        <NavigationProperty Name="TypeDefinitions" Type="Collection(Edm.Metadata.TypeDefinition)" Partner="UnderlyingType" />
+        <NavigationProperty Name="EnumTypes" Type="Collection(Edm.Metadata.EnumType)" Partner="UnderlyingType" />
+      </EntityType>
       <EntityType Name="EnumType" BaseType="Edm.Metadata.PrimitiveType">
         <Property Name="IsFlags" Type="Edm.Boolean" Nullable="false" />
         <NavigationProperty Name="UnderlyingType" Type="Edm.Metadata.PrimitiveType" Nullable="false" Partner="EnumTypes" />
@@ -98,10 +102,6 @@
         <Member Name="Scale" />
         <Member Name="SRID" />
       </EnumType>
-      <EntityType Name="PrimitiveType" BaseType="Edm.Metadata.Type">
-        <NavigationProperty Name="TypeDefinitions" Type="Collection(Edm.Metadata.TypeDefinition)" Partner="UnderlyingType" />
-        <NavigationProperty Name="EnumTypes" Type="Collection(Edm.Metadata.EnumType)" Partner="UnderlyingType" />
-      </EntityType>
       <EntityType Name="Property">
         <Key>
           <PropertyRef Name="Fullname" />
