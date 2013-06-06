@@ -349,16 +349,16 @@ customValue       = *( qchar-no-AMP )
 
 metadataFragment = "#" 
                    ( 'Edm.Null'
-                   / '@ref' [ entity ]
-                   / '@deletedEntity'
-                   / '@link'
-                   / '@deletedLink'
+                   / '$ref' [ entity ]
+                   / '$deletedEntity'
+                   / '$link'
+                   / '$deletedLink'
                    / qualifiedTypeName
                    / entitySetName [ "/" qualifiedEntityTypeName ] 
                      *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
                         "/" navigationProperty
                       ) 
-                     [ propertyList ] [ '/@delta'  ] [ entity ]
+                     [ propertyList ] [ '/$delta'  ] [ entity ]
                    )
 
 propertyList     = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
@@ -368,7 +368,7 @@ propertyListItem = "." ; all properties when $expand is not accompanied by $sele
                  / navigationProperty [ '+' ] [ propertyList ]
                  / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" propertyListItem ]
 
-entity = '/@entity'                   
+entity = '/$entity'                   
 
 
 ;------------------------------------------------------------------------------
