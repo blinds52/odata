@@ -6,6 +6,7 @@
   <DisableTrace Rule="ALPHA"/>
   <DisableTrace Rule="DIGIT"/>
   
+  <!-- TODO: remove constraints that were only needed for data aggregation -->
   <Constraint Rule="action">
     <Match>ActionName</Match>
     <Match>Rejection</Match>
@@ -544,8 +545,6 @@
             Rule="odataRelativeUri">
     <Input>Customers%28%27O%27%27Neil%27%29</Input>
   </TestCase>
-<!-- 
--->
   <TestCase Name="2 URL Components - encoded forward slash" 
             Rule="odataUri">
     <Input>http://host/service/Categories('Smartphone%2FTablet')</Input>
@@ -2140,11 +2139,11 @@
   </TestCase>  
   <TestCase Name="Metadata URL - Reference collection" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#$ref</Input>
+    <Input>http://host/service/$metadata#@ref</Input>
   </TestCase>  
   <TestCase Name="Metadata URL - Reference" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#$ref/@entity</Input>
+    <Input>http://host/service/$metadata#@ref/@entity</Input>
   </TestCase>  
   <TestCase Name="Metadata URL - Delta" 
             Rule="odataUri">
@@ -2218,255 +2217,4 @@
             FailAt="18">
     <Input>odata.maxpagesize=-1</Input>
   </TestCase>  
-  <!-- Aggregation -->
-  <TestCase Name="Aggregation - basic" 
-            Rule="queryOptions">
-    <Input>$apply=aggregate(Amount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - alias" 
-            Rule="queryOptions">
-    <!-- TODO: parens around expression should be unnecessary -->
-    <Input>$apply=aggregate(Amount as TotalAmount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - expression" 
-            Rule="queryOptions">
-    <Input>$apply=aggregate(Amount mul Product/TaxRate as Tax)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - expression after path" 
-            Rule="queryOptions">
-    <Input>$apply=aggregate(Sales(Amount mul Product/TaxRate as Tax))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - aggregation function" 
-            Rule="queryOptions">
-    <Input>$apply=aggregate(Amount with max as MaxAmount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - aggregation function and alias" 
-            Rule="queryOptions">
-    <Input>$apply=aggregate(Product with countdistinct as DistinctProducts)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - aggregation function" 
-            Rule="queryOptions">
-    <Input>$apply=aggregate(Amount as DailyAverage from Time with average)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - $count" 
-            Rule="queryOptions">
-    <Input>$apply=aggregate($count as SalesCount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - $count does not allow with" 
-            Rule="queryOptions"
-            FailAt="24">
-    <Input>$apply=aggregate($count with sum as SalesCount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - topcount" 
-            Rule="queryOptions">
-    <Input>$apply=topcount(2,Amount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - topsum" 
-            Rule="queryOptions">
-    <Input>$apply=topsum(15,Amount)</Input>
-  </TestCase>
-    <TestCase Name="Aggregation - toppercent" 
-            Rule="queryOptions">
-    <Input>$apply=toppercent(50,Amount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - bottomcount" 
-            Rule="queryOptions">
-    <Input>$apply=bottomcount(2,Amount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - bottomsum" 
-            Rule="queryOptions">
-    <Input>$apply=bottomsum(15,Amount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - bottompercent" 
-            Rule="queryOptions">
-    <Input>$apply=bottompercent(50,Amount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - identity" 
-            Rule="queryOptions">
-    <Input>$apply=identity</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - concat" 
-            Rule="queryOptions">
-    <Input>$apply=concat(topcount(2,Amount),bottomcount(2,Amount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - groupby" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country,Product/Name),aggregate(Amount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - groupby distinct" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Product/Name,Amount),aggregate())</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - groupby rollup" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((rollup(Customer/Country,Customer/Name),rollup(Product/ProductGroup/Name,Product/Name),Currency/Code),aggregate(Amount))</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - filter" 
-            Rule="queryOptions">
-    <Input>$apply=filter(Amount gt 3)</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - expand" 
-            Rule="queryOptions">
-    <Input>$apply=expand(Sales,Amount gt 3)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - on entity container" 
-            Rule="odataRelativeUri">
-    <Input>Model.Container?$apply=groupby((Products/Name,Time/Date),aggregate(Sales/Amount))</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - hierarchy functions - isroot" 
-            Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isroot(SaM.SalesOrgHierarchy)</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - hierarchy functions - isdescendant" 
-            Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isdescendant(SaM.SalesOrgHierarchy,'EMEA')</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - hierarchy functions - isdescendant" 
-            Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isdescendant(SaM.SalesOrgHierarchy,'EMEA',1)</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - hierarchy functions - isancestor" 
-            Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isancestor(SaM.SalesOrgHierarchy,'EMEA')</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - hierarchy functions - isancestor" 
-            Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isancestor(SaM.SalesOrgHierarchy,'EMEA',1)</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - hierarchy functions - issibling" 
-            Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=issibling(SaM.SalesOrgHierarchy,'EMEA')</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - hierarchy functions - isleaf" 
-            Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isleaf(SaM.SalesOrgHierarchy)</Input>
-  </TestCase>                
-  <TestCase Name="Aggregation - Examples" 
-            Rule="odataRelativeUri">
-    <Input>Customers?$apply=groupby((Name),aggregate())</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Name),aggregate())</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Name,Customer/ID),aggregate())</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer),aggregate())</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Name,Customer/ID,Product/Name),aggregate())</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales/Amount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales(Amount as TotalAmount)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales(Revenue sub Cost as Profit)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Revenue sub Cost as Profit))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name,Sales/Currency/Code),aggregate(Sales/Amount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Country,Sales/Product/Name),aggregate())</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum as TotalAmount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount with min as MinAmount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount with max as MaxAmount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount with average as AverageAmount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales/$count as SalesCount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales($count as SalesCount)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales/$count as SalesCount,Sales(Amount as TotalAmount)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum as TotalAmount,Amount with average as AvgAmt))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Name),aggregate(Sales(Amount with sum as TotalAmount),Sales(Amount with average as AvgAmt)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Customer/Country,Product/Name),concat(aggregate(Amount),topcount(1,Amount)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Product/ID,Product/Name,Time/Month),aggregate(Amount with sum as SumAmount))/groupby((Product/ID,Product/Name),aggregate(SumAmount with average as AverageAmount))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Product/ID,Product/Name),aggregate(Amount with sum as MonthlyAverage from Time/Month with average))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((rollup($all,Customer/Country,Customer/ID),Currency/Code),aggregate(Amount as AverageAmount from Customer/ID with average from Customer/Country with average))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=filter(Amount le 1)/aggregate(Amount)</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=filter(Amount le 2)/groupby((Product/Name),aggregate(Amount))&amp;$filter=Amount ge 4</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Continent/Name,Country/Name),aggregate(Population))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=filter(Population ge 10000000)/groupby((Continent/Name,Country/Name),aggregate(Population))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Continent/Name,Country/Name),aggregate(Population))/filter(Population ge 10000000)/concat(identity,groupby((Continent/Name),aggregate(Population)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Continent/Name,Country/Name),aggregate(Population))/filter(Population ge 10000000)/groupby((rollup(Continent/Name,Country/Name)),aggregate(Population))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=groupby((Continent/Name,Country/Name),aggregate(Population))/concat(filter(Population ge 10000000),groupby((Continent/Name),aggregate(Population)))</Input>
-  </TestCase>
-  <TestCase Name="Aggregation - Examples" 
-            Rule="queryOptions">
-    <Input>$apply=filter(Status eq 'incomplete')/expand(Items,not Shipped)/groupby((Customer/Country),aggregate(Items/Amount))</Input>
-  </TestCase>
 </TestSuite>
