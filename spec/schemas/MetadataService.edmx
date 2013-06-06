@@ -133,7 +133,7 @@
         <NavigationProperty Name="NavigationPropertyBindings" Type="Collection(Edm.Metadata.NavigationPropertyBinding)" Partner="NavigationProperty" />
       </EntityType>
       <ComplexType Name="OnDelete">
-        <Property Name="Action" Type="Meta.OnDeleteAction" Nullable="false" />
+        <Property Name="Action" Type="Edm.Metadata.OnDeleteAction" Nullable="false" />
         <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" />
       </ComplexType>
       <EnumType Name="OnDeleteAction">
@@ -292,76 +292,76 @@
         <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" Partner="Annotation" />
       </EntityType>
       <ComplexType Name="AnnotationExpression" Abstract="true" />
-      <ComplexType Name="Constant" BaseType="Meta.AnnotationExpression">
+      <ComplexType Name="Constant" BaseType="Edm.Metadata.AnnotationExpression">
         <Property Name="Value" Type="Edm.PrimitiveType" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="LabeledElementReference" BaseType="Meta.AnnotationExpression">
-        <Property Name="Element" Type="Meta.SimpleIdentifier" Nullable="false" />
+      <ComplexType Name="LabeledElementReference" BaseType="Edm.Metadata.AnnotationExpression">
+        <Property Name="Element" Type="Edm.Metadata.SimpleIdentifier" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="NavigationPropertyPath" BaseType="Meta.AnnotationExpression">
+      <ComplexType Name="NavigationPropertyPath" BaseType="Edm.Metadata.AnnotationExpression">
         <Property Name="Value" Type="Edm.String" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="Path" BaseType="Meta.AnnotationExpression">
+      <ComplexType Name="Path" BaseType="Edm.Metadata.AnnotationExpression">
         <Property Name="Value" Type="Edm.String" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="PropertyPath" BaseType="Meta.AnnotationExpression">
+      <ComplexType Name="PropertyPath" BaseType="Edm.Metadata.AnnotationExpression">
         <Property Name="Value" Type="Edm.String" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="AnnotatableExpression" BaseType="Meta.AnnotationExpression" Abstract="true">
-        <Property Name="Annotations" Type="Collection(Meta.SecondaryAnnotation)" />
+      <ComplexType Name="AnnotatableExpression" BaseType="Edm.Metadata.AnnotationExpression" Abstract="true">
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
       </ComplexType>
-      <ComplexType Name="UnaryExpression" BaseType="Meta.AnnotatableExpression" Abstract="true">
-        <Property Name="Value" Type="Meta.AnnotationExpression" Nullable="false" />
+      <ComplexType Name="UnaryExpression" BaseType="Edm.Metadata.AnnotatableExpression" Abstract="true">
+        <Property Name="Value" Type="Edm.Metadata.AnnotationExpression" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="SecondaryAnnotation" BaseType="Meta.UnaryExpression">
-        <Property Name="Qualifier" Type="Meta.SimpleIdentifier" />
-        <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" Partner="Applications" />
+      <ComplexType Name="SecondaryAnnotation" BaseType="Edm.Metadata.UnaryExpression">
+        <Property Name="Qualifier" Type="Edm.Metadata.SimpleIdentifier" />
+        <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" />
       </ComplexType>
       <TypeDefinition Name="SimpleIdentifier" UnderlyingType="Edm.String" />
       <TypeDefinition Name="QualifiedName" UnderlyingType="Edm.String" />
-      <ComplexType Name="Apply" BaseType="Meta.AnnotatableExpression">
-        <Property Name="Function" Type="Meta.QualifiedName" Nullable="false" />
-        <Property Name="Values" Type="Collection(Meta.AnnotationExpression)" />
+      <ComplexType Name="Apply" BaseType="Edm.Metadata.AnnotatableExpression">
+        <Property Name="Function" Type="Edm.Metadata.QualifiedName" Nullable="false" />
+        <Property Name="Values" Type="Collection(Edm.Metadata.AnnotationExpression)" />
       </ComplexType>
-      <ComplexType Name="Collection" BaseType="Meta.AnnotatableExpression">
-        <Property Name="Items" Type="Collection(Meta.AnnotationExpression)" />
+      <ComplexType Name="Collection" BaseType="Edm.Metadata.AnnotatableExpression">
+        <Property Name="Items" Type="Collection(Edm.Metadata.AnnotationExpression)" />
       </ComplexType>
-      <ComplexType Name="Record" BaseType="Meta.AnnotatableExpression">
-        <Property Name="PropertyValues" Type="Collection(Meta.PropertyValue)" />
+      <ComplexType Name="Record" BaseType="Edm.Metadata.AnnotatableExpression">
+        <Property Name="PropertyValues" Type="Collection(Edm.Metadata.PropertyValue)" />
         <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="PropertyValue" BaseType="Meta.UnaryExpression">
-        <Property Name="Property" Type="Meta.SimpleIdentifier" Nullable="false" />
+      <ComplexType Name="PropertyValue" BaseType="Edm.Metadata.UnaryExpression">
+        <Property Name="Property" Type="Edm.Metadata.SimpleIdentifier" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="If" BaseType="Meta.AnnotatableExpression">
-        <Property Name="Test" Type="Meta.AnnotationExpression" Nullable="false" />
-        <Property Name="Then" Type="Meta.AnnotationExpression" Nullable="false" />
-        <Property Name="Else" Type="Meta.AnnotationExpression" Nullable="false" />
+      <ComplexType Name="If" BaseType="Edm.Metadata.AnnotatableExpression">
+        <Property Name="Test" Type="Edm.Metadata.AnnotationExpression" Nullable="false" />
+        <Property Name="Then" Type="Edm.Metadata.AnnotationExpression" Nullable="false" />
+        <Property Name="Else" Type="Edm.Metadata.AnnotationExpression" />
       </ComplexType>
-      <ComplexType Name="Cast" BaseType="Meta.UnaryExpression">
+      <ComplexType Name="Cast" BaseType="Edm.Metadata.UnaryExpression">
         <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="IsOf" BaseType="Meta.UnaryExpression">
+      <ComplexType Name="IsOf" BaseType="Edm.Metadata.UnaryExpression">
         <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="LabeledElement" BaseType="Meta.UnaryExpression">
-        <Property Name="Name" Type="Meta.SimpleIdentifier" Nullable="false" />
+      <ComplexType Name="LabeledElement" BaseType="Edm.Metadata.UnaryExpression">
+        <Property Name="Name" Type="Edm.Metadata.SimpleIdentifier" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="Null" BaseType="Meta.AnnotatableExpression" />
-      <ComplexType Name="BinaryExpression" BaseType="Meta.AnnotatableExpression" Abstract="true">
-        <Property Name="Left" Type="Meta.AnnotationExpression" Nullable="false" />
-        <Property Name="Right" Type="Meta.AnnotationExpression" Nullable="false" />
+      <ComplexType Name="Null" BaseType="Edm.Metadata.AnnotatableExpression" />
+      <ComplexType Name="BinaryExpression" BaseType="Edm.Metadata.AnnotatableExpression" Abstract="true">
+        <Property Name="Left" Type="Edm.Metadata.AnnotationExpression" Nullable="false" />
+        <Property Name="Right" Type="Edm.Metadata.AnnotationExpression" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="Eq" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="Ne" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="Ge" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="Gt" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="Le" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="Lt" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="And" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="Or" BaseType="Meta.BinaryExpression" />
-      <ComplexType Name="Not" BaseType="Meta.UnaryExpression" />
-      <ComplexType Name="Url" BaseType="Meta.UnaryExpression" />
+      <ComplexType Name="Eq" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="Ne" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="Ge" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="Gt" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="Le" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="Lt" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="And" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="Or" BaseType="Edm.Metadata.BinaryExpression" />
+      <ComplexType Name="Not" BaseType="Edm.Metadata.UnaryExpression" />
+      <ComplexType Name="Url" BaseType="Edm.Metadata.UnaryExpression" />
       <EntityContainer Name="MetadataContainer">
         <EntitySet Name="Schemata" EntityType="Edm.Metadata.Schema">
           <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainers" />
