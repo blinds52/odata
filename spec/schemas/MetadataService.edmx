@@ -58,7 +58,7 @@
       <ComplexType Name="KeyProperty">
         <Property Name="PropertyPath" Type="Edm.String" Nullable="false" />
         <Property Name="Alias" Type="Edm.String" />
-        <NavigationProperty Name="Property" Type="Edm.Metadata.PrimitiveProperty" Nullable="false" />
+        <NavigationProperty Name="Property" Type="Edm.Metadata.Property" Nullable="false" />
       </ComplexType>
       <EntityType Name="ComplexType" BaseType="Edm.Metadata.Type">
         <Property Name="Abstract" Type="Edm.Boolean" Nullable="false" />
@@ -130,6 +130,7 @@
         <NavigationProperty Name="Partner" Type="Edm.Metadata.NavigationProperty" />
         <NavigationProperty Name="DeclaringType" Type="Edm.Metadata.Type" Nullable="false" />
         <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+        <NavigationProperty Name="NavigationPropertyBindings" Type="Collection(Edm.Metadata.NavigationPropertyBinding)" Partner="NavigationProperty" />
       </EntityType>
       <ComplexType Name="OnDelete">
         <Property Name="Action" Type="Meta.OnDeleteAction" Nullable="false" />
@@ -230,6 +231,7 @@
         <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" />
         <NavigationProperty Name="Source" Type="Edm.EntityType" Nullable="false" />
         <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
+        <NavigationProperty Name="NavigationProperty" Type="Edm.Metadata.NavigationProperty" Nullable="false" Partner="NavigationPropertyBindings" />
       </EntityType>
       <EntityType Name="SingletonEntity">
         <Key>
@@ -366,15 +368,13 @@
           <NavigationPropertyBinding Target="Actions" Path="Actions" />
           <NavigationPropertyBinding Target="Functions" Path="Functions" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
-          <NavigationPropertyBinding Target="References" Path="Document" />
+          <NavigationPropertyBinding Target="References" Path="Reference" />
           <NavigationPropertyBinding Target="Types" Path="Types" />
         </EntitySet>
         <EntitySet Name="Properties" EntityType="Edm.Metadata.Property">
-          <NavigationPropertyBinding Target="Types" Path="Edm.Metadata.ComplexProperty/Type" />
-          <NavigationPropertyBinding Target="Types" Path="Edm.Metadata.PrimitiveProperty/Type" />
-          <NavigationPropertyBinding Target="Types" Path="Edm.Metadata.EnumProperty/Type" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
           <NavigationPropertyBinding Target="Types" Path="DeclaringType" />
+          <NavigationPropertyBinding Target="Types" Path="Type" />
         </EntitySet>
         <EntitySet Name="EntitySets" EntityType="Edm.Metadata.EntitySet">
           <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainer" />
@@ -395,6 +395,7 @@
           <NavigationPropertyBinding Target="Types" Path="Type" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
           <NavigationPropertyBinding Target="Types" Path="DeclaringType" />
+          <NavigationPropertyBinding Target="NavigationPropertyBindings" Path="NavigationPropertyBindings" />
         </EntitySet>
         <EntitySet Name="FunctionImports" EntityType="Edm.Metadata.FunctionImport">
           <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainer" />
@@ -404,6 +405,7 @@
         </EntitySet>
         <EntitySet Name="NavigationPropertyBindings" EntityType="Edm.Metadata.NavigationPropertyBinding">
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
+          <NavigationPropertyBinding Target="NavigationProperties" Path="NavigationProperty" />
         </EntitySet>
         <EntitySet Name="Types" EntityType="Edm.Metadata.Type">
           <NavigationPropertyBinding Target="Types" Path="Edm.Metadata.EntityType/DerivedTypes" />
