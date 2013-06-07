@@ -32,6 +32,13 @@
     To model navigation properties in complex types, enter #V4:Navigation: followed by the target type into the LongDescription
     of the Documentation. The value after the second colon is taken literally, so you can use Collection(...) for collection-valued
     navigation properties. Use fully qualified types in the literal to produce valid V4 CSDL.
+    
+    To model derived complex types, add a complex property named V4_BaseType that is typed with the base complex type.
+    
+    To model abstract complex types, add a property named V4_Abstract of any type.
+    
+    To model type definitions, add a complex type with the name of the type definition and a property named V4_TypeDefinition
+    that has the underlying type and the facets fixed by the type definition.
   -->
 
   <!-- TODO: Use Alias instead of Namespace as qualifier -->
@@ -104,9 +111,36 @@
     </PropertyRef>
   </xsl:template>
 
+  <xsl:template match="edm3:ComplexType[edm3:Property[@Name='V4_TypeDefinition']]">
+    <TypeDefinition>
+      <xsl:copy-of select="@Name" />
+      <xsl:attribute name="UnderlyingType">
+        <xsl:choose>
+          <xsl:when test="contains(@Type,'.')"><xsl:value-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@Type" /></xsl:when>
+          <xsl:when test="not(contains(@Type,'.'))">Edm.<xsl:value-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@Type" /></xsl:when>
+        </xsl:choose>
+      </xsl:attribute>
+      <xsl:copy-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@MaxLength" />
+      <xsl:copy-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@Precision" />
+      <xsl:copy-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@Scale" />
+      <xsl:copy-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@Unicode" />
+      <xsl:copy-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@SRID" />
+    </TypeDefinition>
+  </xsl:template>
+  
   <xsl:template match="edm3:ComplexType">
     <ComplexType>
       <xsl:copy-of select="@Name|@Abstract|@BaseType|@OpenType" />
+      <xsl:if test="edm3:Property[@Name = 'V4_BaseType']">
+        <xsl:attribute name="BaseType">
+          <xsl:value-of select="edm3:Property[@Name = 'V4_BaseType']/@Type" />
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="edm3:Property[@Name = 'V4_Abstract']">
+        <xsl:attribute name="Abstract">
+          <xsl:value-of select="'true'" />
+        </xsl:attribute>
+      </xsl:if>
       <xsl:apply-templates />
     </ComplexType>
   </xsl:template>
@@ -124,6 +158,8 @@
           </xsl:if>
         </NavigationProperty>
       </xsl:when>
+      <xsl:when test="@Name = 'V4_Abstract'" />
+      <xsl:when test="@Name = 'V4_BaseType'" />
       <xsl:otherwise>
         <Property>
           <xsl:copy-of select="@Name" />
