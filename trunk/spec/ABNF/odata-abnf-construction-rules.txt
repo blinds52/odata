@@ -202,7 +202,7 @@ primitiveFunctionImportCall    = [ containerQualifier ] primitiveFunctionImport 
 primitiveColFunctionImportCall = [ containerQualifier ] primitiveColFunctionImport [ functionParameters ]
 
 functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
-functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
+functionParameter  = parameterName EQ ( parameterAlias / entityKeyRef / primitiveLiteral )
 parameterName      = odataIdentifier
 parameterAlias     = AT odataIdentifier
 
@@ -216,7 +216,6 @@ containerQualifier = namespace "." entityContainer "."
 queryOptions = queryOption *( "&" queryOption )        
 queryOption  = systemQueryOption  
              / aliasAndValue 
-             / parameterNameAndValue
              / customQueryOption  
              
 entityOptions = *( entityOption "&" ) id *( "&" entityOption )
@@ -325,18 +324,17 @@ parameterNameAndType   = parameterName ":" qualifiedTypeName
 
 skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
 
-aliasAndValue         = parameterAlias EQ parameterValue
-parameterNameAndValue = parameterName  EQ parameterValue
+aliasAndValue = parameterAlias EQ parameterValue
 
 parameterValue = arrayOrObject
-               / entityReference
+               / entityKeyRef
                / commonExpr
                / primitiveLiteral
 
-entityReference = 'KEY' OPEN 
-                  [ entityContainer "." ] entitySetName keyPredicate
-                  [ "/" qualifiedEntityTypeName ]
-                  CLOSE                
+entityKeyRef = 'KEY' OPEN 
+               [ entityContainer "." ] entitySetName keyPredicate
+               [ "/" qualifiedEntityTypeName ]
+               CLOSE                
 
 customQueryOption = customName [ EQ customValue ]
 customName        = qchar-no-AMP-EQ-AT-DOLLAR *( qchar-no-AMP-EQ ) 
@@ -575,7 +573,7 @@ castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CL
 
 arrayOrObject = complexColInUri  
               / complexInUri
-              / entityRefColInUri
+              / entityKeyRefColInUri
               / primitiveColInUri
                
 complexColInUri = begin-array 
@@ -622,10 +620,10 @@ primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark
                          name-separator 
                          primitiveLiteralInJSON
 
-entityRefColInUri = begin-array
-                    [ entityRefInJSON *( value-separator entityRefInJSON ) ]
-                    end-array
-entityRefInJSON   = quotation-mark entityReference quotation-mark                                        
+entityKeyRefColInUri = begin-array
+                       [ entityKeyRefInJSON *( value-separator entityKeyRefInJSON ) ]
+                       end-array
+entityKeyRefInJSON   = quotation-mark entityKeyRef quotation-mark                                        
                                         
 ; JSON syntax: adapted to URI restrictions from [RFC4627]                 
 begin-object = BWS ( "{" / "%7B" ) BWS

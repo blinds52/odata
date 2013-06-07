@@ -602,19 +602,19 @@
   </TestCase>
   <TestCase Name="4.3 Addressing entities - function call with query parameter" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCategoryId()?categoryId=2</Input>
+    <Input>ProductsByCategoryId(categoryId=2)</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - function parameter" 
-            Rule="parameterNameAndValue">
+            Rule="functionParameter">
     <Input>color='red'</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - top-level function call" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor()?color='red'</Input>
+    <Input>ProductsByColor(color='red')</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - bound function call" 
             Rule="odataRelativeUri">
-    <Input>Categories(1)/Model.ProductsByColor()?color='red'</Input>
+    <Input>Categories(1)/Model.ProductsByColor(color='red')</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (short)" 
             Rule="resourcePath">
@@ -787,7 +787,7 @@
   </TestCase>
   <TestCase Name="4.5.2 Call function import - qualified" 
             Rule="odataRelativeUri">
-    <Input>Model.Container.TheBestProduct?Size=3</Input>
+    <Input>Model.Container.TheBestProduct(Size=3)</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call function import - only at service root" 
             Rule="odataRelativeUri"
@@ -1768,7 +1768,7 @@
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" 
             Rule="queryOptions">
-      <Input>$orderby=Name&amp;securitytoken=0412312321</Input>
+      <Input>$orderby=Name&amp;!deltatoken=0412312321</Input>
   </TestCase>
   <TestCase Name="complex parameter value - no properties" 
             Rule="complexInUri">
@@ -1776,47 +1776,51 @@
   </TestCase>
   <TestCase Name="function with complex parameter - no properties" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex()?complex={}</Input>
+    <Input>ProductsByComplex(complex=@c)?@c={}</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - one property" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex()?complex={"Name":"Value"}</Input>
+    <Input>ProductsByComplex(complex=@c)?@c={"Name":"Value"}</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - one property" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex()?complex={"odata.type":"Model.Customer","Name":"Value"}</Input>
+    <Input>ProductsByComplex(complex=@c)?@c={"odata.type":"Model.Customer","Name":"Value"}</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - three properties" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex()?complex={"Name":false,"Price":3.14e0,"Rating":null}</Input>
+    <Input>ProductsByComplex(complex=@c)?@c={"Name":false,"Price":3.14e0,"Rating":null}</Input>
   </TestCase>
   <TestCase Name="function with collection of primitive - zero" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor()?colors=[]</Input>
+    <Input>ProductsByColor(colors=@c)?@c=[]</Input>
   </TestCase>
   <TestCase Name="function with collection of primitive - one" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor()?colors=["red"]</Input>
+    <Input>ProductsByColor(colors=@c)?@c=["red"]</Input>
   </TestCase>
   <TestCase Name="function with collection of primitive - two" 
             Rule="odataRelativeUri">
-    <Input>ProductsByColor()?colors=["red","green"]</Input>
+    <Input>ProductsByColor(colors=@c)?@c=["red","green"]</Input>
   </TestCase>
   <TestCase Name="function with complex parameter - complex and collection properties" 
             Rule="odataRelativeUri">
-    <Input>ProductsByComplex()?complex={"Names":["Fred","George"],"Address":{"Street":"MyWay"}}</Input>
+    <Input>ProductsByComplex(complex=@c)?@c={"Names":["Fred","George"],"Address":{"Street":"MyWay"}}</Input>
   </TestCase>
   <TestCase Name="function with reference type parameter" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCustomerRef()?customer=KEY(Customers(1))</Input>
+    <Input>ProductsByCustomerRef(customer=@c)?@c=KEY(Customers(1))</Input>
+  </TestCase>
+  <TestCase Name="function with reference type parameter" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCustomerRef(customer=KEY(Customers(1)))</Input>
   </TestCase>
   <TestCase Name="function with reference type parameter - type cast" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCustomerRef()?customer=KEY(Customers(1)/Model.VipCustomer)</Input>
+    <Input>ProductsByCustomerRef(customer=KEY(Customers(1)/Model.VipCustomer))</Input>
   </TestCase>
   <TestCase Name="function with reference type parameter - array" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCustomerRef()?customer=["KEY(Customers(1))"]</Input>
+    <Input>ProductsByCustomerRef(customer=@c)?@c=["KEY(Customers(1))"]</Input>
   </TestCase>
   <!-- Enumeration types -->
   <TestCase Name="Enumeration value in URI" 
