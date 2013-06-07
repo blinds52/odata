@@ -40,6 +40,17 @@
         <NavigationProperty Name="BecomeAlsoNavigation" Type="TestV3.EntityType" Nullable="false" />
         <NavigationProperty Name="BecomeCollectionNavigation" Type="Collection(TestV3.EntityType)" />
       </ComplexType>
+      <ComplexType Name="AbstractBase" Abstract="true">
+        <Property Name="SomeString" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="AbstractDerived" BaseType="Self.AbstractBase" Abstract="true">
+        <Property Name="AnotherString" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="ConcreteDerived" BaseType="Self.AbstractDerived">
+        <Property Name="YetAnotherString" Type="Edm.String" />
+      </ComplexType>
+      <TypeDefinition Name="Char80" UnderlyingType="Edm.String" MaxLength="80" />
+      <TypeDefinition Name="Amount" UnderlyingType="Edm.Decimal" Precision="32" Scale="3" />
       <EntityType Name="Type" Abstract="true">
         <Key>
           <PropertyRef Name="Fullname" />
