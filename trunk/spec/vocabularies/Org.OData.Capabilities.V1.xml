@@ -68,10 +68,10 @@
         <Annotation Term="Core.Description" String="Restrictions on insert operations" />
       </Term>
       <ComplexType Name="InsertRestrictionsType">
-        <Property Name="Insertable" Type="Edm.Boolean">
+        <Property Name="Insertable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be inserted" />
         </Property>
-        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="true">
+        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
           <Annotation Term="Core.Description" String="These navigation properties do not allow deep inserts" />
         </Property>
       </ComplexType>
@@ -80,10 +80,10 @@
         <Annotation Term="Core.Description" String="Restrictions on update operations" />
       </Term>
       <ComplexType Name="UpdateRestrictionsType">
-        <Property Name="Updatable" Type="Edm.Boolean">
+        <Property Name="Updatable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be updated" />
         </Property>
-        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="true">
+        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
           <Annotation Term="Core.Description" String="These navigation properties do not allow rebinding" />
         </Property>
       </ComplexType>
@@ -92,10 +92,10 @@
         <Annotation Term="Core.Description" String="Restrictions on delete operations" />
       </Term>
       <ComplexType Name="DeleteRestrictionsType">
-        <Property Name="Deletable" Type="Edm.Boolean">
+        <Property Name="Deletable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be deleted" />
         </Property>
-        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="true">
+        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
           <Annotation Term="Core.Description" String="These navigation properties do not allow DeleteLink requests" />
         </Property>
       </ComplexType>
@@ -137,13 +137,16 @@
         <Annotation Term="Core.Description" String="Restrictions on $filter expressions" />
       </Term>
       <ComplexType Name="FilterRestrictionsType">
-        <Property Name="Filterable" Type="Edm.Boolean">
+        <Property Name="Filterable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="$filter is supported" />
         </Property>
-        <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
+        <Property Name="RequiresFilter" Type="Edm.Boolean" Nullable="true">
+          <Annotation Term="Core.Description" String="$filter is required" />
+        </Property>
+        <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
         </Property>
-        <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
+        <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="These properties cannot be used in $filter expressions" />
         </Property>
       </ComplexType>
@@ -152,16 +155,16 @@
         <Annotation Term="Core.Description" String="Restrictions on $orderby expressions" />
       </Term>
       <ComplexType Name="SortRestrictionsType">
-        <Property Name="Sortable" Type="Edm.Boolean">
+        <Property Name="Sortable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="$orderby is supported" />
         </Property>
-        <Property Name="AscendingOnlyProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
+        <Property Name="AscendingOnlyProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="These properties can only be used for sorting in Ascending order" />
         </Property>
-        <Property Name="DescendingOnlyProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
+        <Property Name="DescendingOnlyProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="These properties can only be used for sorting in Descending order" />
         </Property>
-        <Property Name="UnsortableProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
+        <Property Name="UnsortableProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="These properties cannot be used in $orderby expressions" />
         </Property>
       </ComplexType>
@@ -173,10 +176,10 @@
         <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preferenc" />
         </Property>
-        <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="true">
+        <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="Change tracking supports filters on these properties" />
         </Property>
-        <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="true">
+        <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)">
           <Annotation Term="Core.Description" String="Change tracking supports these properties expanded" />
         </Property>
       </ComplexType>
