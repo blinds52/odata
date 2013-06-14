@@ -100,18 +100,20 @@
         </Property>
       </ComplexType>
 
-      <!-- TODO: morph this into CountRestrictions and specify properties where /$count cannot be appended in $filter -->
-      <Term Name="Countable" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Supports /$count path suffix and $count=true system query option" />
+      <Term Name="CountRestrictions" Type="Capabilities.CountRestrictionsType" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Restrictions on /$count path suffix and $count=true system query option" />
       </Term>
-
-      <!-- TODO: ClientPagingRestrictions: CannotSkip, CannotTop, default false -->
-      <Term Name="CanTop" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Supports $top" />
-      </Term>
-      <Term Name="CanSkip" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Supports $skip" />
-      </Term>
+      <ComplexType Name="CountRestrictionsType">
+        <Property Name="Countable" Type="Edm.Boolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="Entities can be counted" />
+        </Property>
+        <Property Name="NonCountableProperties" Type="Collection(Edm.PropertyPath)">
+          <Annotation Term="Core.Description" String="These collection properties do not allow /$count segments" />
+        </Property>
+        <Property Name="NonCountableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
+          <Annotation Term="Core.Description" String="These navigation properties do not allow /$count segments" />
+        </Property>
+      </ComplexType>
 
       <Term Name="Navigable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
         <Annotation Term="Core.Description" String="Supports navigation paths according to OData URL conventions" />
@@ -119,6 +121,13 @@
 
       <Term Name="IndexableByKey" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports key values according to OData URL conventions" />
+      </Term>
+
+      <Term Name="TopSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Supports $top" />
+      </Term>
+      <Term Name="SkipSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Supports $skip" />
       </Term>
 
       <Term Name="BatchSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
