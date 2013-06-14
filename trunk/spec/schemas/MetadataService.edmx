@@ -9,7 +9,7 @@
         <Property Name="Uri" Type="Edm.String" Nullable="false" />
         <Property Name="Include" Type="Collection(Edm.Metadata.Include)" />
         <Property Name="IncludeAnnotations" Type="Collection(Edm.Metadata.IncludeAnnotations)" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
       </EntityType>
       <ComplexType Name="Include">
         <Property Name="Alias" Type="Edm.String" />
@@ -65,6 +65,18 @@
         <NavigationProperty Name="BaseType" Type="Edm.Metadata.ComplexType" Partner="DerivedTypes" />
         <NavigationProperty Name="DerivedTypes" Type="Collection(Edm.Metadata.ComplexType)" Partner="BaseType" />
       </EntityType>
+      <Function Name="AllProperties" IsBound="true">
+        <Parameter Name="Type" Type="Edm.Metadata.StructuredType" />
+        <ReturnType Type="Collection(Edm.Metadata.Property)" />
+      </Function>
+      <Function Name="AllNavigationProperties" IsBound="true">
+        <Parameter Name="Type" Type="Edm.Metadata.StructuredType" />
+        <ReturnType Type="Collection(Edm.Metadata.NavigationProperty)" />
+      </Function>
+      <Function Name="AllEntitySets" IsBound="true">
+        <Parameter Name="Type" Type="Edm.Metadata.EntityType" />
+        <ReturnType Type="Collection(Edm.Metadata.EntitySet)" />
+      </Function>
       <EntityType Name="PrimitiveType" BaseType="Edm.Metadata.Type">
         <NavigationProperty Name="TypeDefinitions" Type="Collection(Edm.Metadata.TypeDefinition)" Partner="UnderlyingType" />
         <NavigationProperty Name="EnumTypes" Type="Collection(Edm.Metadata.EnumType)" Partner="UnderlyingType" />
@@ -131,7 +143,7 @@
       </EntityType>
       <ComplexType Name="OnDelete">
         <Property Name="Action" Type="Edm.Metadata.OnDeleteAction" Nullable="false" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
       </ComplexType>
       <EnumType Name="OnDeleteAction">
         <Member Name="Cascade" />
@@ -142,7 +154,7 @@
       <ComplexType Name="ReferentialConstraint">
         <Property Name="Property" Type="Edm.String" Nullable="false" />
         <Property Name="ReferencedProperty" Type="Edm.String" Nullable="false" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
       </ComplexType>
       <EntityType Name="Action">
         <Key>
@@ -159,7 +171,7 @@
         <Property Name="ReturnType" Type="Edm.Metadata.ReturnType" />
         <Property Name="EntitySetPath" Type="Edm.String" />
         <Property Name="Parameters" Type="Collection(Edm.Metadata.Parameter)" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
       </ComplexType>
       <EntityType Name="Function">
         <Key>
@@ -177,7 +189,7 @@
         <Property Name="ReturnType" Type="Edm.Metadata.ReturnType" Nullable="false" />
         <Property Name="EntitySetPath" Type="Edm.String" />
         <Property Name="Parameters" Type="Collection(Edm.Metadata.Parameter)" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
       </ComplexType>
       <ComplexType Name="Parameter">
         <Property Name="Name" Type="Edm.String" Nullable="false" />
@@ -187,12 +199,13 @@
         <Property Name="Facets" Type="Collection(Edm.Metadata.Facet)" />
         <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
         <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
       </ComplexType>
       <ComplexType Name="ReturnType">
         <Property Name="Facets" Type="Collection(Edm.Metadata.Facet)" />
         <Property Name="IsCollection" Type="Edm.Boolean" Nullable="false" />
         <NavigationProperty Name="Type" Type="Edm.Metadata.Type" Nullable="false" />
+        <Property Name="Nullable" Type="Edm.Boolean" Nullable="false" />
       </ComplexType>
       <EntityType Name="EntityContainer">
         <Key>
@@ -228,7 +241,7 @@
         <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" />
         <NavigationProperty Name="Source" Type="Edm.EntityType" Nullable="false" />
         <NavigationProperty Name="NavigationProperty" Type="Edm.Metadata.NavigationProperty" Nullable="false" Partner="NavigationPropertyBindings" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
       </EntityType>
       <EntityType Name="Singleton">
         <Key>
@@ -284,7 +297,7 @@
         <Property Name="Fullname" Type="Edm.String" Nullable="false" />
         <Property Name="Qualifier" Type="Edm.String" />
         <Property Name="Value" Type="Edm.Metadata.AnnotationExpression" Nullable="false" />
-        <Property Name="Annotations" Type="Collection(Edm.Metadata.SecondaryAnnotation)" />
+        <Property Name="Annotations" Type="Collection(Edm.Metadata.InlineAnnotation)" />
         <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" Partner="Applications" />
         <NavigationProperty Name="Target" Type="Edm.EntityType" Nullable="false" Partner="Annotation" />
       </EntityType>
@@ -310,7 +323,7 @@
       <ComplexType Name="UnaryExpression" BaseType="Edm.Metadata.AnnotatableExpression" Abstract="true">
         <Property Name="Value" Type="Edm.Metadata.AnnotationExpression" Nullable="false" />
       </ComplexType>
-      <ComplexType Name="SecondaryAnnotation" BaseType="Edm.Metadata.UnaryExpression">
+      <ComplexType Name="InlineAnnotation" BaseType="Edm.Metadata.UnaryExpression">
         <Property Name="Qualifier" Type="Edm.Metadata.SimpleIdentifier" />
         <NavigationProperty Name="Term" Type="Edm.Metadata.Term" Nullable="false" />
       </ComplexType>
