@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://tinyurl.com/Org-OData-Measures-V1">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Measures.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="http://somewhere/Vocabulary/V1">
+    <edmx:IncludeAnnotations TermNamespace="Name.Space" TargetNamespace="Target.Space" />
+    <edmx:IncludeAnnotations TermNamespace="Name.Space" TargetNamespace="Target.Space" Qualifier="SomeName" />
+    <edmx:IncludeAnnotations TermNamespace="NameSpace"  Qualifier="SomeName"/>
+    <edmx:IncludeAnnotations TermNamespace="Name.Space" />
+  </edmx:Reference>
+  <edmx:DataServices xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Schema Namespace="Model1" Alias="Self">
+      <Function Name="CreatedEntities" ReturnType="Collection(Edm.EntityType)">
+        <Parameter Name="before" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Parameter Name="after" Type="Edm.DateTimeOffset" Nullable="true" />
+      </Function>
+      <Annotation Term="Some.Thing">
+        <And>
+          <Or>
+            <Eq>
+              <Ge>
+                <Null />
+                <Null />
+              </Ge>
+              <Gt>
+                <Null />
+                <Null />
+              </Gt>
+            </Eq>
+            <Ne>
+              <Lt>
+                <Null />
+                <Null />
+              </Lt>
+              <Null />
+            </Ne>
+          </Or>
+          <Not>
+            <Le>
+              <Null />
+              <Null />
+            </Le>
+          </Not>
+        </And>
+      </Annotation>
+      <Annotation Term="Twolegged.If">
+        <If>
+          <Bool>true</Bool>
+          <Path>Then</Path>
+        </If>
+      </Annotation>
+      <Annotation Term="Twolegged.If">
+        <If>
+          <Bool>true</Bool>
+          <Path>Then</Path>
+          <Path>Else</Path>
+        </If>
+      </Annotation>
+      <EnumType Name="Pattern">
+        <Member Name="Yellow">
+          <Annotation Term="Does.Work" />
+          <Annotation Term="For.Testing">
+            <IsOf Type="Edm.Binary">
+              <Path>Hugo</Path>
+            </IsOf>
+          </Annotation>
+        </Member>
+      </EnumType>
+      <EntityType Name="Weird">
+        <Key>
+          <PropertyRef Name="The/Key" Alias="TheKey" />
+        </Key>
+        <Property Name="TheKey" Type="Edm.PropertyPath" />
+        <Property Name="TheValue" Type="Edm.String" MaxLength="max" />
+        <Property Name="TheString" Type="Edm.Strong" MaxLength="max" />
+        <Property Name="Tags" Type="Collection(Edm.String)" SRID="variable" />
+        <Property Type="Edm.Decimal" Name="Price" Scale="variable" />
+        <Annotation Term="Some.Term" Qualifier="SomeQualifier">
+          <Annotation Term="Some.Term" String="Some Value" />
+          <Collection>
+            <String>SomeString</String>
+            <Date>1212-11-30</Date>
+            <DateTimeOffset>2000-01-01T16:00:00.000-09:00</DateTimeOffset>
+            <DateTimeOffset>2000-01-01T16:00:00Z</DateTimeOffset>
+            <TimeOfDay>23:59:59.123456789012</TimeOfDay>
+            <Path>MyAddress/vCard.Address#work/Street</Path>
+            <EnumMember>Pattern.Yellow</EnumMember>
+            <EnumMember>Pattern.Yellow Pattern.Solid</EnumMember>
+            <Record>
+              <PropertyValue Property="Egon" String="1" />
+              <PropertyValue Property="Hugo" String="2">
+                <Annotation Term="Some.Term" String="Some Value" />
+              </PropertyValue>
+              <Annotation Term="Some.Term" String="Some Value" />
+            </Record>
+            <LabeledElement Name="Hugo">
+              <String>Hello</String>
+            </LabeledElement>
+            <LabeledElement Name="Hugo" String="Hello" />
+          </Collection>
+        </Annotation>
+        <Annotation Term="Vocab.GIQSupplier">
+          <UrlRef>
+            <String>http://www.odata.org</String>
+          </UrlRef>
+        </Annotation>
+        <Annotation Term="Vocab.GIQSupplier">
+          <UrlRef>
+            <Apply Function="odata.fillUriTemplate">
+              <String>http://host/service/Suppliers({suppID})</String>
+              <LabeledElement Name="suppID">
+                <Apply Function="odata.UriEncode">
+                  <Path>@SupplierId</Path>
+                  <DateTimeOffset>2013-04-08T23:00:00.0Z</DateTimeOffset>
+                </Apply>
+              </LabeledElement>
+            </Apply>
+          </UrlRef>
+        </Annotation>
+        <Annotation Term="org.example.display.DisplayName">
+          <Cast SRID="variable" Scale="variable" Type="Edm.String">
+            <String>Product Catalog</String>
+          </Cast>
+        </Annotation>
+        <Annotation Term="Self.IsPreferredCustomer">
+          <IsOf SRID="variable" Type="Self.PreferredCustomer">
+            <Path>Customer/$count</Path>
+          </IsOf>
+        </Annotation>
+      </EntityType>
+
+      <ComplexType Name="Address" OpenType="true">
+        <Property Name="Street" Type="Edm.String" />
+        <NavigationProperty Name="City" Type="MyModel.City" />
+        <Property Name="Street" Type="Edm.String" />
+        <NavigationProperty Name="Region" Type="MyModel.Region" />
+        <NavigationProperty Name="Country" Type="MyModel.Country" />
+      </ComplexType>
+
+      <TypeDefinition Name="Fixedstring" UnderlyingType="Edm.String" />
+
+      <EntityContainer Name="Sales" IsDefaultEntityContainer="true">
+        <EntitySet Name="StandardCustomers" EntityType="Self.Customer">
+          <NavigationPropertyBinding Path="Orders" Target="Orders" />
+        </EntitySet>
+        <EntitySet Name="PreferredCustomer" EntityType="Self.Customer">
+          <NavigationPropertyBinding Path="Orders" Target="Orders" />
+        </EntitySet>
+        <EntitySet Name="Orders" EntityType="Self.Order" />
+      </EntityContainer>
+    </Schema>
+
+    <Schema Namespace="Schema.One" Alias="Self">
+      <Function Name="Foo" ReturnType="Edm.String" />
+      <Function Name="OddWaldos" IsBindable="true">
+        <Parameter Name="in" Type="Collection(Self.Waldo)" />
+        <ReturnType Type="Collection(Self.Waldo)" EntitySetPath="in" />
+      </Function>
+      <Action Name="Rejection" IsBindable="true">
+        <Parameter Name="Reason" Type="Edm.String" Nullable="true" />
+      </Action>
+      <EntityType Name="Waldo">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityContainer Name="Default" IsDefaultEntityContainer="true">
+        <FunctionImport Name="Bar" Function="Self.Foo" />
+        <EntitySet Name="Waldos" EntityType="Self.Waldo" />
+      </EntityContainer>
+    </Schema>
+
+    <Schema Namespace="Schema.One" Alias="Self">
+      <Function Name="Foo" ReturnType="Edm.String" />
+    </Schema>
+    <Schema Namespace="Schema.Two" Alias="Self">
+      <EntityType Name="Waldo">
+        <Property Name="Fred" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Fred">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Waldos" Type="Collection(Self.Waldos)" />
+      </EntityType>
+      <EntityContainer Name="Default" IsDefaultEntityContainer="true">
+        <FunctionImport Name="Bar" Function="Other.Foo" />
+        <EntitySet Name="Waldos" EntityType="Self.Waldo" />
+        <EntitySet Name="Freds" EntityType="Self.Fred">
+          <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
+        </EntitySet>
+      </EntityContainer>
+      <EntityContainer Name="Second" IsDefaultEntityContainer="false">
+        <FunctionImport Name="CreatedEntities" Function="Model.CreatedEntities" />
+        <FunctionImport Name="Bar" Function="Other.Foo" IncludeInServiceDocument="true" />
+        <EntitySet Name="Waldos" EntityType="Self.Waldo" IncludeInServiceDocument="true" />
+        <EntitySet Name="Freds" EntityType="Self.Fred">
+          <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+
+
+  </edmx:DataServices>
+</edmx:Edmx>

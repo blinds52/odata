@@ -125,6 +125,7 @@
   </xs:complexType>
   <xs:complexType name="TActionFunctionReturnType">
     <xs:attribute name="Type" type="edm:TTypeName" use="optional" />
+    <xs:attribute name="Nullable" type="xs:boolean" use="optional" />
     <xs:attribute name="EntitySetPath" type="edm:TPath" use="optional" />
     <xs:attributeGroup ref="edm:TFacetAttributes" />
   </xs:complexType>
@@ -178,6 +179,7 @@
   <xs:element name="Annotation">
     <xs:complexType>
       <xs:sequence>
+        <xs:element ref="edm:Annotation" minOccurs="0" maxOccurs="unbounded" />
         <xs:group ref="edm:GExpression" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="Term" type="edm:TQualifiedName" use="required" />
@@ -222,7 +224,7 @@
       <xs:element name="Path" type="edm:TPathExpression" />
       <xs:element name="PropertyPath" type="edm:TPathExpression" />
       <xs:element name="Record" type="edm:TRecordExpression" />
-      <xs:element name="Url" type="edm:TOneChildExpression" />
+      <xs:element name="UrlRef" type="edm:TOneChildExpression" />
     </xs:choice>
   </xs:group>
   <xs:attributeGroup name="GInlineExpressions">
@@ -328,7 +330,6 @@
   <xs:complexType name="TCollectionExpression">
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="edm:Annotation" />
         <xs:group ref="edm:GExpression" />
       </xs:choice>
     </xs:sequence>
