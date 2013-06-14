@@ -331,7 +331,7 @@ parameterValue = arrayOrObject
                / commonExpr
                / primitiveLiteral
 
-entityKeyRef = 'KEY' OPEN 
+entityKeyRef = 'ref' OPEN 
                [ entityContainer "." ] entitySetName keyPredicate
                [ "/" qualifiedEntityTypeName ]
                CLOSE                
@@ -621,9 +621,8 @@ primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark
                          primitiveLiteralInJSON
 
 entityKeyRefColInUri = begin-array
-                       [ entityKeyRefInJSON *( value-separator entityKeyRefInJSON ) ]
+                       [ entityKeyRef *( value-separator entityKeyRef ) ]
                        end-array
-entityKeyRefInJSON   = quotation-mark entityKeyRef quotation-mark                                        
                                         
 ; JSON syntax: adapted to URI restrictions from [RFC4627]                 
 begin-object = BWS ( "{" / "%7B" ) BWS
