@@ -345,13 +345,19 @@
     <xsl:choose>
       <xsl:when test="@IsSideEffecting='true'">
         <Action>
-          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath|@IsBindable" />
+          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath" />
+          <xsl:if test="@IsBindable">
+            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable"/></xsl:attribute>
+          </xsl:if>
           <xsl:apply-templates />
         </Action>
       </xsl:when>
       <xsl:otherwise>
         <Function>
-          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath|@IsBindable|@IsComposable" />
+          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath|@IsComposable" />
+          <xsl:if test="@IsBindable">
+            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable"/></xsl:attribute>
+          </xsl:if>
           <xsl:apply-templates />
         </Function>
       </xsl:otherwise>
