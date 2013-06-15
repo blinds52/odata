@@ -78,7 +78,7 @@
 ; Contents:
 ;   1. Resource Path
 ;   2. Query Options
-;   3. Metadata URL Fragments
+;   3. Context URL Fragments
 ;   4. Expressions
 ;   5. JSON format for function parameters
 ;   6. Header values
@@ -103,7 +103,7 @@ odataUri = ( "https" / "http" )                       ; Note: case-insensitive
 serviceRoot = "/" *( segment-nz "/" )
 
 odataRelativeUri = '$batch'                           ; Note: case-sensitive!
-                 / '$metadata' [ "?" format ] [ metadataFragment ]
+                 / '$metadata' [ "?" format ] [ contextFragment ]
                  / '$entity' "?" entityOptions  
                  / resourcePath [ "?" queryOptions ]
 
@@ -342,22 +342,22 @@ customValue       = *( qchar-no-AMP )
 
      
 ;------------------------------------------------------------------------------
-; 3. Metadata URL Fragments
+; 3. Context URL Fragments
 ;------------------------------------------------------------------------------
 
-metadataFragment = "#" 
-                   ( 'Edm.Null'
-                   / '$ref' [ entity ]
-                   / '$deletedEntity'
-                   / '$link'
-                   / '$deletedLink'
-                   / qualifiedTypeName
-                   / entitySetName [ "/" qualifiedEntityTypeName ] 
-                     *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
-                        "/" navigationProperty
-                      ) 
-                     [ propertyList ] [ '/$delta'  ] [ entity ]
-                   )
+contextFragment = "#" 
+                  ( 'Edm.Null'
+                  / '$ref' [ entity ]
+                  / '$deletedEntity'
+                  / '$link'
+                  / '$deletedLink'
+                  / qualifiedTypeName
+                  / entitySetName [ "/" qualifiedEntityTypeName ] 
+                    *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
+                       "/" navigationProperty
+                     ) 
+                    [ propertyList ] [ '/$delta'  ] [ entity ]
+                  )
 
 propertyList     = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
 propertyListItem = "." ; all properties when $expand is not accompanied by $select
