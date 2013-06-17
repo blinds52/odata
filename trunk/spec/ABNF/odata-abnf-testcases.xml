@@ -56,9 +56,6 @@
     <Match>Products</Match>
     <Match>Sales</Match>
   </Constraint>
-  <Constraint Rule="entityContainer">
-    <Match>Container</Match>
-  </Constraint>
   <Constraint Rule="entityColFunction">
   </Constraint>
   <Constraint Rule="entityColFunctionImport">
@@ -78,10 +75,11 @@
     <Match>Category</Match>
     <Match>Continent</Match>
     <Match>Country</Match>
+    <Match>Countries</Match>
     <Match>CountrySet</Match>
     <Match>Currency</Match>
     <Match>Customer</Match>
-    <Match>CustomerSet</Match>
+    <Match>Customers</Match>
     <Match>Product</Match>
     <Match>ProductGroup</Match>
     <Match>Supplier</Match>
@@ -89,6 +87,7 @@
   </Constraint>
   <Constraint Rule="entitySetName">
     <Match>Categories</Match>
+    <Match>Countries</Match>
     <Match>Customers</Match>
     <Match>Employees</Match>
     <Match>LeaveRequests</Match>
@@ -484,18 +483,9 @@
             FailAt="2">
     <Input>No.Dot</Input>
   </TestCase>
-  <TestCase Name="Entity Set - in default entity container" 
+  <TestCase Name="Entity Set" 
             Rule="resourcePath">
     <Input>Products</Input>
-  </TestCase>
-  <TestCase Name="Entity Set - entity container name must be qualified" 
-            Rule="resourcePath"
-            FailAt="9">
-    <Input>Container.Products</Input>
-  </TestCase>
-  <TestCase Name="Entity Set - with (qualified) entity container" 
-            Rule="resourcePath">
-    <Input>Namespace.Container.Products</Input>
   </TestCase>
   <!-- 
   	Test cases for example URLs in OData URI  
@@ -578,16 +568,12 @@
             Rule="odataRelativeUri">
     <Input>Products</Input>
   </TestCase>
-  <TestCase Name="4.3 Addressing entities - entity set" 
-            Rule="odataRelativeUri">
-    <Input>Model.Container.Products</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - no entity set after container" 
+  <TestCase Name="4.3 Addressing entities - no trailing dot" 
             Rule="odataRelativeUri"
-            FailAt="9">
-    <Input>Container.('foo')</Input>
+            FailAt="8">
+    <Input>Products.('foo')</Input>
   </TestCase>
-  <TestCase Name="4.3 Addressing entities - no container before entity set" 
+  <TestCase Name="4.3 Addressing entities - no leading dot" 
             Rule="odataRelativeUri"
             FailAt="0">
     <Input>.Products('foo')</Input>
@@ -754,40 +740,31 @@
             Rule="odataRelativeUri">
     <Input>Activation</Input>
   </TestCase>
-  <TestCase Name="4.5.1 Call unbound action with container" 
-            Rule="odataRelativeUri"
-            FailAt="9">
-    <Input>Container.Activation()</Input>
-  </TestCase>
-  <TestCase Name="4.5.1 Call unbound action with container" 
-            Rule="odataRelativeUri">
-    <Input>Model.Container.Activation()</Input>
-  </TestCase>
   <TestCase Name="4.5.1 Call bound action" 
             Rule="odataRelativeUri">
     <Input>LeaveRequests(4)/Model.Rejection()</Input>
   </TestCase>
   <TestCase Name="4.5.1 Call action at service root" 
             Rule="odataRelativeUri"
-            FailAt="15">
+            FailAt="5">
     <Input>Model.Rejection</Input>
   </TestCase>
   <TestCase Name="4.5.1 Call action at service root" 
             Rule="odataRelativeUri"
-            FailAt="15">
+            FailAt="5">
     <Input>Model.Rejection()</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call function import" 
             Rule="odataRelativeUri">
     <Input>TheBestProduct()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call function import - qualified" 
+  <TestCase Name="4.5.2 Call function import - no parentheses" 
             Rule="odataRelativeUri">
-    <Input>Model.Container.TheBestProduct</Input>
+    <Input>TheBestProduct</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call function import - qualified" 
+  <TestCase Name="4.5.2 Call function import - inline parameter" 
             Rule="odataRelativeUri">
-    <Input>Model.Container.TheBestProduct(Size=3)</Input>
+    <Input>TheBestProduct(Size=3)</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call function import - only at service root" 
             Rule="odataRelativeUri"
@@ -1570,6 +1547,10 @@
             Rule="expand">
     <Input>$expand=Category($levels=4),Category($levels=max)</Input>
   </TestCase>
+  <TestCase Name="5.1.2 Expand - star" 
+            Rule="expand">
+    <Input>$expand=*,*/$ref,*($levels=2),Category</Input>
+  </TestCase>
   <TestCase Name="5.1.3 Select - simple" 
             Rule="select">
     <Input>$select=Rating,ReleaseDate</Input>
@@ -2169,9 +2150,9 @@
             Rule="odataUri">
     <Input>http://host/service/$metadata#$deletedLink</Input>
   </TestCase>  
-  <TestCase Name="Query - on entity container" 
+  <TestCase Name="Query - crossjoin" 
             Rule="odataRelativeUri">
-    <Input>Model.Container?$select=CustomerSet,CountrySet&amp;$expand=CustomerSet($select=Name),CountrySet($select=Name)&amp;$filter=CustomerSet/CountryCode eq CountrySet/CountryCode and CountrySet/Name eq 'USA'</Input>
+    <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
   </TestCase>                
   <TestCase Name="Preferences - include-annotations - all" 
             Rule="preference">
