@@ -316,14 +316,13 @@ selectPath     = ( complexProperty / complexColProperty )
 
 allOperationsInSchema = namespace "." STAR                 
 
-; The parameterTypeNames are required to uniquely identify the action or function
+; The parameterNames uniquely identify the bound function overload
 ; only if it has overloads.
-qualifiedActionName   = namespace "." action   [ OPEN parameterNamesAndTypes CLOSE ]
-qualifiedFunctionName = namespace "." function [ OPEN parameterNamesAndTypes CLOSE ]
+qualifiedActionName   = namespace "." action
+qualifiedFunctionName = namespace "." function [ OPEN parameterNames CLOSE ]
 
-; The names of all parameters, suffixed with a colon and the parameter type 
-parameterNamesAndTypes = parameterNameAndType *( COMMA parameterNameAndType )
-parameterNameAndType   = parameterName ":" qualifiedTypeName 
+; The names of all non-binding parameters, separated by commas 
+parameterNames = parameterName *( COMMA parameterName )
 
 skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
 
@@ -349,11 +348,14 @@ customValue       = *( qchar-no-AMP )
 ;------------------------------------------------------------------------------
 
 contextFragment = "#" 
-                  ( 'Edm.Null'
-                  / '$ref' [ entity ]
+                  ( 'Collection($ref)'
+                  / '$ref'
+                  / 'Collection(Edm.EntityType)'
+                  / 'Collection(Edm.ComplexType)'
                   / '$deletedEntity'
                   / '$link'
                   / '$deletedLink'
+                  / singletonEntity
                   / qualifiedTypeName
                   / entitySetName [ "/" qualifiedEntityTypeName ] 
                     *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
