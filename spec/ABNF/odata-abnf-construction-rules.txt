@@ -112,8 +112,8 @@ odataRelativeUri = '$batch'                           ; Note: case-sensitive!
 ; 1. Resource Path
 ;------------------------------------------------------------------------------
 
-resourcePath = [ containerQualifier ] entitySetName   [ collectionNavigation ] 
-             / [ containerQualifier ] singletonEntity [ singleNavigation ]
+resourcePath = entitySetName                  [ collectionNavigation ] 
+             / singletonEntity                [ singleNavigation ]
              / actionImportCall 
              / entityColFunctionImportCall    [ collectionNavigation ] 
              / entityFunctionImportCall       [ singleNavigation ] 
@@ -121,7 +121,7 @@ resourcePath = [ containerQualifier ] entitySetName   [ collectionNavigation ]
              / complexFunctionImportCall      [ complexPath ] 
              / primitiveColFunctionImportCall [ collectionPath ] 
              / primitiveFunctionImportCall    [ singlePath ] 
-             / namespace "." entityContainer  [ '/$all' ]
+             / crossjoin
              / '$all'
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ]
@@ -177,7 +177,7 @@ boundOperation = "/" ( boundActionCall
                      / boundPrimitiveFuncCall    [ singlePath ] 
                      )
 
-actionImportCall = [ containerQualifier ] actionImport [ "()" ]
+actionImportCall = actionImport [ "()" ]
 boundActionCall  = namespace "." action [ "()" ]
                    ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
                    ; and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
@@ -194,19 +194,21 @@ boundComplexColFuncCall   = namespace "." complexColFunction   functionParameter
 boundPrimitiveFuncCall    = namespace "." primitiveFunction    functionParameters
 boundPrimitiveColFuncCall = namespace "." primitiveColFunction functionParameters
 
-entityFunctionImportCall       = [ containerQualifier ] entityFunctionImport       [ functionParameters ]
-entityColFunctionImportCall    = [ containerQualifier ] entityColFunctionImport    [ functionParameters ]
-complexFunctionImportCall      = [ containerQualifier ] complexFunctionImport      [ functionParameters ]
-complexColFunctionImportCall   = [ containerQualifier ] complexColFunctionImport   [ functionParameters ]
-primitiveFunctionImportCall    = [ containerQualifier ] primitiveFunctionImport    [ functionParameters ]
-primitiveColFunctionImportCall = [ containerQualifier ] primitiveColFunctionImport [ functionParameters ]
+entityFunctionImportCall       = entityFunctionImport       [ functionParameters ]
+entityColFunctionImportCall    = entityColFunctionImport    [ functionParameters ]
+complexFunctionImportCall      = complexFunctionImport      [ functionParameters ]
+complexColFunctionImportCall   = complexColFunctionImport   [ functionParameters ]
+primitiveFunctionImportCall    = primitiveFunctionImport    [ functionParameters ]
+primitiveColFunctionImportCall = primitiveColFunctionImport [ functionParameters ]
 
 functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
 functionParameter  = parameterName EQ ( parameterAlias / entityKeyRef / primitiveLiteral )
 parameterName      = odataIdentifier
 parameterAlias     = AT odataIdentifier
 
-containerQualifier = namespace "." entityContainer "."
+crossjoin = '$crossjoin' OPEN
+            entitySetName *( COMMA entitySetName )
+            CLOSE
 
 
 ;------------------------------------------------------------------------------
@@ -239,7 +241,8 @@ systemQueryOption = expand
                   / top 
 
 expand            = '$expand' EQ expandItem *( COMMA expandItem )
-expandItem        = expandPath
+expandItem        = STAR [ ref / OPEN levels CLOSE ]
+                  / expandPath
                     [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                     /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
@@ -332,7 +335,7 @@ parameterValue = arrayOrObject
                / primitiveLiteral
 
 entityKeyRef = 'ref' OPEN 
-               [ entityContainer "." ] entitySetName keyPredicate
+               entitySetName keyPredicate
                [ "/" qualifiedEntityTypeName ]
                CLOSE                
 
@@ -674,6 +677,8 @@ preference = annotationsPreference
            ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
            ; / token [ BWS "=" BWS word ] *( OWS ";" [ OWS parameter ] )
            
+;TODO: add missing preferences: track-changes, continue-on-error, callback, isolation, ...           
+           
 annotationsPreference = 'odata.include-annotations' EQ 
                         DQUOTE annotationsList DQUOTE
 annotationsList       = annotationIdentifier *(COMMA annotationIdentifier)
@@ -774,8 +779,6 @@ streamProperty          = odataIdentifier
 navigationProperty          = entityNavigationProperty / entityColNavigationProperty  
 entityNavigationProperty    = odataIdentifier
 entityColNavigationProperty = odataIdentifier
-
-entityContainer = odataIdentifier
 
 action       = odataIdentifier
 actionImport = odataIdentifier

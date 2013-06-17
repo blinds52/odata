@@ -10,7 +10,7 @@
   <xs:element name="Schema">
     <xs:complexType>
       <xs:sequence>
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
           <xs:element name="ComplexType" type="edm:TComplexType" />
           <xs:element name="EntityType" type="edm:TEntityType" />
           <xs:element name="TypeDefinition" type="edm:TTypeDefinition" />
@@ -447,7 +447,7 @@
     -->
   <xs:complexType name="TEntityContainer">
     <xs:sequence>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
         <xs:element name="EntitySet" type="edm:TEntitySet" />
         <xs:element name="ActionImport" type="edm:TActionImport" />
         <xs:element name="FunctionImport" type="edm:TFunctionImport" />
@@ -470,7 +470,7 @@
   </xs:complexType>
   <xs:complexType name="TNavigationPropertyBinding">
     <xs:attribute name="Path" type="edm:TPath" use="required" />
-    <xs:attribute name="Target" type="edm:TOptionallyQualifiedName" use="required" />
+    <xs:attribute name="Target" type="edm:TPath" use="required" />
   </xs:complexType>
   <xs:attributeGroup name="TEntitySetAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
@@ -503,33 +503,29 @@
   </xs:complexType>
   <xs:attributeGroup name="TActionFunctionImportAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="EntitySet" type="edm:TOptionallyQualifiedName" use="optional" />
+    <xs:attribute name="EntitySet" type="edm:TPath" use="optional" />
     <xs:attribute name="IncludeInServiceDocument" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
   <!-- 
         general purpose simple types 
     -->
-  <xs:simpleType name="TNamespaceName">
-    <xs:restriction base="edm:TOptionallyQualifiedName">
-      <xs:maxLength value="511" />
-    </xs:restriction>
-  </xs:simpleType>
   <xs:simpleType name="TSimpleIdentifier">
     <xs:restriction base="xs:string">
       <xs:maxLength value="128" />
-      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification not starting with a $ -->
+      <!-- ECMAScript identifiers not starting with a '$' -->
       <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="TOptionallyQualifiedName">
+  <xs:simpleType name="TNamespaceName">
     <xs:restriction base="xs:string">
-      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '.' for namespace qualification -->
+      <xs:maxLength value="511" />
+      <!-- one or more SimpleIdentifiers separated by dots -->
       <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TQualifiedName">
     <xs:restriction base="xs:string">
-      <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '.' for namespace qualification -->
+      <!-- a NamespaceName followed by a dot and a SimpleIdentifier -->
       <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){1,}" />
     </xs:restriction>
   </xs:simpleType>

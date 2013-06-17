@@ -202,11 +202,12 @@
         </EntitySet>
       </EntityContainer>
       <EntityContainer Name="Second" IsDefaultEntityContainer="false">
-        <FunctionImport Name="CreatedEntities" Function="Model.CreatedEntities" />
-        <FunctionImport Name="Bar" Function="Other.Foo" IncludeInServiceDocument="true" />
+        <FunctionImport Name="CreatedEntities" Function="Model.CreatedEntities" EntitySet="Waldos" />
+        <FunctionImport Name="Bar" Function="Other.Foo" IncludeInServiceDocument="true" EntitySet="Namespace.Container/Freds" />
         <EntitySet Name="Waldos" EntityType="Self.Waldo" IncludeInServiceDocument="true" />
         <EntitySet Name="Freds" EntityType="Self.Fred">
           <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
+          <NavigationPropertyBinding Target="Namespace.Container/Freds" Path="MoreWaldos" />
         </EntitySet>
       </EntityContainer>
     </Schema>
