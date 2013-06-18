@@ -78,13 +78,20 @@
 
   <xs:element name="ref">
     <xs:complexType>
-      <xs:attribute name="ref" type="xs:anyURI" use="required" />
+      <xs:sequence>
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:anyURI" use="required" />
       <xs:attribute ref="metadata:context" use="optional" />
+      <xs:attribute ref="metadata:type" use="optional" />
     </xs:complexType>
   </xs:element>
 
   <xs:element name="link">
     <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
       <xs:attribute name="source" type="xs:anyURI" use="required" />
       <xs:attribute name="relationship" type="edm:TSimpleIdentifier" use="required" />
       <xs:attribute name="target" type="xs:anyURI" use="required" />
@@ -93,6 +100,9 @@
 
   <xs:element name="deleted-link">
     <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="metadata:annotation" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
       <xs:attribute name="source" type="xs:anyURI" use="required" />
       <xs:attribute name="relationship" type="edm:TSimpleIdentifier" use="required" />
       <xs:attribute name="target" type="xs:anyURI" use="required" />
