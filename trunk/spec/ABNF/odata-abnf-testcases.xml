@@ -2108,11 +2108,11 @@
   </TestCase>  
   <TestCase Name="Context URL - collection with containment" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Orders</Input>
+    <Input>http://host/service/$metadata#Customers('ALFKI')/Orders</Input>
   </TestCase>  
   <TestCase Name="Context URL - containment" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Orders/$entity</Input>
+    <Input>http://host/service/$metadata#Customers('ALFKI')/Orders/$entity</Input>
   </TestCase>  
   <TestCase Name="Context URL - Entity with $select" 
             Rule="odataUri">
@@ -2166,43 +2166,63 @@
             Rule="odataRelativeUri">
     <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
   </TestCase>                
-  <TestCase Name="Preferences - include-annotations - all" 
+  <TestCase Name="Preferences - allow  entity references" 
+            Rule="preference">
+    <Input>odata.allow-entityreferences</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - callback" 
+            Rule="preference">
+    <Input>odata.callback;url="please://call/me?back#here"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - callback"  
+            Rule="preference">
+    <Input>odata.callback;url="http://myserver/notfication/token/12345"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - continue on error" 
+            Rule="preference">
+    <Input>odata.continue-on-error</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include annotations - all" 
             Rule="preference">
     <Input>odata.include-annotations="*"</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - none" 
+  <TestCase Name="Preferences - include annotations - none" 
             Rule="preference">
     <Input>odata.include-annotations="-*"</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - all in namespace" 
+  <TestCase Name="Preferences - include annotations - all in namespace" 
             Rule="preference">
     <Input>odata.include-annotations="Namespace.*"</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - namespace must be suffixed with .*" 
-            Rule="annotationsPreference"
+  <TestCase Name="Preferences - include annotations - namespace must be suffixed with .*" 
+            Rule="includeAnnotationsPreference"
             FailAt="36">
     <Input>odata.include-annotations="Namespace"</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - namespace must be suffixed with .*" 
-            Rule="annotationsPreference"
+  <TestCase Name="Preferences - include annotations - namespace must be suffixed with .*" 
+            Rule="includeAnnotationsPreference"
             FailAt="37">
     <Input>odata.include-annotations="Namespace."</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - nothing from namespace" 
+  <TestCase Name="Preferences - include annotations - nothing from namespace" 
             Rule="preference">
     <Input>odata.include-annotations="-Namespace.*"</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - only a special term" 
+  <TestCase Name="Preferences - include annotations - only a special term" 
             Rule="preference">
     <Input>odata.include-annotations="Namespace.SomeTerm"</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - everything except a special term" 
+  <TestCase Name="Preferences - include annotations - everything except a special term" 
             Rule="preference">
     <Input>odata.include-annotations="-Namespace.SomeTerm"</Input>
   </TestCase>  
-  <TestCase Name="Preferences - include-annotations - several" 
+  <TestCase Name="Preferences - include annotations - several" 
             Rule="preference">
     <Input>odata.include-annotations="Namespace.SomeTerm,Model.AnotherTerm,Namespace.*"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - isolation" 
+            Rule="preference">
+    <Input>odata.isolation=snapshot</Input>
   </TestCase>  
   <TestCase Name="Preferences - maxpagesize - ok" 
             Rule="preference">
@@ -2217,5 +2237,25 @@
             Rule="maxpagesizePreference"
             FailAt="18">
     <Input>odata.maxpagesize=-1</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - return minimal" 
+            Rule="preference">
+    <Input>return=minimal</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - return representation" 
+            Rule="preference">
+    <Input>return=representation</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - respond async" 
+            Rule="preference">
+    <Input>respond-async</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - track changes" 
+            Rule="preference">
+    <Input>odata.track-changes</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - wait" 
+            Rule="preference">
+    <Input>wait=0</Input>
   </TestCase>  
 </TestSuite>
