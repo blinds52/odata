@@ -195,13 +195,30 @@
       </Term>
       <ComplexType Name="ChangeTrackingType">
         <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
-          <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preferenc" />
+          <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preference" />
         </Property>
         <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="Change tracking supports filters on these properties" />
         </Property>
         <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)">
           <Annotation Term="Core.Description" String="Change tracking supports these properties expanded" />
+        </Property>
+      </ComplexType>
+      
+      
+      <Term Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocolType)" AppliesTo="EntityContainer EntitySet">
+        <Annotation Term="Core.Description" String="Lists all types of supported callback endpoints for this container or entity set" />
+      </Term>
+      <ComplexType Name="CallbackProtocolType">
+        <Property Name="Id" Type="Edm.String">
+          <Annotation Term="Core.Description" String="Protcol Identifier" />
+        </Property>
+        <Property Name="UrlTemplate" Type="Edm.String">
+          <Annotation Term="Core.Description" String="URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570" />
+        </Property>
+        <Property Name="DocumentationUrl" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="Human readable description of the meaning of the URL Template parameters" />
+          <Annotation Term="Core.IsURL"></Annotation>
         </Property>
       </ComplexType>
     </Schema>
