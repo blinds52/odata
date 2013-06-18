@@ -81,9 +81,9 @@
 ;   3. Context URL Fragments
 ;   4. Expressions
 ;   5. JSON format for function parameters
-;   6. Header values
-;   7. Names and identifiers
-;   8. Literal Data Values
+;   6. Names and identifiers
+;   7. Literal Data Values
+;   8. Header values
 ;   9. Punctuation
 ;
 ;   A. URI syntax [RFC3986]
@@ -357,7 +357,7 @@ contextFragment = "#"
                   / '$deletedLink'
                   / singletonEntity
                   / qualifiedTypeName
-                  / entitySetName [ "/" qualifiedEntityTypeName ] 
+                  / entitySetName [ keyPredicate ] [ "/" qualifiedEntityTypeName ] 
                     *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
                        "/" navigationProperty
                      ) 
@@ -671,42 +671,7 @@ exp          = "e" [ "-" / "+" ] 1*DIGIT
 
 
 ;------------------------------------------------------------------------------
-; 6. Header values
-;------------------------------------------------------------------------------
-
-preference = annotationsPreference
-           / maxpagesizePreference
-           ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
-           ; / token [ BWS "=" BWS word ] *( OWS ";" [ OWS parameter ] )
-           
-;TODO: add missing preferences: track-changes, continue-on-error, callback, isolation, ...           
-           
-annotationsPreference = 'odata.include-annotations' EQ 
-                        DQUOTE annotationsList DQUOTE
-annotationsList       = annotationIdentifier *(COMMA annotationIdentifier)
-annotationIdentifier  = [ excludeOperator ]
-                        ( STAR 
-                        / namespace "." ( termName / STAR ) 
-                        ) 
-excludeOperator       = "-"
-           
-maxpagesizePreference = 'odata.maxpagesize' EQ oneToNine *DIGIT         
-           
-
-;parameter      = token [ BWS "=" BWS word ]
-;word           = token / quoted-string
-;token          = 1*tchar
-;tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
-;               / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
-;               / DIGIT / ALPHA
-;quoted-string  = DQUOTE *( qdtext / quoted-pair ) DQUOTE
-;qdtext         = %x21 / %x23-5B / %x5D-7E / obs-text / OWS
-;obs-text       = %x80-FF
-;quoted-pair    = "\" ( HTAB / SP / VCHAR / obs-text )
-
-
-;------------------------------------------------------------------------------
-; 7. Names and identifiers
+; 6. Names and identifiers
 ;------------------------------------------------------------------------------
 
 qualifiedTypeName = qualifiedEntityTypeName 
@@ -808,7 +773,7 @@ primitiveColFunctionImport = odataIdentifier
 
 
 ;------------------------------------------------------------------------------
-; 8. Literal Data Values
+; 7. Literal Data Values
 ;------------------------------------------------------------------------------
 
 primitiveLiteral = null 
@@ -870,7 +835,7 @@ int32Value = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 21474
 int64Value = [ sign ] 1*19DIGIT ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
 string           = SQUOTE *( SQUOTE-in-string / pchar-no-SQUOTE ) SQUOTE
-SQUOTE-in-string = SQUOTE SQUOTE ; two quotes represent one within string literal
+SQUOTE-in-string = SQUOTE SQUOTE ; two consecutive single quotes represent one within a string literal
 
 date      = "date" SQUOTE dateValue SQUOTE
 dateValue = year "-" month "-" day
@@ -960,6 +925,61 @@ geometryPrefix  = "geometry"
 
 
 ;------------------------------------------------------------------------------
+; 8. Header values
+;------------------------------------------------------------------------------
+
+preference = allowEntityReferencesPreference
+           / callbackPreference
+           / continueOnErrorPreference
+           / includeAnnotationsPreference
+           / isolationPreference
+           / maxpagesizePreference
+           / respondAsyncPreference
+           / returnPreference
+           / trackChangesPreference
+           / waitPreference
+           ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
+           ; / token [ BWS "=" BWS word ] *( OWS ";" [ OWS parameter ] )
+           
+allowEntityReferencesPreference = "odata.allow-entityreferences"
+
+callbackPreference = "odata.callback" OWS ";" OWS "url" BWS EQ BWS DQUOTE URI DQUOTE
+
+continueOnErrorPreference = "odata.continue-on-error"           
+           
+includeAnnotationsPreference = "odata.include-annotations" BWS EQ BWS DQUOTE annotationsList DQUOTE
+annotationsList      = annotationIdentifier *(COMMA annotationIdentifier)
+annotationIdentifier = [ excludeOperator ]
+                       ( STAR 
+                       / namespace "." ( termName / STAR ) 
+                       ) 
+excludeOperator      = "-"
+           
+isolationPreference = "odata.isolation" BWS EQ BWS 'snapshot'
+
+maxpagesizePreference = "odata.maxpagesize" BWS EQ BWS oneToNine *DIGIT         
+
+respondAsyncPreference = "respond-async"
+
+returnPreference = "return" BWS EQ BWS ( 'representation' / 'minimal' )
+
+trackChangesPreference = "odata.track-changes"
+
+waitPreference = "wait" BWS EQ BWS 1*DIGIT
+
+;parameter      = token [ BWS "=" BWS word ]
+;word           = token / quoted-string
+;token          = 1*tchar
+;tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
+;               / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+;               / DIGIT / ALPHA
+;quoted-string  = DQUOTE *( qdtext / quoted-pair ) DQUOTE
+;qdtext         = %x21 / %x23-5B / %x5D-7E / obs-text / OWS
+;obs-text       = %x80-FF
+;quoted-pair    = "\" ( HTAB / SP / VCHAR / obs-text )
+
+
+;------------------------------------------------------------------------------
 ; 9. Punctuation
 ;------------------------------------------------------------------------------
 
@@ -984,8 +1004,8 @@ CLOSE = ")" / "%29"
 ; A. URI syntax [RFC3986]
 ;------------------------------------------------------------------------------
 
-;URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
-;hier-part     = "//" authority path-abempty
+URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
+hier-part     = "//" authority path-abempty
 ;              / path-absolute
 ;              / path-rootless
 ;              / path-empty
@@ -996,9 +1016,9 @@ CLOSE = ")" / "%29"
 ;              / path-absolute
 ;              / path-noscheme
 ;              / path-empty
-;scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-;authority     = [ userinfo "@" ] host [ ":" port ]
-;userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
+scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+authority     = [ userinfo "@" ] host [ ":" port ]
+userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
 host          = IP-literal / IPv4address / reg-name
 port          = *DIGIT
 IP-literal    = "[" ( IPv6address / IPvFuture  ) "]"
@@ -1026,17 +1046,17 @@ reg-name      = *( unreserved / pct-encoded / sub-delims )
 ;              / path-noscheme   ; begins with a non-colon segment
 ;              / path-rootless   ; begins with a segment
 ;              / path-empty      ; zero characters
-;path-abempty  = *( "/" segment )
+path-abempty  = *( "/" segment )
 ;path-absolute = "/" [ segment-nz *( "/" segment ) ]
 ;path-noscheme = segment-nz-nc *( "/" segment )
 ;path-rootless = segment-nz *( "/" segment )
 ;path-empty    = ""
-;segment       = *pchar
+segment       = *pchar
 segment-nz    = 1*pchar
 ;segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" ) ; non-zero-length segment without any colon ":"
 pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
-;query         = *( pchar / "/" / "?" )
-;fragment      = *( pchar / "/" / "?" )
+query         = *( pchar / "/" / "?" )
+fragment      = *( pchar / "/" / "?" )
 pct-encoded   = "%" HEXDIG HEXDIG
 unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ;reserved      = gen-delims / sub-delims
@@ -1065,10 +1085,10 @@ qchar-no-AMP-DQUOTE   = qchar-unescaped
 ;------------------------------------------------------------------------------
 ; B. IRI syntax [RFC3987]
 ;------------------------------------------------------------------------------
-; Note: the IRI-in-query syntax rule stated here is an over-genenrous stub.
-; Valid values are all strings that satisfy the rules in RFC3987 AND where the 
-; characters "&" and "#" have been percent-encoded to make them valid URL query
-; parameter values. 
+; Note: the IRI-in-query syntax rule stated here is an over-generous stub.
+; Valid values are all strings that satisfy the rules in RFC3987 AND in which 
+; the characters "&" and "#" have been percent-encoded to make them valid URL 
+; query parameter values. 
 ;------------------------------------------------------------------------------
 
 IRI-in-query = 1*qchar-no-AMP
