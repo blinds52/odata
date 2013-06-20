@@ -2178,9 +2178,29 @@
             Rule="odataRelativeUri">
     <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
   </TestCase>                
+  <TestCase Name="Header - odata-entitid" 
+            Rule="header">
+    <Input>odata-entityID: ralf:handl</Input>
+  </TestCase>  
+  <TestCase Name="Header - odata-entitid" 
+            Rule="header">
+    <Input>odata-entityID: empty:/</Input>
+  </TestCase>  
+  <TestCase Name="Header - odata-isolation" 
+            Rule="header">
+    <Input>odata-isolation:sNapShoT</Input>
+  </TestCase>  
+  <TestCase Name="Header - odata-maxversion" 
+            Rule="header">
+    <Input>odata-maxversion: 4.0</Input>
+  </TestCase>  
+  <TestCase Name="Header - odata-version" 
+            Rule="header">
+    <Input>odata-version: 4.0</Input>
+  </TestCase>  
   <TestCase Name="Preferences - allow  entity references" 
-            Rule="preference">
-    <Input>odata.allow-entityreferences</Input>
+            Rule="prefer">
+    <Input>Prefer: odata.allow-entityreferences,odata.maxpagesize=20</Input>
   </TestCase>  
   <TestCase Name="Preferences - callback" 
             Rule="preference">
@@ -2231,10 +2251,6 @@
   <TestCase Name="Preferences - include annotations - several" 
             Rule="preference">
     <Input>odata.include-annotations="Namespace.SomeTerm,Model.AnotherTerm,Namespace.*"</Input>
-  </TestCase>  
-  <TestCase Name="Preferences - isolation" 
-            Rule="preference">
-    <Input>odata.isolation=snapshot</Input>
   </TestCase>  
   <TestCase Name="Preferences - maxpagesize - ok" 
             Rule="preference">

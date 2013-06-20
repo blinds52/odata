@@ -91,7 +91,7 @@
 ;   C. ABNF core definitions [RFC5234]
 ;
 ;------------------------------------------------------------------------------
-dummyStartRule = odataUri / preference ; just to please the test parser
+dummyStartRule = odataUri / header             ; just to please the test parser
 ;------------------------------------------------------------------------------
 
 
@@ -929,11 +929,22 @@ geometryPrefix  = "geometry"
 ; 8. Header values
 ;------------------------------------------------------------------------------
 
+header = odata-entityid
+       / odata-isolation
+       / odata-maxversion
+       / odata-version
+       / prefer
+       
+odata-entityid   = "OData-EntityID"   COLON OWS URI
+odata-isolation  = "OData-Isolation"  COLON OWS "snapshot"
+odata-maxversion = "OData-MaxVersion" COLON OWS "4.0"     
+odata-version    = "OData-Version"    COLON OWS "4.0"     
+      
+prefer     = "Prefer" COLON OWS preference *( COMMA preference )       
 preference = allowEntityReferencesPreference
            / callbackPreference
            / continueOnErrorPreference
            / includeAnnotationsPreference
-           / isolationPreference
            / maxpagesizePreference
            / respondAsyncPreference
            / returnPreference
@@ -956,8 +967,6 @@ annotationIdentifier = [ excludeOperator ]
                        ) 
 excludeOperator      = "-"
            
-isolationPreference = "odata.isolation" BWS EQ BWS 'snapshot'
-
 maxpagesizePreference = "odata.maxpagesize" BWS EQ BWS oneToNine *DIGIT         
 
 respondAsyncPreference = "respond-async"
@@ -1007,8 +1016,8 @@ CLOSE = ")" / "%29"
 
 URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
 hier-part     = "//" authority path-abempty
-;              / path-absolute
-;              / path-rootless
+              / path-absolute
+              / path-rootless
 ;              / path-empty
 ;URI-reference = URI / relative-ref
 ;absolute-URI  = scheme ":" hier-part [ "?" query ]
@@ -1048,9 +1057,9 @@ reg-name      = *( unreserved / pct-encoded / sub-delims )
 ;              / path-rootless   ; begins with a segment
 ;              / path-empty      ; zero characters
 path-abempty  = *( "/" segment )
-;path-absolute = "/" [ segment-nz *( "/" segment ) ]
+path-absolute = "/" [ segment-nz *( "/" segment ) ]
 ;path-noscheme = segment-nz-nc *( "/" segment )
-;path-rootless = segment-nz *( "/" segment )
+path-rootless = segment-nz *( "/" segment )
 ;path-empty    = ""
 segment       = *pchar
 segment-nz    = 1*pchar
