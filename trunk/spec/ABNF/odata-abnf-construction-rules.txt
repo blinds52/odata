@@ -364,13 +364,14 @@ contextFragment = "#"
                     [ propertyList ] [ '/$delta'  ] [ entity ]
                   )
 
-propertyList     = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
-propertyListItem = "." ; all properties when $expand is not accompanied by $select
-                 / primitiveProperty  
-                 / primitiveColProperty 
-                 / navigationProperty [ '+' ] [ propertyList ]
-                 / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" propertyListItem ]
-
+propertyList         = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
+propertyListItem     = STAR ; all structural properties
+                     / propertyListProperty
+propertyListProperty = primitiveProperty  
+                     / primitiveColProperty 
+                     / navigationProperty [ '+' ] [ propertyList ]
+                     / selectPath [ "/" propertyListProperty ]
+                 
 entity = '/$entity'                   
 
 

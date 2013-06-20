@@ -2084,13 +2084,25 @@
   </TestCase> 
   <TestCase Name="Context URL - Entity set with $select" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(.,Orders(ID))</Input>
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Orders(ID))</Input>
   </TestCase> 
-  <TestCase Name="Context URL - Entity with $select" 
+  <TestCase Name="Context URL - Entity set with $select and $expand" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(.,Orders(ID))/$entity</Input>
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country)</Input>
   </TestCase> 
-  <TestCase Name="Context URL - Entity set with cast, $select and nested $expand" 
+  <TestCase Name="Context URL - Entity set with $select and $expand with nested select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country(Code))</Input>
+  </TestCase> 
+  <TestCase Name="Context URL - Entity set with $select and $expand with nested select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Orders,Orders(ID,Items(Price)))</Input>
+  </TestCase> 
+  <TestCase Name="Context URL - Entity with $select and $expand with nested select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(*,Orders(ID))/$entity</Input>
+  </TestCase> 
+  <TestCase Name="Context URL - Entity set with cast, $select and recursive $expand" 
             Rule="odataUri">
     <Input>http://host/service/$metadata#Employees(Title,DirectReports+(FirstName,LastName))</Input>
   </TestCase> 
