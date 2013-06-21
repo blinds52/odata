@@ -52,54 +52,80 @@
         </String>
       </Annotation>
 
-      <Term Name="SupportedFormats" Type="Collection(Edm.String)">
-        <Annotation Term="Core.Description" String="Media types of supported formats, including format parameters" />
-        <Annotation Term="Core.IsMediaType" />
-      </Term>
-
+      <!-- Conformance Level -->
+      
       <Term Name="ConformanceLevel" Type="Capabilities.ConformanceLevelType" AppliesTo="EntityContainer" />
       <EnumType Name="ConformanceLevelType">
         <Member Name="Minimal" />
         <Member Name="Intermediate" />
         <Member Name="Advanced" />
       </EnumType>
-
-      <Term Name="InsertRestrictions" Type="Capabilities.InsertRestrictionsType" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Restrictions on insert operations" />
+      
+      <!-- Request Capabilities -->
+      
+      <Term Name="SupportedFormats" Type="Collection(Edm.String)">
+        <Annotation Term="Core.Description" String="Media types of supported formats, including format parameters" />
+        <Annotation Term="Core.IsMediaType" />
       </Term>
-      <ComplexType Name="InsertRestrictionsType">
-        <Property Name="Insertable" Type="Edm.Boolean" DefaultValue="true">
-          <Annotation Term="Core.Description" String="Entities can be inserted" />
+
+      <Term Name="AcceptEncodings" Type="Collection(Edm.String)" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="List of acceptable compression methods for ($batch) requests, e.g. gzip" />
+      </Term>
+
+      <!-- Supported Preferences -->
+      
+      <Term Name="AsynchronousRequestsSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Service supports the asynchronous request preference" />
+      </Term>
+
+      <Term Name="BatchContinueOnErrorSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Service supports the continue on error preference" />
+      </Term>
+      
+      <Term Name="CallbackSupport" Type="Capabilities.CallbackType" AppliesTo="EntityContainer EntitySet">
+        <Annotation Term="Core.Description" String="If present, service supports callbacks for the annotated entity container or entity set using the specified protocols" />
+      </Term>
+      <ComplexType Name="CallbackType">
+        <Property Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocolType)"/>
+        <Annotation Term="Core.Description" String="A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'" />
+      </ComplexType>
+      <ComplexType Name="CallbackProtocolType">
+        <Property Name="Id" Type="Edm.String">
+          <Annotation Term="Core.Description" String="Protcol Identifier" />
         </Property>
-        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
-          <Annotation Term="Core.Description" String="These navigation properties do not allow deep inserts" />
+        <Property Name="UrlTemplate" Type="Edm.String">
+          <Annotation Term="Core.Description" String="URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570" />
+        </Property>
+        <Property Name="DocumentationUrl" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="Human readable description of the meaning of the URL Template parameters" />
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
-      <Term Name="UpdateRestrictions" Type="Capabilities.UpdateRestrictionsType" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Restrictions on update operations" />
+      <Term Name="ChangeTrackingSupport" Type="Capabilities.ChangeTrackingType" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Change tracking capabilities of this entity set" />
       </Term>
-      <ComplexType Name="UpdateRestrictionsType">
-        <Property Name="Updatable" Type="Edm.Boolean" DefaultValue="true">
-          <Annotation Term="Core.Description" String="Entities can be updated" />
+      <ComplexType Name="ChangeTrackingType">
+        <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preference" />
         </Property>
-        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
-          <Annotation Term="Core.Description" String="These navigation properties do not allow rebinding" />
+        <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)">
+          <Annotation Term="Core.Description" String="Change tracking supports filters on these properties" />
+        </Property>
+        <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)">
+          <Annotation Term="Core.Description" String="Change tracking supports these properties expanded" />
         </Property>
       </ComplexType>
 
-      <Term Name="DeleteRestrictions" Type="Capabilities.DeleteRestrictionsType" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Restrictions on delete operations" />
+      <Term Name="IsolationSupport" Type="Capabilities.IsolationLevel" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Supported odata.isolation levels" />
       </Term>
-      <ComplexType Name="DeleteRestrictionsType">
-        <Property Name="Deletable" Type="Edm.Boolean" DefaultValue="true">
-          <Annotation Term="Core.Description" String="Entities can be deleted" />
-        </Property>
-        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
-          <Annotation Term="Core.Description" String="These navigation properties do not allow DeleteLink requests" />
-        </Property>
-      </ComplexType>
-
+      <EnumType Name="IsolationLevel" IsFlags="true">
+        <Member Name="Snapshot" Value="1" />  
+      </EnumType>
+      
+      <!--Query Capabilities-->
+      
       <Term Name="CountRestrictions" Type="Capabilities.CountRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on /$count path suffix and $count=true system query option" />
       </Term>
@@ -132,10 +158,6 @@
 
       <Term Name="BatchSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Supports $batch requests" />
-      </Term>
-
-      <Term Name="AcceptEncoding" Type="Collection(Edm.String)" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="List of acceptable compression methods for ($batch) requests, e.g. gzip" />
       </Term>
 
       <Term Name="FilterFunctions" Type="Collection(Edm.String)" AppliesTo="EntityContainer EntitySet">
@@ -190,37 +212,44 @@
         </Property>
       </ComplexType>
 
-      <Term Name="ChangeTracking" Type="Capabilities.ChangeTrackingType" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="Change tracking capabilities of this entity set" />
+      <!-- Updatability -->
+
+      <Term Name="InsertRestrictions" Type="Capabilities.InsertRestrictionsType" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Restrictions on insert operations" />
       </Term>
-      <ComplexType Name="ChangeTrackingType">
-        <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
-          <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preference" />
+      <ComplexType Name="InsertRestrictionsType">
+        <Property Name="Insertable" Type="Edm.Boolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="Entities can be inserted" />
         </Property>
-        <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)">
-          <Annotation Term="Core.Description" String="Change tracking supports filters on these properties" />
-        </Property>
-        <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)">
-          <Annotation Term="Core.Description" String="Change tracking supports these properties expanded" />
+        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
+          <Annotation Term="Core.Description" String="These navigation properties do not allow deep inserts" />
         </Property>
       </ComplexType>
-      
-      
-      <Term Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocolType)" AppliesTo="EntityContainer EntitySet">
-        <Annotation Term="Core.Description" String="Lists all types of supported callback endpoints for this container or entity set" />
+
+      <Term Name="UpdateRestrictions" Type="Capabilities.UpdateRestrictionsType" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Restrictions on update operations" />
       </Term>
-      <ComplexType Name="CallbackProtocolType">
-        <Property Name="Id" Type="Edm.String">
-          <Annotation Term="Core.Description" String="Protcol Identifier" />
+      <ComplexType Name="UpdateRestrictionsType">
+        <Property Name="Updatable" Type="Edm.Boolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="Entities can be updated" />
         </Property>
-        <Property Name="UrlTemplate" Type="Edm.String">
-          <Annotation Term="Core.Description" String="URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570" />
-        </Property>
-        <Property Name="DocumentationUrl" Type="Edm.String" Nullable="true">
-          <Annotation Term="Core.Description" String="Human readable description of the meaning of the URL Template parameters" />
-          <Annotation Term="Core.IsURL"></Annotation>
+        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
+          <Annotation Term="Core.Description" String="These navigation properties do not allow rebinding" />
         </Property>
       </ComplexType>
+
+      <Term Name="DeleteRestrictions" Type="Capabilities.DeleteRestrictionsType" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Restrictions on delete operations" />
+      </Term>
+      <ComplexType Name="DeleteRestrictionsType">
+        <Property Name="Deletable" Type="Edm.Boolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="Entities can be deleted" />
+        </Property>
+        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)">
+          <Annotation Term="Core.Description" String="These navigation properties do not allow DeleteLink requests" />
+        </Property>
+      </ComplexType>
+
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
