@@ -30,7 +30,7 @@
         <NavigationProperty Name="Types" Type="Collection(Edm.Metadata.Type)" Partner="Schema" />
         <NavigationProperty Name="Actions" Type="Collection(Edm.Metadata.Action)" Partner="Schema" />
         <NavigationProperty Name="Functions" Type="Collection(Edm.Metadata.Function)" Partner="Schema" />
-        <NavigationProperty Name="EntityContainers" Type="Collection(Edm.Metadata.EntityContainer)" Partner="Schema" />
+        <NavigationProperty Name="EntityContainer" Type="Edm.Metadata.EntityContainer" Nullable="false" Partner="Schema" />
         <NavigationProperty Name="Terms" Type="Collection(Edm.Metadata.Term)" Partner="Schema" />
         <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
@@ -217,7 +217,7 @@
         <NavigationProperty Name="FunctionImports" Type="Collection(Edm.Metadata.FunctionImport)" Partner="EntityContainer" />
         <NavigationProperty Name="Singletons" Type="Collection(Edm.Metadata.Singleton)" Partner="EntityContainer" />
         <NavigationProperty Name="ActionImports" Type="Collection(Edm.Metadata.ActionImport)" Partner="EntityContainer" />
-        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="EntityContainers" />
+        <NavigationProperty Name="Schema" Type="Edm.Metadata.Schema" Nullable="false" Partner="EntityContainer" />
         <NavigationProperty Name="Annotations" Type="Collection(Edm.Metadata.Annotation)" Partner="Target" />
       </EntityType>
       <EntityType Name="EntitySet">
@@ -376,7 +376,7 @@
       <ComplexType Name="Url" BaseType="Edm.Metadata.UnaryExpression" />
       <EntityContainer Name="MetadataContainer">
         <EntitySet Name="Schemata" EntityType="Edm.Metadata.Schema">
-          <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainers" />
+          <NavigationPropertyBinding Target="EntityContainer" Path="EntityContainer" />
           <NavigationPropertyBinding Target="Terms" Path="Terms" />
           <NavigationPropertyBinding Target="Actions" Path="Actions" />
           <NavigationPropertyBinding Target="Functions" Path="Functions" />
@@ -390,19 +390,19 @@
           <NavigationPropertyBinding Target="Types" Path="DeclaringType" />
         </EntitySet>
         <EntitySet Name="EntitySets" EntityType="Edm.Metadata.EntitySet">
-          <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainer" />
+          <NavigationPropertyBinding Target="EntityContainer" Path="EntityContainer" />
           <NavigationPropertyBinding Target="Types" Path="EntityType" />
           <NavigationPropertyBinding Target="NavigationPropertyBindings" Path="NavigationPropertyBindings" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
         </EntitySet>
-        <EntitySet Name="EntityContainers" EntityType="Edm.Metadata.EntityContainer">
+        <Singleton Name="EntityContainer" Type="Edm.Metadata.EntityContainer">
           <NavigationPropertyBinding Target="Schemata" Path="Schema" />
           <NavigationPropertyBinding Target="EntitySets" Path="EntitySets" />
           <NavigationPropertyBinding Target="FunctionImports" Path="FunctionImports" />
           <NavigationPropertyBinding Target="Singletons" Path="Singletons" />
           <NavigationPropertyBinding Target="ActionImports" Path="ActionImports" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
-        </EntitySet>
+        </Singleton>
         <EntitySet Name="NavigationProperties" EntityType="Edm.Metadata.NavigationProperty">
           <NavigationPropertyBinding Target="NavigationProperties" Path="Partner" />
           <NavigationPropertyBinding Target="Types" Path="Type" />
@@ -411,7 +411,7 @@
           <NavigationPropertyBinding Target="Types" Path="DeclaringType" />
         </EntitySet>
         <EntitySet Name="FunctionImports" EntityType="Edm.Metadata.FunctionImport">
-          <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainer" />
+          <NavigationPropertyBinding Target="EntityContainer" Path="EntityContainer" />
           <NavigationPropertyBinding Target="EntitySets" Path="EntitySet" />
           <NavigationPropertyBinding Target="Functions" Path="Function" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
@@ -453,7 +453,7 @@
           <NavigationPropertyBinding Target="Schemata" Path="Schema" />
         </EntitySet>
         <EntitySet Name="Singletons" EntityType="Edm.Metadata.Singleton">
-          <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainer" />
+          <NavigationPropertyBinding Target="EntityContainer" Path="EntityContainer" />
           <NavigationPropertyBinding Target="Types" Path="Type" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
           <NavigationPropertyBinding Target="NavigationPropertyBindings" Path="NavigationPropertyBindings" />
@@ -465,7 +465,7 @@
         <EntitySet Name="ActionImports" EntityType="Edm.Metadata.ActionImport">
           <NavigationPropertyBinding Target="Actions" Path="Action" />
           <NavigationPropertyBinding Target="EntitySets" Path="EntitySet" />
-          <NavigationPropertyBinding Target="EntityContainers" Path="EntityContainer" />
+          <NavigationPropertyBinding Target="EntityContainer" Path="EntityContainer" />
           <NavigationPropertyBinding Target="Annotations" Path="Annotations" />
         </EntitySet>
         <EntitySet Name="References" EntityType="Edm.Metadata.Reference">
