@@ -202,7 +202,7 @@ primitiveFunctionImportCall    = primitiveFunctionImport    [ functionParameters
 primitiveColFunctionImportCall = primitiveColFunctionImport [ functionParameters ]
 
 functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
-functionParameter  = parameterName EQ ( parameterAlias / entityKeyRef / primitiveLiteral )
+functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
 parameterName      = odataIdentifier
 parameterAlias     = AT odataIdentifier
 
@@ -329,14 +329,7 @@ skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
 aliasAndValue = parameterAlias EQ parameterValue
 
 parameterValue = arrayOrObject
-               / entityKeyRef
                / commonExpr
-               / primitiveLiteral
-
-entityKeyRef = 'ref' OPEN 
-               entitySetName keyPredicate
-               [ "/" qualifiedEntityTypeName ]
-               CLOSE                
 
 customQueryOption = customName [ EQ customValue ]
 customName        = qchar-no-AMP-EQ-AT-DOLLAR *( qchar-no-AMP-EQ ) 
@@ -382,7 +375,8 @@ entity = '/$entity'
 ; Note: a boolCommonExpr is also a commonExpr, e.g. sort by Boolean 
 commonExpr = ( primitiveLiteral
              / parameterAlias
-             / arrayOrObject
+             / arrayOrObject   ; TODO: really? cast({...},type)? not better require alias?
+             / rootExpr
              / firstMemberExpr
              / functionExpr
              / negateExpr 
@@ -411,6 +405,8 @@ boolCommonExpr = ( isofExpr
                    ]
                  / boolParenExpr
                  ) [ andExpr / orExpr ] 
+
+rootExpr = '$root/' ( entitySetName keyPredicate / singletonEntity ) [ singleNavigationExpr ]
 
 firstMemberExpr = memberExpr
                 / inscopeVariableExpr [ "/" memberExpr ]
@@ -577,9 +573,10 @@ castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CL
 ; applying these rules, see comment at the top of this file
 ;------------------------------------------------------------------------------
 
+; TODO: add array of $root expressions
 arrayOrObject = complexColInUri  
               / complexInUri
-              / entityKeyRefColInUri
+              / rootExprCol
               / primitiveColInUri
                
 complexColInUri = begin-array 
@@ -591,11 +588,14 @@ complexInUri = begin-object
                  / primitivePropertyInUri 
                  / complexPropertyInUri 
                  / collectionPropertyInUri  
+                 / navigationPropertyInUri
                  )
                  *( value-separator 
-                    ( primitivePropertyInUri 
+                    ( annotationInUri 
+                    / primitivePropertyInUri 
                     / complexPropertyInUri 
                     / collectionPropertyInUri  
+                    / navigationPropertyInUri
                     ) 
                   )
                ]  
@@ -626,9 +626,18 @@ primitivePropertyInUri = quotation-mark primitiveProperty quotation-mark
                          name-separator 
                          primitiveLiteralInJSON
 
-entityKeyRefColInUri = begin-array
-                       [ entityKeyRef *( value-separator entityKeyRef ) ]
-                       end-array
+navigationPropertyInUri = singleNavPropInJSON
+                        / collectionNavPropInJSON
+singleNavPropInJSON     = quotation-mark entityNavigationProperty quotation-mark
+													name-separator
+													rootExpr
+collectionNavPropInJSON = quotation-mark entityColNavigationProperty quotation-mark
+													name-separator
+													rootExprCol
+
+rootExprCol = begin-array 
+              [ rootExpr *( value-separator rootExpr ) ]
+              end-array
                                         
 ; JSON syntax: adapted to URI restrictions from [RFC4627]                 
 begin-object = BWS ( "{" / "%7B" ) BWS
@@ -677,18 +686,18 @@ exp          = "e" [ "-" / "+" ] 1*DIGIT
 
 qualifiedTypeName = qualifiedEntityTypeName 
                   / qualifiedComplexTypeName
-                  / qualifiedEnumerationTypeName
+                  / qualifiedEnumTypeName
                   / primitiveTypeName 
                   / 'Collection' OPEN 
                     ( qualifiedEntityTypeName 
                     / qualifiedComplexTypeName
-                    / qualifiedEnumerationTypeName 
+                    / qualifiedEnumTypeName 
                     / primitiveTypeName 
                     ) CLOSE
 
 qualifiedEntityTypeName      = namespace "." entityTypeName
 qualifiedComplexTypeName     = namespace "." complexTypeName
-qualifiedEnumerationTypeName = namespace "." enumerationTypeName
+qualifiedEnumTypeName = namespace "." enumerationTypeName
 
 ; an alias is just a single-part namespace
 namespace     = namespacePart *( "." namespacePart )
@@ -865,7 +874,7 @@ minute = zeroToFiftyNine
 second = zeroToFiftyNine       
 fractionalSeconds = 1*12DIGIT
 
-enum            = qualifiedEnumerationTypeName SQUOTE enumValue SQUOTE
+enum            = qualifiedEnumTypeName SQUOTE enumValue SQUOTE
 enumValue       = singleEnumValue *( COMMA singleEnumValue )
 singleEnumValue = enumerationMember / int64Value
 
@@ -935,7 +944,7 @@ header = odata-entityid
        / odata-version
        / prefer
        
-odata-entityid   = "OData-EntityID"   COLON OWS URI
+odata-entityid   = "OData-EntityID"   COLON OWS IRI
 odata-isolation  = "OData-Isolation"  COLON OWS "snapshot"
 odata-maxversion = "OData-MaxVersion" COLON OWS "4.0"     
 odata-version    = "OData-Version"    COLON OWS "4.0"     
@@ -1095,12 +1104,10 @@ qchar-no-AMP-DQUOTE   = qchar-unescaped
 ;------------------------------------------------------------------------------
 ; B. IRI syntax [RFC3987]
 ;------------------------------------------------------------------------------
-; Note: the IRI-in-query syntax rule stated here is an over-generous stub.
-; Valid values are all strings that satisfy the rules in RFC3987 AND in which 
-; the characters "&" and "#" have been percent-encoded to make them valid URL 
-; query parameter values. 
+; Note: these are over-generous stubs, for the actual patterns refer to RFC3987
 ;------------------------------------------------------------------------------
 
+IRI          = 1*LOCTET
 IRI-in-query = 1*qchar-no-AMP
 
                       
@@ -1119,7 +1126,7 @@ HTAB   = %x09
 ;LWSP = *(WSP / CRLF WSP) 
 ;VCHAR = %x21-7E 
 ;CHAR = %x01-7F
-;LOCTET = %x00-FF 
+LOCTET = %x00-FF 
 ;CR     = %x0D 
 ;LF     = %x0A 
 ;CRLF   = CR LF

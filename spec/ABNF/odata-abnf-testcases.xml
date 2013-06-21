@@ -62,7 +62,7 @@
     <Match>ProductsByCategoryId</Match>
     <Match>ProductsByColor</Match>
     <Match>ProductsByComplex</Match>
-    <Match>ProductsByCustomerRef</Match>
+    <Match>ProductsByCustomer</Match>
   </Constraint>
   <Constraint Rule="entityFunction">
     <Match>BestProduct</Match>
@@ -145,6 +145,7 @@
     <Match>Available</Match>
     <Match>MostPopularName</Match>
     <Match>PhoneticallySimilar</Match>
+    <Match>GeoLocation</Match>
   </Constraint>
   <Constraint Rule="primitiveFunctionImport">
     <Match>TheMostPopularName</Match>
@@ -1791,21 +1792,25 @@
             Rule="odataRelativeUri">
     <Input>ProductsByComplex(complex=@c)?@c={"Names":["Fred","George"],"Address":{"Street":"MyWay"}}</Input>
   </TestCase>
-  <TestCase Name="function with reference type parameter" 
+  <TestCase Name="function with rootExpr" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCustomerRef(customer=@c)?@c=ref(Customers(1))</Input>
+    <Input>ProductsByCustomer(customer=@c)?@c=$root/Customers(1)</Input>
   </TestCase>
-  <TestCase Name="function with reference type parameter" 
+  <TestCase Name="function with rootExpr - single navigation" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCustomerRef(customer=ref(Customers(1)))</Input>
+    <Input>ProductsByCustomer(customer=@c)?@c=$root/Customers(1)/Model.VipCustomer/AccountRepresentative</Input>
   </TestCase>
-  <TestCase Name="function with reference type parameter - type cast" 
+  <TestCase Name="function with rootExpr - array" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCustomerRef(customer=ref(Customers(1)/Model.VipCustomer))</Input>
+    <Input>ProductsByCustomer(customer=@c)?@c=[$root/Customers(1),$root/Customers(2)]</Input>
   </TestCase>
-  <TestCase Name="function with reference type parameter - array" 
+  <TestCase Name="function with rootExpr - complex with single navigation" 
             Rule="odataRelativeUri">
-    <Input>ProductsByCustomerRef(customer=@c)?@c=[ref(Customers(1)),ref(Customers(2))]</Input>
+    <Input>ProductsByCustomer(customer=@c)?@c={"Country":$root/Countries('DE')}</Input>
+  </TestCase>
+  <TestCase Name="function with rootExpr - complex with collection navigation" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCustomer(customer=@c)?@c={"Orders":[$root/Orders(1)]}</Input>
   </TestCase>
   <!-- Enumeration types -->
   <TestCase Name="Enumeration value in URI" 
@@ -2209,6 +2214,14 @@
   <TestCase Name="Preferences - callback"  
             Rule="preference">
     <Input>odata.callback;url="http://myserver/notfication/token/12345"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - callback"  
+            Rule="preference">
+    <Input>odata.callback;url="some:where"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - callback"  
+            Rule="preference">
+    <Input>odata.callback;url="some:/where"</Input>
   </TestCase>  
   <TestCase Name="Preferences - continue on error" 
             Rule="preference">
