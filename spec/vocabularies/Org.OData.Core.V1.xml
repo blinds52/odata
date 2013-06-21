@@ -6,6 +6,8 @@
         <String>Core terms needed to write vocabularies</String>
       </Annotation>
 
+      <!--Documentation-->
+
       <Term Name="Description" Type="Edm.String">
         <Annotation Term="Core.Description" String="A brief description of a model element" />
         <Annotation Term="Core.IsLanguageDependent" />
@@ -16,10 +18,14 @@
         <Annotation Term="Core.IsLanguageDependent" />
       </Term>
 
+      <!-- Localization -->
+
       <Term Name="IsLanguageDependent" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">
         <Annotation Term="Core.Description" String="Properties and terms annotated with this term are language-dependent" />
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
+
+      <!-- Term Restrictions -->
 
       <TypeDefinition Name="Tag" UnderlyingType="Edm.Boolean">
         <Annotation Term="Core.Description" String="This is the type to use for all tagging terms" />
@@ -35,7 +41,38 @@
           String="Terms annotated with this term convey that the annotation target is &quot;the same as&quot; the term it is annotated with. Example: annotate Employee with Org.Schema.Person" />
       </Term>
 
-      <!-- Value restrictions for terms -->
+      <!--Resource Paths-->
+      
+      <Term Name="ResourcePath" Type="Edm.String" AppliesTo="EntitySet Singleton ActionImport FunctionImport">
+        <Annotation Term="Core.Description" String="Resource path for entity container child, can be relative to xml:base, Content-Location, and request URL" />
+        <Annotation Term="Core.IsUrl" />
+      </Term>
+
+      <Term Name="DereferenceableIDs" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Entity-ids are URLs that locate the identified entity" />
+      </Term>
+
+      <Term Name="ConventionalIDs" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Entity-ids follow OData URL conventions" />
+      </Term>
+
+      <!-- Permissions  -->
+      
+      <Term Name="Permissions" Type="Core.Permission" AppliesTo="Property">
+        <Annotation Term="Core.Description" String="Permissions available for a property.The value of 2 is reserved for future use." />
+      </Term>
+      <EnumType Name="Permission" IsFlags="true">
+        <Member Name="None" Value="0" />
+        <Member Name="Read" Value="1" />
+        <Member Name="ReadWrite" Value="3" />
+      </EnumType>
+
+      <!-- Metadata Extensions  -->
+
+      <Term Name="Computed" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
+        <Annotation Term="Core.Description" String="A value for this property is generated on both insert and update" />
+      </Term>
+
       <Term Name="IsURL" Type="Core.Tag" DefaultValue="true" AppliesTo="Property Term">
         <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid URL" />
         <Annotation Term="Core.RequiresType" String="Edm.String" />
@@ -43,7 +80,7 @@
 
       <Term Name="AcceptableMediaTypes" Type="Collection(Edm.String)" AppliesTo="EntityType Property">
         <Annotation Term="Core.Description"
-          String="Lists the MIME types acceptable for the annotated entity type marked with HasStream=&quot;true&quot; or the annotated named resource property " />
+          String="Lists the MIME types acceptable for the annotated entity type marked with HasStream=&quot;true&quot; or the annotated named resource property" />
         <Annotation Term="Core.IsMediaType" />
       </Term>
 
@@ -57,23 +94,6 @@
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
-      <Term Name="Navigable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
-        <Annotation Term="Core.Description" String="Supports navigation paths according to OData URL conventions" />
-      </Term>
-
-      <Term Name="ResourcePath" Type="Edm.String" AppliesTo="EntitySet Singleton ActionImport FunctionImport">
-        <Annotation Term="Core.Description" String="Resource path for entity container child, can be relative to xml:base, Content-Location, and request URL" />
-        <Annotation Term="Core.IsUrl" />
-      </Term>
-
-      <Term Name="ConventionalIDs" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Entity-ids follow OData URL conventions" />
-      </Term>
-
-      <Term Name="DereferenceableIDs" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Entity-ids are URLs that locate the identified entity" />
-      </Term>
-
       <Term Name="OptimisticConcurrencyControl" Type="Core.OptimisticConcurrencyControlType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="If present, the annotated entity set uses optimistic concurrency control" />
       </Term>
@@ -82,15 +102,6 @@
           <Annotation Term="Core.Description" String="The ETag is computed from these properties" />
         </Property>
       </ComplexType>
-
-      <Term Name="Computed" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
-        <Annotation Term="Core.Description" String="A value for this property is generated on both insert and update" />
-      </Term>
-
-      <Term Name="Immutable" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
-        <Annotation Term="Core.Description"
-          String="A value for this non-key property is generated on insert and remains unchanged on update" />
-      </Term>
 
     </Schema>
   </edmx:DataServices>
