@@ -68,7 +68,7 @@
         <Annotation Term="Core.IsMediaType" />
       </Term>
 
-      <Term Name="AcceptEncodings" Type="Collection(Edm.String)" AppliesTo="EntityContainer">
+      <Term Name="AcceptableEncodings" Type="Collection(Edm.String)" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="List of acceptable compression methods for ($batch) requests, e.g. gzip" />
       </Term>
 
@@ -82,14 +82,21 @@
         <Annotation Term="Core.Description" String="Service supports the continue on error preference" />
       </Term>
       
-      <Term Name="CallbackSupport" Type="Capabilities.CallbackType" AppliesTo="EntityContainer EntitySet">
-        <Annotation Term="Core.Description" String="If present, service supports callbacks for the annotated entity container or entity set using the specified protocols" />
+      <Term Name="IsolationSupported" Type="Capabilities.IsolationLevel" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Supported odata.isolation levels" />
+      </Term>
+      <EnumType Name="IsolationLevel" IsFlags="true">
+        <Member Name="Snapshot" Value="1" />  
+      </EnumType>
+      
+      <Term Name="CallbackSupported" Type="Capabilities.CallbackType" AppliesTo="EntityContainer EntitySet">
+        <Annotation Term="Core.Description" String="Supports callbacks for the specified protocols" />
       </Term>
       <ComplexType Name="CallbackType">
-        <Property Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocolType)"/>
+        <Property Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocol)"/>
         <Annotation Term="Core.Description" String="A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'" />
       </ComplexType>
-      <ComplexType Name="CallbackProtocolType">
+      <ComplexType Name="CallbackProtocol">
         <Property Name="Id" Type="Edm.String">
           <Annotation Term="Core.Description" String="Protcol Identifier" />
         </Property>
@@ -102,8 +109,8 @@
         </Property>
       </ComplexType>
 
-      <Term Name="ChangeTrackingSupport" Type="Capabilities.ChangeTrackingType" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Change tracking capabilities of this entity set" />
+      <Term Name="ChangeTracking" Type="Capabilities.ChangeTrackingType" AppliesTo="EntityContainer EntitySet">
+        <Annotation Term="Core.Description" String="Change tracking capabilities of this service or entity set" />
       </Term>
       <ComplexType Name="ChangeTrackingType">
         <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
@@ -117,13 +124,6 @@
         </Property>
       </ComplexType>
 
-      <Term Name="IsolationSupport" Type="Capabilities.IsolationLevel" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Supported odata.isolation levels" />
-      </Term>
-      <EnumType Name="IsolationLevel" IsFlags="true">
-        <Member Name="Snapshot" Value="1" />  
-      </EnumType>
-      
       <!--Query Capabilities-->
       
       <Term Name="CountRestrictions" Type="Capabilities.CountRestrictionsType" AppliesTo="EntitySet">
