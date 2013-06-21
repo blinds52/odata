@@ -943,7 +943,7 @@ header = odata-entityid
        / odata-version
        / prefer
        
-odata-entityid   = "OData-EntityID"   COLON OWS IRI
+odata-entityid   = "OData-EntityID"   COLON OWS IRI-in-header
 odata-isolation  = "OData-Isolation"  COLON OWS "snapshot"
 odata-maxversion = "OData-MaxVersion" COLON OWS "4.0"     
 odata-version    = "OData-Version"    COLON OWS "4.0"     
@@ -993,7 +993,7 @@ waitPreference = "wait" BWS EQ BWS 1*DIGIT
 ;               / DIGIT / ALPHA
 ;quoted-string  = DQUOTE *( qdtext / quoted-pair ) DQUOTE
 ;qdtext         = %x21 / %x23-5B / %x5D-7E / obs-text / OWS
-;obs-text       = %x80-FF
+obs-text       = %x80-FF
 ;quoted-pair    = "\" ( HTAB / SP / VCHAR / obs-text )
 
 
@@ -1106,8 +1106,8 @@ qchar-no-AMP-DQUOTE   = qchar-unescaped
 ; Note: these are over-generous stubs, for the actual patterns refer to RFC3987
 ;------------------------------------------------------------------------------
 
-IRI          = 1*LOCTET
-IRI-in-query = 1*qchar-no-AMP
+IRI-in-header = 1*( VCHAR / obs-text )
+IRI-in-query  = 1*qchar-no-AMP
 
                       
 ;------------------------------------------------------------------------------
@@ -1123,9 +1123,9 @@ SP     = %x20
 HTAB   = %x09 
 ;WSP    = SP / HTAB 
 ;LWSP = *(WSP / CRLF WSP) 
-;VCHAR = %x21-7E 
+VCHAR = %x21-7E 
 ;CHAR = %x01-7F
-LOCTET = %x00-FF 
+;LOCTET = %x00-FF 
 ;CR     = %x0D 
 ;LF     = %x0A 
 ;CRLF   = CR LF
