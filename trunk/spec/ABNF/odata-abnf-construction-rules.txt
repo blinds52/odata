@@ -91,20 +91,19 @@
 ;   C. ABNF core definitions [RFC5234]
 ;
 ;------------------------------------------------------------------------------
-dummyStartRule = odataUri / header             ; just to please the test parser
+dummyStartRule = odataUri / header            ; just to please the test parser
 ;------------------------------------------------------------------------------
 
 
-odataUri = ( "https" / "http" )                       ; Note: case-insensitive 
-           "://" host [ ":" port ]
-           serviceRoot
-           [ odataRelativeUri ]  
+odataUri = serviceRoot [ odataRelativeUri ]  
 
-serviceRoot = "/" *( segment-nz "/" )
+serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive 
+              "://" host [ ":" port ]
+              "/" *( segment-nz "/" )
 
 odataRelativeUri = '$batch'                           ; Note: case-sensitive!
-                 / '$metadata' [ "?" format ] [ contextFragment ]
                  / '$entity' "?" entityOptions  
+                 / '$metadata' [ "?" format ] [ contextFragment ]
                  / resourcePath [ "?" queryOptions ]
 
 
@@ -177,8 +176,8 @@ boundOperation = "/" ( boundActionCall
                      / boundPrimitiveFuncCall    [ singlePath ] 
                      )
 
-actionImportCall = actionImport [ "()" ]
-boundActionCall  = namespace "." action [ "()" ]
+actionImportCall = actionImport
+boundActionCall  = namespace "." action
                    ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
                    ; and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
 
@@ -194,12 +193,12 @@ boundComplexColFuncCall   = namespace "." complexColFunction   functionParameter
 boundPrimitiveFuncCall    = namespace "." primitiveFunction    functionParameters
 boundPrimitiveColFuncCall = namespace "." primitiveColFunction functionParameters
 
-entityFunctionImportCall       = entityFunctionImport       [ functionParameters ]
-entityColFunctionImportCall    = entityColFunctionImport    [ functionParameters ]
-complexFunctionImportCall      = complexFunctionImport      [ functionParameters ]
-complexColFunctionImportCall   = complexColFunctionImport   [ functionParameters ]
-primitiveFunctionImportCall    = primitiveFunctionImport    [ functionParameters ]
-primitiveColFunctionImportCall = primitiveColFunctionImport [ functionParameters ]
+entityFunctionImportCall       = entityFunctionImport       functionParameters
+entityColFunctionImportCall    = entityColFunctionImport    functionParameters
+complexFunctionImportCall      = complexFunctionImport      functionParameters
+complexColFunctionImportCall   = complexColFunctionImport   functionParameters
+primitiveFunctionImportCall    = primitiveFunctionImport    functionParameters
+primitiveColFunctionImportCall = primitiveColFunctionImport functionParameters
 
 functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
 functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
@@ -430,11 +429,9 @@ inscopeVariableExpr       = implicitVariableExpr
 implicitVariableExpr      = '$it'              ; references the unnamed outer variable of the query
 lambdaVariableExpr        = odataIdentifier
 
-collectionNavigationExpr = count
-                         / "/" [ qualifiedEntityTypeName "/" ] 
-                           ( boundFunctionExpr 
-                           / anyExpr
-                           / allExpr 
+collectionNavigationExpr = [ "/" qualifiedEntityTypeName ]
+                           ( keyPredicate [ singleNavigationExpr ] 
+                           / collectionPathExpr 
                            )
 
 singleNavigationExpr = "/" memberExpr

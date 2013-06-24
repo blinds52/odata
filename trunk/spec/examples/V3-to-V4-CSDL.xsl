@@ -25,6 +25,8 @@
 
     To model nullable complex properties, enter #V4:Nullable into the LongDescription of the Documentation.
 
+    To model singletons, enter #V4:Nullable into the LongDescription of the Documentation of an entity type.
+
     To model properties with the new abstract or concrete Edm types, enter #V4:Type: followed by the desired type into the
     LongDescription of the Documentation. The value after the second colon is taken literally, so you can use Collection(...)
     for collection-valued properties. Use fully qualified types in the literal to produce valid V4 CSDL.
@@ -32,15 +34,16 @@
     To model navigation properties in complex types, enter #V4:Navigation: followed by the target type into the LongDescription
     of the Documentation. The value after the second colon is taken literally, so you can use Collection(...) for collection-valued
     navigation properties. Use fully qualified types in the literal to produce valid V4 CSDL.
-    
+
     To model derived complex types, add a complex property named V4_BaseType that is typed with the base complex type.
-    
+
     To model abstract complex types, add a property named V4_Abstract of any type.
-    
+
     To model type definitions, add a complex type with the name of the type definition and a property named V4_TypeDefinition
     that has the underlying type and the facets fixed by the type definition.
   -->
 
+  <!-- TODO: Singleton -->
   <!-- TODO: Use Alias instead of Namespace as qualifier -->
   <!-- TODO: Annotations, ValueAnnotation -> Annotation, TypeAnnotation -> Annotation with Record -->
 
@@ -127,7 +130,7 @@
       <xsl:copy-of select="edm3:Property[@Name = 'V4_TypeDefinition']/@SRID" />
     </TypeDefinition>
   </xsl:template>
-  
+
   <xsl:template match="edm3:ComplexType">
     <ComplexType>
       <xsl:copy-of select="@Name|@Abstract|@BaseType|@OpenType" />
@@ -282,16 +285,31 @@
   </xsl:template>
 
   <xsl:template match="edm3:EntitySet">
-    <xsl:if test="@Name != 'V4_Edm_EntityType'">
-      <EntitySet>
-        <xsl:copy-of select="@Name|@EntityType" />
-        <xsl:apply-templates />
-        <xsl:variable name="name" select="@Name" />
-        <xsl:apply-templates select="../edm3:AssociationSet/edm3:End[@EntitySet=$name]" mode="Binding">
-          <xsl:with-param name="entitytype" select="@EntityType" />
-        </xsl:apply-templates>
-      </EntitySet>
-    </xsl:if>
+    <xsl:variable name="type" select="@EntityType" />
+    <xsl:variable name="name" select="@Name" />
+    <xsl:choose>
+    <!--
+      <xsl:when test="../../edm3:EntityType[@Name=$type]/edm3:Documentation/edm3:LongDescription = '#V4:Singleton'">
+      -->
+      <xsl:when test="contains(../../edm3:EntityType[@Name=$type]/@Name,'EntityContainer')">
+        <Singleton>
+          <xsl:copy-of select="@Name|@EntityType" />
+          <xsl:apply-templates />
+          <xsl:apply-templates select="../edm3:AssociationSet/edm3:End[@EntitySet=$name]" mode="Binding">
+            <xsl:with-param name="entitytype" select="@EntityType" />
+          </xsl:apply-templates>
+        </Singleton>
+      </xsl:when>
+      <xsl:when test="@Name != 'V4_Edm_EntityType'">
+        <EntitySet>
+          <xsl:copy-of select="@Name|@EntityType" />
+          <xsl:apply-templates />
+          <xsl:apply-templates select="../edm3:AssociationSet/edm3:End[@EntitySet=$name]" mode="Binding">
+            <xsl:with-param name="entitytype" select="@EntityType" />
+          </xsl:apply-templates>
+        </EntitySet>
+      </xsl:when>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm3:AssociationSet/edm3:End" mode="Binding">
@@ -347,7 +365,7 @@
         <Action>
           <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath" />
           <xsl:if test="@IsBindable">
-            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable"/></xsl:attribute>
+            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
           </xsl:if>
           <xsl:apply-templates />
         </Action>
@@ -356,7 +374,7 @@
         <Function>
           <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath|@IsComposable" />
           <xsl:if test="@IsBindable">
-            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable"/></xsl:attribute>
+            <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
           </xsl:if>
           <xsl:apply-templates />
         </Function>
