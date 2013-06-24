@@ -743,24 +743,20 @@
   </TestCase>
   <TestCase Name="4.5.1 Call bound action" 
             Rule="odataRelativeUri">
-    <Input>LeaveRequests(4)/Model.Rejection()</Input>
+    <Input>LeaveRequests(4)/Model.Rejection</Input>
   </TestCase>
   <TestCase Name="4.5.1 Call action at service root" 
             Rule="odataRelativeUri"
             FailAt="5">
     <Input>Model.Rejection</Input>
   </TestCase>
-  <TestCase Name="4.5.1 Call action at service root" 
-            Rule="odataRelativeUri"
-            FailAt="5">
-    <Input>Model.Rejection()</Input>
-  </TestCase>
   <TestCase Name="4.5.2 Call function import" 
             Rule="odataRelativeUri">
     <Input>TheBestProduct()</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call function import - no parentheses" 
-            Rule="odataRelativeUri">
+            Rule="odataRelativeUri"
+            FailAt="14">
     <Input>TheBestProduct</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call function import - inline parameter" 
@@ -960,6 +956,10 @@
   <TestCase Name="4.10 Addressing a Media Resource" 
             Rule="odataRelativeUri">
     <Input>Categories(1)/$value</Input>
+  </TestCase>
+  <TestCase Name="5 $ is reserved" 
+            Rule="filter">
+    <Input>$filter=true</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" 
             Rule="filter">
@@ -1463,6 +1463,14 @@
   <TestCase Name="5.1.1.6.4 $it with entity reference"
             Rule="queryOptions">
     <Input>$filter=$it eq {"odata.ref":"http://host/service/ZqV5t"}</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.7 Path expressions" 
+            Rule="commonExpr">
+    <Input>Items</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.7 Path expressions - key access after set navigation" 
+            Rule="commonExpr">
+    <Input>Items(1)</Input>
   </TestCase>
   <TestCase Name="5.1.1.8 aliases" 
             Rule="queryOptions">
