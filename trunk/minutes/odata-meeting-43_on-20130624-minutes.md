@@ -108,33 +108,11 @@ Stefan:
 ### 4.4 Issues in Applied state [GM1]
 
 Stefan:
->I **move** to close ODATA-262, ODATA-291, ODATA-377, ODATA-386, ODATA-391, ODATA-441, ODATA-445, ODATA-453, ODATA-454, ODATA-455, ODATA-456, ODATA-457, ODATA-458, ODATA-459, ODATA-460, ODATA-463 and ODATA-464 as applied. **Martin seconds**.
+>I **move** to close ODATA-377, ODATA-386, ODATA-441, ODATA-445, ODATA-453, ODATA-454, ODATA-455, ODATA-456, ODATA-457, ODATA-458, ODATA-459, ODATA-460, ODATA-463 and ODATA-464 as applied. **Martin seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
 
-####4.4.1 [ODATA-262](https://tools.oasis-open.org/issues/browse/ODATA-262)
-
-ODATA-262:
-: "Specify how OData services can be protected against cross-site request forgery (CSRF or XSRF)" [component: Securing Open Data] is **Applied**.
-
-**Note**:
-> Issue state has been progressed by grouping motion (cf. section [[4.4][GM1]])
-
-ODATA-262:
-: "Specify how OData services can be protected against cross-site request forgery (CSRF or XSRF)" [component: Securing Open Data] is **Closed** with no objections.
-
-####4.4.2 [ODATA-291](https://tools.oasis-open.org/issues/browse/ODATA-291)
-
-ODATA-291:
-: "Consider adding a mechanism for idempotence with POST" [component: Idempotence] is **Applied**.
-
-**Note**:
-> Issue state has been progressed by grouping motion (cf. section [[4.4][GM1]])
-
-ODATA-291:
-: "Consider adding a mechanism for idempotence with POST" [component: Idempotence] is **Closed** with no objections.
-
-####4.4.3 [ODATA-377](https://tools.oasis-open.org/issues/browse/ODATA-377)
+####4.4.1 [ODATA-377](https://tools.oasis-open.org/issues/browse/ODATA-377)
 
 ODATA-377:
 : "Fix broken links in CSD01 documents " [components: OData CSDL, OData ATOM Format, OData Protocol, OData JSON Format, OData URL Conventions] is **Applied**.
@@ -145,7 +123,7 @@ ODATA-377:
 ODATA-377:
 : "Fix broken links in CSD01 documents " [components: OData CSDL, OData ATOM Format, OData Protocol, OData JSON Format, OData URL Conventions] is **Closed** with no objections.
 
-####4.4.4 [ODATA-386](https://tools.oasis-open.org/issues/browse/ODATA-386)
+####4.4.2 [ODATA-386](https://tools.oasis-open.org/issues/browse/ODATA-386)
 
 ODATA-386:
 : "odata-v4.0-csprd01-part1-protocol, 3 Data Model, appears to be an unnumbered list of definitions, with annotations defined in a separate subsection - suggest new format, etc." [component: OData Protocol] is **Applied**.
@@ -156,18 +134,7 @@ ODATA-386:
 ODATA-386:
 : "odata-v4.0-csprd01-part1-protocol, 3 Data Model, appears to be an unnumbered list of definitions, with annotations defined in a separate subsection - suggest new format, etc." [component: OData Protocol] is **Closed** with no objections.
 
-####4.4.5 [ODATA-391](https://tools.oasis-open.org/issues/browse/ODATA-391)
-
-ODATA-391:
-: "Add query function isdefined(PropertyPath) to determine whether an instance has a property of that name" [component: OData Extension for Data Aggregation] is **Applied**.
-
-**Note**:
-> Issue state has been progressed by grouping motion (cf. section [[4.4][GM1]])
-
-ODATA-391:
-: "Add query function isdefined(PropertyPath) to determine whether an instance has a property of that name" [component: OData Extension for Data Aggregation] is **Closed** with no objections.
-
-####4.4.6 [ODATA-441](https://tools.oasis-open.org/issues/browse/ODATA-441)
+####4.4.3 [ODATA-441](https://tools.oasis-open.org/issues/browse/ODATA-441)
 
 ODATA-441:
 : "Specify canonical form of entity-id" [components: OData URL Conventions, OData Protocol] is **Applied**.
@@ -178,7 +145,7 @@ ODATA-441:
 ODATA-441:
 : "Specify canonical form of entity-id" [components: OData URL Conventions, OData Protocol] is **Closed** with no objections.
 
-####4.4.7 [ODATA-445](https://tools.oasis-open.org/issues/browse/ODATA-445)
+####4.4.4 [ODATA-445](https://tools.oasis-open.org/issues/browse/ODATA-445)
 
 ODATA-445:
 : "odata.type relative to odata.type in surrounding entities" [components: OData JSON Format, OData ATOM Format] is **Applied**.
@@ -189,7 +156,7 @@ ODATA-445:
 ODATA-445:
 : "odata.type relative to odata.type in surrounding entities" [components: OData JSON Format, OData ATOM Format] is **Closed** with no objections.
 
-####4.4.8 [ODATA-453](https://tools.oasis-open.org/issues/browse/ODATA-453)
+####4.4.5 [ODATA-453](https://tools.oasis-open.org/issues/browse/ODATA-453)
 
 ODATA-453:
 : "deal with KEY function" [components: OData URL Conventions, OData ABNF Construction Rules] is **Applied**.
@@ -200,7 +167,7 @@ ODATA-453:
 ODATA-453:
 : "deal with KEY function" [components: OData URL Conventions, OData ABNF Construction Rules] is **Closed** with no objections.
 
-####4.4.9 [ODATA-454](https://tools.oasis-open.org/issues/browse/ODATA-454)
+####4.4.6 [ODATA-454](https://tools.oasis-open.org/issues/browse/ODATA-454)
 
 ODATA-454:
 : "Need a way to specify a property is unavailable" [components: OData JSON Format, OData ATOM Format, Vocabularies] is **Applied**.
@@ -211,7 +178,7 @@ ODATA-454:
 ODATA-454:
 : "Need a way to specify a property is unavailable" [components: OData JSON Format, OData ATOM Format, Vocabularies] is **Closed** with no objections.
 
-####4.4.10 [ODATA-455](https://tools.oasis-open.org/issues/browse/ODATA-455)
+####4.4.7 [ODATA-455](https://tools.oasis-open.org/issues/browse/ODATA-455)
 
 ODATA-455:
 : "Make EntityContainer a Singleton in MetadataService" [component: OData CSDL] is **Applied**.
@@ -222,7 +189,7 @@ ODATA-455:
 ODATA-455:
 : "Make EntityContainer a Singleton in MetadataService" [component: OData CSDL] is **Closed** with no objections.
 
-####4.4.11 [ODATA-456](https://tools.oasis-open.org/issues/browse/ODATA-456)
+####4.4.8 [ODATA-456](https://tools.oasis-open.org/issues/browse/ODATA-456)
 
 ODATA-456:
 : "Don't require client to specify odata.trackchanges preference on each page" [component: OData Protocol] is **Applied**.
@@ -233,7 +200,7 @@ ODATA-456:
 ODATA-456:
 : "Don't require client to specify odata.trackchanges preference on each page" [component: OData Protocol] is **Closed** with no objections.
 
-####4.4.12 [ODATA-457](https://tools.oasis-open.org/issues/browse/ODATA-457)
+####4.4.9 [ODATA-457](https://tools.oasis-open.org/issues/browse/ODATA-457)
 
 ODATA-457:
 : "Require hash (#) on odata.type" [components: OData ATOM Format, OData ABNF Construction Rules, OData Extension for JSON Data] is **Applied**.
@@ -244,7 +211,7 @@ ODATA-457:
 ODATA-457:
 : "Require hash (#) on odata.type" [components: OData ATOM Format, OData ABNF Construction Rules, OData Extension for JSON Data] is **Closed** with no objections.
 
-####4.4.13 [ODATA-458](https://tools.oasis-open.org/issues/browse/ODATA-458)
+####4.4.10 [ODATA-458](https://tools.oasis-open.org/issues/browse/ODATA-458)
 
 ODATA-458:
 : "odata.isolation should be a header rather than an expectation" [component: OData Protocol] is **Applied**.
@@ -255,7 +222,7 @@ ODATA-458:
 ODATA-458:
 : "odata.isolation should be a header rather than an expectation" [component: OData Protocol] is **Closed** with no objections.
 
-####4.4.14 [ODATA-459](https://tools.oasis-open.org/issues/browse/ODATA-459)
+####4.4.11 [ODATA-459](https://tools.oasis-open.org/issues/browse/ODATA-459)
 
 ODATA-459:
 : "State consequences of using IRIs that are not URLs" [component: OData Protocol] is **Applied**.
@@ -266,7 +233,7 @@ ODATA-459:
 ODATA-459:
 : "State consequences of using IRIs that are not URLs" [component: OData Protocol] is **Closed** with no objections.
 
-####4.4.15 [ODATA-460](https://tools.oasis-open.org/issues/browse/ODATA-460)
+####4.4.12 [ODATA-460](https://tools.oasis-open.org/issues/browse/ODATA-460)
 
 ODATA-460:
 : "Add terms to capability vocabulary" [components: Vocabularies, OData Protocol] is **Applied**.
@@ -325,21 +292,18 @@ None.
 
 JIRA Issues:
 
-* [ODATA-262](https://tools.oasis-open.org/issues/browse/ODATA-262) "Specify how OData services can be protected against cross-site request forgery (CSRF or XSRF)" [4.4.1][odata-262]
-* [ODATA-291](https://tools.oasis-open.org/issues/browse/ODATA-291) "Consider adding a mechanism for idempotence with POST" [4.4.2][odata-291]
-* [ODATA-377](https://tools.oasis-open.org/issues/browse/ODATA-377) "Fix broken links in CSD01 documents " [4.4.3][odata-377]
-* [ODATA-386](https://tools.oasis-open.org/issues/browse/ODATA-386) "odata-v4.0-csprd01-part1-protocol, 3 Data Model, appears to be an unnumbered list of definitions, with annotations defined in a separate subsection - suggest new format, etc." [4.4.4][odata-386]
-* [ODATA-391](https://tools.oasis-open.org/issues/browse/ODATA-391) "Add query function isdefined(PropertyPath) to determine whether an instance has a property of that name" [4.4.5][odata-391]
-* [ODATA-441](https://tools.oasis-open.org/issues/browse/ODATA-441) "Specify canonical form of entity-id" [4.4.6][odata-441]
-* [ODATA-445](https://tools.oasis-open.org/issues/browse/ODATA-445) "odata.type relative to odata.type in surrounding entities" [4.4.7][odata-445]
-* [ODATA-453](https://tools.oasis-open.org/issues/browse/ODATA-453) "deal with KEY function" [4.4.8][odata-453]
-* [ODATA-454](https://tools.oasis-open.org/issues/browse/ODATA-454) "Need a way to specify a property is unavailable" [4.4.9][odata-454]
-* [ODATA-455](https://tools.oasis-open.org/issues/browse/ODATA-455) "Make EntityContainer a Singleton in MetadataService" [4.4.10][odata-455]
-* [ODATA-456](https://tools.oasis-open.org/issues/browse/ODATA-456) "Don't require client to specify odata.trackchanges preference on each page" [4.4.11][odata-456]
-* [ODATA-457](https://tools.oasis-open.org/issues/browse/ODATA-457) "Require hash (#) on odata.type" [4.4.12][odata-457]
-* [ODATA-458](https://tools.oasis-open.org/issues/browse/ODATA-458) "odata.isolation should be a header rather than an expectation" [4.4.13][odata-458]
-* [ODATA-459](https://tools.oasis-open.org/issues/browse/ODATA-459) "State consequences of using IRIs that are not URLs" [4.4.14][odata-459]
-* [ODATA-460](https://tools.oasis-open.org/issues/browse/ODATA-460) "Add terms to capability vocabulary" [4.4.15][odata-460]
+* [ODATA-377](https://tools.oasis-open.org/issues/browse/ODATA-377) "Fix broken links in CSD01 documents " [4.4.1][odata-377]
+* [ODATA-386](https://tools.oasis-open.org/issues/browse/ODATA-386) "odata-v4.0-csprd01-part1-protocol, 3 Data Model, appears to be an unnumbered list of definitions, with annotations defined in a separate subsection - suggest new format, etc." [4.4.2][odata-386]
+* [ODATA-441](https://tools.oasis-open.org/issues/browse/ODATA-441) "Specify canonical form of entity-id" [4.4.3][odata-441]
+* [ODATA-445](https://tools.oasis-open.org/issues/browse/ODATA-445) "odata.type relative to odata.type in surrounding entities" [4.4.4][odata-445]
+* [ODATA-453](https://tools.oasis-open.org/issues/browse/ODATA-453) "deal with KEY function" [4.4.5][odata-453]
+* [ODATA-454](https://tools.oasis-open.org/issues/browse/ODATA-454) "Need a way to specify a property is unavailable" [4.4.6][odata-454]
+* [ODATA-455](https://tools.oasis-open.org/issues/browse/ODATA-455) "Make EntityContainer a Singleton in MetadataService" [4.4.7][odata-455]
+* [ODATA-456](https://tools.oasis-open.org/issues/browse/ODATA-456) "Don't require client to specify odata.trackchanges preference on each page" [4.4.8][odata-456]
+* [ODATA-457](https://tools.oasis-open.org/issues/browse/ODATA-457) "Require hash (#) on odata.type" [4.4.9][odata-457]
+* [ODATA-458](https://tools.oasis-open.org/issues/browse/ODATA-458) "odata.isolation should be a header rather than an expectation" [4.4.10][odata-458]
+* [ODATA-459](https://tools.oasis-open.org/issues/browse/ODATA-459) "State consequences of using IRIs that are not URLs" [4.4.11][odata-459]
+* [ODATA-460](https://tools.oasis-open.org/issues/browse/ODATA-460) "Add terms to capability vocabulary" [4.4.12][odata-460]
 * [ODATA-463](https://tools.oasis-open.org/issues/browse/ODATA-463) "Deleted-entry, link, and deleted-link should include {entity-set} in context URL" [4.1][odata-463]
 * [ODATA-464](https://tools.oasis-open.org/issues/browse/ODATA-464) "Disallows $format for delta and next links" [4.2][odata-464]
 
