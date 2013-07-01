@@ -56,9 +56,6 @@
     <Match>Products</Match>
     <Match>Sales</Match>
   </Constraint>
-  <Constraint Rule="entityContainer">
-    <Match>Container</Match>
-  </Constraint>
   <Constraint Rule="entityColFunction">
   </Constraint>
   <Constraint Rule="entityColFunctionImport">
@@ -98,6 +95,7 @@
     <Match>Sales</Match>
     <Match>SalesOrganizations</Match>
     <Match>Suppliers</Match>
+    <Match>Time</Match>
   </Constraint>
   <Constraint Rule="entityTypeName">
     <Match>Customer</Match>
@@ -124,6 +122,7 @@
     <Match>BestProductEverCreated</Match>
   </Constraint>
   <Constraint Rule="namespacePart">
+    <Match>Aggregation</Match>
     <Match>Model</Match>
     <Match>Namespace</Match>
     <Match>odata</Match>
@@ -142,9 +141,11 @@
     <Match>Sizes</Match>
   </Constraint>
   <Constraint Rule="primitiveFunction">
-    <Match>Available</Match>
-    <Match>MostPopularName</Match>
-    <Match>PhoneticallySimilar</Match>
+    <Match>isroot</Match>
+    <Match>isleaf</Match>
+    <Match>isancestor</Match>
+    <Match>issibling</Match>
+    <Match>isdescendant</Match>
   </Constraint>
   <Constraint Rule="primitiveFunctionImport">
     <Match>TheMostPopularName</Match>
@@ -262,28 +263,28 @@
     <Input>$apply=expand(Sales,Amount gt 3)</Input>
   </TestCase>
   <TestCase Name="Aggregation - on entity container" Rule="odataRelativeUri">
-    <Input>Model.Container?$apply=groupby((Products/Name,Time/Date),aggregate(Sales/Amount))</Input>
+    <Input>$crossjoin(Products,Time,Sales)?$apply=groupby((Products/Name,Time/Date),aggregate(Sales/Amount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - hierarchy functions - isroot" Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isroot(SaM.SalesOrgHierarchy)</Input>
+    <Input>SalesOrganizations?$filter=$it/Aggregation.isroot(Hierarchy='SaM.SalesOrgHierarchy')</Input>
   </TestCase>
   <TestCase Name="Aggregation - hierarchy functions - isdescendant" Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isdescendant(SaM.SalesOrgHierarchy,'EMEA')</Input>
+    <Input>SalesOrganizations?$filter=$it/Aggregation.isdescendant(Hierarchy='SaM.SalesOrgHierarchy',Node='EMEA')</Input>
   </TestCase>
   <TestCase Name="Aggregation - hierarchy functions - isdescendant" Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isdescendant(SaM.SalesOrgHierarchy,'EMEA',1)</Input>
+    <Input>SalesOrganizations?$filter=$it/Aggregation.isdescendant(Hierarchy='SaM.SalesOrgHierarchy',Node='EMEA',MaxDistance=1)</Input>
   </TestCase>
   <TestCase Name="Aggregation - hierarchy functions - isancestor" Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isancestor(SaM.SalesOrgHierarchy,'EMEA')</Input>
+    <Input>SalesOrganizations?$filter=$it/Aggregation.isancestor(Hierarchy='SaM.SalesOrgHierarchy',Node='EMEA')</Input>
   </TestCase>
   <TestCase Name="Aggregation - hierarchy functions - isancestor" Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isancestor(SaM.SalesOrgHierarchy,'EMEA',1)</Input>
+    <Input>SalesOrganizations?$filter=$it/Aggregation.isancestor(Hierarchy='SaM.SalesOrgHierarchy',Node='EMEA',MaxDistance=1)</Input>
   </TestCase>
   <TestCase Name="Aggregation - hierarchy functions - issibling" Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=issibling(SaM.SalesOrgHierarchy,'EMEA')</Input>
+    <Input>SalesOrganizations?$filter=$it/Aggregation.issibling(Hierarchy='SaM.SalesOrgHierarchy',Node='EMEA')</Input>
   </TestCase>
   <TestCase Name="Aggregation - hierarchy functions - isleaf" Rule="odataRelativeUri">
-    <Input>SalesOrganizations?$filter=isleaf(SaM.SalesOrgHierarchy)</Input>
+    <Input>SalesOrganizations?$filter=$it/Aggregation.isleaf(Hierarchy='SaM.SalesOrgHierarchy')</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" Rule="odataRelativeUri">
     <Input>Customers?$apply=groupby((Name),aggregate())</Input>
