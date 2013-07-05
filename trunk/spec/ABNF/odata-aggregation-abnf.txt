@@ -95,35 +95,31 @@ applyTrafo = aggregateTrafo
 aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
 aggregateParam  = expandPath OPEN aggregateExpr CLOSE   
                 / aggregateExpr
-                / propertyWithPath
+                / aggregatedProperty [ aggregateWith ]
 aggregateExpr   = ( '$count'                     aggregateAs 
                   / commonExpr [ aggregateWith ] aggregateAs *( aggregateFrom ) 
                   ) 
 aggregateAs     = RWS 'as'   RWS odataIdentifier
 aggregateWith   = RWS 'with' RWS aggregateMethod        
-aggregateFrom   = RWS 'from' RWS propertyWithPath [ aggregateWith ]
+aggregateFrom   = RWS 'from' RWS groupingProperty [ aggregateWith ]
 aggregateMethod = 'sum' 
                 / 'min' 
                 / 'max' 
                 / 'average' 
                 / 'countdistinct' 
                 / namespace "." odataIdentifier
-
-; TODO: do we allow aggregation of primitive values in collections of complex or primitive type?                 
-propertyWithPath = [ qualifiedEntityTypeName "/" ] 
-                   *( complexProperty    [ "/" qualifiedComplexTypeName ] "/"
-                    / navigationProperty [ "/" qualifiedEntityTypeName  ] "/" 
-                    ) 
-                   ( navigationProperty [ "/" qualifiedEntityTypeName ] 
-                   / structuralProperty 
-                   )
-
-structuralProperty = primitiveProperty  
-                   / primitiveColProperty 
-                   / complexProperty 
-                   / complexColProperty 
-                   / streamProperty
-
+                
+aggregatedProperty = pathPrefix ( primitiveProperty / primitiveColProperty )                
+groupingProperty   = pathPrefix
+                     ( entityNavigationProperty [ "/" qualifiedEntityTypeName ] 
+                     / primitiveProperty 
+                     / complexProperty
+                     )
+pathPrefix         = [ qualifiedEntityTypeName "/" ] 
+                     *( ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] "/"
+                      / navigationProperty [ "/" qualifiedEntityTypeName  ] "/" 
+                      ) 
+                           
 bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
@@ -134,10 +130,10 @@ filterTrafo = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
 
 groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOSE
 groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
-groupbyElement = propertyWithPath / rollupSpec
+groupbyElement = groupingProperty / rollupSpec
 rollupSpec     = 'rollup' OPEN BWS 
-                  ( '$all' / propertyWithPath )
-                  1*( BWS COMMA BWS propertyWithPath ) 
+                  ( '$all' / groupingProperty )
+                  1*( BWS COMMA BWS groupingProperty ) 
                   BWS CLOSE
 
 identityTrafo = 'identity'
