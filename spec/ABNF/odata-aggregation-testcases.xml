@@ -12,6 +12,7 @@
   <Constraint Rule="actionImport">
   </Constraint>
   <Constraint Rule="complexColProperty">
+    <Match>Details</Match>
   </Constraint>
   <Constraint Rule="complexColFunction">
   </Constraint>
@@ -245,6 +246,12 @@
     <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum as TotalAmount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" Rule="queryOptions">
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" Rule="queryOptions">
+    <Input>$apply=groupby((Customer/Country),aggregate(Amount as TotalAmount))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" Rule="queryOptions">
     <Input>$apply=groupby((Customer/Country),aggregate(Amount with min as MinAmount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" Rule="queryOptions">
@@ -261,6 +268,21 @@
   </TestCase>
   <TestCase Name="Aggregation - Examples" Rule="queryOptions">
     <Input>$apply=groupby((Name),aggregate(Sales/$count as SalesCount,Sales(Amount as TotalAmount)))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" Rule="queryOptions">
+    <Input>$apply=groupby((Customer/Country),aggregate(Sales/Amount))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples" Rule="queryOptions">
+    <Input>$apply=groupby((Customer/Country),aggregate(Sales/Amount with sum))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples - alias required" Rule="queryOptions" FailAt="66">
+    <Input>$apply=groupby((Customer/Country),aggregate(Sales/Amount with sum from Time with average))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - Examples - alias required" Rule="queryOptions" FailAt="66">
+    <Input>$apply=groupby((Customer/Country),aggregate(Sales(Amount with sum from Time with average)))</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - collection of complex type" Rule="queryOptions">
+    <Input>$apply=groupby((Product),aggregate(Details/Amount))</Input>
   </TestCase>
   <TestCase Name="Aggregation - Examples" Rule="queryOptions">
     <Input>$apply=groupby((Customer/Country),aggregate(Amount with sum as TotalAmount,Amount with average as AvgAmt))</Input>
