@@ -42,39 +42,36 @@
 ;   sum, min, and max) to the Open Data Protocol (OData) without changing any
 ;   of the base principles of OData.
 ;
-; Status:
-;   This Working Draft (WD) has been produced by one or more TC Members; it has
-;   not yet been voted on by the TC or approved as a Committee Draft (Committee
-;   Specification Draft or a Committee Note Draft). The OASIS document Approval
-;   Process begins officially with a TC vote to approve a WD as a Committee
-;   Draft. A TC may approve a Working Draft, revise it, and re-approve it any
-;   number of times as a Committee Draft.
-;
-;
 ; Overview:
-;   This grammar uses the ABNF defined in RFC5234 with one extension: literals 
-;   enclosed in single quotes (e.g. '$metadata') are treated case-sensitive. 
+;   This grammar extends the OData ABNF Construction Rules Version 4.0
 ;
-;   The following rules assume that URIs have been percent-encoding normalized
-;   as described in section 6.2.2.2 of RFC3986 
-;   (http://tools.ietf.org/html/rfc3986#section-6.2.2.2)
-;   before applying the grammar to them, i.e. all characters in the unreserved 
-;   set (see rule "unreserved" below) are plain literals and NOT
-;   percent-encoded. 
-;
-;   For characters outside the unreserved set the rules explicitly state 
-;   whether the percent-encoded representation is treated identical to the
-;   plain literal representation.
-; 
-;   One prominent example is the single quote that delimits OData primitive  
-;   type literals: %27 and ' are treated identically, so a single quote within 
-;   a string literal is "encoded" as two consecutive single quotes in either
-;   literal or percent-encoded representation.
+; Contents:
+;   1. New alternatives for OData ABNF Construction Rules
+;   2. System Query Option $apply
+;   3. Extensions to $filter 
 ;
 ;------------------------------------------------------------------------------
 
+;------------------------------------------------------------------------------
+; 1. New alternatives for OData ABNF Construction Rules
+;------------------------------------------------------------------------------
 
-systemQueryOption =/ apply    ; new alternative for systemQueryOption core rule
+systemQueryOption =/ apply   
+
+boolMethodCallExpr =/ isdefinedExpr
+
+
+;------------------------------------------------------------------------------
+; 2. System Query Option $apply
+;------------------------------------------------------------------------------
+
+; TODO: experimental; discuss
+; TODO: discuss if we want to allow subsequent path segments after $apply:
+; collectionNavPath =/ applySegment [ collectionNavigation ]
+; collectionNavPath =/ applySegment
+; applySegment = '/$apply' OPEN ( applyExpr / parameterAlias ) CLOSE
+; TODO: extend aliasAndValue rule to aliasAndApplyExpr
+; end-of-TODO
 
 
 apply      = '$apply' EQ applyExpr
@@ -88,10 +85,12 @@ applyTrafo = aggregateTrafo
            / filterTrafo
            / groupbyTrafo
            / identityTrafo
+           / searchTrafo
            / topcountTrafo
            / toppercentTrafo
            / topsumTrafo
-
+           / customFunction
+           
 aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
 aggregateParam  = expandPath OPEN aggregateExpr CLOSE   
                 / aggregateExpr
@@ -127,6 +126,7 @@ bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExp
 concatTrafo = 'concat' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
 expandTrafo = 'expand' OPEN BWS expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
 filterTrafo = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
+searchTrafo = 'search' OPEN BWS searchExpr BWS CLOSE
 
 groupbyTrafo   = 'groupby' OPEN BWS groupbyList BWS COMMA BWS applyExpr BWS CLOSE
 groupbyList    = OPEN BWS groupbyElement *( BWS COMMA BWS groupbyElement ) BWS CLOSE
@@ -141,6 +141,15 @@ identityTrafo = 'identity'
 topcountTrafo   = 'topcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 toppercentTrafo = 'toppercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 topsumTrafo     = 'topsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+
+customFunction = namespace "." entityColFunction functionExprParameters
+
+
+;------------------------------------------------------------------------------
+; 3. Extensions to $filter
+;------------------------------------------------------------------------------
+
+isdefinedExpr = 'isdefined' OPEN BWS ( groupingProperty / aggregatedProperty ) BWS CLOSE
 
 
 ;------------------------------------------------------------------------------
