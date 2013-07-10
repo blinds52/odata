@@ -6,7 +6,6 @@
   <DisableTrace Rule="ALPHA" />
   <DisableTrace Rule="DIGIT" />
 
-  <!-- TODO: remove unnecessary matches, be careful when removing constraints -->
   <Constraint Rule="action">
   </Constraint>
   <Constraint Rule="actionImport">
@@ -29,6 +28,7 @@
   <Constraint Rule="customName">
   </Constraint>
   <Constraint Rule="entityColFunction">
+    <Match>Magic</Match>
   </Constraint>
   <Constraint Rule="entityColFunctionImport">
   </Constraint>
@@ -76,6 +76,7 @@
   </Constraint>
   <Constraint Rule="namespacePart">
     <Match>Aggregation</Match>
+    <Match>Custom</Match>
   </Constraint>
   <Constraint Rule="primitiveColFunction">
   </Constraint>
@@ -184,6 +185,9 @@
   </TestCase>
   <TestCase Name="Aggregation - expand" Rule="queryOptions">
     <Input>$apply=expand(Sales,Amount gt 3)</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - search" Rule="queryOptions">
+    <Input>$apply=search(Hugo)</Input>
   </TestCase>
   <TestCase Name="Aggregation - on entity container" Rule="odataRelativeUri">
     <Input>$crossjoin(Products,Time,Sales)?$apply=groupby((Products/Name,Time/Date),aggregate(Sales/Amount))</Input>
@@ -326,4 +330,18 @@
   <TestCase Name="Aggregation - Examples" Rule="queryOptions">
     <Input>$apply=filter(Status eq 'incomplete')/expand(Items,not Shipped)/groupby((Customer/Country),aggregate(Items/Amount))</Input>
   </TestCase>
+  <TestCase Name="Aggregation - isdefined" Rule="queryOptions">
+    <Input>$filter=isdefined(Sales/Amount) and isdefined(Customer/Name)</Input>
+  </TestCase>
+  <TestCase Name="Aggregation - custom function" Rule="queryOptions">
+    <Input>$apply=aggregate(Amount)/Custom.Magic(Rule=1)</Input>
+  </TestCase>
+  <!-- TODO: experimental path segment
+  <TestCase Name="Aggregation - Examples" Rule="collectionNavigation">
+    <Input>/$apply(groupby((Name),aggregate(Sales/Amount)))</Input>
+  </TestCase>
+    <TestCase Name="Aggregation - Examples" Rule="collectionNavigation">
+    <Input>/$apply(@pipe)?@pipe=groupby((Name),aggregate(Sales/Amount))</Input>
+  </TestCase>
+  -->
 </TestSuite>
