@@ -17,9 +17,10 @@
 ;   - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
 ;
 ; Additional artifacts: 
-;   This prose specification is one component of a Work Product that consists
-;   of:
-;   - OData Extension for Data Aggregation Version 4.0 (this document)
+;   This grammar is one component of a Work Product which consists of:
+;   - OData Extension for Data Aggregation Version 4.0
+;   - OData Aggregation ABNF Construction Rules Version 4.0
+;   - OData Aggregation ABNF Test Cases
 ;   - OData Aggregation Vocabulary
 ;
 ; Related work:
@@ -43,7 +44,10 @@
 ;   of the base principles of OData.
 ;
 ; Overview:
-;   This grammar extends the OData ABNF Construction Rules Version 4.0
+;   This grammar uses the ABNF defined in RFC5234 with one extension: literals 
+;   enclosed in single quotes (e.g. '$metadata') are treated case-sensitive. 
+;
+;   It extends the OData ABNF Construction Rules Version 4.0
 ;
 ; Contents:
 ;   1. New alternatives for OData ABNF Construction Rules
@@ -64,15 +68,6 @@ boolMethodCallExpr =/ isdefinedExpr
 ;------------------------------------------------------------------------------
 ; 2. System Query Option $apply
 ;------------------------------------------------------------------------------
-
-; TODO: experimental; discuss
-; TODO: discuss if we want to allow subsequent path segments after $apply:
-; collectionNavPath =/ applySegment [ collectionNavigation ]
-; collectionNavPath =/ applySegment
-; applySegment = '/$apply' OPEN ( applyExpr / parameterAlias ) CLOSE
-; TODO: extend aliasAndValue rule to aliasAndApplyExpr
-; end-of-TODO
-
 
 apply      = '$apply' EQ applyExpr
 applyExpr  = applyTrafo *( "/" applyTrafo )
