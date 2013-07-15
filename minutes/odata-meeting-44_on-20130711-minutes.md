@@ -28,9 +28,19 @@ Meeting chaired by Barbara Hartel
 
 Quorum achieved. Details cf. [normative attendance sheet for this meeting](https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=34205).
 
-## 2 Classification of Changes to CSPRD02
+## 2 Approval of Agenda
 
-###2.1 Document Part 1: Protocol
+Approved
+
+## 3 Approval of Minutes from Previous Meeting(s)
+
+### 3.1 Approval of [Minutes of 2013-06-24 Meeting#43](https://www.oasis-open.org/committees/download.php/49699/odata-meeting-43_on-20130624-minutes.html)
+
+**Meeting minutes approved with no objections**.
+
+## 4 Classification of Changes to CSPRD02
+
+###4.1 Document Part 1: Protocol
 
 Change Section 10.17: Removed superfluous dot character
 Last sentence of the section contained a dot character in the middle of a sentence. This dot was removed.
@@ -40,7 +50,7 @@ Paragraph 6, Sentence 4 contained two consecutive space characters. One of them 
 
 All: Change Section 10.17 and Section 11.6 are agreed to be non-material
 
-###2.2 Document Part 3: CSDL
+###4.2 Document Part 3: CSDL
 
 Several Sections: Removed superfluous space characters
 In several sentences, two consecutive space characters were reduced to one space character.
@@ -84,7 +94,7 @@ All: Correcting the description does not add or remove a feature, so it is a non
 
 All agree that changes in Part 3: CSDL above are non material
 
-###2.3 XML Schema edm.xsd
+###4.3 XML Schema edm.xsd
 
 Removed attribute IsDefaultEntityContainer from element EntityContainer
 The attribute was removed from CSDL with ODATA-435 and should have been removed here, too.
@@ -113,7 +123,7 @@ The "front matter" comments were copied from a working draft template, and the S
 
 All agree that the changes in XML Schema edm.xsd are non-material
 
-###2.4 abnf-construction-rules.txt
+###4.4 abnf-construction-rules.txt
 
 Removed comments on document status
 The "front matter" comments were copied from a working draft template, and the Status section did not make sense in this text document.
@@ -127,7 +137,7 @@ All: Extracting the rule does not add or remove a feature, so it is a non-materi
 
 All agree that the changes in abnf-construction-rules.txt are non-material
 
-###2.5 Org.OData.Capabilities.V1.xml, Org.OData.Measures.V1.xml and Org.OData.Atom.V1.xml
+###4.5 Org.OData.Capabilities.V1.xml, Org.OData.Measures.V1.xml and Org.OData.Atom.V1.xml
 
 Changed value of Uri attribute in line 3 of every file.
 The value was a link to the current SVN copy instead of a link to the future publishing location of the committee specification.
@@ -135,9 +145,9 @@ The value was a link to the current SVN copy instead of a link to the future pub
 
 All agree that the changes in Org.OData.Capabilities.V1.xml, Org.OData.Measures.V1.xml and Org.OData.Atom.V1.xml above are non-material
 
-###2.6 Changes to Non-Normative Examples
+###4.6 Changes to Non-Normative Examples
 
-####2.6.1 Part 1: Protocol
+####4.6.1 Part 1: Protocol
 
 Section 11.5.2, Example 71: Corrected two typos
 Changed #SampleEntities.MostRecent to #SampleEntities.MostRecentOrder and MostRecentOrder to MostRecentOrder(). Now the example is consistent and correct.
@@ -150,7 +160,7 @@ Sales. was a typo in the URL, and the example description was misleading.
 
 All agree that the changes above in the examples of Part 1: Protocol are non-material
 
-####2.6.2 Part 2: URL Conventions
+####4.6.2 Part 2: URL Conventions
 
 Section 4.4, Example 25: Changed Products('Bread')  to Products(0)
 This example was inconsistent with the other examples in the document.
@@ -160,7 +170,7 @@ The example for a cross-join request lacked a response.
 
 All agree that the changes above of Part 2: URL Conventions are non-material
 
-####2.6.3 Part 3: CSDL
+####4.6.3 Part 3: CSDL
 
 Section 13, Example 28: Changed Function to Action and added space characters
 This was a typo; the attribute is named Action and not Function, see section 13.5.2.
@@ -183,7 +193,7 @@ This was a typo.
 
 All agree that the chenages in Part 3: CSDL abobve are non-material
 
-####2.6.4 Atom Format
+####4.6.4 Atom Format
 
 Section 14, Example 37: Corrected one typo
 Corrected a metadata:context URL (changed Orders to Customers).
@@ -193,7 +203,7 @@ This was a typo.
 
 All agree that the changes babove in Atom Format are non-material
 
-####2.6.5 JSON Format
+####4.6.5 JSON Format
 
 Chapter 13, Example 28: Corrected two typos
 The context URL still contained the suffix /$entity that was removed with ODATA-439.
@@ -209,7 +219,7 @@ This was a typo.
 
 All agree that the changes above in JSON Format are non-material
 
-##3 Feedback to "Changes to V3"
+##5 Feedback to "Changes to V3"
 
 Discussion:
 
@@ -219,13 +229,17 @@ Discussion:
 * Mike will write "history"
 * Ralf will Mention change of "substring" to "contains"
 
-## 4 Next Meetings
+## 6 Next Meetings
 
-### 4.1 Meeting on 2013-07-18 by Call during 0800-1000 PT
+### 6.1 Meeting on 2013-07-18 by Call during 0800-1000 PT
+
+Discussion:
+
+All agree, to hold the meetings thereafter with the usual duration of 1 hour
 
 Agreed.
 
-## 5 AOB
+## 7 AOB
 
 None.
 
