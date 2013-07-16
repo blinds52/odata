@@ -93,7 +93,7 @@ serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive
 
 odataRelativeUri = '$batch'                           ; Note: case-sensitive!
                  / '$entity' "?" entityOptions  
-                 / '$metadata' [ "?" format ] [ contextFragment ]
+                 / '$metadata' [ "?" format ] [ context ]
                  / resourcePath [ "?" queryOptions ]
 
 
@@ -328,22 +328,21 @@ customValue       = *( qchar-no-AMP )
 ; 3. Context URL Fragments
 ;------------------------------------------------------------------------------
 
-contextFragment = "#" 
-                  ( 'Collection($ref)'
-                  / '$ref'
-                  / 'Collection(Edm.EntityType)'
-                  / 'Collection(Edm.ComplexType)'
-                  / singletonEntity
-                  / qualifiedTypeName
-                  / entitySetName '/$deletedEntity'
-                  / entitySetName '/$link'
-                  / entitySetName '/$deletedLink'
-                  / entitySetName [ keyPredicate ] [ "/" qualifiedEntityTypeName ] 
-                    *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
-                       "/" navigationProperty [ keyPredicate ]
-                     ) 
-                    [ propertyList ] [ '/$delta'  ] [ entity ]
-                  )
+context         = "#" contextFragment
+contextFragment = 'Collection($ref)'
+                / '$ref'
+                / 'Collection(Edm.EntityType)'
+                / 'Collection(Edm.ComplexType)'
+                / singletonEntity
+                / qualifiedTypeName
+                / entitySetName '/$deletedEntity'
+                / entitySetName '/$link'
+                / entitySetName '/$deletedLink'
+                / entitySetName [ keyPredicate ] [ "/" qualifiedEntityTypeName ] 
+                  *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
+                     "/" navigationProperty [ keyPredicate ]
+                   ) 
+                  [ propertyList ] [ '/$delta'  ] [ entity ]
 
 propertyList         = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
 propertyListItem     = STAR ; all structural properties
