@@ -25,6 +25,10 @@
         <Property Name="AggregatableProperties" Type="Collection(Aggregation.AggregatableProperty)">
           <Annotation Term="Core.Description" String="Properties that can be used in the aggregate transformation" />
         </Property>
+        <!-- TODO: consider merging these with AggregatableProperties via an abstract base type -->
+        <Property Name="DynamicAggregatableProperties" Type="Collection(Aggregation.DynamicAggregatableProperty)">
+          <Annotation Term="Core.Description" String="Properties that can be used in the aggregate transformation" />
+        </Property>
         <Property Name="GroupableProperties" Type="Collection(Aggregation.GroupableProperty)">
           <Annotation Term="Core.Description" String="Properties that can be used in the groupby transformation" />
         </Property>
@@ -55,8 +59,17 @@
         <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="Properties that must be grouped by when aggregating this property" />
         </Property>
-        <Property Name="UnSupportedGroupingProperties" Type="Collection(Edm.PropertyPath)">
+        <Property Name="UnsupportedGroupingProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="Properties that must not be grouped by when using this aggregation method" />
+        </Property>
+      </ComplexType>
+
+      <!-- TODO: consider introducing abstract base type for this and the "Declared"AggregatableProperty -->
+      <ComplexType Name="DynamicAggregatableProperty">
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Type" Type="Edm.String" />
+        <Property Name="SupportedGroupingProperties" Type="Collection(Edm.PropertyPath)">
+          <Annotation Term="Core.Description" String="The aggregated value is defined for (a subset of) these grouping properties" />
         </Property>
       </ComplexType>
 
