@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  Version="4.0"
+>
+  <edmx:Reference
+    Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/vocabularies/Org.OData.Aggregation.V1.xml"
+  >
+    <edmx:Include Alias="DataAggregation" Namespace="Org.OData.Aggregation.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="SalesModel" Namespace="org.example.odata.salesservice">
+
+      <Annotations Target="SalesModel.Container">
+        <Annotation Term="DataAggregation.SupportsApply">
+          <Record>
+            <PropertyValue Property="DynamicAggregatableProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="Name" String="Budget" />
+                  <PropertyValue Property="Type" String="Edm.Decimal" />
+                  <PropertyValue Property="SupportedGroupingProperties">
+                    <Collection>
+                      <PropertyPath>Time/Year</PropertyPath>
+                      <PropertyPath>SalesOranizations/Unit</PropertyPath>
+                    </Collection>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="SalesModel.Container/Sales">
+        <Annotation Term="DataAggregation.SupportsApply">
+          <Record>
+            <PropertyValue Property="DynamicAggregatableProperties">
+              <Collection>
+                <Record>
+                  <PropertyValue Property="Name" String="ForeCast" />
+                  <PropertyValue Property="Type" String="Edm.Decimal" />
+                  <PropertyValue Property="SupportedGroupingProperties">
+                    <Collection>
+                      <PropertyPath>Customer/Country</PropertyPath>
+                      <PropertyPath>Time/Month</PropertyPath>
+                      <PropertyPath>Time/Quarter</PropertyPath>
+                      <PropertyPath>Time/Year</PropertyPath>
+                    </Collection>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="SalesModel.Product">
+        <Annotation Term="DataAggregation.LeveledHierarchy" Qualifier="ProductHierarchy">
+          <Record>
+            <PropertyValue Property="Levels">
+              <Collection>
+                <String>Category/Name</String>
+                <String>Name</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="SalesModel.Time">
+        <Annotation Term="DataAggregation.LeveledHierarchy" Qualifier="TimeHierarchy">
+          <Record>
+            <PropertyValue Property="Levels">
+              <Collection>
+                <String>Year</String>
+                <String>Quarter</String>
+                <String>Month</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Annotations Target="SalesModel.SalesOrganization">
+        <Annotation Term="DataAggregation.RecursiveHierarchy" Qualifier="SalesOrgHierarchy">
+          <Record>
+            <PropertyValue Property="NodeProperty" String="ID" />
+            <PropertyValue Property="ParentNodeProperty" String="Superordinate/ID" />
+          </Record>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
