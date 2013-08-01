@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Temporal.V1" Alias="Temporal">
+      <Annotation Term="Core.Description">
+        <String>Terms to describe which data in a given entity model is time-dependent, and in which dimensions.</String>
+      </Annotation>
+
+      <Term Name="SupportsTemporal" Type="Aggregation.SupportsTemporalType" AppliesTo="EntitySet EntityContainer">
+        <Annotation Term="Core.Description">
+          <String>This entity set or entity container supports the temporal system query option</String>
+        </Annotation>
+      </Term>
+
+      <ComplexType Name="SupportsTemporalType">
+        <Property Name="Dimensions" Type="Temporal.Dimension" Nullable="false">
+          <Annotation Term="Core.Documentation" String="Time dimensions of this entity set or service" />
+        </Property>
+        <Property Name="From" Type="Edm.PropertyPath">
+          <Annotation Term="Core.Documentation" String="Lower boundary (inclusive) of application time" />
+        </Property>
+        <Property Name="To" Type="Edm.PropertyPath">
+          <Annotation Term="Core.Documentation" String="Upper boundary (exclusive) of application time" />
+        </Property>
+        <Property Name="SystemFrom" Type="Edm.PropertyPath">
+          <Annotation Term="Core.Documentation" String="Lower boundary (inclusive) of system time" />
+        </Property>
+        <Property Name="SystemTo" Type="Edm.PropertyPath">
+          <Annotation Term="Core.Documentation" String="Upper boundary (exclusive) of system time" />
+        </Property>
+      </ComplexType>
+
+      <EnumType Name="Dimension" IsFlags="true">
+        <Member Name="SystemTime" Value="1" />
+        <Member Name="ApplicationTime" Value="2" />
+        <Member Name="BiTemporal" Value="3" />
+      </EnumType>
+
+
+      <!-- TODO:
+        Effective type can only be Edm.Date or Edm.DateTimeOffset
+        Or just use Edm.DateTimeOffset and require "cast" of dates to dateTimesStamps? Which time zone would that be?
+      -->
+      <Term Name="From" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation" String="Lower boundary (inclusive) of application time" />
+      </Term>
+
+      <Term Name="To" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation" String="Upper boundary (exclusive) of application time" />
+      </Term>
+
+      <Term Name="SystemFrom" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation" String="Lower boundary (inclusive) of system time" />
+      </Term>
+
+      <Term Name="SystemTo" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation" String="Upper boundary (exclusive) of system time" />
+      </Term>
+
+
+      <Term Name="PointInTimeMultiplicity" Type="Temporal.MultiplicityType" AppliesTo="NavigationProperty">
+        <Annotation Term="Core.Description" String="The effective multiplicity at any given point in time" />
+      </Term>
+
+      <EnumType Name="MultiplicityType">
+        <Annotation Term="Core.Description" String="The multiplicity of a navigation property" />
+        <Member Name="ZeroOrOne" />
+        <Member Name="One" />
+        <Member Name="Many" />
+      </EnumType>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
