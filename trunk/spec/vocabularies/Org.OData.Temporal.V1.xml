@@ -16,34 +16,20 @@
       </Term>
 
       <ComplexType Name="SupportsTemporalType">
-        <Property Name="Dimensions" Type="Temporal.Dimension" Nullable="false">
-          <Annotation Term="Core.Documentation" String="Time dimensions of this entity set or service" />
+        <Property Name="ApplicationTimeGranularity" Type="Temporal.Granularity">
+          <Annotation Term="Core.Documentation" String="Time granularity of the application-time dimension" />
         </Property>
-        <Property Name="From" Type="Edm.PropertyPath">
-          <Annotation Term="Core.Documentation" String="Lower boundary (inclusive) of application time" />
-        </Property>
-        <Property Name="To" Type="Edm.PropertyPath">
-          <Annotation Term="Core.Documentation" String="Upper boundary (exclusive) of application time" />
-        </Property>
-        <Property Name="SystemFrom" Type="Edm.PropertyPath">
-          <Annotation Term="Core.Documentation" String="Lower boundary (inclusive) of system time" />
-        </Property>
-        <Property Name="SystemTo" Type="Edm.PropertyPath">
-          <Annotation Term="Core.Documentation" String="Upper boundary (exclusive) of system time" />
+        <Property Name="SystemTimeGranularity" Type="Temporal.Granularity">
+          <Annotation Term="Core.Documentation" String="Time granularity of the system-time dimension" />
         </Property>
       </ComplexType>
 
-      <EnumType Name="Dimension" IsFlags="true">
-        <Member Name="SystemTime" Value="1" />
-        <Member Name="ApplicationTime" Value="2" />
-        <Member Name="BiTemporal" Value="3" />
+      <EnumType Name="Granularity" IsFlags="false">
+        <Member Name="Date" />
+        <Member Name="DateTimeOffset" />
       </EnumType>
+      
 
-
-      <!-- TODO:
-        Effective type can only be Edm.Date or Edm.DateTimeOffset
-        Or just use Edm.DateTimeOffset and require "cast" of dates to dateTimesStamps? Which time zone would that be?
-      -->
       <Term Name="From" Type="Edm.PrimitiveType" AppliesTo="EntityType">
         <Annotation Term="Core.Documentation" String="Lower boundary (inclusive) of application time" />
       </Term>
