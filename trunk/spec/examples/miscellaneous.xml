@@ -22,6 +22,41 @@
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" />
       <Annotation Term="UI.ReferenceFacet" UrlRef="http://LineItem" />
 
+      <Annotation Term="UI.HyperLink" NavigationPropertyPath="Supplier" />
+
+      <Annotation Term="Capabilities.UpdateRestrictions">
+        <Record>
+          <PropertyValue Property="NonUpdatableNavigationProperties">
+            <Collection>
+              <NavigationPropertyPath>Supplier</NavigationPropertyPath>
+              <NavigationPropertyPath>Category</NavigationPropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+
+      <Annotation Term="SearchVocabulary.SearchResult">
+        <Record>
+          <PropertyValue Property="Title" Path="Name" />
+          <PropertyValue Property="Abstract" Path="Description" />
+          <PropertyValue Property="Url">
+            <Apply Function="odata.concat">
+              <String>Products(</String>
+              <Path>ID</Path>
+              <String>)</String>
+            </Apply>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+
+      <Annotation Term="org.example.display.DisplayName">
+        <If>
+          <Path>IsFemale</Path>
+          <String>Female</String>
+          <String>Male</String>
+        </If>
+      </Annotation>
+
       <Annotation Term="UI.CollectionFacet" Qualifier="Contacts">
         <Collection>
           <AnnotationPath>Supplier/@Communication.Contact</AnnotationPath>
@@ -100,8 +135,7 @@
             <Path>MyAddress/vCard.Address#work/Street</Path>
             <EnumMember>org.example.Pattern/Red</EnumMember>
             <EnumMember>org.example.Pattern/Red
-              org.example.Pattern/Striped
-            </EnumMember>
+              org.example.Pattern/Striped</EnumMember>
             <Record>
               <PropertyValue Property="Egon" String="1" />
               <PropertyValue Property="Hugo" String="2">
