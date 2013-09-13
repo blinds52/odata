@@ -86,7 +86,7 @@
           </Or>
           <Not>
             <Le>
-              <Null />
+              <Float>INF</Float>
               <Null />
             </Le>
           </Not>
@@ -100,7 +100,7 @@
       </Annotation>
       <Annotation Term="Twolegged.If">
         <If>
-          <Bool>true</Bool>
+          <Bool>false</Bool>
           <Path>Then</Path>
           <Path>Else</Path>
         </If>
@@ -135,7 +135,8 @@
             <Path>MyAddress/vCard.Address#work/Street</Path>
             <EnumMember>org.example.Pattern/Red</EnumMember>
             <EnumMember>org.example.Pattern/Red
-              org.example.Pattern/Striped</EnumMember>
+              org.example.Pattern/Striped
+            </EnumMember>
             <Record>
               <PropertyValue Property="Egon" String="1" />
               <PropertyValue Property="Hugo" String="2">
@@ -188,6 +189,15 @@
         <NavigationProperty Name="Country" Type="MyModel.Country" />
       </ComplexType>
 
+      <EntityType Name="Order">
+        <Property Name="Quantity" Type="Edm.Decimal">
+          <Annotation Term="Measures.Unit" Path="ShippingUnit" />
+        </Property>
+        <Property Name="ShippingUnit" Type="Edm.String">
+          <Annotation Term="Core.Description" String="Contains the unit for property Quantity" />
+        </Property>
+      </EntityType>
+
       <TypeDefinition Name="Fixedstring" UnderlyingType="Edm.String" />
 
       <EntityContainer Name="Sales">
@@ -237,24 +247,17 @@
         <NavigationProperty Name="Waldos" Type="Collection(Self.Waldos)" />
       </EntityType>
       <EntityContainer Name="Default">
-        <FunctionImport Name="Bar" Function="Other.Foo" />
-        <EntitySet Name="Waldos" EntityType="Self.Waldo" />
-        <EntitySet Name="Freds" EntityType="Self.Fred">
-          <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
-        </EntitySet>
-      </EntityContainer>
-      <EntityContainer Name="Second">
-        <FunctionImport Name="CreatedEntities" Function="Model.CreatedEntities" EntitySet="Waldos" />
         <FunctionImport Name="Bar" Function="Other.Foo" IncludeInServiceDocument="true"
           EntitySet="Namespace.Container/Freds" />
-        <EntitySet Name="Waldos" EntityType="Self.Waldo" IncludeInServiceDocument="true" />
+        <FunctionImport Name="CreatedEntities" Function="Model.CreatedEntities" EntitySet="Waldos" />
+        <FunctionImport Name="Bar" Function="Other.Foo" />
+        <EntitySet Name="Waldos" EntityType="Self.Waldo" />
         <EntitySet Name="Freds" EntityType="Self.Fred">
           <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
           <NavigationPropertyBinding Target="Namespace.Container/Freds" Path="MoreWaldos" />
         </EntitySet>
       </EntityContainer>
     </Schema>
-
 
   </edmx:DataServices>
 </edmx:Edmx>
