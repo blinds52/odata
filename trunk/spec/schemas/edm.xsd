@@ -220,7 +220,7 @@
   <xs:attributeGroup name="GInlineExpressions">
     <!-- Constant Expressions -->
     <xs:attribute name="Binary" type="xs:hexBinary" use="optional" />
-    <xs:attribute name="Bool" type="xs:boolean" use="optional" />
+    <xs:attribute name="Bool" type="edm:boolean" use="optional" />
     <xs:attribute name="Date" type="edm:date" use="optional" />
     <xs:attribute name="DateTimeOffset" type="edm:dateTimeStamp" use="optional" />
     <xs:attribute name="Decimal" type="xs:decimal" use="optional" />
@@ -248,7 +248,7 @@
   </xs:complexType>
   <xs:complexType name="TBoolConstantExpression">
     <xs:simpleContent>
-      <xs:extension base="xs:boolean" />
+      <xs:extension base="edm:boolean" />
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TDateConstantExpression">
@@ -675,6 +675,12 @@
       <xs:enumeration value="None" />
       <xs:enumeration value="SetDefault" />
       <xs:enumeration value="SetNull" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!--boolean without 0 and 1 -->
+  <xs:simpleType name="boolean">
+    <xs:restriction base="xs:boolean">
+      <xs:pattern value="true|false" />
     </xs:restriction>
   </xs:simpleType>
   <!-- date and time without offset -->
