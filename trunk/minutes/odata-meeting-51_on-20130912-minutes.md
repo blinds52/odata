@@ -203,7 +203,7 @@ ODATA-491:
 Discussion:
 
 * Ralf summarizes the issue.
-* Hubert would love to discuss that use-case for OData-191 with Ralf next time we talk and see if it similar to his 'aliases' case which happen to be used as 'keys' (read: unique identifiers) as well
+* Hubert would love to discuss that use-case for OData-491 with Ralf next time we talk and see if it similar to his 'aliases' case which happen to be used as 'keys' (read: unique identifiers) as well
 
 ODATA-491 is OPEN.
 
