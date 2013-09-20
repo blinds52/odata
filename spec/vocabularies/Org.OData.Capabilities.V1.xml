@@ -53,16 +53,16 @@
       </Annotation>
 
       <!-- Conformance Level -->
-      
+
       <Term Name="ConformanceLevel" Type="Capabilities.ConformanceLevelType" AppliesTo="EntityContainer" />
       <EnumType Name="ConformanceLevelType">
         <Member Name="Minimal" />
         <Member Name="Intermediate" />
         <Member Name="Advanced" />
       </EnumType>
-      
+
       <!-- Request Capabilities -->
-      
+
       <Term Name="SupportedFormats" Type="Collection(Edm.String)">
         <Annotation Term="Core.Description" String="Media types of supported formats, including format parameters" />
         <Annotation Term="Core.IsMediaType" />
@@ -73,7 +73,7 @@
       </Term>
 
       <!-- Supported Preferences -->
-      
+
       <Term Name="AsynchronousRequestsSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Service supports the asynchronous request preference" />
       </Term>
@@ -81,19 +81,22 @@
       <Term Name="BatchContinueOnErrorSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Service supports the continue on error preference" />
       </Term>
-      
+
       <Term Name="IsolationSupported" Type="Capabilities.IsolationLevel" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Supported odata.isolation levels" />
       </Term>
       <EnumType Name="IsolationLevel" IsFlags="true">
-        <Member Name="Snapshot" Value="1" />  
+        <Member Name="Snapshot" Value="1" />
       </EnumType>
-      
+
       <Term Name="CallbackSupported" Type="Capabilities.CallbackType" AppliesTo="EntityContainer EntitySet">
         <Annotation Term="Core.Description" String="Supports callbacks for the specified protocols" />
       </Term>
+      <Term Name="CrossJoinSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Supports cross joins for the entity sets in this container" />
+      </Term>
       <ComplexType Name="CallbackType">
-        <Property Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocol)"/>
+        <Property Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocol)" />
         <Annotation Term="Core.Description" String="A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'" />
       </ComplexType>
       <ComplexType Name="CallbackProtocol">
@@ -124,8 +127,8 @@
         </Property>
       </ComplexType>
 
-      <!--Query Capabilities-->
-      
+      <!--Query Capabilities -->
+
       <Term Name="CountRestrictions" Type="Capabilities.CountRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on /$count path suffix and $count=true system query option" />
       </Term>
@@ -211,6 +214,26 @@
           <Annotation Term="Core.Description" String="These properties cannot be used in $expand expressions" />
         </Property>
       </ComplexType>
+
+      <Term Name="SearchRestrictions" Type="Capabilities.SearchRestrictionsType" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Restrictions on $search expressions" />
+      </Term>
+      <ComplexType Name="SearchRestrictionsType">
+        <Property Name="Searchable" Type="Edm.Boolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="$search is supported" />
+        </Property>
+        <Property Name="UnsupportedExpressions" Type="Capabilities.SearchExpressions" DefaultValue="none">
+          <Annotation Term="Core.Description" String="Expressions supported in $search" />
+        </Property>
+      </ComplexType>
+      <EnumType Name="SearchExpressions" IsFlags="true">
+        <Member Name="none" Value="0" />
+        <Member Name="AND" Value="1" />
+        <Member Name="OR" Value="2" />
+        <Member Name="NOT" Value="4" />
+        <Member Name="phrase" Value="8" />
+        <Member Name="group" Value="16" />
+      </EnumType>
 
       <!-- Data Modification Capabilities -->
 
