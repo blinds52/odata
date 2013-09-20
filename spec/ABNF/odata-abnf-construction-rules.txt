@@ -81,7 +81,7 @@
 ;   C. ABNF core definitions [RFC5234]
 ;
 ;------------------------------------------------------------------------------
-dummyStartRule = odataUri / header            ; just to please the test parser
+dummyStartRule = odataUri / header / primitiveValue ; just to please the test parser
 ;------------------------------------------------------------------------------
 
 
@@ -668,16 +668,13 @@ exp          = "e" [ "-" / "+" ] 1*DIGIT
 ; 6. Names and identifiers
 ;------------------------------------------------------------------------------
 
-qualifiedTypeName = qualifiedEntityTypeName 
+singleQualifiedTypeName = qualifiedEntityTypeName 
                   / qualifiedComplexTypeName
                   / qualifiedEnumTypeName
                   / primitiveTypeName 
-                  / 'Collection' OPEN 
-                    ( qualifiedEntityTypeName 
-                    / qualifiedComplexTypeName
-                    / qualifiedEnumTypeName 
-                    / primitiveTypeName 
-                    ) CLOSE
+                  
+qualifiedTypeName = singleQualifiedTypeName                  
+                  / 'Collection' OPEN singleQualifiedTypeName CLOSE
 
 qualifiedEntityTypeName      = namespace "." entityTypeName
 qualifiedComplexTypeName     = namespace "." complexTypeName
@@ -700,7 +697,7 @@ odataIdentifier             = identifierLeadingCharacter *127identifierCharacter
 identifierLeadingCharacter  = ALPHA / "_"         ; plus Unicode characters from the categories L or Nl
 identifierCharacter         = ALPHA / "_" / DIGIT ; plus Unicode characters from the categories L, Nl, Nd, Mn, Mc, Pc, or Cf
 
-primitiveTypeName = ['Edm.'] ( 'Binary'
+primitiveTypeName = 'Edm.'   ( 'Binary'
                              / 'Boolean'
                              / 'Byte'
                              / 'Date' 
@@ -770,13 +767,14 @@ primitiveColFunctionImport = odataIdentifier
 ; 7. Literal Data Values
 ;------------------------------------------------------------------------------
 
+; in URLs
 primitiveLiteral = null 
                  / booleanValue 
                  / decimalValue 
                  / doubleValue 
                  / singleValue 
                  / sbyteValue 
-                 / byteValue 
+                 / byteValue
                  / int16Value 
                  / int32Value 
                  / int64Value 
@@ -801,9 +799,30 @@ primitiveLiteral = null
                  / geometryMultiPoint 
                  / geometryMultiPolygon 
                  / geometryPoint 
-                 / geometryPolygon 
+                 / geometryPolygon
+         
+; in Atom and JSON message bodies and CSDL DefaultValue attributes                 
+primitiveValue = booleanValue
+               / decimalValue 
+               / doubleValue 
+               / singleValue 
+               / sbyteValue 
+               / byteValue
+               / int16Value 
+               / int32Value 
+               / int64Value 
+               / dateValue
+               / dateTimeOffsetValue 
+               / durationValue
+               / guidValue
+               / timeOfDayValue
+               / enumValue
+               / binaryValue 
+               ; also valid are:
+               ; - any XML string for strings in Atom and CSDL documents
+               ; - any JSON string for JSON documents 
 
-null      = nullValue [ SQUOTE qualifiedTypeName SQUOTE ] 
+null      = nullValue [ SQUOTE singleQualifiedTypeName SQUOTE ] 
 nullValue = 'null' 
        ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
        ; Knowing the type is useful for function overload resolution purposes 

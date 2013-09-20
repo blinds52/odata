@@ -389,13 +389,19 @@
             Rule="null">
     <Input>null</Input>
   </TestCase>
-  <TestCase Name="Null: qualified" 
-            Rule="null">
+  <TestCase Name="Null: Primitive types must be qualified" 
+            Rule="null"
+            FailAt="11">
     <Input>null'Double'</Input>
   </TestCase>
   <TestCase Name="Null: fully qualified" 
             Rule="null">
-    <Input>null'Edm.Double'</Input>
+    <Input>null'Model.Address'</Input>
+  </TestCase>
+  <TestCase Name="Null: no collections" 
+            Rule="null"
+            FailAt="15">
+    <Input>null'Collection(Edm.Double)'</Input>
   </TestCase>
   <TestCase Name="String" 
             Rule="string">
@@ -422,6 +428,10 @@
   <TestCase Name="String" 
             Rule="string">
     <Input>'%26%28'</Input>
+  </TestCase>
+  <TestCase Name="primitive value in request body"
+            Rule="primitiveValue">
+    <Input>Yellow</Input>
   </TestCase>
   <TestCase Name="Resource Path - Entity Set" 
             Rule="resourcePath">
