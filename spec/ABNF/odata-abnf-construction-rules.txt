@@ -669,16 +669,18 @@ exp          = "e" [ "-" / "+" ] 1*DIGIT
 ;------------------------------------------------------------------------------
 
 singleQualifiedTypeName = qualifiedEntityTypeName 
-                  / qualifiedComplexTypeName
-                  / qualifiedEnumTypeName
-                  / primitiveTypeName 
+                        / qualifiedComplexTypeName
+                        / qualifiedTypeDefinitionName
+                        / qualifiedEnumTypeName
+                        / primitiveTypeName 
                   
 qualifiedTypeName = singleQualifiedTypeName                  
                   / 'Collection' OPEN singleQualifiedTypeName CLOSE
 
-qualifiedEntityTypeName      = namespace "." entityTypeName
-qualifiedComplexTypeName     = namespace "." complexTypeName
-qualifiedEnumTypeName = namespace "." enumerationTypeName
+qualifiedEntityTypeName     = namespace "." entityTypeName
+qualifiedComplexTypeName    = namespace "." complexTypeName
+qualifiedTypeDefinitionName = namespace "." typeDefinitionName 
+qualifiedEnumTypeName       = namespace "." enumerationTypeName
 
 ; an alias is just a single-part namespace
 namespace     = namespacePart *( "." namespacePart )
@@ -687,7 +689,8 @@ namespacePart = odataIdentifier
 entitySetName       = odataIdentifier
 singletonEntity     = odataIdentifier          
 entityTypeName      = odataIdentifier
-complexTypeName     = odataIdentifier 
+complexTypeName     = odataIdentifier
+typeDefinitionName  = odataIdentifier 
 enumerationTypeName = odataIdentifier
 enumerationMember   = odataIdentifier
 termName            = odataIdentifier
@@ -697,25 +700,25 @@ odataIdentifier             = identifierLeadingCharacter *127identifierCharacter
 identifierLeadingCharacter  = ALPHA / "_"         ; plus Unicode characters from the categories L or Nl
 identifierCharacter         = ALPHA / "_" / DIGIT ; plus Unicode characters from the categories L, Nl, Nd, Mn, Mc, Pc, or Cf
 
-primitiveTypeName = 'Edm.'   ( 'Binary'
-                             / 'Boolean'
-                             / 'Byte'
-                             / 'Date' 
-                             / 'DateTimeOffset'
-                             / 'Decimal'
-                             / 'Double'
-                             / 'Duration' 
-                             / 'Guid' 
-                             / 'Int16'
-                             / 'Int32'
-                             / 'Int64'
-                             / 'SByte'
-                             / 'Single'
-                             / 'Stream'
-                             / 'String'
-                             / 'TimeOfDay'
-                             / abstractSpatialTypeName [ concreteSpatialTypeName ] 
-                             )
+primitiveTypeName = 'Edm.' ( 'Binary'
+                           / 'Boolean'
+                           / 'Byte'
+                           / 'Date' 
+                           / 'DateTimeOffset'
+                           / 'Decimal'
+                           / 'Double'
+                           / 'Duration' 
+                           / 'Guid' 
+                           / 'Int16'
+                           / 'Int32'
+                           / 'Int64'
+                           / 'SByte'
+                           / 'Single'
+                           / 'Stream'
+                           / 'String'
+                           / 'TimeOfDay'
+                           / abstractSpatialTypeName [ concreteSpatialTypeName ] 
+                           )
 abstractSpatialTypeName = 'Geography'
                         / 'Geometry'
 concreteSpatialTypeName = 'Collection'
