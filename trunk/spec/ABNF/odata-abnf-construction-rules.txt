@@ -773,6 +773,11 @@ primitiveColFunctionImport = odataIdentifier
 ; in URLs
 primitiveLiteral = null 
                  / booleanValue 
+                 / guid 
+                 / duration
+                 / date
+                 / dateTimeOffset 
+                 / timeOfDay 
                  / decimalValue 
                  / doubleValue 
                  / singleValue 
@@ -782,12 +787,7 @@ primitiveLiteral = null
                  / int32Value 
                  / int64Value 
                  / binary 
-                 / date
-                 / dateTimeOffset 
-                 / duration
-                 / guid 
                  / string 
-                 / timeOfDay 
                  / enum
                  / geographyCollection 
                  / geographyLineString 
@@ -806,6 +806,20 @@ primitiveLiteral = null
          
 ; in Atom and JSON message bodies and CSDL DefaultValue attributes                 
 primitiveValue = booleanValue
+               / guidValue
+               / durationValue
+               / dateValue
+               / dateTimeOffsetValue 
+               / timeOfDayValue
+               / enumValue
+               / fullCollectionLiteral
+               / fullLineStringLiteral
+               / fullMultiPointLiteral
+               / fullMultiLineStringLiteral
+               / fullMultiPolygonLiteral
+               / fullPointLiteral
+               / fullPolygonLiteral
+               / binaryValue 
                / decimalValue 
                / doubleValue 
                / singleValue 
@@ -814,13 +828,6 @@ primitiveValue = booleanValue
                / int16Value 
                / int32Value 
                / int64Value 
-               / dateValue
-               / dateTimeOffsetValue 
-               / durationValue
-               / guidValue
-               / timeOfDayValue
-               / enumValue
-               / binaryValue 
                ; also valid are:
                ; - any XML string for strings in Atom and CSDL documents
                ; - any JSON string for JSON documents 
@@ -883,7 +890,8 @@ fractionalSeconds = 1*12DIGIT
 
 enum            = qualifiedEnumTypeName SQUOTE enumValue SQUOTE
 enumValue       = singleEnumValue *( COMMA singleEnumValue )
-singleEnumValue = enumerationMember / int64Value
+singleEnumValue = enumerationMember / enumMemberValue
+enumMemberValue = int64Value
 
 geographyCollection   = geographyPrefix SQUOTE fullCollectionLiteral SQUOTE
 fullCollectionLiteral = sridLiteral collectionLiteral
