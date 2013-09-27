@@ -114,7 +114,7 @@
     <xs:attribute name="Value" type="xs:long" use="optional" />
   </xs:complexType>
   <xs:complexType name="TActionFunctionReturnType">
-    <xs:attribute name="Type" type="edm:TTypeName" use="optional" />
+    <xs:attribute name="Type" type="edm:TTypeName" use="required" />
     <xs:attribute name="Nullable" type="xs:boolean" use="optional" />
     <xs:attributeGroup ref="edm:TFacetAttributes" />
   </xs:complexType>
@@ -134,7 +134,7 @@
         <xs:element name="Parameter" type="edm:TActionFunctionParameter" />
         <xs:element ref="edm:Annotation" />
       </xs:choice>
-      <xs:element name="ReturnType" type="edm:TActionFunctionReturnType" minOccurs="0" maxOccurs="1" />
+      <xs:element name="ReturnType" type="edm:TActionFunctionReturnType" minOccurs="1" maxOccurs="1" />
     </xs:sequence>
     <xs:attributeGroup ref="edm:TFunctionAttributes" />
   </xs:complexType>
@@ -219,7 +219,7 @@
   </xs:group>
   <xs:attributeGroup name="GInlineExpressions">
     <!-- Constant Expressions -->
-    <xs:attribute name="Binary" type="xs:hexBinary" use="optional" />
+    <xs:attribute name="Binary" type="edm:binary" use="optional" />
     <xs:attribute name="Bool" type="edm:boolean" use="optional" />
     <xs:attribute name="Date" type="edm:date" use="optional" />
     <xs:attribute name="DateTimeOffset" type="edm:dateTimeStamp" use="optional" />
@@ -243,7 +243,7 @@
   -->
   <xs:complexType name="TBinaryConstantExpression">
     <xs:simpleContent>
-      <xs:extension base="xs:hexBinary" />
+      <xs:extension base="edm:binary" />
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TBoolConstantExpression">
@@ -409,13 +409,11 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="TActionAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="ReturnType" type="edm:TTypeName" use="optional" />
     <xs:attribute name="EntitySetPath" type="edm:TPath" use="optional" />
     <xs:attribute name="IsBound" type="xs:boolean" use="optional" default="false" />
   </xs:attributeGroup>
   <xs:attributeGroup name="TFunctionAttributes">
     <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
-    <xs:attribute name="ReturnType" type="edm:TTypeName" use="optional" />
     <xs:attribute name="EntitySetPath" type="edm:TPath" use="optional" />
     <xs:attribute name="IsBound" type="xs:boolean" use="optional" default="false" />
     <xs:attribute name="IsComposable" type="xs:boolean" use="optional" default="false" />
@@ -675,6 +673,13 @@
       <xs:enumeration value="None" />
       <xs:enumeration value="SetDefault" />
       <xs:enumeration value="SetNull" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- binary data in base64url encoding -->
+  <xs:simpleType name="binary">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse" />
+      <xs:pattern value="((([A-Za-z0-9_\-] ?){4})*(([A-Za-z0-9_\-] ?){3}[A-Za-z0-9_\-]|([A-Za-z0-9_\-] ?){2}[AEIMQUYcgkosw048] ?|[A-Za-z0-9_\-] ?[AQgw] ?))?" />
     </xs:restriction>
   </xs:simpleType>
   <!--boolean without 0 and 1 -->

@@ -12,12 +12,14 @@
   </edmx:Reference>
   <edmx:DataServices xmlns="http://docs.oasis-open.org/odata/ns/edm">
     <Schema Namespace="Model1" Alias="Self">
-      <Function Name="CreatedEntities" ReturnType="Collection(Edm.EntityType)">
+      <Function Name="CreatedEntities">
         <Parameter Name="before" Type="Edm.DateTimeOffset" Nullable="true" />
         <Parameter Name="after" Type="Edm.DateTimeOffset" Nullable="true" />
+        <ReturnType Type="Collection(Edm.EntityType)" />
       </Function>
-      <Function Name="TopSellingProducts" ReturnType="Collection(Model.Product)">
+      <Function Name="TopSellingProducts">
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" Nullable="true" />
+        <ReturnType Type="Collection(Model.Product)" />
       </Function>
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" />
       <Annotation Term="UI.ReferenceFacet" UrlRef="http://LineItem" />
@@ -135,8 +137,7 @@
             <Path>MyAddress/vCard.Address#work/Street</Path>
             <EnumMember>org.example.Pattern/Red</EnumMember>
             <EnumMember>org.example.Pattern/Red
-              org.example.Pattern/Striped
-            </EnumMember>
+              org.example.Pattern/Striped</EnumMember>
             <Record>
               <PropertyValue Property="Egon" String="1" />
               <PropertyValue Property="Hugo" String="2">
@@ -179,6 +180,13 @@
             <Path>Customer/$count</Path>
           </IsOf>
         </Annotation>
+        <Annotation Term="Some.Binary" Binary="hugo hase -_ab" />
+        <Annotation Term="Some.Binary">
+          <Binary>Hugo
+            Hase
+            -_ab
+          </Binary>
+        </Annotation>
       </EntityType>
 
       <ComplexType Name="Address" OpenType="true">
@@ -212,7 +220,6 @@
     </Schema>
 
     <Schema Namespace="Schema.One" Alias="Self">
-      <Function Name="Foo" ReturnType="Edm.String" />
       <Function Name="OddWaldos" IsBound="true" EntitySetPath="in">
         <Parameter Name="in" Type="Collection(Self.Waldo)" />
         <ReturnType Type="Collection(Self.Waldo)" />
@@ -233,7 +240,9 @@
     </Schema>
 
     <Schema Namespace="Schema.One" Alias="Self">
-      <Function Name="Foo" ReturnType="Edm.String" />
+      <Function Name="Foo">
+        <ReturnType Type="Edm.String" />
+      </Function>
     </Schema>
     <Schema Namespace="Schema.Two" Alias="Self">
       <EntityType Name="Waldo">
