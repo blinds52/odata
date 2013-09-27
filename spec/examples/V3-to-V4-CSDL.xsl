@@ -363,20 +363,30 @@
     <xsl:choose>
       <xsl:when test="@IsSideEffecting='true'">
         <Action>
-          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath" />
+          <xsl:copy-of select="@Name|@EntitySetPath" />
           <xsl:if test="@IsBindable">
             <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
           </xsl:if>
           <xsl:apply-templates />
+          <xsl:if test="@ReturnType">
+            <ReturnType>
+              <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
+            </ReturnType>
+          </xsl:if>
         </Action>
       </xsl:when>
       <xsl:otherwise>
         <Function>
-          <xsl:copy-of select="@Name|@ReturnType|@EntitySetPath|@IsComposable" />
+          <xsl:copy-of select="@Name|@EntitySetPath|@IsComposable" />
           <xsl:if test="@IsBindable">
             <xsl:attribute name="IsBound"><xsl:value-of select="@IsBindable" /></xsl:attribute>
           </xsl:if>
           <xsl:apply-templates />
+          <xsl:if test="@ReturnType">
+            <ReturnType>
+              <xsl:attribute name="Type"><xsl:value-of select="@ReturnType" /></xsl:attribute>
+            </ReturnType>
+          </xsl:if>
         </Function>
       </xsl:otherwise>
     </xsl:choose>
