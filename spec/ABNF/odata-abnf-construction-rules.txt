@@ -845,8 +845,8 @@ booleanValue = "true" / "false"
 
 decimalValue = [SIGN] 1*DIGIT ["." 1*DIGIT]
 
-doubleValue = decimalValue [ "e" [SIGN] 1*DIGIT ] / nanInfinity ; with restricted number range
-singleValue = doubleValue                                       ; with restricted number range
+doubleValue = decimalValue [ "e" [SIGN] 1*DIGIT ] / nanInfinity ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
+singleValue = doubleValue                                       ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
 nanInfinity = 'NaN' / '-INF' / 'INF'
 
 guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
@@ -950,11 +950,14 @@ geometryPrefix  = "geometry"
 ; 8. Header values
 ;------------------------------------------------------------------------------
 
-header = odata-entityid
+header = content-id
+       / odata-entityid
        / odata-isolation
        / odata-maxversion
        / odata-version
        / prefer
+
+content-id = "Content-ID" COLON OWS 1*( ALPHA / DIGIT )
        
 odata-entityid   = "OData-EntityID"   COLON OWS IRI-in-header
 odata-isolation  = "OData-Isolation"  COLON OWS "snapshot"
