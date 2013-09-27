@@ -93,6 +93,7 @@ serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive
 
 odataRelativeUri = '$batch'                           ; Note: case-sensitive!
                  / '$entity' "?" entityOptions  
+                 / '$entity' "/" qualifiedEntityTypeName "?" entityCastOptions  
                  / '$metadata' [ "?" format ] [ context ]
                  / resourcePath [ "?" queryOptions ]
 
@@ -208,11 +209,13 @@ queryOption  = systemQueryOption
              / aliasAndValue 
              / customQueryOption  
              
-entityOptions = *( entityOption "&" ) id *( "&" entityOption )
-entityOption  = expand 
-              / format
-              / select
-              / customQueryOption
+entityOptions  = *( entityIdOption "&" ) id *( "&" entityIdOption )
+entityIdOption = format
+               / customQueryOption
+entityCastOptions = *( entityCastOption "&" ) id *( "&" entityCastOption )
+entityCastOption  = entityIdOption
+                  / expand 
+                  / select
 
 id = '$id' EQ IRI-in-query       
 
@@ -771,13 +774,13 @@ primitiveColFunctionImport = odataIdentifier
 ;------------------------------------------------------------------------------
 
 ; in URLs
-primitiveLiteral = null 
+primitiveLiteral = nullValue 
                  / booleanValue 
-                 / guid 
+                 / guidValue 
                  / duration
-                 / date
-                 / dateTimeOffset 
-                 / timeOfDay 
+                 / dateValue
+                 / dateTimeOffsetValue 
+                 / timeOfDayValue
                  / decimalValue 
                  / doubleValue 
                  / singleValue 
@@ -832,11 +835,9 @@ primitiveValue = booleanValue
                ; - any XML string for strings in Atom and CSDL documents
                ; - any JSON string for JSON documents 
 
-null      = nullValue [ SQUOTE singleQualifiedTypeName SQUOTE ] 
 nullValue = 'null' 
-       ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
-       ; Knowing the type is useful for function overload resolution purposes 
-                                                
+
+; TODO: base64url                                                
 binary      = ( 'X' / "binary" ) SQUOTE binaryValue SQUOTE ; Note: 'X' is case sensitive, "binary" is not
 binaryValue = *(2HEXDIG)
 
@@ -848,7 +849,6 @@ doubleValue = decimalValue [ "e" [SIGN] 1*DIGIT ] / nanInfinity ; with restricte
 singleValue = doubleValue                                       ; with restricted number range
 nanInfinity = 'NaN' / '-INF' / 'INF'
 
-guid     = "guid" SQUOTE guidValue SQUOTE
 guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
 
 byteValue  = 1*3DIGIT           ; numbers in the range from 0 to 255
@@ -860,10 +860,8 @@ int64Value = [ sign ] 1*19DIGIT ; numbers in the range from -9223372036854775808
 string           = SQUOTE *( SQUOTE-in-string / pchar-no-SQUOTE ) SQUOTE
 SQUOTE-in-string = SQUOTE SQUOTE ; two consecutive single quotes represent one within a string literal
 
-date      = "date" SQUOTE dateValue SQUOTE
 dateValue = year "-" month "-" day
 
-dateTimeOffset      = "datetimeoffset" SQUOTE dateTimeOffsetValue SQUOTE
 dateTimeOffsetValue = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / sign hour ":" minute )
 
 duration      = "duration" SQUOTE durationValue SQUOTE
@@ -871,7 +869,6 @@ durationValue = [ sign ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M"
      ; the above is an approximation of the rules for an xml dayTimeDuration.
      ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
-timeOfDay     = "timeofday" SQUOTE timeOfDayValue SQUOTE 
 timeOfDayValue = hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
  
 oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
