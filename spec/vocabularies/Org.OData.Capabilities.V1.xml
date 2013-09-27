@@ -97,14 +97,16 @@
       </Term>
       <ComplexType Name="CallbackType">
         <Property Name="CallbackProtocols" Type="Collection(Capabilities.CallbackProtocol)" />
-        <Annotation Term="Core.Description" String="A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'" />
+        <Annotation Term="Core.Description"
+          String="A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'" />
       </ComplexType>
       <ComplexType Name="CallbackProtocol">
         <Property Name="Id" Type="Edm.String">
           <Annotation Term="Core.Description" String="Protcol Identifier" />
         </Property>
         <Property Name="UrlTemplate" Type="Edm.String">
-          <Annotation Term="Core.Description" String="URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570" />
+          <Annotation Term="Core.Description"
+            String="URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570" />
         </Property>
         <Property Name="DocumentationUrl" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.Description" String="Human readable description of the meaning of the URL Template parameters" />
@@ -144,9 +146,34 @@
         </Property>
       </ComplexType>
 
-      <Term Name="Navigable" Type="Core.Tag" DefaultValue="true" AppliesTo="NavigationProperty">
-        <Annotation Term="Core.Description" String="Supports navigation paths according to OData URL conventions" />
+      <Term Name="NavigationRestrictions" Type="Capabilities.NavigationRestrictionsType" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description" String="Restrictions on navigating properties according to OData URL conventions" />
       </Term>
+      <ComplexType Name="NavigationRestrictionsType">
+        <Property Name="Navigability" Type="Capabilities.NavigationType">
+          <Annotation Term="Core.Description" String="Supported Navigability" />
+        </Property>
+        <Property Name="RestrictedProperties" Type="Collection(Capabilities.NavigationPropertyRestriction)" />
+      </ComplexType>
+      <ComplexType Name="NavigationPropertyRestriction">
+        <Property Name="NavigationProperty" Type="Edm.NavigationPropertyPath">
+          <Annotation Term="Core.Description" String="Navigation properties can be navigated to a single level" />
+        </Property>
+        <Property Name="Navigability" Type="Capabilities.NavigationType">
+          <Annotation Term="Core.Description" String="Navigation properties can be navigated to a single level" />
+        </Property>
+      </ComplexType>
+      <EnumType Name="NavigationType">
+        <Member Name="Recursive">
+          <Annotation Term="Core.Description" String="Navigation properties can be recursively navigated" />
+        </Member>
+        <Member Name="Single">
+          <Annotation Term="Core.Description" String="Navigation properties can be navigated to a single level" />
+        </Member>
+        <Member Name="None">
+          <Annotation Term="Core.Description" String="Navigation properties are not navigable" />
+        </Member>
+      </EnumType>
 
       <Term Name="IndexableByKey" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports key values according to OData URL conventions" />
@@ -178,7 +205,8 @@
           <Annotation Term="Core.Description" String="$filter is required" />
         </Property>
         <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)">
-          <Annotation Term="Core.Description" String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
+          <Annotation Term="Core.Description"
+            String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
         </Property>
         <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="These properties cannot be used in $filter expressions" />
