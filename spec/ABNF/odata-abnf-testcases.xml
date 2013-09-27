@@ -296,27 +296,27 @@ Overview:
             FailAt="5">
     <Input>X'123'</Input>
   </TestCase>
-  <TestCase Name="Date in URL" 
-            Rule="date">
-    <Input>date'2012-09-03'</Input>
-  </TestCase>
-  <TestCase Name="Date in URL" 
-            Rule="date">
-    <Input>date'2012-09-10'</Input>
-  </TestCase>
-  <TestCase Name="Date in URL" 
-            Rule="date">
-    <Input>date'2012-09-20'</Input>
-  </TestCase>
-  <TestCase Name="Date in body" 
+  <TestCase Name="Date in URL or body" 
             Rule="dateValue">
     <Input>2012-09-03</Input>
   </TestCase>
-  <TestCase Name="Date in body: year zero" 
+  <TestCase Name="Date" 
+            Rule="dateValue">
+    <Input>2012-09-10</Input>
+  </TestCase>
+  <TestCase Name="Date" 
+            Rule="dateValue">
+    <Input>2012-09-20</Input>
+  </TestCase>
+  <TestCase Name="Date" 
+            Rule="dateValue">
+    <Input>2012-09-03</Input>
+  </TestCase>
+  <TestCase Name="Date: year zero" 
             Rule="dateValue">
     <Input>0000-01-01</Input>
   </TestCase>
-  <TestCase Name="Date in body: negative" 
+  <TestCase Name="Date: negative" 
             Rule="dateValue">
     <Input>-10000-04-01</Input>
   </TestCase>
@@ -354,14 +354,14 @@ Overview:
             Rule="dateTimeOffsetValue">
     <Input>2012-09-03T14:53+02:00</Input>
   </TestCase>
-  <TestCase Name="DateTimeOffset in URL: UTC" 
-            Rule="dateTimeOffset">
-    <Input>datetimeoffset'2012-09-03T12:53Z'</Input>
+  <TestCase Name="DateTimeOffset: UTC" 
+            Rule="dateTimeOffsetValue">
+    <Input>2012-09-03T12:53Z</Input>
   </TestCase>
-  <TestCase Name="DateTimeOffset in URL: Midnight" 
-            Rule="dateTimeOffset"
-            FailAt="27">
-    <Input>datetimeoffset'2012-09-03T24:00-03:00'</Input>
+  <TestCase Name="DateTimeOffset: 24:00" 
+            Rule="dateTimeOffsetValue"
+            FailAt="12">
+    <Input>2012-09-03T24:00-03:00</Input>
   </TestCase>
   <TestCase Name="Decimal" 
             Rule="decimalValue">
@@ -452,22 +452,8 @@ Overview:
     <Input>1234567890123456789</Input>
   </TestCase>
   <TestCase Name="Null: unqualified" 
-            Rule="null">
+            Rule="nullValue">
     <Input>null</Input>
-  </TestCase>
-  <TestCase Name="Null: Primitive types must be qualified" 
-            Rule="null"
-            FailAt="11">
-    <Input>null'Double'</Input>
-  </TestCase>
-  <TestCase Name="Null: fully qualified" 
-            Rule="null">
-    <Input>null'Model.Address'</Input>
-  </TestCase>
-  <TestCase Name="Null: no collections" 
-            Rule="null"
-            FailAt="15">
-    <Input>null'Collection(Edm.Double)'</Input>
   </TestCase>
   <TestCase Name="String" 
             Rule="string">
@@ -536,35 +522,35 @@ Overview:
     <Input>Categories(ID=1,Size=5)</Input>
   </TestCase>
   <TestCase Name="Correct Guid" 
-            Rule="GUID">
-    <Input>guid'01234567-89ab-cdef-0123-456789abcdef'</Input>
+            Rule="guidValue">
+    <Input>01234567-89ab-cdef-0123-456789abcdef</Input>
   </TestCase>
   <TestCase Name="Guid with wrong character" 
-            Rule="GUID"
-            FailAt="10">
-    <Input>guid'01234g67-89ab-cdef-0123-456789abcdef'</Input>
+            Rule="guidValue"
+            FailAt="5">
+    <Input>01234g67-89ab-cdef-0123-456789abcdef</Input>
   </TestCase>
   <TestCase Name="Guid with less than 32 digits" 
-            Rule="GUID"
-            FailAt="28">
-    <Input>guid'01234567-89ab-cdef-456789abcdef'</Input>
+            Rule="guidValue"
+            FailAt="23">
+    <Input>01234567-89ab-cdef-456789abcdef</Input>
   </TestCase>
   <TestCase Name="TimeOfDay" 
-            Rule="timeOfDay">
-    <Input>timeofday'11:22:33'</Input>
+            Rule="timeOfDayValue">
+    <Input>11:22:33</Input>
   </TestCase>
   <TestCase Name="TimeOfDay: no seconds" 
-            Rule="timeOfDay">
-    <Input>timeofday'11:22'</Input>
+            Rule="timeOfDayValue">
+    <Input>11:22</Input>
   </TestCase>
   <TestCase Name="TimeOfDay: fractional seconds" 
-            Rule="timeOfDay">
-    <Input>timeofday'11:22:33.4444444'</Input>
+            Rule="timeOfDayValue">
+    <Input>11:22:33.4444444</Input>
   </TestCase>
   <TestCase Name="TimeOfDay: 24:00" 
-            Rule="timeOfDay"
-            FailAt="11">
-    <Input>timeofday'24:00:00'</Input>
+            Rule="timeOfDayValue"
+            FailAt="1">
+    <Input>24:00:00</Input>
   </TestCase>
   <TestCase Name="Identifier" 
             Rule="odataIdentifier">
@@ -802,14 +788,19 @@ Overview:
             Rule="odataRelativeUri">
     <Input>$entity?$id=urn:some:id</Input>
   </TestCase>
+  <TestCase Name="4.3.4 $entity with OData URL, $select and $expand fails without type-cast" 
+            Rule="odataRelativeUri"
+            FailAt="48">
+    <Input>$entity?$id=http://myservice/Customers('ALFKI')&amp;$select=CompanyName,ContactName&amp;$expand=Orders</Input>
+  </TestCase>
   <TestCase Name="4.3.4 $entity with OData URL, $select and $expand" 
             Rule="odataRelativeUri">
-    <Input>$entity?$id=http://myservice/Customers('ALFKI')&amp;$select=CompanyName,ContactName&amp;$expand=Orders</Input>
+    <Input>$entity/Model.Customer?$id=http://myservice/Customers('ALFKI')&amp;$select=CompanyName,ContactName&amp;$expand=Orders</Input>
   </TestCase>
   <TestCase Name="4.3.4 $entity without $id fails" 
             Rule="odataRelativeUri"
-            FailAt="22">
-    <Input>$entity?$expand=Orders</Input>
+            FailAt="20">
+    <Input>$entity?$format=json</Input>
   </TestCase>
   <TestCase Name="4.4 Addressing Links between Entities" 
             Rule="odataRelativeUri">
@@ -1550,7 +1541,7 @@ Overview:
   </TestCase>
   <TestCase Name="5.1.1.6.1 primitive literal"
             Rule="filter">
-    <Input>$filter=ReleaseDate gt date'2013-05-24'</Input>
+    <Input>$filter=ReleaseDate gt 2013-05-24</Input>
   </TestCase>
   <TestCase Name="5.1.1.6.4 $it"
             Rule="filter">
