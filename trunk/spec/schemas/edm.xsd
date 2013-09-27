@@ -232,10 +232,10 @@
     <xs:attribute name="String" type="xs:string" use="optional" />
     <xs:attribute name="TimeOfDay" type="edm:time" use="optional" />
     <!-- Dynamic Expressions -->
-    <xs:attribute name="AnnotationPath" type="edm:TPathWithTermCast" use="optional" />
-    <xs:attribute name="NavigationPropertyPath" type="edm:TPathWithTermCast" use="optional" />
-    <xs:attribute name="Path" type="edm:TPathWithTermCast" use="optional" />
-    <xs:attribute name="PropertyPath" type="edm:TPathWithTermCast" use="optional" />
+    <xs:attribute name="AnnotationPath" type="edm:TPathWithTermSegments" use="optional" />
+    <xs:attribute name="NavigationPropertyPath" type="edm:TPathWithTermSegments" use="optional" />
+    <xs:attribute name="Path" type="edm:TPathWithTermSegments" use="optional" />
+    <xs:attribute name="PropertyPath" type="edm:TPathWithTermSegments" use="optional" />
     <xs:attribute name="UrlRef" type="xs:anyURI" use="optional" />
   </xs:attributeGroup>
   <!-- 
@@ -363,7 +363,7 @@
   </xs:complexType>
   <xs:complexType name="TPathExpression">
     <xs:simpleContent>
-      <xs:extension base="edm:TPathWithTermCast" />
+      <xs:extension base="edm:TPathWithTermSegments" />
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TRecordExpression">
@@ -525,16 +525,12 @@
       <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./][\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="TPathWithTermCast">
-    <!-- Note: this pattern is overly generous: 
-          - segments starting with @ must contain at least one dot
-          - # is only allowed after segments starting with @ and containing at least one dot
-          - at most one # is allowed per slash-separated segment 
-    -->
+  <xs:simpleType name="TPathWithTermSegments">
+    <!-- Note: this pattern is overly generous, for the strict definition see http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html -->
     <xs:restriction base="xs:string">
       <!-- The below pattern represents the allowed identifiers in the ECMAScript specification plus the '/' for path segment separation and
            the '.' for namespace qualification inside the segments. -->
-      <xs:pattern value="@?[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}([\./#][@$]?[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+      <xs:pattern value="@?[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(([\./#@]|/@)[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}(/$count)?" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="TClientFunction">
