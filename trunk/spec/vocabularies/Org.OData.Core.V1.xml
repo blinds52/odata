@@ -6,7 +6,7 @@
         <String>Core terms needed to write vocabularies</String>
       </Annotation>
 
-      <!--Documentation-->
+      <!--Documentation -->
 
       <Term Name="Description" Type="Edm.String">
         <Annotation Term="Core.Description" String="A brief description of a model element" />
@@ -41,10 +41,11 @@
           String="Terms annotated with this term convey that the annotation target is &quot;the same as&quot; the term it is annotated with. Example: annotate Employee with Org.Schema.Person" />
       </Term>
 
-      <!--Resource Paths-->
-      
+      <!--Resource Paths -->
+
       <Term Name="ResourcePath" Type="Edm.String" AppliesTo="EntitySet Singleton ActionImport FunctionImport">
-        <Annotation Term="Core.Description" String="Resource path for entity container child, can be relative to xml:base and the request URL" />
+        <Annotation Term="Core.Description"
+          String="Resource path for entity container child, can be relative to xml:base and the request URL" />
         <Annotation Term="Core.IsUrl" />
       </Term>
 
@@ -56,8 +57,8 @@
         <Annotation Term="Core.Description" String="Entity-ids follow OData URL conventions" />
       </Term>
 
-      <!-- Permissions  -->
-      
+      <!-- Permissions -->
+
       <Term Name="Permissions" Type="Core.Permission" AppliesTo="Property">
         <Annotation Term="Core.Description" String="Permissions available for a property.The value of 2 is reserved for future use." />
       </Term>
@@ -67,7 +68,7 @@
         <Member Name="ReadWrite" Value="3" />
       </EnumType>
 
-      <!-- Metadata Extensions  -->
+      <!-- Metadata Extensions -->
 
       <Term Name="Immutable" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description"
@@ -99,14 +100,10 @@
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
-      <Term Name="OptimisticConcurrencyControl" Type="Core.OptimisticConcurrencyControlType" AppliesTo="EntitySet">
-        <Annotation Term="Core.Description" String="If present, the annotated entity set uses optimistic concurrency control" />
+      <Term Name="OptimisticConcurrency" Type="Collection(Edm.PropertyPath)" AppliesTo="EntitySet">
+        <Annotation Term="Core.Description"
+          String="Data modification requires the use of Etags. A non-empty collection contains the set of properties that are used to compute the ETag" />
       </Term>
-      <ComplexType Name="OptimisticConcurrencyControlType">
-        <Property Name="ETagDependsOn" Type="Collection(Edm.PropertyPath)" Nullable="true">
-          <Annotation Term="Core.Description" String="The ETag is computed from these properties" />
-        </Property>
-      </ComplexType>
 
     </Schema>
   </edmx:DataServices>
