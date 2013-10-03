@@ -301,8 +301,7 @@ selectProperty = primitiveProperty
                / primitiveColProperty 
                / navigationProperty
                / selectPath [ "/" selectProperty ]
-selectPath     = ( complexProperty / complexColProperty ) 
-                 [ "/" qualifiedComplexTypeName ]               
+selectPath     = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ]               
 
 
 allOperationsInSchema = namespace "." STAR                 
@@ -338,25 +337,33 @@ contextFragment = 'Collection($ref)'
                 / 'Collection(Edm.ComplexType)'
                 / singletonEntity
                 / qualifiedTypeName
-                / entitySetName '/$deletedEntity'
-                / entitySetName '/$link'
-                / entitySetName '/$deletedLink'
-                / entitySetName [ keyPredicate ] [ "/" qualifiedEntityTypeName ] 
-                  *( *( "/" ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] )
-                     "/" navigationProperty [ keyPredicate ]
-                   ) 
-                  [ propertyList ] [ '/$delta'  ] [ entity ]
+                / entitySet ( '/$deletedEntity' / '/$link' / '/$deletedLink' )
+                / entitySet keyPredicate "/" contextPropertyPath
+                / entitySet [ selectList ] [ '/$entity' / '/$delta' ]
+                
+entitySet = entitySetName *( containmentNavigation ) [ "/" qualifiedEntityTypeName ]
+            
+containmentNavigation = keyPredicate [ "/" qualifiedEntityTypeName ]
+                        *( "/" complexProperty [ "/" qualifiedComplexTypeName ] ) "/" navigationProperty   
 
-propertyList         = OPEN propertyListItem *( COMMA propertyListItem ) CLOSE
-propertyListItem     = STAR ; all structural properties
-                     /  [ qualifiedEntityTypeName "/" ] propertyListProperty
-propertyListProperty = primitiveProperty  
-                     / primitiveColProperty 
-                     / navigationProperty [ '+' ] [ propertyList ]
-                     / selectPath [ "/" propertyListProperty ]
+selectList         = OPEN selectListItem *( COMMA selectListItem ) CLOSE
+selectListItem     = STAR ; all structural properties
+                   / allOperationsInSchema 
+                   / [ qualifiedEntityTypeName "/" ] 
+                     ( qualifiedActionName
+                     / qualifiedFunctionName 
+                     / selectListProperty
+                     )
+selectListProperty = primitiveProperty  
+                   / primitiveColProperty 
+                   / navigationProperty [ '+' ] [ selectList ]
+                   / selectPath [ "/" selectListProperty ]
+
+contextPropertyPath = primitiveProperty
+                    / primitiveColProperty
+                    / complexColProperty
+                    / complexProperty [ [ "/" qualifiedComplexTypeName ] "/" contextPropertyPath ]
                  
-entity = '/$entity'                   
-
 
 ;------------------------------------------------------------------------------
 ; 4. Expressions
