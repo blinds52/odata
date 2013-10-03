@@ -15,7 +15,7 @@
       <Function Name="CreatedEntities">
         <Parameter Name="before" Type="Edm.DateTimeOffset" Nullable="true" />
         <Parameter Name="after" Type="Edm.DateTimeOffset" Nullable="true" />
-        <ReturnType Type="Collection(Edm.EntityType)" />
+        <ReturnType Type="Collection(Edm.EntityType)" Nullable="true" />
       </Function>
       <Function Name="TopSellingProducts">
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" Nullable="true" />
@@ -23,8 +23,8 @@
       </Function>
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="@UI.LineItem" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" />
-      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem" Qualifier="OnNavProp"/>
-      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem#Tablet" Qualifier="OnNavPropQualified"/>
+      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem" Qualifier="OnNavProp" />
+      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem#Tablet" Qualifier="OnNavPropQualified" />
       <Annotation Term="UI.ReferenceFacet" UrlRef="http://LineItem" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="@x.Supplier#X/Contacts@y.ViewVariants" />
 
@@ -128,7 +128,7 @@
         <Property Name="TheKey" Type="Edm.PropertyPath" />
         <Property Name="TheValue" Type="Edm.String" MaxLength="max" />
         <Property Name="TheString" Type="Edm.Strong" MaxLength="max" />
-        <Property Name="Tags" Type="Collection(Edm.String)" SRID="variable" />
+        <Property Name="Tags" Type="Collection(Edm.String)" Nullable="true" SRID="variable" />
         <Property Type="Edm.Decimal" Name="Price" Scale="variable" />
         <Annotation Term="Some.Term" Qualifier="SomeQualifier">
           <Annotation Term="Some.Term" String="Some Value" />
@@ -270,6 +270,117 @@
           <NavigationPropertyBinding Target="Namespace.Container/Freds" Path="MoreWaldos" />
         </EntitySet>
       </EntityContainer>
+    </Schema>
+
+
+    <!-- Examples for ODATA-535 -->
+    <Schema Namespace="X">
+      <Term Name="Person" Type="X.PersonType" />
+      <Term Name="Team" Type="Collection(X.Person)" /> <!-- semantically more explicit than using the underlying type -->
+      <Term Name="Movie" Type="X.MovieType" />
+      <Term Name="Friend" Type="X.FriendType" /> <!-- X.FriendType is an EntityType -->
+    </Schema>
+    <Schema Namespace="Y">
+      <Term Name="Developer" BaseTerm="X.Person" Type="Y.DeveloperType" />
+      <ComplexType Name="DeveloperType" BaseType="X.PersonType">
+        <!-- additional properties -->
+      </ComplexType>
+
+      <Annotations Target="Some.EntityType">
+        <Annotation Term="X.Person">
+          <Record>
+            <!-- property values defined on X.PersonType go here -->
+          </Record>
+        </Annotation>
+        <Annotation Term="Y.Developer">
+          <Record>
+            <!-- property values not already specified in the base term annotation go here -->
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Term Name="DevelopmentTeam" Type="Collection(Y.Developer)">
+        <Annotation Term="custom.IsA" String="X.Team" />
+      </Term>
+
+      <Annotations Target="Some.EntityType">
+        <Annotation Term="Y.DevelopmentTeam">
+          <Annotation Term="custom.IsA" String="X.Team" />
+          <Annotation Term="custom.ItemIsA" String="Y.Developer X.Person" />
+          <Path>SomeNavProp/@Y.Developer</Path>
+        </Annotation>
+      </Annotations>
+
+      <Term Name="ScrumTeam" BaseTerm="Y.DevelopmentTeam" Type="Y.ScrumTeamType" />
+      <ComplexType Name="ScrumTeamType">
+        <Property Name="ScrumMaster" Type="Y.DeveloperType">
+          <Annotation Term="custom.IsA" String="Y.Developer X.Person" />
+        </Property>
+      </ComplexType>
+      <Annotations Target="Some.EntityType">
+        <Annotation Term="Y.DevelopmentTeam">
+          <Annotation Term="custom.IsA" String="X.Team" />
+          <Path>SomeNavProp/@Y.Developer</Path>
+        </Annotation>
+        <Annotation Term="Y.ScrumTeam">
+          <Record>
+            <PropertyValue Property="ScrumMaster">
+              <Annotation Term="custom.IsA" String="Y.Developer X.Person" />
+              <Record>
+                <!-- property values for Y.DeveloperType go here -->
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+
+      <Term Name="Movies" Type="Collection(X.Movie)" />
+      <Annotations Target="Some.EntityType">
+        <Annotation Term="Y.Movies">
+          <Annotation Term="custom.ItemIsA" String="X.Movie" />
+          <Path>AllMyMovies</Path>
+        </Annotation>
+      </Annotations>
+
+      <Term Name="ArchivedMovies" Type="Collection(Y.ArchivedMovieType)">
+        <Annotation Term="custom.ItemIsA" String="X.Movie" />
+      </Term>
+      <ComplexType Name="ArchivedMovieType" BaseType="X.MovieType">
+        <Annotation Term="custom.IsA" String="X.Movie" />
+        <Property Name="ArchivedAt" Type="Edm.Date" />
+      </ComplexType>
+      <Annotations Target="Some.EntityType">
+        <Annotation Term="Y.ArchivedMovies">
+          <Annotation Term="custom.ItemIsA" String="X.Movie" />
+          <Path>MoviesInStorage</Path>
+        </Annotation>
+      </Annotations>
+
+      <Term Name="SomeThing" Type="Y.SomeThingType" />
+      <ComplexType Name="SomeThingType">
+        <Property Name="SomeProperty" Type="Edm.String" />
+        <Property Name="Contacts" Type="Collection(X.PersonType)">
+          <Annotation Term="custom.ItemIsA" String="X.Person" />
+        </Property>
+        <NavigationProperty Name="VIPs" Type="Collection(X.Friend)">
+          <Annotation Term="custom.ItemIsA" String="X.Friend" />
+        </NavigationProperty>
+      </ComplexType>
+      <Annotations Target="Some.EntityType">
+        <Annotation Term=" Y.Something">
+          <Record>
+            <PropertyValue Property="SomeProperty" String="SomeThing" />
+            <PropertyValue Property="Contacts">
+              <Annotation Term="custom.ItemIsA" String="X.Person" />
+              <Path>MyContacts</Path>
+            </PropertyValue>
+            <PropertyValue Property="VIPs">
+              <Annotation Term="custom.ItemIsA" String="X.Person" />
+              <Path>MyBestFriends</Path>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
     </Schema>
 
   </edmx:DataServices>
