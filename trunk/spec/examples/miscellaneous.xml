@@ -141,7 +141,8 @@
             <Path>MyAddress/vCard.Address#work/Street</Path>
             <EnumMember>org.example.Pattern/Red</EnumMember>
             <EnumMember>org.example.Pattern/Red
-              org.example.Pattern/Striped</EnumMember>
+              org.example.Pattern/Striped
+            </EnumMember>
             <Record>
               <PropertyValue Property="Egon" String="1" />
               <PropertyValue Property="Hugo" String="2">
@@ -276,7 +277,9 @@
     <!-- Examples for ODATA-535 -->
     <Schema Namespace="X">
       <Term Name="Person" Type="X.PersonType" />
-      <Term Name="Team" Type="Collection(X.Person)" /> <!-- semantically more explicit than using the underlying type -->
+      <Term Name="Team" Type="Collection(X.PersonType)">
+        <Annotation Term="custom.ItemIsA" String="X.Person" />
+      </Term>
       <Term Name="Movie" Type="X.MovieType" />
       <Term Name="Friend" Type="X.FriendType" /> <!-- X.FriendType is an EntityType -->
     </Schema>
@@ -299,14 +302,18 @@
         </Annotation>
       </Annotations>
 
-      <Term Name="DevelopmentTeam" Type="Collection(Y.Developer)">
+      <Term Name="DevelopmentTeam" Type="Collection(Y.DeveloperType)">
+        <Annotation Term="custom.ItemIsA" String="Y.Developer" />
         <Annotation Term="custom.IsA" String="X.Team" />
+        <!--
+          cannot express that with BaseType because it would be hard to have
+          both a DevelopmentTeam and a Team annotation and then correlate the records
+        -->
       </Term>
 
       <Annotations Target="Some.EntityType">
         <Annotation Term="Y.DevelopmentTeam">
           <Annotation Term="custom.IsA" String="X.Team" />
-          <Annotation Term="custom.ItemIsA" String="Y.Developer X.Person" />
           <Path>SomeNavProp/@Y.Developer</Path>
         </Annotation>
       </Annotations>
@@ -326,6 +333,10 @@
           <Record>
             <PropertyValue Property="ScrumMaster">
               <Annotation Term="custom.IsA" String="Y.Developer X.Person" />
+              <!--
+                cannot express that in complex type definition unless we make
+                terms and types interchangeably everywhere
+              -->
               <Record>
                 <!-- property values for Y.DeveloperType go here -->
               </Record>
@@ -337,7 +348,6 @@
       <Term Name="Movies" Type="Collection(X.Movie)" />
       <Annotations Target="Some.EntityType">
         <Annotation Term="Y.Movies">
-          <Annotation Term="custom.ItemIsA" String="X.Movie" />
           <Path>AllMyMovies</Path>
         </Annotation>
       </Annotations>
