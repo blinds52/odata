@@ -2230,11 +2230,11 @@ Overview:
   </TestCase> 
   <TestCase Name="Context URL - Entity set with $select and $expand" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country)</Input>
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country,Model.*)</Input>
   </TestCase> 
   <TestCase Name="Context URL - Entity set with $select and $expand with nested select" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country(Code))</Input>
+    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country(Code,Model.ActionName,Model.MostPopularAddress))</Input>
   </TestCase> 
   <TestCase Name="Context URL - Entity set with $select and $expand with nested select" 
             Rule="odataUri">
@@ -2272,9 +2272,13 @@ Overview:
             Rule="odataUri">
     <Input>http://host/service/$metadata#Customers('ALFKI')/Orders(1)/Items</Input>
   </TestCase>  
+  <TestCase Name="Context URL - containment - multi-level with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers('ALFKI')/Orders(1)/Items(Product)/$entity</Input>
+  </TestCase>  
   <TestCase Name="Context URL - containment with type cast" 
             Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers('ALFKI')/Model.VipCustomer</Input>
+    <Input>http://host/service/$metadata#Customers('ALFKI')/Model.VipCustomer/Address/Orders</Input>
   </TestCase>  
   <TestCase Name="Context URL - Entity with $select" 
             Rule="odataUri">
@@ -2283,6 +2287,10 @@ Overview:
   <TestCase Name="Context URL - Entity with type cast" 
             Rule="odataUri">
     <Input>http://host/service/$metadata#Customers/Model.VipCustomer/$entity</Input>
+  </TestCase>  
+  <TestCase Name="Context URL - Entity property value" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers(1)/Addresses</Input>
   </TestCase>  
   <TestCase Name="Context URL - Individual value" 
             Rule="odataUri">
