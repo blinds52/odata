@@ -18,6 +18,7 @@
         Namespace="TestV3" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
         annotation:UseStrongSpatialTypes="false"
       >
+        <Using Alias="Ala" Namespace="name.space" NamespaceUri="http://some.where" />
         <EntityContainer Name="TestV3Container" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Schemata" EntityType="TestV3.Schema" />
           <EntitySet Name="Types" EntityType="TestV3.Type" cg:GetterAccess="Internal" />
@@ -47,12 +48,12 @@
             <PropertyRef Name="Namespace" />
           </Key>
           <Property Type="String" Name="Namespace" Nullable="false" annotation:StoreGeneratedPattern="None" />
-          <Property Type="String" Name="Alias" Nullable="false" />
+          <Property Type="String" Name="Alias" Nullable="false" FixedLength="true" Collation="String" />
           <NavigationProperty Name="EntityTypes" Relationship="TestV3.SchemaEntityType" FromRole="Schema"
             ToRole="EntityType" />
         </EntityType>
         <ComplexType Name="SomeComplex">
-          <Property Type="Binary" Name="SomeBinary" />
+          <Property Type="Binary" Name="SomeBinary" ConcurrencyMode="None" MaxLength="Max" />
           <Property Type="Geography" Name="BecomeNavigation">
             <Documentation>
               <LongDescription>#V4:Navigation:TestV3.EntityType</LongDescription>
@@ -121,6 +122,18 @@
           <NavigationProperty Name="Schema" Relationship="TestV3.SchemaEntityType" FromRole="EntityType"
             ToRole="Schema" />
         </EntityType>
+        <EnumType Name="Colors" IsFlags="true" UnderlyingType="Int32">
+          <Member Name="Green" Value="1" />
+        </EnumType>
+        <Function Name="ModelFunction" ReturnType="String" Nullable="true" FixedLength="true">
+          <Parameter Name="In" Type="Edm.String" DefaultValue="def" />
+          <Parameter Name="In" Type="Edm.String" Collation="String" />
+        </Function>
+        <Function Name="ModelFunctionWithReturnType">
+          <Parameter Name="In" Type="Edm.String" DefaultValue="def" />
+          <Parameter Name="In" Type="Edm.String" Collation="String" />
+          <ReturnType Type="Boolean" Nullable="true" />
+        </Function>
         <Association Name="SchemaEntityType">
           <End Type="TestV3.Schema" Role="Schema" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -137,6 +150,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ValueTerm Name="SomeTerm" Type="Edm.String" MaxLength="Max">
+          <Documentation>
+            <Summary>A term is a term is a term</Summary>
+          </Documentation>
+        </ValueTerm>
+        <Annotations Target="Some.Type">
+          <TypeAnnotation Term="Type.Term">
+            <PropertyValue Property="prop">
+              <Decimal>3.1415</Decimal>
+            </PropertyValue>
+          </TypeAnnotation>
+          <ValueAnnotation Term="Value.Term" Path="Hugo" Qualifier="Qual" />
+          <ValueAnnotation Term="Value.Term">
+            <Collection>
+              <Record>
+                <PropertyValue Property="Prop" String="Nine" />
+              </Record>
+              <DateTime>2013-10-14T09:07:01</DateTime>
+              <DateTimeOffset>2013-10-14T09:07:02Z</DateTimeOffset>
+              <If>
+                <Bool>true</Bool>
+                <Int>42</Int>
+                <Float>3.14</Float>
+              </If>
+            </Collection>
+          </ValueAnnotation>
+        </Annotations>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
