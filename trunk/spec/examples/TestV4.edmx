@@ -19,15 +19,15 @@
           IncludeInServiceDocument="true" />
       </EntityContainer>
       <EntityType Name="Schema" HasStream="true">
-        <Key>
-          <PropertyRef Name="Namespace" />
-        </Key>
         <Annotation Term="Core.Description">
           <String>Summary</String>
         </Annotation>
         <Annotation Term="Core.LongDescription">
           <String>Long description</String>
         </Annotation>
+        <Key>
+          <PropertyRef Name="Namespace" />
+        </Key>
         <Property Name="Namespace" Type="Edm.String" Nullable="false" />
         <Property Name="Alias" Type="Edm.String" Nullable="false" />
         <NavigationProperty Name="EntityTypes" Type="Collection(TestV3.EntityType)" Partner="Schema">
@@ -35,10 +35,11 @@
         </NavigationProperty>
       </EntityType>
       <ComplexType Name="SomeComplex">
-        <Property Name="SomeBinary" Type="Edm.Binary" />
+        <Property Name="SomeBinary" Type="Edm.Binary" MaxLength="max" />
         <NavigationProperty Name="BecomeNavigation" Type="TestV3.EntityType" />
         <NavigationProperty Name="BecomeAlsoNavigation" Type="TestV3.EntityType" Nullable="false" />
-        <NavigationProperty Name="BecomeCollectionNavigation" Type="Collection(TestV3.EntityType)" />
+        <NavigationProperty Name="BecomeCollectionNavigation" Type="Collection(TestV3.EntityType)"
+          Nullable="false" />
       </ComplexType>
       <ComplexType Name="AbstractBase" Abstract="true">
         <Property Name="SomeString" Type="Edm.String" />
@@ -74,6 +75,41 @@
           <ReferentialConstraint Property="SchemaAlias" ReferencedProperty="Alias" />
         </NavigationProperty>
       </EntityType>
+      <EnumType Name="Colors" IsFlags="true" UnderlyingType="Edm.Int32">
+        <Member Name="Green" Value="1" />
+      </EnumType>
+      <Function Name="ModelFunction">
+        <Parameter Name="In" Type="Edm.String" />
+        <Parameter Name="In" Type="Edm.String" />
+        <ReturnType Type="Edm.String" Nullable="true" />
+      </Function>
+      <Function Name="ModelFunctionWithReturnType">
+        <Parameter Name="In" Type="Edm.String" />
+        <Parameter Name="In" Type="Edm.String" />
+        <ReturnType Type="Edm.Boolean" Nullable="true" />
+      </Function>
+      <Term Name="SomeTerm" Type="Edm.String" MaxLength="max">
+        <Annotation Term="Core.Description">
+          <String>A term is a term is a term</String>
+        </Annotation>
+      </Term>
+      <Annotations Target="Some.Type">
+        <Annotation Term="Type.Term">
+          <Record>
+            <PropertyValue Property="prop">
+              <Bool>true</Bool>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Value.Term" Path="Hugo" Qualifier="Qual" />
+        <Annotation Term="Value.Term">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Prop" String="Nine" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
       <Action Name="Approval" IsBound="true">
         <Parameter Name="lr" Type="TestV3.EntityType" />
         <ReturnType Type="Edm.String" />

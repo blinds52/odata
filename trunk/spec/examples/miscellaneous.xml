@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  Version="4.0"
+>
   <edmx:Reference Uri="http://tinyurl.com/Org-OData-Measures-V1">
     <edmx:Include Alias="Core" Namespace="Org.OData.Measures.V1" />
+    <Annotation Term="Some.Term" />
   </edmx:Reference>
   <edmx:Reference Uri="http://somewhere/Vocabulary/V1">
     <edmx:IncludeAnnotations TermNamespace="Name.Space" TargetNamespace="Target.Space" />
@@ -10,7 +13,7 @@
     <edmx:IncludeAnnotations TermNamespace="NameSpace" Qualifier="SomeName" />
     <edmx:IncludeAnnotations TermNamespace="Name.Space" />
   </edmx:Reference>
-  <edmx:DataServices xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <edmx:DataServices>
     <Schema Namespace="Model1" Alias="Self">
       <Function Name="CreatedEntities">
         <Parameter Name="before" Type="Edm.DateTimeOffset" Nullable="true" />
@@ -30,8 +33,29 @@
 
       <Annotation Term="UI.HyperLink" NavigationPropertyPath="Supplier" />
 
+      <Annotation Term="Is.Null">
+        <Annotation Term="Next.to.Null" />
+        <Null>
+          <Annotation Term="Within.Null" />
+        </Null>
+      </Annotation>
+
+      <Annotation Term="Vocabulary1.SubTitle">
+        <Annotation Term="For.Constant" />
+        <Int>1234</Int>
+      </Annotation>
+
+      <Annotation Term="A.Bool" Bool="true">
+        <Annotation Term="Annotate.A.Bool" />
+      </Annotation>
+      <Annotation Term="A.Decimal" Decimal="12.34" />
+      <Annotation Term="A.Float" Float="1.23e4" />
+      <Annotation Term="An.Int" Int="1234" />
+      <Annotation Term="A.String" String="1.23e4" />
+      <Annotation Term="A.Date" Date="2013-10-09" />
+
       <Annotation Term="Capabilities.UpdateRestrictions">
-        <Record>
+        <Record Type="Derived.Type">
           <PropertyValue Property="NonUpdatableNavigationProperties">
             <Collection>
               <NavigationPropertyPath>Supplier</NavigationPropertyPath>
@@ -47,6 +71,7 @@
           <PropertyValue Property="Abstract" Path="Description" />
           <PropertyValue Property="Url">
             <Apply Function="odata.concat">
+              <Annotation Term="In.Apply" />
               <String>Products(</String>
               <Path>ID</Path>
               <String>)</String>
@@ -57,6 +82,7 @@
 
       <Annotation Term="org.example.display.DisplayName">
         <If>
+          <Annotation Term="In.If" />
           <Path>IsFemale</Path>
           <String>Female</String>
           <String>Male</String>
@@ -74,6 +100,7 @@
           <Or>
             <Eq>
               <Ge>
+                <Annotation Term="In.Ge" />
                 <Null />
                 <Null />
               </Ge>
@@ -141,8 +168,7 @@
             <Path>MyAddress/vCard.Address#work/Street</Path>
             <EnumMember>org.example.Pattern/Red</EnumMember>
             <EnumMember>org.example.Pattern/Red
-              org.example.Pattern/Striped
-            </EnumMember>
+              org.example.Pattern/Striped</EnumMember>
             <Record>
               <PropertyValue Property="Egon" String="1" />
               <PropertyValue Property="Hugo" String="2">
@@ -150,11 +176,14 @@
               </PropertyValue>
               <Annotation Term="Some.Term" String="Some Value" />
             </Record>
-            <LabeledElement Name="Hugo">
+            <LabeledElement Name="Attribute" String="Hello" />
+            <LabeledElement Name="Element">
               <String>Hello</String>
             </LabeledElement>
-            <LabeledElement Name="Hugo" String="Hello" />
-            <LabeledElementReference>Model.Hugo</LabeledElementReference>
+            <LabeledElement Name="Record">
+              <Record />
+            </LabeledElement>
+            <LabeledElementReference>Model.Attribute</LabeledElementReference>
           </Collection>
         </Annotation>
         <Annotation Term="Vocab.GIQSupplier">
@@ -377,7 +406,7 @@
         </NavigationProperty>
       </ComplexType>
       <Annotations Target="Some.EntityType">
-        <Annotation Term=" Y.Something">
+        <Annotation Term="Y.Something">
           <Record>
             <PropertyValue Property="SomeProperty" String="SomeThing" />
             <PropertyValue Property="Contacts">
