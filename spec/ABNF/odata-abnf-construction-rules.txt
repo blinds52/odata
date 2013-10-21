@@ -339,7 +339,7 @@ contextFragment = 'Collection($ref)'
                 / '$ref'
                 / 'Collection(Edm.EntityType)'
                 / 'Collection(Edm.ComplexType)'
-                / singletonEntity
+                / singletonEntity [ navigation *( containmentNavigation ) [ "/" qualifiedEntityTypeName ] ] [ selectList ]
                 / qualifiedTypeName
                 / entitySet ( '/$deletedEntity' / '/$link' / '/$deletedLink' )
                 / entitySet keyPredicate "/" contextPropertyPath
@@ -347,8 +347,8 @@ contextFragment = 'Collection($ref)'
                 
 entitySet = entitySetName *( containmentNavigation ) [ "/" qualifiedEntityTypeName ]
             
-containmentNavigation = keyPredicate [ "/" qualifiedEntityTypeName ]
-                        *( "/" complexProperty [ "/" qualifiedComplexTypeName ] ) "/" navigationProperty   
+containmentNavigation = keyPredicate [ "/" qualifiedEntityTypeName ] navigation
+navigation            = *( "/" complexProperty [ "/" qualifiedComplexTypeName ] ) "/" navigationProperty   
 
 selectList         = OPEN selectListItem *( COMMA selectListItem ) CLOSE
 selectListItem     = STAR ; all structural properties
