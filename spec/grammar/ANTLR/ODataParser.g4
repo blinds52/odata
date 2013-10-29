@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------------
  * odata-v4.0-abnf for URI conventions transformed into ANTLRv4 syntax from 
  * https://tools.oasis-open.org/version-control/svn/odata/ in there
- * /trunk/spec/ABNF/odata-abnf-construction-rules-v4.0-wd01.txt rev 188
- * last modified 2013-02-15 15:26:46 +0000 (from svn info)
+ * /trunk/spec/ABNF/odata-abnf-construction-rules-v4.0-wd01.txt rev 191
+ * last modified 2013-02-15 15:41:18 +0000 (from svn info)
  * ----------------------------------------------------------------------------
  * From the normative ABNF file:
  * This grammar uses the ABNF defined in RFC5234 with one extension: literals
@@ -251,8 +251,8 @@ allOperationsInSchema : namespace DOT STAR ;
 
 // The parameterTypeNames are required to uniquely identify the action or function
 // only if it has overloads.
-qualifiedActionName   : namespace "." action ( OP parameterTypeNames CP )? ;
-qualifiedFunctionName : namespace "." function ( OP parameterTypeNames CP )? ;
+qualifiedActionName   : namespace '.' action ( OP parameterTypeNames CP )? ;
+qualifiedFunctionName : namespace '.' function ( OP parameterTypeNames CP )? ;
 
 // The types of all the parameters to the corresponding function 
 // in the order they are declared in the function.
@@ -797,7 +797,7 @@ durationBody : ( SIGN )? P_LUC ( ( Digit )+ D_LUC )? ( T_LUC ( ( Digit )+ H_LUC 
 
 timeOfDay     : TimeOfDay_LAC SQ timeOfDayBody SQ; 
 
-timeOfDayBody : hour COLON minute ( COLON second ( DOT fractionalSeconds )?)?];
+timeOfDayBody : hour COLON minute ( COLON second ( DOT fractionalSeconds )?)?;
  
 year  : ( Digit ) ( Digit ) ( Digit ) ( Digit );
 
@@ -912,11 +912,11 @@ DecOctet     : ONEHUNDRED_TO_ONEHUNDREDNINETYNINE            // 100-199
               | ( Digit ) ;                // 0-9
 regName      : ( Unreserved | PctEncoded | SubDelims )*;
 segmentNZ    : ( pChar )+;
-pChar         : Unreserved | PctEncoded | SubDelims | COLON | AT_SIGN;
+pChar         : Unreserved | PctEncoded | SubDelims | COLON | AT_SIGN;
 PctEncoded   : PERCENT HEXDIG1 HEXDIG1;
 Unreserved    : Alpha | Digit | MINUS | DOT | UNDERSCORE | TILDE;
 SubDelims    : DOLLAR | AMPERSAND | EQ | SEMI | SQ | OtherDelims;
-OtherDelims  : EXCLAMATION | OP | CP | STAR | PLUS | COMMA;
+OtherDelims  : EXCLAMATION | OP | CP | STAR | PLUS | COMMA;
 
 /* ----------------------------------------------------------------------------
  * 7. Punctuation
