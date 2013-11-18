@@ -989,15 +989,15 @@ preference = allowEntityReferencesPreference
            / trackChangesPreference
            / waitPreference
            ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
-           ; / token [ BWS "=" BWS word ] *( OWS ";" [ OWS parameter ] )
+           ; / token [ EQ-h word ] *( OWS ";" [ OWS parameter ] )
            
 allowEntityReferencesPreference = "odata.allow-entityreferences"
 
-callbackPreference = "odata.callback" OWS ";" OWS "url" BWS EQ BWS DQUOTE URI DQUOTE
+callbackPreference = "odata.callback" OWS ";" OWS "url" EQ-h DQUOTE URI DQUOTE
 
 continueOnErrorPreference = "odata.continue-on-error"           
            
-includeAnnotationsPreference = "odata.include-annotations" BWS EQ BWS DQUOTE annotationsList DQUOTE
+includeAnnotationsPreference = "odata.include-annotations" EQ-h DQUOTE annotationsList DQUOTE
 annotationsList      = annotationIdentifier *(COMMA annotationIdentifier)
 annotationIdentifier = [ excludeOperator ]
                        ( STAR 
@@ -1005,17 +1005,17 @@ annotationIdentifier = [ excludeOperator ]
                        ) 
 excludeOperator      = "-"
            
-maxpagesizePreference = "odata.maxpagesize" BWS EQ BWS oneToNine *DIGIT         
+maxpagesizePreference = "odata.maxpagesize" EQ-h oneToNine *DIGIT         
 
 respondAsyncPreference = "respond-async"
 
-returnPreference = "return" BWS EQ BWS ( 'representation' / 'minimal' )
+returnPreference = "return" EQ-h ( 'representation' / 'minimal' )
 
 trackChangesPreference = "odata.track-changes"
 
-waitPreference = "wait" BWS EQ BWS 1*DIGIT
+waitPreference = "wait" EQ-h 1*DIGIT
 
-;parameter      = token [ BWS "=" BWS word ]
+;parameter      = token [ EQ-h word ]
 ;word           = token / quoted-string
 ;token          = 1*tchar
 ;tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
@@ -1026,14 +1026,17 @@ waitPreference = "wait" BWS EQ BWS 1*DIGIT
 obs-text       = %x80-FF
 ;quoted-pair    = "\" ( HTAB / SP / VCHAR / obs-text )
 
+OWS   = *( SP / HTAB )  ; "optional" whitespace 
+BWS-h = *( SP / HTAB )  ; "bad" whitespace in header values 
+EQ-h  = BWS-h EQ BWS-h 
+
 
 ;------------------------------------------------------------------------------
 ; 9. Punctuation
 ;------------------------------------------------------------------------------
 
-OWS =  *( SP / HTAB / "%20" / "%09" )  ; "optional" whitespace 
 RWS = 1*( SP / HTAB / "%20" / "%09" )  ; "required" whitespace 
-BWS = OWS                              ; "bad" whitespace 
+BWS =  *( SP / HTAB / "%20" / "%09" )  ; "bad" whitespace 
 
 AT     = "@" / "%40"
 COLON  = ":" / "%3A"
