@@ -1,55 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
-Technical Committee:
+  Technical Committee:
   OASIS Open Data Protocol (OData) TC
   https://www.oasis-open.org/committees/odata
 
-Chairs:
+  Chairs:
   - Barbara Hartel (barbara.hartel@sap.com), SAP AG
   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
 
-Editors:
+  Editors:
   - Ralf Handl (ralf.handl@sap.com), SAP AG
   - Hubert Heijkers (hubert.heijkers@nl.ibm.com), IBM
   - Gerald Krause (gerald.krause@sap.com), SAP AG
   - Michael Pizzo (mikep@microsoft.com), Microsoft
   - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
 
-Additional artifacts: 
+  Additional artifacts:
   This CSDL document is one component of a Work Product that consists of:
   - OData Extension for Data Aggregation Version 4.0
   - OData Aggregation ABNF Construction Rules Version 4.0
   - OData Aggregation ABNF Test Cases
   - OData Aggregation Vocabulary (this document)
 
-Related work:
+  Related work:
   This work product is related to:
   - OData Version 4.0, a multi-part Work Product which includes:
-    - OData Version 4.0 Part 1: Protocol
-    - OData Version 4.0 Part 2: URL Conventions
-    - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
-    - OData ABNF Construction Rules Version 4.0
-    - OData ABNF Test Cases
-    - OData Core Vocabulary
-    - OData Measures Vocabulary
-    - OData Capabilities Vocabulary
+  - OData Version 4.0 Part 1: Protocol
+  - OData Version 4.0 Part 2: URL Conventions
+  - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
+  - OData ABNF Construction Rules Version 4.0
+  - OData ABNF Test Cases
+  - OData Core Vocabulary
+  - OData Measures Vocabulary
+  - OData Capabilities Vocabulary
   - OData JSON Format Version 4.0
   This specification replaces or supersedes:
   - None
 
-Declared XML namespaces:
+  Declared XML namespaces:
   - none
 
-Abstract:
-  This specification adds basic grouping and aggregation functionality 
-  (e.g. sum, min, and max) to the Open Data Protocol (OData) without 
+  Abstract:
+  This specification adds basic grouping and aggregation functionality
+  (e.g. sum, min, and max) to the Open Data Protocol (OData) without
   changing any of the base principles of OData.
 
-Overview:
+  Overview:
   This document defines terms to describe which data in a given entity model
   can be aggregated, and how.
-  
+
 -->
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
   <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs02/vocabularies/Org.OData.Core.V1.xml">
@@ -74,15 +74,11 @@ Overview:
         <Property Name="SupportedTransformations" Type="Collection(Edm.String)">
           <Annotation Term="Core.Description" String="Transformations that can be used in $apply" />
         </Property>
-        <Property Name="AggregatableProperties" Type="Collection(Aggregation.AggregatableProperty)">
-          <Annotation Term="Core.Description" String="Properties that can be used in the aggregate transformation" />
-        </Property>
-        <!-- TODO: consider merging these with AggregatableProperties via an abstract base type -->
-        <Property Name="DynamicAggregatableProperties" Type="Collection(Aggregation.DynamicAggregatableProperty)">
-          <Annotation Term="Core.Description" String="Properties that can be used in the aggregate transformation" />
-        </Property>
         <Property Name="GroupableProperties" Type="Collection(Aggregation.GroupableProperty)">
           <Annotation Term="Core.Description" String="Properties that can be used in the groupby transformation" />
+        </Property>
+        <Property Name="AggregatableProperties" Type="Collection(Aggregation.AggregatableProperty)">
+          <Annotation Term="Core.Description" String="Properties that can be used in the aggregate transformation" />
         </Property>
         <Property Name="SupportsRollup" DefaultValue="MultipleHierarchies" Type="Aggregation.SupportsRollupType">
           <Annotation Term="Core.Description" String="The service supports rollup hierarchies in a groupby transformation" />
@@ -96,11 +92,16 @@ Overview:
         <Member Name="MultipleHierarchies" />
       </EnumType>
 
+      <ComplexType Name="GroupableProperty">
+        <Property Name="Name" Type="Edm.PropertyPath" />
+        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)">
+          <Annotation Term="Core.Description"
+            String="Properties that are functionally dependent on the groupable property and should not be used for grouping" />
+        </Property>
+      </ComplexType>
+
       <ComplexType Name="AggregatableProperty">
         <Property Name="Name" Type="Edm.PropertyPath" />
-        <Property Name="DefaultAggregationMethod" Type="Edm.String" Nullable="true">
-          <Annotation Term="Core.Description" String="The default aggregation method for this property" />
-        </Property>
         <Property Name="SupportedAggregationMethods" Type="Collection(Aggregation.SupportedAggregationMethod)">
           <Annotation Term="Core.Description" String="The supported aggregation methods for this property" />
         </Property>
@@ -113,20 +114,20 @@ Overview:
         </Property>
       </ComplexType>
 
-      <!-- TODO: consider introducing abstract base type for this and the "Declared"AggregatableProperty -->
-      <ComplexType Name="DynamicAggregatableProperty">
-        <Property Name="Name" Type="Edm.String" />
-        <Property Name="Type" Type="Edm.String" />
+      <Term Name="CustomAggregate" Type="Aggregation.CustomAggregateType" AppliesTo="EntitySet EntityContainer">
+        <Annotation Term="Core.Description" String="Dynamic property that can be used in the aggregate transformation" />
+        <Annotation Term="Core.LongDescription"
+          String="This term MUST be applied with a Qualifier, the Qualifier value is the name of the dynamic property" />
+      </Term>
+      <ComplexType Name="CustomAggregateType">
+        <Property Name="Type" Type="Edm.String">
+          <Annotation Term="Core.Description" String="Primitive type of the aggregated values" />
+        </Property>
         <Property Name="SupportedGroupingProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="The aggregated value is defined for (a subset of) these grouping properties" />
         </Property>
-      </ComplexType>
-
-      <ComplexType Name="GroupableProperty">
-        <Property Name="Name" Type="Edm.PropertyPath" />
-        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)">
-          <Annotation Term="Core.Description"
-            String="Properties that are functionally dependent on the groupable property and should not be used for grouping" />
+        <Property Name="SupportedAggregationMethods" Type="Collection(Aggregation.SupportedAggregationMethod)">
+          <Annotation Term="Core.Description" String="The supported aggregation methods for this dynamic property" />
         </Property>
       </ComplexType>
 

@@ -11,20 +11,15 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="SalesModel" Namespace="org.example.odata.salesservice">
 
       <Annotations Target="SalesModel.Container">
-        <Annotation Term="DataAggregation.SupportsApply">
+        <Annotation Term="DataAggregation.SupportsApply" />
+
+        <Annotation Term="DataAggregation.CustomAggregate" Qualifier="Budget">
           <Record>
-            <PropertyValue Property="DynamicAggregatableProperties">
+            <PropertyValue Property="Type" String="Edm.Decimal" />
+            <PropertyValue Property="SupportedGroupingProperties">
               <Collection>
-                <Record>
-                  <PropertyValue Property="Name" String="Budget" />
-                  <PropertyValue Property="Type" String="Edm.Decimal" />
-                  <PropertyValue Property="SupportedGroupingProperties">
-                    <Collection>
-                      <PropertyPath>Time/Year</PropertyPath>
-                      <PropertyPath>SalesOranizations/Unit</PropertyPath>
-                    </Collection>
-                  </PropertyValue>
-                </Record>
+                <PropertyPath>Time/Year</PropertyPath>
+                <PropertyPath>SalesOranizations/Unit</PropertyPath>
               </Collection>
             </PropertyValue>
           </Record>
@@ -32,22 +27,15 @@
       </Annotations>
 
       <Annotations Target="SalesModel.Container/Sales">
-        <Annotation Term="DataAggregation.SupportsApply">
+        <Annotation Term="DataAggregation.CustomAggregate" Qualifier="Forecast">
           <Record>
-            <PropertyValue Property="DynamicAggregatableProperties">
+            <PropertyValue Property="Type" String="Edm.Decimal" />
+            <PropertyValue Property="SupportedGroupingProperties">
               <Collection>
-                <Record>
-                  <PropertyValue Property="Name" String="ForeCast" />
-                  <PropertyValue Property="Type" String="Edm.Decimal" />
-                  <PropertyValue Property="SupportedGroupingProperties">
-                    <Collection>
-                      <PropertyPath>Customer/Country</PropertyPath>
-                      <PropertyPath>Time/Month</PropertyPath>
-                      <PropertyPath>Time/Quarter</PropertyPath>
-                      <PropertyPath>Time/Year</PropertyPath>
-                    </Collection>
-                  </PropertyValue>
-                </Record>
+                <PropertyPath>Customer/Country</PropertyPath>
+                <PropertyPath>Time/Month</PropertyPath>
+                <PropertyPath>Time/Quarter</PropertyPath>
+                <PropertyPath>Time/Year</PropertyPath>
               </Collection>
             </PropertyValue>
           </Record>
