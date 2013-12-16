@@ -54,6 +54,7 @@
 ;   1. New alternatives for OData ABNF Construction Rules
 ;   2. System Query Option $apply
 ;   3. Extensions to $filter 
+;   4. Extensions to context URL 
 ;
 ;------------------------------------------------------------------------------
 
@@ -61,9 +62,13 @@
 ; 1. New alternatives for OData ABNF Construction Rules
 ;------------------------------------------------------------------------------
 
-systemQueryOption =/ apply   
+systemQueryOption =/ apply
+
+selectList =/ emptyProjection
 
 boolMethodCallExpr =/ isdefinedExpr
+
+primitiveProperty =/ aggregateAlias / customAggregate
 
 
 ;------------------------------------------------------------------------------
@@ -87,14 +92,16 @@ applyTrafo = aggregateTrafo
            / topsumTrafo
            / customFunction
            
-aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateParam *( BWS COMMA BWS aggregateParam ) ] BWS CLOSE
-aggregateParam  = expandPath OPEN aggregateExpr CLOSE   
-                / aggregateExpr
-                / aggregatedProperty [ aggregateWith ]
-aggregateExpr   = ( '$count'                     aggregateAs 
-                  / commonExpr [ aggregateWith ] aggregateAs *( aggregateFrom ) 
+aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateExpr *( BWS COMMA BWS aggregateExpr ) ] BWS CLOSE
+; TODO: fold aggregateExpr2 into aggregateExpr to allow from...with with customAggregate
+; TODO: is expandPath sufficient or do we need more general (longer) paths
+aggregateExpr   = expandPath OPEN aggregateExpr2 CLOSE   
+                / aggregateExpr2
+                / [ pathPrefix ] customAggregate [ aggregateAs aggregateFrom ]
+aggregateExpr2  = ( [ pathPrefix ] '$count'  aggregateAs 
+                  / commonExpr aggregateWith aggregateAs *( aggregateFrom ) 
                   ) 
-aggregateAs     = RWS 'as'   RWS odataIdentifier
+aggregateAs     = RWS 'as'   RWS aggregateAlias
 aggregateWith   = RWS 'with' RWS aggregateMethod        
 aggregateFrom   = RWS 'from' RWS groupingProperty [ aggregateWith ]
 aggregateMethod = 'sum' 
@@ -104,7 +111,9 @@ aggregateMethod = 'sum'
                 / 'countdistinct' 
                 / namespace "." odataIdentifier
                 
-aggregatedProperty = pathPrefix ( primitiveProperty / primitiveColProperty )                
+customAggregate = odataIdentifier
+aggregateAlias  = odataIdentifier
+                
 groupingProperty   = pathPrefix
                      ( entityNavigationProperty [ "/" qualifiedEntityTypeName ] 
                      / primitiveProperty 
@@ -145,7 +154,14 @@ customFunction = namespace "." entityColFunction functionExprParameters
 ; 3. Extensions to $filter
 ;------------------------------------------------------------------------------
 
-isdefinedExpr = 'isdefined' OPEN BWS ( groupingProperty / aggregatedProperty ) BWS CLOSE
+isdefinedExpr = 'isdefined' OPEN BWS ( firstMemberExpr ) BWS CLOSE
+
+
+;------------------------------------------------------------------------------
+; 3. Extensions to $filter
+;------------------------------------------------------------------------------
+
+emptyProjection = OPEN CLOSE
 
 
 ;------------------------------------------------------------------------------
