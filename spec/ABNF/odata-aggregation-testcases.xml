@@ -63,9 +63,9 @@
   <DisableTrace Rule="identifierCharacter" />
   <DisableTrace Rule="ALPHA" />
   <DisableTrace Rule="DIGIT" />
-  <DisableTrace Rule="HEXDIG"/>
-  <DisableTrace Rule="A-to-F"/>
-  <DisableTrace Rule="oneToNine"/>
+  <DisableTrace Rule="HEXDIG" />
+  <DisableTrace Rule="A-to-F" />
+  <DisableTrace Rule="oneToNine" />
 
   <Constraint Rule="action">
   </Constraint>
@@ -116,6 +116,7 @@
   <Constraint Rule="entityColNavigationProperty">
     <Match>Items</Match>
     <Match>Orders</Match>
+    <Match>Products</Match>
     <Match>Sales</Match>
   </Constraint>
   <Constraint Rule="entityColFunction">
@@ -262,16 +263,14 @@
   <TestCase Name="aggregate - property from requires with" Rule="queryOptions" FailAt="24">
     <Input>$apply=aggregate(Amount as DailyAverage from Time with average)</Input>
   </TestCase>
-    <TestCase Name="aggregate - custom aggregate and from" Rule="queryOptions">
+  <TestCase Name="aggregate - custom aggregate and from" Rule="queryOptions">
     <Input>$apply=aggregate(Forecast as DailyAverage from Time with average)</Input>
-    </TestCase>
-  <!-- TODO: make this work
-  -->
+  </TestCase>
   <!-- TODO: Details(Amount...) or Details/Amount...?
-    <TestCase Name="Aggregation - collection of complex type" Rule="queryOptions">
-    <Input>$apply=groupby((Product),aggregate(Details/Amount with sum as Total))</Input>
-    </TestCase>
   -->
+  <TestCase Name="Aggregation - collection of complex type" Rule="queryOptions">
+    <Input>$apply=groupby((Product),aggregate(Details(Amount with sum as Total)))</Input>
+  </TestCase>
   <TestCase Name="aggregate - $count" Rule="queryOptions">
     <Input>$apply=aggregate($count as SalesCount)</Input>
   </TestCase>
@@ -319,6 +318,9 @@
   </TestCase>
   <TestCase Name="aggregate - expand" Rule="queryOptions">
     <Input>$apply=expand(Sales,Amount gt 3)</Input>
+  </TestCase>
+  <TestCase Name="aggregate - multi-level expand" Rule="queryOptions">
+    <Input>$apply=expand(Products/Sales,Amount gt 3)</Input>
   </TestCase>
   <TestCase Name="aggregate - search" Rule="queryOptions">
     <Input>$apply=search(coffee)</Input>
