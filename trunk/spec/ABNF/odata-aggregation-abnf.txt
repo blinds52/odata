@@ -93,17 +93,14 @@ applyTrafo = aggregateTrafo
            / customFunction
            
 aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateExpr *( BWS COMMA BWS aggregateExpr ) ] BWS CLOSE
-; TODO: fold aggregateExpr2 into aggregateExpr to allow from...with with customAggregate
-; TODO: is expandPath sufficient or do we need more general (longer) paths
-aggregateExpr   = expandPath OPEN aggregateExpr2 CLOSE   
-                / aggregateExpr2
-                / [ pathPrefix ] customAggregate [ aggregateAs aggregateFrom ]
-aggregateExpr2  = ( [ pathPrefix ] '$count'  aggregateAs 
-                  / commonExpr aggregateWith aggregateAs *( aggregateFrom ) 
-                  ) 
+aggregateExpr   = customAggregate [ aggregateAs aggregateFrom ]
+                / commonExpr aggregateWith aggregateAs [ aggregateFrom ]
+                / pathPrefix customAggregate
+                / pathPrefix '$count' aggregateAs 
+                / pathPrefix pathSegment OPEN aggregateExpr CLOSE 
 aggregateAs     = RWS 'as'   RWS aggregateAlias
 aggregateWith   = RWS 'with' RWS aggregateMethod        
-aggregateFrom   = RWS 'from' RWS groupingProperty [ aggregateWith ]
+aggregateFrom   = RWS 'from' RWS groupingProperty [ aggregateWith ] [ aggregateFrom ]
 aggregateMethod = 'sum' 
                 / 'min' 
                 / 'max' 
@@ -119,17 +116,16 @@ groupingProperty   = pathPrefix
                      / primitiveProperty 
                      / complexProperty
                      )
-pathPrefix         = [ qualifiedEntityTypeName "/" ] 
-                     *( ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] "/"
-                      / navigationProperty [ "/" qualifiedEntityTypeName  ] "/" 
-                      ) 
+pathPrefix         = [ qualifiedEntityTypeName "/" ] *( pathSegment "/" ) 
+pathSegment        = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ]
+                   / navigationProperty [ "/" qualifiedEntityTypeName  ] 
                            
 bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottomsumTrafo     = 'bottomsum'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 concatTrafo = 'concat' OPEN BWS applyExpr 1*( BWS COMMA BWS applyExpr ) BWS CLOSE
-expandTrafo = 'expand' OPEN BWS expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
+expandTrafo = 'expand' OPEN BWS *( expandPath "/") expandPath BWS COMMA BWS boolCommonExpr BWS CLOSE
 filterTrafo = 'filter' OPEN BWS boolCommonExpr BWS CLOSE
 searchTrafo = 'search' OPEN BWS searchExpr BWS CLOSE
 
