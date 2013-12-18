@@ -61,12 +61,11 @@
         <String>Terms to describe which data in a given entity model can be aggregated, and how.</String>
       </Annotation>
 
-      <Term Name="ApplySupported" Type="Aggregation.ApplySupportedType" AppliesTo="EntitySet EntityContainer">
+      <Term Name="ApplySupported" Type="Aggregation.ApplySupportedType" AppliesTo="EntityType ComplexType EntityContainer">
         <Annotation Term="Core.Description">
-          <String>This entity set or entity container supports the $apply system query option</String>
+          <String>This structured type or entity container supports the $apply system query option</String>
         </Annotation>
       </Term>
-
       <ComplexType Name="ApplySupportedType">
         <Property Name="Transformations" Type="Collection(Edm.String)">
           <Annotation Term="Core.Description" String="Transformations that can be used in $apply" />
@@ -76,14 +75,8 @@
           <Annotation Term="Core.LongDescription" String="Possible values are sum, min, max, average, and countdistinct." />
         </Property>
         <Property Name="CustomAggregationMethods" Type="Collection(Edm.String)">
-          <Annotation Term="Core.Description" String="Custom aggregation methods that can be used in aggregate(...with...)" />
-          <Annotation Term="Core.LongDescription" String="Possible values are qualified names." />
-        </Property>
-        <Property Name="AggregatableProperties" Type="Collection(Aggregation.AggregatableProperty)">
-          <Annotation Term="Core.Description" String="Properties that can be used in the aggregate transformation" />
-        </Property>
-        <Property Name="GroupableProperties" Type="Collection(Aggregation.GroupableProperty)">
-          <Annotation Term="Core.Description" String="Properties that can be used in the groupby transformation" />
+          <Annotation Term="Core.Description"
+            String="Qualified names of custom aggregation methods that can be used in aggregate(...with...)" />
         </Property>
         <Property Name="Rollup" DefaultValue="MultipleHierarchies" Type="Aggregation.RollupType">
           <Annotation Term="Core.Description" String="The service supports rollup hierarchies in a groupby transformation" />
@@ -97,33 +90,31 @@
         <Member Name="MultipleHierarchies" />
       </EnumType>
 
-      <ComplexType Name="GroupableProperty">
-        <Property Name="Name" Type="Edm.PropertyPath" />
+      <Term Name="GroupableProperty" Type="Aggregation.GroupablePropertyType" AppliesTo="Property">
+        <Annotation Term="Core.Description" String="This property can be used in the groupby transformation" />
+      </Term>
+      <ComplexType Name="GroupablePropertyType">
         <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description"
             String="Properties that are functionally dependent on the groupable property and should not be used for grouping" />
         </Property>
       </ComplexType>
 
-      <ComplexType Name="AggregatableProperty">
-        <Property Name="Name" Type="Edm.PropertyPath" />
+      <Term Name="AggregatableProperty" Type="Aggregation.AggregatablePropertyType" AppliesTo="Property">
+        <Annotation Term="Core.Description" String="This property can be used in the aggregate transformation" />
+      </Term>
+      <ComplexType Name="AggregatablePropertyType">
+        <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)">
+          <Annotation Term="Core.Description" String="Properties that must be grouped by when aggregating this property" />
+        </Property>
         <!-- TODO: Do the AggregationMethods per property really differ (in a significant number of cases) from the ones
           declared on the set/container? -->
-        <Property Name="AggregationMethods" Type="Collection(Aggregation.AggregationMethod)">
+        <Property Name="AggregationMethods" Type="Collection(Edm.String)">
           <Annotation Term="Core.Description" String="The supported aggregation methods for this property" />
         </Property>
       </ComplexType>
 
-      <ComplexType Name="AggregationMethod">
-        <Property Name="Name" Type="Edm.String" />
-        <!-- TODO: can the required grouping properties really differ per aggregation method? If not, move up to AggregatableProperty,
-          remove this complex type, and make AggregationMethods a collection of strings -->
-        <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)">
-          <Annotation Term="Core.Description" String="Properties that must be grouped by when aggregating this property" />
-        </Property>
-      </ComplexType>
-
-      <Term Name="CustomAggregate" Type="Aggregation.CustomAggregateType" AppliesTo="EntitySet EntityContainer">
+      <Term Name="CustomAggregate" Type="Aggregation.CustomAggregateType" AppliesTo="EntityType ComplexType EntityContainer">
         <Annotation Term="Core.Description" String="Dynamic property that can be used in the aggregate transformation" />
         <Annotation Term="Core.LongDescription"
           String="This term MUST be applied with a Qualifier, the Qualifier value is the name of the dynamic property" />
@@ -132,24 +123,17 @@
         <Property Name="Type" Type="Edm.String">
           <Annotation Term="Core.Description" String="Primitive type of the aggregated values" />
         </Property>
-        <!-- TODO: do we need this? Can custom aggregates on the same set/container have different groupable properties,
-          and different from those declared on the set/container? -->
-        <Property Name="GroupableProperties" Type="Collection(Aggregation.GroupableProperty)">
-          <Annotation Term="Core.Description" String="The aggregated value is defined for (a subset of) these grouping properties" />
-        </Property>
-        <!-- TODO: do we really want to allow specifying an aggregation method with a custom aggregate, i.e. overrule
-          the server-defined default aggregation behavior? -->
-        <Property Name="AggregationMethods" Type="Collection(Aggregation.SupportedAggregationMethod)">
-          <Annotation Term="Core.Description" String="The supported aggregation methods for this dynamic property" />
+        <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)">
+          <Annotation Term="Core.Description" String="Properties that must be grouped by when aggregating this property" />
         </Property>
       </ComplexType>
 
-      <Term Name="LeveledHierarchy" Type="Collection(Edm.PropertyPath)" AppliesTo="EntityType">
+      <Term Name="LeveledHierarchy" Type="Collection(Edm.PropertyPath)" AppliesTo="EntityType ComplexType">
         <Annotation Term="Core.Description"
           String="Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy" />
       </Term>
 
-      <Term Name="RecursiveHierarchy" Type="Aggregation.RecursiveHierarchyType" AppliesTo="EntityType">
+      <Term Name="RecursiveHierarchy" Type="Aggregation.RecursiveHierarchyType" AppliesTo="EntityType ComplexType">
         <Annotation Term="Core.Description" String="Defines a recursive hierarchy." />
       </Term>
 
@@ -223,7 +207,6 @@
         <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" />
       </ComplexType>
 
-      <!-- TODO: do we need this? -->
       <!-- instance annotation for rollup instances -->
       <Term Name="Rollup" Type="Core.Tag" DefaultValue="true">
         <Annotation Term="Core.Description" String="Supports $batch requests" />
