@@ -151,7 +151,7 @@ Agreed.
 
 ### 9.2 January 9, 2014 during 8-10am PT?
 
-Agreed, as then we will try to advance the aggregation extension to CD02
+Agreed, as then we will try to advance the aggregation extension to CSD02
 
 ## 10 AOB
 
