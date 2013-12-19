@@ -86,24 +86,13 @@
         <Member Name="MultipleHierarchies" />
       </EnumType>
 
-      <Term Name="GroupableProperty" Type="Aggregation.GroupablePropertyType" AppliesTo="Property">
+      <Term Name="Groupable" Type="Core.Tag" AppliesTo="Property" DefaultValue="true">
         <Annotation Term="Core.Description" String="This property can be used in the groupby transformation" />
       </Term>
-      <ComplexType Name="GroupablePropertyType">
-        <Property Name="DependentProperties" Type="Collection(Edm.PropertyPath)">
-          <Annotation Term="Core.Description"
-            String="Properties that are functionally dependent on the groupable property and should not be used for grouping" />
-        </Property>
-      </ComplexType>
 
-      <Term Name="AggregatableProperty" Type="Aggregation.AggregatablePropertyType" AppliesTo="Property">
+      <Term Name="Aggregatable" Type="Core.Tag" AppliesTo="Property" DefaultValue="true">
         <Annotation Term="Core.Description" String="This property can be used in the aggregate transformation" />
       </Term>
-      <ComplexType Name="AggregatablePropertyType">
-        <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)">
-          <Annotation Term="Core.Description" String="Properties that must be grouped by when aggregating this property" />
-        </Property>
-      </ComplexType>
 
       <Term Name="CustomAggregate" Type="Aggregation.CustomAggregateType" AppliesTo="EntityType ComplexType EntityContainer">
         <Annotation Term="Core.Description" String="Dynamic property that can be used in the aggregate transformation" />
@@ -114,10 +103,15 @@
         <Property Name="Type" Type="Edm.String">
           <Annotation Term="Core.Description" String="Primitive type of the aggregated values" />
         </Property>
-        <Property Name="RequiredGroupingProperties" Type="Collection(Edm.PropertyPath)">
-          <Annotation Term="Core.Description" String="Properties that must be grouped by when aggregating this property" />
-        </Property>
       </ComplexType>
+
+      <Term Name="ContextDefiningProperties" Type="Collection(Edm.PropertyPath)" AppliesTo="Property Annotation">
+        <Annotation Term="Core.Description"
+          String="The annotated property or custom aggregate is only well-defined in the context of these properties" />
+        <Annotation Term="Core.LongDescription">
+          <String>The context-defining properties need either be part of the result entities, or be restricted to a single value by a pre-filter operation. Examples are postal codes within a country, or monetary amounts whose context is the unit of currency.</String>
+        </Annotation>
+      </Term>
 
       <Term Name="LeveledHierarchy" Type="Collection(Edm.PropertyPath)" AppliesTo="EntityType ComplexType">
         <Annotation Term="Core.Description"
