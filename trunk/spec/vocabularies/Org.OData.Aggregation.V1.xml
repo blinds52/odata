@@ -77,6 +77,10 @@
         <Property Name="Rollup" DefaultValue="MultipleHierarchies" Type="Aggregation.RollupType">
           <Annotation Term="Core.Description" String="The service supports rollup hierarchies in a groupby transformation" />
         </Property>
+        <Property Name="AllPropertiesSupported" DefaultValue="true" Type="Edm.Boolean">
+          <Annotation Term="Core.Description"
+            String="The service supports all properties of structured types within the scope of this annotation in groupby and aggregate transformations" />
+        </Property>
       </ComplexType>
 
       <EnumType Name="RollupType">
@@ -187,15 +191,9 @@
         <Annotation Term="Core.Description"
           String="This action or function is available on aggregated entities if the RequiredProperties are still defined" />
       </Term>
-
       <ComplexType Name="AvailableOnAggregatesType">
         <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" />
       </ComplexType>
-
-      <!-- instance annotation for rollup instances -->
-      <Term Name="Rollup" Type="Core.Tag" DefaultValue="true">
-        <Annotation Term="Core.Description" String="Supports $batch requests" />
-      </Term>
 
     </Schema>
   </edmx:DataServices>
