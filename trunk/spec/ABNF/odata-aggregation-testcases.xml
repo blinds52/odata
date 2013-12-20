@@ -118,6 +118,7 @@
     <Match>Orders</Match>
     <Match>Products</Match>
     <Match>Sales</Match>
+    <Match>Suppliers</Match>
   </Constraint>
   <Constraint Rule="entityColFunction">
   </Constraint>
@@ -319,6 +320,9 @@
   </TestCase>
   <TestCase Name="aggregate - multi-level expand" Rule="queryOptions">
     <Input>$apply=expand(Products,true,expand(Sales,Amount gt 3))</Input>
+  </TestCase>
+  <TestCase Name="aggregate - multi-level expand with branches" Rule="queryOptions">
+    <Input>$apply=expand(Products,true,expand(Sales,Amount gt 3),expand(Suppliers,true,expand(Products,true)))</Input>
   </TestCase>
   <TestCase Name="aggregate - search" Rule="queryOptions">
     <Input>$apply=search(coffee)</Input>
