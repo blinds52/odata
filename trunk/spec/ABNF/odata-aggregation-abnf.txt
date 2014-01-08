@@ -54,7 +54,6 @@
 ;   1. New alternatives for OData ABNF Construction Rules
 ;   2. System Query Option $apply
 ;   3. Extensions to $filter 
-;   4. Extensions to context URL 
 ;
 ;------------------------------------------------------------------------------
 
@@ -63,8 +62,6 @@
 ;------------------------------------------------------------------------------
 
 systemQueryOption =/ apply
-
-selectList =/ emptyProjection
 
 boolMethodCallExpr =/ isdefinedExpr
 
@@ -92,7 +89,7 @@ applyTrafo = aggregateTrafo
            / topsumTrafo
            / customFunction
            
-aggregateTrafo  = 'aggregate' OPEN [ BWS aggregateExpr *( BWS COMMA BWS aggregateExpr ) ] BWS CLOSE
+aggregateTrafo  = 'aggregate' OPEN BWS aggregateExpr *( BWS COMMA BWS aggregateExpr ) BWS CLOSE
 aggregateExpr   = customAggregate [ aggregateAs aggregateFrom ]
                 / commonExpr aggregateWith aggregateAs [ aggregateFrom ]
                 / pathPrefix '$count' aggregateAs 
@@ -151,13 +148,6 @@ customFunction = namespace "." entityColFunction functionExprParameters
 ;------------------------------------------------------------------------------
 
 isdefinedExpr = 'isdefined' OPEN BWS ( firstMemberExpr ) BWS CLOSE
-
-
-;------------------------------------------------------------------------------
-; 3. Extensions to $filter
-;------------------------------------------------------------------------------
-
-emptyProjection = OPEN CLOSE
 
 
 ;------------------------------------------------------------------------------
