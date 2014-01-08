@@ -5,7 +5,7 @@
   <edmx:Reference
     Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/vocabularies/Org.OData.Aggregation.V1.xml"
   >
-    <edmx:Include Alias="DataAggregation" Namespace="Org.OData.Aggregation.V1" />
+    <edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1" />
   </edmx:Reference>
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Alias="SalesModel" Namespace="org.example.odata.salesservice">
@@ -15,7 +15,7 @@
           <PropertyRef Name="Code" />
         </Key>
         <Property Name="Code" Type="Edm.String">
-          <Annotation Term="DataAggregation.Groupable" />
+          <Annotation Term="Aggregation.Groupable" />
         </Property>
         <Property Name="Name" Type="Edm.String">
           <Annotation Term="Core.IsLanguageDependent" />
@@ -29,8 +29,8 @@
         <Property Name="ID" Type="Edm.String" Nullable="false" />
 
         <Property Name="Amount" Type="Edm.Decimal" Scale="variable">
-          <Annotation Term="DataAggregation.Aggregateable" />
-          <Annotation Term="DataAggregation.ContextDefiningProperties">
+          <Annotation Term="Aggregation.Aggregateable" />
+          <Annotation Term="Aggregation.ContextDefiningProperties">
             <Collection>
               <PropertyPath>Currency/Code</PropertyPath>
             </Collection>
@@ -43,20 +43,17 @@
         <NavigationProperty Name="SalesOrganization" Type="SalesModel.SalesOrganization" Nullable="false" />
         <NavigationProperty Name="Time" Type="SalesModel.Time" Nullable="false" />
 
-        <Annotation Term="DataAggregation.CustomAggregate" Qualifier="Forecast">
-          <Annotation Term="DataAggregation.ContextDefiningProperties">
+        <Annotation Term="Aggregation.CustomAggregate" Qualifier="Forecast" String="Edm.Decimal">
+          <Annotation Term="Aggregation.ContextDefiningProperties">
             <Collection>
               <PropertyPath>Currency/Code</PropertyPath>
             </Collection>
           </Annotation>
-          <Record>
-            <PropertyValue Property="Type" String="Edm.Decimal" />
-          </Record>
         </Annotation>
       </EntityType>
 
       <Annotations Target="SalesModel.Product">
-        <Annotation Term="DataAggregation.LeveledHierarchy" Qualifier="ProductHierarchy">
+        <Annotation Term="Aggregation.LeveledHierarchy" Qualifier="ProductHierarchy">
           <Record>
             <PropertyValue Property="Levels">
               <Collection>
@@ -69,7 +66,7 @@
       </Annotations>
 
       <Annotations Target="SalesModel.Time">
-        <Annotation Term="DataAggregation.LeveledHierarchy" Qualifier="TimeHierarchy">
+        <Annotation Term="Aggregation.LeveledHierarchy" Qualifier="TimeHierarchy">
           <Record>
             <PropertyValue Property="Levels">
               <Collection>
@@ -83,7 +80,7 @@
       </Annotations>
 
       <Annotations Target="SalesModel.SalesOrganization">
-        <Annotation Term="DataAggregation.RecursiveHierarchy" Qualifier="SalesOrgHierarchy">
+        <Annotation Term="Aggregation.RecursiveHierarchy" Qualifier="SalesOrgHierarchy">
           <Record>
             <PropertyValue Property="NodeProperty" String="ID" />
             <PropertyValue Property="ParentNodeProperty" String="Superordinate/ID" />
@@ -92,21 +89,18 @@
       </Annotations>
 
       <EntityContainer Name="Default">
-        <Annotation Term="DataAggregation.ApplySupported">
+        <Annotation Term="Aggregation.ApplySupported">
           <Record>
             <PropertyValue Property="AllPropertiesSupported" Bool="false" />
           </Record>
         </Annotation>
 
-        <Annotation Term="DataAggregation.CustomAggregate" Qualifier="Budget">
-          <Annotation Term="DataAggregation.ContextDefiningProperties">
+        <Annotation Term="Aggregation.CustomAggregate" Qualifier="Budget" String="Edm.Decimal">
+          <Annotation Term="Aggregation.ContextDefiningProperties">
             <Collection>
               <PropertyPath>Currencies/Code</PropertyPath>
             </Collection>
           </Annotation>
-          <Record>
-            <PropertyValue Property="Type" String="Edm.Decimal" />
-          </Record>
         </Annotation>
 
         <EntitySet Name="Sales" EntityType="SalesModel.Sales" />
