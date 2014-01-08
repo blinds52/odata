@@ -316,13 +316,13 @@
     <Input>$apply=filter(Amount gt 3)</Input>
   </TestCase>
   <TestCase Name="aggregate - expand" Rule="queryOptions">
-    <Input>$apply=expand(Sales,Amount gt 3)</Input>
+    <Input>$apply=expand(Sales,filter(Amount gt 3))</Input>
   </TestCase>
   <TestCase Name="aggregate - multi-level expand" Rule="queryOptions">
-    <Input>$apply=expand(Products,true,expand(Sales,Amount gt 3))</Input>
+    <Input>$apply=expand(Products,expand(Sales,filter(Amount gt 3)))</Input>
   </TestCase>
   <TestCase Name="aggregate - multi-level expand with branches" Rule="queryOptions">
-    <Input>$apply=expand(Products,true,expand(Sales,Amount gt 3),expand(Suppliers,true,expand(Products,true)))</Input>
+    <Input>$apply=expand(Products,expand(Sales,filter(Amount gt 3)),expand(Suppliers,expand(Products)))</Input>
   </TestCase>
   <TestCase Name="aggregate - search" Rule="queryOptions">
     <Input>$apply=search(coffee)</Input>
@@ -459,6 +459,6 @@
     <Input>$apply=groupby((Continent/Name,Country/Name),aggregate(Population with sum as CountryPopulation))/concat(filter(CountryPopulation ge 10000000),groupby((Continent/Name),aggregate(CountryPopulation with sum as TotalPopulation)))</Input>
   </TestCase>
   <TestCase Name="transformation sequences - filter and expand" Rule="queryOptions">
-    <Input>$apply=filter(Status eq 'incomplete')/expand(Items,not Shipped)/groupby((Customer/Country),aggregate(Items(Amount with sum as ItemAmount)))</Input>
+    <Input>$apply=filter(Status eq 'incomplete')/expand(Items,filter(not Shipped))/groupby((Customer/Country),aggregate(Items(Amount with sum as ItemAmount)))</Input>
   </TestCase>
 </TestSuite>
