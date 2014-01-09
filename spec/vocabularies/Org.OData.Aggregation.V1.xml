@@ -77,9 +77,9 @@
         <Property Name="Rollup" DefaultValue="MultipleHierarchies" Type="Aggregation.RollupType">
           <Annotation Term="Core.Description" String="The service supports rollup hierarchies in a groupby transformation" />
         </Property>
-        <Property Name="AllPropertiesSupported" DefaultValue="true" Type="Edm.Boolean">
+        <Property Name="PropertyRestrictions" DefaultValue="false" Type="Edm.Boolean">
           <Annotation Term="Core.Description"
-            String="The service supports all properties of structured types within the scope of this annotation in groupby and aggregate transformations" />
+            String="Only properties tagged as Groupable can be used in the groupby transformation, and only those tagged as Aggregatable can be used in the aggregate transformation" />
         </Property>
       </ComplexType>
 
@@ -90,11 +90,11 @@
         <Member Name="MultipleHierarchies" />
       </EnumType>
 
-      <Term Name="Groupable" Type="Core.Tag" AppliesTo="Property" DefaultValue="true">
+      <Term Name="Groupable" Type="Core.Tag" AppliesTo="Property NavigationProperty" DefaultValue="true">
         <Annotation Term="Core.Description" String="This property can be used in the groupby transformation" />
       </Term>
 
-      <Term Name="Aggregatable" Type="Core.Tag" AppliesTo="Property" DefaultValue="true">
+      <Term Name="Aggregatable" Type="Core.Tag" AppliesTo="Property NavigationProperty" DefaultValue="true">
         <Annotation Term="Core.Description" String="This property can be used in the aggregate transformation" />
       </Term>
 
