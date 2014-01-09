@@ -237,7 +237,7 @@ Note:
 
 ### 5.2 Approval of CSD02 and start 15-day public review
 
-MemberX:
+Stefan:
 >I **move** that the TC approve OData Extension for Data Aggregation Version 4.0 Working Draft 02 and all associated artifacts packaged together in [https://www.oasis-open.org/committees/download.php/51902/odata-data-aggregation-ext-v4.0-wd02-2014-01-09-b.zip](https://www.oasis-open.org/committees/download.php/51902/odata-data-aggregation-ext-v4.0-wd02-2014-01-09-b.zip) as Committee Specification Draft 02 and designate Microsoft Word version of the specification as authoritative. Further, I **move** that the TC approve submitting OData Extension for Data Aggregation Version 4.0 Committee Specification Draft 02 for 15 days of public review. **Diane seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
