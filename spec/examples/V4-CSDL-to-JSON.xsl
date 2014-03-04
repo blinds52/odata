@@ -26,7 +26,7 @@
   <xsl:strip-space elements="*" />
 
   <xsl:template match="edmx:Edmx">
-    <xsl:text>{"odata.context":"$metadata",</xsl:text>
+    <xsl:text>{"@odata.context":"$metadata",</xsl:text>
     <xsl:apply-templates select="@*" />
     <xsl:apply-templates select="edmx:Reference" mode="array" />
     <xsl:apply-templates select="edmx:DataServices" />
