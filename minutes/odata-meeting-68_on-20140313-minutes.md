@@ -9,9 +9,11 @@ Meeting chaired by Ram Jeyaraman
 ### 1.1 Members Present:
 
         Diane Downie (Citrix Systems)
+        Gerald Krause (SAP AG)
         Hubert Heijkers (IBM)
         John Willson (Individual)
         Ken Baclawski (Northeastern University)
+        Martin Zurmuehl (SAP AG)
         Matthew Borges (SAP AG) a.k.a. Matt
         Michael Pizzo (Microsoft) a.k.a. Mike
         Patrick Durusau (Individual)
@@ -84,7 +86,7 @@ Discussion:
 
 (Cf. [Approval](https://lists.oasis-open.org/archives/odata/201403/msg00053.html)).
 
-### 6.2 Next steps?
+### 6.2 Next steps
 
 Discussion:
 
@@ -115,7 +117,7 @@ Discussion:
 * All need to also agree on a location
 * Stefan could join on May and if it is in Europe
 * Mike suggests that all check their calendars and so we can tentatively decide during next meeting.
-* Mike and Stefan would prefer May 12 and not April 21 (Easter!)
+* Mike and Stefan would prefer **May 12** and **not** April 21 (_Note: Easter holidays between April 18-21_)
 * Ram will prepare before next meeting
 * Ram suggests to further discuss by email
 
