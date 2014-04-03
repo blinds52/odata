@@ -282,21 +282,175 @@ ODATA-625:
 : "Add example for UrlRef in attribute notation" [component: OData CSDL] is **Proposed** with no objections.
 
 
-#### 6.1.3 OData Protocol
+#### 6.1.3 OData Protocol [ga_03]
 
 Hubert:
 >I **move** to resolve ODATA-578, ODATA-580, ODATA-591, ODATA-609, ODATA-610, ODATA-612, ODATA-623, and ODATA-624 as proposed. **Martin seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
 
-#### 6.1.3 OData URL Conventions [ga_03]
+##### 6.1.3.1 [ODATA-578](https://tools.oasis-open.org/issues/browse/ODATA-578)
+
+ODATA-578:
+: "Contains example has order of arguments backwards" [component: OData Protocol] is **New**
+
+Discussion:
+
+* Mike summarizes the issue
+* All agree on the proposal
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-578:
+: "Contains example has order of arguments backwards" [component: OData Protocol] is **Proposed** with no objections.
+
+
+##### 6.1.3.2 [ODATA-580](https://tools.oasis-open.org/issues/browse/ODATA-580)
+
+ODATA-580:
+: "8.2.4 If-Match should refer to term Core.OptimisticConcurrency" [component: OData Protocol] is **New**
+
+Discussion:
+
+* All agree on the proposal
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-580:
+: "8.2.4 If-Match should refer to term Core.OptimisticConcurrency" [component: OData Protocol] is **Proposed** with no objections.
+
+
+##### 6.1.3.3 [ODATA-591](https://tools.oasis-open.org/issues/browse/ODATA-591)
+
+ODATA-591:
+: "Part1, examples 36-40: replace 'associated' with 'related'" [component: OData Protocol] is **New**
+
+Discussion:
+
+* Mike summarizes the issue
+* All agree on the proposal
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-591:
+: "Part1, examples 36-40: replace 'associated' with 'related'" [component: OData Protocol] is **Proposed** with no objections.
+
+
+##### 6.1.3.4 [ODATA-609](https://tools.oasis-open.org/issues/browse/ODATA-609)
+
+ODATA-609:
+: "Section 11.4.4 Upsert: key values in URL win over key values in request body" [component: OData Protocol] is **New**
+
+Discussion:
+
+* All agree on the proposal
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-609:
+: "Section 11.4.4 Upsert: key values in URL win over key values in request body" [component: OData Protocol] is **Proposed** with no objections.
+
+
+##### 6.1.3.5 [ODATA-610](https://tools.oasis-open.org/issues/browse/ODATA-610)
+
+ODATA-610:
+: "11.4.4: Upsert and server-generated keys" [component: OData Protocol] is **New**
+
+Discussion:
+
+* Mike summarizes the issue
+* The proposals are: Either explicitly state that the behavior is service-specific, or state the desired generic behavior, e.g. disallow this combination altogether.
+* Mike prefers to disallow this combination altogether
+* Mike updates the issue accordingly
+* Updated proposal for OData-610 now reads: Disallow upserts for entity types with server-generated keys.
+* All agree to disallow (as documented in the issue)
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-610:
+: "11.4.4: Upsert and server-generated keys" [component: OData Protocol] is **Proposed** with no objections.
+
+
+##### 6.1.3.6 [ODATA-612](https://tools.oasis-open.org/issues/browse/ODATA-612)
+
+ODATA-612:
+: "Consistently use 'edit link' and 'edit URL'" [components: OData Protocol, OData JSON Format] is **New**
+
+Discussion:
+
+* Mike summarizes the issue
+* All agree on the proposal
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-612:
+: "Consistently use 'edit link' and 'edit URL'" [components: OData Protocol, OData JSON Format] is **Proposed** with no objections.
+
+
+##### 6.1.3.7 [ODATA-623](https://tools.oasis-open.org/issues/browse/ODATA-623)
+
+ODATA-623:
+: "11.4.3: be more specific on updating key properties" [component: OData Protocol] is **New**
+
+Discussion:
+
+* Mike summarizes the issue
+* All agree on the proposal
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-623:
+: "11.4.3: be more specific on updating key properties" [component: OData Protocol] is **Proposed** with no objections.
+
+
+##### 6.1.3.8 [ODATA-624](https://tools.oasis-open.org/issues/browse/ODATA-624)
+
+ODATA-624:
+: "Clarify that (clients and) services may include additional format parameters in Content-Type header." [component: OData Protocol] is **New**
+
+Discussion:
+
+* All discuss ODATA-624
+* All agree the proposal is fine as is, but add the server must anwser with NotAcceptable if format is not handled
+* Mike adds to issue proposal: "Services must return with not acceptable if the request contains an unknown or unsupported format parameter."
+* All agree on the updated proposal
+
+Note:
+> For details cf. [6.1.3][ga_03] where the motion is documented.
+
+ODATA-624:
+: "Clarify that (clients and) services may include additional format parameters in Content-Type header." [component: OData Protocol] is **Proposed** with no objections.
+
+
+##### 6.1.3.9 [ODATA-632](https://tools.oasis-open.org/issues/browse/ODATA-632)
+
+ODATA-632:
+: "'Core.OptimisticConcurrencyControl' should be 'Core.OptimisticConcurrency'" [component: OData Protocol] is **New**
+
+Discussion:
+
+* All agree on the proposal but decide the issue should be closed as identical to ODATA-580.
+
+ODATA-632:
+: "'Core.OptimisticConcurrencyControl' should be 'Core.OptimisticConcurrency'" [component: OData Protocol] is **Closed as identical to ODATA-580** with no objections.
+
+
+
+#### 6.1.4 OData URL Conventions [ga_04]
 
 Stefan:
 >I **move** to resolve ODATA-562, ODATA-564, ODATA-602, ODATA-608, and ODATA-611 as proposed. **Hubert seconds**.
 
 **No further discussion**. **No objections**. The **motion passes**.
 
-##### 6.1.3.1 [ODATA-562](https://tools.oasis-open.org/issues/browse/ODATA-562)
+##### 6.1.4.1 [ODATA-562](https://tools.oasis-open.org/issues/browse/ODATA-562)
 
 ODATA-562:
 : "5.1.1.4.29: cast function is optional for first four rules" [component: OData URL Conventions] is **New**
@@ -316,12 +470,12 @@ The cast function is optional for primitive values (first three rules)."
 * All agree on the proposal
 
 Note:
-> For details cf. [6.1.3][ga_03] where the motion is documented.
+> For details cf. [6.1.4][ga_04] where the motion is documented.
 
 ODATA-562:
 : "5.1.1.4.29: cast function is optional for first four rules" [component: OData URL Conventions] is **Proposed** with no objections.
 
-##### 6.1.3.2 [ODATA-564](https://tools.oasis-open.org/issues/browse/ODATA-564)
+##### 6.1.4.2 [ODATA-564](https://tools.oasis-open.org/issues/browse/ODATA-564)
 
 ODATA-564:
 : "5.1.1.4.28: define 'assignable'" [component: OData URL Conventions] is **New**
@@ -343,12 +497,12 @@ Discussion:
 * All agree on the (updated) proposal
 
 Note:
-> For details cf. [6.1.3][ga_03] where the motion is documented.
+> For details cf. [6.1.4][ga_04] where the motion is documented.
 
 ODATA-564:
 : "5.1.1.4.28: define 'assignable'" [component: OData URL Conventions] is **Proposed** with no objections.
 
-##### 6.1.3.3 [ODATA-602](https://tools.oasis-open.org/issues/browse/ODATA-602)
+##### 6.1.4.3 [ODATA-602](https://tools.oasis-open.org/issues/browse/ODATA-602)
 
 ODATA-602:
 : "Explicitly state what's allowed after /$all" [component: OData URL Conventions] is **New**
@@ -358,12 +512,12 @@ Discussion:
 * Ralf summarizes the issue and proposal
 
 Note:
-> For details cf. [6.1.3][ga_03] where the motion is documented.
+> For details cf. [6.1.4][ga_04] where the motion is documented.
 
 ODATA-602:
 : "Explicitly state what's allowed after /$all" [component: OData URL Conventions] is **Proposed** with no objections.
 
-##### 6.1.3.4 [ODATA-608](https://tools.oasis-open.org/issues/browse/ODATA-608)
+##### 6.1.4.4 [ODATA-608](https://tools.oasis-open.org/issues/browse/ODATA-608)
 
 ODATA-608:
 : "Explicitly state that the path segment /$count can be combined with $search and $filter, and that the calculated count is identical to $count=true" [component: OData URL Conventions] is **New**
@@ -374,12 +528,12 @@ Discussion:
 * All agree to that clarification
 
 Note:
-> For details cf. [6.1.3][ga_03] where the motion is documented.
+> For details cf. [6.1.4][ga_04] where the motion is documented.
 
 ODATA-608:
 : "Explicitly state that the path segment /$count can be combined with $search and $filter, and that the calculated count is identical to $count=true" [component: OData URL Conventions] is **Proposed** with no objections.
 
-##### 6.1.3.5 [ODATA-611](https://tools.oasis-open.org/issues/browse/ODATA-611)
+##### 6.1.4.5 [ODATA-611](https://tools.oasis-open.org/issues/browse/ODATA-611)
 
 ODATA-611:
 : "Explicitly state that the service root URL ends with a forward-slash" [component: OData URL Conventions] is **New**
@@ -391,7 +545,7 @@ Discussion:
 * All agree to that clarification and further assume, that as service to clients, servers will rewrite/redirect if given a URL missing a final forward-slash as usual (cf. sample above)
 
 Note:
-> For details cf. [6.1.3][ga_03] where the motion is documented.
+> For details cf. [6.1.4][ga_04] where the motion is documented.
 
 ODATA-611:
 : "Explicitly state that the service root URL ends with a forward-slash" [component: OData URL Conventions] is **Proposed** with no objections.
