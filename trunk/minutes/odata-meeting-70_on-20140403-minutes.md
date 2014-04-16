@@ -330,7 +330,7 @@ ODATA-634:
 ##### 5.1.4.2 [ODATA-635](https://tools.oasis-open.org/issues/browse/ODATA-635)
 
 Note:
-> We received the public Comment #20140300002 on 2014-03-27 with title "Non-updatable properties?". This lead to issue ODATA-635.
+> We received the public Comment [c201403e00002](https://lists.oasis-open.org/archives/odata-comment/201403/msg00002.html) on 2014-03-27 with title "Non-updatable properties?". This lead to issue ODATA-635.
 
 ODATA-635:
 "Clarify if a PUT request is allowed to change the odata.type of the entity (public comment c201403e00002)" [component: OData Protocol] is **New**
@@ -434,11 +434,39 @@ None.
 
 Public Comments:
 
-        WILL_FOLLOW in next revision
+* [c201403e00002](https://lists.oasis-open.org/archives/odata-comment/201403/msg00002.html) "Non-updatable properties?" cf. section [5.1.4.2][odata-635].
 
 JIRA Issues:
 
-        WILL_FOLLOW in next revision
+* [ODATA-587](https://tools.oasis-open.org/issues/browse/ODATA-587) "Add example for complex value that is an empty object" [5.1.3.2][odata-587]
+
+* [ODATA-592](https://tools.oasis-open.org/issues/browse/ODATA-592) "JSON example 11: 'type':'Point' with uppercase P according to GeoJSON spec" [5.1.3.3][odata-592]
+
+* [ODATA-594](https://tools.oasis-open.org/issues/browse/ODATA-594) "Discrepancy between ATOM and JSON formats (GML, GeoJson) for Polygon information content" [5.1.3.4][odata-594]
+
+* [ODATA-596](https://tools.oasis-open.org/issues/browse/ODATA-596) "Discrepancy between order of elements for geo-positions between GeoJSON and GML may cause interoperability difficulties." [5.1.3.1][odata-596]
+
+* [ODATA-597](https://tools.oasis-open.org/issues/browse/ODATA-597) "Seeking clarification of naming for GeographyCollection with GeoJSON" [5.1.3.5][odata-597]
+
+* [ODATA-598](https://tools.oasis-open.org/issues/browse/ODATA-598) "Update JSON RFC reference" [5.1.3.6][odata-598]
+
+* [ODATA-599](https://tools.oasis-open.org/issues/browse/ODATA-599) "Let's update the GeoJSON reference" [5.1.3.7][odata-599]
+
+* [ODATA-600](https://tools.oasis-open.org/issues/browse/ODATA-600) "Ensure future compatibility by reference to draft-bray-i-json-n (The I-JSON Message Format)" [5.1.3.8][odata-600]
+
+* [ODATA-606](https://tools.oasis-open.org/issues/browse/ODATA-606) "Specify navigation property binding combined with containment" [5.1.2.1][odata-606]
+
+* [ODATA-607](https://tools.oasis-open.org/issues/browse/ODATA-607) "Section 4.5.4: explicitly state that @odata.count can be applied to expanded to-many navigation properties" [5.1.3.9][odata-607]
+
+* [ODATA-632](https://tools.oasis-open.org/issues/browse/ODATA-632) "'Core.OptimisticConcurrencyControl' should be 'Core.OptimisticConcurrency'" [5.1.4.3][odata-632]
+
+* [ODATA-633](https://tools.oasis-open.org/issues/browse/ODATA-633) "Rule pct-encoded-unescaped unintentionally omits hex pairs starting with 7" [5.1.1.1][odata-633]
+
+* [ODATA-634](https://tools.oasis-open.org/issues/browse/ODATA-634) "Specify the behaviour when a non-nullable property with no default value is omitted from a PUT" [5.1.4.1][odata-634]
+
+* [ODATA-635](https://tools.oasis-open.org/issues/browse/ODATA-635) "Clarify if a PUT request is allowed to change the odata.type of the entity (public comment c201403e00002)" [5.1.4.2][odata-635]
+
+* [ODATA-636](https://tools.oasis-open.org/issues/browse/ODATA-636) "Clarify that complex types and arrays can only be passed to functions through parameter aliases" [5.1.5.1][odata-636]
 
 ## Timeline Reference [TL_REF]
 
