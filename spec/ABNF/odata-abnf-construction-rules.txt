@@ -164,7 +164,7 @@ value = '/$value'
 boundOperation = "/" ( boundActionCall
                      / boundEntityColFuncCall    [ collectionNavigation ] 
                      / boundEntityFuncCall       [ singleNavigation ] 
-                     / boundComplexColFuncCall   [ collectionPath ] 
+                     / boundComplexColFuncCall   [ "/" qualifiedComplexTypeName ] [ collectionPath ] 
                      / boundComplexFuncCall      [ complexPath ]
                      / boundPrimitiveColFuncCall [ collectionPath ] 
                      / boundPrimitiveFuncCall    [ singlePath ] 
@@ -242,7 +242,7 @@ expandItem        = STAR [ ref / OPEN levels CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                     /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
                     ]
-expandPath        = [ qualifiedEntityTypeName "/" ] 
+expandPath        = [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
                     *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
                     navigationProperty 
                     [ "/" qualifiedEntityTypeName ]
@@ -258,7 +258,7 @@ expandOption      = expandRefOption
                   / expand
                   / levels
                 
-levels = '$levels' EQ ( 1*DIGIT / 'max' )
+levels = '$levels' EQ ( oneToNine *DIGIT / 'max' )
 
 filter = '$filter' EQ boolCommonExpr
 
@@ -296,7 +296,7 @@ searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L o
 select         = '$select' EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
                / allOperationsInSchema 
-               / [ qualifiedEntityTypeName "/" ] 
+               / [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
                  ( selectProperty
                  / qualifiedActionName  
                  / qualifiedFunctionName  
@@ -659,7 +659,7 @@ charInJSON   = qchar-unescaped
              / qchar-JSON-special    
              / escape ( quotation-mark 
                       / escape
-                      / ( "/" / "%2F" ) ; solidus         U+002F
+                      / "%2F"           ; solidus         U+002F
                       / 'b'             ; backspace       U+0008                
                       / 'f'             ; form feed       U+000C
                       / 'n'             ; line feed       U+000A

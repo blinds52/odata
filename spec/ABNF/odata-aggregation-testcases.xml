@@ -77,6 +77,7 @@
   <Constraint Rule="aggregateAlias">
     <Match>Actual</Match>
     <Match>AverageAmount</Match>
+    <Match>AveragePrice</Match>
     <Match>AvgAmt</Match>
     <Match>CountryPopulation</Match>
     <Match>CustomerCountryAverage</Match>
@@ -457,5 +458,8 @@
   </TestCase>
   <TestCase Name="transformation sequences - filter and expand" Rule="queryOptions">
     <Input>$apply=filter(Status eq 'incomplete')/expand(Items,filter(not Shipped))/groupby((Customer/Country),aggregate(Items(Amount with sum as ItemAmount)))</Input>
+  </TestCase>
+  <TestCase Name="aggregate in $expand" Rule="odataRelativeUri">
+    <Input>Categories?$expand=Products($apply=aggregate(Price with average as AveragePrice))</Input>
   </TestCase>
 </TestSuite>
