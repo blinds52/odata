@@ -950,6 +950,14 @@ Overview:
             Rule="odataRelativeUri">
     <Input>Customers/Model.MostPopularAddresses()/$count</Input>
   </TestCase>
+  <TestCase Name="4.5.2 Call bound complex collection function with cast" 
+            Rule="odataRelativeUri">
+    <Input>Customers/Model.MostPopularAddresses()/Model.AddressWithLocation</Input>
+  </TestCase>
+  <TestCase Name="4.5.2 Call bound complex collection function with cast" 
+            Rule="odataRelativeUri">
+    <Input>Customers/Model.MostPopularAddresses()/Model.AddressWithLocation/$count</Input>
+  </TestCase>
   <TestCase Name="4.5.2 Call bound complex collection function - multiple" 
             Rule="odataRelativeUri">
     <Input>Customers/Model.MostPopularAddresses()/Model.MostPopularNames()</Input>
@@ -1102,6 +1110,14 @@ Overview:
   <TestCase Name="4.9 Inheritance - $expand" 
             Rule="odataRelativeUri">
     <Input>Categories?$expand=Products($filter=startswith(Name,'P'))</Input>
+  </TestCase>
+  <TestCase Name="4.9 Inheritance - $expand" 
+            Rule="odataRelativeUri">
+    <Input>Categories?$expand=Products($filter=startswith(Name,'P'))</Input>
+  </TestCase>
+  <TestCase Name="4.9 Inheritance - $expand on complex resource" 
+            Rule="odataRelativeUri">
+    <Input>TheMostPopularAddresses()?$expand=Model.AddressWithLocation/Country</Input>
   </TestCase>
   <TestCase Name="4.10 Addressing a Media Resource" 
             Rule="odataRelativeUri">
@@ -1714,6 +1730,11 @@ Overview:
             Rule="expand">
     <Input>$expand=Category($levels=4),Category($levels=max)</Input>
   </TestCase>
+  <TestCase Name="5.1.2 Expand - levels without leading zeroes" 
+            Rule="expand"
+            FailAt="25">
+    <Input>$expand=Category($levels=04)</Input>
+  </TestCase>
   <TestCase Name="5.1.2 Expand - star" 
             Rule="expand">
     <Input>$expand=*,*/$ref,*($levels=2),Category</Input>
@@ -1741,6 +1762,10 @@ Overview:
   <TestCase Name="5.1.3 Select - with cast and property of complex property" 
             Rule="select">
     <Input>$select=Address/Model.AddressWithLocation/Location</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select on complex resource - with cast and property of sub-type" 
+            Rule="select">
+    <Input>$select=Model.AddressWithLocation/Location</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - with expand" 
             Rule="queryOptions">
