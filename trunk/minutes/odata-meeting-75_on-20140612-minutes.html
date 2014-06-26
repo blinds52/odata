@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #75 Thursday Jun 12, 2014</title>
+</head>
+<body>
+<h1>OData TC meeting #75 Thursday Jun 12, 2014</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2014-06-12 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Susan Malaika (IBM)
+        Edmond Bourne (BlackBerry)
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP AG) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ram Jeyaraman (Microsoft)
+        Stefan Drees (Individual)
+        Susan Malaika (IBM)
+        Martin Zurmuehl (SAP AG)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=36545">normative attendance sheet for this meeting</a>.</p>
+
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from June 12, 2014 TC meeting: </h4>
+URL=<a href="https://www.oasis-open.org/committees/download.php/53293/odata-meeting-74_on-20140605-minutes.html">from June 12, 2014 TC meeting#74</a>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list</a>
+
+<h4>4.1 Action items due by June 12, 2014</h4>
+<p>None</p>
+
+<h3>5. Process issues</h3>
+
+<h4>OData v4 Errata issues in New or Open state:</h4>
+<ul>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-699">ODATA-699</a>: Include Action and Function as targets for Annotations</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-698">ODATA-698</a>: Clarify rules around handling of custom query options when building URLs</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-697">ODATA-697</a>: Define how/where $&lt;content-id&gt; can be used within a changeset</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-696">ODATA-696</a>: Support "interfaces" for casting entities to multiple different types</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-695">ODATA-695</a>: ODATA-585 Returning 200 in placeof 204 no content</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-694">ODATA-694</a>: ODATA-579 Dynamic actions/functions in errata</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-693">ODATA-693</a>: ODATA-544 ReturnType should support annotations</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-692">ODATA-692</a>: ODATA-560 Future versions are expected to support referential constraints to complex/nav properties</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-691">ODATA-691</a>: ODATA-618 Call out that services may support the use of term names in place of type names</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-690">ODATA-690</a>: ODATA-557 Alert clients to new symbolic scale value "float"</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-687">ODATA-687</a>: ODATA-561 Prepare clients to deal with type annotations without the leading "#"</li>
+<li><a href="https://tools.oasis-open.org/issues/browse/ODATA-686">ODATA-686</a>: ODATA-630 Alert clients that odata may be default namespace in future versions of the protocol</li>
+</ul>
+
+
+
+<p>ODATA-699 is OPEN</p>
+<p>Proposed is to collect this to be resolved in a grouped motion</p>
+
+<p>ODATA-698 is OPEN</p>
+<p>Mike presents "Clarify rules around handling of custom query options when building URLs" to the group
+<br>
+Proposed wording: In many cases OData services return URLs to identify resources that are later requested by clients. Where possible, interoperability is enhanced by providing all identifying information in the path portion of the URL. However, clients should be prepared for such URLs to include custom query options and propogate any such custom query options in future requests for the identified resource.</p>
+
+<p>ODATA-697 is OPEN</p>
+<p>Introduced by Mike to the group. Proposed wording for 697:
+"Entities created by an Insert request within a change set can be referenced by subsequent requests within the same change set in places where a resource path to an existing entity can be specified. The temporary resource path for a newly inserted entity is the value of the Content-ID header prefixed with a $ character. If $&lt;content-id&gt; is identical to the name of a top-level system resource ($batch, $crossjoin, $all, $entity, $root, $id, $metadata, or other system resources defined according to the OData-Version of the protocol specified in the request), then the reference to the top-level system resource is used."</p>
+
+<p>ODATA-693 is OPEN</p>
+<p>Mike suggests to open ODATA-544 but then explains, that as agreed last week we will simply just fix it
+<br>Stefan seconds 
+<br>Mike suggests to consider ODATA-544 and then close ODATA-693 with no action.
+<br>All agree that we will address the topic as ODATA-693</p>
+
+<p>ODATA-700 is OPEN</p>
+<p>Mike summarizes.
+<br>Here is what we can do today:
+<br>&lt;Annotations Target="myschema.myentitytype/mynavproperty"/&gt;
+<br>Here is what we want to do:
+<br>&lt;Annotations Target="myschema.mycontainer/myentityset/mynavproperty"/&gt;
+<br>Here is part of the proposed wording change:
+<br>QualifiedName of an entity container followed by a segment containing an entity set name and zero or more property, navigation property, or type segments
+<br>Example:
+<br>SampleSchema.SampleEntityContainer/SampleEntitySet
+   [/SampleSchema.SampleEntityType]
+   (
+     /SampleProperty[/SampleSchema.SampleComplexType] |
+     /SampleNavigationProperty[/SampleSchema.SampleEntityType] |
+   )*
+</p>
+<p>
+Mike suggests to revisit ODATA-685 "Prepare clients in 4.0 to deal with nav property binding on containmnet"</p>
+<p>Mike walks all through a document (shared in a live session) explaining problems and resolutions in the context of ODATA-700 related  part3-csdl current editor draft</p>
+
+<p>Hubert states example:</p>
+&lt;EntityType Name="Hierarchy">
+<br>        &lt;Key>
+<br>          &lt;PropertyRef Name="Name"/>
+<br>        &lt;/Key>
+<br>        &lt;Property Name="Name" Type="Edm.String" Nullable="false"/>
+<br>        &lt;NavigationProperty Name="Elements" Type="Collection(ibm.tm1.api.v1.Element)" Partner="Hierarchy" ContainsTarget="true"/>
+<br>        &lt;NavigationProperty Name="Subsets" Type="Collection(ibm.tm1.api.v1.Subset)" Partner="Hierarchy" ContainsTarget="true"/>
+<br>      &lt;/EntityType>
+<br>      &lt;EntityType Name="Element">
+<br>        &lt;Key>
+<br>          &lt;PropertyRef Name="Name"/>
+<br>        &lt;/Key>
+<br>        &lt;Property Name="Name" Type="Edm.String" Nullable="false"/>
+<br>      &lt;/EntityType>
+<br>      &lt;EntityType Name="Subset" tm1lural="Subsets">
+<br>        &lt;Key>
+<br>          &lt;PropertyRef Name="Name"/>
+<br>        &lt;/Key>
+<br>        &lt;Property Name="Name" Type="Edm.String" Nullable="false"/>
+<br>        &lt;NavigationProperty Name="Elements" Type="Collection(ibm.tm1.api.v1.Element)"/>
+<br>      &lt;/EntityType>
+<br>      &lt;/NavigationProperty>
+      
+
+<p><b>Mike</b>: I move we resolve ODATA-699, ODATA-698, ODATA-697, ODATA-693, ODATA-700, and OData-685 as proposed.</p>
+<p>Hubert seconds</p>
+
+<p><b>No discussion, no objection, motion passes unanimously</b></p>
+
+
+
+<h3>6. Next meeting planned for Jun, 26 2014</h3>
+
+<p>Agreed</p>
+
+<h3>7. AOB</h3>
+
+<p><em>None</em></p>
+
+<h3>Meeting adjourned at 10:09 PDT</h3>
+
+</body>
+</html>
