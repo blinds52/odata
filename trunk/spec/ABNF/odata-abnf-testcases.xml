@@ -183,6 +183,7 @@ Overview:
   </Constraint>
   <Constraint Rule="entityTypeName">
     <Match>Customer</Match>
+    <Match>Employee</Match>
     <Match>Manager</Match>
     <Match>BestSellingProduct</Match>
     <Match>PreferredSupplier</Match>
@@ -2302,6 +2303,10 @@ Overview:
             Rule="odataUri">
     <Input>http://host/service/$metadata#Employees(Title,DirectReports+(FirstName,LastName))</Input>
   </TestCase> 
+  <TestCase Name="Context URL - Collection of structured type with $select and recursive $expand" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Collection(Model.Employee)(Title,DirectReports+(FirstName,LastName))</Input>
+  </TestCase> 
   <TestCase Name="Context URL - Entity set with type cast" 
             Rule="odataUri">
     <Input>http://host/service/$metadata#Customers/Model.VipCustomer</Input>
@@ -2357,6 +2362,10 @@ Overview:
   <TestCase Name="Context URL - Entity property value" 
             Rule="odataUri">
     <Input>http://host/service/$metadata#Customers(1)/Addresses</Input>
+  </TestCase>  
+  <TestCase Name="Context URL - Entity property value with $select" 
+            Rule="odataUri">
+    <Input>http://host/service/$metadata#Customers(1)/Addresses(Country)</Input>
   </TestCase>  
   <TestCase Name="Context URL - Individual value" 
             Rule="odataUri">
