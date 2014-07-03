@@ -22,7 +22,9 @@
       </Function>
       <Function Name="TopSellingProducts">
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" Nullable="true" />
-        <ReturnType Type="Collection(Model.Product)" />
+        <ReturnType Type="Collection(Model.Product)">
+          <Annotation Term="A.B" String="Works"/>
+        </ReturnType>
       </Function>
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="@UI.LineItem" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" />
@@ -308,6 +310,7 @@
         <EntitySet Name="Freds" EntityType="Self.Fred">
           <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
           <NavigationPropertyBinding Target="Namespace.Container/Freds" Path="MoreWaldos" />
+          <NavigationPropertyBinding Target="Namespace.Container/Orders/Items/M.E/Nav" Path="MoreWaldos" />
         </EntitySet>
       </EntityContainer>
     </Schema>
@@ -390,6 +393,14 @@
           <Path>AllMyMovies</Path>
         </Annotation>
       </Annotations>
+
+
+      <Annotations Target="MySchema.MyEntityContainer/MyEntitySet/MySchema.MyEntityType/MyProperty">
+        <Annotation Term="Y.Movies">
+          <Path>AllMyMovies</Path>
+        </Annotation>
+      </Annotations>
+
 
       <Term Name="ArchivedMovies" Type="Collection(Y.ArchivedMovieType)">
         <Annotation Term="custom.ItemIsA" String="X.Movie" />
