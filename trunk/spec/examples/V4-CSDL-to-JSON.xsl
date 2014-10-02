@@ -81,7 +81,7 @@
     <xsl:if test="position() != 1">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:text>{"PropertyPath":"</xsl:text>
+    <xsl:text>{"PropertyRef":"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:if test="@Alias">
       <xsl:text>","Alias":"</xsl:text>
