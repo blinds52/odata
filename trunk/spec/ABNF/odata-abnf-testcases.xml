@@ -230,6 +230,7 @@ Overview:
   </Constraint>
   <Constraint Rule="primitiveFunction">
     <Match>Available</Match>
+    <Match>MostPopularCategory</Match>
     <Match>MostPopularName</Match>
     <Match>PhoneticallySimilar</Match>
     <Match>GeoLocation</Match>
@@ -736,6 +737,10 @@ Overview:
   <TestCase Name="4.3 Addressing entities - function call with alias" 
             Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=@cat)?@cat=2</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - function call with alias for expression" 
+            Rule="odataRelativeUri">
+    <Input>ProductsByCategoryId(categoryId=@cat)?@cat=Model.MostPopularCategory()</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - function call with query parameter" 
             Rule="odataRelativeUri">
@@ -2249,7 +2254,7 @@ Overview:
   </TestCase>
   <TestCase Name="Functions in filter - alias as parameter" 
             Rule="queryOptions">
-    <Input>$filter=Model.PhoneticallySimilar(Word=@expression)&amp;@expression=5</Input>
+    <Input>$filter=Model.PhoneticallySimilar(Word=@expression)&amp;@expression=5 add 3</Input>
   </TestCase>
   <TestCase Name="Functions in filter - expression as parameter" 
             Rule="queryOptions">
