@@ -1,304 +1,247 @@
 {
   "@odata.context":"$metadata",
-  "Version":"4.0",
-  "Reference":[
-    {
-      "Uri":"http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml",
-      "Include":[
-        {
-          "Namespace":"Org.OData.Core.V1",
-          "Alias":"Core"
+  "version":"4.0",
+  "references":{
+    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml":{
+      "includes":{
+        "Org.OData.Core.V1":{
+          "alias":"Core"
         }
-      ]
+      }
     },
-    {
-      "Uri":"http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml",
-      "Include":[
-        {
-          "Alias":"UoM",
-          "Namespace":"Org.OData.Measures.V1"
+    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml":{
+      "includes":{
+        "Org.OData.Measures.V1":{
+          "alias":"UoM"
         }
-      ]
+      }
     }
-  ],
-  "Schema":[
-    {
-      "Namespace":"ODataDemo",
-      "EntityType":[
-        {
-          "Name":"Product",
-          "HasStream":"true",
-          "Key":[
-            {
-              "PropertyRef":"ID"
-            }
-          ],
-          "Property":[
-            {
-              "Name":"ID",
-              "Type":"Edm.String",
-              "Nullable":"false"
+  },
+  "schemas":{
+    "ODataDemo":{
+      "alias":null,
+      "entityTypes":{
+        "Product":{
+          "hasStream":true,
+          "keys":{
+            "ID":"ID"
+          },
+          "properties":{
+            "ID":{
+              "type":"Edm.String",
+              "nullable":false
             },
-            {
-              "Name":"Description",
-              "Type":"Edm.String",
+            "Description":{
+              "type":"Edm.String",
               "@Core.IsLanguageDependent":{
                 
               }
             },
-            {
-              "Name":"ReleaseDate",
-              "Type":"Edm.Date"
+            "ReleaseDate":{
+              "type":"Edm.Date"
             },
-            {
-              "Name":"DiscontinuedDate",
-              "Type":"Edm.Date"
+            "DiscontinuedDate":{
+              "type":"Edm.Date"
             },
-            {
-              "Name":"Rating",
-              "Type":"Edm.Int32"
+            "Rating":{
+              "type":"Edm.Int32"
             },
-            {
-              "Name":"Price",
-              "Type":"Edm.Decimal",
+            "Price":{
+              "type":"Edm.Decimal",
               "@Org.OData.Measures.V1.ISOCurrency":{
-                "Path":"Currency"
+                "path":"Currency"
               }
             },
-            {
-              "Name":"Currency",
-              "Type":"Edm.String",
-              "MaxLength":"3"
+            "Currency":{
+              "type":"Edm.String",
+              "maxLength":"3"
             }
-          ],
-          "NavigationProperty":[
-            {
-              "Name":"Category",
-              "Type":"ODataDemo.Category",
-              "Nullable":"false",
-              "Partner":"Products"
+          },
+          "navigationProperties":{
+            "Category":{
+              "type":"ODataDemo.Category",
+              "nullable":false,
+              "partner":"Products"
             },
-            {
-              "Name":"Supplier",
-              "Type":"ODataDemo.Supplier",
-              "Partner":"Products"
+            "Supplier":{
+              "type":"ODataDemo.Supplier",
+              "partner":"Products"
             }
-          ]
+          }
         },
-        {
-          "Name":"Category",
-          "Key":[
-            {
-              "PropertyRef":"ID"
-            }
-          ],
-          "Property":[
-            {
-              "Name":"ID",
-              "Type":"Edm.Int32",
-              "Nullable":"false"
+        "Category":{
+          "keys":{
+            "ID":"ID"
+          },
+          "properties":{
+            "ID":{
+              "type":"Edm.Int32",
+              "nullable":false
             },
-            {
-              "Name":"Name",
-              "Type":"Edm.String",
-              "Nullable":"false",
+            "Name":{
+              "type":"Edm.String",
+              "nullable":false,
               "@Core.IsLanguageDependent":{
                 
               }
             }
-          ],
-          "NavigationProperty":[
-            {
-              "Name":"Products",
-              "Partner":"Category",
-              "Type":"Collection(ODataDemo.Product)",
-              "OnDelete":{
-                "Action":"Cascade"
+          },
+          "navigationProperties":{
+            "Products":{
+              "partner":"Category",
+              "type":"Collection(ODataDemo.Product)",
+              "onDelete":{
+                "action":"Cascade"
               }
             }
-          ]
+          }
         },
-        {
-          "Name":"Supplier",
-          "Key":[
-            {
-              "PropertyRef":"ID"
-            }
-          ],
-          "Property":[
-            {
-              "Name":"ID",
-              "Type":"Edm.String",
-              "Nullable":"false"
+        "Supplier":{
+          "keys":{
+            "ID":"ID"
+          },
+          "properties":{
+            "ID":{
+              "type":"Edm.String",
+              "nullable":false
             },
-            {
-              "Name":"Name",
-              "Type":"Edm.String"
+            "Name":{
+              "type":"Edm.String"
             },
-            {
-              "Name":"Address",
-              "Type":"ODataDemo.Address",
-              "Nullable":"false"
+            "Address":{
+              "type":"ODataDemo.Address",
+              "nullable":false
             },
-            {
-              "Name":"Concurrency",
-              "Type":"Edm.Int32",
-              "Nullable":"false"
+            "Concurrency":{
+              "type":"Edm.Int32",
+              "nullable":false
             }
-          ],
-          "NavigationProperty":[
-            {
-              "Name":"Products",
-              "Partner":"Supplier",
-              "Type":"Collection(ODataDemo.Product)"
+          },
+          "navigationProperties":{
+            "Products":{
+              "partner":"Supplier",
+              "type":"Collection(ODataDemo.Product)"
             }
-          ]
+          }
         },
-        {
-          "Name":"Country",
-          "Key":[
-            {
-              "PropertyRef":"Code"
-            }
-          ],
-          "Property":[
-            {
-              "Name":"Code",
-              "Type":"Edm.String",
-              "MaxLength":"2",
-              "Nullable":"false"
+        "Country":{
+          "keys":{
+            "Code":"Code"
+          },
+          "properties":{
+            "Code":{
+              "type":"Edm.String",
+              "maxLength":"2",
+              "nullable":false
             },
-            {
-              "Name":"Name",
-              "Type":"Edm.String"
+            "Name":{
+              "type":"Edm.String"
             }
-          ]
+          }
         }
-      ],
-      "ComplexType":[
-        {
-          "Name":"Address",
-          "Property":[
-            {
-              "Name":"Street",
-              "Type":"Edm.String"
+      },
+      "complexTypes":{
+        "Address":{
+          "properties":{
+            "Street":{
+              "type":"Edm.String"
             },
-            {
-              "Name":"City",
-              "Type":"Edm.String"
+            "City":{
+              "type":"Edm.String"
             },
-            {
-              "Name":"State",
-              "Type":"Edm.String"
+            "State":{
+              "type":"Edm.String"
             },
-            {
-              "Name":"ZipCode",
-              "Type":"Edm.String"
+            "ZipCode":{
+              "type":"Edm.String"
             },
-            {
-              "Name":"CountryName",
-              "Type":"Edm.String"
+            "CountryName":{
+              "type":"Edm.String"
             }
-          ],
-          "NavigationProperty":[
-            {
-              "Name":"Country",
-              "Type":"ODataDemo.Country",
-              "ReferentialConstraint":[
-                {
-                  "Property":"CountryName",
-                  "ReferencedProperty":"Name"
+          },
+          "navigationProperties":{
+            "Country":{
+              "type":"ODataDemo.Country",
+              "referentialConstraints":{
+                "CountryName":{
+                  "referencedProperty":"Name"
                 }
-              ]
+              }
             }
-          ]
+          }
         }
-      ],
-      "Function":[
+      },
+      "functions":[
         {
-          "Name":"ProductsByRating",
-          "Parameter":[
-            {
-              "Name":"Rating",
-              "Type":"Edm.Int32"
+          "name":"ProductsByRating",
+          "parameters":{
+            "Rating":{
+              "type":"Edm.Int32"
             }
-          ],
-          "ReturnType":{
-            "Type":"Collection(ODataDemo.Product)"
+          },
+          "returnType":{
+            "type":"Collection(ODataDemo.Product)"
           }
         }
       ],
-      "EntityContainer":[
-        {
-          "Name":"DemoService",
-          "EntitySet":[
-            {
-              "Name":"Products",
-              "EntityType":"ODataDemo.Product",
-              "NavigationPropertyBinding":[
-                {
-                  "Path":"Category",
-                  "Target":"Categories"
-                }
-              ]
-            },
-            {
-              "Name":"Categories",
-              "EntityType":"ODataDemo.Category",
-              "NavigationPropertyBinding":[
-                {
-                  "Path":"Products",
-                  "Target":"Products"
-                }
-              ]
-            },
-            {
-              "Name":"Suppliers",
-              "EntityType":"ODataDemo.Supplier",
-              "NavigationPropertyBinding":[
-                {
-                  "Path":"Products",
-                  "Target":"Products"
-                },
-                {
-                  "Path":"Address/Country",
-                  "Target":"Countries"
-                }
-              ],
-              "@Core.OptimisticConcurrency":{
-                "Collection":[
-                  {
-                    "PropertyPath":"Concurrency"
-                  }
-                ]
+      "entityContainer":{
+        "name":"DemoService",
+        "entitySets":{
+          "Products":{
+            "entityType":"ODataDemo.Product",
+            "navigationPropertyBindings":{
+              "Category":{
+                "target":"Categories"
+              }
+            }
+          },
+          "Categories":{
+            "entityType":"ODataDemo.Category",
+            "navigationPropertyBindings":{
+              "Products":{
+                "target":"Products"
+              }
+            }
+          },
+          "Suppliers":{
+            "entityType":"ODataDemo.Supplier",
+            "navigationPropertyBindings":{
+              "Products":{
+                "target":"Products"
+              },
+              "Address/Country":{
+                "target":"Countries"
               }
             },
-            {
-              "Name":"Countries",
-              "EntityType":"ODataDemo.Country"
-            }
-          ],
-          "Singleton":[
-            {
-              "Name":"Contoso",
-              "Type":"Self.Supplier",
-              "NavigationPropertyBinding":[
+            "@Core.OptimisticConcurrency":{
+              "collection":[
                 {
-                  "Path":"Products",
-                  "Target":"Products"
+                  "propertyPath":"Concurrency"
                 }
               ]
             }
-          ],
-          "FunctionImport":[
-            {
-              "Name":"ProductsByRating",
-              "EntitySet":"Products",
-              "Function":"ODataDemo.ProductsByRating"
+          },
+          "Countries":{
+            "entityType":"ODataDemo.Country"
+          }
+        },
+        "singletons":{
+          "Contoso":{
+            "type":"Self.Supplier",
+            "navigationPropertyBindings":{
+              "Products":{
+                "target":"Products"
+              }
             }
-          ]
+          }
+        },
+        "functionImports":{
+          "ProductsByRating":{
+            "entitySet":"Products",
+            "function":"ODataDemo.ProductsByRating"
+          }
         }
-      ]
+      }
     }
-  ]
+  }
 }

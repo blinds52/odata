@@ -50,7 +50,7 @@
           <NavigationPropertyBinding Target="Employees" Path="Manager" />
           <NavigationPropertyBinding Target="Employees" Path="Employee" />
         </EntitySet>
-        <EntitySet Name="Countries" EntityType="Model.Country"/>
+        <EntitySet Name="Countries" EntityType="Model.Country" />
         <EntitySet Name="Time" EntityType="Model.Time">
           <NavigationPropertyBinding Target="Sales" Path="Sales" />
         </EntitySet>
@@ -109,7 +109,7 @@
         <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
         <NavigationProperty Name="OrderItems" Type="Collection(Model.OrderItem)" Partner="Product" />
         <Property Name="ReleaseDate" Type="Edm.Date" Nullable="false" />
-        <Property Name="DiscontinuedDate" Type="Edm.Date"     />
+        <Property Name="DiscontinuedDate" Type="Edm.Date" />
         <Property Name="LifeTime" Type="Edm.String" Nullable="false" />
         <Property Name="Color" Type="Edm.String" Nullable="false" />
         <Property Name="TaxRate" Type="Edm.Decimal" Nullable="false" />
@@ -161,7 +161,8 @@
         <NavigationProperty Name="Time" Type="Model.Time" Nullable="false" Partner="Sales" />
         <NavigationProperty Name="Currency" Type="Model.Currency" Nullable="false" Partner="Sales" />
         <NavigationProperty Name="Customer" Type="Model.Customer" Nullable="false" Partner="Sales" />
-        <NavigationProperty Name="SalesOrganization" Type="Model.SalesOrganization" Nullable="false" Partner="Sales" />
+        <NavigationProperty Name="SalesOrganization" Type="Model.SalesOrganization" Nullable="false"
+          Partner="Sales" />
         <NavigationProperty Name="Product" Type="Model.Product" Nullable="false" Partner="Sales" />
       </EntityType>
       <EntityType Name="Employee" HasStream="true">
@@ -203,13 +204,15 @@
       </EntityType>
       <EntityType Name="PreferredSupplier" BaseType="Model.Supplier">
         <NavigationProperty Name="AccountRepresentative" Type="Model.Employee" Nullable="false">
-          <ReferentialConstraint Property="EmployeeID" ReferencedProperty="ID" />
+          <ReferentialConstraint Property="EmployeeID" ReferencedProperty="ID">
+            <Annotation Term="Core.Description" String="The key account manager" />
+          </ReferentialConstraint>
         </NavigationProperty>
         <Property Name="EmployeeID" Type="Edm.String" Nullable="false" />
       </EntityType>
       <EnumType Name="Pattern" IsFlags="true">
-        <Member Name="Yellow" />
-        <Member Name="Solid" />
+        <Member Name="Yellow" Value="1" />
+        <Member Name="Solid" Value="2" />
       </EnumType>
       <EntityType Name="Manager" BaseType="Model.Employee">
         <NavigationProperty Name="Employees" Type="Collection(Model.Employee)" Partner="Manager" />
