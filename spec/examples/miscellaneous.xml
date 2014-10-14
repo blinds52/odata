@@ -23,15 +23,15 @@
       <Function Name="TopSellingProducts">
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" Nullable="true" />
         <ReturnType Type="Collection(Model.Product)">
-          <Annotation Term="A.B" String="Works"/>
+          <Annotation Term="A.B" String="Works" />
         </ReturnType>
       </Function>
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="@UI.LineItem" />
-      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" />
+      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" Qualifier="OnNavPropTarget" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem" Qualifier="OnNavProp" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem#Tablet" Qualifier="OnNavPropQualified" />
-      <Annotation Term="UI.ReferenceFacet" UrlRef="http://LineItem" />
-      <Annotation Term="UI.ReferenceFacet" AnnotationPath="@x.Supplier#X/Contacts@y.ViewVariants" />
+      <Annotation Term="UI.ReferenceFacet" UrlRef="http://LineItem" Qualifier="ViaUrl" />
+      <Annotation Term="UI.ReferenceFacet" AnnotationPath="@x.Supplier#X/Contacts@y.ViewVariants" Qualifier="complicated" />
 
       <Annotation Term="UI.HyperLink" NavigationPropertyPath="Supplier" />
 
@@ -138,7 +138,7 @@
           </Not>
         </And>
       </Annotation>
-      <Annotation Term="Twolegged.If">
+      <Annotation Term="Onelegged.If">
         <If>
           <Bool>true</Bool>
           <Path>Then</Path>
@@ -243,7 +243,15 @@
         <NavigationProperty Name="Country" Type="MyModel.Country" />
       </ComplexType>
 
-      <EntityType Name="Order">
+      <ComplexType Name="NavigationOnly">
+        <NavigationProperty Name="Planet" Type="Some.Planet" />
+      </ComplexType>
+
+      <ComplexType Name="AnnotationOnly">
+        <Annotation Term="Some.Tag" />
+      </ComplexType>
+
+      <EntityType Name="Order" Abstract="true">
         <Property Name="Quantity" Type="Edm.Decimal">
           <Annotation Term="Measures.Unit" Path="ShippingUnit" />
         </Property>
@@ -291,7 +299,7 @@
       </Function>
     </Schema>
     <Schema Namespace="Schema.Two" Alias="Self">
-      <EntityType Name="Waldo">
+      <EntityType Name="Waldo" Abstract="true">
         <Property Name="Fred" Type="Edm.String" />
       </EntityType>
       <EntityType Name="Fred">
@@ -310,7 +318,7 @@
         <EntitySet Name="Freds" EntityType="Self.Fred">
           <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
           <NavigationPropertyBinding Target="Namespace.Container/Freds" Path="MoreWaldos" />
-          <NavigationPropertyBinding Target="Namespace.Container/Orders/Items/M.E/Nav" Path="MoreWaldos" />
+          <NavigationPropertyBinding Target="Namespace.Container/Orders/Items/M.E/Nav" Path="EvenMoreWaldos" />
         </EntitySet>
       </EntityContainer>
     </Schema>
