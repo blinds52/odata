@@ -1,11 +1,14 @@
 {
-  "@odata.context":"$metadata",
-  "version":"4.0",
+  "@odata.context":"#",
+  "$schema":"http://odata.org/schemas/edm-v4.0#",
   "references":{
     "http://tinyurl.com/Org-OData-Measures-V1":{
       "includes":{
         "Org.OData.Measures.V1":{
           "alias":"Core"
+        },
+        "anotherOne":{
+          
         }
       },
       "@Some.Term":{
@@ -33,6 +36,331 @@
       ]
     }
   },
+  "definitions":{
+    "Self.Weird":{
+      "$ref":"#/definitions/Model1.Weird"
+    },
+    "Model1.Weird":{
+      "typekind":"EntityType",
+      "keys":{
+        "TheKey":"The/Key"
+      },
+      "properties":{
+        "TheKey":{
+          "odataType":"Edm.PropertyPath"
+        },
+        "TheValue":{
+          "type":"string"
+        },
+        "TheString":{
+          "type":"string",
+          "maxLength":20
+        },
+        "Tags":{
+          "odataType":"Collection(Edm.String)",
+          "SRID":"variable"
+        },
+        "Price":{
+          "type":"number",
+          "scale":"variable"
+        }
+      },
+      "@Some.Term#SomeQualifier":{
+        "@Some.Term":{
+          "string":"Some Value"
+        },
+        "collection":[
+          {
+            "string":"SomeString"
+          },
+          {
+            "date":"1212-11-30"
+          },
+          {
+            "dateTimeOffset":"2000-01-01T16:00:00.000-09:00"
+          },
+          {
+            "dateTimeOffset":"2000-01-01T16:00:00Z"
+          },
+          {
+            "timeOfDay":"23:59:59.123456789012"
+          },
+          {
+            "path":"MyAddress/vCard.Address#work/Street"
+          },
+          {
+            "enumMember":"org.example.Pattern/Red"
+          },
+          {
+            "enumMember":"org.example.Pattern/Red org.example.Pattern/Striped"
+          },
+          {
+            "record":{
+              "Egon":{
+                "string":"1"
+              },
+              "Hugo":{
+                "string":"2",
+                "@Some.Term":{
+                  "string":"Some Value"
+                }
+              },
+              "@Some.Term":{
+                "string":"Some Value"
+              }
+            }
+          },
+          {
+            "labeledElement":{
+              "name":"Attribute",
+              "string":"Hello"
+            }
+          },
+          {
+            "labeledElement":{
+              "name":"Element",
+              "string":"Hello"
+            }
+          },
+          {
+            "labeledElement":{
+              "name":"Record",
+              "record":{
+                
+              }
+            }
+          },
+          {
+            "labeledElementReference":"Model.Attribute"
+          }
+        ]
+      },
+      "@Vocab.GIQSupplier":{
+        "urlRef":{
+          "string":"http:\/\/www.odata.org"
+        }
+      },
+      "@Vocab.GIQSupplier":{
+        "urlRef":{
+          "apply":{
+            "function":"odata.fillUriTemplate",
+            "values":[
+              {
+                "string":"http:\/\/host\/service\/Suppliers({suppID})"
+              },
+              {
+                "labeledElement":{
+                  "name":"suppID",
+                  "apply":{
+                    "function":"odata.UriEncode",
+                    "values":[
+                      {
+                        "path":"@SupplierId"
+                      },
+                      {
+                        "dateTimeOffset":"2013-04-08T23:00:00.0Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "@org.example.display.DisplayName":{
+        "cast":{
+          "SRID":"variable",
+          "scale":"variable",
+          "type":"Edm.String",
+          "string":"Product Catalog"
+        }
+      },
+      "@Self.IsPreferredCustomer":{
+        "isOf":{
+          "SRID":"variable",
+          "type":"Self.PreferredCustomer",
+          "path":"Customer/$count"
+        }
+      },
+      "@Some.Binary":{
+        "binary":"Zg"
+      },
+      "@Some.Binary":{
+        "binary":"Zg=="
+      },
+      "@Some.Binary":{
+        "binary":"Zm8"
+      },
+      "@Some.Binary":{
+        "binary":"Zm8="
+      },
+      "@Some.Binary":{
+        "binary":"HugoHase-_ab"
+      }
+    },
+    "Self.Address":{
+      "$ref":"#/definitions/Model1.Address"
+    },
+    "Model1.Address":{
+      "typekind":"ComplexType",
+      "openType":true,
+      "properties":{
+        "Street":{
+          "type":"string"
+        },
+        "Street":{
+          "type":"string"
+        }
+      },
+      "navigationProperties":{
+        "City":{
+          "type":"MyModel.City"
+        },
+        "Region":{
+          "type":"MyModel.Region"
+        },
+        "Country":{
+          "type":"MyModel.Country"
+        }
+      }
+    },
+    "Self.NavigationOnly":{
+      "$ref":"#/definitions/Model1.NavigationOnly"
+    },
+    "Model1.NavigationOnly":{
+      "typekind":"ComplexType",
+      "navigationProperties":{
+        "Planet":{
+          "type":"Some.Planet"
+        }
+      }
+    },
+    "Self.AnnotationOnly":{
+      "$ref":"#/definitions/Model1.AnnotationOnly"
+    },
+    "Model1.AnnotationOnly":{
+      "typekind":"ComplexType",
+      "@Some.Tag":{
+        
+      }
+    },
+    "Self.Order":{
+      "$ref":"#/definitions/Model1.Order"
+    },
+    "Model1.Order":{
+      "typekind":"EntityType",
+      "abstract":true,
+      "properties":{
+        "Quantity":{
+          "type":"number",
+          "@Measures.Unit":{
+            "path":"ShippingUnit"
+          }
+        },
+        "ShippingUnit":{
+          "type":"string",
+          "@Core.Description":{
+            "string":"Contains the unit for property Quantity"
+          }
+        }
+      }
+    },
+    "Self.Waldo":{
+      "$ref":"#/definitions/Schema.One.Waldo"
+    },
+    "Schema.One.Waldo":{
+      "typekind":"EntityType",
+      "keys":{
+        "ID":"ID"
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        }
+      }
+    },
+    "Self.Waldo":{
+      "$ref":"#/definitions/Schema.Two.Waldo"
+    },
+    "Schema.Two.Waldo":{
+      "typekind":"EntityType",
+      "abstract":true,
+      "properties":{
+        "Fred":{
+          "type":"string"
+        }
+      }
+    },
+    "Self.Fred":{
+      "$ref":"#/definitions/Schema.Two.Fred"
+    },
+    "Schema.Two.Fred":{
+      "typekind":"EntityType",
+      "keys":{
+        "ID":"ID"
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        }
+      },
+      "navigationProperties":{
+        "Waldos":{
+          "type":"Collection(Self.Waldos)"
+        }
+      }
+    },
+    "Y.DeveloperType":{
+      "typekind":"ComplexType",
+      "baseType":"X.PersonType"
+    },
+    "Y.ScrumTeamType":{
+      "typekind":"ComplexType",
+      "properties":{
+        "ScrumMaster":{
+          "odataType":"Y.DeveloperType",
+          "@custom.IsA":{
+            "string":"Y.Developer X.Person"
+          }
+        }
+      }
+    },
+    "Y.ArchivedMovieType":{
+      "typekind":"ComplexType",
+      "baseType":"X.MovieType",
+      "properties":{
+        "ArchivedAt":{
+          "odataType":"Edm.Date"
+        }
+      },
+      "@custom.IsA":{
+        "string":"X.Movie"
+      }
+    },
+    "Y.SomeThingType":{
+      "typekind":"ComplexType",
+      "properties":{
+        "SomeProperty":{
+          "type":"string"
+        },
+        "Contacts":{
+          "odataType":"Collection(X.PersonType)",
+          "@custom.ItemIsA":{
+            "string":"X.Person"
+          }
+        }
+      },
+      "navigationProperties":{
+        "VIPs":{
+          "type":"Collection(X.Friend)",
+          "@custom.ItemIsA":{
+            "string":"X.Friend"
+          }
+        }
+      }
+    }
+  },
   "schemas":{
     "Model1":{
       "alias":"Self",
@@ -58,20 +386,20 @@
         "navigationPropertyPath":"Supplier"
       },
       "@Is.Null":{
+        "@Next.to.Null":{
+          
+        },
         "null":{
           "@Within.Null":{
             
           }
-        },
-        "@Next.to.Null":{
-          
         }
       },
       "@Vocabulary1.SubTitle":{
-        "int":1234,
         "@For.Constant":{
           
-        }
+        },
+        "int":1234
       },
       "@A.Bool":{
         "bool":true,
@@ -285,221 +613,6 @@
           }
         ]
       },
-      "entityTypes":{
-        "Weird":{
-          "keys":{
-            "TheKey":"The/Key"
-          },
-          "properties":{
-            "TheKey":{
-              "type":"Edm.PropertyPath"
-            },
-            "TheValue":{
-              "type":"Edm.String",
-              "maxLength":"max"
-            },
-            "TheString":{
-              "type":"Edm.Strong",
-              "maxLength":"max"
-            },
-            "Tags":{
-              "type":"Collection(Edm.String)",
-              "nullable":true,
-              "SRID":"variable"
-            },
-            "Price":{
-              "type":"Edm.Decimal",
-              "scale":"variable"
-            }
-          },
-          "@Some.Term#SomeQualifier":{
-            "collection":[
-              {
-                "string":"SomeString"
-              },
-              {
-                "date":"1212-11-30"
-              },
-              {
-                "dateTimeOffset":"2000-01-01T16:00:00.000-09:00"
-              },
-              {
-                "dateTimeOffset":"2000-01-01T16:00:00Z"
-              },
-              {
-                "timeOfDay":"23:59:59.123456789012"
-              },
-              {
-                "path":"MyAddress/vCard.Address#work/Street"
-              },
-              {
-                "enumMember":"org.example.Pattern/Red"
-              },
-              {
-                "enumMember":"org.example.Pattern/Red org.example.Pattern/Striped"
-              },
-              {
-                "record":{
-                  "Egon":{
-                    "string":"1"
-                  },
-                  "Hugo":{
-                    "string":"2",
-                    "@Some.Term":{
-                      "string":"Some Value"
-                    }
-                  },
-                  "@Some.Term":{
-                    "string":"Some Value"
-                  }
-                }
-              },
-              {
-                "labeledElement":{
-                  "name":"Attribute",
-                  "string":"Hello"
-                }
-              },
-              {
-                "labeledElement":{
-                  "name":"Element",
-                  "string":"Hello"
-                }
-              },
-              {
-                "labeledElement":{
-                  "name":"Record",
-                  "record":{
-                    
-                  }
-                }
-              },
-              {
-                "labeledElementReference":"Model.Attribute"
-              }
-            ],
-            "@Some.Term":{
-              "string":"Some Value"
-            }
-          },
-          "@Vocab.GIQSupplier":{
-            "urlRef":{
-              "string":"http:\/\/www.odata.org"
-            }
-          },
-          "@Vocab.GIQSupplier":{
-            "urlRef":{
-              "apply":{
-                "function":"odata.fillUriTemplate",
-                "values":[
-                  {
-                    "string":"http:\/\/host\/service\/Suppliers({suppID})"
-                  },
-                  {
-                    "labeledElement":{
-                      "name":"suppID",
-                      "apply":{
-                        "function":"odata.UriEncode",
-                        "values":[
-                          {
-                            "path":"@SupplierId"
-                          },
-                          {
-                            "dateTimeOffset":"2013-04-08T23:00:00.0Z"
-                          }
-                        ]
-                      }
-                    }
-                  }
-                ]
-              }
-            }
-          },
-          "@org.example.display.DisplayName":{
-            "cast":{
-              "SRID":"variable",
-              "scale":"variable",
-              "type":"Edm.String",
-              "string":"Product Catalog"
-            }
-          },
-          "@Self.IsPreferredCustomer":{
-            "isOf":{
-              "SRID":"variable",
-              "type":"Self.PreferredCustomer",
-              "path":"Customer/$count"
-            }
-          },
-          "@Some.Binary":{
-            "binary":"Zg"
-          },
-          "@Some.Binary":{
-            "binary":"Zg=="
-          },
-          "@Some.Binary":{
-            "binary":"Zm8"
-          },
-          "@Some.Binary":{
-            "binary":"Zm8="
-          },
-          "@Some.Binary":{
-            "binary":"HugoHase-_ab"
-          }
-        },
-        "Order":{
-          "abstract":true,
-          "properties":{
-            "Quantity":{
-              "type":"Edm.Decimal",
-              "@Measures.Unit":{
-                "path":"ShippingUnit"
-              }
-            },
-            "ShippingUnit":{
-              "type":"Edm.String",
-              "@Core.Description":{
-                "string":"Contains the unit for property Quantity"
-              }
-            }
-          }
-        }
-      },
-      "complexTypes":{
-        "Address":{
-          "openType":true,
-          "properties":{
-            "Street":{
-              "type":"Edm.String"
-            },
-            "Street":{
-              "type":"Edm.String"
-            }
-          },
-          "navigationProperties":{
-            "City":{
-              "type":"MyModel.City"
-            },
-            "Region":{
-              "type":"MyModel.Region"
-            },
-            "Country":{
-              "type":"MyModel.Country"
-            }
-          }
-        },
-        "NavigationOnly":{
-          "navigationProperties":{
-            "Planet":{
-              "type":"Some.Planet"
-            }
-          }
-        },
-        "AnnotationOnly":{
-          "@Some.Tag":{
-            
-          }
-        }
-      },
       "enumTypes":{
         "Pattern":{
           "members":{
@@ -585,19 +698,6 @@
     },
     "Schema.One":{
       "alias":"Self",
-      "entityTypes":{
-        "Waldo":{
-          "keys":{
-            "ID":"ID"
-          },
-          "properties":{
-            "ID":{
-              "type":"Edm.String",
-              "nullable":false
-            }
-          }
-        }
-      },
       "actions":[
         {
           "name":"Rejection",
@@ -605,6 +705,7 @@
           "parameters":{
             "Reason":{
               "type":"Edm.String",
+              "maxLength":"max",
               "nullable":true
             }
           }
@@ -652,32 +753,6 @@
     },
     "Schema.Two":{
       "alias":"Self",
-      "entityTypes":{
-        "Waldo":{
-          "abstract":true,
-          "properties":{
-            "Fred":{
-              "type":"Edm.String"
-            }
-          }
-        },
-        "Fred":{
-          "keys":{
-            "ID":"ID"
-          },
-          "properties":{
-            "ID":{
-              "type":"Edm.String",
-              "nullable":false
-            }
-          },
-          "navigationProperties":{
-            "Waldos":{
-              "type":"Collection(Self.Waldos)"
-            }
-          }
-        }
-      },
       "entityContainer":{
         "name":"Default",
         "entitySets":{
@@ -737,53 +812,6 @@
     },
     "Y":{
       "alias":null,
-      "complexTypes":{
-        "DeveloperType":{
-          "baseType":"X.PersonType"
-        },
-        "ScrumTeamType":{
-          "properties":{
-            "ScrumMaster":{
-              "type":"Y.DeveloperType",
-              "@custom.IsA":{
-                "string":"Y.Developer X.Person"
-              }
-            }
-          }
-        },
-        "ArchivedMovieType":{
-          "baseType":"X.MovieType",
-          "properties":{
-            "ArchivedAt":{
-              "type":"Edm.Date"
-            }
-          },
-          "@custom.IsA":{
-            "string":"X.Movie"
-          }
-        },
-        "SomeThingType":{
-          "properties":{
-            "SomeProperty":{
-              "type":"Edm.String"
-            },
-            "Contacts":{
-              "type":"Collection(X.PersonType)",
-              "@custom.ItemIsA":{
-                "string":"X.Person"
-              }
-            }
-          },
-          "navigationProperties":{
-            "VIPs":{
-              "type":"Collection(X.Friend)",
-              "@custom.ItemIsA":{
-                "string":"X.Friend"
-              }
-            }
-          }
-        }
-      },
       "terms":{
         "Developer":{
           "baseTerm":"X.Person",
@@ -832,28 +860,28 @@
         {
           "target":"Some.EntityType",
           "@Y.DevelopmentTeam":{
-            "path":"SomeNavProp/@Y.Developer",
             "@custom.IsA":{
               "string":"X.Team"
-            }
+            },
+            "path":"SomeNavProp/@Y.Developer"
           }
         },
         {
           "target":"Some.EntityType",
           "@Y.DevelopmentTeam":{
-            "path":"SomeNavProp/@Y.Developer",
             "@custom.IsA":{
               "string":"X.Team"
-            }
+            },
+            "path":"SomeNavProp/@Y.Developer"
           },
           "@Y.ScrumTeam":{
             "record":{
               "ScrumMaster":{
-                "record":{
-                  
-                },
                 "@custom.IsA":{
                   "string":"Y.Developer X.Person"
+                },
+                "record":{
+                  
                 }
               }
             }
@@ -874,10 +902,10 @@
         {
           "target":"Some.EntityType",
           "@Y.ArchivedMovies":{
-            "path":"MoviesInStorage",
             "@custom.ItemIsA":{
               "string":"X.Movie"
-            }
+            },
+            "path":"MoviesInStorage"
           }
         },
         {
@@ -888,16 +916,16 @@
                 "string":"SomeThing"
               },
               "Contacts":{
-                "path":"MyContacts",
                 "@custom.ItemIsA":{
                   "string":"X.Person"
-                }
+                },
+                "path":"MyContacts"
               },
               "VIPs":{
-                "path":"MyBestFriends",
                 "@custom.ItemIsA":{
                   "string":"X.Person"
-                }
+                },
+                "path":"MyBestFriends"
               }
             }
           }
