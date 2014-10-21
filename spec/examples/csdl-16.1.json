@@ -48,7 +48,8 @@
         "Price":{
           "type":"number",
           "@Org.OData.Measures.V1.ISOCurrency":{
-            "path":"Currency"
+            "@odata.type":"Edm.Path",
+            "value":"Currency"
           }
         },
         "Currency":{
@@ -215,13 +216,12 @@
                 "target":"Countries"
               }
             },
-            "@Core.OptimisticConcurrency":{
-              "collection":[
-                {
-                  "propertyPath":"Concurrency"
-                }
-              ]
-            }
+            "@Core.OptimisticConcurrency":[
+              {
+                "@odata.type":"Edm.PropertyPath",
+                "value":"Concurrency"
+              }
+            ]
           },
           "Countries":{
             "entityType":"ODataDemo.Country"
@@ -245,5 +245,19 @@
         }
       }
     }
-  }
+  },
+  "anyOf":[
+    {
+      "$ref":"#/definitions/ODataDemo.Product"
+    },
+    {
+      "$ref":"#/definitions/ODataDemo.Category"
+    },
+    {
+      "$ref":"#/definitions/ODataDemo.Supplier"
+    },
+    {
+      "$ref":"#/definitions/ODataDemo.Country"
+    }
+  ]
 }
