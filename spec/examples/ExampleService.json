@@ -15,13 +15,22 @@
       "$ref":"#/definitions/Model.Customer"
     },
     "Model.Customer":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
           "type":"string"
+        },
+        "Orders":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Order"
+          },
+          "odataType":"Collection(Model.Order)",
+          "partner":"Customer"
         },
         "Name":{
           "type":"string"
@@ -36,6 +45,15 @@
           "type":"string",
           "@Core.Description":"This is weird, given that we have a Country entity type"
         },
+        "Sales":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Sales"
+          },
+          "odataType":"Collection(Model.Sales)",
+          "partner":"Customer"
+        },
         "ContactName":{
           "type":"string"
         },
@@ -46,23 +64,16 @@
           "type":"string"
         },
         "Address":{
+          "$ref":"#/definitions/Model.Address",
           "odataType":"Model.Address"
         },
         "EmailAddresses":{
+          "$ref":"#/definitions/Collection(Edm.String)",
           "odataType":"Collection(Edm.String)"
         },
         "Phone":{
+          "$ref":"#/definitions/Model.PhoneNumber",
           "odataType":"Model.PhoneNumber"
-        }
-      },
-      "navigationProperties":{
-        "Orders":{
-          "type":"Collection(Model.Order)",
-          "partner":"Customer"
-        },
-        "Sales":{
-          "type":"Collection(Model.Sales)",
-          "partner":"Customer"
         }
       }
     },
@@ -70,7 +81,7 @@
       "$ref":"#/definitions/Model.Supplier"
     },
     "Model.Supplier":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -78,20 +89,25 @@
         "ID":{
           "type":"string"
         },
+        "Products":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Product"
+          },
+          "odataType":"Collection(Model.Product)",
+          "partner":"Supplier"
+        },
         "Name":{
           "type":"string"
         },
         "EmailAddresses":{
+          "$ref":"#/definitions/Collection(Edm.String)",
           "odataType":"Collection(Edm.String)"
         },
         "Addresses":{
+          "$ref":"#/definitions/Collection(Model.Address)",
           "odataType":"Collection(Model.Address)"
-        }
-      },
-      "navigationProperties":{
-        "Products":{
-          "type":"Collection(Model.Product)",
-          "partner":"Supplier"
         }
       }
     },
@@ -99,7 +115,7 @@
       "$ref":"#/definitions/Model.Product"
     },
     "Model.Product":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -109,8 +125,22 @@
           "minimum":-2147483648,
           "maximum":2147483647
         },
+        "Category":{
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Category",
+          "odataType":"Model.Category",
+          "nullable":false,
+          "partner":"Products"
+        },
         "Name":{
           "type":"string"
+        },
+        "Supplier":{
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Supplier",
+          "odataType":"Model.Supplier",
+          "nullable":false,
+          "partner":"Products"
         },
         "Description":{
           "type":"string"
@@ -119,6 +149,7 @@
           "type":"string"
         },
         "Sizes":{
+          "$ref":"#/definitions/Collection(Edm.String)",
           "odataType":"Collection(Edm.String)"
         },
         "Rating":{
@@ -126,11 +157,20 @@
           "minimum":-2147483648,
           "maximum":2147483647
         },
+        "OrderItems":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.OrderItem"
+          },
+          "odataType":"Collection(Model.OrderItem)",
+          "partner":"Product"
+        },
         "ReleaseDate":{
-          "odataType":"Edm.Date"
+          "TODO":"Edm.Date"
         },
         "DiscontinuedDate":{
-          "odataType":"Edm.Date"
+          "TODO":"Edm.Date"
         },
         "LifeTime":{
           "type":"string"
@@ -140,25 +180,14 @@
         },
         "TaxRate":{
           "type":"number"
-        }
-      },
-      "navigationProperties":{
-        "Category":{
-          "type":"Model.Category",
-          "nullable":false,
-          "partner":"Products"
-        },
-        "Supplier":{
-          "type":"Model.Supplier",
-          "nullable":false,
-          "partner":"Products"
-        },
-        "OrderItems":{
-          "type":"Collection(Model.OrderItem)",
-          "partner":"Product"
         },
         "Sales":{
-          "type":"Collection(Model.Sales)",
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Sales"
+          },
+          "odataType":"Collection(Model.Sales)",
           "partner":"Product"
         }
       }
@@ -167,7 +196,7 @@
       "$ref":"#/definitions/Model.Order"
     },
     "Model.Order":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -177,22 +206,28 @@
           "minimum":-2147483648,
           "maximum":2147483647
         },
+        "Items":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.OrderItem"
+          },
+          "odataType":"Collection(Model.OrderItem)",
+          "partner":"Order"
+        },
         "Completed":{
           "type":"boolean"
         },
-        "ShippingAddress":{
-          "odataType":"Model.Address"
-        }
-      },
-      "navigationProperties":{
-        "Items":{
-          "type":"Collection(Model.OrderItem)",
-          "partner":"Order"
-        },
         "Customer":{
-          "type":"Model.Customer",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Customer",
+          "odataType":"Model.Customer",
           "nullable":false,
           "partner":"Orders"
+        },
+        "ShippingAddress":{
+          "$ref":"#/definitions/Model.Address",
+          "odataType":"Model.Address"
         }
       }
     },
@@ -200,14 +235,14 @@
       "$ref":"#/definitions/Model.VipCustomer"
     },
     "Model.VipCustomer":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "baseType":"Model.Customer"
     },
     "ODataDemo.Category":{
       "$ref":"#/definitions/Model.Category"
     },
     "Model.Category":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -220,17 +255,20 @@
         "Amount":{
           "type":"number"
         },
+        "Products":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Product"
+          },
+          "odataType":"Collection(Model.Product)",
+          "partner":"Category"
+        },
         "Name":{
           "type":"string"
         },
         "Thumbnail":{
           "type":"string"
-        }
-      },
-      "navigationProperties":{
-        "Products":{
-          "type":"Collection(Model.Product)",
-          "partner":"Category"
         }
       }
     },
@@ -238,7 +276,7 @@
       "$ref":"#/definitions/Model.OrderItem"
     },
     "Model.OrderItem":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "OrderID":"OrderID",
         "ItemID":"ItemID"
@@ -252,16 +290,10 @@
         "ItemID":{
           "type":"string"
         },
-        "Size":{
-          "type":"string"
-        },
-        "Price":{
-          "type":"number"
-        }
-      },
-      "navigationProperties":{
         "Order":{
-          "type":"Model.Order",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Order",
+          "odataType":"Model.Order",
           "nullable":false,
           "partner":"Items",
           "onDelete":{
@@ -273,13 +305,23 @@
             }
           }
         },
+        "Size":{
+          "type":"string"
+        },
+        "Price":{
+          "type":"number"
+        },
         "Product":{
-          "type":"Model.Product",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Product",
+          "odataType":"Model.Product",
           "nullable":false,
           "partner":"OrderItems"
         },
         "Currency":{
-          "type":"Model.Currency",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Currency",
+          "odataType":"Model.Currency",
           "nullable":false
         }
       }
@@ -288,7 +330,7 @@
       "$ref":"#/definitions/Model.Sales"
     },
     "Model.Sales":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -300,31 +342,39 @@
         },
         "Amount":{
           "type":"number"
-        }
-      },
-      "navigationProperties":{
+        },
         "Time":{
-          "type":"Model.Time",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Time",
+          "odataType":"Model.Time",
           "nullable":false,
           "partner":"Sales"
         },
         "Currency":{
-          "type":"Model.Currency",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Currency",
+          "odataType":"Model.Currency",
           "nullable":false,
           "partner":"Sales"
         },
         "Customer":{
-          "type":"Model.Customer",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Customer",
+          "odataType":"Model.Customer",
           "nullable":false,
           "partner":"Sales"
         },
         "SalesOrganization":{
-          "type":"Model.SalesOrganization",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.SalesOrganization",
+          "odataType":"Model.SalesOrganization",
           "nullable":false,
           "partner":"Sales"
         },
         "Product":{
-          "type":"Model.Product",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Product",
+          "odataType":"Model.Product",
           "nullable":false,
           "partner":"Sales"
         }
@@ -334,7 +384,7 @@
       "$ref":"#/definitions/Model.Employee"
     },
     "Model.Employee":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "hasStream":true,
       "keys":{
         "ID":"ID"
@@ -351,15 +401,20 @@
         },
         "Title":{
           "type":"string"
-        }
-      },
-      "navigationProperties":{
+        },
         "Manager":{
-          "type":"Model.Manager",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Manager",
+          "odataType":"Model.Manager",
           "partner":"Employees"
         },
         "LeaveRequests":{
-          "type":"Collection(Model.LeaveRequest)",
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.LeaveRequest"
+          },
+          "odataType":"Collection(Model.LeaveRequest)",
           "partner":"Employee"
         }
       }
@@ -368,7 +423,7 @@
       "$ref":"#/definitions/Model.LeaveRequest"
     },
     "Model.LeaveRequest":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -377,16 +432,18 @@
           "type":"integer",
           "minimum":-2147483648,
           "maximum":2147483647
-        }
-      },
-      "navigationProperties":{
+        },
         "Manager":{
-          "type":"Model.Manager",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Manager",
+          "odataType":"Model.Manager",
           "nullable":false,
           "partner":"Inbox"
         },
         "Employee":{
-          "type":"Model.Employee",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Employee",
+          "odataType":"Model.Employee",
           "nullable":false,
           "partner":"LeaveRequests"
         }
@@ -396,10 +453,22 @@
       "$ref":"#/definitions/Model.Address"
     },
     "Model.Address":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "properties":{
         "Street":{
           "type":"string"
+        },
+        "Country":{
+          "kind":"navigation",
+          "$ref":"#/definitions/Example.Country",
+          "odataType":"Example.Country",
+          "nullable":false
+        },
+        "City":{
+          "kind":"navigation",
+          "$ref":"#/definitions/Example.City",
+          "odataType":"Example.City",
+          "nullable":false
         },
         "Region":{
           "type":"string"
@@ -407,26 +476,16 @@
         "PostalCode":{
           "type":"string"
         }
-      },
-      "navigationProperties":{
-        "Country":{
-          "type":"Example.Country",
-          "nullable":false
-        },
-        "City":{
-          "type":"Example.City",
-          "nullable":false
-        }
       }
     },
     "ODataDemo.AddressWithLocation":{
       "$ref":"#/definitions/Model.AddressWithLocation"
     },
     "Model.AddressWithLocation":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "properties":{
         "Location":{
-          "odataType":"Edm.GeographyPoint"
+          "TODO":"Edm.GeographyPoint"
         }
       }
     },
@@ -434,7 +493,7 @@
       "$ref":"#/definitions/Model.Country"
     },
     "Model.Country":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "Code":"Code"
       },
@@ -455,16 +514,13 @@
       "$ref":"#/definitions/Model.PreferredSupplier"
     },
     "Model.PreferredSupplier":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "baseType":"Model.Supplier",
       "properties":{
-        "EmployeeID":{
-          "type":"string"
-        }
-      },
-      "navigationProperties":{
         "AccountRepresentative":{
-          "type":"Model.Employee",
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.Employee",
+          "odataType":"Model.Employee",
           "nullable":false,
           "referentialConstraints":{
             "EmployeeID":{
@@ -472,6 +528,9 @@
               "@Core.Description":"The key account manager"
             }
           }
+        },
+        "EmployeeID":{
+          "type":"string"
         }
       }
     },
@@ -479,15 +538,25 @@
       "$ref":"#/definitions/Model.Manager"
     },
     "Model.Manager":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "baseType":"Model.Employee",
-      "navigationProperties":{
+      "properties":{
         "Employees":{
-          "type":"Collection(Model.Employee)",
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Employee"
+          },
+          "odataType":"Collection(Model.Employee)",
           "partner":"Manager"
         },
         "Inbox":{
-          "type":"Collection(Model.LeaveRequest)",
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.LeaveRequest"
+          },
+          "odataType":"Collection(Model.LeaveRequest)",
           "partner":"Manager"
         }
       }
@@ -496,13 +565,13 @@
       "$ref":"#/definitions/Model.Time"
     },
     "Model.Time":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "Date":"Date"
       },
       "properties":{
         "Date":{
-          "odataType":"Edm.Date"
+          "TODO":"Edm.Date"
         },
         "Year":{
           "type":"string",
@@ -513,11 +582,14 @@
         },
         "Month":{
           "type":"string"
-        }
-      },
-      "navigationProperties":{
+        },
         "Sales":{
-          "type":"Collection(Model.Sales)",
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Sales"
+          },
+          "odataType":"Collection(Model.Sales)",
           "partner":"Time"
         }
       }
@@ -526,7 +598,7 @@
       "$ref":"#/definitions/Model.SalesOrganization"
     },
     "Model.SalesOrganization":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -536,15 +608,20 @@
         },
         "Name":{
           "type":"string"
-        }
-      },
-      "navigationProperties":{
+        },
         "Sales":{
-          "type":"Collection(Model.Sales)",
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Sales"
+          },
+          "odataType":"Collection(Model.Sales)",
           "partner":"SalesOrganization"
         },
         "Superordinate":{
-          "type":"Model.SalesOrganization"
+          "kind":"navigation",
+          "$ref":"#/definitions/Model.SalesOrganization",
+          "odataType":"Model.SalesOrganization"
         }
       }
     },
@@ -552,7 +629,7 @@
       "$ref":"#/definitions/Model.Currency"
     },
     "Model.Currency":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "Code":"Code"
       },
@@ -564,6 +641,15 @@
         "Name":{
           "type":"string"
         },
+        "Sales":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Sales"
+          },
+          "odataType":"Collection(Model.Sales)",
+          "partner":"Currency"
+        },
         "Symbol":{
           "type":"string"
         },
@@ -572,25 +658,19 @@
           "minimum":0,
           "maximum":255
         }
-      },
-      "navigationProperties":{
-        "Sales":{
-          "type":"Collection(Model.Sales)",
-          "partner":"Currency"
-        }
       }
     },
     "ODataDemo.City":{
       "$ref":"#/definitions/Model.City"
     },
     "Model.City":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
-          "odataType":"Edm.Guid"
+          "TODO":"Edm.Guid"
         },
         "Name":{
           "type":"string"
@@ -601,7 +681,7 @@
       "$ref":"#/definitions/Model.PhoneNumber"
     },
     "Model.PhoneNumber":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "properties":{
         "Number":{
           "type":"string"
@@ -615,7 +695,7 @@
       "$ref":"#/definitions/Model.CellPhoneNumber"
     },
     "Model.CellPhoneNumber":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "properties":{
         "Carrier":{
           "type":"string"
@@ -801,49 +881,5 @@
         }
       }
     }
-  },
-  "anyOf":[
-    {
-      "$ref":"#/definitions/Model.Customer"
-    },
-    {
-      "$ref":"#/definitions/Model.Supplier"
-    },
-    {
-      "$ref":"#/definitions/Model.Product"
-    },
-    {
-      "$ref":"#/definitions/Model.Order"
-    },
-    {
-      "$ref":"#/definitions/Model.Category"
-    },
-    {
-      "$ref":"#/definitions/Model.OrderItem"
-    },
-    {
-      "$ref":"#/definitions/Model.Sales"
-    },
-    {
-      "$ref":"#/definitions/Model.Employee"
-    },
-    {
-      "$ref":"#/definitions/Model.LeaveRequest"
-    },
-    {
-      "$ref":"#/definitions/Model.Country"
-    },
-    {
-      "$ref":"#/definitions/Model.Time"
-    },
-    {
-      "$ref":"#/definitions/Model.SalesOrganization"
-    },
-    {
-      "$ref":"#/definitions/Model.Currency"
-    },
-    {
-      "$ref":"#/definitions/Model.City"
-    }
-  ]
+  }
 }
