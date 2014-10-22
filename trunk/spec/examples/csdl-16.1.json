@@ -19,7 +19,7 @@
   },
   "definitions":{
     "ODataDemo.Product":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "hasStream":true,
       "keys":{
         "ID":"ID"
@@ -35,10 +35,10 @@
           }
         },
         "ReleaseDate":{
-          "odataType":"Edm.Date"
+          "TODO":"Edm.Date"
         },
         "DiscontinuedDate":{
-          "odataType":"Edm.Date"
+          "TODO":"Edm.Date"
         },
         "Rating":{
           "type":"integer",
@@ -55,22 +55,24 @@
         "Currency":{
           "type":"string",
           "maxLength":3
-        }
-      },
-      "navigationProperties":{
+        },
         "Category":{
-          "type":"ODataDemo.Category",
+          "kind":"navigation",
+          "$ref":"#/definitions/ODataDemo.Category",
+          "odataType":"ODataDemo.Category",
           "nullable":false,
           "partner":"Products"
         },
         "Supplier":{
-          "type":"ODataDemo.Supplier",
+          "kind":"navigation",
+          "$ref":"#/definitions/ODataDemo.Supplier",
+          "odataType":"ODataDemo.Supplier",
           "partner":"Products"
         }
       }
     },
     "ODataDemo.Category":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -85,12 +87,15 @@
           "@Core.IsLanguageDependent":{
             
           }
-        }
-      },
-      "navigationProperties":{
+        },
         "Products":{
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/ODataDemo.Product"
+          },
+          "odataType":"Collection(ODataDemo.Product)",
           "partner":"Category",
-          "type":"Collection(ODataDemo.Product)",
           "onDelete":{
             "action":"Cascade"
           }
@@ -98,7 +103,7 @@
       }
     },
     "ODataDemo.Supplier":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -110,23 +115,27 @@
           "type":"string"
         },
         "Address":{
+          "$ref":"#/definitions/ODataDemo.Address",
           "odataType":"ODataDemo.Address"
         },
         "Concurrency":{
           "type":"integer",
           "minimum":-2147483648,
           "maximum":2147483647
-        }
-      },
-      "navigationProperties":{
+        },
         "Products":{
-          "partner":"Supplier",
-          "type":"Collection(ODataDemo.Product)"
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/ODataDemo.Product"
+          },
+          "odataType":"Collection(ODataDemo.Product)",
+          "partner":"Supplier"
         }
       }
     },
     "ODataDemo.Country":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "Code":"Code"
       },
@@ -141,7 +150,7 @@
       }
     },
     "ODataDemo.Address":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "properties":{
         "Street":{
           "type":"string"
@@ -157,11 +166,11 @@
         },
         "CountryName":{
           "type":"string"
-        }
-      },
-      "navigationProperties":{
+        },
         "Country":{
-          "type":"ODataDemo.Country",
+          "kind":"navigation",
+          "$ref":"#/definitions/ODataDemo.Country",
+          "odataType":"ODataDemo.Country",
           "referentialConstraints":{
             "CountryName":{
               "referencedProperty":"Name"
@@ -245,19 +254,5 @@
         }
       }
     }
-  },
-  "anyOf":[
-    {
-      "$ref":"#/definitions/ODataDemo.Product"
-    },
-    {
-      "$ref":"#/definitions/ODataDemo.Category"
-    },
-    {
-      "$ref":"#/definitions/ODataDemo.Supplier"
-    },
-    {
-      "$ref":"#/definitions/ODataDemo.Country"
-    }
-  ]
+  }
 }

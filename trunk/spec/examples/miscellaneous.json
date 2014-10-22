@@ -41,13 +41,13 @@
       "$ref":"#/definitions/Model1.Weird"
     },
     "Model1.Weird":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "TheKey":"The/Key"
       },
       "properties":{
         "TheKey":{
-          "odataType":"Edm.PropertyPath"
+          "TODO":"Edm.PropertyPath"
         },
         "TheValue":{
           "type":"string"
@@ -57,6 +57,7 @@
           "maxLength":20
         },
         "Tags":{
+          "$ref":"#/definitions/Collection(Edm.String)",
           "odataType":"Collection(Edm.String)",
           "SRID":"variable"
         },
@@ -197,25 +198,29 @@
       "$ref":"#/definitions/Model1.Address"
     },
     "Model1.Address":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "openType":true,
       "properties":{
         "Street":{
           "type":"string"
         },
+        "City":{
+          "kind":"navigation",
+          "$ref":"#/definitions/MyModel.City",
+          "odataType":"MyModel.City"
+        },
         "Street":{
           "type":"string"
-        }
-      },
-      "navigationProperties":{
-        "City":{
-          "type":"MyModel.City"
         },
         "Region":{
-          "type":"MyModel.Region"
+          "kind":"navigation",
+          "$ref":"#/definitions/MyModel.Region",
+          "odataType":"MyModel.Region"
         },
         "Country":{
-          "type":"MyModel.Country"
+          "kind":"navigation",
+          "$ref":"#/definitions/MyModel.Country",
+          "odataType":"MyModel.Country"
         }
       }
     },
@@ -223,10 +228,12 @@
       "$ref":"#/definitions/Model1.NavigationOnly"
     },
     "Model1.NavigationOnly":{
-      "typekind":"ComplexType",
-      "navigationProperties":{
+      "kind":"ComplexType",
+      "properties":{
         "Planet":{
-          "type":"Some.Planet"
+          "kind":"navigation",
+          "$ref":"#/definitions/Some.Planet",
+          "odataType":"Some.Planet"
         }
       }
     },
@@ -234,7 +241,7 @@
       "$ref":"#/definitions/Model1.AnnotationOnly"
     },
     "Model1.AnnotationOnly":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "@Some.Tag":{
         
       }
@@ -243,7 +250,7 @@
       "$ref":"#/definitions/Model1.Order"
     },
     "Model1.Order":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "abstract":true,
       "properties":{
         "Quantity":{
@@ -263,7 +270,7 @@
       "$ref":"#/definitions/Schema.One.Waldo"
     },
     "Schema.One.Waldo":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
@@ -277,7 +284,7 @@
       "$ref":"#/definitions/Schema.Two.Waldo"
     },
     "Schema.Two.Waldo":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "abstract":true,
       "properties":{
         "Fred":{
@@ -289,58 +296,66 @@
       "$ref":"#/definitions/Schema.Two.Fred"
     },
     "Schema.Two.Fred":{
-      "typekind":"EntityType",
+      "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
           "type":"string"
-        }
-      },
-      "navigationProperties":{
+        },
         "Waldos":{
-          "type":"Collection(Self.Waldos)"
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Self.Waldos"
+          },
+          "odataType":"Collection(Self.Waldos)"
         }
       }
     },
     "Y.DeveloperType":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "baseType":"X.PersonType"
     },
     "Y.ScrumTeamType":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "properties":{
         "ScrumMaster":{
+          "$ref":"#/definitions/Y.DeveloperType",
           "odataType":"Y.DeveloperType",
           "@custom.IsA":"Y.Developer X.Person"
         }
       }
     },
     "Y.ArchivedMovieType":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "baseType":"X.MovieType",
       "properties":{
         "ArchivedAt":{
-          "odataType":"Edm.Date"
+          "TODO":"Edm.Date"
         }
       },
       "@custom.IsA":"X.Movie"
     },
     "Y.SomeThingType":{
-      "typekind":"ComplexType",
+      "kind":"ComplexType",
       "properties":{
         "SomeProperty":{
           "type":"string"
         },
         "Contacts":{
+          "$ref":"#/definitions/Collection(X.PersonType)",
           "odataType":"Collection(X.PersonType)",
           "@custom.ItemIsA":"X.Person"
-        }
-      },
-      "navigationProperties":{
+        },
         "VIPs":{
-          "type":"Collection(X.Friend)",
+          "kind":"navigation",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/X.Friend"
+          },
+          "odataType":"Collection(X.Friend)",
           "@custom.ItemIsA":"X.Friend"
         }
       }
@@ -871,25 +886,5 @@
         }
       ]
     }
-  },
-  "anyOf":[
-    {
-      "$ref":"#/definitions/Self.Customer"
-    },
-    {
-      "$ref":"#/definitions/Self.Customer"
-    },
-    {
-      "$ref":"#/definitions/Self.Order"
-    },
-    {
-      "$ref":"#/definitions/Self.Waldo"
-    },
-    {
-      "$ref":"#/definitions/Self.Waldo"
-    },
-    {
-      "$ref":"#/definitions/Self.Fred"
-    }
-  ]
+  }
 }

@@ -81,16 +81,19 @@
   </xsl:template>
 
   <xsl:template match="edm:*" mode="validation">
-    <xsl:if test="position() = 1">
+    <!-- TODO: this does not work out with json-schema-validator-2.2.5
+      because it dives into all alternatives and then believes to have detected a circle
+      <xsl:if test="position() = 1">
       <xsl:text>,"anyOf":[</xsl:text>
-    </xsl:if>
-    <xsl:apply-templates select="." mode="ref" />
-    <xsl:if test="position()!=last()">
+      </xsl:if>
+      <xsl:apply-templates select="." mode="ref" />
+      <xsl:if test="position()!=last()">
       <xsl:text>,</xsl:text>
-    </xsl:if>
-    <xsl:if test="position() = last()">
+      </xsl:if>
+      <xsl:if test="position() = last()">
       <xsl:text>]</xsl:text>
-    </xsl:if>
+      </xsl:if>
+    -->
   </xsl:template>
 
   <xsl:template match="edm:EntitySet" mode="ref">
@@ -139,12 +142,19 @@
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
-    <xsl:text>"typekind":"</xsl:text>
+    <xsl:text>"kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*[local-name()!='Name']|edm:Key" mode="list2" />
-    <xsl:apply-templates select="edm:Property" mode="hash" />
-    <xsl:apply-templates select="edm:NavigationProperty" mode="hash" />
+    <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
+      <xsl:with-param name="name" select="'properties'" />
+    </xsl:apply-templates>
+    <!-- TODO: $ref to edm schema for validation of annotations
+      <xsl:text>,"patternProperties":{"^@":{}}</xsl:text>
+      <xsl:if test="not(@OpenType='true')">
+      <xsl:text>,"additionalProperties":false</xsl:text>
+      </xsl:if>
+    -->
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -152,6 +162,7 @@
   <xsl:template match="edm:Property" mode="hashvalue">
     <xsl:choose>
       <!-- TODO: $ref to edm.json instead? -->
+      <!-- TODO: handle collections -->
       <xsl:when test="@Type = 'Edm.String'">
         <xsl:text>"type":"string"</xsl:text>
         <xsl:apply-templates select="@MaxLength" />
@@ -187,8 +198,16 @@
         <!-- TODO: Scale, Precision -->
       </xsl:when>
       <!-- TODO: Guid, Date, TimeOfDay, DateTimeOffset, Geo* -->
+      <xsl:when test="starts-with(@Type,'Edm.')">
+        <xsl:text>"TODO":"</xsl:text>
+        <xsl:value-of select="@Type" />
+        <xsl:text>"</xsl:text>
+        <!-- TODO: Scale, Precision -->
+      </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"odataType":"</xsl:text>
+        <xsl:text>"$ref":"#/definitions/</xsl:text>
+        <xsl:value-of select="@Type" />
+        <xsl:text>","odataType":"</xsl:text>
         <xsl:value-of select="@Type" />
         <xsl:text>"</xsl:text>
       </xsl:otherwise>
@@ -196,6 +215,49 @@
     <xsl:apply-templates
       select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable' and local-name()!='MaxLength']|*"
       mode="list2" />
+  </xsl:template>
+
+  <xsl:template match="edm:Property/@MaxLength">
+    <xsl:if test=".!='max'">
+      <xsl:text>,"maxLength":</xsl:text>
+      <xsl:value-of select="." />
+    </xsl:if>
+  </xsl:template>
+
+  <!-- name : unquoted boolean value -->
+  <xsl:template
+    match="@Nullable|@HasStream|@OpenType|@ContainsTarget|@IsFlags|@IsBound|@IsComposable|@Abstract|@IncludeInServiceDocument|@Unicode"
+  >
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="lowerCamelCase">
+      <xsl:with-param name="name" select="local-name()" />
+    </xsl:call-template>
+    <xsl:text>":</xsl:text>
+    <xsl:value-of select="." />
+  </xsl:template>
+
+  <xsl:template match="edm:NavigationProperty" mode="hashvalue">
+    <xsl:text>"kind":"navigation",</xsl:text>
+    <xsl:choose>
+      <xsl:when test="starts-with(@Type,'Collection(')">
+        <xsl:text>"type":"array","items":{"$ref":"#/definitions/</xsl:text>
+        <xsl:value-of select="substring-before(substring-after(@Type,'('),')')" />
+        <xsl:text>"}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"$ref":"#/definitions/</xsl:text>
+        <xsl:value-of select="@Type" />
+        <xsl:text>"</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>,"odataType":"</xsl:text>
+    <xsl:value-of select="@Type" />
+    <xsl:text>"</xsl:text>
+    <xsl:apply-templates
+      select="@*[local-name()!='Name' and local-name()!='Type']|node()[local-name()!='ReferentialConstraint']" mode="list2" />
+    <xsl:apply-templates select="edm:ReferentialConstraint" mode="hash">
+      <xsl:with-param name="key" select="'Property'" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template match="edm:Key">
@@ -217,15 +279,6 @@
     <xsl:text>":"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="edm:NavigationProperty" mode="hashvalue">
-    <!-- TODO: represent as JSON Schema properties -->
-    <xsl:apply-templates select="@*[local-name()!='Name']|node()[local-name()!='ReferentialConstraint']"
-      mode="list" />
-    <xsl:apply-templates select="edm:ReferentialConstraint" mode="hash">
-      <xsl:with-param name="key" select="'Property'" />
-    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template match="edm:ReferentialConstraint" mode="item">
@@ -285,25 +338,6 @@
       <xsl:with-param name="key" select="'Path'" />
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
-  </xsl:template>
-
-  <xsl:template match="edm:Property/@MaxLength">
-    <xsl:if test=".!='max'">
-      <xsl:text>,"maxLength":</xsl:text>
-      <xsl:value-of select="." />
-    </xsl:if>
-  </xsl:template>
-
-  <!-- name : unquoted boolean value -->
-  <xsl:template
-    match="@Nullable|@HasStream|@OpenType|@ContainsTarget|@IsFlags|@IsBound|@IsComposable|@Abstract|@IncludeInServiceDocument|@Unicode"
-  >
-    <xsl:text>"</xsl:text>
-    <xsl:call-template name="lowerCamelCase">
-      <xsl:with-param name="name" select="local-name()" />
-    </xsl:call-template>
-    <xsl:text>":</xsl:text>
-    <xsl:value-of select="." />
   </xsl:template>
 
   <xsl:template match="edm:Annotation">
@@ -585,6 +619,7 @@
 
   <!-- pluralize(name) : hash -->
   <xsl:template match="*" mode="hash">
+    <xsl:param name="name" />
     <xsl:param name="key" select="'Name'" />
     <xsl:param name="after" select="'something'" />
     <xsl:if test="position() = 1">
@@ -592,9 +627,16 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>"</xsl:text>
-      <xsl:call-template name="pluralize">
-        <xsl:with-param name="name" select="local-name()" />
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$name">
+          <xsl:value-of select="$name" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="pluralize">
+            <xsl:with-param name="name" select="local-name()" />
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>":{</xsl:text>
     </xsl:if>
     <xsl:apply-templates select="." mode="hashpair">
