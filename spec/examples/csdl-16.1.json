@@ -1,22 +1,5 @@
 {
-  "@odata.context":"#",
-  "$schema":"http://odata.org/schemas/edm-v4.0#",
-  "references":{
-    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml":{
-      "includes":{
-        "Org.OData.Core.V1":{
-          "alias":"Core"
-        }
-      }
-    },
-    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml":{
-      "includes":{
-        "Org.OData.Measures.V1":{
-          "alias":"UoM"
-        }
-      }
-    }
-  },
+  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
     "ODataDemo.Product":{
       "kind":"EntityType",
@@ -29,31 +12,59 @@
           "type":"string"
         },
         "Description":{
-          "type":"string",
+          "type":[
+            "string",
+            "null"
+          ],
           "@Core.IsLanguageDependent":{
             
           }
         },
         "ReleaseDate":{
-          "TODO":"Edm.Date"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "DiscontinuedDate":{
-          "TODO":"Edm.Date"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "Rating":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "Price":{
-          "type":"number",
+          "type":[
+            "number",
+            "null"
+          ],
           "@Org.OData.Measures.V1.ISOCurrency":{
             "@odata.type":"Edm.Path",
             "value":"Currency"
           }
         },
         "Currency":{
-          "type":"string",
+          "type":[
+            "string",
+            "null"
+          ],
           "maxLength":3
         },
         "Category":{
@@ -78,9 +89,11 @@
       },
       "properties":{
         "ID":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "Name":{
           "type":"string",
@@ -112,16 +125,20 @@
           "type":"string"
         },
         "Name":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Address":{
-          "$ref":"#/definitions/ODataDemo.Address",
-          "odataType":"ODataDemo.Address"
+          "$ref":"#/definitions/ODataDemo.Address"
         },
         "Concurrency":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "Products":{
           "kind":"navigation",
@@ -145,7 +162,10 @@
           "maxLength":2
         },
         "Name":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -153,19 +173,34 @@
       "kind":"ComplexType",
       "properties":{
         "Street":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "City":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "State":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "ZipCode":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "CountryName":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Country":{
           "kind":"navigation",
@@ -251,6 +286,22 @@
             "entitySet":"Products",
             "function":"ODataDemo.ProductsByRating"
           }
+        }
+      }
+    }
+  },
+  "references":{
+    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml":{
+      "includes":{
+        "Org.OData.Core.V1":{
+          "alias":"Core"
+        }
+      }
+    },
+    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml":{
+      "includes":{
+        "Org.OData.Measures.V1":{
+          "alias":"UoM"
         }
       }
     }

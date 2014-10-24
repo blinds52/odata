@@ -1,6 +1,5 @@
 {
-  "@odata.context":"#",
-  "$schema":"http://odata.org/schemas/edm-v4.0#",
+  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
     "Meta.Reference":{
       "$ref":"#/definitions/Edm.Metadata.Reference"
@@ -15,16 +14,43 @@
           "type":"string"
         },
         "Include":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.Include)",
-          "odataType":"Collection(Edm.Metadata.Include)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Include"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "IncludeAnnotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.IncludeAnnotations)",
-          "odataType":"Collection(Edm.Metadata.IncludeAnnotations)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.IncludeAnnotations"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -35,7 +61,10 @@
       "kind":"ComplexType",
       "properties":{
         "Alias":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Schema":{
           "kind":"navigation",
@@ -52,13 +81,22 @@
       "kind":"ComplexType",
       "properties":{
         "TargetNamespace":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "TermNamespace":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Qualifier":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -75,7 +113,10 @@
           "type":"string"
         },
         "Alias":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Reference":{
           "kind":"navigation",
@@ -212,8 +253,17 @@
       "baseType":"Edm.Metadata.StructuredType",
       "properties":{
         "Key":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.KeyProperty)",
-          "odataType":"Collection(Edm.Metadata.KeyProperty)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.KeyProperty"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "HasStream":{
           "type":"boolean"
@@ -254,7 +304,10 @@
           "type":"string"
         },
         "Alias":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Property":{
           "kind":"navigation",
@@ -359,9 +412,11 @@
           "type":"string"
         },
         "Value":{
-          "type":"integer",
-          "minimum":-9223372036854775808,
-          "maximum":9223372036854775807
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int64"
+            }
+          ]
         },
         "EnumType":{
           "kind":"navigation",
@@ -389,8 +444,17 @@
       "baseType":"Edm.Metadata.PrimitiveType",
       "properties":{
         "Facets":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.Facet)",
-          "odataType":"Collection(Edm.Metadata.Facet)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "UnderlyingType":{
           "kind":"navigation",
@@ -408,7 +472,11 @@
       "kind":"ComplexType",
       "properties":{
         "Name":{
-          "TODO":"Edm.Metadata.FacetName"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.FacetName"
+            }
+          ]
         },
         "Value":{
           "type":"string"
@@ -434,11 +502,23 @@
           "type":"boolean"
         },
         "DefaultValue":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Facets":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.Facet)",
-          "odataType":"Collection(Edm.Metadata.Facet)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "IsCollection":{
           "type":"boolean"
@@ -489,11 +569,27 @@
           "type":"boolean"
         },
         "OnDelete":{
-          "TODO":"Edm.Metadata.Include"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Include"
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "ReferentialConstraints":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.ReferentialConstraint)",
-          "odataType":"Collection(Edm.Metadata.ReferentialConstraint)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ReferentialConstraint"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "IsCollection":{
           "type":"boolean"
@@ -543,11 +639,24 @@
       "kind":"ComplexType",
       "properties":{
         "Action":{
-          "TODO":"Edm.Metadata.OnDeleteAction"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.OnDeleteAction"
+            }
+          ]
         },
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -564,8 +673,17 @@
           "type":"string"
         },
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -585,8 +703,17 @@
           "type":"string"
         },
         "Overloads":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.ActionOverload)",
-          "odataType":"Collection(Edm.Metadata.ActionOverload)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ActionOverload"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "ActionImports":{
           "kind":"navigation",
@@ -616,18 +743,46 @@
           "type":"boolean"
         },
         "ReturnType":{
-          "TODO":"Edm.Metadata.ReturnType"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ReturnType"
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "EntitySetPath":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Parameters":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.Parameter)",
-          "odataType":"Collection(Edm.Metadata.Parameter)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Parameter"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -647,8 +802,17 @@
           "type":"string"
         },
         "Overloads":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.FunctionOverload)",
-          "odataType":"Collection(Edm.Metadata.FunctionOverload)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.FunctionOverload"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "FunctionImports":{
           "kind":"navigation",
@@ -681,18 +845,43 @@
           "type":"string"
         },
         "ReturnType":{
-          "TODO":"Edm.Metadata.ReturnType"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ReturnType"
+            }
+          ]
         },
         "EntitySetPath":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Parameters":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.Parameter)",
-          "odataType":"Collection(Edm.Metadata.Parameter)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Parameter"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -712,8 +901,17 @@
           "type":"boolean"
         },
         "Facets":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.Facet)",
-          "odataType":"Collection(Edm.Metadata.Facet)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "IsCollection":{
           "type":"boolean"
@@ -725,8 +923,17 @@
           "nullable":false
         },
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -740,8 +947,17 @@
           "type":"boolean"
         },
         "Facets":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.Facet)",
-          "odataType":"Collection(Edm.Metadata.Facet)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "IsCollection":{
           "type":"boolean"
@@ -1068,7 +1284,10 @@
           "type":"string"
         },
         "DefaultValue":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "IsCollection":{
           "type":"boolean"
@@ -1124,14 +1343,30 @@
           "type":"string"
         },
         "Qualifier":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Value":{
-          "TODO":"Edm.Metadata.AnnotationExpression"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+            }
+          ]
         },
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "Term":{
           "kind":"navigation",
@@ -1164,7 +1399,11 @@
       "baseType":"Edm.Metadata.AnnotationExpression",
       "properties":{
         "Value":{
-          "TODO":"Edm.PrimitiveType"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PrimitiveType"
+            }
+          ]
         }
       }
     },
@@ -1176,7 +1415,11 @@
       "baseType":"Edm.Metadata.AnnotationExpression",
       "properties":{
         "Element":{
-          "TODO":"Edm.Metadata.QualifiedName"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.QualifiedName"
+            }
+          ]
         }
       }
     },
@@ -1237,8 +1480,17 @@
       "abstract":true,
       "properties":{
         "Annotations":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.InlineAnnotation)",
-          "odataType":"Collection(Edm.Metadata.InlineAnnotation)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -1251,7 +1503,11 @@
       "abstract":true,
       "properties":{
         "Value":{
-          "TODO":"Edm.Metadata.AnnotationExpression"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+            }
+          ]
         }
       }
     },
@@ -1263,7 +1519,14 @@
       "baseType":"Edm.Metadata.UnaryExpression",
       "properties":{
         "Qualifier":{
-          "TODO":"Edm.Metadata.SimpleIdentifier"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.SimpleIdentifier"
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "Term":{
           "kind":"navigation",
@@ -1281,11 +1544,24 @@
       "baseType":"Edm.Metadata.AnnotatableExpression",
       "properties":{
         "Function":{
-          "TODO":"Edm.Metadata.QualifiedName"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.QualifiedName"
+            }
+          ]
         },
         "Values":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.AnnotationExpression)",
-          "odataType":"Collection(Edm.Metadata.AnnotationExpression)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -1297,8 +1573,17 @@
       "baseType":"Edm.Metadata.AnnotationExpression",
       "properties":{
         "Items":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.AnnotationExpression)",
-          "odataType":"Collection(Edm.Metadata.AnnotationExpression)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         }
       }
     },
@@ -1310,8 +1595,17 @@
       "baseType":"Edm.Metadata.AnnotatableExpression",
       "properties":{
         "PropertyValues":{
-          "$ref":"#/definitions/Collection(Edm.Metadata.PropertyValue)",
-          "odataType":"Collection(Edm.Metadata.PropertyValue)"
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.PropertyValue"
+              },
+              {
+                "type":"null"
+              }
+            ]
+          }
         },
         "Type":{
           "kind":"navigation",
@@ -1329,7 +1623,11 @@
       "baseType":"Edm.Metadata.UnaryExpression",
       "properties":{
         "Property":{
-          "TODO":"Edm.Metadata.SimpleIdentifier"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.SimpleIdentifier"
+            }
+          ]
         }
       }
     },
@@ -1341,13 +1639,28 @@
       "baseType":"Edm.Metadata.AnnotatableExpression",
       "properties":{
         "Test":{
-          "TODO":"Edm.Metadata.AnnotationExpression"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+            }
+          ]
         },
         "Then":{
-          "TODO":"Edm.Metadata.AnnotationExpression"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+            }
+          ]
         },
         "Else":{
-          "TODO":"Edm.Metadata.AnnotationExpression"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+            },
+            {
+              "type":"null"
+            }
+          ]
         }
       }
     },
@@ -1389,7 +1702,11 @@
       "baseType":"Edm.Metadata.UnaryExpression",
       "properties":{
         "Name":{
-          "TODO":"Edm.Metadata.SimpleIdentifier"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.SimpleIdentifier"
+            }
+          ]
         }
       }
     },
@@ -1409,10 +1726,18 @@
       "abstract":true,
       "properties":{
         "Left":{
-          "TODO":"Edm.Metadata.AnnotationExpression"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+            }
+          ]
         },
         "Right":{
-          "TODO":"Edm.Metadata.AnnotationExpression"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+            }
+          ]
         }
       }
     },
