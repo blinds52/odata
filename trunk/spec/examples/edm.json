@@ -2,7 +2,52 @@
   "id":"http://odata.org/schemas/edm-v4.0#",
   "$schema":"http://json-schema.org/draft-04/schema#",
   "description":"JSON Schema of OData 4.0 JSON Format for CSDL",
-  "definitions@TODO":"reuse types for Edm types",
+  "definitions":{
+    "Edm.Byte":{
+      "type":"integer",
+      "minimum":0,
+      "maximum":255
+    },
+    "Edm.Date":{
+      "type":"string",
+      "pattern":"^[0-9]{4,}-[0-9]{2}-[0-9]{2}$",
+      "format":"xsd:date",
+      "format@TODO":"list format keywords"
+    },
+    "Edm.DateTimeOffset":{
+      "type":"string",
+      "TODO":"pattern"
+    },
+    "Edm.Double":{
+      "type":"number",
+      "TODO":"-INF,INF,NaN"
+    },
+    "Edm.Int16":{
+      "type":"integer",
+      "minimum":-32768,
+      "maximum":32767
+    },
+    "Edm.Int32":{
+      "type":"integer",
+      "minimum":-2147483648,
+      "maximum":2147483647
+    },
+    "Edm.Int64":{
+      "type":"integer",
+      "minimum":-9223372036854775808,
+      "maximum":9223372036854775807
+    },
+    "Edm.SByte":{
+      "type":"integer",
+      "minimum":-128,
+      "maximum":127
+    },
+    "Edm.Single":{
+      "type":"number",
+      "TODO":"-INF,INF,NaN"
+    }
+  },
+  "definitions@TODO":"Guid, Date, TimeOfDay, DateTimeOffset, Geo, Stream, Binary, Duration, Error Response",
   "keywords@TODO":"declare additional keywords for definitions",
   "allOf":[
     {
@@ -10,22 +55,13 @@
     },
     {
       "properties":{
-        "@odata.context":{
-          "description":"OData context URL",
-          "type":"string",
-          "pattern":"#$"
-        },
         "schemas":{
           "@TODO":"define"
         },
         "references":{
           "@TODO":"do we need this, or can we replace it with a JSON Schema construct"
         }
-      },
-      "required":[
-        "@odata.context",
-        "schemas"
-      ]
+      }
     }
   ]
 }

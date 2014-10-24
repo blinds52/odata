@@ -1,41 +1,5 @@
 {
-  "@odata.context":"#",
-  "$schema":"http://odata.org/schemas/edm-v4.0#",
-  "references":{
-    "http://tinyurl.com/Org-OData-Measures-V1":{
-      "includes":{
-        "Org.OData.Measures.V1":{
-          "alias":"Core"
-        },
-        "anotherOne":{
-          
-        }
-      },
-      "@Some.Term":{
-        
-      }
-    },
-    "http://somewhere/Vocabulary/V1":{
-      "includeAnnotations":[
-        {
-          "termNamespace":"Name.Space",
-          "targetNamespace":"Target.Space"
-        },
-        {
-          "termNamespace":"Name.Space",
-          "targetNamespace":"Target.Space",
-          "qualifier":"SomeName"
-        },
-        {
-          "termNamespace":"NameSpace",
-          "qualifier":"SomeName"
-        },
-        {
-          "termNamespace":"Name.Space"
-        }
-      ]
-    }
-  },
+  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
     "Self.Weird":{
       "$ref":"#/definitions/Model1.Weird"
@@ -47,23 +11,42 @@
       },
       "properties":{
         "TheKey":{
-          "TODO":"Edm.PropertyPath"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PropertyPath"
+            }
+          ]
         },
         "TheValue":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "TheString":{
-          "type":"string",
+          "type":[
+            "string",
+            "null"
+          ],
           "maxLength":20
         },
         "Tags":{
-          "$ref":"#/definitions/Collection(Edm.String)",
-          "odataType":"Collection(Edm.String)",
-          "SRID":"variable"
+          "type":"array",
+          "items":{
+            "type":[
+              "string",
+              "null"
+            ]
+          }
         },
         "Price":{
-          "type":"number",
-          "scale":"variable"
+          "type":[
+            "number",
+            "null"
+          ],
+          "odata":{
+            "scale":"variable"
+          }
         }
       },
       "@Some.Term#SomeQualifier":[
@@ -202,7 +185,10 @@
       "openType":true,
       "properties":{
         "Street":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "City":{
           "kind":"navigation",
@@ -210,7 +196,10 @@
           "odataType":"MyModel.City"
         },
         "Street":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Region":{
           "kind":"navigation",
@@ -221,6 +210,19 @@
           "kind":"navigation",
           "$ref":"#/definitions/MyModel.Country",
           "odataType":"MyModel.Country"
+        },
+        "MapLocation":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "SRID":"variable"
+          }
         }
       }
     },
@@ -254,14 +256,20 @@
       "abstract":true,
       "properties":{
         "Quantity":{
-          "type":"number",
+          "type":[
+            "number",
+            "null"
+          ],
           "@Measures.Unit":{
             "@odata.type":"Edm.Path",
             "value":"ShippingUnit"
           }
         },
         "ShippingUnit":{
-          "type":"string",
+          "type":[
+            "string",
+            "null"
+          ],
           "@Core.Description":"Contains the unit for property Quantity"
         }
       }
@@ -288,7 +296,10 @@
       "abstract":true,
       "properties":{
         "Fred":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -323,7 +334,6 @@
       "properties":{
         "ScrumMaster":{
           "$ref":"#/definitions/Y.DeveloperType",
-          "odataType":"Y.DeveloperType",
           "@custom.IsA":"Y.Developer X.Person"
         }
       }
@@ -333,7 +343,14 @@
       "baseType":"X.MovieType",
       "properties":{
         "ArchivedAt":{
-          "TODO":"Edm.Date"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+            },
+            {
+              "type":"null"
+            }
+          ]
         }
       },
       "@custom.IsA":"X.Movie"
@@ -342,11 +359,16 @@
       "kind":"ComplexType",
       "properties":{
         "SomeProperty":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "Contacts":{
-          "$ref":"#/definitions/Collection(X.PersonType)",
-          "odataType":"Collection(X.PersonType)",
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/X.PersonType"
+          },
           "@custom.ItemIsA":"X.Person"
         },
         "VIPs":{
@@ -883,6 +905,41 @@
             },
             "VIPs@custom.ItemIsA":"X.Person"
           }
+        }
+      ]
+    }
+  },
+  "references":{
+    "http://tinyurl.com/Org-OData-Measures-V1":{
+      "includes":{
+        "Org.OData.Measures.V1":{
+          "alias":"Core"
+        },
+        "anotherOne":{
+          
+        }
+      },
+      "@Some.Term":{
+        
+      }
+    },
+    "http://somewhere/Vocabulary/V1":{
+      "includeAnnotations":[
+        {
+          "termNamespace":"Name.Space",
+          "targetNamespace":"Target.Space"
+        },
+        {
+          "termNamespace":"Name.Space",
+          "targetNamespace":"Target.Space",
+          "qualifier":"SomeName"
+        },
+        {
+          "termNamespace":"NameSpace",
+          "qualifier":"SomeName"
+        },
+        {
+          "termNamespace":"Name.Space"
         }
       ]
     }

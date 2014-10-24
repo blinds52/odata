@@ -1,20 +1,10 @@
 {
-  "@odata.context":"#",
-  "$schema":"http://odata.org/schemas/edm-v4.0#",
-  "references":{
-    "http://tinyurl.com/Org-OData-Core":{
-      "includes":{
-        "Org.OData.Core.V1":{
-          "alias":"Core"
-        }
-      }
-    }
-  },
+  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
-    "ODataDemo.Customer":{
-      "$ref":"#/definitions/Model.Customer"
-    },
     "Model.Customer":{
+      "$ref":"#/definitions/OData.Demo.Customer"
+    },
+    "OData.Demo.Customer":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
@@ -36,7 +26,10 @@
           "type":"string"
         },
         "CompanyName":{
-          "type":"string"
+          "type":[
+            "string",
+            "null"
+          ]
         },
         "BirthDate":{
           "type":"string"
@@ -64,23 +57,26 @@
           "type":"string"
         },
         "Address":{
-          "$ref":"#/definitions/Model.Address",
-          "odataType":"Model.Address"
+          "$ref":"#/definitions/Model.Address"
         },
         "EmailAddresses":{
-          "$ref":"#/definitions/Collection(Edm.String)",
-          "odataType":"Collection(Edm.String)"
+          "type":"array",
+          "items":{
+            "type":[
+              "string",
+              "null"
+            ]
+          }
         },
         "Phone":{
-          "$ref":"#/definitions/Model.PhoneNumber",
-          "odataType":"Model.PhoneNumber"
+          "$ref":"#/definitions/Model.PhoneNumber"
         }
       }
     },
-    "ODataDemo.Supplier":{
-      "$ref":"#/definitions/Model.Supplier"
-    },
     "Model.Supplier":{
+      "$ref":"#/definitions/OData.Demo.Supplier"
+    },
+    "OData.Demo.Supplier":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
@@ -102,28 +98,37 @@
           "type":"string"
         },
         "EmailAddresses":{
-          "$ref":"#/definitions/Collection(Edm.String)",
-          "odataType":"Collection(Edm.String)"
+          "type":"array",
+          "items":{
+            "type":[
+              "string",
+              "null"
+            ]
+          }
         },
         "Addresses":{
-          "$ref":"#/definitions/Collection(Model.Address)",
-          "odataType":"Collection(Model.Address)"
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/Model.Address"
+          }
         }
       }
     },
-    "ODataDemo.Product":{
-      "$ref":"#/definitions/Model.Product"
-    },
     "Model.Product":{
+      "$ref":"#/definitions/OData.Demo.Product"
+    },
+    "OData.Demo.Product":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "Category":{
           "kind":"navigation",
@@ -149,13 +154,20 @@
           "type":"string"
         },
         "Sizes":{
-          "$ref":"#/definitions/Collection(Edm.String)",
-          "odataType":"Collection(Edm.String)"
+          "type":"array",
+          "items":{
+            "type":[
+              "string",
+              "null"
+            ]
+          }
         },
         "Rating":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "OrderItems":{
           "kind":"navigation",
@@ -167,10 +179,21 @@
           "partner":"Product"
         },
         "ReleaseDate":{
-          "TODO":"Edm.Date"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+            }
+          ]
         },
         "DiscontinuedDate":{
-          "TODO":"Edm.Date"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "LifeTime":{
           "type":"string"
@@ -192,19 +215,21 @@
         }
       }
     },
-    "ODataDemo.Order":{
-      "$ref":"#/definitions/Model.Order"
-    },
     "Model.Order":{
+      "$ref":"#/definitions/OData.Demo.Order"
+    },
+    "OData.Demo.Order":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "Items":{
           "kind":"navigation",
@@ -226,31 +251,32 @@
           "partner":"Orders"
         },
         "ShippingAddress":{
-          "$ref":"#/definitions/Model.Address",
-          "odataType":"Model.Address"
+          "$ref":"#/definitions/Model.Address"
         }
       }
     },
-    "ODataDemo.VipCustomer":{
-      "$ref":"#/definitions/Model.VipCustomer"
-    },
     "Model.VipCustomer":{
+      "$ref":"#/definitions/OData.Demo.VipCustomer"
+    },
+    "OData.Demo.VipCustomer":{
       "kind":"EntityType",
       "baseType":"Model.Customer"
     },
-    "ODataDemo.Category":{
-      "$ref":"#/definitions/Model.Category"
-    },
     "Model.Category":{
+      "$ref":"#/definitions/OData.Demo.Category"
+    },
+    "OData.Demo.Category":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "Amount":{
           "type":"number"
@@ -272,10 +298,10 @@
         }
       }
     },
-    "ODataDemo.OrderItem":{
-      "$ref":"#/definitions/Model.OrderItem"
-    },
     "Model.OrderItem":{
+      "$ref":"#/definitions/OData.Demo.OrderItem"
+    },
+    "OData.Demo.OrderItem":{
       "kind":"EntityType",
       "keys":{
         "OrderID":"OrderID",
@@ -283,9 +309,11 @@
       },
       "properties":{
         "OrderID":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "ItemID":{
           "type":"string"
@@ -326,19 +354,21 @@
         }
       }
     },
-    "ODataDemo.Sales":{
-      "$ref":"#/definitions/Model.Sales"
-    },
     "Model.Sales":{
+      "$ref":"#/definitions/OData.Demo.Sales"
+    },
+    "OData.Demo.Sales":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "Amount":{
           "type":"number"
@@ -380,10 +410,10 @@
         }
       }
     },
-    "ODataDemo.Employee":{
-      "$ref":"#/definitions/Model.Employee"
-    },
     "Model.Employee":{
+      "$ref":"#/definitions/OData.Demo.Employee"
+    },
+    "OData.Demo.Employee":{
       "kind":"EntityType",
       "hasStream":true,
       "keys":{
@@ -419,19 +449,21 @@
         }
       }
     },
-    "ODataDemo.LeaveRequest":{
-      "$ref":"#/definitions/Model.LeaveRequest"
-    },
     "Model.LeaveRequest":{
+      "$ref":"#/definitions/OData.Demo.LeaveRequest"
+    },
+    "OData.Demo.LeaveRequest":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
-          "type":"integer",
-          "minimum":-2147483648,
-          "maximum":2147483647
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            }
+          ]
         },
         "Manager":{
           "kind":"navigation",
@@ -449,10 +481,10 @@
         }
       }
     },
-    "ODataDemo.Address":{
-      "$ref":"#/definitions/Model.Address"
-    },
     "Model.Address":{
+      "$ref":"#/definitions/OData.Demo.Address"
+    },
+    "OData.Demo.Address":{
       "kind":"ComplexType",
       "properties":{
         "Street":{
@@ -478,21 +510,25 @@
         }
       }
     },
-    "ODataDemo.AddressWithLocation":{
-      "$ref":"#/definitions/Model.AddressWithLocation"
-    },
     "Model.AddressWithLocation":{
+      "$ref":"#/definitions/OData.Demo.AddressWithLocation"
+    },
+    "OData.Demo.AddressWithLocation":{
       "kind":"ComplexType",
       "properties":{
         "Location":{
-          "TODO":"Edm.GeographyPoint"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+            }
+          ]
         }
       }
     },
-    "ODataDemo.Country":{
-      "$ref":"#/definitions/Model.Country"
-    },
     "Model.Country":{
+      "$ref":"#/definitions/OData.Demo.Country"
+    },
+    "OData.Demo.Country":{
       "kind":"EntityType",
       "keys":{
         "Code":"Code"
@@ -510,10 +546,10 @@
         }
       }
     },
-    "ODataDemo.PreferredSupplier":{
-      "$ref":"#/definitions/Model.PreferredSupplier"
-    },
     "Model.PreferredSupplier":{
+      "$ref":"#/definitions/OData.Demo.PreferredSupplier"
+    },
+    "OData.Demo.PreferredSupplier":{
       "kind":"EntityType",
       "baseType":"Model.Supplier",
       "properties":{
@@ -534,10 +570,10 @@
         }
       }
     },
-    "ODataDemo.Manager":{
-      "$ref":"#/definitions/Model.Manager"
-    },
     "Model.Manager":{
+      "$ref":"#/definitions/OData.Demo.Manager"
+    },
+    "OData.Demo.Manager":{
       "kind":"EntityType",
       "baseType":"Model.Employee",
       "properties":{
@@ -561,17 +597,21 @@
         }
       }
     },
-    "ODataDemo.Time":{
-      "$ref":"#/definitions/Model.Time"
-    },
     "Model.Time":{
+      "$ref":"#/definitions/OData.Demo.Time"
+    },
+    "OData.Demo.Time":{
       "kind":"EntityType",
       "keys":{
         "Date":"Date"
       },
       "properties":{
         "Date":{
-          "TODO":"Edm.Date"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+            }
+          ]
         },
         "Year":{
           "type":"string",
@@ -594,10 +634,10 @@
         }
       }
     },
-    "ODataDemo.SalesOrganization":{
-      "$ref":"#/definitions/Model.SalesOrganization"
-    },
     "Model.SalesOrganization":{
+      "$ref":"#/definitions/OData.Demo.SalesOrganization"
+    },
+    "OData.Demo.SalesOrganization":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
@@ -625,10 +665,10 @@
         }
       }
     },
-    "ODataDemo.Currency":{
-      "$ref":"#/definitions/Model.Currency"
-    },
     "Model.Currency":{
+      "$ref":"#/definitions/OData.Demo.Currency"
+    },
+    "OData.Demo.Currency":{
       "kind":"EntityType",
       "keys":{
         "Code":"Code"
@@ -654,33 +694,39 @@
           "type":"string"
         },
         "FractionalDigits":{
-          "type":"integer",
-          "minimum":0,
-          "maximum":255
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Byte"
+            }
+          ]
         }
       }
     },
-    "ODataDemo.City":{
-      "$ref":"#/definitions/Model.City"
-    },
     "Model.City":{
+      "$ref":"#/definitions/OData.Demo.City"
+    },
+    "OData.Demo.City":{
       "kind":"EntityType",
       "keys":{
         "ID":"ID"
       },
       "properties":{
         "ID":{
-          "TODO":"Edm.Guid"
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Guid"
+            }
+          ]
         },
         "Name":{
           "type":"string"
         }
       }
     },
-    "ODataDemo.PhoneNumber":{
-      "$ref":"#/definitions/Model.PhoneNumber"
-    },
     "Model.PhoneNumber":{
+      "$ref":"#/definitions/OData.Demo.PhoneNumber"
+    },
+    "OData.Demo.PhoneNumber":{
       "kind":"ComplexType",
       "properties":{
         "Number":{
@@ -691,10 +737,10 @@
         }
       }
     },
-    "ODataDemo.CellPhoneNumber":{
-      "$ref":"#/definitions/Model.CellPhoneNumber"
-    },
     "Model.CellPhoneNumber":{
+      "$ref":"#/definitions/OData.Demo.CellPhoneNumber"
+    },
+    "OData.Demo.CellPhoneNumber":{
       "kind":"ComplexType",
       "properties":{
         "Carrier":{
@@ -704,8 +750,8 @@
     }
   },
   "schemas":{
-    "Model":{
-      "alias":"ODataDemo",
+    "OData.Demo":{
+      "alias":"Model",
       "enumTypes":{
         "Pattern":{
           "isFlags":true,
@@ -878,6 +924,15 @@
           "Cities":{
             "entityType":"Model.City"
           }
+        }
+      }
+    }
+  },
+  "references":{
+    "http://tinyurl.com/Org-OData-Core":{
+      "includes":{
+        "Org.OData.Core.V1":{
+          "alias":"Core"
         }
       }
     }
