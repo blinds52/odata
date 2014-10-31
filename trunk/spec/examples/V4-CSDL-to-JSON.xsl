@@ -3,14 +3,13 @@
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/"
 >
   <!--
-    This style sheet transforms OData 4.0 CSDL documents into an experimental JSON metadata format.
+    This style sheet transforms OData 4.0 XML CSDL documents into OData JSON CSDL
 
     TODO:
     - EnumType in definitions
     - TypeDefinition in definitions
     - inheritance via allOf[this,base]
     - Property facets
-    - NavigationProperty type/nullable
     - detect qualifier for external namespace and insert correct url
     - replace alias in nav/property type in definitions with namespace
   -->
@@ -46,6 +45,7 @@
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
+    <!-- TODO: EnumType, TypeDefinition -->
     <xsl:apply-templates select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType" mode="hash">
       <xsl:with-param name="name" select="'definitions'" />
     </xsl:apply-templates>
@@ -84,29 +84,24 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
-    <!--
-      <xsl:if test="../@Alias">
-      <xsl:text>"</xsl:text>
-      <xsl:value-of select="../@Alias" />
-      <xsl:text>.</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>":{"$ref":"#/definitions/</xsl:text>
-      <xsl:value-of select="../@Namespace" />
-      <xsl:text>.</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>"},</xsl:text>
-      </xsl:if>
-    -->
+    <!-- TODO: BaseType via allof[base,this] -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{</xsl:text>
-    <!-- TODO: group all OData stuff in odata object -->
+    <xsl:text>":{"type":"object","odata":{</xsl:text>
     <xsl:text>"kind":"</xsl:text>
-    <xsl:value-of select="local-name()" />
+    <xsl:choose>
+      <xsl:when test="local-name()='ComplexType'">
+        <xsl:text>complex</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>entity</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*[local-name()!='Name']|edm:Key" mode="list2" />
+    <xsl:text>}</xsl:text>
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
