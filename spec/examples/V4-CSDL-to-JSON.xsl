@@ -549,7 +549,7 @@
   </xsl:template>
 
   <xsl:template
-    match="@Binary|@Date|@DateTimeOffset|@Guid|@TimeOfDay|@UrlRef|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
+    match="@Binary|@Date|@DateTimeOffset|@Duration|@Guid|@TimeOfDay|@UrlRef|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Duration|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
   >
     <xsl:text>{"@odata.type":"Edm.</xsl:text>
     <xsl:value-of select="local-name()" />
