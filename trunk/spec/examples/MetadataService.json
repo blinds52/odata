@@ -1,9 +1,6 @@
 {
   "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
-    "Meta.Reference":{
-      "$ref":"#/definitions/Edm.Metadata.Reference"
-    },
     "Edm.Metadata.Reference":{
       "kind":"EntityType",
       "keys":{
@@ -16,46 +13,22 @@
         "Include":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Include"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.Include"
           }
         },
         "IncludeAnnotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.IncludeAnnotations"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.IncludeAnnotations"
           }
         },
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         }
       }
-    },
-    "Meta.Include":{
-      "$ref":"#/definitions/Edm.Metadata.Include"
     },
     "Edm.Metadata.Include":{
       "kind":"ComplexType",
@@ -67,15 +40,12 @@
           ]
         },
         "Schema":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odataType":"Edm.Metadata.Schema",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Meta.IncludeAnnotations":{
-      "$ref":"#/definitions/Edm.Metadata.IncludeAnnotations"
     },
     "Edm.Metadata.IncludeAnnotations":{
       "kind":"ComplexType",
@@ -100,9 +70,6 @@
         }
       }
     },
-    "Meta.Schema":{
-      "$ref":"#/definitions/Edm.Metadata.Schema"
-    },
     "Edm.Metadata.Schema":{
       "kind":"EntityType",
       "keys":{
@@ -119,66 +86,76 @@
           ]
         },
         "Reference":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.Metadata.Reference",
-          "odataType":"Edm.Metadata.Reference"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Edm.Metadata.Reference"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Types":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Type"
           },
-          "odataType":"Collection(Edm.Metadata.Type)",
-          "partner":"Schema"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Schema"
+          }
         },
         "Actions":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Action"
           },
-          "odataType":"Collection(Edm.Metadata.Action)",
-          "partner":"Schema"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Schema"
+          }
         },
         "Functions":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Function"
           },
-          "odataType":"Collection(Edm.Metadata.Function)",
-          "partner":"Schema"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Schema"
+          }
         },
         "EntityContainer":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odataType":"Edm.Metadata.EntityContainer",
-          "nullable":false,
-          "partner":"Schema"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Schema"
+          }
         },
         "Terms":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Term"
           },
-          "odataType":"Collection(Edm.Metadata.Term)",
-          "partner":"Schema"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Schema"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.Type":{
-      "$ref":"#/definitions/Edm.Metadata.Type"
     },
     "Edm.Metadata.Type":{
       "kind":"EntityType",
@@ -194,25 +171,23 @@
           "type":"string"
         },
         "Schema":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odataType":"Edm.Metadata.Schema",
-          "nullable":false,
-          "partner":"Types"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Types"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.StructuredType":{
-      "$ref":"#/definitions/Edm.Metadata.StructuredType"
     },
     "Edm.Metadata.StructuredType":{
       "kind":"EntityType",
@@ -226,27 +201,26 @@
           "type":"string"
         },
         "Properties":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Property"
           },
-          "odataType":"Collection(Edm.Metadata.Property)",
-          "partner":"DeclaringType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"DeclaringType"
+          }
         },
         "NavigationProperties":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.NavigationProperty"
           },
-          "odataType":"Collection(Edm.Metadata.NavigationProperty)",
-          "partner":"DeclaringType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"DeclaringType"
+          }
         }
       }
-    },
-    "Meta.EntityType":{
-      "$ref":"#/definitions/Edm.Metadata.EntityType"
     },
     "Edm.Metadata.EntityType":{
       "kind":"EntityType",
@@ -255,47 +229,47 @@
         "Key":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.KeyProperty"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.KeyProperty"
           }
         },
         "HasStream":{
           "type":"boolean"
         },
         "BaseType":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.Metadata.EntityType",
-          "odataType":"Edm.Metadata.EntityType",
-          "partner":"DerivedTypes"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Edm.Metadata.EntityType"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation",
+            "partner":"DerivedTypes"
+          }
         },
         "DerivedTypes":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.EntityType"
           },
-          "odataType":"Collection(Edm.Metadata.EntityType)",
-          "partner":"BaseType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"BaseType"
+          }
         },
         "EntitySets":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.EntitySet"
           },
-          "odataType":"Collection(Edm.Metadata.EntitySet)",
-          "partner":"EntityType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntityType"
+          }
         }
       }
-    },
-    "Meta.KeyProperty":{
-      "$ref":"#/definitions/Edm.Metadata.KeyProperty"
     },
     "Edm.Metadata.KeyProperty":{
       "kind":"ComplexType",
@@ -310,66 +284,68 @@
           ]
         },
         "Property":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Property",
-          "odataType":"Edm.Metadata.Property",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Meta.ComplexType":{
-      "$ref":"#/definitions/Edm.Metadata.ComplexType"
     },
     "Edm.Metadata.ComplexType":{
       "kind":"EntityType",
       "baseType":"Edm.Metadata.StructuredType",
       "properties":{
         "BaseType":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.Metadata.ComplexType",
-          "odataType":"Edm.Metadata.ComplexType",
-          "partner":"DerivedTypes"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Edm.Metadata.ComplexType"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation",
+            "partner":"DerivedTypes"
+          }
         },
         "DerivedTypes":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.ComplexType"
           },
-          "odataType":"Collection(Edm.Metadata.ComplexType)",
-          "partner":"BaseType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"BaseType"
+          }
         }
       }
-    },
-    "Meta.PrimitiveType":{
-      "$ref":"#/definitions/Edm.Metadata.PrimitiveType"
     },
     "Edm.Metadata.PrimitiveType":{
       "kind":"EntityType",
       "baseType":"Edm.Metadata.Type",
       "properties":{
         "TypeDefinitions":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.TypeDefinition"
           },
-          "odataType":"Collection(Edm.Metadata.TypeDefinition)",
-          "partner":"UnderlyingType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"UnderlyingType"
+          }
         },
         "EnumTypes":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.EnumType"
           },
-          "odataType":"Collection(Edm.Metadata.EnumType)",
-          "partner":"UnderlyingType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"UnderlyingType"
+          }
         }
       }
-    },
-    "Meta.EnumType":{
-      "$ref":"#/definitions/Edm.Metadata.EnumType"
     },
     "Edm.Metadata.EnumType":{
       "kind":"EntityType",
@@ -379,25 +355,23 @@
           "type":"boolean"
         },
         "UnderlyingType":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.PrimitiveType",
-          "odataType":"Edm.Metadata.PrimitiveType",
-          "nullable":false,
-          "partner":"EnumTypes"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EnumTypes"
+          }
         },
         "Members":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.EnumTypeMember"
           },
-          "odataType":"Collection(Edm.Metadata.EnumTypeMember)",
-          "partner":"EnumType"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EnumType"
+          }
         }
       }
-    },
-    "Meta.EnumTypeMember":{
-      "$ref":"#/definitions/Edm.Metadata.EnumTypeMember"
     },
     "Edm.Metadata.EnumTypeMember":{
       "kind":"EntityType",
@@ -412,32 +386,26 @@
           "type":"string"
         },
         "Value":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int64"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int64"
         },
         "EnumType":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EnumType",
-          "odataType":"Edm.Metadata.EnumType",
-          "nullable":false,
-          "partner":"Members"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Members"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.TypeDefinition":{
-      "$ref":"#/definitions/Edm.Metadata.TypeDefinition"
     },
     "Edm.Metadata.TypeDefinition":{
       "kind":"EntityType",
@@ -446,45 +414,28 @@
         "Facets":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.Facet"
           }
         },
         "UnderlyingType":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.PrimitiveType",
-          "odataType":"Edm.Metadata.PrimitiveType",
-          "nullable":false,
-          "partner":"TypeDefinitions"
+          "odata":{
+            "kind":"navigation",
+            "partner":"TypeDefinitions"
+          }
         }
       }
-    },
-    "Meta.Facet":{
-      "$ref":"#/definitions/Edm.Metadata.Facet"
     },
     "Edm.Metadata.Facet":{
       "kind":"ComplexType",
       "properties":{
         "Name":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.FacetName"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.FacetName"
         },
         "Value":{
           "type":"string"
         }
       }
-    },
-    "Meta.Property":{
-      "$ref":"#/definitions/Edm.Metadata.Property"
     },
     "Edm.Metadata.Property":{
       "kind":"EntityType",
@@ -510,45 +461,36 @@
         "Facets":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.Facet"
           }
         },
         "IsCollection":{
           "type":"boolean"
         },
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odataType":"Edm.Metadata.Type",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "DeclaringType":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.StructuredType",
-          "odataType":"Edm.Metadata.StructuredType",
-          "nullable":false,
-          "partner":"Properties"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Properties"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.NavigationProperty":{
-      "$ref":"#/definitions/Edm.Metadata.NavigationProperty"
     },
     "Edm.Metadata.NavigationProperty":{
       "kind":"EntityType",
@@ -571,7 +513,7 @@
         "OnDelete":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Include"
+              "$ref":"#/definitions/Edm.Metadata.Include"
             },
             {
               "type":"null"
@@ -581,87 +523,73 @@
         "ReferentialConstraints":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ReferentialConstraint"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.ReferentialConstraint"
           }
         },
         "IsCollection":{
           "type":"boolean"
         },
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityType",
-          "odataType":"Edm.Metadata.EntityType",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Partner":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.Metadata.NavigationProperty",
-          "odataType":"Edm.Metadata.NavigationProperty"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Edm.Metadata.NavigationProperty"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "NavigationPropertyBindings":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.NavigationPropertyBinding"
           },
-          "odataType":"Collection(Edm.Metadata.NavigationPropertyBinding)",
-          "partner":"NavigationProperty"
+          "odata":{
+            "kind":"navigation",
+            "partner":"NavigationProperty"
+          }
         },
         "DeclaringType":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.StructuredType",
-          "odataType":"Edm.Metadata.StructuredType",
-          "nullable":false,
-          "partner":"NavigationProperties"
+          "odata":{
+            "kind":"navigation",
+            "partner":"NavigationProperties"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.OnDelete":{
-      "$ref":"#/definitions/Edm.Metadata.OnDelete"
     },
     "Edm.Metadata.OnDelete":{
       "kind":"ComplexType",
       "properties":{
         "Action":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.OnDeleteAction"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.OnDeleteAction"
         },
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         }
       }
-    },
-    "Meta.ReferentialConstraint":{
-      "$ref":"#/definitions/Edm.Metadata.ReferentialConstraint"
     },
     "Edm.Metadata.ReferentialConstraint":{
       "kind":"ComplexType",
@@ -675,20 +603,10 @@
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         }
       }
-    },
-    "Meta.Action":{
-      "$ref":"#/definitions/Edm.Metadata.Action"
     },
     "Edm.Metadata.Action":{
       "kind":"EntityType",
@@ -705,36 +623,27 @@
         "Overloads":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ActionOverload"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.ActionOverload"
           }
         },
         "ActionImports":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.ActionImport"
           },
-          "odataType":"Collection(Edm.Metadata.ActionImport)",
-          "partner":"Action"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Action"
+          }
         },
         "Schema":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odataType":"Edm.Metadata.Schema",
-          "nullable":false,
-          "partner":"Actions"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Actions"
+          }
         }
       }
-    },
-    "Meta.ActionOverload":{
-      "$ref":"#/definitions/Edm.Metadata.ActionOverload"
     },
     "Edm.Metadata.ActionOverload":{
       "kind":"ComplexType",
@@ -745,7 +654,7 @@
         "ReturnType":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ReturnType"
+              "$ref":"#/definitions/Edm.Metadata.ReturnType"
             },
             {
               "type":"null"
@@ -761,33 +670,16 @@
         "Parameters":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Parameter"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.Parameter"
           }
         },
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         }
       }
-    },
-    "Meta.Function":{
-      "$ref":"#/definitions/Edm.Metadata.Function"
     },
     "Edm.Metadata.Function":{
       "kind":"EntityType",
@@ -804,36 +696,27 @@
         "Overloads":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.FunctionOverload"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.FunctionOverload"
           }
         },
         "FunctionImports":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.FunctionImport"
           },
-          "odataType":"Collection(Edm.Metadata.FunctionImport)",
-          "partner":"Function"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Function"
+          }
         },
         "Schema":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odataType":"Edm.Metadata.Schema",
-          "nullable":false,
-          "partner":"Functions"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Functions"
+          }
         }
       }
-    },
-    "Meta.FunctionOverload":{
-      "$ref":"#/definitions/Edm.Metadata.FunctionOverload"
     },
     "Edm.Metadata.FunctionOverload":{
       "kind":"ComplexType",
@@ -845,11 +728,7 @@
           "type":"string"
         },
         "ReturnType":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.ReturnType"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.ReturnType"
         },
         "EntitySetPath":{
           "type":[
@@ -860,33 +739,16 @@
         "Parameters":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Parameter"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.Parameter"
           }
         },
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         }
       }
-    },
-    "Meta.Parameter":{
-      "$ref":"#/definitions/Edm.Metadata.Parameter"
     },
     "Edm.Metadata.Parameter":{
       "kind":"ComplexType",
@@ -903,42 +765,25 @@
         "Facets":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.Facet"
           }
         },
         "IsCollection":{
           "type":"boolean"
         },
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odataType":"Edm.Metadata.Type",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         }
       }
-    },
-    "Meta.ReturnType":{
-      "$ref":"#/definitions/Edm.Metadata.ReturnType"
     },
     "Edm.Metadata.ReturnType":{
       "kind":"ComplexType",
@@ -949,29 +794,19 @@
         "Facets":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Facet"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.Facet"
           }
         },
         "IsCollection":{
           "type":"boolean"
         },
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odataType":"Edm.Metadata.Type",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Meta.EntityContainer":{
-      "$ref":"#/definitions/Edm.Metadata.EntityContainer"
     },
     "Edm.Metadata.EntityContainer":{
       "kind":"EntityType",
@@ -986,61 +821,63 @@
           "type":"string"
         },
         "EntitySets":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.EntitySet"
           },
-          "odataType":"Collection(Edm.Metadata.EntitySet)",
-          "partner":"EntityContainer"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntityContainer"
+          }
         },
         "FunctionImports":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.FunctionImport"
           },
-          "odataType":"Collection(Edm.Metadata.FunctionImport)",
-          "partner":"EntityContainer"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntityContainer"
+          }
         },
         "Singletons":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Singleton"
           },
-          "odataType":"Collection(Edm.Metadata.Singleton)",
-          "partner":"EntityContainer"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntityContainer"
+          }
         },
         "ActionImports":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.ActionImport"
           },
-          "odataType":"Collection(Edm.Metadata.ActionImport)",
-          "partner":"EntityContainer"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntityContainer"
+          }
         },
         "Schema":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odataType":"Edm.Metadata.Schema",
-          "nullable":false,
-          "partner":"EntityContainer"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntityContainer"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.EntitySet":{
-      "$ref":"#/definitions/Edm.Metadata.EntitySet"
     },
     "Edm.Metadata.EntitySet":{
       "kind":"EntityType",
@@ -1058,41 +895,40 @@
           "type":"boolean"
         },
         "EntityType":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityType",
-          "odataType":"Edm.Metadata.EntityType",
-          "nullable":false,
-          "partner":"EntitySets"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntitySets"
+          }
         },
         "NavigationPropertyBindings":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.NavigationPropertyBinding"
           },
-          "odataType":"Collection(Edm.Metadata.NavigationPropertyBinding)",
-          "partner":"Source"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Source"
+          }
         },
         "EntityContainer":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odataType":"Edm.Metadata.EntityContainer",
-          "nullable":false,
-          "partner":"EntitySets"
+          "odata":{
+            "kind":"navigation",
+            "partner":"EntitySets"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.NavigationPropertyBinding":{
-      "$ref":"#/definitions/Edm.Metadata.NavigationPropertyBinding"
     },
     "Edm.Metadata.NavigationPropertyBinding":{
       "kind":"EntityType",
@@ -1107,28 +943,25 @@
           "type":"string"
         },
         "Target":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.EntityType",
-          "odataType":"Edm.EntityType",
-          "nullable":false
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.EntityType",
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Source":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.EntityType",
-          "odataType":"Edm.EntityType",
-          "nullable":false
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.EntityType",
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "NavigationProperty":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.NavigationProperty",
-          "odataType":"Edm.Metadata.NavigationProperty",
-          "nullable":false,
-          "partner":"NavigationPropertyBindings"
+          "odata":{
+            "kind":"navigation",
+            "partner":"NavigationPropertyBindings"
+          }
         }
       }
-    },
-    "Meta.Singleton":{
-      "$ref":"#/definitions/Edm.Metadata.Singleton"
     },
     "Edm.Metadata.Singleton":{
       "kind":"EntityType",
@@ -1143,40 +976,39 @@
           "type":"string"
         },
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityType",
-          "odataType":"Edm.Metadata.EntityType",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "NavigationPropertyBindings":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.NavigationPropertyBinding"
           },
-          "odataType":"Collection(Edm.Metadata.NavigationPropertyBinding)",
-          "partner":"Source"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Source"
+          }
         },
         "EntityContainer":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odataType":"Edm.Metadata.EntityContainer",
-          "nullable":false,
-          "partner":"Singletons"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Singletons"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.ActionImport":{
-      "$ref":"#/definitions/Edm.Metadata.ActionImport"
     },
     "Edm.Metadata.ActionImport":{
       "kind":"EntityType",
@@ -1191,37 +1023,43 @@
           "type":"string"
         },
         "Action":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Action",
-          "odataType":"Edm.Metadata.Action",
-          "nullable":false,
-          "partner":"ActionImports"
+          "odata":{
+            "kind":"navigation",
+            "partner":"ActionImports"
+          }
         },
         "EntitySet":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.Metadata.EntitySet",
-          "odataType":"Edm.Metadata.EntitySet"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Edm.Metadata.EntitySet"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "EntityContainer":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odataType":"Edm.Metadata.EntityContainer",
-          "nullable":false,
-          "partner":"ActionImports"
+          "odata":{
+            "kind":"navigation",
+            "partner":"ActionImports"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.FunctionImport":{
-      "$ref":"#/definitions/Edm.Metadata.FunctionImport"
     },
     "Edm.Metadata.FunctionImport":{
       "kind":"EntityType",
@@ -1239,37 +1077,43 @@
           "type":"boolean"
         },
         "Function":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Function",
-          "odataType":"Edm.Metadata.Function",
-          "nullable":false,
-          "partner":"FunctionImports"
+          "odata":{
+            "kind":"navigation",
+            "partner":"FunctionImports"
+          }
         },
         "EntitySet":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.Metadata.EntitySet",
-          "odataType":"Edm.Metadata.EntitySet"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Edm.Metadata.EntitySet"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "EntityContainer":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odataType":"Edm.Metadata.EntityContainer",
-          "nullable":false,
-          "partner":"FunctionImports"
+          "odata":{
+            "kind":"navigation",
+            "partner":"FunctionImports"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.Term":{
-      "$ref":"#/definitions/Edm.Metadata.Term"
     },
     "Edm.Metadata.Term":{
       "kind":"EntityType",
@@ -1293,45 +1137,52 @@
           "type":"boolean"
         },
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odataType":"Edm.Metadata.Type",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "BaseTerm":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.Metadata.Term",
-          "odataType":"Edm.Metadata.Term"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Edm.Metadata.Term"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Applications":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Term"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Term"
+          }
         },
         "Schema":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odataType":"Edm.Metadata.Schema",
-          "nullable":false,
-          "partner":"Terms"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Terms"
+          }
         },
         "Annotations":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odataType":"Collection(Edm.Metadata.Annotation)",
-          "partner":"Target"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Target"
+          }
         }
       }
-    },
-    "Meta.Annotation":{
-      "$ref":"#/definitions/Edm.Metadata.Annotation"
     },
     "Edm.Metadata.Annotation":{
       "kind":"EntityType",
@@ -1349,82 +1200,51 @@
           ]
         },
         "Value":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         },
         "Term":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Term",
-          "odataType":"Edm.Metadata.Term",
-          "nullable":false,
-          "partner":"Applications"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Applications"
+          }
         },
         "Target":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Edm.EntityType",
-          "odataType":"Edm.EntityType",
-          "nullable":false,
-          "partner":"Annotation"
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.EntityType",
+          "odata":{
+            "kind":"navigation",
+            "partner":"Annotation"
+          }
         }
       }
-    },
-    "Meta.AnnotationExpression":{
-      "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
     },
     "Edm.Metadata.AnnotationExpression":{
       "kind":"ComplexType",
       "abstract":true
-    },
-    "Meta.Constant":{
-      "$ref":"#/definitions/Edm.Metadata.Constant"
     },
     "Edm.Metadata.Constant":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotationExpression",
       "properties":{
         "Value":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PrimitiveType"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PrimitiveType"
         }
       }
-    },
-    "Meta.LabeledElementReference":{
-      "$ref":"#/definitions/Edm.Metadata.LabeledElementReference"
     },
     "Edm.Metadata.LabeledElementReference":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotationExpression",
       "properties":{
         "Element":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.QualifiedName"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.QualifiedName"
         }
       }
-    },
-    "Meta.AnnotationPath":{
-      "$ref":"#/definitions/Edm.Metadata.AnnotationPath"
     },
     "Edm.Metadata.AnnotationPath":{
       "kind":"ComplexType",
@@ -1435,9 +1255,6 @@
         }
       }
     },
-    "Meta.NavigationPropertyPath":{
-      "$ref":"#/definitions/Edm.Metadata.NavigationPropertyPath"
-    },
     "Edm.Metadata.NavigationPropertyPath":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotationExpression",
@@ -1446,9 +1263,6 @@
           "type":"string"
         }
       }
-    },
-    "Meta.Path":{
-      "$ref":"#/definitions/Edm.Metadata.Path"
     },
     "Edm.Metadata.Path":{
       "kind":"ComplexType",
@@ -1459,9 +1273,6 @@
         }
       }
     },
-    "Meta.PropertyPath":{
-      "$ref":"#/definitions/Edm.Metadata.PropertyPath"
-    },
     "Edm.Metadata.PropertyPath":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotationExpression",
@@ -1471,9 +1282,6 @@
         }
       }
     },
-    "Meta.AnnotatableExpression":{
-      "$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
-    },
     "Edm.Metadata.AnnotatableExpression":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotationExpression",
@@ -1482,20 +1290,10 @@
         "Annotations":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.InlineAnnotation"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
           }
         }
       }
-    },
-    "Meta.UnaryExpression":{
-      "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
     },
     "Edm.Metadata.UnaryExpression":{
       "kind":"ComplexType",
@@ -1503,16 +1301,9 @@
       "abstract":true,
       "properties":{
         "Value":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         }
       }
-    },
-    "Meta.InlineAnnotation":{
-      "$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
     },
     "Edm.Metadata.InlineAnnotation":{
       "kind":"ComplexType",
@@ -1521,7 +1312,7 @@
         "Qualifier":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.SimpleIdentifier"
+              "$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
             },
             {
               "type":"null"
@@ -1529,44 +1320,27 @@
           ]
         },
         "Term":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Term",
-          "odataType":"Edm.Metadata.Term",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Meta.Apply":{
-      "$ref":"#/definitions/Edm.Metadata.Apply"
     },
     "Edm.Metadata.Apply":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotatableExpression",
       "properties":{
         "Function":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.QualifiedName"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.QualifiedName"
         },
         "Values":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
           }
         }
       }
-    },
-    "Meta.Collection":{
-      "$ref":"#/definitions/Edm.Metadata.Collection"
     },
     "Edm.Metadata.Collection":{
       "kind":"ComplexType",
@@ -1575,20 +1349,10 @@
         "Items":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
           }
         }
       }
-    },
-    "Meta.Record":{
-      "$ref":"#/definitions/Edm.Metadata.Record"
     },
     "Edm.Metadata.Record":{
       "kind":"ComplexType",
@@ -1597,65 +1361,40 @@
         "PropertyValues":{
           "type":"array",
           "items":{
-            "anyOf":[
-              {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.PropertyValue"
-              },
-              {
-                "type":"null"
-              }
-            ]
+            "$ref":"#/definitions/Edm.Metadata.PropertyValue"
           }
         },
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odataType":"Edm.Metadata.Type",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Meta.PropertyValue":{
-      "$ref":"#/definitions/Edm.Metadata.PropertyValue"
     },
     "Edm.Metadata.PropertyValue":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.UnaryExpression",
       "properties":{
         "Property":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.SimpleIdentifier"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
         }
       }
-    },
-    "Meta.If":{
-      "$ref":"#/definitions/Edm.Metadata.If"
     },
     "Edm.Metadata.If":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotatableExpression",
       "properties":{
         "Test":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         "Then":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         "Else":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+              "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
             },
             {
               "type":"null"
@@ -1664,61 +1403,42 @@
         }
       }
     },
-    "Meta.Cast":{
-      "$ref":"#/definitions/Edm.Metadata.Cast"
-    },
     "Edm.Metadata.Cast":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.UnaryExpression",
       "properties":{
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odataType":"Edm.Metadata.Type",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Meta.IsOf":{
-      "$ref":"#/definitions/Edm.Metadata.IsOf"
     },
     "Edm.Metadata.IsOf":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.UnaryExpression",
       "properties":{
         "Type":{
-          "kind":"navigation",
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odataType":"Edm.Metadata.Type",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Meta.LabeledElement":{
-      "$ref":"#/definitions/Edm.Metadata.LabeledElement"
     },
     "Edm.Metadata.LabeledElement":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.UnaryExpression",
       "properties":{
         "Name":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.SimpleIdentifier"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
         }
       }
-    },
-    "Meta.Null":{
-      "$ref":"#/definitions/Edm.Metadata.Null"
     },
     "Edm.Metadata.Null":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.AnnotatableExpression"
-    },
-    "Meta.BinaryExpression":{
-      "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
     },
     "Edm.Metadata.BinaryExpression":{
       "kind":"ComplexType",
@@ -1726,86 +1446,48 @@
       "abstract":true,
       "properties":{
         "Left":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         "Right":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
-            }
-          ]
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         }
       }
-    },
-    "Meta.Eq":{
-      "$ref":"#/definitions/Edm.Metadata.Eq"
     },
     "Edm.Metadata.Eq":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
     },
-    "Meta.Ne":{
-      "$ref":"#/definitions/Edm.Metadata.Ne"
-    },
     "Edm.Metadata.Ne":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
-    },
-    "Meta.Ge":{
-      "$ref":"#/definitions/Edm.Metadata.Ge"
     },
     "Edm.Metadata.Ge":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
     },
-    "Meta.Gt":{
-      "$ref":"#/definitions/Edm.Metadata.Gt"
-    },
     "Edm.Metadata.Gt":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
-    },
-    "Meta.Le":{
-      "$ref":"#/definitions/Edm.Metadata.Le"
     },
     "Edm.Metadata.Le":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
     },
-    "Meta.Lt":{
-      "$ref":"#/definitions/Edm.Metadata.Lt"
-    },
     "Edm.Metadata.Lt":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
-    },
-    "Meta.And":{
-      "$ref":"#/definitions/Edm.Metadata.And"
     },
     "Edm.Metadata.And":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
     },
-    "Meta.Or":{
-      "$ref":"#/definitions/Edm.Metadata.Or"
-    },
     "Edm.Metadata.Or":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.BinaryExpression"
     },
-    "Meta.Not":{
-      "$ref":"#/definitions/Edm.Metadata.Not"
-    },
     "Edm.Metadata.Not":{
       "kind":"ComplexType",
       "baseType":"Edm.Metadata.UnaryExpression"
-    },
-    "Meta.Url":{
-      "$ref":"#/definitions/Edm.Metadata.Url"
     },
     "Edm.Metadata.Url":{
       "kind":"ComplexType",

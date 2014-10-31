@@ -68,17 +68,25 @@
           "maxLength":3
         },
         "Category":{
-          "kind":"navigation",
           "$ref":"#/definitions/ODataDemo.Category",
-          "odataType":"ODataDemo.Category",
-          "nullable":false,
-          "partner":"Products"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Products"
+          }
         },
         "Supplier":{
-          "kind":"navigation",
-          "$ref":"#/definitions/ODataDemo.Supplier",
-          "odataType":"ODataDemo.Supplier",
-          "partner":"Products"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/ODataDemo.Supplier"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation",
+            "partner":"Products"
+          }
         }
       }
     },
@@ -89,11 +97,7 @@
       },
       "properties":{
         "ID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Name":{
           "type":"string",
@@ -102,15 +106,16 @@
           }
         },
         "Products":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/ODataDemo.Product"
           },
-          "odataType":"Collection(ODataDemo.Product)",
-          "partner":"Category",
-          "onDelete":{
-            "action":"Cascade"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Category",
+            "onDelete":{
+              "action":"Cascade"
+            }
           }
         }
       }
@@ -134,20 +139,17 @@
           "$ref":"#/definitions/ODataDemo.Address"
         },
         "Concurrency":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Products":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/ODataDemo.Product"
           },
-          "odataType":"Collection(ODataDemo.Product)",
-          "partner":"Supplier"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Supplier"
+          }
         }
       }
     },
@@ -203,12 +205,20 @@
           ]
         },
         "Country":{
-          "kind":"navigation",
-          "$ref":"#/definitions/ODataDemo.Country",
-          "odataType":"ODataDemo.Country",
-          "referentialConstraints":{
-            "CountryName":{
-              "referencedProperty":"Name"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/ODataDemo.Country"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation",
+            "referentialConstraints":{
+              "CountryName":{
+                "referencedProperty":"Name"
+              }
             }
           }
         }

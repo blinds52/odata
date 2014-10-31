@@ -1,9 +1,6 @@
 {
   "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
-    "Self.Weird":{
-      "$ref":"#/definitions/Model1.Weird"
-    },
     "Model1.Weird":{
       "kind":"EntityType",
       "keys":{
@@ -11,11 +8,7 @@
       },
       "properties":{
         "TheKey":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PropertyPath"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PropertyPath"
         },
         "TheValue":{
           "type":[
@@ -177,9 +170,6 @@
         "value":"HugoHase-_ab"
       }
     },
-    "Self.Address":{
-      "$ref":"#/definitions/Model1.Address"
-    },
     "Model1.Address":{
       "kind":"ComplexType",
       "openType":true,
@@ -191,9 +181,17 @@
           ]
         },
         "City":{
-          "kind":"navigation",
-          "$ref":"#/definitions/MyModel.City",
-          "odataType":"MyModel.City"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/MyModel.City"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Street":{
           "type":[
@@ -202,14 +200,30 @@
           ]
         },
         "Region":{
-          "kind":"navigation",
-          "$ref":"#/definitions/MyModel.Region",
-          "odataType":"MyModel.Region"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/MyModel.Region"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Country":{
-          "kind":"navigation",
-          "$ref":"#/definitions/MyModel.Country",
-          "odataType":"MyModel.Country"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/MyModel.Country"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "MapLocation":{
           "anyOf":[
@@ -226,30 +240,29 @@
         }
       }
     },
-    "Self.NavigationOnly":{
-      "$ref":"#/definitions/Model1.NavigationOnly"
-    },
     "Model1.NavigationOnly":{
       "kind":"ComplexType",
       "properties":{
         "Planet":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Some.Planet",
-          "odataType":"Some.Planet"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Some.Planet"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Self.AnnotationOnly":{
-      "$ref":"#/definitions/Model1.AnnotationOnly"
     },
     "Model1.AnnotationOnly":{
       "kind":"ComplexType",
       "@Some.Tag":{
         
       }
-    },
-    "Self.Order":{
-      "$ref":"#/definitions/Model1.Order"
     },
     "Model1.Order":{
       "kind":"EntityType",
@@ -274,9 +287,6 @@
         }
       }
     },
-    "Self.Waldo":{
-      "$ref":"#/definitions/Schema.One.Waldo"
-    },
     "Schema.One.Waldo":{
       "kind":"EntityType",
       "keys":{
@@ -287,9 +297,6 @@
           "type":"string"
         }
       }
-    },
-    "Self.Waldo":{
-      "$ref":"#/definitions/Schema.Two.Waldo"
     },
     "Schema.Two.Waldo":{
       "kind":"EntityType",
@@ -303,9 +310,6 @@
         }
       }
     },
-    "Self.Fred":{
-      "$ref":"#/definitions/Schema.Two.Fred"
-    },
     "Schema.Two.Fred":{
       "kind":"EntityType",
       "keys":{
@@ -316,12 +320,13 @@
           "type":"string"
         },
         "Waldos":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Self.Waldos"
           },
-          "odataType":"Collection(Self.Waldos)"
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
     },
@@ -333,7 +338,14 @@
       "kind":"ComplexType",
       "properties":{
         "ScrumMaster":{
-          "$ref":"#/definitions/Y.DeveloperType",
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Y.DeveloperType"
+            },
+            {
+              "type":"null"
+            }
+          ],
           "@custom.IsA":"Y.Developer X.Person"
         }
       }
@@ -372,12 +384,13 @@
           "@custom.ItemIsA":"X.Person"
         },
         "VIPs":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/X.Friend"
           },
-          "odataType":"Collection(X.Friend)",
+          "odata":{
+            "kind":"navigation"
+          },
           "@custom.ItemIsA":"X.Friend"
         }
       }

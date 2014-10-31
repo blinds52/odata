@@ -1,9 +1,6 @@
 {
   "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
-    "Model.Customer":{
-      "$ref":"#/definitions/OData.Demo.Customer"
-    },
     "OData.Demo.Customer":{
       "kind":"EntityType",
       "keys":{
@@ -14,13 +11,14 @@
           "type":"string"
         },
         "Orders":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Order"
           },
-          "odataType":"Collection(Model.Order)",
-          "partner":"Customer"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Customer"
+          }
         },
         "Name":{
           "type":"string"
@@ -39,13 +37,14 @@
           "@Core.Description":"This is weird, given that we have a Country entity type"
         },
         "Sales":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Sales"
           },
-          "odataType":"Collection(Model.Sales)",
-          "partner":"Customer"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Customer"
+          }
         },
         "ContactName":{
           "type":"string"
@@ -62,19 +61,13 @@
         "EmailAddresses":{
           "type":"array",
           "items":{
-            "type":[
-              "string",
-              "null"
-            ]
+            "type":"string"
           }
         },
         "Phone":{
           "$ref":"#/definitions/Model.PhoneNumber"
         }
       }
-    },
-    "Model.Supplier":{
-      "$ref":"#/definitions/OData.Demo.Supplier"
     },
     "OData.Demo.Supplier":{
       "kind":"EntityType",
@@ -86,13 +79,14 @@
           "type":"string"
         },
         "Products":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Product"
           },
-          "odataType":"Collection(Model.Product)",
-          "partner":"Supplier"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Supplier"
+          }
         },
         "Name":{
           "type":"string"
@@ -100,10 +94,7 @@
         "EmailAddresses":{
           "type":"array",
           "items":{
-            "type":[
-              "string",
-              "null"
-            ]
+            "type":"string"
           }
         },
         "Addresses":{
@@ -114,9 +105,6 @@
         }
       }
     },
-    "Model.Product":{
-      "$ref":"#/definitions/OData.Demo.Product"
-    },
     "OData.Demo.Product":{
       "kind":"EntityType",
       "keys":{
@@ -124,28 +112,24 @@
       },
       "properties":{
         "ID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Category":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Category",
-          "odataType":"Model.Category",
-          "nullable":false,
-          "partner":"Products"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Products"
+          }
         },
         "Name":{
           "type":"string"
         },
         "Supplier":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Supplier",
-          "odataType":"Model.Supplier",
-          "nullable":false,
-          "partner":"Products"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Products"
+          }
         },
         "Description":{
           "type":"string"
@@ -156,34 +140,24 @@
         "Sizes":{
           "type":"array",
           "items":{
-            "type":[
-              "string",
-              "null"
-            ]
+            "type":"string"
           }
         },
         "Rating":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "OrderItems":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.OrderItem"
           },
-          "odataType":"Collection(Model.OrderItem)",
-          "partner":"Product"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Product"
+          }
         },
         "ReleaseDate":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
         },
         "DiscontinuedDate":{
           "anyOf":[
@@ -202,21 +176,26 @@
           "type":"string"
         },
         "TaxRate":{
-          "type":"number"
+          "type":[
+            "number",
+            "null"
+          ],
+          "odata":{
+            "precision":"10",
+            "scale":"6"
+          }
         },
         "Sales":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Sales"
           },
-          "odataType":"Collection(Model.Sales)",
-          "partner":"Product"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Product"
+          }
         }
       }
-    },
-    "Model.Order":{
-      "$ref":"#/definitions/OData.Demo.Order"
     },
     "OData.Demo.Order":{
       "kind":"EntityType",
@@ -225,45 +204,36 @@
       },
       "properties":{
         "ID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Items":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.OrderItem"
           },
-          "odataType":"Collection(Model.OrderItem)",
-          "partner":"Order"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Order"
+          }
         },
         "Completed":{
           "type":"boolean"
         },
         "Customer":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Customer",
-          "odataType":"Model.Customer",
-          "nullable":false,
-          "partner":"Orders"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Orders"
+          }
         },
         "ShippingAddress":{
           "$ref":"#/definitions/Model.Address"
         }
       }
     },
-    "Model.VipCustomer":{
-      "$ref":"#/definitions/OData.Demo.VipCustomer"
-    },
     "OData.Demo.VipCustomer":{
       "kind":"EntityType",
       "baseType":"Model.Customer"
-    },
-    "Model.Category":{
-      "$ref":"#/definitions/OData.Demo.Category"
     },
     "OData.Demo.Category":{
       "kind":"EntityType",
@@ -272,23 +242,20 @@
       },
       "properties":{
         "ID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Amount":{
           "type":"number"
         },
         "Products":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Product"
           },
-          "odataType":"Collection(Model.Product)",
-          "partner":"Category"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Category"
+          }
         },
         "Name":{
           "type":"string"
@@ -298,9 +265,6 @@
         }
       }
     },
-    "Model.OrderItem":{
-      "$ref":"#/definitions/OData.Demo.OrderItem"
-    },
     "OData.Demo.OrderItem":{
       "kind":"EntityType",
       "keys":{
@@ -309,27 +273,23 @@
       },
       "properties":{
         "OrderID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "ItemID":{
           "type":"string"
         },
         "Order":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Order",
-          "odataType":"Model.Order",
-          "nullable":false,
-          "partner":"Items",
-          "onDelete":{
-            "action":"Cascade"
-          },
-          "referentialConstraints":{
-            "OrderID":{
-              "referencedProperty":"ID"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Items",
+            "onDelete":{
+              "action":"Cascade"
+            },
+            "referentialConstraints":{
+              "OrderID":{
+                "referencedProperty":"ID"
+              }
             }
           }
         },
@@ -340,22 +300,19 @@
           "type":"number"
         },
         "Product":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Product",
-          "odataType":"Model.Product",
-          "nullable":false,
-          "partner":"OrderItems"
+          "odata":{
+            "kind":"navigation",
+            "partner":"OrderItems"
+          }
         },
         "Currency":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Currency",
-          "odataType":"Model.Currency",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Model.Sales":{
-      "$ref":"#/definitions/OData.Demo.Sales"
     },
     "OData.Demo.Sales":{
       "kind":"EntityType",
@@ -364,54 +321,47 @@
       },
       "properties":{
         "ID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Amount":{
           "type":"number"
         },
         "Time":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Time",
-          "odataType":"Model.Time",
-          "nullable":false,
-          "partner":"Sales"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Sales"
+          }
         },
         "Currency":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Currency",
-          "odataType":"Model.Currency",
-          "nullable":false,
-          "partner":"Sales"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Sales"
+          }
         },
         "Customer":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Customer",
-          "odataType":"Model.Customer",
-          "nullable":false,
-          "partner":"Sales"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Sales"
+          }
         },
         "SalesOrganization":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.SalesOrganization",
-          "odataType":"Model.SalesOrganization",
-          "nullable":false,
-          "partner":"Sales"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Sales"
+          }
         },
         "Product":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Product",
-          "odataType":"Model.Product",
-          "nullable":false,
-          "partner":"Sales"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Sales"
+          }
         }
       }
-    },
-    "Model.Employee":{
-      "$ref":"#/definitions/OData.Demo.Employee"
     },
     "OData.Demo.Employee":{
       "kind":"EntityType",
@@ -433,24 +383,30 @@
           "type":"string"
         },
         "Manager":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Model.Manager",
-          "odataType":"Model.Manager",
-          "partner":"Employees"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Model.Manager"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation",
+            "partner":"Employees"
+          }
         },
         "LeaveRequests":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.LeaveRequest"
           },
-          "odataType":"Collection(Model.LeaveRequest)",
-          "partner":"Employee"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Employee"
+          }
         }
       }
-    },
-    "Model.LeaveRequest":{
-      "$ref":"#/definitions/OData.Demo.LeaveRequest"
     },
     "OData.Demo.LeaveRequest":{
       "kind":"EntityType",
@@ -459,30 +415,23 @@
       },
       "properties":{
         "ID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Manager":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Manager",
-          "odataType":"Model.Manager",
-          "nullable":false,
-          "partner":"Inbox"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Inbox"
+          }
         },
         "Employee":{
-          "kind":"navigation",
           "$ref":"#/definitions/Model.Employee",
-          "odataType":"Model.Employee",
-          "nullable":false,
-          "partner":"LeaveRequests"
+          "odata":{
+            "kind":"navigation",
+            "partner":"LeaveRequests"
+          }
         }
       }
-    },
-    "Model.Address":{
-      "$ref":"#/definitions/OData.Demo.Address"
     },
     "OData.Demo.Address":{
       "kind":"ComplexType",
@@ -491,16 +440,16 @@
           "type":"string"
         },
         "Country":{
-          "kind":"navigation",
           "$ref":"#/definitions/Example.Country",
-          "odataType":"Example.Country",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "City":{
-          "kind":"navigation",
           "$ref":"#/definitions/Example.City",
-          "odataType":"Example.City",
-          "nullable":false
+          "odata":{
+            "kind":"navigation"
+          }
         },
         "Region":{
           "type":"string"
@@ -510,23 +459,13 @@
         }
       }
     },
-    "Model.AddressWithLocation":{
-      "$ref":"#/definitions/OData.Demo.AddressWithLocation"
-    },
     "OData.Demo.AddressWithLocation":{
       "kind":"ComplexType",
       "properties":{
         "Location":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
         }
       }
-    },
-    "Model.Country":{
-      "$ref":"#/definitions/OData.Demo.Country"
     },
     "OData.Demo.Country":{
       "kind":"EntityType",
@@ -546,22 +485,26 @@
         }
       }
     },
-    "Model.PreferredSupplier":{
-      "$ref":"#/definitions/OData.Demo.PreferredSupplier"
-    },
     "OData.Demo.PreferredSupplier":{
       "kind":"EntityType",
       "baseType":"Model.Supplier",
       "properties":{
         "AccountRepresentative":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Model.Employee",
-          "odataType":"Model.Employee",
-          "nullable":false,
-          "referentialConstraints":{
-            "EmployeeID":{
-              "referencedProperty":"ID",
-              "@Core.Description":"The key account manager"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Model.Employee"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation",
+            "referentialConstraints":{
+              "EmployeeID":{
+                "referencedProperty":"ID",
+                "@Core.Description":"The key account manager"
+              }
             }
           }
         },
@@ -570,35 +513,31 @@
         }
       }
     },
-    "Model.Manager":{
-      "$ref":"#/definitions/OData.Demo.Manager"
-    },
     "OData.Demo.Manager":{
       "kind":"EntityType",
       "baseType":"Model.Employee",
       "properties":{
         "Employees":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Employee"
           },
-          "odataType":"Collection(Model.Employee)",
-          "partner":"Manager"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Manager"
+          }
         },
         "Inbox":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.LeaveRequest"
           },
-          "odataType":"Collection(Model.LeaveRequest)",
-          "partner":"Manager"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Manager"
+          }
         }
       }
-    },
-    "Model.Time":{
-      "$ref":"#/definitions/OData.Demo.Time"
     },
     "OData.Demo.Time":{
       "kind":"EntityType",
@@ -607,11 +546,7 @@
       },
       "properties":{
         "Date":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
         },
         "Year":{
           "type":"string",
@@ -624,18 +559,16 @@
           "type":"string"
         },
         "Sales":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Sales"
           },
-          "odataType":"Collection(Model.Sales)",
-          "partner":"Time"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Time"
+          }
         }
       }
-    },
-    "Model.SalesOrganization":{
-      "$ref":"#/definitions/OData.Demo.SalesOrganization"
     },
     "OData.Demo.SalesOrganization":{
       "kind":"EntityType",
@@ -650,23 +583,29 @@
           "type":"string"
         },
         "Sales":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Sales"
           },
-          "odataType":"Collection(Model.Sales)",
-          "partner":"SalesOrganization"
+          "odata":{
+            "kind":"navigation",
+            "partner":"SalesOrganization"
+          }
         },
         "Superordinate":{
-          "kind":"navigation",
-          "$ref":"#/definitions/Model.SalesOrganization",
-          "odataType":"Model.SalesOrganization"
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Model.SalesOrganization"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
         }
       }
-    },
-    "Model.Currency":{
-      "$ref":"#/definitions/OData.Demo.Currency"
     },
     "OData.Demo.Currency":{
       "kind":"EntityType",
@@ -682,28 +621,22 @@
           "type":"string"
         },
         "Sales":{
-          "kind":"navigation",
           "type":"array",
           "items":{
             "$ref":"#/definitions/Model.Sales"
           },
-          "odataType":"Collection(Model.Sales)",
-          "partner":"Currency"
+          "odata":{
+            "kind":"navigation",
+            "partner":"Currency"
+          }
         },
         "Symbol":{
           "type":"string"
         },
         "FractionalDigits":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Byte"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Byte"
         }
       }
-    },
-    "Model.City":{
-      "$ref":"#/definitions/OData.Demo.City"
     },
     "OData.Demo.City":{
       "kind":"EntityType",
@@ -712,19 +645,12 @@
       },
       "properties":{
         "ID":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Guid"
-            }
-          ]
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Guid"
         },
         "Name":{
           "type":"string"
         }
       }
-    },
-    "Model.PhoneNumber":{
-      "$ref":"#/definitions/OData.Demo.PhoneNumber"
     },
     "OData.Demo.PhoneNumber":{
       "kind":"ComplexType",
@@ -736,9 +662,6 @@
           "type":"string"
         }
       }
-    },
-    "Model.CellPhoneNumber":{
-      "$ref":"#/definitions/OData.Demo.CellPhoneNumber"
     },
     "OData.Demo.CellPhoneNumber":{
       "kind":"ComplexType",
