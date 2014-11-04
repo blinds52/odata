@@ -368,16 +368,18 @@
 
   <!-- name : quoted or unquoted float value -->
   <xsl:template match="@Float|edm:Float">
+    <xsl:text>{"@odata.type":"Edm.Double","value":</xsl:text>
     <xsl:choose>
       <xsl:when test=". = 'INF' or . = '-INF' or . = 'NaN'">
-        <xsl:text>{"@odata.type":"Edm.Double","value":"</xsl:text>
+        <xsl:text>"</xsl:text>
         <xsl:value-of select="." />
-        <xsl:text>"}</xsl:text>
+        <xsl:text>"</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="." />
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <!-- unquoted value -->
