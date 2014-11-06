@@ -382,9 +382,27 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <!-- unquoted value -->
-  <xsl:template match="@Bool|@Decimal|@Int|edm:Bool|edm:Decimal|edm:Int">
+  <!-- unquoted direct value -->
+  <xsl:template match="@Bool|@Int|edm:Bool|edm:Int">
     <xsl:value-of select="." />
+  </xsl:template>
+
+  <!-- name : unquoted object value -->
+  <xsl:template match="@Decimal|edm:Decimal">
+    <xsl:text>{"@odata.type":"Edm.Decimal","value":</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <!-- name : quoted object value -->
+  <xsl:template
+    match="@Binary|@Date|@DateTimeOffset|@Duration|@Guid|@TimeOfDay|@UrlRef|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Duration|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
+  >
+    <xsl:text>{"@odata.type":"Edm.</xsl:text>
+    <xsl:value-of select="local-name()" />
+    <xsl:text>","value":"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>"}</xsl:text>
   </xsl:template>
 
   <!-- escaped string value -->
@@ -543,16 +561,6 @@
     <xsl:text>","value":</xsl:text>
     <xsl:apply-templates select="node()" />
     <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template
-    match="@Binary|@Date|@DateTimeOffset|@Duration|@Guid|@TimeOfDay|@UrlRef|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Duration|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
-  >
-    <xsl:text>{"@odata.type":"Edm.</xsl:text>
-    <xsl:value-of select="local-name()" />
-    <xsl:text>","value":"</xsl:text>
-    <xsl:value-of select="." />
-    <xsl:text>"}</xsl:text>
   </xsl:template>
 
   <xsl:template match="@EnumMember|edm:EnumMember">
