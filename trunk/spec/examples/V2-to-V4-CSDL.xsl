@@ -20,18 +20,13 @@
 
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
-      <edmx:Reference Uri="http://tinyurl.com/Org-OData-Core">
-        <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
-      </edmx:Reference>
       <xsl:apply-templates />
     </edmx:Edmx>
   </xsl:template>
 
   <xsl:template match="edmx1:Reference">
     <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
-      <xsl:attribute name="Uri">
-        <xsl:value-of select="@Uri" />
-      </xsl:attribute>
+      <xsl:copy-of select="@Uri" />
       <xsl:apply-templates />
     </edmx:Reference>
   </xsl:template>
