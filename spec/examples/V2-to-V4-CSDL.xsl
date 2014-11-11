@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 sap m cg annotation" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm"
-  xmlns:sap="http://www.sap.com/Protocols/SAPData" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
-  xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm sap m cg annotation" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
+  xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:sap="http://www.sap.com/Protocols/SAPData"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
 >
   <!--
 
@@ -19,32 +19,31 @@
   <xsl:strip-space elements="*" />
 
   <xsl:template match="edmx1:Edmx">
-    <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Edmx Version="4.0">
       <xsl:apply-templates />
     </edmx:Edmx>
   </xsl:template>
 
-  <xsl:template match="edmx1:Reference">
-    <edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
-      <xsl:copy-of select="@Uri" />
-      <xsl:apply-templates />
+  <xsl:template match="edmx:Reference">
+    <edmx:Reference>
+      <xsl:apply-templates select="@*|node()" />
     </edmx:Reference>
   </xsl:template>
 
-  <xsl:template match="edmx1:Include">
-    <edmx:Include xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <xsl:template match="edmx:Include">
+    <edmx:Include>
       <xsl:copy-of select="@Namespace|@Alias" />
     </edmx:Include>
   </xsl:template>
 
-  <xsl:template match="edmx1:IncludeAnnotations">
-    <edmx:IncludeAnnotations xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <xsl:template match="edmx:IncludeAnnotations">
+    <edmx:IncludeAnnotations>
       <xsl:copy-of select="@Namespace|@Qualifier|@TargetNamespace" />
     </edmx:IncludeAnnotations>
   </xsl:template>
 
   <xsl:template match="edmx1:DataServices">
-    <edmx:DataServices xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:DataServices>
       <xsl:apply-templates />
     </edmx:DataServices>
   </xsl:template>
@@ -55,24 +54,6 @@
       <xsl:apply-templates />
       <xsl:apply-templates select="edm2:EntityContainer/edm2:FunctionImport" mode="Schema" />
     </Schema>
-  </xsl:template>
-
-  <xsl:template match="edm2:EntityType">
-    <EntityType>
-      <xsl:apply-templates select="@*|node()" />
-    </EntityType>
-  </xsl:template>
-
-  <xsl:template match="@m:HasStream">
-    <xsl:attribute name="HasStream">
-      <xsl:value-of select="." />
-    </xsl:attribute>
-  </xsl:template>
-
-  <xsl:template match="edm2:ComplexType">
-    <ComplexType>
-      <xsl:apply-templates select="@*|node()" />
-    </ComplexType>
   </xsl:template>
 
   <xsl:template match="edm2:Property">
@@ -289,6 +270,12 @@
     </xsl:attribute>
   </xsl:template>
 
+  <xsl:template match="@m:HasStream">
+    <xsl:attribute name="HasStream">
+      <xsl:value-of select="." />
+    </xsl:attribute>
+  </xsl:template>
+
   <!-- SAP annotations -->
   <xsl:template match="@sap:label">
     <Annotation Term="Common.Label">
@@ -313,14 +300,19 @@
   <!-- ignore -->
   <xsl:template match="@sap:content-version" />
   <xsl:template match="edm2:Association|edm2:AssociationSet|edm2:Using" />
-  <xsl:template match="@FixedLength|@Collation|edm2:Parameter/@DefaultValue" />
+  <xsl:template match="@Collation|@FixedLength|@Mode|edm2:Parameter/@DefaultValue" />
   <xsl:template match="@m:IsDefaultEntityContainer" />
-  <xsl:template match="@cg:*|@annotation:*" />
-  <xsl:template match="@Mode" />
 
   <!-- literally copy from edm2 to edm namespace -->
   <xsl:template match="edm2:*">
     <xsl:element name="{local-name()}">
+      <xsl:apply-templates select="@*|node()" />
+    </xsl:element>
+  </xsl:template>
+
+  <!-- literally copy OData 4.0 edm elements -->
+  <xsl:template match="@edm:*|edm:*">
+    <xsl:element name="{name()}">
       <xsl:apply-templates select="@*|node()" />
     </xsl:element>
   </xsl:template>
