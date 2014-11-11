@@ -368,7 +368,7 @@
 
   <!-- name : quoted or unquoted float value -->
   <xsl:template match="@Float|edm:Float">
-    <xsl:text>{"@odata.type":"Edm.Double","value":</xsl:text>
+    <xsl:text>{"@odata.type":"#Double","value":</xsl:text>
     <xsl:choose>
       <xsl:when test=". = 'INF' or . = '-INF' or . = 'NaN'">
         <xsl:text>"</xsl:text>
@@ -387,18 +387,18 @@
     <xsl:value-of select="." />
   </xsl:template>
 
-  <!-- name : unquoted object value -->
+  <!-- name : object with unquoted value -->
   <xsl:template match="@Decimal|edm:Decimal">
-    <xsl:text>{"@odata.type":"Edm.Decimal","value":</xsl:text>
+    <xsl:text>{"@odata.type":"#Decimal","value":</xsl:text>
     <xsl:value-of select="." />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <!-- name : quoted object value -->
+  <!-- name : object with quoted value -->
   <xsl:template
     match="@Binary|@Date|@DateTimeOffset|@Duration|@Guid|@TimeOfDay|@UrlRef|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Duration|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
   >
-    <xsl:text>{"@odata.type":"Edm.</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","value":"</xsl:text>
     <xsl:value-of select="." />
@@ -481,7 +481,7 @@
   <xsl:template match="edm:Record">
     <xsl:text>{</xsl:text>
     <xsl:if test="@Type">
-      <xsl:text>"@odata.type":"</xsl:text>
+      <xsl:text>"@odata.type":"#</xsl:text>
       <xsl:value-of select="@Type" />
       <xsl:text>"</xsl:text>
     </xsl:if>
@@ -508,7 +508,7 @@
   </xsl:template>
 
   <xsl:template match="edm:If|edm:Eq|edm:Ne|edm:Ge|edm:Gt|edm:Le|edm:Lt|edm:And|edm:Or">
-    <xsl:text>{"@odata.type":"Edm.</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","value":[</xsl:text>
     <xsl:apply-templates select="*[local-name()!='Annotation']" mode="list" />
@@ -518,7 +518,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Apply">
-    <xsl:text>{"@odata.type":"Edm.Apply"</xsl:text>
+    <xsl:text>{"@odata.type":"#Apply"</xsl:text>
     <xsl:apply-templates select="@*" mode="list2" />
     <xsl:text>,"value":[</xsl:text>
     <xsl:apply-templates select="*[local-name()!='Annotation']" mode="list" />
@@ -528,7 +528,7 @@
   </xsl:template>
 
   <xsl:template match="edm:LabeledElement">
-    <xsl:text>{"@odata.type":"Edm.</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","name":"</xsl:text>
     <xsl:value-of select="@Name" />
@@ -538,7 +538,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Cast|edm:IsOf">
-    <xsl:text>{"@odata.type":"Edm.</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*" mode="list2" />
@@ -548,7 +548,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Null">
-    <xsl:text>{"@odata.type":"Edm.</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*|node()" mode="list2" />
@@ -556,7 +556,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Not|edm:UrlRef">
-    <xsl:text>{"@odata.type":"Edm.</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","value":</xsl:text>
     <xsl:apply-templates select="node()" />
@@ -564,14 +564,20 @@
   </xsl:template>
 
   <xsl:template match="@EnumMember|edm:EnumMember">
-    <xsl:text>{"@odata.type":"</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:variable name="type" select="substring-before(.,'/')" />
     <xsl:value-of select="$type" />
     <xsl:text>","value":"</xsl:text>
     <xsl:call-template name="replace-all">
-      <xsl:with-param name="string" select="." />
-      <xsl:with-param name="old" select="concat($type,'/')" />
-      <xsl:with-param name="new" select="''" />
+      <xsl:with-param name="string">
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string" select="." />
+          <xsl:with-param name="old" select="concat($type,'/')" />
+          <xsl:with-param name="new" select="''" />
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="old" select="' '" />
+      <xsl:with-param name="new" select="','" />
     </xsl:call-template>
     <xsl:text>"}</xsl:text>
   </xsl:template>
