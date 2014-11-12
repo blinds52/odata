@@ -396,12 +396,23 @@
 
   <!-- name : object with quoted value -->
   <xsl:template
-    match="@Binary|@Date|@DateTimeOffset|@Duration|@Guid|@TimeOfDay|@UrlRef|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Duration|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
+    match="@Binary|@Date|@DateTimeOffset|@Duration|@Guid|@TimeOfDay|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Duration|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
   >
     <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","value":"</xsl:text>
     <xsl:value-of select="." />
+    <xsl:text>"}</xsl:text>
+  </xsl:template>
+
+  <!-- name : object with escaped string value -->
+  <xsl:template match="@UrlRef">
+    <xsl:text>{"@odata.type":"#</xsl:text>
+    <xsl:value-of select="local-name()" />
+    <xsl:text>","value":"</xsl:text>
+    <xsl:call-template name="escape">
+      <xsl:with-param name="string" select="." />
+    </xsl:call-template>
     <xsl:text>"}</xsl:text>
   </xsl:template>
 
@@ -559,7 +570,7 @@
     <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","value":</xsl:text>
-    <xsl:apply-templates select="node()" />
+    <xsl:apply-templates select="@*|node()" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
