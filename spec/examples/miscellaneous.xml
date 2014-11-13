@@ -15,6 +15,58 @@
     <edmx:IncludeAnnotations TermNamespace="Name.Space" />
   </edmx:Reference>
   <edmx:DataServices>
+    <Schema Namespace="CSDL.Examples">
+      <Annotation Term="Core.Description" String="Examples from Part 3: CSDL" />
+
+      <!-- 10 Enumeration Type -->
+      <!-- Example 25: FirstClass has a value of 0, TwoDay a value of 1, and Overnight a value of 2 -->
+      <EnumType Name="ShippingMethod">
+        <Annotation Term="Core.Description" String="Method of shipping" />
+        <Member Name="FirstClass">
+          <Annotation Term="Core.Description" String="Shipped with highest priority" />
+        </Member>
+        <Member Name="TwoDay">
+          <Annotation Term="Core.Description" String="Shipped within two days" />
+        </Member>
+        <Member Name="Overnight">
+          <Annotation Term="Core.Description" String="Shipped over night" />
+        </Member>
+      </EnumType>
+
+      <!-- Example 26: pattern values can be combined, and some combined values have explicit names -->
+      <EnumType Name="Pattern" UnderlyingType="Edm.Int32" IsFlags="true">
+        <Member Name="Plain" Value="0" />
+        <Member Name="Red" Value="1" />
+        <Member Name="Blue" Value="2" />
+        <Member Name="Yellow" Value="4" />
+        <Member Name="Solid" Value="8" />
+        <Member Name="Striped" Value="16" />
+        <Member Name="SolidRed" Value="9" />
+        <Member Name="SolidBlue" Value="10" />
+        <Member Name="SolidYellow" Value="12" />
+        <Member Name="RedBlueStriped" Value="19" />
+        <Member Name="RedYellowStriped" Value="21" />
+        <Member Name="BlueYellowStriped" Value="22" />
+      </EnumType>
+
+      <!-- 11 Type Definition -->
+      <!-- Example 27 -->
+      <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
+        <Annotation Term="Org.OData.Measurements.V1.Unit" String="Centimeters" />
+      </TypeDefinition>
+
+      <TypeDefinition Name="Weight" UnderlyingType="Edm.Int32">
+        <Annotation Term="Org.OData.Measurements.V1.Unit" String="Kilograms" />
+      </TypeDefinition>
+
+      <ComplexType Name="Size">
+        <Property Name="Height" Type="Self.Length" />
+        <Property Name="Weight" Type="Self.Weight" />
+      </ComplexType>
+
+
+    </Schema>
+
     <Schema Namespace="Model1" Alias="Self">
       <Function Name="CreatedEntities">
         <Parameter Name="before" Type="Edm.DateTimeOffset" Nullable="true" />
@@ -158,8 +210,15 @@
           <Path>Else</Path>
         </If>
       </Annotation>
-      <EnumType Name="Pattern">
-        <Member Name="Yellow">
+
+      <EnumType Name="Size">
+        <Annotation Term="Core.Description" String="Sizes" />
+        <Member Name="Small" />
+        <Member Name="Medium" />
+        <Member Name="Large" />
+      </EnumType>
+      <EnumType Name="Pattern" UnderlyingType="Edm.Int64" IsFlags="true">
+        <Member Name="Yellow" Value="1">
           <Annotation Term="Does.Work" />
           <Annotation Term="For.Testing">
             <IsOf Type="Edm.Binary">
@@ -167,7 +226,11 @@
             </IsOf>
           </Annotation>
         </Member>
+        <Member Name="Striped" Value="2">
+          <Annotation Term="Core.Description" String="nicely striped" />
+        </Member>
       </EnumType>
+
       <EntityType Name="Weird">
         <Key>
           <PropertyRef Name="The/Key" Alias="TheKey" />
@@ -269,9 +332,16 @@
         </Property>
       </EntityType>
 
-      <TypeDefinition Name="Fixedstring" UnderlyingType="Edm.String" />
+      <TypeDefinition Name="Text50" MaxLength="50" UnderlyingType="Edm.String" />
+
+      <TypeDefinition Name="VariableDecimal" UnderlyingType="Edm.Decimal" Scale="variable">
+        <Annotation Term="Core.Description" String="A type definition" />
+      </TypeDefinition>
+
+      <TypeDefinition Name="ExactTimestamp" UnderlyingType="Edm.DateTimeOffset" Precision="12" />
 
       <EntityContainer Name="Sales">
+        <Annotation Term="Core.Description" String="The Sales Container" />
         <EntitySet Name="StandardCustomers" EntityType="Self.Customer">
           <NavigationPropertyBinding Path="Orders" Target="Orders" />
         </EntitySet>
