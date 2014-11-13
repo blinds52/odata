@@ -6,8 +6,6 @@
     This style sheet transforms OData 4.0 XML CSDL documents into OData JSON CSDL
 
     TODO:
-    - EnumType in definitions
-    - TypeDefinition in definitions
     - inheritance via allOf[this,base]
     - Property facets
     - detect qualifier for external namespace and insert correct url
@@ -45,8 +43,10 @@
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
-    <!-- TODO: EnumType, TypeDefinition -->
-    <xsl:apply-templates select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType" mode="hash">
+    <xsl:apply-templates
+      select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType|edm:Schema/edm:TypeDefinition|edm:Schema/edm:EnumType"
+      mode="hash"
+    >
       <xsl:with-param name="name" select="'definitions'" />
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Schema" mode="hash">
@@ -74,13 +74,59 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    <xsl:apply-templates select="edm:EnumType" mode="hash" />
-    <xsl:apply-templates select="edm:TypeDefinition" mode="hash" />
     <xsl:apply-templates select="edm:Action" mode="array" />
     <xsl:apply-templates select="edm:Function" mode="array" />
     <xsl:apply-templates select="edm:Term" mode="hash" />
     <xsl:apply-templates select="edm:EntityContainer" />
     <xsl:apply-templates select="edm:Annotations" mode="array" />
+  </xsl:template>
+
+  <xsl:template match="edm:EnumType" mode="hashpair">
+    <!-- TODO: isFlags as anyOf:[enum,string pattern] -->
+    <!-- TODO: suppress isFlags:false -->
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{"enum":[</xsl:text>
+    <xsl:apply-templates select="edm:Member" mode="list" />
+    <xsl:text>]</xsl:text>
+    <xsl:apply-templates select="edm:Member" mode="annotation" />
+    <xsl:apply-templates select="@*[local-name()!='Name']" mode="object">
+      <xsl:with-param name="name" select="'odata'" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Member">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"</xsl:text>
+    <xsl:if test="@Value">
+      <xsl:text>,</xsl:text>
+      <xsl:value-of select="@Value" />
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Member" mode="annotation">
+    <xsl:apply-templates select="edm:Annotation" mode="list2">
+      <xsl:with-param name="target" select="@Name" />
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="edm:TypeDefinition" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{</xsl:text>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="@UnderlyingType" />
+      <xsl:with-param name="nullable" select="'false'" />
+    </xsl:call-template>
+    <xsl:apply-templates select="node()" mode="list2" />
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
@@ -110,22 +156,6 @@
   </xsl:template>
 
   <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
-    <xsl:variable name="type">
-      <xsl:choose>
-        <xsl:when test="starts-with(@Type,'Collection(')">
-          <xsl:value-of select="substring-before(substring-after(@Type,'('),')')" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@Type" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="qualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$type" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
         <xsl:with-param name="type" select="@Type" />
@@ -135,53 +165,10 @@
     <xsl:if test="starts-with(@Type,'Collection(')">
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
-    <xsl:choose>
-      <xsl:when test="$type = 'Edm.String'">
-        <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'string'" />
-          <xsl:with-param name="nullable" select="$nullable" />
-        </xsl:call-template>
-        <xsl:apply-templates select="@MaxLength" />
-      </xsl:when>
-      <xsl:when test="$type = 'Edm.Boolean'">
-        <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'boolean'" />
-          <xsl:with-param name="nullable" select="$nullable" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:when test="$type = 'Edm.Decimal'">
-        <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'number'" />
-          <xsl:with-param name="nullable" select="$nullable" />
-        </xsl:call-template>
-        <!-- TODO: Scale, Precision; needs to go within the number schema if nullable -->
-      </xsl:when>
-      <xsl:when test="$qualifier='Edm'">
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>"anyOf":[{</xsl:text>
-        </xsl:if>
-        <xsl:text>"$ref":"</xsl:text>
-        <xsl:value-of select="$edmUri" />
-        <xsl:text>#/definitions/</xsl:text>
-        <xsl:value-of select="$type" />
-        <xsl:text>"</xsl:text>
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>},{"type":"null"}]</xsl:text>
-        </xsl:if>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>"anyOf":[{</xsl:text>
-        </xsl:if>
-        <!-- TODO: external namespaces/aliases -->
-        <xsl:text>"$ref":"#/definitions/</xsl:text>
-        <xsl:value-of select="$type" />
-        <xsl:text>"</xsl:text>
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>},{"type":"null"}]</xsl:text>
-        </xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="@Type" />
+      <xsl:with-param name="nullable" select="$nullable" />
+    </xsl:call-template>
     <xsl:if test="starts-with(@Type,'Collection(')">
       <xsl:text>}</xsl:text>
     </xsl:if>
@@ -215,11 +202,79 @@
       <xsl:when test="$nullable">
         <xsl:value-of select="$nullable" />
       </xsl:when>
-      <xsl:when test="starts-with(@Type,'Collection(')">
+      <xsl:when test="starts-with($type,'Collection(')">
         <xsl:value-of select="'false'" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="'true'" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="type">
+    <xsl:param name="type" />
+    <xsl:param name="nullable" />
+    <xsl:variable name="singleType">
+      <xsl:choose>
+        <xsl:when test="starts-with($type,'Collection(')">
+          <xsl:value-of select="substring-before(substring-after($type,'('),')')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$type" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$singleType = 'Edm.String'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:apply-templates select="@MaxLength" />
+      </xsl:when>
+      <xsl:when test="$singleType = 'Edm.Boolean'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'boolean'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="$singleType = 'Edm.Decimal'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'number'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <!-- TODO: Scale, Precision; needs to go within the number schema if nullable -->
+      </xsl:when>
+      <xsl:when test="$qualifier='Edm'">
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>"anyOf":[{</xsl:text>
+        </xsl:if>
+        <xsl:text>"$ref":"</xsl:text>
+        <xsl:value-of select="$edmUri" />
+        <xsl:text>#/definitions/</xsl:text>
+        <xsl:value-of select="$singleType" />
+        <xsl:text>"</xsl:text>
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>},{"type":"null"}]</xsl:text>
+        </xsl:if>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>"anyOf":[{</xsl:text>
+        </xsl:if>
+        <!-- TODO: external namespaces/aliases -->
+        <xsl:text>"$ref":"#/definitions/</xsl:text>
+        <xsl:value-of select="$singleType" />
+        <xsl:text>"</xsl:text>
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>},{"type":"null"}]</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -239,7 +294,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm:Property/@MaxLength">
+  <xsl:template match="edm:Property/@MaxLength|edm:TypeDefinition/@MaxLength">
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
       <xsl:value-of select="." />
@@ -283,14 +338,6 @@
     <xsl:text>{</xsl:text>
     <xsl:apply-templates select="@*|node()" mode="list" />
     <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="edm:EnumType" mode="hashvalue">
-    <xsl:apply-templates select="@*[local-name()!='Name']" mode="list" />
-    <xsl:apply-templates select="edm:Member" mode="hash">
-      <xsl:with-param name="after" select="@*[local-name()!='Name']" />
-    </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
   </xsl:template>
 
   <xsl:template match="edm:Action|edm:Function" mode="item">

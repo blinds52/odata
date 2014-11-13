@@ -1,6 +1,117 @@
 {
   "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
+    "CSDL.Examples.ShippingMethod":{
+      "enum":[
+        "FirstClass",
+        "TwoDay",
+        "Overnight"
+      ],
+      "FirstClass@Core.Description":"Shipped with highest priority",
+      "TwoDay@Core.Description":"Shipped within two days",
+      "Overnight@Core.Description":"Shipped over night",
+      "@Core.Description":"Method of shipping"
+    },
+    "CSDL.Examples.Pattern":{
+      "enum":[
+        "Plain",
+        0,
+        "Red",
+        1,
+        "Blue",
+        2,
+        "Yellow",
+        4,
+        "Solid",
+        8,
+        "Striped",
+        16,
+        "SolidRed",
+        9,
+        "SolidBlue",
+        10,
+        "SolidYellow",
+        12,
+        "RedBlueStriped",
+        19,
+        "RedYellowStriped",
+        21,
+        "BlueYellowStriped",
+        22
+      ],
+      "odata":{
+        "underlyingType":"Edm.Int32",
+        "isFlags":true
+      }
+    },
+    "CSDL.Examples.Length":{
+      "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32",
+      "@Org.OData.Measurements.V1.Unit":"Centimeters"
+    },
+    "CSDL.Examples.Weight":{
+      "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32",
+      "@Org.OData.Measurements.V1.Unit":"Kilograms"
+    },
+    "CSDL.Examples.Size":{
+      "type":"object",
+      "odata":{
+        "kind":"complex"
+      },
+      "properties":{
+        "Height":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Self.Length"
+            },
+            {
+              "type":"null"
+            }
+          ]
+        },
+        "Weight":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Self.Weight"
+            },
+            {
+              "type":"null"
+            }
+          ]
+        }
+      }
+    },
+    "Model1.Size":{
+      "enum":[
+        "Small",
+        "Medium",
+        "Large"
+      ],
+      "@Core.Description":"Sizes"
+    },
+    "Model1.Pattern":{
+      "enum":[
+        "Yellow",
+        1,
+        "Striped",
+        2
+      ],
+      "Yellow@Does.Work":{
+        
+      },
+      "Yellow@For.Testing":{
+        "@odata.type":"#IsOf",
+        "type":"Edm.Binary",
+        "value":{
+          "@odata.type":"#Path",
+          "value":"Hugo"
+        }
+      },
+      "Striped@Core.Description":"nicely striped",
+      "odata":{
+        "underlyingType":"Edm.Int64",
+        "isFlags":true
+      }
+    },
     "Model1.Weird":{
       "type":"object",
       "odata":{
@@ -306,6 +417,17 @@
         }
       }
     },
+    "Model1.Text50":{
+      "type":"string",
+      "maxLength":50
+    },
+    "Model1.VariableDecimal":{
+      "type":"number",
+      "@Core.Description":"A type definition"
+    },
+    "Model1.ExactTimestamp":{
+      "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+    },
     "Schema.One.Waldo":{
       "type":"object",
       "odata":{
@@ -437,6 +559,10 @@
     }
   },
   "schemas":{
+    "CSDL.Examples":{
+      "alias":null,
+      "@Core.Description":"Examples from Part 3: CSDL"
+    },
     "Model1":{
       "alias":"Self",
       "@UI.ReferenceFacet":{
@@ -684,30 +810,6 @@
           }
         ]
       },
-      "enumTypes":{
-        "Pattern":{
-          "members":{
-            "Yellow":{
-              "@Does.Work":{
-                
-              },
-              "@For.Testing":{
-                "@odata.type":"#IsOf",
-                "type":"Edm.Binary",
-                "value":{
-                  "@odata.type":"#Path",
-                  "value":"Hugo"
-                }
-              }
-            }
-          }
-        }
-      },
-      "typeDefinitions":{
-        "Fixedstring":{
-          "underlyingType":"Edm.String"
-        }
-      },
       "functions":[
         {
           "name":"CreatedEntities",
@@ -764,7 +866,8 @@
           "Orders":{
             "entityType":"Self.Order"
           }
-        }
+        },
+        "@Core.Description":"The Sales Container"
       }
     },
     "Schema.One":{
