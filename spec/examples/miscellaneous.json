@@ -1,18 +1,78 @@
 {
   "$schema":"http://odata.org/schemas/v4.0/edm.json#",
   "definitions":{
-    "CSDL.Examples.ShippingMethod":{
+    "org.example.Measurement":{
+      "type":"object",
+      "properties":{
+        "Dimension":{
+          "type":"string",
+          "maxLength":50
+        },
+        "Length":{
+          "type":"number",
+          "multipleOf":1e-2,
+          "minimum":-9999999999999999.99,
+          "maximum":9999999999999999.99
+        }
+      }
+    },
+    "org.example.Example7to11":{
+      "type":"object",
+      "properties":{
+        "Units":{
+          "type":"array",
+          "items":{
+            "type":"string"
+          }
+        },
+        "SuggestedTimes":{
+          "type":"array",
+          "items":{
+            "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+          }
+        },
+        "Amount9":{
+          "anyOf":[
+            {
+              "type":"number",
+              "multipleOf":1e-2,
+              "minimum":-9.99,
+              "maximum":9.99
+            },
+            {
+              "type":"null"
+            }
+          ]
+        },
+        "Amount11":{
+          "anyOf":[
+            {
+              "type":"number",
+              "minimum":-999,
+              "maximum":999
+            },
+            {
+              "type":"null"
+            }
+          ]
+        }
+      }
+    },
+    "org.example.ShippingMethod":{
       "enum":[
         "FirstClass",
+        0,
         "TwoDay",
-        "Overnight"
+        1,
+        "Overnight",
+        2
       ],
       "FirstClass@Core.Description":"Shipped with highest priority",
       "TwoDay@Core.Description":"Shipped within two days",
-      "Overnight@Core.Description":"Shipped over night",
+      "Overnight@Core.Description":"Shipped overnight",
       "@Core.Description":"Method of shipping"
     },
-    "CSDL.Examples.Pattern":{
+    "org.example.Pattern":{
       "enum":[
         "Plain",
         0,
@@ -44,19 +104,16 @@
         "isFlags":true
       }
     },
-    "CSDL.Examples.Length":{
+    "org.example.Length":{
       "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32",
       "@Org.OData.Measurements.V1.Unit":"Centimeters"
     },
-    "CSDL.Examples.Weight":{
+    "org.example.Weight":{
       "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32",
       "@Org.OData.Measurements.V1.Unit":"Kilograms"
     },
-    "CSDL.Examples.Size":{
+    "org.example.Size":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "Height":{
           "anyOf":[
@@ -83,8 +140,11 @@
     "Model1.Size":{
       "enum":[
         "Small",
+        0,
         "Medium",
-        "Large"
+        1,
+        "Large",
+        2
       ],
       "@Core.Description":"Sizes"
     },
@@ -147,14 +207,17 @@
           }
         },
         "Price":{
-          "type":[
-            "number",
-            "null"
-          ],
-          "multipleOf":1e-3,
-          "odata":{
-            "precision":"15"
-          }
+          "anyOf":[
+            {
+              "type":"number",
+              "multipleOf":1e-3,
+              "minimum":-999999999999.999,
+              "maximum":999999999999.999
+            },
+            {
+              "type":"null"
+            }
+          ]
         }
       },
       "@Some.Term#SomeQualifier":[
@@ -254,14 +317,14 @@
       },
       "@org.example.display.DisplayName":{
         "@odata.type":"#Cast",
-        "SRID":"variable",
+        "srid":"variable",
         "scale":"variable",
         "type":"Edm.String",
         "value":"Product Catalog"
       },
       "@Self.IsPreferredCustomer":{
         "@odata.type":"#IsOf",
-        "SRID":"variable",
+        "srid":"variable",
         "type":"Self.PreferredCustomer",
         "value":{
           "@odata.type":"#Path",
@@ -292,7 +355,6 @@
     "Model1.Address":{
       "type":"object",
       "odata":{
-        "kind":"complex",
         "openType":true
       },
       "properties":{
@@ -357,16 +419,13 @@
             }
           ],
           "odata":{
-            "SRID":"variable"
+            "srid":"variable"
           }
         }
       }
     },
     "Model1.NavigationOnly":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "Planet":{
           "anyOf":[
@@ -385,9 +444,6 @@
     },
     "Model1.AnnotationOnly":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "@Some.Tag":{
         
       }
@@ -400,9 +456,14 @@
       },
       "properties":{
         "Quantity":{
-          "type":[
-            "number",
-            "null"
+          "anyOf":[
+            {
+              "type":"number",
+              "multipleOf":1
+            },
+            {
+              "type":"null"
+            }
           ],
           "@Measures.Unit":{
             "@odata.type":"#Path",
@@ -422,9 +483,21 @@
       "type":"string",
       "maxLength":50
     },
+    "Model1.IntegerDecimal":{
+      "type":"number",
+      "multipleOf":1,
+      "@Core.Description":"A decimal without fractional part"
+    },
+    "Model1.IntegerDecimal10":{
+      "type":"number",
+      "multipleOf":1,
+      "minimum":-9999999999,
+      "maximum":9999999999,
+      "@Core.Description":"A ten-digit integer"
+    },
     "Model1.VariableDecimal":{
       "type":"number",
-      "@Core.Description":"A type definition"
+      "@Core.Description":"A floating decimal"
     },
     "Model1.ExactTimestamp":{
       "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
@@ -487,18 +560,12 @@
           "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/X.PersonType"
         },
         {
-          "type":"object",
-          "odata":{
-            "kind":"complex"
-          }
+          "type":"object"
         }
       ]
     },
     "Y.ScrumTeamType":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "ScrumMaster":{
           "anyOf":[
@@ -520,9 +587,6 @@
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"complex"
-          },
           "properties":{
             "ArchivedAt":{
               "anyOf":[
@@ -541,9 +605,6 @@
     },
     "Y.SomeThingType":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "SomeProperty":{
           "type":[
@@ -572,8 +633,8 @@
     }
   },
   "schemas":{
-    "CSDL.Examples":{
-      "alias":null,
+    "org.example":{
+      "alias":"sales",
       "@Core.Description":"Examples from Part 3: CSDL"
     },
     "Model1":{
@@ -1135,6 +1196,40 @@
         },
         {
           "termNamespace":"Name.Space"
+        }
+      ]
+    },
+    "http://vocabs.odata.org/capabilities/v1":{
+      "includes":{
+        "Org.OData.Capabilities.V1":{
+          
+        }
+      }
+    },
+    "http://vocabs.odata.org/display/v1":{
+      "includes":{
+        "org.example.Display":{
+          "alias":"UI"
+        }
+      }
+    },
+    "http://odata.org/ann/b":{
+      "includeAnnotations":[
+        {
+          "termNamespace":"org.example.validation"
+        },
+        {
+          "termNamespace":"org.example.display",
+          "qualifier":"Tablet"
+        },
+        {
+          "termNamespace":"org.example.hcm",
+          "targetNamespace":"com.contoso.Sales"
+        },
+        {
+          "termNamespace":"org.example.hcm",
+          "qualifier":"Tablet",
+          "targetNamespace":"com.contoso.Person"
         }
       ]
     }

@@ -6,7 +6,8 @@
     This style sheet transforms OData 4.0 XML CSDL documents into OData JSON CSDL
 
     TODO:
-    - Property facets
+    - Precision for DateTimeOffset, Duration, and TimeOfDay
+    - isFlags for EnumType
     - detect qualifier for external namespace and insert correct url
     - replace alias in nav/property type in definitions with namespace
   -->
@@ -98,15 +99,21 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Member">
+  <xsl:template match="edm:Member" mode="list">
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>"</xsl:text>
-    <!-- TODO: use position()-1 as value if none is given -->
-    <xsl:if test="@Value">
-      <xsl:text>,</xsl:text>
-      <xsl:value-of select="@Value" />
-    </xsl:if>
+    <xsl:text>",</xsl:text>
+    <xsl:choose>
+      <xsl:when test="@Value">
+        <xsl:value-of select="@Value" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="position() - 1" />
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm:Member" mode="annotation">
@@ -142,20 +149,20 @@
       <xsl:value-of select="@BaseType" />
       <xsl:text>"},{</xsl:text>
     </xsl:if>
-    <xsl:text>"type":"object","odata":{</xsl:text>
-    <xsl:text>"kind":"</xsl:text>
+    <xsl:text>"type":"object"</xsl:text>
     <xsl:choose>
       <xsl:when test="local-name()='ComplexType'">
-        <xsl:text>complex</xsl:text>
+        <xsl:apply-templates select="@*[local-name()!='Name' and local-name()!='BaseType']" mode="object">
+          <xsl:with-param name="name" select="'odata'" />
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>entity</xsl:text>
+        <xsl:text>,"odata":{"kind":"entity"</xsl:text>
+        <xsl:apply-templates select="@*[local-name()!='Name' and local-name()!='BaseType']|edm:Key"
+          mode="list2" />
+        <xsl:text>}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>"</xsl:text>
-    <xsl:apply-templates select="@*[local-name()!='Name' and local-name()!='BaseType']|edm:Key"
-      mode="list2" />
-    <xsl:text>}</xsl:text>
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
@@ -185,7 +192,7 @@
     </xsl:if>
     <xsl:choose>
       <xsl:when test="local-name()='Property'">
-        <xsl:apply-templates select="@Precision|@SRID|@Unicode|*[local-name()!='Annotation']" mode="object">
+        <xsl:apply-templates select="@SRID|@Unicode|*[local-name()!='Annotation']" mode="object">
           <xsl:with-param name="name" select="'odata'" />
         </xsl:apply-templates>
       </xsl:when>
@@ -253,12 +260,54 @@
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType = 'Edm.Decimal'">
-        <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'number'" />
-          <xsl:with-param name="nullable" select="$nullable" />
-        </xsl:call-template>
-        <xsl:apply-templates select="@Scale" />
-        <!-- TODO: Scale, Precision; needs to go within the number schema if nullable -->
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>"anyOf":[{</xsl:text>
+        </xsl:if>
+        <xsl:text>"type":"number"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="not(@Scale) or @Scale='0'">
+            <xsl:text>,"multipleOf":1</xsl:text>
+          </xsl:when>
+          <xsl:when test="@Scale!='variable'">
+            <xsl:text>,"multipleOf":1e-</xsl:text>
+            <xsl:value-of select="@Scale" />
+          </xsl:when>
+        </xsl:choose>
+        <xsl:if test="@Precision">
+          <xsl:variable name="scale">
+            <xsl:choose>
+              <xsl:when test="not(@Scale)">
+                <xsl:value-of select="0" />
+              </xsl:when>
+              <xsl:when test="@Scale='variable'">
+                <xsl:value-of select="0" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="@Scale" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="limit">
+            <xsl:call-template name="repeat">
+              <xsl:with-param name="string" select="'9'" />
+              <xsl:with-param name="count" select="@Precision - $scale" />
+            </xsl:call-template>
+            <xsl:if test="$scale > 0">
+              <xsl:text>.</xsl:text>
+              <xsl:call-template name="repeat">
+                <xsl:with-param name="string" select="'9'" />
+                <xsl:with-param name="count" select="$scale" />
+              </xsl:call-template>
+            </xsl:if>
+          </xsl:variable>
+          <xsl:text>,"minimum":-</xsl:text>
+          <xsl:value-of select="$limit" />
+          <xsl:text>,"maximum":</xsl:text>
+          <xsl:value-of select="$limit" />
+        </xsl:if>
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>},{"type":"null"}]</xsl:text>
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
         <xsl:if test="not($nullable='false')">
@@ -288,6 +337,18 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="repeat">
+    <xsl:param name="string" />
+    <xsl:param name="count" />
+    <xsl:value-of select="$string" />
+    <xsl:if test="$count &gt; 1">
+      <xsl:call-template name="repeat">
+        <xsl:with-param name="string" select="$string" />
+        <xsl:with-param name="count" select="$count - 1" />
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template name="nullableType">
     <xsl:param name="type" />
     <xsl:param name="nullable" />
@@ -306,13 +367,6 @@
   <xsl:template match="edm:Property/@MaxLength|edm:TypeDefinition/@MaxLength">
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
-      <xsl:value-of select="." />
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="edm:Property/@Scale|edm:TypeDefinition/@Scale">
-    <xsl:if test=".!='variable'">
-      <xsl:text>,"multipleOf":1e-</xsl:text>
       <xsl:value-of select="." />
     </xsl:if>
   </xsl:template>
@@ -387,7 +441,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EntitySet|edm:Singleton" mode="hashvalue">
-    <xsl:apply-templates select="@*[local-name()!='Name']" />
+    <xsl:apply-templates select="@*[local-name()!='Name']" mode="list" />
     <xsl:apply-templates select="edm:NavigationPropertyBinding" mode="hash">
       <xsl:with-param name="key" select="'Path'" />
     </xsl:apply-templates>
@@ -858,7 +912,7 @@
     <xsl:param name="name" />
     <xsl:choose>
       <xsl:when test="$name = 'SRID'">
-        <xsl:text>SRID</xsl:text>
+        <xsl:text>srid</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="translate(substring($name,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')" />

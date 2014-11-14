@@ -14,9 +14,37 @@
     <edmx:IncludeAnnotations TermNamespace="NameSpace" Qualifier="SomeName" />
     <edmx:IncludeAnnotations TermNamespace="Name.Space" />
   </edmx:Reference>
+  <edmx:Reference Uri="http://vocabs.odata.org/capabilities/v1">
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="http://vocabs.odata.org/display/v1">
+    <edmx:Include Alias="UI" Namespace="org.example.Display" />
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odata.org/ann/b">
+    <edmx:IncludeAnnotations TermNamespace="org.example.validation" />
+    <edmx:IncludeAnnotations TermNamespace="org.example.display" Qualifier="Tablet" />
+    <edmx:IncludeAnnotations TermNamespace="org.example.hcm" TargetNamespace="com.contoso.Sales" />
+    <edmx:IncludeAnnotations TermNamespace="org.example.hcm" Qualifier="Tablet" TargetNamespace="com.contoso.Person" />
+  </edmx:Reference>
   <edmx:DataServices>
-    <Schema Namespace="CSDL.Examples">
+    <Schema Namespace="org.example" Alias="sales">
       <Annotation Term="Core.Description" String="Examples from Part 3: CSDL" />
+
+      <!-- 6 Structural Property -->
+      <!-- Example 6 -->
+      <ComplexType Name="Measurement">
+        <Property Name="Dimension" Type="Edm.String" Nullable="false" MaxLength="50" DefaultValue="Unspecified" />
+        <Property Name="Length" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="2" />
+      </ComplexType>
+
+      <ComplexType Name="Example7to11">
+        <Property Name="Units" Type="Collection(Edm.String)" />
+        <Property Name="SuggestedTimes" Type="Collection(Edm.DateTimeOffset)" Precision="6" />
+        <Property Name="Amount9" Type="Edm.Decimal" Precision="3" Scale="2" />
+        <Property Name="Amount11" Type="Edm.Decimal" Precision="3" Scale="variable" />
+      </ComplexType>
+
+      <!-- TODO: fill in examples -->
 
       <!-- 10 Enumeration Type -->
       <!-- Example 25: FirstClass has a value of 0, TwoDay a value of 1, and Overnight a value of 2 -->
@@ -29,7 +57,7 @@
           <Annotation Term="Core.Description" String="Shipped within two days" />
         </Member>
         <Member Name="Overnight">
-          <Annotation Term="Core.Description" String="Shipped over night" />
+          <Annotation Term="Core.Description" String="Shipped overnight" />
         </Member>
       </EnumType>
 
@@ -64,6 +92,7 @@
         <Property Name="Weight" Type="Self.Weight" />
       </ComplexType>
 
+      <!-- TODO: fill in examples -->
 
     </Schema>
 
@@ -334,8 +363,16 @@
 
       <TypeDefinition Name="Text50" MaxLength="50" UnderlyingType="Edm.String" />
 
+      <TypeDefinition Name="IntegerDecimal" UnderlyingType="Edm.Decimal" Scale="0">
+        <Annotation Term="Core.Description" String="A decimal without fractional part" />
+      </TypeDefinition>
+
+      <TypeDefinition Name="IntegerDecimal10" UnderlyingType="Edm.Decimal" Precision="10">
+        <Annotation Term="Core.Description" String="A ten-digit integer" />
+      </TypeDefinition>
+
       <TypeDefinition Name="VariableDecimal" UnderlyingType="Edm.Decimal" Scale="variable">
-        <Annotation Term="Core.Description" String="A type definition" />
+        <Annotation Term="Core.Description" String="A floating decimal" />
       </TypeDefinition>
 
       <TypeDefinition Name="ExactTimestamp" UnderlyingType="Edm.DateTimeOffset" Precision="12" />
