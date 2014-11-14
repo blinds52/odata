@@ -189,9 +189,9 @@
             "number",
             "null"
           ],
+          "multipleOf":1e-6,
           "odata":{
-            "precision":"10",
-            "scale":"6"
+            "precision":"10"
           }
         },
         "Sales":{
@@ -244,11 +244,17 @@
       }
     },
     "OData.Demo.VipCustomer":{
-      "type":"object",
-      "odata":{
-        "kind":"entity",
-        "baseType":"Model.Customer"
-      }
+      "allOf":[
+        {
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Customer"
+        },
+        {
+          "type":"object",
+          "odata":{
+            "kind":"entity"
+          }
+        }
+      ]
     },
     "OData.Demo.Category":{
       "type":"object",
@@ -525,35 +531,41 @@
       }
     },
     "OData.Demo.PreferredSupplier":{
-      "type":"object",
-      "odata":{
-        "kind":"entity",
-        "baseType":"Model.Supplier"
-      },
-      "properties":{
-        "AccountRepresentative":{
-          "anyOf":[
-            {
-              "$ref":"#/definitions/Model.Employee"
-            },
-            {
-              "type":"null"
-            }
-          ],
+      "allOf":[
+        {
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Supplier"
+        },
+        {
+          "type":"object",
           "odata":{
-            "kind":"navigation",
-            "referentialConstraints":{
-              "EmployeeID":{
-                "referencedProperty":"ID",
-                "@Core.Description":"The key account manager"
+            "kind":"entity"
+          },
+          "properties":{
+            "AccountRepresentative":{
+              "anyOf":[
+                {
+                  "$ref":"#/definitions/Model.Employee"
+                },
+                {
+                  "type":"null"
+                }
+              ],
+              "odata":{
+                "kind":"navigation",
+                "referentialConstraints":{
+                  "EmployeeID":{
+                    "referencedProperty":"ID",
+                    "@Core.Description":"The key account manager"
+                  }
+                }
               }
+            },
+            "EmployeeID":{
+              "type":"string"
             }
           }
-        },
-        "EmployeeID":{
-          "type":"string"
         }
-      }
+      ]
     },
     "OData.Demo.Pattern":{
       "enum":[
@@ -567,33 +579,39 @@
       }
     },
     "OData.Demo.Manager":{
-      "type":"object",
-      "odata":{
-        "kind":"entity",
-        "baseType":"Model.Employee"
-      },
-      "properties":{
-        "Employees":{
-          "type":"array",
-          "items":{
-            "$ref":"#/definitions/Model.Employee"
-          },
-          "odata":{
-            "kind":"navigation",
-            "partner":"Manager"
-          }
+      "allOf":[
+        {
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Employee"
         },
-        "Inbox":{
-          "type":"array",
-          "items":{
-            "$ref":"#/definitions/Model.LeaveRequest"
-          },
+        {
+          "type":"object",
           "odata":{
-            "kind":"navigation",
-            "partner":"Manager"
+            "kind":"entity"
+          },
+          "properties":{
+            "Employees":{
+              "type":"array",
+              "items":{
+                "$ref":"#/definitions/Model.Employee"
+              },
+              "odata":{
+                "kind":"navigation",
+                "partner":"Manager"
+              }
+            },
+            "Inbox":{
+              "type":"array",
+              "items":{
+                "$ref":"#/definitions/Model.LeaveRequest"
+              },
+              "odata":{
+                "kind":"navigation",
+                "partner":"Manager"
+              }
+            }
           }
         }
-      }
+      ]
     },
     "OData.Demo.Time":{
       "type":"object",

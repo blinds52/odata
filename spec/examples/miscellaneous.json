@@ -151,8 +151,9 @@
             "number",
             "null"
           ],
+          "multipleOf":1e-3,
           "odata":{
-            "scale":"variable"
+            "precision":"15"
           }
         }
       },
@@ -481,11 +482,17 @@
       }
     },
     "Y.DeveloperType":{
-      "type":"object",
-      "odata":{
-        "kind":"complex",
-        "baseType":"X.PersonType"
-      }
+      "allOf":[
+        {
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/X.PersonType"
+        },
+        {
+          "type":"object",
+          "odata":{
+            "kind":"complex"
+          }
+        }
+      ]
     },
     "Y.ScrumTeamType":{
       "type":"object",
@@ -507,23 +514,29 @@
       }
     },
     "Y.ArchivedMovieType":{
-      "type":"object",
-      "odata":{
-        "kind":"complex",
-        "baseType":"X.MovieType"
-      },
-      "properties":{
-        "ArchivedAt":{
-          "anyOf":[
-            {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
-            },
-            {
-              "type":"null"
+      "allOf":[
+        {
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/X.MovieType"
+        },
+        {
+          "type":"object",
+          "odata":{
+            "kind":"complex"
+          },
+          "properties":{
+            "ArchivedAt":{
+              "anyOf":[
+                {
+                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+                },
+                {
+                  "type":"null"
+                }
+              ]
             }
-          ]
+          }
         }
-      },
+      ],
       "@custom.IsA":"X.Movie"
     },
     "Y.SomeThingType":{
