@@ -6,7 +6,6 @@
     This style sheet transforms OData 4.0 XML CSDL documents into OData JSON CSDL
 
     TODO:
-    - inheritance via allOf[this,base]
     - Property facets
     - detect qualifier for external namespace and insert correct url
     - replace alias in nav/property type in definitions with namespace
@@ -103,6 +102,7 @@
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"</xsl:text>
+    <!-- TODO: use position()-1 as value if none is given -->
     <xsl:if test="@Value">
       <xsl:text>,</xsl:text>
       <xsl:value-of select="@Value" />
@@ -130,12 +130,19 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
-    <!-- TODO: BaseType via allof[base,this] -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"type":"object","odata":{</xsl:text>
+    <xsl:text>":{</xsl:text>
+    <xsl:if test="@BaseType">
+      <xsl:text>"allOf":[{"$ref":"</xsl:text>
+      <xsl:value-of select="$edmUri" />
+      <xsl:text>#/definitions/</xsl:text>
+      <xsl:value-of select="@BaseType" />
+      <xsl:text>"},{</xsl:text>
+    </xsl:if>
+    <xsl:text>"type":"object","odata":{</xsl:text>
     <xsl:text>"kind":"</xsl:text>
     <xsl:choose>
       <xsl:when test="local-name()='ComplexType'">
@@ -146,11 +153,15 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"</xsl:text>
-    <xsl:apply-templates select="@*[local-name()!='Name']|edm:Key" mode="list2" />
+    <xsl:apply-templates select="@*[local-name()!='Name' and local-name()!='BaseType']|edm:Key"
+      mode="list2" />
     <xsl:text>}</xsl:text>
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
+    <xsl:if test="@BaseType">
+      <xsl:text>}]</xsl:text>
+    </xsl:if>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -174,10 +185,7 @@
     </xsl:if>
     <xsl:choose>
       <xsl:when test="local-name()='Property'">
-        <xsl:apply-templates
-          select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable' and local-name()!='MaxLength']|*[local-name()!='Annotation']"
-          mode="object"
-        >
+        <xsl:apply-templates select="@Precision|@SRID|@Unicode|*[local-name()!='Annotation']" mode="object">
           <xsl:with-param name="name" select="'odata'" />
         </xsl:apply-templates>
       </xsl:when>
@@ -249,6 +257,7 @@
           <xsl:with-param name="type" select="'number'" />
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
+        <xsl:apply-templates select="@Scale" />
         <!-- TODO: Scale, Precision; needs to go within the number schema if nullable -->
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
@@ -297,6 +306,13 @@
   <xsl:template match="edm:Property/@MaxLength|edm:TypeDefinition/@MaxLength">
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
+      <xsl:value-of select="." />
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Property/@Scale|edm:TypeDefinition/@Scale">
+    <xsl:if test=".!='variable'">
+      <xsl:text>,"multipleOf":1e-</xsl:text>
       <xsl:value-of select="." />
     </xsl:if>
   </xsl:template>
