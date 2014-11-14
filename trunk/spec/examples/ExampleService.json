@@ -185,14 +185,17 @@
           "type":"string"
         },
         "TaxRate":{
-          "type":[
-            "number",
-            "null"
-          ],
-          "multipleOf":1e-6,
-          "odata":{
-            "precision":"10"
-          }
+          "anyOf":[
+            {
+              "type":"number",
+              "multipleOf":1e-6,
+              "minimum":-9999.999999,
+              "maximum":9999.999999
+            },
+            {
+              "type":"null"
+            }
+          ]
         },
         "Sales":{
           "type":"array",
@@ -269,7 +272,8 @@
           "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Amount":{
-          "type":"number"
+          "type":"number",
+          "multipleOf":1
         },
         "Products":{
           "type":"array",
@@ -324,7 +328,8 @@
           "type":"string"
         },
         "Price":{
-          "type":"number"
+          "type":"number",
+          "multipleOf":1
         },
         "Product":{
           "$ref":"#/definitions/Model.Product",
@@ -354,7 +359,8 @@
           "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Amount":{
-          "type":"number"
+          "type":"number",
+          "multipleOf":1
         },
         "Time":{
           "$ref":"#/definitions/Model.Time",
@@ -471,9 +477,6 @@
     },
     "OData.Demo.Address":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "Street":{
           "type":"string"
@@ -500,9 +503,6 @@
     },
     "OData.Demo.AddressWithLocation":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "Location":{
           "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
@@ -740,9 +740,6 @@
     },
     "OData.Demo.PhoneNumber":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "Number":{
           "type":"string"
@@ -754,9 +751,6 @@
     },
     "OData.Demo.CellPhoneNumber":{
       "type":"object",
-      "odata":{
-        "kind":"complex"
-      },
       "properties":{
         "Carrier":{
           "type":"string"
