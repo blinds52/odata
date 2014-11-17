@@ -10,9 +10,12 @@
     Existing constructs that have an equivalent in V4 are automatically translated.
     The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset.
     The retired primitive type Edm.Time is translated into the Edm.TimeOfDay.
-    TODO: TimeOfDay as target for Time
-
+    
     In addition the SAP annotations are translated into corresponding V4 annotations in the OASIS vocabularies or SAP vocabularies.
+
+    TODO: TimeOfDay as target for Time
+    TODO: IsComposable for functions generated from function imports
+    TODO: translate more sap: annotations
 
   -->
   <xsl:output method="xml" indent="yes" />
