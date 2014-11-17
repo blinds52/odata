@@ -28,7 +28,14 @@
         "SuggestedTimes":{
           "type":"array",
           "items":{
-            "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+            "allOf":[
+              {
+                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+              },
+              {
+                "pattern":"(^[^.]*$|[.][0-9]{1,6}$)"
+              }
+            ]
           }
         },
         "Amount9":{
@@ -72,32 +79,85 @@
       "Overnight@Core.Description":"Shipped overnight",
       "@Core.Description":"Method of shipping"
     },
+    "org.example.Category":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "EntityInfoID":"Info/ID"
+        }
+      },
+      "properties":{
+        "Info":{
+          "$ref":"#/definitions/org.example.EntityInfo"
+        },
+        "Name":{
+          "type":[
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "org.example.EntityInfo":{
+      "type":"object",
+      "properties":{
+        "ID":{
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+        },
+        "Created":{
+          "anyOf":[
+            {
+              "allOf":[
+                {
+                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+                },
+                {
+                  "pattern":"^[^.]*$"
+                }
+              ]
+            },
+            {
+              "type":"null"
+            }
+          ]
+        }
+      }
+    },
     "org.example.Pattern":{
-      "enum":[
-        "Plain",
-        0,
-        "Red",
-        1,
-        "Blue",
-        2,
-        "Yellow",
-        4,
-        "Solid",
-        8,
-        "Striped",
-        16,
-        "SolidRed",
-        9,
-        "SolidBlue",
-        10,
-        "SolidYellow",
-        12,
-        "RedBlueStriped",
-        19,
-        "RedYellowStriped",
-        21,
-        "BlueYellowStriped",
-        22
+      "anyOf":[
+        {
+          "enum":[
+            "Plain",
+            0,
+            "Red",
+            1,
+            "Blue",
+            2,
+            "Yellow",
+            4,
+            "Solid",
+            8,
+            "Striped",
+            16,
+            "SolidRed",
+            9,
+            "SolidBlue",
+            10,
+            "SolidYellow",
+            12,
+            "RedBlueStriped",
+            19,
+            "RedYellowStriped",
+            21,
+            "BlueYellowStriped",
+            22
+          ]
+        },
+        {
+          "type":"string",
+          "pattern":"^(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped)(,(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped))*$"
+        }
       ],
       "odata":{
         "underlyingType":"Edm.Int32",
@@ -118,7 +178,7 @@
         "Height":{
           "anyOf":[
             {
-              "$ref":"#/definitions/Self.Length"
+              "$ref":"#/definitions/org.example.Length"
             },
             {
               "type":"null"
@@ -128,7 +188,39 @@
         "Weight":{
           "anyOf":[
             {
-              "$ref":"#/definitions/Self.Weight"
+              "$ref":"#/definitions/org.example.Weight"
+            },
+            {
+              "type":"null"
+            }
+          ]
+        }
+      }
+    },
+    "Model1.Stuff":{
+      "type":"object",
+      "properties":{
+        "ABool":{
+          "type":[
+            "boolean",
+            "null"
+          ]
+        },
+        "AnInt":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+            },
+            {
+              "type":"null"
+            }
+          ]
+        },
+        "ADecimal":{
+          "anyOf":[
+            {
+              "type":"number",
+              "multipleOf":1
             },
             {
               "type":"null"
@@ -149,11 +241,19 @@
       "@Core.Description":"Sizes"
     },
     "Model1.Pattern":{
-      "enum":[
-        "Yellow",
-        1,
-        "Striped",
-        2
+      "anyOf":[
+        {
+          "enum":[
+            "Yellow",
+            1,
+            "Striped",
+            2
+          ]
+        },
+        {
+          "type":"string",
+          "pattern":"^(Yellow|Striped)(,(Yellow|Striped))*$"
+        }
       ],
       "Yellow@Does.Work":{
         
@@ -213,6 +313,19 @@
               "multipleOf":1e-3,
               "minimum":-999999999999.999,
               "maximum":999999999999.999
+            },
+            {
+              "type":"null"
+            }
+          ]
+        },
+        "Permission":{
+          "$ref":"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml#/definitions/Org.OData.Core.V1.Permission"
+        },
+        "AliasPermission":{
+          "anyOf":[
+            {
+              "$ref":"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml#/definitions/Org.OData.Core.V1.Permission"
             },
             {
               "type":"null"
@@ -500,7 +613,14 @@
       "@Core.Description":"A floating decimal"
     },
     "Model1.ExactTimestamp":{
-      "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+      "allOf":[
+        {
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+        },
+        {
+          "pattern":"(^[^.]*$|[.][0-9]{1,12}$)"
+        }
+      ]
     },
     "Schema.One.Waldo":{
       "type":"object",
@@ -546,7 +666,7 @@
         "Waldos":{
           "type":"array",
           "items":{
-            "$ref":"#/definitions/Self.Waldos"
+            "$ref":"#/definitions/org.example.Waldos"
           },
           "odata":{
             "kind":"navigation"
@@ -634,7 +754,7 @@
   },
   "schemas":{
     "org.example":{
-      "alias":"sales",
+      "alias":"Self",
       "@Core.Description":"Examples from Part 3: CSDL"
     },
     "Model1":{
@@ -676,7 +796,10 @@
       "@Is.Null@Next.to.Null":{
         
       },
-      "@Vocabulary1.SubTitle":1234,
+      "@Vocabulary1.SubTitle":{
+        "@odata.type":"#Int64",
+        "value":1234
+      },
       "@Vocabulary1.SubTitle@For.Constant":{
         
       },
@@ -688,10 +811,7 @@
         "@odata.type":"#Decimal",
         "value":12.34
       },
-      "@A.Float":{
-        "@odata.type":"#Double",
-        "value":1.23e4
-      },
+      "@A.Float":1.23e4,
       "@A.Float#inf":{
         "@odata.type":"#Double",
         "value":"INF"
@@ -704,11 +824,11 @@
         "@odata.type":"#Double",
         "value":"NaN"
       },
-      "@A.Float#Element":{
-        "@odata.type":"#Double",
-        "value":1.23e4
+      "@A.Float#Element":1.23e4,
+      "@An.Int":{
+        "@odata.type":"#Int64",
+        "value":1234
       },
-      "@An.Int":1234,
       "@A.String":"1.23e4",
       "@A.String#withAmp":"Fast&Furious",
       "@A.String#ToBeEscaped":"A\/\"good\"\r\nstory\\for\tkids",
@@ -1166,10 +1286,17 @@
     }
   },
   "references":{
+    "http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml":{
+      "includes":{
+        "Org.OData.Core.V1":{
+          "alias":"Core"
+        }
+      }
+    },
     "http://tinyurl.com/Org-OData-Measures-V1":{
       "includes":{
         "Org.OData.Measures.V1":{
-          "alias":"Core"
+          "alias":"Measures"
         },
         "anotherOne":{
           

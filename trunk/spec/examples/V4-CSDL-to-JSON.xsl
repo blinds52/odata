@@ -6,10 +6,8 @@
     This style sheet transforms OData 4.0 XML CSDL documents into OData JSON CSDL
 
     TODO:
-    - Precision for DateTimeOffset, Duration, and TimeOfDay
-    - isFlags for EnumType
-    - detect qualifier for external namespace and insert correct url
-    - replace alias in nav/property type in definitions with namespace
+    - DefaultValue -> default - Problem: find correct representation for Boolean, numbers, string (escaped)
+    - Core.Description -> title/description?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -82,17 +80,33 @@
   </xsl:template>
 
   <xsl:template match="edm:EnumType" mode="hashpair">
-    <!-- TODO: isFlags as anyOf:[enum,string pattern] -->
-    <!-- TODO: suppress isFlags:false -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"enum":[</xsl:text>
+    <xsl:text>":{</xsl:text>
+    <xsl:if test="@IsFlags='true'">
+      <xsl:text>"anyOf":[{</xsl:text>
+    </xsl:if>
+    <xsl:text>"enum":[</xsl:text>
     <xsl:apply-templates select="edm:Member" mode="list" />
     <xsl:text>]</xsl:text>
+    <xsl:if test="@IsFlags='true'">
+      <xsl:text>},{"type":"string","pattern":"^</xsl:text>
+      <xsl:variable name="pattern">
+        <xsl:apply-templates select="edm:Member" mode="pattern" />
+      </xsl:variable>
+      <xsl:text>(</xsl:text>
+      <xsl:value-of select="$pattern" />
+      <xsl:text>)(,(</xsl:text>
+      <xsl:value-of select="$pattern" />
+      <xsl:text>))*</xsl:text>
+      <xsl:text>$"}]</xsl:text>
+    </xsl:if>
     <xsl:apply-templates select="edm:Member" mode="annotation" />
-    <xsl:apply-templates select="@*[local-name()!='Name']" mode="object">
+    <xsl:apply-templates select="@*[local-name()!='Name' and not(local-name()='IsFlags' and .='false')]"
+      mode="object"
+    >
       <xsl:with-param name="name" select="'odata'" />
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
@@ -114,6 +128,13 @@
         <xsl:value-of select="position() - 1" />
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="edm:Member" mode="pattern">
+    <xsl:if test="position() > 1">
+      <xsl:text>|</xsl:text>
+    </xsl:if>
+    <xsl:value-of select="@Name" />
   </xsl:template>
 
   <xsl:template match="edm:Member" mode="annotation">
@@ -313,11 +334,37 @@
         <xsl:if test="not($nullable='false')">
           <xsl:text>"anyOf":[{</xsl:text>
         </xsl:if>
+        <xsl:variable name="precision">
+          <xsl:choose>
+            <xsl:when test="@Precision">
+              <xsl:value-of select="@Precision" />
+            </xsl:when>
+            <xsl:when test="$singleType='Edm.DateTimeOffset' or $singleType='Edm.Duration' or $singleType='Edm.TimeOfDay'">
+              <xsl:value-of select="0" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="-1" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:if test="$precision>=0">
+          <xsl:text>"allOf":[{</xsl:text>
+        </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$edmUri" />
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="$precision>0">
+            <xsl:text>},{"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
+            <xsl:value-of select="$precision" />
+            <xsl:text>}$)"}]</xsl:text>
+          </xsl:when>
+          <xsl:when test="$precision=0">
+            <xsl:text>},{"pattern":"^[^.]*$"}]</xsl:text>
+          </xsl:when>
+        </xsl:choose>
         <xsl:if test="not($nullable='false')">
           <xsl:text>},{"type":"null"}]</xsl:text>
         </xsl:if>
@@ -326,15 +373,53 @@
         <xsl:if test="not($nullable='false')">
           <xsl:text>"anyOf":[{</xsl:text>
         </xsl:if>
-        <!-- TODO: external namespaces/aliases -->
-        <xsl:text>"$ref":"#/definitions/</xsl:text>
-        <xsl:value-of select="$singleType" />
-        <xsl:text>"</xsl:text>
+        <xsl:call-template name="ref">
+          <xsl:with-param name="qualifier" select="$qualifier" />
+          <xsl:with-param name="typeName">
+            <xsl:call-template name="substring-after-last">
+              <xsl:with-param name="input" select="$singleType" />
+              <xsl:with-param name="marker" select="'.'" />
+            </xsl:call-template>
+          </xsl:with-param>
+        </xsl:call-template>
         <xsl:if test="not($nullable='false')">
           <xsl:text>},{"type":"null"}]</xsl:text>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="ref">
+    <xsl:param name="qualifier" />
+    <xsl:param name="typeName" />
+    <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+    <xsl:variable name="externalNamespace">
+      <xsl:choose>
+        <xsl:when test="//edmx:Include[@Alias=$qualifier]/@Namespace">
+          <xsl:value-of select="//edmx:Include[@Alias=$qualifier]/@Namespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="//edmx:Include[@Namespace=$qualifier]/@Namespace" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:text>"$ref":"</xsl:text>
+    <xsl:value-of select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
+    <xsl:text>#/definitions/</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$internalNamespace">
+        <xsl:value-of select="$internalNamespace" />
+      </xsl:when>
+      <xsl:when test="string-length($externalNamespace)>0">
+        <xsl:value-of select="$externalNamespace" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$qualifier" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="$typeName" />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="repeat">
@@ -369,6 +454,12 @@
       <xsl:text>,"maxLength":</xsl:text>
       <xsl:value-of select="." />
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Property/@DefaultValue">
+    <xsl:text>,"default":"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <!-- name : unquoted boolean value -->
@@ -483,30 +574,37 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- name : quoted or unquoted float value -->
+  <!-- name : unquoted direct value or annotated quoted special value -->
   <xsl:template match="@Float|edm:Float">
-    <xsl:text>{"@odata.type":"#Double","value":</xsl:text>
     <xsl:choose>
       <xsl:when test=". = 'INF' or . = '-INF' or . = 'NaN'">
-        <xsl:text>"</xsl:text>
+        <xsl:text>{"@odata.type":"#Double","value":"</xsl:text>
         <xsl:value-of select="." />
-        <xsl:text>"</xsl:text>
+        <xsl:text>"}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="." />
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <!-- unquoted direct value -->
-  <xsl:template match="@Bool|@Int|edm:Bool|edm:Int">
+  <xsl:template match="@Bool|edm:Bool">
     <xsl:value-of select="." />
   </xsl:template>
 
   <!-- name : object with unquoted value -->
   <xsl:template match="@Decimal|edm:Decimal">
-    <xsl:text>{"@odata.type":"#Decimal","value":</xsl:text>
+    <xsl:text>{"@odata.type":"#</xsl:text>
+    <xsl:value-of select="local-name()" />
+    <xsl:text>","value":</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <!-- name : object with unquoted value -->
+  <xsl:template match="@Int|edm:Int">
+    <xsl:text>{"@odata.type":"#Int64","value":</xsl:text>
     <xsl:value-of select="." />
     <xsl:text>}</xsl:text>
   </xsl:template>

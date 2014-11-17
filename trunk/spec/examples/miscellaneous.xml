@@ -2,8 +2,11 @@
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm"
   Version="4.0"
 >
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  </edmx:Reference>
   <edmx:Reference Uri="http://tinyurl.com/Org-OData-Measures-V1">
-    <edmx:Include Alias="Core" Namespace="Org.OData.Measures.V1" />
+    <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1" />
     <edmx:Include Namespace="anotherOne" />
     <Annotation Term="Some.Term" />
   </edmx:Reference>
@@ -27,7 +30,7 @@
     <edmx:IncludeAnnotations TermNamespace="org.example.hcm" Qualifier="Tablet" TargetNamespace="com.contoso.Person" />
   </edmx:Reference>
   <edmx:DataServices>
-    <Schema Namespace="org.example" Alias="sales">
+    <Schema Namespace="org.example" Alias="Self">
       <Annotation Term="Core.Description" String="Examples from Part 3: CSDL" />
 
       <!-- 6 Structural Property -->
@@ -60,6 +63,20 @@
           <Annotation Term="Core.Description" String="Shipped overnight" />
         </Member>
       </EnumType>
+
+      <!-- Example 18: key referencing a property of a complex type -->
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="Info/ID" Alias="EntityInfoID" />
+        </Key>
+        <Property Name="Info" Type="Self.EntityInfo" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+      </EntityType>
+
+      <ComplexType Name="EntityInfo">
+        <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Created" Type="Edm.DateTimeOffset" />
+      </ComplexType>
 
       <!-- Example 26: pattern values can be combined, and some combined values have explicit names -->
       <EnumType Name="Pattern" UnderlyingType="Edm.Int32" IsFlags="true">
@@ -97,6 +114,12 @@
     </Schema>
 
     <Schema Namespace="Model1" Alias="Self">
+      <ComplexType Name="Stuff">
+        <Property Name="ABool" Type="Edm.Boolean" DefaultValue="false" />
+        <Property Name="AnInt" Type="Edm.Int32" DefaultValue="42" />
+        <Property Name="ADecimal" Type="Edm.Decimal" DefaultValue="3.14" />
+      </ComplexType>
+
       <Function Name="CreatedEntities">
         <Parameter Name="before" Type="Edm.DateTimeOffset" Nullable="true" />
         <Parameter Name="after" Type="Edm.DateTimeOffset" Nullable="true" />
@@ -240,12 +263,13 @@
         </If>
       </Annotation>
 
-      <EnumType Name="Size">
+      <EnumType Name="Size" IsFlags="false">
         <Annotation Term="Core.Description" String="Sizes" />
         <Member Name="Small" />
         <Member Name="Medium" />
         <Member Name="Large" />
       </EnumType>
+
       <EnumType Name="Pattern" UnderlyingType="Edm.Int64" IsFlags="true">
         <Member Name="Yellow" Value="1">
           <Annotation Term="Does.Work" />
@@ -269,6 +293,8 @@
         <Property Name="TheString" Type="Edm.String" MaxLength="20" />
         <Property Name="Tags" Type="Collection(Edm.String)" Nullable="true" />
         <Property Type="Edm.Decimal" Name="Price" Precision="15" Scale="3" />
+        <Property Name="Permission" Type="Org.OData.Core.V1.Permission" Nullable="false" />
+        <Property Name="AliasPermission" Type="Core.Permission" />
         <Annotation Term="Some.Term" Qualifier="SomeQualifier">
           <Annotation Term="Some.Term" String="Some Value" />
           <Collection>
