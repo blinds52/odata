@@ -6,7 +6,8 @@
       "properties":{
         "Dimension":{
           "type":"string",
-          "maxLength":50
+          "maxLength":50,
+          "default":"Unspecified"
         },
         "Length":{
           "type":"number",
@@ -65,21 +66,164 @@
         }
       }
     },
-    "org.example.ShippingMethod":{
-      "enum":[
-        "FirstClass",
-        0,
-        "TwoDay",
-        1,
-        "Overnight",
-        2
-      ],
-      "FirstClass@Core.Description":"Shipped with highest priority",
-      "TwoDay@Core.Description":"Shipped within two days",
-      "Overnight@Core.Description":"Shipped overnight",
-      "@Core.Description":"Method of shipping"
+    "org.example.Product":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "ID":"ID"
+        }
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        },
+        "CategoryID":{
+          "type":"string"
+        },
+        "Category":{
+          "$ref":"#/definitions/org.example.Category",
+          "odata":{
+            "kind":"navigation",
+            "partner":"Products",
+            "referentialConstraints":{
+              "CategoryID":{
+                "referencedProperty":"ID"
+              }
+            }
+          }
+        },
+        "Supplier":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/org.example.Supplier"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
+        }
+      }
     },
     "org.example.Category":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "ID":"ID"
+        }
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        },
+        "Products":{
+          "type":"array",
+          "items":{
+            "$ref":"#/definitions/org.example.Product"
+          },
+          "odata":{
+            "kind":"navigation",
+            "partner":"Category",
+            "onDelete":{
+              "action":"Cascade"
+            }
+          }
+        }
+      }
+    },
+    "org.example.Employee":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "ID":"ID"
+        }
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        },
+        "FirstName":{
+          "type":"string"
+        },
+        "LastName":{
+          "type":"string"
+        },
+        "Manager":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Model.Manager"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "odata":{
+            "kind":"navigation"
+          }
+        }
+      }
+    },
+    "org.example.Manager":{
+      "allOf":[
+        {
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Employee"
+        },
+        {
+          "type":"object",
+          "odata":{
+            "kind":"entity"
+          },
+          "properties":{
+            "AnnualBudget":{
+              "anyOf":[
+                {
+                  "type":"number",
+                  "multipleOf":1
+                },
+                {
+                  "type":"null"
+                }
+              ]
+            },
+            "Employees":{
+              "type":"array",
+              "items":{
+                "$ref":"#/definitions/Model.Employee"
+              },
+              "odata":{
+                "kind":"navigation"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "org.example.Category17":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "ID":"ID"
+        }
+      },
+      "properties":{
+        "ID":{
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+        },
+        "Name":{
+          "type":[
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "org.example.Category18":{
       "type":"object",
       "odata":{
         "kind":"entity",
@@ -123,6 +267,137 @@
           ]
         }
       }
+    },
+    "org.example.OrderLine":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "OrderID":"OrderID",
+          "LineNumber":"LineNumber"
+        }
+      },
+      "properties":{
+        "OrderID":{
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+        },
+        "LineNumber":{
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+        }
+      }
+    },
+    "org.example.Dimensions":{
+      "type":"object",
+      "properties":{
+        "Height":{
+          "type":"number",
+          "multipleOf":1
+        },
+        "Weight":{
+          "type":"number",
+          "multipleOf":1
+        },
+        "Length":{
+          "type":"number",
+          "multipleOf":1
+        }
+      }
+    },
+    "org.example.Product22":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "ID":"ID"
+        }
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        },
+        "ProductDimensions":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/org.example.Dimensions"
+            },
+            {
+              "type":"null"
+            }
+          ]
+        },
+        "ShippingDimensions":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/org.example.Dimensions"
+            },
+            {
+              "type":"null"
+            }
+          ]
+        }
+      }
+    },
+    "org.example.ShipmentBox":{
+      "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "ID":"ID"
+        }
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        },
+        "Dimensions":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/org.example.Dimensions"
+            },
+            {
+              "type":"null"
+            }
+          ]
+        }
+      }
+    },
+    "org.example.FileAccess":{
+      "anyOf":[
+        {
+          "enum":[
+            "Read",
+            1,
+            "Write",
+            2,
+            "Create",
+            4,
+            "Delete",
+            8
+          ]
+        },
+        {
+          "type":"string",
+          "pattern":"^(Read|Write|Create|Delete)(,(Read|Write|Create|Delete))*$"
+        }
+      ],
+      "odata":{
+        "underlyingType":"Edm.Int32",
+        "isFlags":true
+      }
+    },
+    "org.example.ShippingMethod":{
+      "enum":[
+        "FirstClass",
+        0,
+        "TwoDay",
+        1,
+        "Overnight",
+        2
+      ],
+      "FirstClass@Core.Description":"Shipped with highest priority",
+      "TwoDay@Core.Description":"Shipped within two days",
+      "Overnight@Core.Description":"Shipped overnight",
+      "@Core.Description":"Method of shipping"
     },
     "org.example.Pattern":{
       "anyOf":[
@@ -197,16 +472,94 @@
         }
       }
     },
-    "Model1.Stuff":{
+    "org.example2.Product":{
       "type":"object",
+      "odata":{
+        "kind":"entity",
+        "keys":{
+          "ID":"ID"
+        }
+      },
       "properties":{
-        "ABool":{
+        "ID":{
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+        },
+        "Name":{
           "type":[
-            "boolean",
+            "string",
             "null"
           ]
         },
-        "AnInt":{
+        "Description":{
+          "type":[
+            "string",
+            "null"
+          ]
+        }
+      },
+      "@UI.DisplayName":{
+        "@odata.type":"#Path",
+        "value":"Name"
+      },
+      "@SearchVocabulary.SearchResult":{
+        "Title":{
+          "@odata.type":"#Path",
+          "value":"Name"
+        },
+        "Abstract":{
+          "@odata.type":"#Path",
+          "value":"Description"
+        },
+        "Url":{
+          "@odata.type":"#Apply",
+          "function":"odata.concat",
+          "value":[
+            "Products(",
+            {
+              "@odata.type":"#Path",
+              "value":"ID"
+            },
+            ")"
+          ]
+        }
+      }
+    },
+    "Model1.PrimitiveTypes":{
+      "type":"object",
+      "properties":{
+        "NullValue":{
+          "type":[
+            "boolean",
+            "null"
+          ],
+          "default":null
+        },
+        "TrueValue":{
+          "type":[
+            "boolean",
+            "null"
+          ],
+          "default":true
+        },
+        "FalseValue":{
+          "type":[
+            "boolean",
+            "null"
+          ],
+          "default":false
+        },
+        "BinaryValue":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Binary"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"T0RhdGE"
+        },
+        "IntegerValue":{
           "anyOf":[
             {
               "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
@@ -214,18 +567,170 @@
             {
               "type":"null"
             }
-          ]
+          ],
+          "default":-128
         },
-        "ADecimal":{
+        "DoubleValue":{
           "anyOf":[
             {
-              "type":"number",
-              "multipleOf":1
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Double"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":3.1415926535897931
+        },
+        "SingleValue":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Single"
             },
             {
               "type":"null"
             }
           ]
+        },
+        "DecimalValue":{
+          "anyOf":[
+            {
+              "type":"number"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":34.95
+        },
+        "StringValue":{
+          "type":[
+            "string",
+            "null"
+          ],
+          "default":"Say \"Hello\",\nthen go"
+        },
+        "DateValue":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"2012-12-03"
+        },
+        "DateTimeOffsetValue":{
+          "anyOf":[
+            {
+              "allOf":[
+                {
+                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+                },
+                {
+                  "pattern":"^[^.]*$"
+                }
+              ]
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"2012-12-03T07:16:23Z"
+        },
+        "DurationValue":{
+          "anyOf":[
+            {
+              "allOf":[
+                {
+                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Duration"
+                },
+                {
+                  "pattern":"(^[^.]*$|[.][0-9]{1,12}S$)"
+                }
+              ]
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"P12DT23H59M59.999999999999S"
+        },
+        "TimeOfDayValue":{
+          "anyOf":[
+            {
+              "allOf":[
+                {
+                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.TimeOfDay"
+                },
+                {
+                  "pattern":"(^[^.]*$|[.][0-9]{1,6}$)"
+                }
+              ]
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"07:59:59.999"
+        },
+        "GuidValue":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Guid"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"1234567-89ab-cdef-0123-456789abcdef"
+        },
+        "Int64Value":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int64"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":0
+        },
+        "ColorEnumValue":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/Model1.Color"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"yellow"
+        },
+        "GeographyPoint":{
+          "anyOf":[
+            {
+              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"SRID=0;Point(142.1 64.1)"
+        },
+        "StreamValue":{
+          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Stream"
+        },
+        "TypeDefValue":{
+          "anyOf":[
+            {
+              "$ref":"#/definitions/org.example.IntegerDecimal"
+            },
+            {
+              "type":"null"
+            }
+          ],
+          "default":"42"
         }
       }
     },
@@ -240,7 +745,7 @@
       ],
       "@Core.Description":"Sizes"
     },
-    "Model1.Pattern":{
+    "Model1.Color":{
       "anyOf":[
         {
           "enum":[
@@ -353,15 +858,15 @@
         },
         {
           "@odata.type":"#Path",
-          "value":"MyAddress/vCard.Address#work/Street"
+          "value":"MyAddress\/vCard.Address#work\/Street"
         },
         {
-          "@odata.type":"#org.example.Pattern",
-          "value":"Red"
+          "@odata.type":"#Self.Color",
+          "value":"Yellow"
         },
         {
-          "@odata.type":"#org.example.Pattern",
-          "value":"Red,Striped"
+          "@odata.type":"#Self.Color",
+          "value":"Yellow,Striped"
         },
         {
           "Egon":"1",
@@ -441,7 +946,7 @@
         "type":"Self.PreferredCustomer",
         "value":{
           "@odata.type":"#Path",
-          "value":"Customer/$count"
+          "value":"Customer\/$count"
         }
       },
       "@Some.Binary#two":{
@@ -666,7 +1171,7 @@
         "Waldos":{
           "type":"array",
           "items":{
-            "$ref":"#/definitions/org.example.Waldos"
+            "$ref":"#/definitions/Schema.Two.Waldos"
           },
           "odata":{
             "kind":"navigation"
@@ -755,25 +1260,475 @@
   "schemas":{
     "org.example":{
       "alias":"Self",
-      "@Core.Description":"Examples from Part 3: CSDL"
+      "@Core.Description":"Examples from Part 3: CSDL",
+      "functions":[
+        {
+          "name":"TopSellingProducts",
+          "parameters":{
+            "Year":{
+              "type":"Edm.Decimal",
+              "precision":"4",
+              "scale":"0"
+            }
+          },
+          "returnType":{
+            "type":"Collection(Model.Product)"
+          }
+        }
+      ],
+      "entityContainer":{
+        "name":"DemoService",
+        "entitySets":{
+          "StandardCustomers":{
+            "entityType":"Self.Customer",
+            "navigationPropertyBindings":{
+              "Orders":{
+                "target":"Orders"
+              }
+            }
+          },
+          "PreferredCustomers":{
+            "entityType":"Self.Customer",
+            "navigationPropertyBindings":{
+              "Orders":{
+                "target":"Orders"
+              }
+            }
+          },
+          "Orders":{
+            "entityType":"Self.Order"
+          },
+          "Products":{
+            "entityType":"Self.Product",
+            "navigationPropertyBindings":{
+              "Category":{
+                "target":"Self.DemoService.Categories"
+              },
+              "Supplier":{
+                "target":"Self.DemoService.Suppliers"
+              }
+            },
+            "@org.example.display.DisplayName":"Product Catalog"
+          },
+          "Categories":{
+            "entityType":"Self.Category",
+            "navigationPropertyBindings":{
+              "Products":{
+                "target":"Self.DemoService.Products"
+              }
+            }
+          },
+          "Suppliers":{
+            "entityType":"Self.Supplier",
+            "navigationPropertyBindings":{
+              "Products":{
+                "target":"Self.DemoService.Products"
+              }
+            },
+            "@org.example.display.DisplayName":"Supplier Directory"
+          }
+        },
+        "singletons":{
+          "Contoso":{
+            "type":"Self.Supplier"
+          }
+        },
+        "actionImports":{
+          "LeaveRequestApproval":{
+            "action":"Self.Approval"
+          }
+        },
+        "functionImports":{
+          "TopSellingProducts":{
+            "function":"Model.TopSellingProducts",
+            "entitySet":"Products"
+          },
+          "ProductsByRating":{
+            "function":"Self.ProductsByRating",
+            "entitySet":"Products"
+          }
+        }
+      }
+    },
+    "org.example2":{
+      "alias":null,
+      "@Core.Description":"Examples from Part 3: CSDL - second schema",
+      "terms":{
+        "IsURI":{
+          "type":"Core.Tag",
+          "defaultValue":"true",
+          "appliesTo":"Property",
+          "@Core.Description":"Properties and terms annotated with this term MUST contain a valid URI",
+          "@Core.RequiresType":"Edm.String"
+        }
+      },
+      "entityContainer":{
+        "name":"Extending",
+        "extends":"org.example.DemoService",
+        "entitySets":{
+          "Categories34":{
+            "entityType":"org.example.Category",
+            "navigationPropertyBindings":{
+              "Products":{
+                "target":"Products"
+              }
+            }
+          },
+          "Categories35":{
+            "entityType":"org.example.Category",
+            "navigationPropertyBindings":{
+              "Products":{
+                "target":"org.example.DemoService/Products"
+              }
+            }
+          }
+        }
+      },
+      "annotations":[
+        {
+          "target":"Self.Person",
+          "qualifier":"Tablet",
+          "@org.example.display.DisplayName#Tablet":{
+            "@odata.type":"#Path",
+            "value":"FirstName"
+          },
+          "@org.example.display.Thumbnail":{
+            "@odata.type":"#Binary",
+            "value":"T0RhdGE"
+          },
+          "@org.example.display.Thumbnail#element":{
+            "@odata.type":"#Binary",
+            "value":"T0RhdGE"
+          },
+          "@org.example.display.ReadOnly":true,
+          "@org.example.display.ReadOnly#element":true,
+          "@org.example.vCard.birthDay":{
+            "@odata.type":"#Date",
+            "value":"2000-01-01"
+          },
+          "@org.example.vCard.birthDay#element":{
+            "@odata.type":"#Date",
+            "value":"2000-01-01"
+          },
+          "@org.example.display.LastUpdated":{
+            "@odata.type":"#DateTimeOffset",
+            "value":"2000-01-01T16:00:00.000Z"
+          },
+          "@org.example.display.LastUpdated#element":{
+            "@odata.type":"#DateTimeOffset",
+            "value":"2000-01-01T16:00:00.000-09:00"
+          },
+          "@org.example.display.Width":{
+            "@odata.type":"#Decimal",
+            "value":3.14
+          },
+          "@org.example.display.Width#element":{
+            "@odata.type":"#Decimal",
+            "value":3.14
+          },
+          "@org.example.task.duration":{
+            "@odata.type":"#Duration",
+            "value":"P7D"
+          },
+          "@org.example.task.duration#element":{
+            "@odata.type":"#Duration",
+            "value":"P11DT23H59M59.999999999999S"
+          },
+          "@org.example.HasPattern":{
+            "@odata.type":"#org.example.Pattern",
+            "value":"Red"
+          },
+          "@org.example.HasPattern#element":{
+            "@odata.type":"#org.example.Pattern",
+            "value":"Red"
+          },
+          "@org.example.HasPattern":{
+            "@odata.type":"#org.example.Pattern",
+            "value":"Red,Striped"
+          },
+          "@org.example.HasPattern#element":{
+            "@odata.type":"#org.example.Pattern",
+            "value":"Red,Striped"
+          },
+          "@org.example.display.Width":3.14,
+          "@org.example.display.Width#element":3.14,
+          "@org.example.display.Id":{
+            "@odata.type":"#Guid",
+            "value":"21EC2020-3AEA-1069-A2DD-08002B30309D"
+          },
+          "@org.example.display.Id#element":{
+            "@odata.type":"#Guid",
+            "value":"21EC2020-3AEA-1069-A2DD-08002B30309D"
+          },
+          "@org.example.display.Width":{
+            "@odata.type":"#Int64",
+            "value":42
+          },
+          "@org.example.display.Width#element":{
+            "@odata.type":"#Int64",
+            "value":42
+          },
+          "@org.example.display.DisplayName":"Product Catalog",
+          "@org.example.display.DisplayName#element":"Product Catalog",
+          "@org.example.display.EndTime":{
+            "@odata.type":"#TimeOfDay",
+            "value":"21:45:00"
+          },
+          "@org.example.display.EndTime#element":{
+            "@odata.type":"#TimeOfDay",
+            "value":"21:45:00"
+          },
+          "@UI.ReferenceFacet":{
+            "@odata.type":"#AnnotationPath",
+            "value":"Product\/Supplier\/@UI.LineItem"
+          },
+          "@UI.CollectionFacet#Contacts":[
+            {
+              "@odata.type":"#AnnotationPath",
+              "value":"Supplier\/@Communication.Contact"
+            },
+            {
+              "@odata.type":"#AnnotationPath",
+              "value":"Customer\/@Communication.Contact"
+            }
+          ],
+          "@org.example.display.DisplayName":{
+            "@odata.type":"#Apply",
+            "function":"odata.concat",
+            "value":[
+              "Product: ",
+              {
+                "@odata.type":"#Path",
+                "value":"ProductName"
+              },
+              " (",
+              {
+                "@odata.type":"#Path",
+                "value":"Available\/Quantity"
+              },
+              "",
+              {
+                "@odata.type":"#Path",
+                "value":"Available\/Unit"
+              },
+              " available)"
+            ]
+          },
+          "@Some.Term#Example57":{
+            "@odata.type":"#Apply",
+            "function":"odata.fillUriTemplate",
+            "value":[
+              "http:\/\/host\/service\/Genres('{genreName}')",
+              {
+                "@odata.type":"#LabeledElement",
+                "name":"genreName",
+                "value":{
+                  "@odata.type":"#Path",
+                  "value":"NameOfMovieGenre"
+                }
+              }
+            ]
+          },
+          "@Some.Term#Example58":{
+            "@odata.type":"#Apply",
+            "function":"odata.fillUriTemplate",
+            "value":[
+              "http:\/\/host\/service\/Genres({genreName2})",
+              {
+                "@odata.type":"#LabeledElement",
+                "name":"genreName2",
+                "value":{
+                  "@odata.type":"#Apply",
+                  "function":"odata.uriEncode",
+                  "value":[
+                    {
+                      "@odata.type":"#Path",
+                      "value":"NameOfMovieGenre"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "@org.example.display.Threshold":{
+            "@odata.type":"#Cast",
+            "type":"Edm.Decimal",
+            "value":{
+              "@odata.type":"#Path",
+              "value":"Average"
+            }
+          },
+          "@org.example.seo.SeoTerms":[
+            "Product",
+            "Supplier",
+            "Customer"
+          ],
+          "@org.example.person.Gender":{
+            "@odata.type":"#If",
+            "value":[
+              {
+                "@odata.type":"#Path",
+                "value":"IsFemale"
+              },
+              "Female",
+              "Male"
+            ]
+          },
+          "@Self.IsPreferredCustomer":{
+            "@odata.type":"#IsOf",
+            "type":"Self.PreferredCustomer",
+            "value":{
+              "@odata.type":"#Path",
+              "value":"Customer"
+            }
+          },
+          "@org.example.display.DisplayName":{
+            "@odata.type":"#LabeledElement",
+            "name":"CustomerFirstName",
+            "value":{
+              "@odata.type":"#Path",
+              "value":"FirstName"
+            }
+          },
+          "@org.example.display.DisplayName#element":{
+            "@odata.type":"#LabeledElement",
+            "name":"CustomerFirstName",
+            "value":{
+              "@odata.type":"#Path",
+              "value":"FirstName"
+            }
+          },
+          "@org.example.display.DisplayName":{
+            "@odata.type":"#LabeledElementReference",
+            "value":"Model.CustomerFirstName"
+          },
+          "@org.example.display.DisplayName":{
+            "@odata.type":"#Null"
+          },
+          "@UI.HyperLink":{
+            "@odata.type":"#NavigationPropertyPath",
+            "value":"Supplier"
+          },
+          "@Capabilities.UpdateRestrictions#element":{
+            "NonUpdatableNavigationProperties":[
+              {
+                "@odata.type":"#NavigationPropertyPath",
+                "value":"Supplier"
+              },
+              {
+                "@odata.type":"#NavigationPropertyPath",
+                "value":"Category"
+              }
+            ]
+          },
+          "@org.example.display.DisplayName":{
+            "@odata.type":"#Path",
+            "value":"FirstName"
+          },
+          "@org.example.display.DisplayName#element":{
+            "@odata.type":"#Path",
+            "value":"@vCard.Address#work\/FullName"
+          },
+          "@UI.RefreshOnChangeOf":{
+            "@odata.type":"#PropertyPath",
+            "value":"ChangedAt"
+          },
+          "@Capabilities.UpdateRestrictions#element":{
+            "NonUpdatableProperties":[
+              {
+                "@odata.type":"#PropertyPath",
+                "value":"CreatedAt"
+              },
+              {
+                "@odata.type":"#PropertyPath",
+                "value":"ChangedAt"
+              }
+            ]
+          },
+          "@org.example.person.Employee":{
+            "GivenName":{
+              "@odata.type":"#Path",
+              "value":"FirstName"
+            },
+            "Surname":{
+              "@odata.type":"#Path",
+              "value":"LastName"
+            },
+            "Manager":{
+              "@odata.type":"#Path",
+              "value":"DirectSupervisor"
+            },
+            "CostCenter":{
+              "@odata.type":"#UrlRef",
+              "value":{
+                "@odata.type":"#Apply",
+                "function":"odata.fillUriTemplate",
+                "value":[
+                  "http:\/\/host\/anotherservice\/CostCenters('{ccid}')",
+                  {
+                    "@odata.type":"#LabeledElement",
+                    "name":"ccid",
+                    "value":{
+                      "@odata.type":"#Path",
+                      "value":"CostCenterID"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "@Vocab.Supplier":{
+            "@odata.type":"#UrlRef",
+            "value":{
+              "@odata.type":"#Apply",
+              "function":"odata.fillUriTemplate",
+              "value":[
+                "http:\/\/host\/service\/Suppliers({suppID})",
+                {
+                  "@odata.type":"#LabeledElement",
+                  "name":"suppID",
+                  "value":{
+                    "@odata.type":"#Apply",
+                    "function":"odata.uriEncode",
+                    "value":[
+                      {
+                        "@odata.type":"#Path",
+                        "value":"SupplierId"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "@Core.LongDescription#element":{
+            "@odata.type":"#UrlRef",
+            "value":"http:\/\/host\/wiki\/HowToUse"
+          },
+          "@Core.LongDescription":{
+            "@odata.type":"#UrlRef",
+            "value":"http:\/\/host\/wiki\/HowToUse"
+          }
+        }
+      ]
     },
     "Model1":{
-      "alias":"Self",
+      "alias":"M1",
       "@UI.ReferenceFacet":{
         "@odata.type":"#AnnotationPath",
         "value":"@UI.LineItem"
       },
       "@UI.ReferenceFacet#OnNavPropTarget":{
         "@odata.type":"#AnnotationPath",
-        "value":"Product/Supplier/@UI.LineItem"
+        "value":"Product\/Supplier\/@UI.LineItem"
       },
       "@UI.ReferenceFacet#OnNavProp":{
         "@odata.type":"#AnnotationPath",
-        "value":"Product/Supplier@UI.LineItem"
+        "value":"Product\/Supplier@UI.LineItem"
       },
       "@UI.ReferenceFacet#OnNavPropQualified":{
         "@odata.type":"#AnnotationPath",
-        "value":"Product/Supplier@UI.LineItem#Tablet"
+        "value":"Product\/Supplier@UI.LineItem#Tablet"
       },
       "@UI.ReferenceFacet#ViaUrl":{
         "@odata.type":"#UrlRef",
@@ -781,7 +1736,7 @@
       },
       "@UI.ReferenceFacet#complicated":{
         "@odata.type":"#AnnotationPath",
-        "value":"@x.Supplier#X/Contacts@y.ViewVariants"
+        "value":"@x.Supplier#X\/Contacts@y.ViewVariants"
       },
       "@UI.HyperLink":{
         "@odata.type":"#NavigationPropertyPath",
@@ -899,11 +1854,11 @@
       "@UI.CollectionFacet#Contacts":[
         {
           "@odata.type":"#AnnotationPath",
-          "value":"Supplier/@Communication.Contact"
+          "value":"Supplier\/@Communication.Contact"
         },
         {
           "@odata.type":"#AnnotationPath",
-          "value":"Customer/@Communication.Contact"
+          "value":"Customer\/@Communication.Contact"
         }
       ],
       "@Some.Thing":{
@@ -1065,7 +2020,7 @@
       }
     },
     "Schema.One":{
-      "alias":"Self",
+      "alias":"One",
       "actions":[
         {
           "name":"Rejection",
@@ -1081,16 +2036,22 @@
       ],
       "functions":[
         {
+          "name":"Foo",
+          "returnType":{
+            "type":"Edm.String"
+          }
+        },
+        {
           "name":"OddWaldos",
           "isBound":true,
           "entitySetPath":"in",
           "parameters":{
             "in":{
-              "type":"Collection(Self.Waldo)"
+              "type":"Collection(One.Waldo)"
             }
           },
           "returnType":{
-            "type":"Collection(Self.Waldo)"
+            "type":"Collection(One.Waldo)"
           }
         }
       ],
@@ -1098,37 +2059,26 @@
         "name":"Default",
         "entitySets":{
           "Waldos":{
-            "entityType":"Self.Waldo"
+            "entityType":"One.Waldo"
           }
         },
         "functionImports":{
           "Bar":{
-            "function":"Self.Foo"
+            "function":"One.Foo"
           }
         }
       }
     },
-    "Schema.One":{
-      "alias":"Self",
-      "functions":[
-        {
-          "name":"Foo",
-          "returnType":{
-            "type":"Edm.String"
-          }
-        }
-      ]
-    },
     "Schema.Two":{
-      "alias":"Self",
+      "alias":"Two",
       "entityContainer":{
         "name":"Default",
         "entitySets":{
           "Waldos":{
-            "entityType":"Self.Waldo"
+            "entityType":"Two.Waldo"
           },
           "Freds":{
-            "entityType":"Self.Fred",
+            "entityType":"Two.Fred",
             "navigationPropertyBindings":{
               "Waldos":{
                 "target":"Waldos"
@@ -1217,7 +2167,7 @@
           "target":"Some.EntityType",
           "@Y.DevelopmentTeam":{
             "@odata.type":"#Path",
-            "value":"SomeCollectionNavProp/@Y.Developer"
+            "value":"SomeCollectionNavProp\/@Y.Developer"
           },
           "@Y.DevelopmentTeam@custom.IsA":"X.Team"
         },
@@ -1225,7 +2175,7 @@
           "target":"Some.EntityType",
           "@Y.DevelopmentTeam":{
             "@odata.type":"#Path",
-            "value":"SomeCollectionNavProp/@Y.Developer"
+            "value":"SomeCollectionNavProp\/@Y.Developer"
           },
           "@Y.DevelopmentTeam@custom.IsA":"X.Team",
           "@Y.ScrumTeam":{
