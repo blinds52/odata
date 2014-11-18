@@ -6,8 +6,9 @@
     This style sheet transforms OData 4.0 XML CSDL documents into OData JSON CSDL
 
     TODO:
-    - DefaultValue -> default - Problem: find correct representation for Boolean, numbers, string (escaped)
+    - DefaultValue: determine underlying type of type definitions, use for qouting decision
     - Core.Description -> title/description?
+    - Include: fold/duplicate into schemas with uri and optional alias
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -267,20 +268,25 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$singleType = 'Edm.String'">
+      <xsl:when test="$singleType='Edm.Stream'">
+        <xsl:text>"$ref":"</xsl:text>
+        <xsl:value-of select="$edmUri" />
+        <xsl:text>#/definitions/Edm.Stream"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.String'">
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
       </xsl:when>
-      <xsl:when test="$singleType = 'Edm.Boolean'">
+      <xsl:when test="$singleType='Edm.Boolean'">
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'boolean'" />
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
       </xsl:when>
-      <xsl:when test="$singleType = 'Edm.Decimal'">
+      <xsl:when test="$singleType='Edm.Decimal'">
         <xsl:if test="not($nullable='false')">
           <xsl:text>"anyOf":[{</xsl:text>
         </xsl:if>
@@ -359,7 +365,11 @@
           <xsl:when test="$precision>0">
             <xsl:text>},{"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
             <xsl:value-of select="$precision" />
-            <xsl:text>}$)"}]</xsl:text>
+            <xsl:text>}</xsl:text>
+            <xsl:if test="$singleType='Edm.Duration'">
+              <xsl:text>S</xsl:text>
+            </xsl:if>
+            <xsl:text>$)"}]</xsl:text>
           </xsl:when>
           <xsl:when test="$precision=0">
             <xsl:text>},{"pattern":"^[^.]*$"}]</xsl:text>
@@ -387,6 +397,9 @@
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:apply-templates select="@DefaultValue">
+      <xsl:with-param name="type" select="$singleType" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template name="ref">
@@ -457,9 +470,23 @@
   </xsl:template>
 
   <xsl:template match="edm:Property/@DefaultValue">
-    <xsl:text>,"default":"</xsl:text>
-    <xsl:value-of select="." />
-    <xsl:text>"</xsl:text>
+    <xsl:param name="type" />
+    <xsl:text>,"default":</xsl:text>
+    <!-- TODO: look up non-Edm types to get edm:TypeDefinition/@UnderlyingType -->
+    <xsl:choose>
+      <xsl:when
+        test="$type='Edm.Boolean' or $type='Edm.Decimal' or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Byte' or $type='Edm.SByte' or $type='Edm.Int16' or $type='Edm.Int32' or $type='Edm.Int64'"
+      >
+        <xsl:value-of select="." />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"</xsl:text>
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="." />
+        </xsl:call-template>
+        <xsl:text>"</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- name : unquoted boolean value -->
@@ -522,7 +549,7 @@
 
   <xsl:template match="edm:EntityContainer">
     <xsl:text>,"entityContainer":{</xsl:text>
-    <xsl:apply-templates select="@*" />
+    <xsl:apply-templates select="@*" mode="list" />
     <xsl:apply-templates select="edm:EntitySet" mode="hash" />
     <xsl:apply-templates select="edm:Singleton" mode="hash" />
     <xsl:apply-templates select="edm:ActionImport" mode="hash" />
@@ -569,7 +596,7 @@
       <xsl:with-param name="target" select="$name" />
     </xsl:apply-templates>
     <!-- for tagging terms -->
-    <xsl:if test="count(@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation']) = 0">
+    <xsl:if test="count(@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation'])=0">
       <xsl:text>{}</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -577,7 +604,7 @@
   <!-- name : unquoted direct value or annotated quoted special value -->
   <xsl:template match="@Float|edm:Float">
     <xsl:choose>
-      <xsl:when test=". = 'INF' or . = '-INF' or . = 'NaN'">
+      <xsl:when test=".='INF' or .='-INF' or .='NaN'">
         <xsl:text>{"@odata.type":"#Double","value":"</xsl:text>
         <xsl:value-of select="." />
         <xsl:text>"}</xsl:text>
@@ -611,7 +638,7 @@
 
   <!-- name : object with quoted value -->
   <xsl:template
-    match="@Binary|@Date|@DateTimeOffset|@Duration|@Guid|@TimeOfDay|@AnnotationPath|@NavigationPropertyPath|@Path|@PropertyPath|edm:Binary|edm:Date|edm:DateTimeOffset|edm:Duration|edm:Guid|edm:TimeOfDay|edm:AnnotationPath|edm:LabeledElementReference|edm:NavigationPropertyPath|edm:Path|edm:PropertyPath"
+    match="@Binary|edm:Binary|@Date|edm:Date|@DateTimeOffset|edm:DateTimeOffset|@Duration|edm:Duration|@Guid|edm:Guid|edm:LabeledElementReference|@TimeOfDay|edm:TimeOfDay"
   >
     <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
@@ -621,7 +648,9 @@
   </xsl:template>
 
   <!-- name : object with escaped string value -->
-  <xsl:template match="@UrlRef">
+  <xsl:template
+    match="@AnnotationPath|edm:AnnotationPath|@NavigationPropertyPath|edm:NavigationPropertyPath|@Path|edm:Path|@PropertyPath|edm:PropertyPath|@UrlRef"
+  >
     <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","value":"</xsl:text>
@@ -832,7 +861,7 @@
   <xsl:template match="@*|*" mode="object">
     <xsl:param name="name" />
     <xsl:param name="after" select="'something'" />
-    <xsl:if test="position() = 1">
+    <xsl:if test="position()=1">
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
       </xsl:if>
@@ -844,7 +873,7 @@
     <xsl:if test="position()!=last()">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:if test="position() = last()">
+    <xsl:if test="position()=last()">
       <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -852,7 +881,7 @@
   <!-- name : array -->
   <xsl:template match="*" mode="array">
     <xsl:param name="after" select="'something'" />
-    <xsl:if test="position() = 1">
+    <xsl:if test="position()=1">
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
       </xsl:if>
@@ -866,7 +895,7 @@
     <xsl:if test="position()!=last()">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:if test="position() = last()">
+    <xsl:if test="position()=last()">
       <xsl:text>]</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -883,7 +912,7 @@
     <xsl:param name="name" />
     <xsl:param name="key" select="'Name'" />
     <xsl:param name="after" select="'something'" />
-    <xsl:if test="position() = 1">
+    <xsl:if test="position()=1">
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
       </xsl:if>
@@ -906,7 +935,7 @@
     <xsl:if test="position()!=last()">
       <xsl:text>,</xsl:text>
     </xsl:if>
-    <xsl:if test="position() = last()">
+    <xsl:if test="position()=last()">
       <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -914,7 +943,7 @@
   <xsl:template match="*" mode="hashpair">
     <xsl:param name="key" select="'Name'" />
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="@*[local-name() = $key]" />
+    <xsl:value-of select="@*[local-name()=$key]" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="." mode="hashvalue">
       <xsl:with-param name="key" select="$key" />
@@ -986,16 +1015,16 @@
   <xsl:template name="pluralize">
     <xsl:param name="name" />
     <xsl:choose>
-      <xsl:when test="$name = 'Annotations'">
+      <xsl:when test="$name='Annotations'">
         <xsl:text>annotations</xsl:text>
       </xsl:when>
-      <xsl:when test="$name = 'IncludeAnnotations'">
+      <xsl:when test="$name='IncludeAnnotations'">
         <xsl:text>includeAnnotations</xsl:text>
       </xsl:when>
-      <xsl:when test="$name = 'NavigationProperty'">
+      <xsl:when test="$name='NavigationProperty'">
         <xsl:text>navigationProperties</xsl:text>
       </xsl:when>
-      <xsl:when test="$name = 'Property'">
+      <xsl:when test="$name='Property'">
         <xsl:text>properties</xsl:text>
       </xsl:when>
       <xsl:otherwise>
@@ -1009,7 +1038,7 @@
   <xsl:template name="lowerCamelCase">
     <xsl:param name="name" />
     <xsl:choose>
-      <xsl:when test="$name = 'SRID'">
+      <xsl:when test="$name='SRID'">
         <xsl:text>srid</xsl:text>
       </xsl:when>
       <xsl:otherwise>
