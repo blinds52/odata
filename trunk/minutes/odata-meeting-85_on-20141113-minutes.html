@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #83 Thursday Nov 13, 2014</title>
+</head>
+<body>
+<h1>OData TC meeting #83 Thursday Nov 13, 2014</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2014-11-13 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Edmond Bourne (BlackBerry)
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt 
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Drees (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=36567">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from October 30, 2014 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/54460/odata-meeting-84_on-20141030-minutes.html">Meeting#84 on 2014-OCT-30</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by November 13, 2014</h4>
+<p>None</p>
+
+
+<h3>5. Process issues</h3>
+<h4>5.1 ODATA-733 "Specify navigation property binding combined with containment"</h4>
+<p>Ralf: Clarify handling of cycles in Extends for EntityContainers</p>
+<p>Mike: services should not do this, clients should stop once they encounter a service again</p>
+<p>Mike: DMTF is defining a "core" service with entity sets that each service has to support</p>
+<p>Mike: proposes "Services should not introduce cycles in Extends. Clients must be prepared to process cycles in Extends."</p>
+<p>Mike: I move we resolve ODATA-733 as proposed.</p>
+<p>Hubert seconds</p>
+<P>Motion passes, no objections</P>
+
+<h4>5.2 ODATA-734 "Unicode Facet is inadequate"</h4>
+<p>ODATA-734 is open</p>
+<p>Mike to record the discussion in Jira</p>
+<p>John: also investigate UTF-8 vs UTF-16</p>
+
+<h4>5.3 ODATA-735 "Enhance the CSDL for instance annotations"</h4>
+<p>ODATA-735 is open</p>
+<p>John: maybe a session attribute defining language coding for session</p>
+<p>Mike: would need to extend the CSDL schema, so no candidate for Errata03</p>
+
+<p>Mike: I move we move this issue to OData 4.1 release.</p>
+<p>Matt seconds</p>
+<p>Motion passes</p>
+
+<h4>5.4 ODATA-742 "Usage of domain contoso.com and term name contoso in examples"</h4>
+<p>Martin: The edm:Term element MAY define a value for the AppliesTo attribute. The value of this attribute is a whitespace-separated list of CSDL element names that this term is intended to be applied to. If no value is supplied, the term is not intended to be restricted in its application. As the intended usage may evolve over time, clients SHOULD be prepared for any annotation to be applied to any element</p>
+<p>Martin: leftover of editing</p>
+<p>Mike: let's change it</p>
+<p>ODATA-742 is open</p>
+<p>Martin: I move we resolve ODATA-742 and remove references to contoso in the documents</p>
+<p>Stefan seconds</p>
+<p>Motion passes</p>
+
+<h4>5.5 ODATA-746 "12.2.3: IsComposable - clarify what is allowed even if set to false"</h4>
+<p>Mike explains background: stored procedures vs table-valued functions</p>
+<p>Martin: If no value is specified for the IsComposable attribute, the value defaults to false.
+"Functions whose IsComposable attribute is true are considered composable. A composable function can be invoked with additional path segments or system query options appended to the path that identifies the composable function as appropriate for the type returned by the composable function."</p>
+<p>Mike: if there's a generic implementation that post-processes the result the server can set IsComposable to true</p>
+<p>ODATA-746 is open</p>
+<p>Mike: I move we resolve ODATA-746 by clarifying that IsComposable restricts further query refinement through segments, key lookup, or query options.</p>
+<p>Martin seconds</p>
+<p>Motion passes</p>
+
+<h4>5.6 ODATA-745 "Sections 4.5.5, 7.3, and 7.4: is odata.nextLink allowed for all collections?"</h4>
+<p>Mike: there might be a JIRA ticket for this documenting the discussion and decision</p>
+<p>ODATA-745 is open</p>
+
+<h4>5.7 ODATA-749 "What should service return when attempting to related two entities that are already related?"</h4>
+<p>ODATA-749 is open</p>
+<p>Hubert: I more to resolve ODATA-749 as proposed.</p>
+<p>Mike seconds</p>
+<p>Motion passes</p>
+
+<h4>5.8 ODATA-731 "Explicitly state that JSON service documents may contain annotations"</h4>
+<p>ODATA-731 is open</p>
+<p>Mike: I move we resolve ODATA-731 by saying that Any JSON object and name-value pair can be annotated, including the service document. Dynamic properties are not allowed in the service document.</p>
+<p>Hubert seconds</p>
+<p>Motion passes</p>
+
+<p>Martin: Added "https://issues.oasis-open.org/browse/ODATA-519 "Define server-driven paging for collection-valued resources"" to ODATA-745</p>
+
+<h3>6. JSON representation for metadata</h3>
+<p>All walk through the document</p>
+<p>Ram: public comments via the comments mailing list are fine</p>
+<p>send mail to: odata-comment@lists.oasis-open.org</p>
+
+<h3>7. Next meeting</h3>
+<p>Next week: 2014-11-20 8:00-10:00am PT</p>
+<p>Agreed</p>
+ 
+<h4>8. AOB</h4>
+
+<p>None.</p>
+
+<h3>Meeting adjourned at 10:00 PDT</h3>
+
+</body>
+</html>
+
+
