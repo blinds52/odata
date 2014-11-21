@@ -6,15 +6,20 @@
     This style sheet transforms OData 4.0 XML CSDL documents into OData JSON CSDL
 
     TODO:
+    - add "alias" definitions for used Edm types?
     - DefaultValue: determine underlying type of type definitions, use for qouting decision
     - Core.Description -> title/description?
-    - Include: fold/duplicate into schemas with uri and optional alias
+    - Include: fold/duplicate into schemas with uri and optional alias? In addition to references/.../includes/...?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
   <xsl:strip-space elements="*" />
 
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
+
+  <xsl:key name="types"
+    match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType/edm:Property/@Type|edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType/edm:Property/@Type|edmx:Edmx/edmx:DataServices/edm:Schema/edm:TypeDefinition/@UnderlyingType"
+    use="." />
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"$schema":"</xsl:text>
@@ -42,21 +47,47 @@
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
+    <!--
+      <xsl:text>,"edmTypes":[</xsl:text>
+      <xsl:for-each
+      select="edm:Schema/edm:EntityType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:ComplexType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:TypeDefinition/@UnderlyingType[generate-id()=generate-id(key('types',.)[1])]"
+      >
+      <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>"</xsl:text>
+      <xsl:value-of select="." />
+      <xsl:text>"</xsl:text>
+      </xsl:for-each>
+      <xsl:text>]</xsl:text>
+    -->
+    <!--
+      <xsl:for-each select="distinct-values(edm:Schema/edm:EntityType/edm:Property/@Type)">
+      <xsl:value-of select="." />
+      </xsl:for-each>
+    -->
     <xsl:apply-templates
       select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType|edm:Schema/edm:TypeDefinition|edm:Schema/edm:EnumType"
       mode="hash"
     >
       <xsl:with-param name="name" select="'definitions'" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Schema" mode="hash">
+    <xsl:apply-templates select="edm:Schema|../edmx:Reference/edmx:Include" mode="hash">
       <xsl:with-param name="key" select="'Namespace'" />
+      <xsl:with-param name="name" select="'schemas'" />
     </xsl:apply-templates>
   </xsl:template>
 
-  <xsl:template match="edm:EntitySet" mode="ref">
-    <xsl:text>{"$ref":"#/definitions/</xsl:text>
-    <xsl:value-of select="@EntityType" />
-    <xsl:text>"}</xsl:text>
+  <xsl:template match="edmx:Include" mode="hashvalue">
+    <xsl:param name="name" />
+    <xsl:choose>
+      <xsl:when test="$name='schemas'">
+        <xsl:apply-templates select="@Alias|../@Uri" mode="list" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="@Alias" />
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm:Schema" mode="hashvalue">
@@ -116,7 +147,7 @@
     </xsl:if>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>",</xsl:text>
+    <xsl:text>","</xsl:text>
     <xsl:choose>
       <xsl:when test="@Value">
         <xsl:value-of select="@Value" />
@@ -125,6 +156,7 @@
         <xsl:value-of select="position() - 1" />
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Member" mode="pattern">
@@ -933,6 +965,8 @@
       <xsl:text>":{</xsl:text>
     </xsl:if>
     <xsl:apply-templates select="." mode="hashpair">
+      <!-- TODO: pass calculated default name -->
+      <xsl:with-param name="name" select="$name" />
       <xsl:with-param name="key" select="$key" />
     </xsl:apply-templates>
     <xsl:if test="position()!=last()">
@@ -944,11 +978,13 @@
   </xsl:template>
 
   <xsl:template match="*" mode="hashpair">
+    <xsl:param name="name" />
     <xsl:param name="key" select="'Name'" />
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@*[local-name()=$key]" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="." mode="hashvalue">
+      <xsl:with-param name="name" select="$name" />
       <xsl:with-param name="key" select="$key" />
     </xsl:apply-templates>
     <xsl:text>}</xsl:text>
