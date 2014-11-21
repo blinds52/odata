@@ -1,5 +1,5 @@
 @echo off
-set FILES=csdl-16.1.json csdl-16.2.json ExampleService.json miscellaneous.json MetadataService.json TM1$metadata.json merged_metadata.json
+set FILES=csdl-16.1.json csdl-16.2.json ExampleService.json miscellaneous.json MetadataService.json TM1$metadata.json merged_metadata.json Org.OData.Core.V1.json Org.OData.Capabilities.V1.json Org.OData.Measures.V1.json
 
 @rem check syntax of all schemas
 java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax edm.json %FILES%
