@@ -1,14 +1,11 @@
 {
-  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
+  "$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
   "definitions":{
     "ODataDemo.Product":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "hasStream":true,
-        "keys":{
-          "ID":"ID"
-        }
+      "mediaEntity":true,
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -26,7 +23,7 @@
         "ReleaseDate":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
             },
             {
               "type":"null"
@@ -36,7 +33,7 @@
         "DiscontinuedDate":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
             },
             {
               "type":"null"
@@ -46,7 +43,7 @@
         "Rating":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
             },
             {
               "type":"null"
@@ -77,8 +74,7 @@
         },
         "Category":{
           "$ref":"#/definitions/ODataDemo.Category",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Products"
           }
         },
@@ -91,8 +87,7 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Products"
           }
         }
@@ -100,15 +95,12 @@
     },
     "ODataDemo.Category":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Name":{
           "type":"string",
@@ -121,8 +113,7 @@
           "items":{
             "$ref":"#/definitions/ODataDemo.Product"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Category",
             "onDelete":{
               "action":"Cascade"
@@ -133,11 +124,8 @@
     },
     "ODataDemo.Supplier":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -153,15 +141,14 @@
           "$ref":"#/definitions/ODataDemo.Address"
         },
         "Concurrency":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Products":{
           "type":"array",
           "items":{
             "$ref":"#/definitions/ODataDemo.Product"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Supplier"
           }
         }
@@ -169,11 +156,8 @@
     },
     "ODataDemo.Country":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Code":"Code"
-        }
+      "keys":{
+        "Code":"Code"
       },
       "properties":{
         "Code":{
@@ -230,8 +214,7 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "referentialConstraints":{
               "CountryName":{
                 "referencedProperty":"Name"

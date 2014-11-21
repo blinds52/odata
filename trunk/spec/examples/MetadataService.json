@@ -1,13 +1,10 @@
 {
-  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
+  "$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
   "definitions":{
     "Edm.Metadata.Reference":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Uri":"Uri"
-        }
+      "keys":{
+        "Uri":"Uri"
       },
       "properties":{
         "Uri":{
@@ -44,8 +41,8 @@
         },
         "Schema":{
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
@@ -75,11 +72,8 @@
     },
     "Edm.Metadata.Schema":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Namespace":"Namespace"
-        }
+      "keys":{
+        "Namespace":"Namespace"
       },
       "properties":{
         "Namespace":{
@@ -100,8 +94,8 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "Types":{
@@ -109,8 +103,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Type"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Schema"
           }
         },
@@ -119,8 +112,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Action"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Schema"
           }
         },
@@ -129,15 +121,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Function"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Schema"
           }
         },
         "EntityContainer":{
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Schema"
           }
         },
@@ -146,8 +136,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Term"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Schema"
           }
         },
@@ -156,8 +145,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -165,12 +153,9 @@
     },
     "Edm.Metadata.Type":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "abstract":true,
-        "keys":{
-          "QualifiedName":"QualifiedName"
-        }
+      "abstract":true,
+      "keys":{
+        "QualifiedName":"QualifiedName"
       },
       "properties":{
         "QualifiedName":{
@@ -181,8 +166,7 @@
         },
         "Schema":{
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Types"
           }
         },
@@ -191,8 +175,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -201,13 +184,13 @@
     "Edm.Metadata.StructuredType":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Type"
+          "$ref":"#/definitions/Edm.Metadata.Type"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity",
-            "abstract":true
+          "abstract":true,
+          "keys":{
+            
           },
           "properties":{
             "Abstract":{
@@ -221,8 +204,7 @@
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.Property"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"DeclaringType"
               }
             },
@@ -231,8 +213,7 @@
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.NavigationProperty"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"DeclaringType"
               }
             }
@@ -243,13 +224,10 @@
     "Edm.Metadata.EntityType":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.StructuredType"
+          "$ref":"#/definitions/Edm.Metadata.StructuredType"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "Key":{
               "type":"array",
@@ -269,8 +247,7 @@
                   "type":"null"
                 }
               ],
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"DerivedTypes"
               }
             },
@@ -279,8 +256,7 @@
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.EntityType"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"BaseType"
               }
             },
@@ -289,8 +265,7 @@
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.EntitySet"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"EntityType"
               }
             }
@@ -312,8 +287,8 @@
         },
         "Property":{
           "$ref":"#/definitions/Edm.Metadata.Property",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
@@ -321,13 +296,10 @@
     "Edm.Metadata.ComplexType":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.StructuredType"
+          "$ref":"#/definitions/Edm.Metadata.StructuredType"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "BaseType":{
               "anyOf":[
@@ -338,8 +310,7 @@
                   "type":"null"
                 }
               ],
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"DerivedTypes"
               }
             },
@@ -348,8 +319,7 @@
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.ComplexType"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"BaseType"
               }
             }
@@ -360,21 +330,17 @@
     "Edm.Metadata.PrimitiveType":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.Type"
+          "$ref":"#/definitions/Edm.Metadata.Type"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "TypeDefinitions":{
               "type":"array",
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.TypeDefinition"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"UnderlyingType"
               }
             },
@@ -383,8 +349,7 @@
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.EnumType"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"UnderlyingType"
               }
             }
@@ -395,21 +360,17 @@
     "Edm.Metadata.EnumType":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.PrimitiveType"
+          "$ref":"#/definitions/Edm.Metadata.PrimitiveType"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "IsFlags":{
               "type":"boolean"
             },
             "UnderlyingType":{
               "$ref":"#/definitions/Edm.Metadata.PrimitiveType",
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"EnumTypes"
               }
             },
@@ -418,8 +379,7 @@
               "items":{
                 "$ref":"#/definitions/Edm.Metadata.EnumTypeMember"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"EnumType"
               }
             }
@@ -429,11 +389,8 @@
     },
     "Edm.Metadata.EnumTypeMember":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -443,12 +400,11 @@
           "type":"string"
         },
         "Value":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int64"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int64"
         },
         "EnumType":{
           "$ref":"#/definitions/Edm.Metadata.EnumType",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Members"
           }
         },
@@ -457,8 +413,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -467,13 +422,10 @@
     "Edm.Metadata.TypeDefinition":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.PrimitiveType"
+          "$ref":"#/definitions/Edm.Metadata.PrimitiveType"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "Facets":{
               "type":"array",
@@ -483,8 +435,7 @@
             },
             "UnderlyingType":{
               "$ref":"#/definitions/Edm.Metadata.PrimitiveType",
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"TypeDefinitions"
               }
             }
@@ -515,18 +466,12 @@
         3,
         "SRID",
         4
-      ],
-      "odata":{
-        "underlyingType":"Edm.Byte"
-      }
+      ]
     },
     "Edm.Metadata.Property":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -555,14 +500,13 @@
         },
         "Type":{
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "DeclaringType":{
           "$ref":"#/definitions/Edm.Metadata.StructuredType",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Properties"
           }
         },
@@ -571,8 +515,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -580,11 +523,8 @@
     },
     "Edm.Metadata.NavigationProperty":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -620,8 +560,8 @@
         },
         "Type":{
           "$ref":"#/definitions/Edm.Metadata.EntityType",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "Partner":{
@@ -633,8 +573,8 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "NavigationPropertyBindings":{
@@ -642,15 +582,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.NavigationPropertyBinding"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"NavigationProperty"
           }
         },
         "DeclaringType":{
           "$ref":"#/definitions/Edm.Metadata.StructuredType",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"NavigationProperties"
           }
         },
@@ -659,8 +597,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -711,11 +648,8 @@
     },
     "Edm.Metadata.Action":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "QualifiedName":"QualifiedName"
-        }
+      "keys":{
+        "QualifiedName":"QualifiedName"
       },
       "properties":{
         "QualifiedName":{
@@ -735,15 +669,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.ActionImport"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Action"
           }
         },
         "Schema":{
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Actions"
           }
         }
@@ -787,11 +719,8 @@
     },
     "Edm.Metadata.Function":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "QualifiedName":"QualifiedName"
-        }
+      "keys":{
+        "QualifiedName":"QualifiedName"
       },
       "properties":{
         "QualifiedName":{
@@ -811,15 +740,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.FunctionImport"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Function"
           }
         },
         "Schema":{
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Functions"
           }
         }
@@ -880,8 +807,8 @@
         },
         "Type":{
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "Annotations":{
@@ -909,19 +836,16 @@
         },
         "Type":{
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
     },
     "Edm.Metadata.EntityContainer":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "QualifiedName":"QualifiedName"
-        }
+      "keys":{
+        "QualifiedName":"QualifiedName"
       },
       "properties":{
         "QualifiedName":{
@@ -935,8 +859,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.EntitySet"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"EntityContainer"
           }
         },
@@ -945,8 +868,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.FunctionImport"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"EntityContainer"
           }
         },
@@ -955,8 +877,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Singleton"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"EntityContainer"
           }
         },
@@ -965,15 +886,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.ActionImport"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"EntityContainer"
           }
         },
         "Schema":{
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"EntityContainer"
           }
         },
@@ -982,8 +901,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -991,11 +909,8 @@
     },
     "Edm.Metadata.EntitySet":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -1009,8 +924,7 @@
         },
         "EntityType":{
           "$ref":"#/definitions/Edm.Metadata.EntityType",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"EntitySets"
           }
         },
@@ -1019,15 +933,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.NavigationPropertyBinding"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Source"
           }
         },
         "EntityContainer":{
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"EntitySets"
           }
         },
@@ -1036,8 +948,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -1045,11 +956,8 @@
     },
     "Edm.Metadata.NavigationPropertyBinding":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -1059,21 +967,20 @@
           "type":"string"
         },
         "Target":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.EntityType",
-          "odata":{
-            "kind":"navigation"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType",
+          "relationship":{
+            
           }
         },
         "Source":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.EntityType",
-          "odata":{
-            "kind":"navigation"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType",
+          "relationship":{
+            
           }
         },
         "NavigationProperty":{
           "$ref":"#/definitions/Edm.Metadata.NavigationProperty",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"NavigationPropertyBindings"
           }
         }
@@ -1081,11 +988,8 @@
     },
     "Edm.Metadata.Singleton":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -1096,8 +1000,8 @@
         },
         "Type":{
           "$ref":"#/definitions/Edm.Metadata.EntityType",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "NavigationPropertyBindings":{
@@ -1105,15 +1009,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.NavigationPropertyBinding"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Source"
           }
         },
         "EntityContainer":{
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Singletons"
           }
         },
@@ -1122,8 +1024,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -1131,11 +1032,8 @@
     },
     "Edm.Metadata.ActionImport":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -1146,8 +1044,7 @@
         },
         "Action":{
           "$ref":"#/definitions/Edm.Metadata.Action",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"ActionImports"
           }
         },
@@ -1160,14 +1057,13 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "EntityContainer":{
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"ActionImports"
           }
         },
@@ -1176,8 +1072,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -1185,11 +1080,8 @@
     },
     "Edm.Metadata.FunctionImport":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -1203,8 +1095,7 @@
         },
         "Function":{
           "$ref":"#/definitions/Edm.Metadata.Function",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"FunctionImports"
           }
         },
@@ -1217,14 +1108,13 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "EntityContainer":{
           "$ref":"#/definitions/Edm.Metadata.EntityContainer",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"FunctionImports"
           }
         },
@@ -1233,8 +1123,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -1242,11 +1131,8 @@
     },
     "Edm.Metadata.Term":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "QualifiedName":"QualifiedName"
-        }
+      "keys":{
+        "QualifiedName":"QualifiedName"
       },
       "properties":{
         "QualifiedName":{
@@ -1266,8 +1152,8 @@
         },
         "Type":{
           "$ref":"#/definitions/Edm.Metadata.Type",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "BaseTerm":{
@@ -1279,8 +1165,8 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "Applications":{
@@ -1288,15 +1174,13 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Term"
           }
         },
         "Schema":{
           "$ref":"#/definitions/Edm.Metadata.Schema",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Terms"
           }
         },
@@ -1305,8 +1189,7 @@
           "items":{
             "$ref":"#/definitions/Edm.Metadata.Annotation"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Target"
           }
         }
@@ -1314,11 +1197,8 @@
     },
     "Edm.Metadata.Annotation":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Fullname":"Fullname"
-        }
+      "keys":{
+        "Fullname":"Fullname"
       },
       "properties":{
         "Fullname":{
@@ -1341,15 +1221,13 @@
         },
         "Term":{
           "$ref":"#/definitions/Edm.Metadata.Term",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Applications"
           }
         },
         "Target":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.EntityType",
-          "odata":{
-            "kind":"navigation",
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType",
+          "relationship":{
             "partner":"Annotation"
           }
         }
@@ -1357,20 +1235,21 @@
     },
     "Edm.Metadata.AnnotationExpression":{
       "type":"object",
-      "odata":{
-        "abstract":true
+      "abstract":true,
+      "keys":{
+        
       }
     },
     "Edm.Metadata.Constant":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
           "properties":{
             "Value":{
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PrimitiveType"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
             }
           }
         }
@@ -1379,7 +1258,7 @@
     "Edm.Metadata.LabeledElementReference":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
@@ -1394,7 +1273,7 @@
     "Edm.Metadata.AnnotationPath":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
@@ -1409,7 +1288,7 @@
     "Edm.Metadata.NavigationPropertyPath":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
@@ -1424,7 +1303,7 @@
     "Edm.Metadata.Path":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
@@ -1439,7 +1318,7 @@
     "Edm.Metadata.PropertyPath":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
@@ -1454,12 +1333,13 @@
     "Edm.Metadata.AnnotatableExpression":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
-          "odata":{
-            "abstract":true
+          "abstract":true,
+          "keys":{
+            
           },
           "properties":{
             "Annotations":{
@@ -1475,12 +1355,13 @@
     "Edm.Metadata.UnaryExpression":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotatableExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
         },
         {
           "type":"object",
-          "odata":{
-            "abstract":true
+          "abstract":true,
+          "keys":{
+            
           },
           "properties":{
             "Value":{
@@ -1493,7 +1374,7 @@
     "Edm.Metadata.InlineAnnotation":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.UnaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
         },
         {
           "type":"object",
@@ -1510,8 +1391,8 @@
             },
             "Term":{
               "$ref":"#/definitions/Edm.Metadata.Term",
-              "odata":{
-                "kind":"navigation"
+              "relationship":{
+                
               }
             }
           }
@@ -1527,7 +1408,7 @@
     "Edm.Metadata.Apply":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotatableExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
         },
         {
           "type":"object",
@@ -1548,7 +1429,7 @@
     "Edm.Metadata.Collection":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotationExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
         },
         {
           "type":"object",
@@ -1566,7 +1447,7 @@
     "Edm.Metadata.Record":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotatableExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
         },
         {
           "type":"object",
@@ -1579,8 +1460,8 @@
             },
             "Type":{
               "$ref":"#/definitions/Edm.Metadata.Type",
-              "odata":{
-                "kind":"navigation"
+              "relationship":{
+                
               }
             }
           }
@@ -1590,7 +1471,7 @@
     "Edm.Metadata.PropertyValue":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.UnaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
         },
         {
           "type":"object",
@@ -1605,7 +1486,7 @@
     "Edm.Metadata.If":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotatableExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
         },
         {
           "type":"object",
@@ -1633,15 +1514,15 @@
     "Edm.Metadata.Cast":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.UnaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
         },
         {
           "type":"object",
           "properties":{
             "Type":{
               "$ref":"#/definitions/Edm.Metadata.Type",
-              "odata":{
-                "kind":"navigation"
+              "relationship":{
+                
               }
             }
           }
@@ -1651,15 +1532,15 @@
     "Edm.Metadata.IsOf":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.UnaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
         },
         {
           "type":"object",
           "properties":{
             "Type":{
               "$ref":"#/definitions/Edm.Metadata.Type",
-              "odata":{
-                "kind":"navigation"
+              "relationship":{
+                
               }
             }
           }
@@ -1669,7 +1550,7 @@
     "Edm.Metadata.LabeledElement":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.UnaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
         },
         {
           "type":"object",
@@ -1684,7 +1565,7 @@
     "Edm.Metadata.Null":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotatableExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
         },
         {
           "type":"object"
@@ -1694,12 +1575,13 @@
     "Edm.Metadata.BinaryExpression":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.AnnotatableExpression"
+          "$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
         },
         {
           "type":"object",
-          "odata":{
-            "abstract":true
+          "abstract":true,
+          "keys":{
+            
           },
           "properties":{
             "Left":{
@@ -1715,7 +1597,7 @@
     "Edm.Metadata.Eq":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1725,7 +1607,7 @@
     "Edm.Metadata.Ne":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1735,7 +1617,7 @@
     "Edm.Metadata.Ge":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1745,7 +1627,7 @@
     "Edm.Metadata.Gt":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1755,7 +1637,7 @@
     "Edm.Metadata.Le":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1765,7 +1647,7 @@
     "Edm.Metadata.Lt":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1775,7 +1657,7 @@
     "Edm.Metadata.And":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1785,7 +1667,7 @@
     "Edm.Metadata.Or":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.BinaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.BinaryExpression"
         },
         {
           "type":"object"
@@ -1795,7 +1677,7 @@
     "Edm.Metadata.Not":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.UnaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
         },
         {
           "type":"object"
@@ -1805,7 +1687,7 @@
     "Edm.Metadata.Url":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Metadata.UnaryExpression"
+          "$ref":"#/definitions/Edm.Metadata.UnaryExpression"
         },
         {
           "type":"object"
