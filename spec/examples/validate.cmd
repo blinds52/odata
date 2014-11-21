@@ -7,6 +7,6 @@ java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax edm.json %FILES%
 java -jar c:\Java\json-schema-validator-2.2.5-lib.jar edm.json %FILES%
 
 @rem validate example responses against metadata document as schema
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://odata.org/schemas/v4.0/ csdl-16.1-Category.schema.json csdl-16.1-Category.json
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://odata.org/schemas/v4.0/ csdl-16.1-Product.schema.json csdl-16.1-Product.json
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://odata.org/schemas/v4.0/ miscellaneous-PrimitiveTypes.schema.json miscellaneous-PrimitiveTypes.json
+java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/ csdl-16.1-Category.schema.json csdl-16.1-Category.json
+java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/ csdl-16.1-Product.schema.json csdl-16.1-Product.json
+java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/ miscellaneous-PrimitiveTypes.schema.json miscellaneous-PrimitiveTypes.json

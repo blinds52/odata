@@ -1,5 +1,5 @@
 {
-  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
+  "$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
   "definitions":{
     "org.example.Measurement":{
       "type":"object",
@@ -31,7 +31,7 @@
           "items":{
             "allOf":[
               {
-                "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+                "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
               },
               {
                 "pattern":"(^[^.]*$|[.][0-9]{1,6}$)"
@@ -68,11 +68,8 @@
     },
     "org.example.Product":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -83,8 +80,7 @@
         },
         "Category":{
           "$ref":"#/definitions/org.example.Category",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Products",
             "referentialConstraints":{
               "CategoryID":{
@@ -102,19 +98,16 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
     },
     "org.example.Category":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -125,8 +118,7 @@
           "items":{
             "$ref":"#/definitions/org.example.Product"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Category",
             "onDelete":{
               "action":"Cascade"
@@ -137,11 +129,9 @@
     },
     "org.example.Employee":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "mediaEntity":true,
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -162,8 +152,8 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
@@ -171,13 +161,10 @@
     "org.example.Manager":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Employee"
+          "$ref":"#/definitions/org.example.Employee"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "AnnualBudget":{
               "anyOf":[
@@ -195,8 +182,8 @@
               "items":{
                 "$ref":"#/definitions/Model.Employee"
               },
-              "odata":{
-                "kind":"navigation"
+              "relationship":{
+                
               }
             }
           }
@@ -205,15 +192,12 @@
     },
     "org.example.Category17":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Name":{
           "type":[
@@ -225,11 +209,8 @@
     },
     "org.example.Category18":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "EntityInfoID":"Info/ID"
-        }
+      "keys":{
+        "EntityInfoID":"Info/ID"
       },
       "properties":{
         "Info":{
@@ -247,14 +228,14 @@
       "type":"object",
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Created":{
           "anyOf":[
             {
               "allOf":[
                 {
-                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+                  "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
                 },
                 {
                   "pattern":"^[^.]*$"
@@ -270,19 +251,16 @@
     },
     "org.example.OrderLine":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "OrderID":"OrderID",
-          "LineNumber":"LineNumber"
-        }
+      "keys":{
+        "OrderID":"OrderID",
+        "LineNumber":"LineNumber"
       },
       "properties":{
         "OrderID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "LineNumber":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         }
       }
     },
@@ -305,11 +283,8 @@
     },
     "org.example.Product22":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -339,11 +314,8 @@
     },
     "org.example.ShipmentBox":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -377,13 +349,9 @@
         },
         {
           "type":"string",
-          "pattern":"^(Read|Write|Create|Delete)(,(Read|Write|Create|Delete))*$"
+          "pattern":"^(Read|Write|Create|Delete|[1-9][0-9]*)(,(Read|Write|Create|Delete|[1-9][0-9]*))*$"
         }
-      ],
-      "odata":{
-        "underlyingType":"Edm.Int32",
-        "isFlags":true
-      }
+      ]
     },
     "org.example.ShippingMethod":{
       "enum":[
@@ -431,20 +399,16 @@
         },
         {
           "type":"string",
-          "pattern":"^(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped)(,(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped))*$"
+          "pattern":"^(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped|[1-9][0-9]*)(,(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped|[1-9][0-9]*))*$"
         }
-      ],
-      "odata":{
-        "underlyingType":"Edm.Int32",
-        "isFlags":true
-      }
+      ]
     },
     "org.example.Length":{
-      "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32",
+      "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32",
       "@Org.OData.Measurements.V1.Unit":"Centimeters"
     },
     "org.example.Weight":{
-      "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32",
+      "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32",
       "@Org.OData.Measurements.V1.Unit":"Kilograms"
     },
     "org.example.Size":{
@@ -474,15 +438,12 @@
     },
     "org.example2.Product":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Name":{
           "type":[
@@ -551,7 +512,7 @@
         "BinaryValue":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Binary"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Binary"
             },
             {
               "type":"null"
@@ -562,7 +523,7 @@
         "IntegerValue":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
             },
             {
               "type":"null"
@@ -573,7 +534,7 @@
         "DoubleValue":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Double"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Double"
             },
             {
               "type":"null"
@@ -584,7 +545,7 @@
         "SingleValue":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Single"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Single"
             },
             {
               "type":"null"
@@ -612,7 +573,7 @@
         "DateValue":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
             },
             {
               "type":"null"
@@ -625,7 +586,7 @@
             {
               "allOf":[
                 {
-                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+                  "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
                 },
                 {
                   "pattern":"^[^.]*$"
@@ -643,7 +604,7 @@
             {
               "allOf":[
                 {
-                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Duration"
+                  "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Duration"
                 },
                 {
                   "pattern":"(^[^.]*$|[.][0-9]{1,12}S$)"
@@ -661,7 +622,7 @@
             {
               "allOf":[
                 {
-                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.TimeOfDay"
+                  "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.TimeOfDay"
                 },
                 {
                   "pattern":"(^[^.]*$|[.][0-9]{1,6}$)"
@@ -677,7 +638,7 @@
         "GuidValue":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Guid"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Guid"
             },
             {
               "type":"null"
@@ -688,7 +649,7 @@
         "Int64Value":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int64"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int64"
             },
             {
               "type":"null"
@@ -710,7 +671,7 @@
         "GeographyPoint":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
             },
             {
               "type":"null"
@@ -719,7 +680,7 @@
           "default":"SRID=0;Point(142.1 64.1)"
         },
         "StreamValue":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Stream"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Stream"
         },
         "TypeDefValue":{
           "anyOf":[
@@ -757,7 +718,7 @@
         },
         {
           "type":"string",
-          "pattern":"^(Yellow|Striped)(,(Yellow|Striped))*$"
+          "pattern":"^(Yellow|Striped|[1-9][0-9]*)(,(Yellow|Striped|[1-9][0-9]*))*$"
         }
       ],
       "Yellow@Does.Work":{
@@ -771,23 +732,16 @@
           "value":"Hugo"
         }
       },
-      "Striped@Core.Description":"nicely striped",
-      "odata":{
-        "underlyingType":"Edm.Int64",
-        "isFlags":true
-      }
+      "Striped@Core.Description":"nicely striped"
     },
     "Model1.Weird":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "TheKey":"The/Key"
-        }
+      "keys":{
+        "TheKey":"The/Key"
       },
       "properties":{
         "TheKey":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.PropertyPath"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
         },
         "TheValue":{
           "type":[
@@ -808,6 +762,19 @@
             "type":[
               "string",
               "null"
+            ]
+          }
+        },
+        "Dates":{
+          "type":"array",
+          "items":{
+            "anyOf":[
+              {
+                "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
+              },
+              {
+                "type":"null"
+              }
             ]
           }
         },
@@ -972,9 +939,7 @@
     },
     "Model1.Address":{
       "type":"object",
-      "odata":{
-        "openType":true
-      },
+      "openType":true,
       "properties":{
         "Street":{
           "type":[
@@ -991,8 +956,8 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "Street":{
@@ -1010,8 +975,8 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "Country":{
@@ -1023,22 +988,20 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "MapLocation":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
             },
             {
               "type":"null"
             }
           ],
-          "odata":{
-            "srid":"variable"
-          }
+          "srid":"variable"
         }
       }
     },
@@ -1054,8 +1017,8 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
@@ -1068,9 +1031,9 @@
     },
     "Model1.Order":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "abstract":true
+      "abstract":true,
+      "keys":{
+        
       },
       "properties":{
         "Quantity":{
@@ -1120,7 +1083,7 @@
     "Model1.ExactTimestamp":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
         },
         {
           "pattern":"(^[^.]*$|[.][0-9]{1,12}$)"
@@ -1129,11 +1092,8 @@
     },
     "Schema.One.Waldo":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -1143,9 +1103,9 @@
     },
     "Schema.Two.Waldo":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "abstract":true
+      "abstract":true,
+      "keys":{
+        
       },
       "properties":{
         "Fred":{
@@ -1158,11 +1118,8 @@
     },
     "Schema.Two.Fred":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -1173,8 +1130,8 @@
           "items":{
             "$ref":"#/definitions/Schema.Two.Waldos"
           },
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
@@ -1182,7 +1139,7 @@
     "Y.DeveloperType":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/X.PersonType"
+          "$ref":"#/definitions/X.PersonType"
         },
         {
           "type":"object"
@@ -1208,7 +1165,7 @@
     "Y.ArchivedMovieType":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/X.MovieType"
+          "$ref":"#/definitions/X.MovieType"
         },
         {
           "type":"object",
@@ -1216,7 +1173,7 @@
             "ArchivedAt":{
               "anyOf":[
                 {
-                  "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+                  "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
                 },
                 {
                   "type":"null"
@@ -1249,8 +1206,8 @@
           "items":{
             "$ref":"#/definitions/X.Friend"
           },
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           },
           "@custom.ItemIsA":"X.Friend"
         }

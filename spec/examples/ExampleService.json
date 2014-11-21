@@ -1,13 +1,10 @@
 {
-  "$schema":"http://odata.org/schemas/v4.0/edm.json#",
+  "$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
   "definitions":{
     "OData.Demo.Customer":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -18,8 +15,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Order"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Customer"
           }
         },
@@ -44,8 +40,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Sales"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Customer"
           }
         },
@@ -74,11 +69,8 @@
     },
     "OData.Demo.Supplier":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -89,8 +81,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Product"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Supplier"
           }
         },
@@ -113,20 +104,16 @@
     },
     "OData.Demo.Product":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Category":{
           "$ref":"#/definitions/OData.Demo.Category",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Products"
           }
         },
@@ -135,8 +122,7 @@
         },
         "Supplier":{
           "$ref":"#/definitions/OData.Demo.Supplier",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Products"
           }
         },
@@ -153,25 +139,24 @@
           }
         },
         "Rating":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "OrderItems":{
           "type":"array",
           "items":{
             "$ref":"#/definitions/OData.Demo.OrderItem"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Product"
           }
         },
         "ReleaseDate":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
         },
         "DiscontinuedDate":{
           "anyOf":[
             {
-              "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+              "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
             },
             {
               "type":"null"
@@ -202,8 +187,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Sales"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Product"
           }
         }
@@ -211,23 +195,19 @@
     },
     "OData.Demo.Order":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Items":{
           "type":"array",
           "items":{
             "$ref":"#/definitions/OData.Demo.OrderItem"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Order"
           }
         },
@@ -236,8 +216,7 @@
         },
         "Customer":{
           "$ref":"#/definitions/OData.Demo.Customer",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Orders"
           }
         },
@@ -249,27 +228,21 @@
     "OData.Demo.VipCustomer":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Customer"
+          "$ref":"#/definitions/OData.Demo.Customer"
         },
         {
-          "type":"object",
-          "odata":{
-            "kind":"entity"
-          }
+          "type":"object"
         }
       ]
     },
     "OData.Demo.Category":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Amount":{
           "type":"number",
@@ -280,8 +253,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Product"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Category"
           }
         },
@@ -295,24 +267,20 @@
     },
     "OData.Demo.OrderItem":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "OrderID":"OrderID",
-          "ItemID":"ItemID"
-        }
+      "keys":{
+        "OrderID":"OrderID",
+        "ItemID":"ItemID"
       },
       "properties":{
         "OrderID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "ItemID":{
           "type":"string"
         },
         "Order":{
           "$ref":"#/definitions/OData.Demo.Order",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Items",
             "onDelete":{
               "action":"Cascade"
@@ -333,30 +301,26 @@
         },
         "Product":{
           "$ref":"#/definitions/OData.Demo.Product",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"OrderItems"
           }
         },
         "Currency":{
           "$ref":"#/definitions/OData.Demo.Currency",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
     },
     "OData.Demo.Sales":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Amount":{
           "type":"number",
@@ -364,36 +328,31 @@
         },
         "Time":{
           "$ref":"#/definitions/OData.Demo.Time",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Sales"
           }
         },
         "Currency":{
           "$ref":"#/definitions/OData.Demo.Currency",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Sales"
           }
         },
         "Customer":{
           "$ref":"#/definitions/OData.Demo.Customer",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Sales"
           }
         },
         "SalesOrganization":{
           "$ref":"#/definitions/OData.Demo.SalesOrganization",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Sales"
           }
         },
         "Product":{
           "$ref":"#/definitions/OData.Demo.Product",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Sales"
           }
         }
@@ -401,12 +360,9 @@
     },
     "OData.Demo.Employee":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "hasStream":true,
-        "keys":{
-          "ID":"ID"
-        }
+      "mediaEntity":true,
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -430,8 +386,7 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Employees"
           }
         },
@@ -440,8 +395,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.LeaveRequest"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Employee"
           }
         }
@@ -449,27 +403,22 @@
     },
     "OData.Demo.LeaveRequest":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Int32"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
         },
         "Manager":{
           "$ref":"#/definitions/OData.Demo.Manager",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Inbox"
           }
         },
         "Employee":{
           "$ref":"#/definitions/OData.Demo.Employee",
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"LeaveRequests"
           }
         }
@@ -483,14 +432,14 @@
         },
         "Country":{
           "$ref":"#/definitions/Example.Country",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "City":{
           "$ref":"#/definitions/Example.City",
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         },
         "Region":{
@@ -505,17 +454,14 @@
       "type":"object",
       "properties":{
         "Location":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
         }
       }
     },
     "OData.Demo.Country":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Code":"Code"
-        }
+      "keys":{
+        "Code":"Code"
       },
       "properties":{
         "Code":{
@@ -533,13 +479,10 @@
     "OData.Demo.PreferredSupplier":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Supplier"
+          "$ref":"#/definitions/OData.Demo.Supplier"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "AccountRepresentative":{
               "anyOf":[
@@ -550,8 +493,7 @@
                   "type":"null"
                 }
               ],
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "referentialConstraints":{
                   "EmployeeID":{
                     "referencedProperty":"ID",
@@ -579,31 +521,24 @@
         },
         {
           "type":"string",
-          "pattern":"^(Yellow|Solid)(,(Yellow|Solid))*$"
+          "pattern":"^(Yellow|Solid|[1-9][0-9]*)(,(Yellow|Solid|[1-9][0-9]*))*$"
         }
-      ],
-      "odata":{
-        "isFlags":true
-      }
+      ]
     },
     "OData.Demo.Manager":{
       "allOf":[
         {
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Model.Employee"
+          "$ref":"#/definitions/OData.Demo.Employee"
         },
         {
           "type":"object",
-          "odata":{
-            "kind":"entity"
-          },
           "properties":{
             "Employees":{
               "type":"array",
               "items":{
                 "$ref":"#/definitions/OData.Demo.Employee"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"Manager"
               }
             },
@@ -612,8 +547,7 @@
               "items":{
                 "$ref":"#/definitions/OData.Demo.LeaveRequest"
               },
-              "odata":{
-                "kind":"navigation",
+              "relationship":{
                 "partner":"Manager"
               }
             }
@@ -623,15 +557,12 @@
     },
     "OData.Demo.Time":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Date":"Date"
-        }
+      "keys":{
+        "Date":"Date"
       },
       "properties":{
         "Date":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Date"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
         },
         "Year":{
           "type":"string",
@@ -648,8 +579,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Sales"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Time"
           }
         }
@@ -657,11 +587,8 @@
     },
     "OData.Demo.SalesOrganization":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
@@ -675,8 +602,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Sales"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"SalesOrganization"
           }
         },
@@ -689,19 +615,16 @@
               "type":"null"
             }
           ],
-          "odata":{
-            "kind":"navigation"
+          "relationship":{
+            
           }
         }
       }
     },
     "OData.Demo.Currency":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "Code":"Code"
-        }
+      "keys":{
+        "Code":"Code"
       },
       "properties":{
         "Code":{
@@ -716,8 +639,7 @@
           "items":{
             "$ref":"#/definitions/OData.Demo.Sales"
           },
-          "odata":{
-            "kind":"navigation",
+          "relationship":{
             "partner":"Currency"
           }
         },
@@ -725,21 +647,18 @@
           "type":"string"
         },
         "FractionalDigits":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Byte"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Byte"
         }
       }
     },
     "OData.Demo.City":{
       "type":"object",
-      "odata":{
-        "kind":"entity",
-        "keys":{
-          "ID":"ID"
-        }
+      "keys":{
+        "ID":"ID"
       },
       "properties":{
         "ID":{
-          "$ref":"http://odata.org/schemas/v4.0/edm.json#/definitions/Edm.Guid"
+          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Guid"
         },
         "Name":{
           "type":"string"

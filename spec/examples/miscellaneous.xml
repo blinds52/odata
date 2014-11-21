@@ -67,7 +67,7 @@
         <NavigationProperty Name="Supplier" Type="Self.Supplier" />
       </EntityType>
 
-      <EntityType Name="Category">
+      <EntityType Name="Category" HasStream="false">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
@@ -79,7 +79,7 @@
 
       <!-- 8 Entity Type -->
       <!-- Example 15: a simple entity type -->
-      <EntityType Name="Employee">
+      <EntityType Name="Employee" HasStream="true">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
@@ -90,7 +90,7 @@
       </EntityType>
 
       <!-- Example 16: a derived entity type based on the previous example -->
-      <EntityType Name="Manager" BaseType="Model.Employee">
+      <EntityType Name="Manager" BaseType="Self.Employee">
         <Property Name="AnnualBudget" Type="Edm.Decimal" />
         <NavigationProperty Name="Employees" Type="Collection(Model.Employee)" />
       </EntityType>
@@ -760,6 +760,7 @@
         <Property Name="TheValue" Type="Edm.String" MaxLength="max" Nullable="true" />
         <Property Name="TheString" Type="Edm.String" MaxLength="20" />
         <Property Name="Tags" Type="Collection(Edm.String)" Nullable="true" />
+        <Property Name="Dates" Type="Collection(Edm.Date)" Nullable="true" />
         <Property Type="Edm.Decimal" Name="Price" Precision="15" Scale="3" />
         <Property Name="Permission" Type="Org.OData.Core.V1.Permission" Nullable="false" />
         <Property Name="AliasPermission" Type="Core.Permission" />
@@ -842,7 +843,7 @@
         <NavigationProperty Name="Planet" Type="Some.Planet" />
       </ComplexType>
 
-      <ComplexType Name="AnnotationOnly">
+      <ComplexType Name="AnnotationOnly" Abstract="false">
         <Annotation Term="Some.Tag" />
       </ComplexType>
 
