@@ -1,5 +1,22 @@
 {
   "$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+  "edmTypes":[
+    null,
+    "Edm.Int32",
+    "Edm.DateTimeOffset",
+    "Edm.Binary",
+    "Edm.Double",
+    "Edm.Single",
+    "Edm.Date",
+    "Edm.Duration",
+    "Edm.TimeOfDay",
+    "Edm.Guid",
+    "Edm.Int64",
+    "Edm.GeographyPoint",
+    "Edm.Stream",
+    "Edm.Int16",
+    "Edm.Byte"
+  ],
   "definitions":{
     "org.example.Measurement":{
       "type":"object",
@@ -104,6 +121,17 @@
         }
       }
     },
+    "org.example.Supplier":{
+      "type":"object",
+      "keys":{
+        "ID":"ID"
+      },
+      "properties":{
+        "ID":{
+          "type":"string"
+        }
+      }
+    },
     "org.example.Category":{
       "type":"object",
       "keys":{
@@ -146,7 +174,7 @@
         "Manager":{
           "anyOf":[
             {
-              "$ref":"#/definitions/Model.Manager"
+              "$ref":"#/definitions/org.example.Manager"
             },
             {
               "type":"null"
@@ -180,7 +208,7 @@
             "Employees":{
               "type":"array",
               "items":{
-                "$ref":"#/definitions/Model.Employee"
+                "$ref":"#/definitions/org.example.Employee"
               },
               "relationship":{
                 
@@ -685,7 +713,7 @@
         "TypeDefValue":{
           "anyOf":[
             {
-              "$ref":"#/definitions/org.example.IntegerDecimal"
+              "$ref":"#/definitions/Model1.IntegerDecimal"
             },
             {
               "type":"null"
@@ -737,11 +765,11 @@
     "Model1.Weird":{
       "type":"object",
       "keys":{
-        "TheKey":"The/Key"
+        "TheKey":"TheKey"
       },
       "properties":{
         "TheKey":{
-          "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+          "type":"string"
         },
         "TheValue":{
           "type":[
@@ -950,7 +978,7 @@
         "City":{
           "anyOf":[
             {
-              "$ref":"#/definitions/MyModel.City"
+              "$ref":"#/definitions/Model1.City"
             },
             {
               "type":"null"
@@ -969,7 +997,7 @@
         "Region":{
           "anyOf":[
             {
-              "$ref":"#/definitions/MyModel.Region"
+              "$ref":"#/definitions/Model1.Region"
             },
             {
               "type":"null"
@@ -982,7 +1010,7 @@
         "Country":{
           "anyOf":[
             {
-              "$ref":"#/definitions/MyModel.Country"
+              "$ref":"#/definitions/Model1.Country"
             },
             {
               "type":"null"
@@ -1002,8 +1030,26 @@
             }
           ],
           "srid":"variable"
+        },
+        "Numbers":{
+          "type":"array",
+          "items":{
+            "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int16"
+          }
         }
       }
+    },
+    "Model1.City":{
+      "type":"object"
+    },
+    "Model1.Region":{
+      "type":"object"
+    },
+    "Model1.Country":{
+      "type":"object"
+    },
+    "Model1.Planet":{
+      "type":"object"
     },
     "Model1.NavigationOnly":{
       "type":"object",
@@ -1011,7 +1057,7 @@
         "Planet":{
           "anyOf":[
             {
-              "$ref":"#/definitions/Some.Planet"
+              "$ref":"#/definitions/Model1.Planet"
             },
             {
               "type":"null"
@@ -1131,13 +1177,22 @@
         "Waldos":{
           "type":"array",
           "items":{
-            "$ref":"#/definitions/Schema.Two.Waldos"
+            "$ref":"#/definitions/Schema.Two.Waldo"
           },
           "relationship":{
             
           }
         }
       }
+    },
+    "X.PersonType":{
+      "type":"object"
+    },
+    "X.MovieType":{
+      "type":"object"
+    },
+    "X.FriendType":{
+      "type":"object"
     },
     "Y.DeveloperType":{
       "allOf":[
@@ -1207,7 +1262,7 @@
         "VIPs":{
           "type":"array",
           "items":{
-            "$ref":"#/definitions/X.Friend"
+            "$ref":"#/definitions/X.FriendType"
           },
           "relationship":{
             

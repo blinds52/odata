@@ -67,6 +67,13 @@
         <NavigationProperty Name="Supplier" Type="Self.Supplier" />
       </EntityType>
 
+      <EntityType Name="Supplier">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.String" Name="ID" Nullable="false" />
+      </EntityType>
+
       <EntityType Name="Category" HasStream="false">
         <Key>
           <PropertyRef Name="ID" />
@@ -86,13 +93,13 @@
         <Property Name="ID" Type="Edm.String" Nullable="false" />
         <Property Name="FirstName" Type="Edm.String" Nullable="false" />
         <Property Name="LastName" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Manager" Type="Model.Manager" />
+        <NavigationProperty Name="Manager" Type="org.example.Manager" />
       </EntityType>
 
       <!-- Example 16: a derived entity type based on the previous example -->
       <EntityType Name="Manager" BaseType="Self.Employee">
         <Property Name="AnnualBudget" Type="Edm.Decimal" />
-        <NavigationProperty Name="Employees" Type="Collection(Model.Employee)" />
+        <NavigationProperty Name="Employees" Type="Collection(Self.Employee)" />
       </EntityType>
 
       <!-- Example 17: entity type with a simple key -->
@@ -585,7 +592,7 @@
         <Property Name="ColorEnumValue" Type="M1.Color" DefaultValue="yellow" />
         <Property Name="GeographyPoint" Type="Edm.GeographyPoint" DefaultValue="SRID=0;Point(142.1 64.1)" />
         <Property Name="StreamValue" Type="Edm.Stream" />
-        <Property Name="TypeDefValue" Type="Self.IntegerDecimal" DefaultValue="42" />
+        <Property Name="TypeDefValue" Type="M1.IntegerDecimal" DefaultValue="42" />
       </ComplexType>
 
       <Function Name="CreatedEntities">
@@ -754,9 +761,9 @@
 
       <EntityType Name="Weird">
         <Key>
-          <PropertyRef Name="The/Key" Alias="TheKey" />
+          <PropertyRef Name="TheKey" />
         </Key>
-        <Property Name="TheKey" Type="Edm.PropertyPath" Nullable="false" />
+        <Property Name="TheKey" Type="Edm.String" Nullable="false" />
         <Property Name="TheValue" Type="Edm.String" MaxLength="max" Nullable="true" />
         <Property Name="TheString" Type="Edm.String" MaxLength="20" />
         <Property Name="Tags" Type="Collection(Edm.String)" Nullable="true" />
@@ -832,15 +839,28 @@
 
       <ComplexType Name="Address" OpenType="true">
         <Property Name="Street" Type="Edm.String" />
-        <NavigationProperty Name="City" Type="MyModel.City" />
+        <NavigationProperty Name="City" Type="M1.City" />
         <Property Name="Street" Type="Edm.String" />
-        <NavigationProperty Name="Region" Type="MyModel.Region" />
-        <NavigationProperty Name="Country" Type="MyModel.Country" />
+        <NavigationProperty Name="Region" Type="M1.Region" />
+        <NavigationProperty Name="Country" Type="M1.Country" />
         <Property Name="MapLocation" Type="Edm.GeographyPoint" SRID="variable" />
+        <Property Name="Numbers" Type="Collection(Edm.Int16)" />
       </ComplexType>
 
+      <EntityType Name="City">
+      </EntityType>
+
+      <EntityType Name="Region">
+      </EntityType>
+
+      <EntityType Name="Country">
+      </EntityType>
+
+      <EntityType Name="Planet">
+      </EntityType>
+
       <ComplexType Name="NavigationOnly">
-        <NavigationProperty Name="Planet" Type="Some.Planet" />
+        <NavigationProperty Name="Planet" Type="M1.Planet" />
       </ComplexType>
 
       <ComplexType Name="AnnotationOnly" Abstract="false">
@@ -918,7 +938,7 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Waldos" Type="Collection(Two.Waldos)" />
+        <NavigationProperty Name="Waldos" Type="Collection(Two.Waldo)" />
       </EntityType>
       <EntityContainer Name="Default">
         <FunctionImport Name="Bar" Function="Other.Foo" IncludeInServiceDocument="true"
@@ -938,11 +958,20 @@
     <!-- Examples for ODATA-535 -->
     <Schema Namespace="X">
       <Term Name="Person" Type="X.PersonType" />
+      <ComplexType Name="PersonType">
+        <!-- properties -->
+      </ComplexType>
       <Term Name="Team" Type="Collection(X.PersonType)">
         <Annotation Term="custom.ItemIsA" String="X.Person" />
       </Term>
       <Term Name="Movie" Type="X.MovieType" />
+      <ComplexType Name="MovieType">
+        <!-- properties -->
+      </ComplexType>
       <Term Name="Friend" Type="X.FriendType" /> <!-- X.FriendType is an EntityType -->
+      <EntityType Name="FriendType">
+        <!-- properties -->
+      </EntityType>
     </Schema>
     <Schema Namespace="Y">
       <Term Name="Developer" BaseTerm="X.Person" Type="Y.DeveloperType" />
@@ -1041,7 +1070,7 @@
         <Property Name="Contacts" Type="Collection(X.PersonType)">
           <Annotation Term="custom.ItemIsA" String="X.Person" />
         </Property>
-        <NavigationProperty Name="VIPs" Type="Collection(X.Friend)">
+        <NavigationProperty Name="VIPs" Type="Collection(X.FriendType)">
           <Annotation Term="custom.ItemIsA" String="X.Friend" />
         </NavigationProperty>
       </ComplexType>

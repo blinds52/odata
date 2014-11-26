@@ -47,25 +47,46 @@
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
-    <!--
-      <xsl:text>,"edmTypes":[</xsl:text>
-      <xsl:for-each
+    <!-- TODO: append or prepend the used Edm types to "definitions" if it is present -->
+    <xsl:text>,"edmTypes":[</xsl:text>
+    <xsl:for-each
       select="edm:Schema/edm:EntityType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:ComplexType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:TypeDefinition/@UnderlyingType[generate-id()=generate-id(key('types',.)[1])]"
-      >
-      <xsl:if test="position()>1">
-      <xsl:text>,</xsl:text>
+    >
+      <xsl:if test="position()=1">
+        <xsl:text>null</xsl:text>
       </xsl:if>
-      <xsl:text>"</xsl:text>
-      <xsl:value-of select="." />
-      <xsl:text>"</xsl:text>
-      </xsl:for-each>
-      <xsl:text>]</xsl:text>
-    -->
-    <!--
-      <xsl:for-each select="distinct-values(edm:Schema/edm:EntityType/edm:Property/@Type)">
-      <xsl:value-of select="." />
-      </xsl:for-each>
-    -->
+      <xsl:variable name="singleType">
+        <xsl:choose>
+          <xsl:when test="starts-with(.,'Collection(')">
+            <xsl:value-of select="substring-before(substring-after(.,'('),')')" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="." />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="qualifier">
+        <xsl:call-template name="substring-before-last">
+          <xsl:with-param name="input" select="$singleType" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="$singleType='Edm.Boolean'" />
+        <xsl:when test="$singleType='Edm.Decimal'" />
+        <xsl:when test="$singleType='Edm.String'" />
+        <xsl:when test="$qualifier='Edm'">
+          <!-- TODO: suppress if already there by looking up key('types',$singleType) -->
+          <xsl:if test="$singleType=. or not(key('types',$singleType))">
+            <xsl:text>,"</xsl:text>
+            <xsl:value-of select="$singleType" />
+            <xsl:text>"</xsl:text>
+          </xsl:if>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:for-each>
+    <xsl:text>]</xsl:text>
+    <!-- -->
     <xsl:apply-templates
       select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType|edm:Schema/edm:TypeDefinition|edm:Schema/edm:EnumType"
       mode="hash"
