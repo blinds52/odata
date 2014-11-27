@@ -372,14 +372,15 @@
         </Annotation>
 
         <!-- Example 49: combined value for IsFlags enumeration type -->
-        <Annotation Term="org.example.HasPattern" EnumMember="org.example.Pattern/Red org.example.Pattern/Striped" />
-        <Annotation Term="org.example.HasPattern" Qualifier="element">
+        <Annotation Term="org.example.HasPattern" Qualifier="list"
+          EnumMember="org.example.Pattern/Red org.example.Pattern/Striped" />
+        <Annotation Term="org.example.HasPattern" Qualifier="listelement">
           <EnumMember>org.example.Pattern/Red org.example.Pattern/Striped</EnumMember>
         </Annotation>
 
         <!-- Example 50 -->
-        <Annotation Term="org.example.display.Width" Float="3.14" />
-        <Annotation Term="org.example.display.Width" Qualifier="element">
+        <Annotation Term="org.example.display.FloatWidth" Float="3.14" />
+        <Annotation Term="org.example.display.FloatWidth" Qualifier="element">
           <Float>3.14</Float>
         </Annotation>
 
@@ -390,8 +391,8 @@
         </Annotation>
 
         <!-- Example 52 -->
-        <Annotation Term="org.example.display.Width" Int="42" />
-        <Annotation Term="org.example.display.Width" Qualifier="element">
+        <Annotation Term="org.example.display.IntWidth" Int="42" />
+        <Annotation Term="org.example.display.IntWidth" Qualifier="element">
           <Int>42</Int>
         </Annotation>
 
@@ -417,7 +418,7 @@
         </Annotation>
 
         <!-- Example 56 -->
-        <Annotation Term="org.example.display.DisplayName">
+        <Annotation Term="org.example.display.DisplayName" Qualifier="apply">
           <Apply Function="odata.concat">
             <String>Product: </String>
             <Path>ProductName</Path>
@@ -482,22 +483,22 @@
         </Annotation>
 
         <!-- Example 63 -->
-        <Annotation Term="org.example.display.DisplayName">
+        <Annotation Term="org.example.display.DisplayName" Qualifier="l">
           <LabeledElement Name="CustomerFirstName" Path="FirstName" />
         </Annotation>
-        <Annotation Term="org.example.display.DisplayName" Qualifier="element">
+        <Annotation Term="org.example.display.DisplayName" Qualifier="lelement">
           <LabeledElement Name="CustomerFirstName">
             <Path>FirstName</Path>
           </LabeledElement>
         </Annotation>
 
         <!-- Example 64 -->
-        <Annotation Term="org.example.display.DisplayName">
+        <Annotation Term="org.example.display.DisplayName" Qualifier="ref">
           <LabeledElementReference>Model.CustomerFirstName</LabeledElementReference>
         </Annotation>
 
         <!-- Example 65 -->
-        <Annotation Term="org.example.display.DisplayName">
+        <Annotation Term="org.example.display.DisplayName" Qualifier="null">
           <Null />
         </Annotation>
 
@@ -515,14 +516,14 @@
         </Annotation>
 
         <!-- Example 67 -->
-        <Annotation Term="org.example.display.DisplayName" Path="FirstName" />
-        <Annotation Term="org.example.display.DisplayName" Qualifier="element">
+        <Annotation Term="org.example.display.DisplayName" Path="FirstName" Qualifier="path" />
+        <Annotation Term="org.example.display.DisplayName" Qualifier="pathelement">
           <Path>@vCard.Address#work/FullName</Path>
         </Annotation>
 
         <!-- Example 68 -->
         <Annotation Term="UI.RefreshOnChangeOf" PropertyPath="ChangedAt" />
-        <Annotation Term="Capabilities.UpdateRestrictions" Qualifier="element">
+        <Annotation Term="Capabilities.UpdateRestrictions" Qualifier="element2">
           <Record>
             <PropertyValue Property="NonUpdatableProperties">
               <Collection>
@@ -679,7 +680,7 @@
         </Record>
       </Annotation>
 
-      <Annotation Term="org.example.display.DisplayName">
+      <Annotation Term="org.example.display.DisplayName" Qualifier="if">
         <If>
           <Annotation Term="In.If" />
           <Path>IsFemale</Path>
@@ -818,7 +819,7 @@
             </Apply>
           </UrlRef>
         </Annotation>
-        <Annotation Term="org.example.display.DisplayName">
+        <Annotation Term="org.example.display.DisplayName" Qualifier="cast">
           <Cast SRID="variable" Scale="variable" Type="Edm.String">
             <String>Product Catalog</String>
           </Cast>
@@ -840,7 +841,6 @@
       <ComplexType Name="Address" OpenType="true">
         <Property Name="Street" Type="Edm.String" />
         <NavigationProperty Name="City" Type="M1.City" />
-        <Property Name="Street" Type="Edm.String" />
         <NavigationProperty Name="Region" Type="M1.Region" />
         <NavigationProperty Name="Country" Type="M1.Country" />
         <Property Name="MapLocation" Type="Edm.GeographyPoint" SRID="variable" />
@@ -944,7 +944,6 @@
         <FunctionImport Name="Bar" Function="Other.Foo" IncludeInServiceDocument="true"
           EntitySet="Namespace.Container/Freds" />
         <FunctionImport Name="CreatedEntities" Function="Model.CreatedEntities" EntitySet="Waldos" />
-        <FunctionImport Name="Bar" Function="Other.Foo" />
         <EntitySet Name="Waldos" EntityType="Two.Waldo" />
         <EntitySet Name="Freds" EntityType="Two.Fred">
           <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
