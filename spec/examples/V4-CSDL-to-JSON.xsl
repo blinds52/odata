@@ -76,7 +76,6 @@
         <xsl:when test="$singleType='Edm.Decimal'" />
         <xsl:when test="$singleType='Edm.String'" />
         <xsl:when test="$qualifier='Edm'">
-          <!-- TODO: suppress if already there by looking up key('types',$singleType) -->
           <xsl:if test="$singleType=. or not(key('types',$singleType))">
             <xsl:text>,"</xsl:text>
             <xsl:value-of select="$singleType" />
