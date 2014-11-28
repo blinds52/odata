@@ -772,17 +772,22 @@
         <Property Type="Edm.Decimal" Name="Price" Precision="15" Scale="3" />
         <Property Name="Permission" Type="Org.OData.Core.V1.Permission" Nullable="false" />
         <Property Name="AliasPermission" Type="Core.Permission" />
-        <Annotation Term="Some.Term" Qualifier="SomeQualifier">
-          <Annotation Term="Some.Term" String="Some Value" />
+        <Annotation Term="Collection.Of.Strings">
+          <Annotation Term="Core.Description" String="String-valued expressions" />
           <Collection>
             <String>SomeString</String>
-            <Date>1212-11-30</Date>
-            <DateTimeOffset>2000-01-01T16:00:00.000-09:00</DateTimeOffset>
-            <DateTimeOffset>2000-01-01T16:00:00Z</DateTimeOffset>
-            <TimeOfDay>23:59:59.123456789012</TimeOfDay>
             <Path>MyAddress/vCard.Address#work/Street</Path>
-            <EnumMember>Self.Color/Yellow</EnumMember>
-            <EnumMember>Self.Color/Yellow Self.Color/Striped</EnumMember>
+            <LabeledElement Name="Attribute" String="Hello" />
+            <LabeledElementReference>Model.Attribute</LabeledElementReference>
+            <LabeledElement Name="Element">
+              <String>Hello</String>
+            </LabeledElement>
+            <LabeledElementReference>Model.Element</LabeledElementReference>
+          </Collection>
+        </Annotation>
+        <Annotation Term="Collection.Of.Records">
+          <Annotation Term="Core.Description" String="Record-valued expressions" />
+          <Collection>
             <Record>
               <PropertyValue Property="Egon" String="1" />
               <PropertyValue Property="Hugo" String="2">
@@ -790,14 +795,10 @@
               </PropertyValue>
               <Annotation Term="Some.Term" String="Some Value" />
             </Record>
-            <LabeledElement Name="Attribute" String="Hello" />
-            <LabeledElement Name="Element">
-              <String>Hello</String>
-            </LabeledElement>
             <LabeledElement Name="Record">
               <Record />
             </LabeledElement>
-            <LabeledElementReference>Model.Attribute</LabeledElementReference>
+            <LabeledElementReference>Model.Record</LabeledElementReference>
           </Collection>
         </Annotation>
         <Annotation Term="Vocab.GIQSupplier">
