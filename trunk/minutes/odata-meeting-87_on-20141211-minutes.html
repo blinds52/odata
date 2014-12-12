@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #87 Thursday Dec 11, 2014</title>
+</head>
+<body>
+<h1>OData TC meeting #87 Thursday Dec 11, 2014</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2014-12-11 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+
+<pre>
+        Edmond Bourne (BlackBerry)
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt 
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Drees (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=36571">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from November 20, 2014 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/54630/odata-meeting-86_on-20141120-minutes.html">Meeting#86 on 2014-NOV-20</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by December 11, 2014</h4>
+<p>None</p>
+
+
+<h3>5. Process issues (for V4.0_ERRATA03 in New or Open state)</h3>
+
+<h4>5.1 OData CSDL</h4>
+
+<h5>5.1.1 ODATA-755 "Construction rule for canonical URL is incomplete"</h5>
+<p>ODATA-755 is open</p>
+<p>Ralf:<br>
+Unknown/malformed action: /collection/keyvalue<br>
+Check ?help<br>
+GET /collection/keyvalue1/keyvalue2<br></p>
+<p>Ralf: Key parts may have hierarchical order which would be destroyed by lexicographical ordering</p>
+<p>Stefan: Most path orderings should not depend on lexicographical instance ordering but instead adhere to some stable ordering (eg. given by schema).</p>
+<p>Ralf: Needs to be taken into account when designing JSON CSDL: use an array for defining the key to preserve order</p>
+<p>Mike: revised proposal:<br>
+For single-part keys the canonical key predicate does not contain the key property name.<br>
+<br>
+For multi-part keys the canonical key predicate lists the key properties in the order they appear in the CSDL.<br>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-755 according to the revised proposal. Martin seconds
+<p>ODATA-755 is resolved as proposed by Mike</p>
+
+<p>Ralf: No investigation took place. Hubert to record discussion on this issue in last meeting. </p>
+<p>All: Issue postponed to next meeting</p>
+<P>Motion passes, no objections</p>
+
+<h5>5.1.2 ODATA-734 "Unicode Facet is inadequate"</h5>
+<p>Ralf: ODATA-734 is open</p>
+<p>Ralf: Need to define how services should handle codepages between ASCII and Unicode</p>
+<p>Ralf: Servers supporting more than ASCII should advertise Unicode="true" to tell clients that it will send more than ASCII</p>
+<p>Ralf: Servers should respond with a meaningful error in the 5xx range if the client sends characters that the server cannot store</p>
+<p>Mike: Proposal: Services return TRUE if strings support characters outside of the ASCII character set and FALSE if only characters within the ASCII set are supported.</p>
+<p>Hubert: I move to resolve ODATA-734 according to the revised proposal. Matt seconds</p>
+<P>ODATA-734 is resolved as proposed by Mike</p>
+
+
+<h4>5.2 OData JSON Format</h4>
+
+<h5>5.2.1 ODATA-754 "Clarify that numeric enum values are serialized as strings"</h5>
+<p>ODATA-754 is open</p>
+<p>Ralf: b8 8<br>
+b16 16
+8:16
+16:32
+&lt;d:enumvalue>16&lt;/d:enumvalue><br>
+"enumvalue":"16"<br>
+"enumvalue":16<br>
+ABNF says:<br><br>
+enum            = qualifiedEnumTypeName SQUOTE enumValue SQUOTE<br>
+enumValue       = singleEnumValue *( COMMA singleEnumValue )<br>
+singleEnumValue = enumerationMember / enumMemberValue<br>
+enumMemberValue = int64Value<br><br>
+blue<br>
+blue,yellow<br>
+8,16<br>
+8<br>
+16<br></p>
+
+<h5>5.2.2 ODATA-756 "Clarify when odata.metadataEtag will be returned"</h5>
+<p>ODATA-756 is open</p>
+<p>Martin: An ETag header MAY also be returned on a metadata document request or service document request to allow the client subsequently to make a conditional request for the metadata or service document. Clients can also compare the value of the ETag header returned from a metadata document request to the metadata ETag returned in a response in order to verify the version of the metadata used to generate that response.</p>
+<p>Martin: This is from 8.3.1 Header ETag</p>
+<p>Mike: Proposal from issue (changing MUST to SHOULD):If an ETag is returned when requesting the metadata document, then the service SHOULD set the odata.metadataEtag annotation to the metadata document's ETag in all responses when using odata.metadata=minimal or full.  If no ETag is returned when requesting the metadata document, then the service SHOULD NOT set the odata.metadataEtag annotation in any responses.</p>
+<p>Martin: ... in protocol</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-756 according to the revised proposal.
+Matt  seconds.</p>
+
+<p>ODATA-756 is resolved as proposed by Mike</p>
+
+<h4>5.3 OData URL Conventions</h4>
+
+<h5>5.3.1 ODATA-758 "Example 81: wrong parameter style"</h5>
+<p>Ralf: http://host/service/ProductsByColor?colors=["red","green"]</p>
+<p>Ralf: http://host/service/ProductsByColors(colors=@c)?@c=["red","green"]</p>
+<p>ODATA-758 is open</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-758 according to the  proposal.
+Mike  seconds.</p>
+
+<p>ODATA-758 is resolved as proposed</p>
+
+
+<h3>6. OData JSON Format for Common Schema Definition Language (CSDL)</h3>
+<p>All walk through the current document</p>
+<p>Current draft: https://www.oasis-open.org/apps/org/workgroup/odata/download.php/54598/odata-json-csdl-v4.0-wd01-2014-11-21.docx</p>
+<p>Snippets from discussion:<br>
+"Concurrency":{"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"},<br>
+"Concurrency":{"$ref":"#/definitions/Edm.Int32"},<br>
+"Edm.Int32":{"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"},<br></p>
+<pre>
+"org.example.Pattern":{
+      "anyOf":[
+        {
+          "enum":[
+            "Plain",
+            "0",
+            "Red",
+            "1",
+            "Blue",
+            "2",
+            "Yellow",
+            "4",
+            "Solid",
+            "8",
+            "Striped",
+            "16",
+            "SolidRed",
+            "9",
+            "SolidBlue",
+            "10",
+            "SolidYellow",
+            "12",
+            "RedBlueStriped",
+            "19",
+            "RedYellowStriped",
+            "21",
+            "BlueYellowStriped",
+            "22"
+          ],
+        },
+        {
+          "type":"string",
+          "pattern":"^(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped|[1-9][0-9]*)(,(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped|[1-9][0-9]*))*$"
+        }
+      ]
+    }
+</pre>
+<br>
+<pre>
+"org.example.ShippingMethod":{
+      "enum":[
+        "FirstClass",
+        "0",
+        "TwoDay",
+        "1",
+        "Overnight",
+        "2"
+      ],
+      "FirstClass@Core.Description":"Shipped with highest priority",
+      "TwoDay@Core.Description":"Shipped within two days",
+      "Overnight@Core.Description":"Shipped overnight"
+      "@Core.Description":"Method of shipping"
+    }
+"Model1.Text50":{
+      "type":"string",
+      "maxLength":50
+    },
+    "Model1.VariableDecimal":{
+      "type":"number",
+      "@Core.Description":"A type definition"
+    },
+    "Model1.ExactTimestamp":{
+      "$ref":
+      "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
+    }
+</pre>
+<pre>
+{
+  "$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+  "definitions": ,
+  "schemas": ,
+  "references":
+}</pre>
+<br>
+Example 39: a schema for validating messages containing a single Product entity<br>
+<pre>{
+  "$schema":"http://json-schema.org/draft-04/schema#",
+  "allOf": [{
+      "$ref": "csdl-16.1.json#/definitions/ODataDemo.Product"
+    }
+  ]
+}</pre>
+
+<br>4.2.4 Annotations
+<br>...</p>
+
+<h3>7. Next meeting</h3>
+<p>Suggested is 2015-JAN-08 8:00-10:00am PT</p>
+<p>Agreed</p>
+ 
+<h4>8. AOB</h4>
+
+<p>None.</p>
+
+<h3>Meeting adjourned at 10:00 PT</h3>
+
+</body>
+</html>
+
