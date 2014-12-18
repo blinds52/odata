@@ -234,9 +234,8 @@
     <xsl:if test="@Abstract='true'">
       <xsl:text>,"abstract":true</xsl:text>
       <xsl:if test="not(edm:Key)">
-        <xsl:text>,"keys":{}</xsl:text>
+        <xsl:text>,"keys":[]</xsl:text>
       </xsl:if>
-      <!-- TODO: empty key if no explicit key -->
     </xsl:if>
     <xsl:if test="@HasStream='true'">
       <xsl:text>,"mediaEntity":true</xsl:text>
@@ -557,24 +556,15 @@
   </xsl:template>
 
   <xsl:template match="edm:Key">
-    <xsl:text>"keys":{</xsl:text>
+    <xsl:text>"keys":[</xsl:text>
     <xsl:apply-templates select="edm:PropertyRef" mode="list" />
-    <xsl:text>}</xsl:text>
+    <xsl:text>]</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:PropertyRef">
-    <xsl:text>"</xsl:text>
-    <xsl:choose>
-      <xsl:when test="@Alias">
-        <xsl:value-of select="@Alias" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="@Name" />
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>":"</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"</xsl:text>
+    <xsl:text>{</xsl:text>
+    <xsl:apply-templates select="@Name|@Alias" mode="list" />
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:ReferentialConstraint" mode="item">
