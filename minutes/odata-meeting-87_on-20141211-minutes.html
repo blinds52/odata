@@ -59,8 +59,7 @@ URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_
 <h5>5.1.1 ODATA-755 "Construction rule for canonical URL is incomplete"</h5>
 <p>ODATA-755 is open</p>
 <p>Ralf:<br>
-Unknown/malformed action: /collection/keyvalue<br>
-Check ?help<br>
+GET /collection/keyvalue<br>
 GET /collection/keyvalue1/keyvalue2<br></p>
 <p>Ralf: Key parts may have hierarchical order which would be destroyed by lexicographical ordering</p>
 <p>Stefan: Most path orderings should not depend on lexicographical instance ordering but instead adhere to some stable ordering (eg. given by schema).</p>
@@ -72,8 +71,6 @@ For multi-part keys the canonical key predicate lists the key properties in the 
 <p><b>Mike</b>: I <b>move</b> we resolve ODATA-755 according to the revised proposal. Martin seconds
 <p>ODATA-755 is resolved as proposed by Mike</p>
 
-<p>Ralf: No investigation took place. Hubert to record discussion on this issue in last meeting. </p>
-<p>All: Issue postponed to next meeting</p>
 <P>Motion passes, no objections</p>
 
 <h5>5.1.2 ODATA-734 "Unicode Facet is inadequate"</h5>
@@ -90,13 +87,25 @@ For multi-part keys the canonical key predicate lists the key properties in the 
 
 <h5>5.2.1 ODATA-754 "Clarify that numeric enum values are serialized as strings"</h5>
 <p>ODATA-754 is open</p>
-<p>Ralf: b8 8<br>
-b16 16
-8:16
-16:32
+<p>Ralf: EnumMember names have to start with a letter, otherwise member names and member values couldn't be distinguished
+<br>
+Metadata:<br>
+<br>
+&lt;EnumMember Name="8" Value="16"/><br>
+<br>
+&lt;EnumMember Name="16" Value="32"/><br>
+<br>
+Atom Request:<br>
+<br>
 &lt;d:enumvalue>16&lt;/d:enumvalue><br>
+<br>
+would be ambiguous: first member by value or second member by name.<br>
+<br>
+JSON would allow distinguishing this using the JSON type (string vs. number):<br>
+<br>
 "enumvalue":"16"<br>
 "enumvalue":16<br>
+<br>
 ABNF says:<br><br>
 enum            = qualifiedEnumTypeName SQUOTE enumValue SQUOTE<br>
 enumValue       = singleEnumValue *( COMMA singleEnumValue )<br>
