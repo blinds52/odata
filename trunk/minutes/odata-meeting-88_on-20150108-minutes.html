@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #88 Thursday Jan 08, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #88 Thursday Jan 08, 2015</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2015-01-08 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Edmond Bourne (BlackBerry)
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt 
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Drees (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39080">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from December 11, 2014 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/54810/odata-meeting-87_on-20141211-minutes.html">Meeting#87 on 2015-DEC-11</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by January 08, 2015</h4>
+<p>None</p>
+
+
+<h3>5. Issues for V4.0_ERRATA03 in Applied state</h3>
+
+<p>Ralf: Moving this agenda item to next week to give TC members more time to check issues</p>
+
+
+<h3>6. Process issues (for V4.0_ERRATA03 in New or Open state)</h3>
+
+<h4>6.1 OData Protocol</h4>
+
+<h5>6.1.1 ODATA-479 "Allow Content-ID referencing in request bodies for inserting links to newly created entities"</h5>
+<p>Ralf:</p>
+<pre>
+PUT $2/SingleValuedNavigationProperty
+{
+"@odata.context": "http://host/service/$metadata#$ref",
+"@odata.id": "$1"
+}
+</pre>
+<p>Ralf: ODATA-479 is OPEN</p>
+<p>Mike: not sure if we can do this in an errata. Might conflict with id schemes that use a leading $ sign. Investigation needed. If this is done as an extension, we'll need a capability annotation that advertises this feature.</p>
+
+<h5>6.1.2 ODATA-761 "Invoking an Action: Location header for 201 Created responses"</h5>
+<p>Mike: check HTTP rules whether 201 mandates/suggests a Location header</p>
+<p>Adapted proposal:</p>
+<pre>Create and return single entity: 201 Created with Location header
+Create and return multiple entities: 200 Ok, no Location header
+Any other return type: 200 Ok
+No return type: 204 No Content
+If the client requests no results with the return preference, the rules of section 8.2.8.7 apply.
+</pre>
+<p>Ralf: Create entity/entities and return collection of entities: 200 Ok, no Location header</p>
+<p>Mike: suggested wording: "Create and return an entity collection: 200 Ok, no Location header"</p>
+<p>Mike: suggests not mentioning the "return collection of entities" case</p>
+
+<p>Martin:</p>
+<pre>
+6.3.2. 201 Created
+
+The 201 (Created) status code indicates that the request has been
+fulfilled and has resulted in one or more new resources being
+created. The primary resource created by the request is identified
+by either a Location header field in the response or, if no Location
+field is received, by the effective request URI.
+</pre>
+<p>Martin: <a href="http://tools.ietf.org/html/rfc7231#section-6.3.2" target="_blank">http://tools.ietf.org/html/rfc7231#section-6.3.2</a></p>
+
+<p>Ralf: </p>
+
+<pre>
+7.1.2. Location
+
+The "Location" header field is used in some responses to refer to a
+specific resource in relation to the response. The type of
+relationship is defined by the combination of request method and
+status code semantics.
+
+Location = URI-reference
+
+The field value consists of a single URI-reference. When it has the
+form of a relative reference ([RFC3986], Section 4.2), the final
+value is computed by resolving it against the effective request URI
+([RFC3986], Section 5).
+
+For 201 (Created) responses, the Location value refers to the primary
+resource created by the request.
+</pre>
+<p>Ralf: <a href="https://tools.ietf.org/html/rfc7231#section-7.1.2" target="_blank">https://tools.ietf.org/html/rfc7231#section-7.1.2</a></p>
+<p>Ralf: For create/return single entity refer to rules for creating an entity: location header is MUST, return code either 201 or 204</p>
+
+<p>Ralf: ODATA-761 is open</p>
+<p>Ralf: Preference return=representation and return=minimal</p>
+<p>Mike: Actions that create and return a single entity follow the rules for entity creation - must return a location header, should return 201 created unless the return-minimal preference has been specified, in which case the service may return 204 and no content, but still include the location header.</p>
+<p>Hubert: I move to resolve ODATA-761 as per the newly stated proposal. Martin seconds</p>
+<P>ODATA-761 is resolved as proposed</p>
+
+<h4>6.2 OData JSON Format</h4>
+
+<h5>6.2.1 ODATA-754 "Clarify that numeric enum values are serialized as strings"</h5>
+<p>Ralf:</p>
+<pre>
+"enumValue":"Yellow"
+"enumValue":"Yellow|Striped"
+"enumValue":"Yellow|Striped|42"
+"enumValue":42 ???
+"enumValue":"42"
+</pre>
+<p>Ralf: Current proposal:<br>
+Values of type enumValue are represented as JSON strings.
+The preferred representation is the enumerationMember, defined in
+[OData-ABNF], where available.</p>
+
+<p>Mike: Current proposal:</p>
+<pre>
+Add example for numeric value to section 7.1
+
+Rephrase sentence to
+
+
+Values of type enumValue are represented as JSON strings.
+The preferred representation is the enumerationMember, defined in
+[OData-ABNF], where available.
+</pre>
+<p>Strengthen wording throughout that the numeric value should only be used if there is no string equivalent, both in payloads and in urls.</p>
+
+<p>Ralf: ODATA-754 is open</p>
+<p>ddd</p>
+<p>Mike: I move to resolve ODATA-754 as proposed. Hubert seconds</p>
+<P>ODATA-754 is resolved as proposed</p>
+
+<h5>6.2.2 ODATA-762 "Section 8.5: clarify that @odata.bind:null is valid for updating of 0..1 navigation properties"</h5>
+<p>Ralf: ODATA-762 is open</p>
+<p>Martin: I move to resolve ODATA-762 as proposed. Mike seconds</p>
+<P>ODATA-762 is resolved as proposed</p>
+
+<h4>6.3 OData CSDL</h4>
+
+<h5>6.3.1 ODATA-734 "Unicode Facet is inadequate"</h5>
+<p>John: Note the discussion on XML and ATOM on ASCII characters &lt; 30 or special characters in OData</p>
+<p>Mike: Proposal from ODATA-734:</p>
+<p>Services return TRUE if strings support characters outside of the ASCII character set and FALSE if only characters within the ASCII set are supported</p>
+<p>Services can return a 500 error if they receive a value that cannot be persisted.</p>
+<p>Matt: I move to resolve ODATA-734 asproposed. Mike seconds</p>
+<P>ODATA-734 is resolved as proposed</p>
+
+<h3>7. OData JSON Format for Common Schema Definition Language (CSDL)</h3>
+
+<p>Ramesh: Is there a XML Schema for the XML representation?</p>
+<p>Mike: Yes.</p>
+<p>Ralf: Hand-crafted JSON:</p>
+<pre>
+"ReleaseDate":{
+"type":"Edm.Date"
+}
+</pre>
+<p>Ralf: JSON-Schema:</p>
+<pre>
+"ReleaseDate":{
+"anyOf":[
+{
+"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
+},
+{
+"type":"null"
+}
+]
+}
+</pre>
+
+<p>Mike: One last comment; since JSON Schema isn't a standard yet, we may be able to address some of the issues (like nullability) in JSON Schema, rather than rolling our own.</p>
+
+<h3>8. Next meeting</h3>
+<p>Suggested is 2015-JAN-15 8:00-10:00am PT</p>
+<p>Agreed</p>
+ 
+ <h4>9. Acknowledgement section</h4>
+
+<p>Ralf to open a jira issue.</p>
+
+<h4>10. AOB</h4>
+
+<p>None.</p>
+
+<h3>Meeting adjourned at 10:00 PT</h3>
+
+</body>
+</html>
+
