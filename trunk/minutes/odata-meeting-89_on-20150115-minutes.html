@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #89 Thursday Jan 15, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #89 Thursday Jan 15, 2015</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2015-01-15 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt 
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ramesh Reddy (Red Hat)
+        Stefan Drees (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39081">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from January 08, 2015 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/54888/odata-meeting-88_on-20150108-minutes.html">Meeting#88 on 2015-JAN-08</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by January 15, 2015</h4>
+<p>None</p>
+
+<h3>5. Process issues (for V4.0_ERRATA03 in New or Open state)</h3>
+
+<h4>5.1 OData Protocol</h4>
+
+<h5>5.1.1 ODATA-479 "Allow Content-ID referencing in request bodies for inserting links to newly created entities"</h5>
+<p>Ralf: We are probably safe: ids are URIs, and unless they contain a colon they are relative to the request. We've reserved $ for top-level resources, so $1 should be ok.</p>
+<p>Ralf: To be verified</p>
+
+<p>Ralf: Postpone this issue to next meeting</p>
+
+
+<h5>5.1.2 ODATA-765 "Example 77 (invoking an action): show complex parameters"</h5>
+<p>Ralf: ODATA-765 is OPEN</p>
+<p>Ralf: </p>
+<pre>POST http://host/service/Customers('ALFKI')/SampleEntities.CreateOrder 
+
+ { 
+    "items":[ 
+       {"product":4001, "quantity":2}, 
+       {"product":7062, "quantity":1} 
+    ], 
+    "discountCode": "BLACKFRIDAY" 
+ }
+ </pre>
+<p>Current text: </p>
+<pre>POST http://host/service/Customers('ALFKI')/SampleEntities.CreateOrder
+
+{
+   "quantity": 2,
+   "discountCode": "BLACKFRIDAY"
+}
+ </pre>
+<p>Mike: Current example description: Example 77: invoke the SampleEntities.CreateOrder action using /Customers('ALFKI') as the customer (or binding parameter). The values 2 for the quantity parameter and BLACKFRIDAY for the discountCode parameter are passed in the body of the request
+<br>New second sentence:
+The values for the items and and discountCode parameters are passed in the body of the request.
+<br>The items parameter value is an array of complex type instances, the discountCode parameter value is a string.</p>
+
+<p>Mike: Added the following text to the proposal. Also modify description of example appropriately:<br>
+Example 77: invoke the SampleEntities.CreateOrder action using /Customers('ALFKI') as the customer (or binding parameter). The values for the items and and discountCode parameters are passed in the body of the request. The items parameter value is an array of complex type instances, the discountCode parameter value is a string.
+</p>
+<p>Martin: I move to resolve ODATA-765 as proposed in the jira ticket. Hubert seconds</p>
+<P>ODATA-765 is resolved as proposed</p>
+
+<h5>5.1.3 ODATA-766 "8.2.4 and 8.2.5 should refer to RFC7232 (public comment c201501e00001)"</h5>
+<p>Ralf: ODATA-766 is OPEN</p>
+<p>Ralf: Check all references to RFC7230 whether they are really refering the correct part</p>
+<P>Postponed to next meeting</p>
+
+<h5>5.1.4 ODATA-767 "Adapt Acknowledgements"</h5>
+<p>Ralf: ODATA-767 is OPEN</p>
+<p>Ralf: Proposal: keep this issue open until next Errata are published, then add missing people to the Acknowledgement section</p>
+
+<h5>5.1.5 ODATA-768 "Remove superfluous text after references"</h5>
+<p>Ralf: An OData service MUST support at least one of [OData-JSON]ODataJSONRefOData-JSON or [OData-Atom]OData-Atom, and MAY support additional formats for both request and response bodies.</p>
+<p>Ralf: ODATA-768 is OPEN</p>
+<p>Martin and Ralf to check whether this error pattern appears in other places</p>
+<p>Postponed to next meeting</p>
+
+<h5>5.1.6 ODATA-769 "5.2 Model Versioning: allow adding a new term to the model"</h5>
+<p>Ralf: ODATA-769 is OPEN</p>
+<p>Martin: I move to resolve ODATA-769 as proposed. Mike seconds</p>
+<P>ODATA-769 is resolved as proposed</p>
+
+<h3>6. OData JSON Format for Common Schema Definition Language (CSDL)</h3>
+
+<p>Mike to check with JSON Schema authors whether they plan to focus on validation only or whether they want to cover modeling in addition</p>
+<p>Mike to check with JSON Schema authors on timeline for standardization</p>
+<p>John: Liked the discussion.  Could use a diagram.  Liked the modeling extension approach o JSON.</p>
+<p>Ralf: In the mean-time: experiment with redundant OData-specific extensions, and introduce predefined Nullable-variants for Edm types in edm.json</p>
+<p>Mike: Consider an annotation that tells clients not to expect additional properties</p>
+<p>Mike will open a Jira issue</p>
+<p>Mike: Let's prepare an example of how a metadata file would look with the current JSON Schema, and a variant showing how we want it to look with "modeling extension"</p>
+<p>Ralf: <a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/#_trunk_spec_examples_" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/#_trunk_spec_examples_</a></p>
+<p>Mike: we can extend OData 4.0 compatibly by only using the specific media type application/schema+json and reserving the plain application/json for the future</p>
+
+<h3>7. Next meeting</h3>
+<p>Suggested is 2015-FEB-05 8:00-10:00am PT</p>
+<p>Agreed</p>
+ 
+<h4>8. AOB</h4>
+
+<p>None.</p>
+
+<h3>Meeting adjourned at 09:25 PT</h3>
+
+</body>
+</html>
