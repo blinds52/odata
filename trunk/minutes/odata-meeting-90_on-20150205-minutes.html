@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #90 Thursday Feb 05, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #90 Thursday Feb 05, 2015</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2015-02-05 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Edmond Bourne (BlackBerry)
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP AG) a.k.a. Matt 
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Drees (Individual)
+        Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39081">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from January 15, 2015 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/54951/odata-meeting-89_on-20150115-minutes.html">Meeting#89 on 2015-JAN-15</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by February 05, 2015</h4>
+<p>None</p>
+
+<h3>5. Process issues</h3>
+
+<h4>5.1 Issues for V4.0_ERRATA03 in Applied state</h4>
+
+<p>Mike: comment on ODATA-749</p>
+<p>Mike: I move we accept the application of the 16 issues applied in section 5.a of the agenda. Mark seconds.
+
+<p>Motion passes</p>
+
+<h4>5.2 Issues for V4.0_ERRATA03 in New or Open state</h4>
+
+<h5>5.2.1 ODATA-770 "18.2: incomplete description of annotation name format"</h5>
+<p>Ralf: ODATA-770 is OPEN</p>
+<p>Ralf: The name is the same as the name of the name/value pair being annotated, followed by the at sign (@), followed by the namespace- or alias-qualified name of the annotation, followed by a dot (.), followed by the name of the term. The namespace or alias MUST be defined in the metadata document, see [OData-CSDL].</p>
+<p>Ralf: The name is the same as the name of the name/value pair being annotated, followed by the at sign (@), followed by the namespace- or alias-qualified name of the annotation, i.e. the namespace or alias of the schema that defines the term, followed by a dot (.), followed by the name of the term. The namespace or alias MUST be defined in the metadata document, see [OData-CSDL].</p>
+<p>Ralf: diff: , i.e. the namespace or alias of the schema that defines the term,</p>
+<p>Mike: Revised wording: The name is the same as the name of the name/value pair being annotated, followed by the at sign (@), followed by the namespace- or alias-qualified name of the term. The namespace or alias MUST be defined in the metadata document, see [OData-CSDL].</p>
+<p>Mike: Further revised: The name is the same as the name of the property or name/value pair being annotated, followed by the at sign (@), followed by the namespace- or alias-qualified name of the term. The namespace or alias MUST be defined in the metadata document, see [OData-CSDL].</p>
+<p>Mike: I move to resolve ODATA-770 as proposed with the revised wording. John seconds</p>
+<P>ODATA-770 is resolved as proposed</p>
+
+
+<h5>5.2.2 ODATA-771 "Exponential notation for Edm.Decimal values in JSON payloads"</h5>
+<p>Ralf: ODATA-771 is OPEN</p>
+<p>Mike: seems valid, but look into existing implementations to see how they would deal with this in JSON payloads and URLs</p>
+<p>Mike and Ralf: look into implementations</p>
+<p>Mike: added a comment to issue - a minute ago As per 2015-2-5 meeting: <br>
+ Inclination is to make this clarification for JSON payloads, and to add a suggestion to service implementers in URL Conventions and ABNF that they should support this in URLs, but we want to verify behavior of existing implementations.</p>
+
+
+<h5>5.2.3 ODATA-773 "Qualifiers for instance annotations: JSON Format"</h5>
+<p>Ralf: ODATA-773 is OPEN</p>
+<p>Ralf: @namespace.term</p>
+<p>Ralf: @namespace.term#qualifier</p>
+<p>Ralf: CSDL uses the hash to separate the qualifier</p>
+<p>Ralf: If a path segment starts with an at (@) character, it represents a term cast. The at (@) character MUST be followed by a QualifiedName that MAY be followed by a hash (#) character and a SimpleIdentifier. The QualifiedName preceding the hash character MUST resolve to a term that is in scope, the SimpleIdentifier following the hash sign is interpreted as a Qualifier for the term.</p>
+<p>Mike: I move to resolve ODATA-773 as proposed. Stefan seconds</p>
+<P>ODATA-773 is resolved as proposed</p>
+
+
+<h5>5.2.4 ODATA-774 "Qualifiers for annotations: Preference odata.include-annotations"</h5>
+<p>Ralf: ODATA-774 is OPEN</p>
+<p>Mike: what if existing implementations don't expect a qualifier</p>
+<p>Mike: look into existing implementations</p>
+<P>Revisit in next meeting</p>
+
+
+<h5>5.2.5 ODATA-479 "Allow Content-ID referencing in request bodies for inserting links to newly created entities"</h5>
+<p>Ralf: ODATA-479 is OPEN</p>
+<p>Mike: establish pattern without forcing servers to implement it</p>
+<p>Mike: add it to Errata03 as a MAY</p>
+<p>Mike: consider extending the Capabilities vocabulary</p>
+<p>Mike: Added to Issue: As per 2015-2-5 meeting: We would like to introduce this pattern as one that services MAY support in Errata 3. We would like to investigate addition of a capability that services can use to advertise support for this pattern.</p>
+<P>Revisit in next meeting</p>
+
+
+<h5>5.2.6 ODATA-776 "Clarify function invocation"</h5>
+<p>Ralf: ODATA-776 is OPEN</p>
+<p>Ralf: Ralf to add concrete proposal and suggests to revisit next week</p>
+<p>Ralf: Clarify description of function (import) invocation, especially <br>
+ - non-composable functions only support GET, function must be last path segment <br>
+ - composable functions allow additional path segments, last path segment determines allowed HTTP verbs, e.g. POST if last segment is multi-valued navigation property etc.</p>
+
+<p>Mike: I propose we go ahead and approve ODATA-776 and give direction to the editors to construct the appropriate wording that we review when we review it in the applied state.</p>
+<p>Mike: I move to resolve ODATA-776 as proposed. Matt seconds</p>
+<P>ODATA-776 is resolved as proposed</p>
+
+
+<h3>6. Next meeting</h3>
+<p>Suggested is 2015-FEB-26 8:00-10:00am PT</p>
+<p>Agreed</p>
+ 
+<h4>7. AOB</h4>
+
+<p>John: Security Conference http://www.infosec-world.com/ he has one (1) free main conference registration available. Members shall email him if interested.</p>
+
+<p>Mike: Will add action item for himself to report on JSON Schema discussions with Swagger authors</p>
+
+<p>Susan: Likes the swagger - json schema activity connection .... it sounds promising</p>
+
+
+<h3>Meeting adjourned by chair</h3>
+
+</body>
+</html>
