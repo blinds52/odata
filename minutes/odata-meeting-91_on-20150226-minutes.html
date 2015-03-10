@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #91 Thursday Feb 26, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #91 Thursday Feb 26, 2015</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2015-02-26 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt 
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39087">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<p>Minutes approval postponed to next meeting</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by February 26, 2015</h4>
+
+<h5>4.1.1 Follow up with JSON-Schema on use for modeling</h5>
+<p>Mike started investigation, follow-up on next meeting</p>
+
+<h3>5. Process issues (for V4.0_ERRATA03 in New or Open state)</h3>
+
+<h4>5.1 OData ABNF</h4>
+
+<h5>5.1.1 ODATA-783 "Is it intentional that mindatetime/maxdatetime/now don't permit %-encoded parentheses in ABNF?"</h5>
+<p>Ralf: ODATA-783 is OPEN</p>
+
+<p>Postponed to next meeting</p>
+
+
+<h5>5.1.2 ODATA-780 "indexof: what to return if the second argument does not appear in the first argument"</h5>
+<p>Ralf: ODATA-780 is OPEN</p>
+<p>Hubert: I move to resolve ODATA-780 as proposed. Ramesh seconds</p>
+
+<p>Motion carries, ODATA-780 is resolved as proposed.</p>
+
+
+<h5>5.1.3 ODATA-781 "substring: what to return if the start index is outside the first argument string, or the desired length exceeds the remaining string length"</h5>
+<p>Ralf: ODATA-781 is OPEN</p>
+<p>Ramesh: should not return null. it could be valid value</p>
+<p>Hubert: check with SQL what it does, null or empty string, don't like "bad request"</p>
+<p>Ralf: Reserve "bad request" for negative start index or length, both never make sense</p>
+<p>Mike: desired length exceeds remaining string length just leads to a shorter result</p>
+<p>Mark: Java defines this as error conditions.  From the documentationIndexOutOfBoundsException - if the beginIndex is negative, or endIndex is larger than the length of this String object, or beginIndex is larger than endIndex.</p>
+<p>Ramesh: I agree that if SQL ref returns empty or null then that is fine. I am also checking SQL Spec. orcacle: http://www.techonthenet.com/oracle/functions/substr.php</p>
+<p>Ralf: Negative start index could be treated as counting from the end of the string, i.e. substring(X,-3) gives the last three characters</p>
+<p>Ralf: DB2 will return empty string of start &gt; length</p>
+<p>Ralf: DB2 will return error if start &lt; 0</p>
+<p>Ralf: SQL Anywhere treats negative start as "start from beginning"</p>
+<p>Ralf: SQL Anywhere returns empty string as start &gt; length</p>
+<p>Mike: return empty string if start &gt; length</p>
+<p>Mike: return remaining characters if desired length exceeds string length</p>
+<p>Mike: explicitly "unspecify" behavior for negative start index</p>
+<p>Mike: Proposal:<br>
+-Empty string should be returned for an index larger than the length of the string.<br>
+-Length too long should be allowed and return as many characters up to the specified length.<br>
+-The behavior for a negative index is undefined.<br>
+-A negative length is a bad request.</p>
+
+<p>Mark: I move to resolve ODATA-781 as proposed. Matt seconds</p>
+
+<p>Motion carries, ODATA-781 is resolved as proposed</p>
+
+
+<h5>5.1.4 ODATA-784 "Need to specify the behaviour of arithmetic operators on Decimal type"</h5>
+<p>Ralf: ODATA-784 is OPEN</p>
+<p>Ralf: If A and B are values of type decimal, with scales scaleof(A) and scaleof(B), then: <br>
+<br>
+ scaleof(A add B) = max(scaleof(A), scaleof(B)) <br>
+ scaleof(A sub B) = max(scaleof(A), scaleof(B)) <br>
+ scaleof(A mul B) = scaleof(A) + scaleof(B) <br>
+ scaleof(A div B) = scaleof(A) + scaleof(B)<br></p>
+<p>Ralf: 1 div 3 add 2 div 3</p>
+<p>Ralf: Rules 1-3 are straight-forward</p>
+<p>Ralf: Precision for add also might need to be increased by 1</p>
+<p>Mike: to what extent do we need to specify this?</p>
+<p>Mike: Questions brought up:</p>
+<p>Mike: To what extent do we need to specify this?<br>
+Can we say the result is a decimal of sufficient scale?<br>
+Is it dependent upon the defined scale of the data types or the actual numbers?<br>
+If the expression is used in a $filter, and some of the operands result in an overflow and some do not, how is that handled?<br></p>
+<p>Ralf: Whole request needs to fail if computation fails for an instance</p>
+
+<p>Postponed to next meeting</p>
+
+<h5>5.1.5 ODATA-785 "Numeric promotion (on overflow) across "number type families" is undesirable."</h5>
+<p>Ralf: ODATA-785 is OPEN</p>
+<p>Ralf: Proposal<br>
+<br>
+<br>
+Expressly disallow numeric promotion (on overflow) across number type families. <br>
+<br>
+ Expressly disallow numeric promotion (on overflow) between Single and Double. <br>
+<br>
+ The remaining legal option would be numeric promition on overflow only for integer types.<br></p>
+<p>Ralf: Concern that this would change normative parts of the specification</p>
+<p>Ralf: Clients are probably not concerned about current rules</p>
+<p>Ralf: Servers may find it difficult to follow current rules</p>
+<p>Ralf: Research required</p>
+
+<p>Postponed to next meeting</p>
+
+
+<h3>6. Next meeting</h3>
+<p>Suggested is 2015-MAR-12 8:00-10:00am PT</p>
+<p>Agreed</p>
+<p><b>Note: </b>US and Europe are one hour out of sync</p>
+ 
+<h4>7. AOB</h4>
+
+<p>None.</p>
+
+<h3>Meeting adjourned at 09:26 PT</h3>
+
+</body>
+</html>
