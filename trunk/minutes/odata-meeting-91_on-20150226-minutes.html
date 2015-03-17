@@ -57,42 +57,69 @@ URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_
 <p>Mark: I move to resolve OData-783 to allow %encoding paraenthesis for minDatetime, maxdatetime and now functions. John seconds.</p>
 <p>ODATA-783 is resolved as proposed</p>
 
-<h5>5.1.2 ODATA-782 "Example 57: choose better example"</h5>
-<p>Ralf: ODATA-782 is OPEN</p>
-<p><b>Note</b>: Chat trace available to scribe hat a gap, motion to ODATA-782 missing - for now</b>
-<p>ODATA-782: resolved</p>
+<h4>5.2 OData CSDL</h4>
 
-<h5>5.1.3 ODATA-771 "Exponential notation for Edm.Decimal values in JSON payloads"</h5>
+
+<h5>5.2.1 ODATA-782 "Example 57: choose better example"</h5>
+<p>Ralf: ODATA-782 is OPEN</p>
+<pre>
+&lt;Apply Function=3D"odata.fillUriTemplate">
+  &lt;String>http://host/service/Genres('{genreName}')&lt;http://host/service/Genres(></String>
+  &lt;LabeledElement Name=3D"genreName" Path=3D"NameOfMovieGenre"/>
+&lt;/Apply>
+</pre>
+<pre>http://host/someAPI/Genres/{genreName}/LongDescription&lt;http://host/someAPI/Genres/%7BgenreName%7D/LongDescription>&lt;/http:></pre>
+
+<pre>&lt;Apply Function=3D"odata.fillUriTemplate">
+  &lt;String>http://host/service/Genres({genreName})&lt;http://host/service/Genres(%7BgenreName%7D)>&lt;/String>
+  &lt;LabeledElement Name=3D"genreName">
+    &lt;Apply Function=3D"odata.uriEncode">
+      &lt;Path>NameOfMovieGenre&lt;/Path>
+    &lt;/Apply>
+  &lt;/LabeledElement>
+&lt;/Apply>
+</pre>
+
+<p>Mike: Propose to resolve ODATA_782 as proposed. Martin seconds</p>
+
+<p>ODATA-782: resolved as proposed</p>
+
+<h4>5.3 OData JSON Format</h4>
+
+<h5>5.3.1 ODATA-771 "Exponential notation for Edm.Decimal values in JSON payloads"</h5>
 <p>Ralf: ODATA-771 is OPEN</p>
 
 <p>ODATA-771: postponed</p>
 
-<h5>5.1.4 ODATA-479 "Allow Content-ID referencing in request bodies for inserting links to newly created entities"</h5>
+<h4>5.4 OData Protocol</h4>
+
+<h5>5.4.1 ODATA-479 "Allow Content-ID referencing in request bodies for inserting links to newly created entities"</h5>
 <p>Ralf: ODATA-479 is OPEN</p>
 
 <p>ODATA-479: postponed</p>
 
-<h5>5.1.5 ODATA-778 "Example in section 11.7.3.1, 'Referencing Requests in a Change Set', should use JSON, not ATOM"</h5>
+<h5>5.4.2 ODATA-778 "Example in section 11.7.3.1, 'Referencing Requests in a Change Set', should use JSON, not ATOM"</h5>
 <p>Ralf: ODATA-778 is OPEN</p>
-<p><b>Note</b>: Chat trace available to scribe hat a gap, motion to ODATA-778 missing - for now</b>
+<p>Martin: I move to resolve OData-778 as proposed. Mike seconds.</p>
 
-<p>ODATA-778: resolved</p>
+<p>ODATA-778: resolved as proposed</p>
 
-<h5>5.1.6 ODATA-777 "Clarify multiply/divide duration by number"</h5>
+<h4>5.5 OData URL Conventions</h4>
+
+<h5>5.5.1 ODATA-777 "Clarify multiply/divide duration by number"</h5>
 <p>Ralf: ODATA-777 is OPEN</p>
-<p><b>Note</b>: Chat trace available to scribe hat a gap, motion to ODATA-777 missing - for now</b>
+<p>Hubert: I move to resolve ODATA-777 as proposed. Mike seconds.</p>
+<p>ODATA-777: resolved as proposed</p>
 
-<p>ODATA-777: resolved</p>
 
-
-<h5>5.1.7 ODATA-780 "indexof: what to return if the second argument does not appear in the first argument"</h5>
+<h5>5.5.2 ODATA-780 "indexof: what to return if the second argument does not appear in the first argument"</h5>
 <p>Ralf: ODATA-780 is OPEN</p>
 <p>Hubert: I move to resolve ODATA-780 as proposed. Ramesh seconds</p>
 
 <p>Motion carries, ODATA-780 is resolved as proposed.</p>
 
 
-<h5>5.1.8 ODATA-781 "substring: what to return if the start index is outside the first argument string, or the desired length exceeds the remaining string length"</h5>
+<h5>5.5.3 ODATA-781 "substring: what to return if the start index is outside the first argument string, or the desired length exceeds the remaining string length"</h5>
 <p>Ralf: ODATA-781 is OPEN</p>
 <p>Ramesh: should not return null. it could be valid value</p>
 <p>Hubert: check with SQL what it does, null or empty string, don't like "bad request"</p>
@@ -119,7 +146,7 @@ URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_
 <p>Motion carries, ODATA-781 is resolved as proposed</p>
 
 
-<h5>5.1.9 ODATA-784 "Need to specify the behaviour of arithmetic operators on Decimal type"</h5>
+<h5>5.5.4 ODATA-784 "Need to specify the behaviour of arithmetic operators on Decimal type"</h5>
 <p>Ralf: ODATA-784 is OPEN</p>
 <p>Ralf: If A and B are values of type decimal, with scales scaleof(A) and scaleof(B), then: <br>
 <br>
@@ -140,7 +167,7 @@ If the expression is used in a $filter, and some of the operands result in an ov
 
 <p>Postponed to next meeting</p>
 
-<h5>5.1.10 ODATA-785 "Numeric promotion (on overflow) across "number type families" is undesirable."</h5>
+<h5>5.5.5 ODATA-785 "Numeric promotion (on overflow) across "number type families" is undesirable."</h5>
 <p>Ralf: ODATA-785 is OPEN</p>
 <p>Ralf: Proposal<br>
 <br>
