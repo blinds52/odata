@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #92 Thursday Mar 12, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #92 Thursday Mar 12, 2015</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2015-03-12 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Edmond Bourne (BlackBerry)
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt 
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39089">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from February 05, 2015 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/55223/odata-meeting-90_on-20150205-minutes.html">Meeting#90 on 2015-FEB-05</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h4>3.2 Minutes from February 26, 2015 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/55287/odata-meeting-91_on-20150226-minutes.html">Meeting#91 on 2015-FEB-26</a></p>
+<p>Minutes approval postponed to next meeting</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by March 12, 2015</h4>
+
+<h5>4.1.1 Follow up with JSON-Schema on use for modeling</h5>
+<p>Mike started investigation, follow-up on next meeting</p>
+
+<h3>5. Process issues (for V4.0_ERRATA03 in New or Open state)</h3>
+
+<h4>5.1 OData CSDL</h4>
+
+
+<h5>5.1.1 ODATA-789 "Primitive type Edm.Decimal is ill-defined in regard to Precision"</h5>
+<p>Ralf: ODATA-789 is OPEN</p>
+<p>Ralf: Make it clear that CSDL Precision for Edm.Decimal is equated with significant digits.
+
+<br><br>
+Furthermore, since (unlike with temporal types) some clients will be unable to represent Edm.Decimal values with more than 28 digits (not just losing significant digits, but completely unable to represent). Not the 29 that we state currently. (C# doesn't rule the world (yet) but is important to accomodate). 
+
+<br><br>Require that any client or server which can represent a value of type Edm.Decimal must preserve all significant digits. C# decimal is fine for this, it just can't represent large values. java.math.BigDecimal is fine too. But IEEE DECFLOAT is not acceptable except when the Precision is > 16 (for 64-bit) or > 34 (for 128-bit). For example, 9.9e6144 is not representable using DECFLOAT for Edm.Decimal, as IEEE DECFLOAT cannot retain 6145 significant digits.
+
+<br><br>6.2.3 Attribute Precision
+<br>Note: service designers SHOULD be aware that some clients are unable to support a precision greater than 29 for decimal properties and 7 for temporal properties.</p>
+<p>Ralf: Combine ODATA-789 and ODATA-771 (from topic OData JSON Format)<br>
+Proposal will have to clarify
+<ul><li>Mapping of internal types to OData types</li>
+<li>how clients can / have to deal with this</li></ul></p>
+
+<h4>5.2 OData JSON Format</h4>
+
+<h5>5.2.1 ODATA-787 "Clarify how odata.Include-annotations preference affects odata.* markup"</h5>
+<p>Ralf: ODATA-787 is OPEN</p>
+<p>Mike: Discussion:
+<ul>
+<li>We could define an alternate preference, odata.include-metadata as a general way to request certain metadata be omitted (regardless of format).</li>
+<li>In this case we would probably want to explicitly say that odata.* annotations would be ignored in include-annotations, but that might seem a little strange for the JSON format.</li>
+<li>Do we optimize for the JSON format, or try to anticipate potential future formats?</li>
+</ul>
+</p>
+<p>Mike: It's ignored by formats that don't represent this control information as annotations<br>
+Put in the JSON document:<br>
+<ul>
+<li>It's okay to use include-annotations to add additional odata annotations beyond those prescribed by the odata.metadata type parameter</li>
+<li>Services MUST not subtract from odata.metadata level.</li>
+<li>Services MUST always not exclude nextlink, delta link and count as appropriate</li></ul></p>
+
+<p>Hubert: I move to resolve ODATA-787 as proposed. Martin seconds</p>
+<p>ODATA-787 is resolved as proposed</p>
+
+<h4>5.3 OData Protocol</h4>
+
+<h5>5.3.1 ODATA-479 "Allow Content-ID referencing in request bodies for inserting links to newly created entities"</h5>
+
+<p>Postponed until a proposal has been added</p>
+
+
+<h5>5.3.2 ODATA-788 "Clarify precidence rules for odata.include-annotations preference"</h5>
+
+<p>ODATA-788 is OPEN</p>
+<p>Hubert: I move to resolve ODATA-788 as proposed. Mike seconds.</p>
+
+<p>ODATA-788 is resolved as proposed</p>
+
+
+<h3>6. Reference Services (As suggested by Ramesh)</h3>
+
+<p>Ramesh: Define a Reference Service (schema, data) that can be used to validate implementations, 
+define a reference service that uses all V4 constructs that can be used for validating implementations and test interoperability.</p>
+<p>Mike: Have a live implementation of the reference service and make the example URLs in the spec live links</p>
+<p>Ramesh: document schema as well as example requests and responses</p>
+<p> Ramesh: TripPin service is rather complete with respect to V4 features</p>
+<p>Martin: http://www.odata.org/blog/trippin-new-odata-v4-sample-service/  e.g. Person contains trips</p>
+<p>Martin: https://github.com/OData/ODataSamples/issues</p>
+<p>Mike will investigate whether Olingo and/or the OData-TC can use the TripPin model and data</p>
+
+
+<h3>7. Next meeting</h3>
+<p>Suggested is 2015-MAR-19 8:00-10:00am PT</p>
+<p>Agreed</p>
+ 
+<h4>8. AOB</h4>
+
+<p>None.</p>
+
+<h3>Meeting adjourned at 09:58 PT</h3>
+
+</body>
+</html>
