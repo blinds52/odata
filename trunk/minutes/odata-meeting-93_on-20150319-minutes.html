@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #93 Thursday Mar 19, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #93 Thursday Mar 19, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-03-19 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Brent Gross (IBM)
+        Gerald Krause (SAP AG)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Martin Zurmuehl (SAP AG)
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39090">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from March 12, 2015 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/55298/odata-meeting-92_on-20150312-minutes.html">Meeting#92 on 2015-MAR-12</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h4>3.2 Minutes from February 26, 2015 TC meeting: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/55287/odata-meeting-91_on-20150226-minutes.html">Minutes from February 26, 2015 TC meeting (reworked)</a></p>
+<p>Minutes approved as published</p>
+
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by March 19, 2015</h4>
+
+<h5>4.1.1 Follow up with JSON-Schema on use for modeling</h5>
+<p>Established contact</p>
+<p>Ralf: Meeting set up to discuss our issues</p>
+<p>Ralf: Positive initial feedback on our issues</p>
+<p>John: http://json-schema.org/ could you share some of the discussion on a blog?</p>
+<p>Ralf: Strong suggestion on not using anything other than JSON Schema</p>
+<p>John: Susan?  https://groups.google.com/forum/#!forum/json-schema</p>
+<p>Susan: The I-JSON Message Format draft-ietf-json-i-json-06
+<br>
+https://tools.ietf.org/html/draft-ietf-json-i-json-06
+<br>
+I-JSON is a restricted profile of JSON designed to maximize interoperability and increase confidence that software can process it successfully with predictable results. 
+<br>
+Main Contributor: Douglas Crockford
+<br>
+Editor: Tim Bray, Google, Inc. email: tbray@textuality.com
+<br>
+</p>
+
+<p>Stefan: AUTH48 status of draft-ietf-json-i-json-06 -&gt; (RFC-to-be 7493)<br>
+This document is in AUTH48 state as of 2015-03-18. It has not yet been published as an RFC. The RFC Editor is awaiting approvals from the author(s) as shown below (and anyone else listed) before continuing the publication process. ...
+</p>
+<p>Stefan (<b>Update from 2015-MAR-22</b>):<br>
+<br>
+A new Request for Comments is now available in online RFC libraries.
+<br>
+<br>        
+        RFC 7493<br>
+<br>
+        Title:      The I-JSON Message Format <br>
+        Author:     T. Bray, Ed.<br>
+        Status:     Standards Track<br>
+        Stream:     IETF<br>
+        Date:       March 2015<br>
+        Mailbox:    tbray@textuality.com<br>
+        Pages:      6<br>
+        Characters: 12849<br>
+        Updates/Obsoletes/SeeAlso:   None<br>
+<br>
+        I-D Tag:    draft-ietf-json-i-json-06.txt<br>
+<br>
+        URL:        https://www.rfc-editor.org/info/rfc7493<br>
+<br>
+I-JSON (short for "Internet JSON") is a restricted profile of JSON
+designed to maximize interoperability and increase confidence that
+software can process it successfully with predictable results.
+<br><br>
+This document is a product of the JavaScript Object Notation Working Group of the IETF.
+<br><br>
+This is now a Proposed Standard.<br>
+Date: Sun, 22 Mar 2015 09:32:52 -0700<br>
+Announcement Archived-At: <a href="http://mailarchive.ietf.org/arch/msg/json/g5cyKeTm2mnqFruOiYFWQIRe0NQ">http://mailarchive.ietf.org/arch/msg/json/g5cyKeTm2mnqFruOiYFWQIRe0NQ</a><br>
+</p>
+
+<h3>5. Process issues (for V4.0_ERRATA03 in New or Open state)</h3>
+
+<h4>5.1 OData ABNF Construction Rules</h4>
+
+<h5>5.1.1 ODATA-774 "Qualifiers for annotations: Preference odata.include-annotations"</h5>
+
+<p>Ralf: Adapt the definition of the Preference odata.include-annotations: </p>
+
+<pre>
+ Allow in addition to the current definition 
+
+   ns.term#qualifier 
+   ns.*#qualifier 
+   *#qualifier 
+
+ and combined with the excludeoperator - 
+
+   -ns.term#qualifier 
+   -ns.*#qualifier 
+   -*#qualifier
+</pre>
+
+<p>Mike: Added to proposal:</p>
+<pre>
+omission of #qualifier means all, regardless of qualifier
+No way to specify "only unqualified"
+</pre>
+
+<p>John: ##?</p>
+
+<p>Ralf:</p>
+<pre>
+annotationIdentifier = [ excludeOperator ]
+                       ( STAR 
+                       / namespace "." ( termName / STAR ) 
+                       )
+annotationIdentifier = [ excludeOperator ]
+                       ( STAR 
+                       / namespace "." ( termName / STAR ) 
+                       )
+annotationIdentifier = [ excludeOperator ]
+                       ( STAR 
+                       / namespace "." ( termName / STAR ) 
+                       ) 
+                       [ '#' simpleIdentifier ]
+</pre>
+
+<p>Mike: Added to proposal: ABNF needs to be updated to explicitly show a single hash followed by an identifier. This would preclude ## or #(nothing)</p>
+
+<p>John: Likes second</p>
+<p><b>Mike</b>: I propose we resolve ODATA-774 as proposed. John seconds</p>
+<p>ODATA-774 is resolved as proposed</p>
+
+
+<h5>5.1.2 ODATA-775 "Should allow use of parameter aliases for key lookup"</h5>
+
+<p>Mike: Not currently specified: Customers(@custID)?@custID='Alfki'</p>
+<p>Ralf: Customers(ID=@custID)?@custID='ALFKI'</p>
+
+<p>ODATA-775 is OPEN</p>
+
+<p>Mike: Updated proposal: Support the use of parameter aliases in key predicates in both the short form and the long form.</p>
+
+<p><b>Martin</b>: I propose we resolve ODATA-775 as proposed. Mike seconds</p>
+<p>ODATA-775 is resolved as proposed</p>
+
+<h5>5.1.3 ODATA-793 "Expand * on complex type"</h5>
+
+<pre>
+$expand=ComplexProp/* 
+$expand=ComplexProp/ComplexProp/* 
+$expand=ComplexProp/model.type/ComplexProp/* 
+$expand=model.type/ComplexProp/* 
+$expand=model.type/ComplexProp/model.type/ComplexProp/*
+</pre>
+
+<p>ODATA-793 is OPEN</p>
+
+<p>Mike: clarify that $expand=* means all navigation properties, independent of nesting in complex properties</p>
+
+<p>Mike: Updated proposal: <br><br>
+1. * should include nav props on complex types (arbitrarily deep)<br>
+2. Allow for the * expand to be used on complex type properties as well as specific sub types as well....<br>
+<br>
+<p>Mike: The new ABNF for $expand would look something like:</p>
+
+<pre>
+expand               = '$expand' EQ expandItem *( COMMA expandItem )
+expandItem           = expandStar
+                     / expandPath 
+                       ( expandNavigationProperty
+                       / expandStar
+                       )
+expandPath           = [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
+                       *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
+expandNavigationProp = navigationProperty 
+                       [ "/" qualifiedEntityTypeName ]
+                       [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
+                       / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
+                       /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
+                       ]
+expandStar           = [ STAR [ ref / OPEN levels CLOSE ] ]
+</pre>
+
+<p><b>Martin</b>: I propose we resolve ODATA-793 as proposed. Jason seconds</p>
+
+<p>ODATA-793 is resolved as proposed</p>
+
+<h4>5.2 OData CSDL</h4>
+
+<h5>5.2.1 ODATA-795 "Support annotations for expanded references"</h5>
+
+<p>ODATA-795 is OPEN</p>
+
+<p>Mike: Revised proposal:</p>
+
+<p>Mike: Add two new annotations, applied to navigation link elements: "AutoExpandReferences" and "AutoExpand".<br>
+<br>
+ExpandReferences says that the default behavior of the service is to expand just the references of the related resources, and ExpandResources says the default behavior of the service is to expand the related resources.<br>
+<br>
+Such services may or may not support expand on those navigation properties.<br>
+<br>
+</p>
+
+<p>Mike: Add two new annotations, applied to navigation link elements: "AutoExpandReferences" and "AutoExpand".<br>
+<br>
+AutoExpandReferences says that the default behavior of the service is to expand just the references of the related resources, and AutoExpand says the default behavior of the service is to expand the related resources.<br>
+<br>
+Such services may or may not support expand on those navigation properties<br>
+<br>
+</p>
+
+<p><b>Martin</b>: I propose we resolve ODATA-795 as proposed. Mike seconds</p>
+
+<p>ODATA-795 is resolved as proposed</p>
+
+<h5>5.2.2 ODATA-796 "Add annotation to specify whether additional properties may be returned for an entity"</h5>
+
+<p>ODATA-796 is OPEN</p>
+
+<pre>
+NoAdditionalProperties
+Sealed
+Closed
+AdditionalPropertiesDisallowed
+DeclaredPropertiesOnly
+OnlyDeclaredProperties
+</pre>
+ 
+
+<p>Mike: Revised Proposal:<br><br>
+
+Add a new tagging annotation, such as "OnlyDeclaredProperties", applied to an entity, that specifies whether the service is allowed to return additional properties not specified in $metadata.<br><br>
+
+This would include only properties. Services are still allowed to return instance annotations. JSON-Schema representation would include patternproperties for annotations.
+<br><br>
+</p>
+
+<p>Ralf: Use tagging annotation without default value<br><br>
+
+&lt;Annotation Term="Core.AdditionalProperties" Bool="false" />
+</p>
+ 
+
+<p>Mike: Revised proposal:<br/>
+
+Add a new Boolean annotation, applied to an entity, that specifies whether the service is allowed to return additional properties not specified in $metadata.<br/><br/>
+
+Property could be "AdditionalProperties" (to match JSON Schema) and have no default value (require specify bool=false) or could be named something like "OnlyDeclaredProperties" and be a tagging annotation with a default of true when applied.<br/><br/>
+
+This would include only properties. Services are still allowed to return instance annotations. JSON-Schema representation would include patternproperties for annotations.<br/><br/>
+</p>
+
+<p><b>Mike</b>: I move we resolve ODATA-796 as proposed. Martin seconds</p>
+
+<p>ODATA-796 is resolved as proposed</p>
+
+
+<h5>5.2.3 ODATA-789 "Primitive type Edm.Decimal is ill-defined in regard to Precision"</h5>
+
+<p>Ralf: Decimal data types in programming languages and databases</p> 
+
+<hr/>
+ 
+<p>Common terminology is:<br/>
+<br/>
+ Value = Mantissa * 10**(-Scale) <br/>
+<br/>
+ Precision = length of Mantissa <br/>
+<br/>
+</p>
+ 
+<p>Positive Scale means fractional digits, negative scale avoids representing "trailing zeroes" for large integers, e.g. one million has mantissa = 1, scale = -6</p>
+
+<p>Ralf: Type Precision = length of mantissa Scale = -Exponent </p>
+
+ <hr/>
+ <p>
+ C# decimal  96 bit ~ 28-29 decimal digits Instance, 0..28 <br/>
+ Objective-C NSDecimalNumber 38 decimal digits Instance, -128127<br/> 
+ Java BigDecimal unlimited no of decimal digits Instance, -2,147,483,6482,147,483,647 (32 bit) <br/>
+ DECFLOAT34 34 decimal digits Instance, -384383 <br/>
+ DECFLOAT16 16 decimal digits Instance, -61446143 <br/>
+ DB2 DECIMAL 131 decimal digits Column, 0Precision <br/>
+ Sybase ASE DECIMAL 138 decimal digits Column, 0Precision<br/> 
+ Sybase IQ DECIMAL 1126 decimal digits Column, 0Precision <br/>
+ Postgres DECIMAL 11000 decimal digits Column, 0Precision <br/>
+ Oracle NUMBER 1..38 decimal digits Column, -84127<br/>
+</p>
+
+<p>Ralf: Problems when mapping these to Edm.Decimal <br/><br/>
+
+  - missing exponential notation: the "floating-point decimals" can be declared as Scale="variable", but <br/>
+  -- with Precision=internal precision not all internal values can be represented in OData <br/>
+  -- with Precision=unspecified all internal values can be represented, using lots of zeroes, but not all OData values can be stored <br/>
+  - OData representation doesn't allow leading decimal point, numeric Scale has to be lower than precision <br/>
+  -- DECIMAL/NUMBER columns with 0 &lt;= scale &lt; precision fit perfectly <br/>
+  -- scale = precision runs into problems: <br/>
+  --- with Precision=internal precision not all DECIMAL values can be represented in OData <br/>
+  --- with Precision=internal precision plus 1 not all OData values can be stored as DECIMAL values <br/>
+ - Scale cannot be negative or larger than Precision minus 1 <br/>
+ -- NUMBER columns with negative scale or scale larger than precision minus 1 run into the same problems as "floating-point decimals"<br/>
+</p>
+
+<p>Ralf: Possible solutions <br/><br/>
+
+  - define Precision to be the number of significant digits <br/>
+  - allow exponential notation <br/>
+  -- floating-point decimals can be minimally represented <br/>
+  -- Precision can be used to exactly express the number of significant digits <br/>
+  -- an annotation (or in future protocol versions a new facet) can indicate the presence of exponents and their value range <br/>
+  - allow Precision=Scale <br/>
+  -- DECIMAL precision and scale can be exactly expressed in all cases <br/>
+  -- number representation could be relaxed to allow .123, or we don't count the "0." into the Precision in this special case <br/>
+  - allow negative Scale <br/>
+  -- NUMBER precision and scale can be exactly expressed in all cases<br/>
+  </p>
+
+ 
+<p>All discuss request and payload WITHOUT any conversion</p>
+
+<h3>6. Next meeting</h3>
+<p>Suggested is 2015-MAR-26 8:00-10:00am PT</p>
+<p>Agreed</p>
+ 
+<h4>7. AOB</h4>
+
+<p>None.</p>
+
+<h3>Meeting adjourned at 09:59 PT</h3>
+
+</body>
+</html>
