@@ -1493,13 +1493,25 @@ Overview:
             Rule="commonExpr">
     <Input>now()</Input>
   </TestCase>
+  <TestCase Name="5.1.1.4.22 - non-canonical percent-encoding" 
+            Rule="commonExpr">
+    <Input>now%28%20%29</Input>
+  </TestCase>
   <TestCase Name="5.1.1.4.23" 
             Rule="commonExpr">
     <Input>maxdatetime()</Input>
   </TestCase>
+  <TestCase Name="5.1.1.4.23 - non-canonical percent-encoding" 
+            Rule="commonExpr">
+    <Input>maxdatetime%28%20%29</Input>
+  </TestCase>
   <TestCase Name="5.1.1.4.24" 
             Rule="commonExpr">
     <Input>mindatetime()</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.4.24 - non-canonical percent-encoding" 
+            Rule="commonExpr">
+    <Input>mindatetime%28%20%29</Input>
   </TestCase>
   <TestCase Name="5.1.1.4.25" 
             Rule="commonExpr">
@@ -1749,6 +1761,12 @@ Overview:
             Rule="expand">
     <Input>$expand=*,*/$ref,*($levels=2),Category</Input>
   </TestCase>
+  <!-- TODO:
+  <TestCase Name="5.1.2 Expand - star on complex path" 
+            Rule="expand">
+    <Input>$expand=Address/*,Complex1/Complex2/*,ComplexN/*,Address/Model.AddressWithLocation/*,Sub.Type/ComplexProp/*,Address/*/$ref,Address/*($levels=max)</Input>
+  </TestCase>
+  -->
   <TestCase Name="5.1.3 Select - simple" 
             Rule="select">
     <Input>$select=Rating,ReleaseDate</Input>
@@ -1859,6 +1877,10 @@ Overview:
   <TestCase Name="5.1.7 Search - implicit AND" 
             Rule="queryOptions">
     <Input>$search=blue green</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - implicit AND, encoced" 
+            Rule="queryOptions">
+    <Input>$search=blue%20green</Input>
   </TestCase>
   <TestCase Name="5.1.7 Search - AND" 
             Rule="queryOptions">
@@ -2488,13 +2510,25 @@ Overview:
             Rule="preference">
     <Input>odata.include-annotations="*"</Input>
   </TestCase>  
+  <TestCase Name="Preferences - include annotations - all with a given qualifier" 
+            Rule="preference">
+    <Input>odata.include-annotations="*#qualified"</Input>
+  </TestCase>  
   <TestCase Name="Preferences - include annotations - none" 
             Rule="preference">
     <Input>odata.include-annotations="-*"</Input>
   </TestCase>  
+  <TestCase Name="Preferences - include annotations - none with a given qualifier" 
+            Rule="preference">
+    <Input>odata.include-annotations="-*#qualified"</Input>
+  </TestCase>  
   <TestCase Name="Preferences - include annotations - all in namespace" 
             Rule="preference">
     <Input>odata.include-annotations="Namespace.*"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include annotations - all in namespace with given qualifier" 
+            Rule="preference">
+    <Input>odata.include-annotations="Namespace.*#quali"</Input>
   </TestCase>  
   <TestCase Name="Preferences - include annotations - namespace must be suffixed with .*" 
             Rule="includeAnnotationsPreference"
@@ -2510,13 +2544,25 @@ Overview:
             Rule="preference">
     <Input>odata.include-annotations="-Namespace.*"</Input>
   </TestCase>  
+  <TestCase Name="Preferences - include annotations - nothing from namespace" 
+            Rule="preference">
+    <Input>odata.include-annotations="-Namespace.*#quali"</Input>
+  </TestCase>  
   <TestCase Name="Preferences - include annotations - only a special term" 
             Rule="preference">
     <Input>odata.include-annotations="Namespace.SomeTerm"</Input>
   </TestCase>  
+  <TestCase Name="Preferences - include annotations - only a special term" 
+            Rule="preference">
+    <Input>odata.include-annotations="Namespace.SomeTerm#qual"</Input>
+  </TestCase>  
   <TestCase Name="Preferences - include annotations - everything except a special term" 
             Rule="preference">
     <Input>odata.include-annotations="-Namespace.SomeTerm"</Input>
+  </TestCase>  
+  <TestCase Name="Preferences - include annotations - only a special term" 
+            Rule="preference">
+    <Input>odata.include-annotations="-Namespace.SomeTerm#qual"</Input>
   </TestCase>  
   <TestCase Name="Preferences - include annotations - several" 
             Rule="preference">
