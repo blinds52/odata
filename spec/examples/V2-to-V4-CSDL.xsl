@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm sap m cg annotation" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="edmx1 edm2 edm sap m" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:edmx1="http://schemas.microsoft.com/ado/2007/06/edmx"
   xmlns:edm2="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:sap="http://www.sap.com/Protocols/SAPData"
-  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+  xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm"
 >
   <!--
 
@@ -10,7 +10,7 @@
     Existing constructs that have an equivalent in V4 are automatically translated.
     The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset.
     The retired primitive type Edm.Time is translated into the Edm.TimeOfDay.
-    
+
     In addition the SAP annotations are translated into corresponding V4 annotations in the OASIS vocabularies or SAP vocabularies.
 
     TODO: TimeOfDay as target for Time
