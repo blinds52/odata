@@ -124,9 +124,9 @@ collectionNavPath    = keyPredicate [ singleNavigation ]
                      / ref
 
 keyPredicate     = simpleKey / compoundKey
-simpleKey        = OPEN keyPropertyValue CLOSE
+simpleKey        = OPEN ( parameterAlias / keyPropertyValue ) CLOSE
 compoundKey      = OPEN keyValuePair *( COMMA keyValuePair ) CLOSE
-keyValuePair     = ( primitiveKeyProperty / keyPropertyAlias ) EQ keyPropertyValue
+keyValuePair     = ( primitiveKeyProperty / keyPropertyAlias  ) EQ ( parameterAlias / keyPropertyValue )
 keyPropertyValue = primitiveLiteral
 keyPropertyAlias = odataIdentifier
 
