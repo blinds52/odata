@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #96 Thursday Apr 30, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #96 Thursday Apr 30, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-04-30 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+
+<pre>
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        John Willson (Individual)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP AG)
+        Matthew Borges (SAP AG) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39096">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from April 16, 2015 TC meeting #95: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/55493/odata-meeting-95_on-20150416-minutes.html">Meeting#95 on 2015-APR-16</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by April 30, 2015</h4>
+
+<h5>4.1.1 Follow up with JSON-Schema on use for modeling</h5>
+
+<p>No news./p>
+
+
+<h3>5. Process issues (for V4.0_ERRATA03 in New or Open state)</h3>
+
+<h4>5.1 OData CSDL</h4>
+
+<h5>5.1.1 ODATA-801 "Consider supporting negative scale for decimal type"</h5>
+
+<p>ODATA-801 is OPEN</p>
+<p>Mike: changing the definition of Scale might break clients</p>
+<p>Mike: pretending a precision larger than actually stored might result in loss of precision, but clients will be able to read the data</p>
+<p>Mike: could add an annotation that tells that the actual precision and scale</p>
+
+<p>Mike: I propose we defer ODATA-801 to 4.1 release. In 4.0, services should add the absolute value of the negative scale to the returned precision. Add note to spec advising clients to be aware in this case that rounding may occur. Martin seconds.</p>
+ 
+<p>ODATA-801 is DEFERRED to 4.1, will add note to 4.0 spec</p>
+
+<h4>5.2 OData JSON Format</h4>
+
+<h5>5.2.1 ODATA-771 "Exponential notation for Edm.Decimal values in JSON payloads"</h5>
+
+<p>Ralf: Olingo Java client rejects exponential notation</p>
+<p>Ralf: NewtonSoft JSON library converts values with exponential notation as double, which then might lead to problems with the layer on top</p>
+<p>Ralf: C# library also treats it as a double and rejects it because it isn't a decimal</p>
+<p>Ralf: Way forward could be to add a format parameter for the JSON format that clients can specify if they accept exponential notation for decimals</p>
+<p>Mike: two options: </p>
+<ul><li>preference in Prefer header (Protocol, applies to all formats)</li>
+<li>format parameter (specific to JSON)</li></ul>
+
+<p>Mike: seems to be more format-related than protocol-related</p>
+<p>Ralf: DecimalWithExponentialNotation=true</p>
+<p>Ralf: No problem</p>
+<p>Ralf: DecimalExponentialNotation=true</p>
+<p>Ralf: ExponentialDecimals=true</p>
+<p>Ralf: ScientificDecimals=true</p>
+<p>Ralf: E-Decimal</p>
+<p>Ralf: ExpDecimal</p>
+ 
+
+<p>Mike: suggest: add a format parameter, "ExponentialDecimals", that tells the service that the client is able to receive decimals as exponential notation. In presence of this format parameter, services MAY (but are not required to) persist decimal values in exponential notation.</p>
+<p>Mike: Clients should verify in Capabilities.SupportedFormats whether or not service supports this before sending decimal values in exponential notation.</p>
+ 
+
+<p>Hubert: I move to resolve ODATA-771 by means of introducing a format parameter, named "ExponentialDecimals", that tells the service that the client is able to receive decimals using exponential notation. In presence of this format parameter, services MAY (but are not required to) serialize decimal values in exponential notation. Mike seconds.</p>
+
+<p>ODATA-771 is resolved as proposed</p>
+
+<h3>6. Next meeting</h3>
+
+<p>Thursday May 07, 2015 during 8-10am PDT / 17:00-19:00 CEST ?</p>
+<p>Agreed (but regrets from Matt)</p>
+
+
+<h3>7. AOB and wrap up</h3>
+
+<p>None</p>
+
+<h3>Meeting adjourned</h3>
+
+</body>
+</html>
