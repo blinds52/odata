@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #97 Thursday May 07, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #97 Thursday May 07, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-05-07 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP AG)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP AG)
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP AG)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39097">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from April 30, 2015 TC meeting #96: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/55598/odata-meeting-96_on-20150430-minutes.html">Meeting#96 on 2015-APR-30</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by May 07, 2015</h4>
+
+<h5>4.1.1 Follow up with JSON-Schema on use for modeling</h5>
+
+<p>No news./p>
+
+
+<h3>5. Process Issues (for Data Aggregation in New or Open state)</h3>
+
+<h4>5.1 ODATA-759 "6.2.3 Custom Aggregates: unprecise formulation"</h4>
+<p>Change sentence from 
+<br>
+<br>In this case, the value of the Type property MUST have the same value as the Type attribute of the declared property. 
+<br>
+<br>to 
+<br>
+<br>In this case, the value of the annotation MUST have the same value as the Type attribute of the declared property.
+<br></p>
+<p>ODATA-759 is OPEN</p>
+<p>Martin: I move to resolve ODATA-759 as proposed. Hubert seconds</p>
+<p>ODATA-759 is resolved as proposed</p>
+
+<h4>5.2 ODATA-728 "A recursive hierarchy annotation may also contain a navigation property to the parent node"</h4>
+
+<p>Ralf:
+<br>
+<br>NodeProperty: ID
+<br>ParentNodeProperty: Manager/ID
+<br>ParentNavigationProperty: Manager
+</p>
+<p>ODATA-728 is OPEN</p>
+<p>Gerald: I move to resolve ODATA-728 with the amendment to remove the term property "ParentNodeProperty". Stefan seconds</p>
+<p>Hubert: Objection: ParentNodeProperty must not be nullable
+<br>ParentNavigationProperty must not be nullable, ParentNodeProperty is removed</p>
+<p>Hubert: I move to resolve ODATA-728 with the following amendments; Remove the term property "ParentNodeProperty" and making the ParentNavigationProperty required by change the Nullable property to false. Stefan seconds.</p>
+<p>ODATA-728 is resolved with the amended proposal</p>
+
+<h4>5.3 ODATA-727 "Clarify the meaning of annotation values used for hierarchy terms"</h4>
+
+<p>ODATA-727 is OPEN</p>
+<p>Hubert: I move to resolve ODATA-727 as proposed. Gerald seconds.</p>
+<p>ODATA-727 is resolved as proposed</p>
+
+<h4>5.4 ODATA-726 "Describe the data model used for example 75"</h4>
+
+<p>ODATA-726 is OPEN</p>
+<p>Martin: I move to resolve ODATA-726 as proposed. Gerald seconds.</p>
+<p>ODATA-726 is resolved as proposed</p>
+
+
+<h4>5.5 ODATA-725 "Missing navigation properties in diagram in section 2.2"</h4>
+
+<p>ODATA-725 is OPEN</p>
+<p>Gerald: I move to resolve ODATA-725 as proposed. Hubert seconds.</p>
+<p>ODATA-725 is resolved as proposed</p>
+
+
+<h4>5.6 ODATA-703 "Example 31: wrong description"</h4>
+
+<p>ODATA-703 is OPEN</p>
+<p>Hubert: I move to resolve ODATA-703 as proposed, while allowing the editors the freedom to come up with a creative description. Martin seconds.</p>
+<p>ODATA-703 is resolved as proposed</p>
+
+
+<h4>5.7 ODATA-702 "Define the behaviour of system query option $count and path segment /$count in combination with $apply"</h4>
+
+<p>Ralf:
+<br>
+<br>$apply on resource paths ending in /$count acts on the set "preceding" the /$count, the result is the plain-text number of items in the result of $apply, similar to the combination of /$count and $filter 
+<br>
+<br>$count system query option is executed after $apply, @odata.count contains the number of items in the result of $apply
+</p>
+<p>ODATA-702 is OPEN</p>
+<p>Hubert: I move to resolve ODATA-702 as proposed. Stefan seconds.</p>
+<p>ODATA-702 is resolved as proposed</p>
+
+
+<h4>5.8 ODATA-701 "Bug in Example 38: terms for LeveledHierarchy and RecursiveHierarchy incorrectly annotated"</h4>
+
+<p>ODATA-701 is OPEN</p>
+<p>Martin:
+<pre>
+&lt;Annotations Target="SalesModel.Product"&gt; 
+    &lt;Annotation Term="Aggregation.LeveledHierarchy" 
+                Qualifier="ProductHierarchy"&gt; 
+     &lt;Record&gt; 
+      &lt;PropertyValue Property="Levels"&gt; 
+        &lt;Collection&gt; 
+          &lt;String&gt;Category/Name&lt;/String> 
+          &lt;String&gt;Name&lt;/String&gt; 
+        &lt;/Collection&gt; 
+      &lt;/PropertyValue&gt; 
+     &lt;/Record&gt; 
+    &lt;/Annotation&gt; 
+   &lt;/Annotations&gt;
+</pre>
+</p>
+<p>Ralf: Term definition requires PropertyPath instead of String, values remain unchanged</p>
+<p>Martin: 
+<pre>
+&lt;Term Name="LeveledHierarchy" Type="Collection(Edm.PropertyPath)" AppliesTo="EntityType ComplexType"&gt;
+</pre>
+</p>
+<p>Hubert: I move to resolve ODATA-701 as proposed. Gerald seconds.</p>
+<p>ODATA-701 is resolved as proposed</p>
+
+
+<h4>5.9 ODATA-662 "Allow usage of $apply as "Expand Option" in $expand"</h4>
+
+<p>Martin: We haven't specified the usage of $apply as "Expand Option" in $expand. 
+There are good use cases for $apply as an option of $expand (and it combines very well): 
+<br>
+<br>GET Products?$expand=Sales($apply=aggregate(Amount with sum as Total))
+<br>
+<br>Returns all products, and the Sales navigation property value is a one-element array with the Total
+Means: per Product in top-level result inline result of
+</p>
+<p>Mike: does the syntax of $apply prevent nesting it in $expand?</p>
+<p>Martin: no, no semicolons used in $apply syntax</p>
+<p>Mike: seems like a pretty core thing</p>
+<p>ODATA-662 is OPEN</p>
+<p>Mike: I move to resolve ODATA-662 as proposed. Gerald seconds.</p>
+<p>ODATA-662 is resolved as proposed</p>
+
+
+<h4>5.10 ODATA-588 "Typo in example 10: query uses MaxAmount, response uses MinAmount"</h4>
+
+<p>ODATA-588 is OPEN</p>
+<p>Stefan: I move to resolve ODATA-588 as proposed. Gerald seconds.</p>
+<p>ODATA-588 is resolved as proposed</p>
+
+
+<h3>6. Next meeting</h3>
+
+<p>Thursday May 21, 2015 during 8-10am PDT / 17:00-19:00 CEST ?</p>
+<p>Agreed</p>
+
+
+<h3>7. AOB and wrap up</h3>
+
+<p>Mike: Have accumulated several issues that go beyond errata. How about starting on V4.1 to address these issues?</p>
+<p>Mike: Related topic: People planning a REST API don't perceive OData as approrpiate. Spec is rather long. Also name seems to limit it to "database access". 
+Not clear that entry barrier (minimal conformance) is pretty easy.</p>
+<p>Mike: Publish a "REST API Profile" - short description of how to start and use parts of OData to solve common REST API problems</p>
+<p>Names suggested: I-REST, O-REST, ...</p> 
+<p>Mark: hear the same sort of comments. Complaints from client side that it looks too complex.</p>
+<p>Mike: looking at JSON or JSON Schema first impression is just one or two pages of text with examples, plus pointer to full spec</p>
+<p>Mike: We should try to give the same first impression of simplicity</p>
+<p>Mike will put together a proposal of how this could look like</p>
+<p>Stefan: XML for $metadata also adds to the entry barrier. Using JSON (Schema) for CSDL would lower that barrier</p>
+<p>Mike: need to check whether adding a JSON $metadata requires the TC to adjust its charter</p>
+<p>Need to define the scope of our work for the next 12-18 months and have our charter reflect that:</p>
+<ul>
+<li>JSON for $metadata</li>
+<li>V4.1 as a compatible protocol version with version negotiation</li>
+<li>I-REST / ... profile</li>
+</ul>
+<p>Martin: make sure that the things we want to put into V4.1 doesn't make it too hard for V4.0 implementations to also support V4.1</p>
+<p>Mike: need high degree of interop between 4.1 and 4.0, no substantive changes</p>
+<p>Ralf: Check existing issues "parked" on V4.1 whether they can be added "non-breaking"</p>
+<p>All: Definitely: if client requests MaxVersion 4.0 it just gets plain 4.0</p>
+<p>Stefan: non-breaking, compelling changes</p>
+<p>Mike: identify what's important to add</p>
+<p>Ralf: Have both complete V4.1 spec plus a "delta to V4.0" document describing only the changes</p>
+<p>Stefan: definitely worth it</p>
+<p>Martin: talk about this in two weeks, notify Hubert of this decision</p>
+<p>Ralf will place that on the agend of next meeting.</p>
+
+<h3>Meeting adjourned</h3>
+
+</body>
+</html>
