@@ -1,0 +1,541 @@
+{
+	"$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+	"edmTypes":[
+		null,
+		"Edm.PropertyPath",
+		"Edm.NavigationPropertyPath"
+	],
+	"definitions":{
+		"Org.OData.Capabilities.V1.ConformanceLevelType":{
+			"enum":[
+				"Minimal",
+				"0",
+				"Intermediate",
+				"1",
+				"Advanced",
+				"2"
+			]
+		},
+		"Org.OData.Capabilities.V1.IsolationLevel":{
+			"anyOf":[
+				{
+					"enum":[
+						"Snapshot",
+						"1"
+					]
+				},
+				{
+					"type":"string",
+					"pattern":"^(Snapshot|[1-9][0-9]*)(,(Snapshot|[1-9][0-9]*))*$"
+				}
+			]
+		},
+		"Org.OData.Capabilities.V1.CallbackType":{
+			"type":"object",
+			"properties":{
+				"CallbackProtocols":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Org.OData.Capabilities.V1.CallbackProtocol"
+					}
+				}
+			},
+			"@Core.Description":"A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'"
+		},
+		"Org.OData.Capabilities.V1.CallbackProtocol":{
+			"type":"object",
+			"properties":{
+				"Id":{
+					"type":[
+						"string",
+						"null"
+					],
+					"@Core.Description":"Protcol Identifier"
+				},
+				"UrlTemplate":{
+					"type":[
+						"string",
+						"null"
+					],
+					"@Core.Description":"URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570"
+				},
+				"DocumentationUrl":{
+					"type":[
+						"string",
+						"null"
+					],
+					"@Core.Description":"Human readable description of the meaning of the URL Template parameters",
+					"@Core.IsURL":{
+						
+					}
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.ChangeTrackingType":{
+			"type":"object",
+			"properties":{
+				"Supported":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"This entity set supports the odata.track-changes preference"
+				},
+				"FilterableProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					},
+					"@Core.Description":"Change tracking supports filters on these properties"
+				},
+				"ExpandableProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath"
+					},
+					"@Core.Description":"Change tracking supports these properties expanded"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.CountRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Countable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"Entities can be counted"
+				},
+				"NonCountableProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					},
+					"@Core.Description":"These collection properties do not allow \/$count segments"
+				},
+				"NonCountableNavigationProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath"
+					},
+					"@Core.Description":"These navigation properties do not allow \/$count segments"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.NavigationRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Navigability":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Org.OData.Capabilities.V1.NavigationType"
+						},
+						{
+							"type":"null"
+						}
+					],
+					"@Core.Description":"Supported Navigability"
+				},
+				"RestrictedProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Org.OData.Capabilities.V1.NavigationPropertyRestriction"
+					}
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.NavigationPropertyRestriction":{
+			"type":"object",
+			"properties":{
+				"NavigationProperty":{
+					"anyOf":[
+						{
+							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath"
+						},
+						{
+							"type":"null"
+						}
+					],
+					"@Core.Description":"Navigation properties can be navigated"
+				},
+				"Navigability":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Org.OData.Capabilities.V1.NavigationType"
+						},
+						{
+							"type":"null"
+						}
+					],
+					"@Core.Description":"Navigation properties can be navigated to this level"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.NavigationType":{
+			"enum":[
+				"Recursive",
+				"0",
+				"Single",
+				"1",
+				"None",
+				"2"
+			],
+			"Recursive@Core.Description":"Navigation properties can be recursively navigated",
+			"Single@Core.Description":"Navigation properties can be navigated to a single level",
+			"None@Core.Description":"Navigation properties are not navigable"
+		},
+		"Org.OData.Capabilities.V1.FilterRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Filterable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"$filter is supported"
+				},
+				"RequiresFilter":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":false,
+					"@Core.Description":"$filter is required"
+				},
+				"RequiredProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					},
+					"@Core.Description":"These properties must be specified in the $filter clause (properties of derived types are not allowed here)"
+				},
+				"NonFilterableProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					},
+					"@Core.Description":"These properties cannot be used in $filter expressions"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.SortRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Sortable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"$orderby is supported"
+				},
+				"AscendingOnlyProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					},
+					"@Core.Description":"These properties can only be used for sorting in Ascending order"
+				},
+				"DescendingOnlyProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					},
+					"@Core.Description":"These properties can only be used for sorting in Descending order"
+				},
+				"NonSortableProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					},
+					"@Core.Description":"These properties cannot be used in $orderby expressions"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.ExpandRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Expandable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"$expand is supported"
+				},
+				"NonExpandableProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath"
+					},
+					"@Core.Description":"These properties cannot be used in $expand expressions"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.SearchRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Searchable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"$search is supported"
+				},
+				"UnsupportedExpressions":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Org.OData.Capabilities.V1.SearchExpressions"
+						},
+						{
+							"type":"null"
+						}
+					],
+					"default":"none",
+					"@Core.Description":"Expressions not supported in $search"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.SearchExpressions":{
+			"anyOf":[
+				{
+					"enum":[
+						"none",
+						"0",
+						"AND",
+						"1",
+						"OR",
+						"2",
+						"NOT",
+						"4",
+						"phrase",
+						"8",
+						"group",
+						"16"
+					]
+				},
+				{
+					"type":"string",
+					"pattern":"^(none|AND|OR|NOT|phrase|group|[1-9][0-9]*)(,(none|AND|OR|NOT|phrase|group|[1-9][0-9]*))*$"
+				}
+			]
+		},
+		"Org.OData.Capabilities.V1.InsertRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Insertable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"Entities can be inserted"
+				},
+				"NonInsertableNavigationProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath"
+					},
+					"@Core.Description":"These navigation properties do not allow deep inserts"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.UpdateRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Updatable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"Entities can be updated"
+				},
+				"NonUpdatableNavigationProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath"
+					},
+					"@Core.Description":"These navigation properties do not allow rebinding"
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.DeleteRestrictionsType":{
+			"type":"object",
+			"properties":{
+				"Deletable":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":true,
+					"@Core.Description":"Entities can be deleted"
+				},
+				"NonDeletableNavigationProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath"
+					},
+					"@Core.Description":"These navigation properties do not allow DeleteLink requests"
+				}
+			}
+		}
+	},
+	"schemas":{
+		"Org.OData.Core.V1":{
+			"uri":"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml",
+			"alias":"Core"
+		},
+		"Org.OData.Capabilities.V1":{
+			"alias":"Capabilities",
+			"@Core.Description":"\n          The Capabilities vocabulary aims to provide a way for service authors to describe\n          certain capabilities of an OData Service.\n        ",
+			"@Core.LongDescription":"\n          There are some capabilities which are strongly recommended for services to support even\n          though they are optional. Support for $top and $skip is a good example as\n          supporting these query options helps with performance of a service and are essential. Such\n          capabilities are assumed to be default capabilities of an OData service even in\n          the case that a capabilities annotation doesn’t exist. Capabilities annotations are\n          mainly expected to be used to explicitly specify that a service doesn’t support such\n          capabilities. Capabilities annotations can as well be used to declaratively\n          specify the support of such capabilities.\n\n          On the other hand, there are some capabilities that a service may choose to support or\n          not support and in varying degrees. $filter and $orderby are such good examples.\n          This vocabulary aims to define terms to specify support or no support for such\n          capabilities.\n\n          A service is assumed to support by default the following capabilities even though an\n          annotation doesn’t exist:\n          - Countability ($count)\n          - Client pageability ($top, $skip)\n          - Expandability ($expand)\n          - Indexability by key\n          - Batch support ($batch)\n          - Navigability of navigation properties\n\n          A service is expected to support the following capabilities. If not supported, the\n          service is expected to call out the restrictions using annotations:\n          - Filterability ($filter)\n          - Sortability ($orderby)\n          - Queryability of top level entity sets\n          - Query functions\n\n          A client cannot assume that a service supports certain capabilities. A client can try, but\n          it needs to be prepared to handle an error in case the following capabilities are not\n          supported:\n          - Insertability\n          - Updatability\n          - Deletability\n        ",
+			"terms":{
+				"ConformanceLevel":{
+					"type":"Capabilities.ConformanceLevelType",
+					"appliesTo":"EntityContainer"
+				},
+				"SupportedFormats":{
+					"type":"Collection(Edm.String)",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"Media types of supported formats, including format parameters",
+					"@Core.IsMediaType":{
+						
+					}
+				},
+				"AcceptableEncodings":{
+					"type":"Collection(Edm.String)",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"List of acceptable compression methods for ($batch) requests, e.g. gzip"
+				},
+				"AsynchronousRequestsSupported":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"Service supports the asynchronous request preference"
+				},
+				"BatchContinueOnErrorSupported":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"Service supports the continue on error preference"
+				},
+				"IsolationSupported":{
+					"type":"Capabilities.IsolationLevel",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"Supported odata.isolation levels"
+				},
+				"CallbackSupported":{
+					"type":"Capabilities.CallbackType",
+					"appliesTo":"EntityContainer EntitySet",
+					"@Core.Description":"Supports callbacks for the specified protocols"
+				},
+				"CrossJoinSupported":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"Supports cross joins for the entity sets in this container"
+				},
+				"ChangeTracking":{
+					"type":"Capabilities.ChangeTrackingType",
+					"appliesTo":"EntityContainer EntitySet",
+					"@Core.Description":"Change tracking capabilities of this service or entity set"
+				},
+				"CountRestrictions":{
+					"type":"Capabilities.CountRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on \/$count path suffix and $count=true system query option"
+				},
+				"NavigationRestrictions":{
+					"type":"Capabilities.NavigationRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on navigating properties according to OData URL conventions"
+				},
+				"IndexableByKey":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Supports key values according to OData URL conventions"
+				},
+				"TopSupported":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Supports $top"
+				},
+				"SkipSupported":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Supports $skip"
+				},
+				"BatchSupported":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"Supports $batch requests"
+				},
+				"BatchContentIdReferencingInRequestBodiesSupported":{
+					"type":"Core.Tag",
+					"defaultValue":"true",
+					"appliesTo":"EntityContainer",
+					"@Core.Description":"Service supports Content-ID referencing in request bodies"
+				},
+				"FilterFunctions":{
+					"type":"Collection(Edm.String)",
+					"appliesTo":"EntityContainer EntitySet",
+					"@Core.Description":"List of functions supported in $filter"
+				},
+				"FilterRestrictions":{
+					"type":"Capabilities.FilterRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on $filter expressions"
+				},
+				"SortRestrictions":{
+					"type":"Capabilities.SortRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on $orderby expressions"
+				},
+				"ExpandRestrictions":{
+					"type":"Capabilities.ExpandRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on $expand expressions"
+				},
+				"SearchRestrictions":{
+					"type":"Capabilities.SearchRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on $search expressions"
+				},
+				"InsertRestrictions":{
+					"type":"Capabilities.InsertRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on insert operations"
+				},
+				"UpdateRestrictions":{
+					"type":"Capabilities.UpdateRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on update operations"
+				},
+				"DeleteRestrictions":{
+					"type":"Capabilities.DeleteRestrictionsType",
+					"appliesTo":"EntitySet",
+					"@Core.Description":"Restrictions on delete operations"
+				}
+			}
+		}
+	},
+	"references":{
+		"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml":{
+			"includes":{
+				"Org.OData.Core.V1":{
+					"alias":"Core"
+				}
+			}
+		}
+	}
+}

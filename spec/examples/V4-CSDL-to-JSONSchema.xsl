@@ -7,7 +7,7 @@
 
     TODO:
     - add "alias" definitions for used Edm types?
-    - DefaultValue: determine underlying type of type definitions, use for qouting decision
+    - DefaultValue: determine underlying type of type definitions, use for quoting decision
     - Core.Description -> title/description?
     - Include: fold/duplicate into schemas with uri and optional alias? In addition to references/.../includes/...?
   -->
@@ -167,15 +167,6 @@
     </xsl:if>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>","</xsl:text>
-    <xsl:choose>
-      <xsl:when test="@Value">
-        <xsl:value-of select="@Value" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="position() - 1" />
-      </xsl:otherwise>
-    </xsl:choose>
     <xsl:text>"</xsl:text>
   </xsl:template>
 
@@ -187,6 +178,12 @@
   </xsl:template>
 
   <xsl:template match="edm:Member" mode="annotation">
+    <xsl:if test="@Value">
+      <xsl:text>,"</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>@odata.value":</xsl:text>
+      <xsl:value-of select="@Value" />
+    </xsl:if>
     <xsl:apply-templates select="edm:Annotation" mode="list2">
       <xsl:with-param name="target" select="@Name" />
     </xsl:apply-templates>
@@ -211,9 +208,9 @@
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{</xsl:text>
+    <xsl:text>":{"type":"object"</xsl:text>
     <xsl:if test="@BaseType">
-      <xsl:text>"allOf":[{</xsl:text>
+      <xsl:text>,"allOf":[{</xsl:text>
       <xsl:call-template name="ref">
         <xsl:with-param name="qualifier">
           <xsl:call-template name="substring-before-last">
@@ -228,9 +225,8 @@
           </xsl:call-template>
         </xsl:with-param>
       </xsl:call-template>
-      <xsl:text>},{</xsl:text>
+      <xsl:text>}]</xsl:text>
     </xsl:if>
-    <xsl:text>"type":"object"</xsl:text>
     <xsl:if test="@Abstract='true'">
       <xsl:text>,"abstract":true</xsl:text>
       <xsl:if test="not(edm:Key)">
@@ -244,9 +240,6 @@
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
-    <xsl:if test="@BaseType">
-      <xsl:text>}]</xsl:text>
-    </xsl:if>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>

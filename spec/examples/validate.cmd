@@ -1,5 +1,5 @@
 @echo off
-set FILES=csdl-16.1.jsonschema csdl-16.2.jsonschema ExampleService.jsonschema miscellaneous.jsonschema MetadataService.jsonschema TM1$metadata.jsonschema Org.OData.Core.V1.jsonschema 
+set FILES=csdl-16.1.jsonschema csdl-16.2.jsonschema ExampleService.jsonschema miscellaneous.jsonschema MetadataService.jsonschema TM1$metadata.jsonschema TripPin.jsonschema Org.OData.Core.V1.jsonschema 
 @rem Org.OData.Capabilities.V1.jsonschema Org.OData.Measures.V1.jsonschema
 
 @rem check syntax of all schemas
