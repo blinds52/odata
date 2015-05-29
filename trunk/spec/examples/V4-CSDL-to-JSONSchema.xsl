@@ -47,45 +47,45 @@
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
-    <!-- TODO: append or prepend the used Edm types to "definitions" if it is present -->
-    <xsl:text>,"edmTypes":[</xsl:text>
-    <xsl:for-each
+    <!-- TODO: append or prepend the used Edm types to "definitions" if it is present
+      <xsl:text>,"edmTypes":[</xsl:text>
+      <xsl:for-each
       select="edm:Schema/edm:EntityType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:ComplexType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:TypeDefinition/@UnderlyingType[generate-id()=generate-id(key('types',.)[1])]"
-    >
+      >
       <xsl:if test="position()=1">
-        <xsl:text>null</xsl:text>
+      <xsl:text>null</xsl:text>
       </xsl:if>
       <xsl:variable name="singleType">
-        <xsl:choose>
-          <xsl:when test="starts-with(.,'Collection(')">
-            <xsl:value-of select="substring-before(substring-after(.,'('),')')" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="." />
-          </xsl:otherwise>
-        </xsl:choose>
+      <xsl:choose>
+      <xsl:when test="starts-with(.,'Collection(')">
+      <xsl:value-of select="substring-before(substring-after(.,'('),')')" />
+      </xsl:when>
+      <xsl:otherwise>
+      <xsl:value-of select="." />
+      </xsl:otherwise>
+      </xsl:choose>
       </xsl:variable>
       <xsl:variable name="qualifier">
-        <xsl:call-template name="substring-before-last">
-          <xsl:with-param name="input" select="$singleType" />
-          <xsl:with-param name="marker" select="'.'" />
-        </xsl:call-template>
+      <xsl:call-template name="substring-before-last">
+      <xsl:with-param name="input" select="$singleType" />
+      <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
       </xsl:variable>
       <xsl:choose>
-        <xsl:when test="$singleType='Edm.Boolean'" />
-        <xsl:when test="$singleType='Edm.Decimal'" />
-        <xsl:when test="$singleType='Edm.String'" />
-        <xsl:when test="$qualifier='Edm'">
-          <xsl:if test="$singleType=. or not(key('types',$singleType))">
-            <xsl:text>,"</xsl:text>
-            <xsl:value-of select="$singleType" />
-            <xsl:text>"</xsl:text>
-          </xsl:if>
-        </xsl:when>
+      <xsl:when test="$singleType='Edm.Boolean'" />
+      <xsl:when test="$singleType='Edm.Decimal'" />
+      <xsl:when test="$singleType='Edm.String'" />
+      <xsl:when test="$qualifier='Edm'">
+      <xsl:if test="$singleType=. or not(key('types',$singleType))">
+      <xsl:text>,"</xsl:text>
+      <xsl:value-of select="$singleType" />
+      <xsl:text>"</xsl:text>
+      </xsl:if>
+      </xsl:when>
       </xsl:choose>
-    </xsl:for-each>
-    <xsl:text>]</xsl:text>
-    <!-- -->
+      </xsl:for-each>
+      <xsl:text>]</xsl:text>
+    -->
     <xsl:apply-templates
       select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType|edm:Schema/edm:TypeDefinition|edm:Schema/edm:EnumType"
       mode="hash"
@@ -643,9 +643,9 @@
   <xsl:template match="@Float|edm:Float">
     <xsl:choose>
       <xsl:when test=".='INF' or .='-INF' or .='NaN'">
-        <xsl:text>{"@odata.type":"#Double","value":"</xsl:text>
+        <xsl:text>"</xsl:text>
         <xsl:value-of select="." />
-        <xsl:text>"}</xsl:text>
+        <xsl:text>"</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="." />
@@ -654,35 +654,34 @@
   </xsl:template>
 
   <!-- unquoted direct value -->
-  <xsl:template match="@Bool|edm:Bool">
+  <xsl:template match="@Bool|edm:Bool|@Decimal|edm:Decimal|@Int|edm:Int">
     <xsl:value-of select="." />
   </xsl:template>
 
-  <!-- name : object with unquoted value -->
-  <xsl:template match="@Decimal|edm:Decimal">
-    <xsl:text>{"@odata.type":"#</xsl:text>
-    <xsl:value-of select="local-name()" />
-    <xsl:text>","value":</xsl:text>
-    <xsl:value-of select="." />
-    <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <!-- name : object with unquoted value -->
-  <xsl:template match="@Int|edm:Int">
-    <xsl:text>{"@odata.type":"#Int64","value":</xsl:text>
-    <xsl:value-of select="." />
-    <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <!-- name : object with quoted value -->
+  <!-- direct quoted value -->
   <xsl:template
-    match="@Binary|edm:Binary|@Date|edm:Date|@DateTimeOffset|edm:DateTimeOffset|@Duration|edm:Duration|@Guid|edm:Guid|edm:LabeledElementReference|@TimeOfDay|edm:TimeOfDay"
+    match="@Binary|edm:Binary|@Date|edm:Date|@DateTimeOffset|edm:DateTimeOffset|@Duration|edm:Duration|@Guid|edm:Guid|@TimeOfDay|edm:TimeOfDay"
   >
-    <xsl:text>{"@odata.type":"#</xsl:text>
-    <xsl:value-of select="local-name()" />
-    <xsl:text>","value":"</xsl:text>
+    <xsl:text>"</xsl:text>
     <xsl:value-of select="." />
-    <xsl:text>"}</xsl:text>
+    <xsl:text>"</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="@EnumMember|edm:EnumMember">
+    <xsl:variable name="type" select="substring-before(.,'/')" />
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="replace-all">
+      <xsl:with-param name="string">
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string" select="." />
+          <xsl:with-param name="old" select="concat($type,'/')" />
+          <xsl:with-param name="new" select="''" />
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="old" select="' '" />
+      <xsl:with-param name="new" select="','" />
+    </xsl:call-template>
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <!-- name : object with escaped string value -->
@@ -830,6 +829,16 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template
+    match="edm:LabeledElementReference"
+  >
+    <xsl:text>{"@odata.type":"#</xsl:text>
+    <xsl:value-of select="local-name()" />
+    <xsl:text>","value":"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>"}</xsl:text>
+  </xsl:template>
+
   <xsl:template match="edm:Cast|edm:IsOf">
     <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
@@ -854,25 +863,6 @@
     <xsl:text>","value":</xsl:text>
     <xsl:apply-templates select="@*|node()" />
     <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="@EnumMember|edm:EnumMember">
-    <xsl:text>{"@odata.type":"#</xsl:text>
-    <xsl:variable name="type" select="substring-before(.,'/')" />
-    <xsl:value-of select="$type" />
-    <xsl:text>","value":"</xsl:text>
-    <xsl:call-template name="replace-all">
-      <xsl:with-param name="string">
-        <xsl:call-template name="replace-all">
-          <xsl:with-param name="string" select="." />
-          <xsl:with-param name="old" select="concat($type,'/')" />
-          <xsl:with-param name="new" select="''" />
-        </xsl:call-template>
-      </xsl:with-param>
-      <xsl:with-param name="old" select="' '" />
-      <xsl:with-param name="new" select="','" />
-    </xsl:call-template>
-    <xsl:text>"}</xsl:text>
   </xsl:template>
 
   <xsl:template name="replace-all">
