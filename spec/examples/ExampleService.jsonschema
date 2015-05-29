@@ -1,13 +1,5 @@
 {
 	"$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
-	"edmTypes":[
-		null,
-		"Edm.Int32",
-		"Edm.Date",
-		"Edm.GeographyPoint",
-		"Edm.Byte",
-		"Edm.Guid"
-	],
 	"definitions":{
 		"OData.Demo.Customer":{
 			"type":"object",
@@ -242,12 +234,10 @@
 			}
 		},
 		"OData.Demo.VipCustomer":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/OData.Demo.Customer"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
@@ -507,83 +497,79 @@
 			}
 		},
 		"OData.Demo.PreferredSupplier":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/OData.Demo.Supplier"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"AccountRepresentative":{
-							"anyOf":[
-								{
-									"$ref":"#/definitions/OData.Demo.Employee"
-								},
-								{
-									"type":"null"
-								}
-							],
-							"relationship":{
-								"referentialConstraints":{
-									"EmployeeID":{
-										"referencedProperty":"ID",
-										"@Core.Description":"The key account manager"
-									}
-								}
-							}
+				}
+			],
+			"properties":{
+				"AccountRepresentative":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/OData.Demo.Employee"
 						},
-						"EmployeeID":{
-							"type":"string"
+						{
+							"type":"null"
+						}
+					],
+					"relationship":{
+						"referentialConstraints":{
+							"EmployeeID":{
+								"referencedProperty":"ID",
+								"@Core.Description":"The key account manager"
+							}
 						}
 					}
+				},
+				"EmployeeID":{
+					"type":"string"
 				}
-			]
+			}
 		},
 		"OData.Demo.Pattern":{
 			"anyOf":[
 				{
 					"enum":[
 						"Yellow",
-						"1",
-						"Solid",
-						"2"
+						"Solid"
 					]
 				},
 				{
 					"type":"string",
 					"pattern":"^(Yellow|Solid|[1-9][0-9]*)(,(Yellow|Solid|[1-9][0-9]*))*$"
 				}
-			]
+			],
+			"Yellow@odata.value":1,
+			"Solid@odata.value":2
 		},
 		"OData.Demo.Manager":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/OData.Demo.Employee"
+				}
+			],
+			"properties":{
+				"Employees":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/OData.Demo.Employee"
+					},
+					"relationship":{
+						"partner":"Manager"
+					}
 				},
-				{
-					"type":"object",
-					"properties":{
-						"Employees":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/OData.Demo.Employee"
-							},
-							"relationship":{
-								"partner":"Manager"
-							}
-						},
-						"Inbox":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/OData.Demo.LeaveRequest"
-							},
-							"relationship":{
-								"partner":"Manager"
-							}
-						}
+				"Inbox":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/OData.Demo.LeaveRequest"
+					},
+					"relationship":{
+						"partner":"Manager"
 					}
 				}
-			]
+			}
 		},
 		"OData.Demo.Time":{
 			"type":"object",

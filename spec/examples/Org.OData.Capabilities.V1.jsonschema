@@ -1,34 +1,26 @@
 {
 	"$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
-	"edmTypes":[
-		null,
-		"Edm.PropertyPath",
-		"Edm.NavigationPropertyPath"
-	],
 	"definitions":{
 		"Org.OData.Capabilities.V1.ConformanceLevelType":{
 			"enum":[
 				"Minimal",
-				"0",
 				"Intermediate",
-				"1",
-				"Advanced",
-				"2"
+				"Advanced"
 			]
 		},
 		"Org.OData.Capabilities.V1.IsolationLevel":{
 			"anyOf":[
 				{
 					"enum":[
-						"Snapshot",
-						"1"
+						"Snapshot"
 					]
 				},
 				{
 					"type":"string",
 					"pattern":"^(Snapshot|[1-9][0-9]*)(,(Snapshot|[1-9][0-9]*))*$"
 				}
-			]
+			],
+			"Snapshot@odata.value":1
 		},
 		"Org.OData.Capabilities.V1.CallbackType":{
 			"type":"object",
@@ -177,11 +169,8 @@
 		"Org.OData.Capabilities.V1.NavigationType":{
 			"enum":[
 				"Recursive",
-				"0",
 				"Single",
-				"1",
-				"None",
-				"2"
+				"None"
 			],
 			"Recursive@Core.Description":"Navigation properties can be recursively navigated",
 			"Single@Core.Description":"Navigation properties can be navigated to a single level",
@@ -219,8 +208,50 @@
 						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
 					},
 					"@Core.Description":"These properties cannot be used in $filter expressions"
+				},
+				"FilterExpressionRestrictions":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Org.OData.Capabilities.V1.FilterExpressionRestrictionType"
+					},
+					"@Core.Description":"These properties only allow a subset of expressions"
 				}
 			}
+		},
+		"Org.OData.Capabilities.V1.FilterExpressionRestrictionType":{
+			"type":"object",
+			"properties":{
+				"Property":{
+					"anyOf":[
+						{
+							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+						},
+						{
+							"type":"null"
+						}
+					]
+				},
+				"AllowedExpressions":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Org.OData.Capabilities.V1.FilterExpressionType"
+						},
+						{
+							"type":"null"
+						}
+					]
+				}
+			}
+		},
+		"Org.OData.Capabilities.V1.FilterExpressionType":{
+			"enum":[
+				"SingleValue",
+				"MultiValue",
+				"SingleInterval"
+			],
+			"SingleValue@Core.Description":"a single 'eq' clause",
+			"MultiValue@Core.Description":"one or more 'eq' clauses, separated by 'or'",
+			"SingleInterval@Core.Description":"at most one 'ge' and one 'le' clause, separated by 'and', alternatively a single 'eq' clause"
 		},
 		"Org.OData.Capabilities.V1.SortRestrictionsType":{
 			"type":"object",
@@ -306,24 +337,24 @@
 				{
 					"enum":[
 						"none",
-						"0",
 						"AND",
-						"1",
 						"OR",
-						"2",
 						"NOT",
-						"4",
 						"phrase",
-						"8",
-						"group",
-						"16"
+						"group"
 					]
 				},
 				{
 					"type":"string",
 					"pattern":"^(none|AND|OR|NOT|phrase|group|[1-9][0-9]*)(,(none|AND|OR|NOT|phrase|group|[1-9][0-9]*))*$"
 				}
-			]
+			],
+			"none@odata.value":0,
+			"AND@odata.value":1,
+			"OR@odata.value":2,
+			"NOT@odata.value":4,
+			"phrase@odata.value":8,
+			"group@odata.value":16
 		},
 		"Org.OData.Capabilities.V1.InsertRestrictionsType":{
 			"type":"object",

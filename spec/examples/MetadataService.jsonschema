@@ -1,10 +1,5 @@
 {
 	"$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
-	"edmTypes":[
-		null,
-		"Edm.Int64",
-		"Edm.PrimitiveType"
-	],
 	"definitions":{
 		"Edm.Metadata.Reference":{
 			"type":"object",
@@ -193,96 +188,92 @@
 			}
 		},
 		"Edm.Metadata.StructuredType":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.Type"
+				}
+			],
+			"abstract":true,
+			"keys":[
+				
+			],
+			"properties":{
+				"Abstract":{
+					"type":"boolean"
 				},
-				{
-					"type":"object",
-					"abstract":true,
-					"keys":[
-						
-					],
-					"properties":{
-						"Abstract":{
-							"type":"boolean"
-						},
-						"OpenType":{
-							"type":"string"
-						},
-						"Properties":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.Property"
-							},
-							"relationship":{
-								"partner":"DeclaringType"
-							}
-						},
-						"NavigationProperties":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.NavigationProperty"
-							},
-							"relationship":{
-								"partner":"DeclaringType"
-							}
-						}
+				"OpenType":{
+					"type":"string"
+				},
+				"Properties":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.Property"
+					},
+					"relationship":{
+						"partner":"DeclaringType"
+					}
+				},
+				"NavigationProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.NavigationProperty"
+					},
+					"relationship":{
+						"partner":"DeclaringType"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.EntityType":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.StructuredType"
+				}
+			],
+			"properties":{
+				"Key":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.KeyProperty"
+					}
 				},
-				{
-					"type":"object",
-					"properties":{
-						"Key":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.KeyProperty"
-							}
+				"HasStream":{
+					"type":"boolean"
+				},
+				"BaseType":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Edm.Metadata.EntityType"
 						},
-						"HasStream":{
-							"type":"boolean"
-						},
-						"BaseType":{
-							"anyOf":[
-								{
-									"$ref":"#/definitions/Edm.Metadata.EntityType"
-								},
-								{
-									"type":"null"
-								}
-							],
-							"relationship":{
-								"partner":"DerivedTypes"
-							}
-						},
-						"DerivedTypes":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.EntityType"
-							},
-							"relationship":{
-								"partner":"BaseType"
-							}
-						},
-						"EntitySets":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.EntitySet"
-							},
-							"relationship":{
-								"partner":"EntityType"
-							}
+						{
+							"type":"null"
 						}
+					],
+					"relationship":{
+						"partner":"DerivedTypes"
+					}
+				},
+				"DerivedTypes":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.EntityType"
+					},
+					"relationship":{
+						"partner":"BaseType"
+					}
+				},
+				"EntitySets":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.EntitySet"
+					},
+					"relationship":{
+						"partner":"EntityType"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.KeyProperty":{
 			"type":"object",
@@ -305,98 +296,92 @@
 			}
 		},
 		"Edm.Metadata.ComplexType":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.StructuredType"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"BaseType":{
-							"anyOf":[
-								{
-									"$ref":"#/definitions/Edm.Metadata.ComplexType"
-								},
-								{
-									"type":"null"
-								}
-							],
-							"relationship":{
-								"partner":"DerivedTypes"
-							}
+				}
+			],
+			"properties":{
+				"BaseType":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Edm.Metadata.ComplexType"
 						},
-						"DerivedTypes":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.ComplexType"
-							},
-							"relationship":{
-								"partner":"BaseType"
-							}
+						{
+							"type":"null"
 						}
+					],
+					"relationship":{
+						"partner":"DerivedTypes"
+					}
+				},
+				"DerivedTypes":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.ComplexType"
+					},
+					"relationship":{
+						"partner":"BaseType"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.PrimitiveType":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.Type"
+				}
+			],
+			"properties":{
+				"TypeDefinitions":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.TypeDefinition"
+					},
+					"relationship":{
+						"partner":"UnderlyingType"
+					}
 				},
-				{
-					"type":"object",
-					"properties":{
-						"TypeDefinitions":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.TypeDefinition"
-							},
-							"relationship":{
-								"partner":"UnderlyingType"
-							}
-						},
-						"EnumTypes":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.EnumType"
-							},
-							"relationship":{
-								"partner":"UnderlyingType"
-							}
-						}
+				"EnumTypes":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.EnumType"
+					},
+					"relationship":{
+						"partner":"UnderlyingType"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.EnumType":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.PrimitiveType"
+				}
+			],
+			"properties":{
+				"IsFlags":{
+					"type":"boolean"
 				},
-				{
-					"type":"object",
-					"properties":{
-						"IsFlags":{
-							"type":"boolean"
-						},
-						"UnderlyingType":{
-							"$ref":"#/definitions/Edm.Metadata.PrimitiveType",
-							"relationship":{
-								"partner":"EnumTypes"
-							}
-						},
-						"Members":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.EnumTypeMember"
-							},
-							"relationship":{
-								"partner":"EnumType"
-							}
-						}
+				"UnderlyingType":{
+					"$ref":"#/definitions/Edm.Metadata.PrimitiveType",
+					"relationship":{
+						"partner":"EnumTypes"
+					}
+				},
+				"Members":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.EnumTypeMember"
+					},
+					"relationship":{
+						"partner":"EnumType"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.EnumTypeMember":{
 			"type":"object",
@@ -433,28 +418,26 @@
 			}
 		},
 		"Edm.Metadata.TypeDefinition":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.PrimitiveType"
+				}
+			],
+			"properties":{
+				"Facets":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.Facet"
+					}
 				},
-				{
-					"type":"object",
-					"properties":{
-						"Facets":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.Facet"
-							}
-						},
-						"UnderlyingType":{
-							"$ref":"#/definitions/Edm.Metadata.PrimitiveType",
-							"relationship":{
-								"partner":"TypeDefinitions"
-							}
-						}
+				"UnderlyingType":{
+					"$ref":"#/definitions/Edm.Metadata.PrimitiveType",
+					"relationship":{
+						"partner":"TypeDefinitions"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.Facet":{
 			"type":"object",
@@ -470,15 +453,10 @@
 		"Edm.Metadata.FacetName":{
 			"enum":[
 				"MaxLength",
-				"0",
 				"Unicode",
-				"1",
 				"Precision",
-				"2",
 				"Scale",
-				"3",
-				"SRID",
-				"4"
+				"SRID"
 			]
 		},
 		"Edm.Metadata.Property":{
@@ -637,13 +615,9 @@
 		"Edm.Metadata.OnDeleteAction":{
 			"enum":[
 				"Cascade",
-				"0",
 				"None",
-				"1",
 				"SetDefault",
-				"2",
-				"SetNull",
-				"3"
+				"SetNull"
 			]
 		},
 		"Edm.Metadata.ReferentialConstraint":{
@@ -1278,163 +1252,145 @@
 			]
 		},
 		"Edm.Metadata.Constant":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Value":{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Value":{
+					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
+				}
+			}
 		},
 		"Edm.Metadata.LabeledElementReference":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Element":{
-							"$ref":"#/definitions/Edm.Metadata.QualifiedName"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Element":{
+					"$ref":"#/definitions/Edm.Metadata.QualifiedName"
+				}
+			}
 		},
 		"Edm.Metadata.AnnotationPath":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Value":{
-							"type":"string"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Value":{
+					"type":"string"
+				}
+			}
 		},
 		"Edm.Metadata.NavigationPropertyPath":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Value":{
-							"type":"string"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Value":{
+					"type":"string"
+				}
+			}
 		},
 		"Edm.Metadata.Path":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Value":{
-							"type":"string"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Value":{
+					"type":"string"
+				}
+			}
 		},
 		"Edm.Metadata.PropertyPath":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Value":{
-							"type":"string"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Value":{
+					"type":"string"
+				}
+			}
 		},
 		"Edm.Metadata.AnnotatableExpression":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"abstract":true,
-					"keys":[
-						
-					],
-					"properties":{
-						"Annotations":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
-							}
-						}
+				}
+			],
+			"abstract":true,
+			"keys":[
+				
+			],
+			"properties":{
+				"Annotations":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.InlineAnnotation"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.UnaryExpression":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
-				},
-				{
-					"type":"object",
-					"abstract":true,
-					"keys":[
-						
-					],
-					"properties":{
-						"Value":{
-							"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-						}
-					}
 				}
-			]
+			],
+			"abstract":true,
+			"keys":[
+				
+			],
+			"properties":{
+				"Value":{
+					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
+				}
+			}
 		},
 		"Edm.Metadata.InlineAnnotation":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.UnaryExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Qualifier":{
-							"anyOf":[
-								{
-									"$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
-								},
-								{
-									"type":"null"
-								}
-							]
+				}
+			],
+			"properties":{
+				"Qualifier":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
 						},
-						"Term":{
-							"$ref":"#/definitions/Edm.Metadata.Term",
-							"relationship":{
-								
-							}
+						{
+							"type":"null"
 						}
+					]
+				},
+				"Term":{
+					"$ref":"#/definitions/Edm.Metadata.Term",
+					"relationship":{
+						
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.SimpleIdentifier":{
 			"type":"string"
@@ -1443,291 +1399,251 @@
 			"type":"string"
 		},
 		"Edm.Metadata.Apply":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
+				}
+			],
+			"properties":{
+				"Function":{
+					"$ref":"#/definitions/Edm.Metadata.QualifiedName"
 				},
-				{
-					"type":"object",
-					"properties":{
-						"Function":{
-							"$ref":"#/definitions/Edm.Metadata.QualifiedName"
-						},
-						"Values":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-							}
-						}
+				"Values":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.Collection":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Items":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-							}
-						}
+				}
+			],
+			"properties":{
+				"Items":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.Record":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
+				}
+			],
+			"properties":{
+				"PropertyValues":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Edm.Metadata.PropertyValue"
+					}
 				},
-				{
-					"type":"object",
-					"properties":{
-						"PropertyValues":{
-							"type":"array",
-							"items":{
-								"$ref":"#/definitions/Edm.Metadata.PropertyValue"
-							}
-						},
-						"Type":{
-							"$ref":"#/definitions/Edm.Metadata.Type",
-							"relationship":{
-								
-							}
-						}
+				"Type":{
+					"$ref":"#/definitions/Edm.Metadata.Type",
+					"relationship":{
+						
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.PropertyValue":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.UnaryExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Property":{
-							"$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Property":{
+					"$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
+				}
+			}
 		},
 		"Edm.Metadata.If":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Test":{
-							"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-						},
-						"Then":{
-							"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-						},
-						"Else":{
-							"anyOf":[
-								{
-									"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-								},
-								{
-									"type":"null"
-								}
-							]
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Test":{
+					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
+				},
+				"Then":{
+					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
+				},
+				"Else":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
+						},
+						{
+							"type":"null"
+						}
+					]
+				}
+			}
 		},
 		"Edm.Metadata.Cast":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.UnaryExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Type":{
-							"$ref":"#/definitions/Edm.Metadata.Type",
-							"relationship":{
-								
-							}
-						}
+				}
+			],
+			"properties":{
+				"Type":{
+					"$ref":"#/definitions/Edm.Metadata.Type",
+					"relationship":{
+						
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.IsOf":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.UnaryExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Type":{
-							"$ref":"#/definitions/Edm.Metadata.Type",
-							"relationship":{
-								
-							}
-						}
+				}
+			],
+			"properties":{
+				"Type":{
+					"$ref":"#/definitions/Edm.Metadata.Type",
+					"relationship":{
+						
 					}
 				}
-			]
+			}
 		},
 		"Edm.Metadata.LabeledElement":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.UnaryExpression"
-				},
-				{
-					"type":"object",
-					"properties":{
-						"Name":{
-							"$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
-						}
-					}
 				}
-			]
+			],
+			"properties":{
+				"Name":{
+					"$ref":"#/definitions/Edm.Metadata.SimpleIdentifier"
+				}
+			}
 		},
 		"Edm.Metadata.Null":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.BinaryExpression":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.AnnotatableExpression"
-				},
-				{
-					"type":"object",
-					"abstract":true,
-					"keys":[
-						
-					],
-					"properties":{
-						"Left":{
-							"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-						},
-						"Right":{
-							"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
-						}
-					}
 				}
-			]
+			],
+			"abstract":true,
+			"keys":[
+				
+			],
+			"properties":{
+				"Left":{
+					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
+				},
+				"Right":{
+					"$ref":"#/definitions/Edm.Metadata.AnnotationExpression"
+				}
+			}
 		},
 		"Edm.Metadata.Eq":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Ne":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Ge":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Gt":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Le":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Lt":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.And":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Or":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.BinaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Not":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.UnaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		},
 		"Edm.Metadata.Url":{
+			"type":"object",
 			"allOf":[
 				{
 					"$ref":"#/definitions/Edm.Metadata.UnaryExpression"
-				},
-				{
-					"type":"object"
 				}
 			]
 		}
