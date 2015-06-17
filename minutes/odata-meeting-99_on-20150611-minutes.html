@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #99 Thursday Jun 11, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #99 Thursday Jun 11, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-06-11 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Reddy Ramesh (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39097">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from May 21, 2015 TC meeting #98: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/55712/odata-meeting-98_on-20150521-minutes.html">Meeting#98 on 2015-MAY-21</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+URL=<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php">Action item list at https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php</a>
+
+<h4>4.1 Action items due by Jun 11, 2015</h4>
+
+<h5>4.1.1 Follow up with JSON-Schema on use for modeling</h5>
+
+<p>Mike: Sent the following to the JSON-Schema Google Group:
+</p>
+<pre>Dear JSON Schema Community;
+
+We would like to understand from the experts whether or not JSON Schema is 
+appropriate for our particular use case.
+
+OData is an OASIS standard that defines an interoperable protocol for clients 
+to interact with RESTful services in a completely generic manner. 
+
+An important part of the protocol is the ability to describe the resources 
+exposed by the service. OData uses an entity-relationship data model for 
+describing these resources, and has defined an XML-based representation of 
+this common data model (known as "CSDL").
+
+OData uses a JSON representation for data payloads, and together with the 
+growing popularity of JSON/Javascript clients, the OASIS OData Technical 
+Committee (TC) has gotten numerous requests to provide a JSON representation 
+of the data model as well as data payloads.
+
+Given the significant overlap between describing a data model and validating 
+the JSON payload returned from requests against the data model it is very 
+tempting to use JSON Schema for both. In fact, we've seen other REST APIs, 
+such as the DMTF "Redfish" specification, attempt to use JSON Schema to 
+describe their resource model. However, in attempting to use JSON Schema 
+to describe our data model we've run into a few issues that have caused 
+us to question whether modeling is an appropriate use of JSON Schema.
+
+So our question to the community is this:
+Is JSON-Schema intended to be used for data modeling, or should we invest 
+in an alternate "JSON Modeling" language that we would have first-class 
+representation of concepts such as inheritance and relationships, and 
+from which we could generate JSON Schema for validation?
+
+We eagerly await your guidance in this area.
+
+Thanks in advance,
+
+Mike Pizzo
+Editor, OASIS OData Technical Committee
+</pre>
+<p>Mike: Url for JSON-Schema Google Group: <a href="https://groups.google.com/forum/#!forum/json-schema" target="_blank">https://groups.google.com/forum/#!forum/json-schema</a></p>
+
+<h5>4.1.2 Overview presentation on HTTP/2 features (Martin Zurmhl)</h5>
+<p>Martin will present next meeting</p>
+
+<h3>5. Discuss scope of TC work for the next 12-18 months</h3>
+
+<h4>5.1 Mike will present summary of last meetings discussion</h4>
+
+<p>E-Mail from Mike:</p>
+<pre>
+Following are my notes from our discussion in our May 21, 2015 
+OASIS OData TC meeting regarding the goals and accompanying work 
+items to focus on over the course of the next 12-18 months:
+
+1.Maintain Standard:
+a.Address Errata as they come up
+b.Progress OData V4 Errata 2 to ISO
+i.Demonstrate interoperability
+2.Increase Adoption by:
+a.Addressing technical adoption blockers/inhibitors
+i.Targeted, highly-compatible OData 4.1 release
+ii.JSON format for metadata
+iii.Publish vocabulary to describe authentication flows
+b.Making OData more approachable through:
+i.Publishing a profile for simple REST services
+ii.Producing webinars
+iii.Publishing samples that begin at a simple starting point and incrementally walk through a scenario 
+iv.Publish "Implementing OData" whitepaper
+c.Making OData service endpoints more discoverable
+i.Establish an OData endpoint registry, for example, on OData.org
+3.Extend the Protocol by
+a.Publishing Aggregation Extensions for OData
+b.Publishing Temporal Extensions for OData
+4.Evaluate Performance
+a.Is performance suitable for specific scenarios
+i.i.e., Bulk-load
+b.What optimizations can we apply *where needed*
+i.Binary protocol
+5.Investigate HTTP 2.0
+a.Server PUSH
+
+I suggest that the next step would be to prioritize and assign dates for each of the deliverables.
+</pre>
+<p>Hubert asks on what security-related topics we want to address</p>
+<p>Mike: define a vocabulary for supported authentication methods and flows might need to be part of a Catalog because $metadata access already may require authentication</p>
+<p>Mark: split metadata into "server metadata" and "schema metadata"</p>
+<p>Mike: authentication is a barrier for interoperability</p>
+<p>Mike: need a way to provide generic clients with the necessary information Email from odata-discussion google group on efforts to align Swagger with OData:</p>
+<pre>
+FromSubjectReceivedSize
+Mark Stafford[OData Discussion] Aligning Swagger and OData4/15/201560 KB
+We are working really hard to align Swagger and OData. We do sometimes 
+forget to update our non-Microsoft friends with where were at, so thanks, 
+Josh, for bringing this back up on another thread. Heres our current thinking  
+and please take it as current thinking, not roadmap commitments.
+
+We have no philosophical objection to Swagger. Few of us like CSDL as a 
+description format, but its clear that for OData to benefit from really 
+terse payloads and still have rich support for types, relationships, etc, 
+we do need a description of the model somewhere (JSON-LD does the same thing 
+so were not alone in seeing this as a necessity).
+
+There are some pretty big gaps at this point, though. Swagger doesnt support 
+relationships, doesnt have semantics for query string parameters (so a computer 
+cant tell which is the conceptual top parameter), cant tell you where the nextLink 
+is in a response, etc. When I was last in the US (February) I had a great face-to-face 
+conversation with Tony Tam about these points and Im happy to say that were very 
+much on the same page  these would be great additions to Swagger. 
+Since the acquisition, SmartBear has expressed similar interest in closing the gap.
+
+The long term vision would be to allow every OData service to be well-described by 
+Swagger. I mentioned previously that folks should watch our Github repo for news 
+about a modeling tool. The specs for that tool are now 
+public (https://github.com/odata/model-first/), and I think wed like to get some 
+feedback on our thinking here.
+
+The Swagger editor (http://editor.swagger.io) was what originally inspired us 
+to kick off this initiative. We love the idea, but you just have to put so much 
+YAML into the tool to get output. OData has a LOT of conventions that would 
+theoretically enable you to put in a LOT less YAML in order to get the same amount 
+of output, and unlike most Swagger docs, the output would be super consistent. 
+So imagine in your head a tool that allows you to just describe the resource model 
+for your REST API and the tool supplies the rest of the conventions and allows you 
+to output Swagger, RAML, API Blueprint, or even eventually scaffold a proper OData service.
+
+For clickstop #1 we are looking to keep things simple. We would support ingesting 
+the YAML were proposing and outputting Swagger docs. We understand that wouldnt 
+allow rich RESTful APIs to be modeled, but we think its enough to get feedback on 
+whether the approach is helpful.
+
+We  of course  think this tool could be pretty amazing, but what we really want 
+to hear is what you, the OData community thinks. Thoughts?
+
+(And just to preface any questions, we are  as mentioned  currently talking to the 
+Swagger crew and weve kicked off a conversation with CA who seems to have something 
+similar going at Who wants to try out an OData Extension. If theres anyone else we 
+should work with as well, please feel free to connect me  you can reach me directly 
+at mastaffo@microsoft.com.)
+
+Thanks,
+Mark
+-- 
+You received this message because you are subscribed to the Google Groups "OData Discussion" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to odata-discussion+unsubscribe@googlegroups.com.
+To post to this group, send email to odata-discussion@googlegroups.com.
+For more options, visit https://groups.google.com/d/optout
+</pre>
+
+<p>Ralf: Prioritization</p>
+<p>Mike: review applied issues and working drafts next week</p>
+<p>Hold documents back until October to see if V4.1 issues affect Errata03</p>
+<p>Mike: demonstration of interoperability will help progression to ISO standard</p>
+<p>Mike: schedule discussion on demonstration of interoperability</p>
+<p>Meetings during Summer</p>
+<p>Mike away July/August</p>
+<p>Hubert away August</p>
+<p>Matt: I will be available for the whole summer, only missing the odd week</p>
+<p>Hand off Aggregation spec for next public review in July</p>
+<p>Gerald, Martin, Ralf to prepare Temporal spec for TC review in September</p>
+<p>Version 4.1</p>
+<p>Start work on WD01 in September, submit CSD01 in November for public review</p>
+<p>JSON CSDL</p>
+<p>Review in TC in September</p>
+<p>REST Profile</p>
+<p>Depends on V4.1</p>
+<p>First draft in January 2016</p>
+
+<h4> Classify issues for OData V4.1 as ...</h4>
+<p>Mike: I move we reassign all 4.1 issues with no label to 4.2. Martin seconds.</p>
+<p>Motion passes</p>
+
+
+<h3>6. Process Issues (in New or Open state)</h3>
+<h4>6.1 OData CSDL</h4>
+<h5>6.1.1 ODATA-819 "10.2.2: Clarify whether enum types allow multiple members with the same value"</h5>
+
+<p>ODATA-819 is OPEN</p>
+<p>Postponed to next week</p> 
+
+<h4>6.2 OData JSON Format</h4>
+
+<h5>6.2.1 ODATA-815 "Clarify that the values of the format parameters odata.metadata etc. are case-insensitive"</h5>
+<p>ODATA-815 is OPEN</p>
+<p>Mike: I move we accept ODATA-815 as proposed. Matt seconds</p>
+<p>ODATA-815 is resolved as proposed</p>
+ 
+<h3>7. Next meeting</h3>
+
+<p>Thursday Jun 18, 2015 during 8-10am PDT / 17:00-19:00 CEST ?</p>
+<p>Agreed</p>
+
+
+<h3>8. AOB and wrap up</h3>
+
+<p>None</p>
+
+<h3>Meeting adjourned</h3>
+
+</body>
+</html>
