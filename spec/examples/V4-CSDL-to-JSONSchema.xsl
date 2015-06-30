@@ -6,8 +6,9 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
-    - add "alias" definitions for used Edm types?
+    - add inlined "alias" definitions for used Edm types to shorten $ref URLs?
     - DefaultValue: determine underlying type of type definitions, use for quoting decision
+    - IEEE754Compatible: use type: ["number","string"] for Int64 and Decimal so that both flavors can be validated?
     - Core.Description -> title/description?
     - Include: fold/duplicate into schemas with uri and optional alias? In addition to references/.../includes/...?
   -->
@@ -336,20 +337,23 @@
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Decimal'">
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>"anyOf":[{</xsl:text>
-        </xsl:if>
-        <xsl:text>"type":"number"</xsl:text>
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'number'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
         <xsl:choose>
           <xsl:when test="not(@Scale) or @Scale='0'">
+            <!-- TODO: add "scale":0, -->
             <xsl:text>,"multipleOf":1</xsl:text>
           </xsl:when>
           <xsl:when test="@Scale!='variable'">
+            <!-- TODO: add "scale":@Scale, -->
             <xsl:text>,"multipleOf":1e-</xsl:text>
             <xsl:value-of select="@Scale" />
           </xsl:when>
         </xsl:choose>
         <xsl:if test="@Precision">
+          <!-- TODO: add "precision":@Precision, -->
           <xsl:variable name="scale">
             <xsl:choose>
               <xsl:when test="not(@Scale)">
@@ -381,10 +385,8 @@
           <xsl:text>,"maximum":</xsl:text>
           <xsl:value-of select="$limit" />
         </xsl:if>
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>},{"type":"null"}]</xsl:text>
-        </xsl:if>
       </xsl:when>
+      <!-- TODO: inline integer types -->
       <xsl:when test="$qualifier='Edm'">
         <xsl:if test="not($nullable='false')">
           <xsl:text>"anyOf":[{</xsl:text>
@@ -410,18 +412,21 @@
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
+        <xsl:if test="$precision>=0">
+          <xsl:text>}]</xsl:text>
+        </xsl:if>
         <xsl:choose>
           <xsl:when test="$precision>0">
-            <xsl:text>},{"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
+            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
             <xsl:value-of select="$precision" />
             <xsl:text>}</xsl:text>
             <xsl:if test="$singleType='Edm.Duration'">
               <xsl:text>S</xsl:text>
             </xsl:if>
-            <xsl:text>$)"}]</xsl:text>
+            <xsl:text>$)"</xsl:text>
           </xsl:when>
           <xsl:when test="$precision=0">
-            <xsl:text>},{"pattern":"^[^.]*$"}]</xsl:text>
+            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
           </xsl:when>
         </xsl:choose>
         <xsl:if test="not($nullable='false')">
@@ -829,9 +834,7 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template
-    match="edm:LabeledElementReference"
-  >
+  <xsl:template match="edm:LabeledElementReference">
     <xsl:text>{"@odata.type":"#</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>","value":"</xsl:text>

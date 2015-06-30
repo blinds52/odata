@@ -15,16 +15,43 @@ var tm1 = JSON.parse(fs.readFileSync("TM1$metadata.jsonschema"));
 
 var ZSchema = require("z-schema");
 
-ZSchema.registerFormat("xsd:date", function(str) {
+ZSchema.registerFormat("base64url", function(str) {
   return true;
 });
-ZSchema.registerFormat("xsd:dayTimeDuration", function(str) {
+ZSchema.registerFormat("uuid", function(str) {
   return true;
 });
-ZSchema.registerFormat("xsd:double", function(str) {
+ZSchema.registerFormat("date-time", function(str) {
   return true;
 });
-ZSchema.registerFormat("xsd:float", function(str) {
+ZSchema.registerFormat("date", function(str) {
+  return true;
+});
+ZSchema.registerFormat("time", function(str) {
+  return true;
+});
+ZSchema.registerFormat("duration", function(str) {
+  return true;
+});
+ZSchema.registerFormat("double", function(str) {
+  return true;
+});
+ZSchema.registerFormat("float", function(str) {
+  return true;
+});
+ZSchema.registerFormat("int64", function(str) {
+  return true;
+});
+ZSchema.registerFormat("int32", function(str) {
+  return true;
+});
+ZSchema.registerFormat("int16", function(str) {
+  return true;
+});
+ZSchema.registerFormat("int8", function(str) {
+  return true;
+});
+ZSchema.registerFormat("byte", function(str) {
   return true;
 });
 
