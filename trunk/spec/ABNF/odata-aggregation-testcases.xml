@@ -74,7 +74,7 @@
   </Constraint>
   <Constraint Rule="actionImport">
   </Constraint>
-  <Constraint Rule="aggregateAlias">
+  <Constraint Rule="expressionAlias">
     <Match>Actual</Match>
     <Match>AverageAmount</Match>
     <Match>AveragePrice</Match>
@@ -92,6 +92,7 @@
     <Match>Tax</Match>
     <Match>Total</Match>
     <Match>TotalPopulation</Match>
+    <Match>WeekDay</Match>
   </Constraint>
   <Constraint Rule="complexColProperty">
     <Match>Details</Match>
@@ -419,6 +420,12 @@
   </TestCase>
   <TestCase Name="combining transformations - within groupby" Rule="queryOptions">
     <Input>$apply=groupby((Customer/Country,Product/Name,Currency/Code),topcount(2,Amount)/aggregate(Amount with sum as Total))</Input>
+  </TestCase>
+  <TestCase Name="compute" Rule="queryOptions">
+    <Input>$apply=calculate(Amount mul Product/TaxRate as Tax)</Input>
+  </TestCase>
+  <TestCase Name="compute" Rule="queryOptions">
+    <Input>$apply=calculate(Amount mul Product/TaxRate as Tax, day(Time/Date) as WeekDay)</Input>
   </TestCase>
   <TestCase Name="model functions as set transformations" Rule="queryOptions">
     <Input>$apply=groupby((Customer/Country,Product/Name),aggregate(Amount with sum as Total))/groupby((Customer/Country),Self.TopCountAndBalance(Count=1,Property='Total'))</Input>
