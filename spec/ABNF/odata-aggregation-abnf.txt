@@ -67,7 +67,7 @@ expandOption =/ apply
 
 boolMethodCallExpr =/ isdefinedExpr
 
-primitiveProperty =/ aggregateAlias / customAggregate
+primitiveProperty =/ expressionAlias / customAggregate
 
 
 ;------------------------------------------------------------------------------
@@ -80,6 +80,7 @@ applyTrafo = aggregateTrafo
            / bottomcountTrafo
            / bottompercentTrafo
            / bottomsumTrafo
+           / calculateTrafo
            / concatTrafo
            / expandTrafo
            / filterTrafo
@@ -92,12 +93,11 @@ applyTrafo = aggregateTrafo
            / customFunction
            
 aggregateTrafo  = 'aggregate' OPEN BWS aggregateExpr *( BWS COMMA BWS aggregateExpr ) BWS CLOSE
-aggregateExpr   = customAggregate [ aggregateAs aggregateFrom ]
-                / commonExpr aggregateWith aggregateAs [ aggregateFrom ]
-                / pathPrefix '$count' aggregateAs 
+aggregateExpr   = customAggregate [ asAlias aggregateFrom ]
+                / commonExpr aggregateWith asAlias [ aggregateFrom ]
+                / pathPrefix '$count' asAlias 
                 / pathPrefix customAggregate
                 / pathPrefix pathSegment OPEN aggregateExpr CLOSE 
-aggregateAs     = RWS 'as'   RWS aggregateAlias
 aggregateWith   = RWS 'with' RWS aggregateMethod        
 aggregateFrom   = RWS 'from' RWS groupingProperty [ aggregateWith ] [ aggregateFrom ]
 aggregateMethod = 'sum' 
@@ -106,9 +106,11 @@ aggregateMethod = 'sum'
                 / 'average' 
                 / 'countdistinct' 
                 / namespace "." odataIdentifier
+
+asAlias         = RWS 'as' RWS expressionAlias
+expressionAlias = odataIdentifier
                 
 customAggregate = odataIdentifier
-aggregateAlias  = odataIdentifier
                 
 groupingProperty   = pathPrefix
                      ( entityNavigationProperty [ "/" qualifiedEntityTypeName ] 
@@ -118,6 +120,9 @@ groupingProperty   = pathPrefix
 pathPrefix         = [ qualifiedEntityTypeName "/" ] *( pathSegment "/" ) 
 pathSegment        = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ]
                    / navigationProperty [ "/" qualifiedEntityTypeName  ] 
+                   
+calculateTrafo     = 'calculate' OPEN BWS calculateExpr *( BWS COMMA BWS calculateExpr ) BWS CLOSE     
+calculateExpr      = commonExpr asAlias             
                            
 bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
