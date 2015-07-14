@@ -80,7 +80,7 @@ applyTrafo = aggregateTrafo
            / bottomcountTrafo
            / bottompercentTrafo
            / bottomsumTrafo
-           / calculateTrafo
+           / computeTrafo
            / concatTrafo
            / expandTrafo
            / filterTrafo
@@ -112,17 +112,17 @@ expressionAlias = odataIdentifier
                 
 customAggregate = odataIdentifier
                 
-groupingProperty   = pathPrefix
-                     ( entityNavigationProperty [ "/" qualifiedEntityTypeName ] 
-                     / primitiveProperty 
-                     / complexProperty
-                     )
-pathPrefix         = [ qualifiedEntityTypeName "/" ] *( pathSegment "/" ) 
-pathSegment        = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ]
-                   / navigationProperty [ "/" qualifiedEntityTypeName  ] 
+groupingProperty = pathPrefix
+                   ( entityNavigationProperty [ "/" qualifiedEntityTypeName ] 
+                   / primitiveProperty 
+                   / complexProperty
+                   )
+pathPrefix       = [ qualifiedEntityTypeName "/" ] *( pathSegment "/" ) 
+pathSegment      = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ]
+                 / navigationProperty [ "/" qualifiedEntityTypeName  ] 
                    
-calculateTrafo     = 'calculate' OPEN BWS calculateExpr *( BWS COMMA BWS calculateExpr ) BWS CLOSE     
-calculateExpr      = commonExpr asAlias             
+computeTrafo = 'compute' OPEN BWS computeExpr *( BWS COMMA BWS computeExpr ) BWS CLOSE     
+computeExpr  = commonExpr asAlias             
                            
 bottomcountTrafo   = 'bottomcount'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 bottompercentTrafo = 'bottompercent' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
