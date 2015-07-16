@@ -11,6 +11,7 @@
     - IEEE754Compatible: use type: ["number","string"] for Int64 and Decimal so that both flavors can be validated?
     - Core.Description -> title/description?
     - Include: fold/duplicate into schemas with uri and optional alias? In addition to references/.../includes/...?
+    - IEEE754compatible: alternative string format for Edm.Decimal and Edm.Int64? With pattern?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -26,11 +27,18 @@
     <xsl:text>{"$schema":"</xsl:text>
     <xsl:value-of select="$edmUri" />
     <xsl:text>#"</xsl:text>
+    <xsl:apply-templates select="@*" mode="list2" />
     <xsl:apply-templates select="edmx:DataServices" />
     <xsl:apply-templates select="edmx:Reference" mode="hash">
       <xsl:with-param name="key" select="'Uri'" />
     </xsl:apply-templates>
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edmx:Edmx/@Version">
+    <xsl:text>"odata-version":"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template match="edmx:Reference" mode="hashvalue">
