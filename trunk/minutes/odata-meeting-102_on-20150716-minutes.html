@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #102 Thursday Jul 16, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #102 Thursday Jul 16, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-07-16 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Jason Fam (IBM)
+        Ken Baclawski (Northeastern University)
+        Martin Zurmuehl (SAP SE) 
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39107">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from July 09, 2015 TC meeting #101: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/56109/odata-meeting-101_on-20150709-minutes.html">https://www.oasis-open.org/committees/download.php/56109/odata-meeting-101_on-20150709-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due July 16, 2015</h4>
+<p>None</p>
+
+<h3>5. Process Issues</h3>
+
+<h4>5.1 Extension for Data Aggregation: review applied issues</h4>
+
+<h5>5.1.1 Revised Documents</h5>
+
+<h6>5.1.1.1 OData Extension for Data Aggregation Version 4.0 WD03</h6>
+URL=<a href="https://www.oasis-open.org/committees/download.php/56091/odata-data-aggregation-ext-v4.0-wd03-2015-07-14.docx" target="_blank">https://www.oasis-open.org/committees/download.php/56091/odata-data-aggregation-ext-v4.0-wd03-2015-07-14.docx</a>
+
+<h6>5.1.1.2 odata-aggregation-abnf.txt</h6>
+URL=<a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-abnf.txt" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-abnf.txt</a>
+
+<h6>5.1.1.3 odata-aggregation-testcases.xml</h6>
+URL=<a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-testcases.xml" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-testcases.xml</a>
+
+<h6>5.1.1.4 Org.OData.Aggregation.V1.xml</h6>
+URL=<a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Aggregation.V1.xml" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Aggregation.V1.xml</a>
+
+<h5>5.1.2 Issues for Data Aggregation V4.0_CSD03</h5>
+
+<h6>5.1.2.1 ODATA-9 "allow expressions in the $select query option</h6>
+
+<p>Ramesh: is this limited to functions? no, just "as" sounds more SQL ish</p>
+<p>Ralf: no, any common expression is allowed</p>
+<p>Ramesh: Ok.</p>
+
+<p><b>Hubert</b>: I <b>move</b> to close ODATA-9 as applied. Gerald seconds</p>
+<p>ODATA-9 is CLOSED</p>
+
+<h6>5.1.2.1 ODATA-829 "Section 7.2, Examples 50: aggregate returns one item even for empty input set"</h6>
+
+<p>Example 52:  </p>
+<pre>
+GET ~/Products?$apply=groupby((Name),
+                              aggregate(Sales/Amount with sum as Total))
+results in
+{
+  "@odata.context": "$metadata#Products(Name,Sales(Total))",
+  "value": [
+    { "@odata.id": null, "Name": "Coffee", "Sales": [ { "Total":   12 } ] },
+    { "@odata.id": null, "Name": "Paper",  "Sales": [ { "Total":    8 } ] },
+    { "@odata.id": null, "Name": "Pencil", "Sales": [ { "Total": null } ] },
+    { "@odata.id": null, "Name": "Sugar",  "Sales": [ { "Total":    4 } ] }
+  ]
+}
+</pre>
+<p>Note that the base set of the request is Products, so there is a result item for product Pencil even</p>
+
+<p>Was:</p>
+<pre>
+    { "@odata.id": null, "Name": "Pencil", "Sales": [] },
+</pre>
+<p>Text below example is now:<p>
+<blockquote>
+Note that the base set of the request is Products, so there is a result item for product Pencil even though there are no sales item. As aggregate returns exactly one result item even if there are no items to be aggregated, the Sales navigation propertys value is an array with one element representing the sum over no input values, which is null.
+</blockquote>
+<p>ODATA-829 is OPEN</p>
+
+<p><b>Hubert</b>:I <b>move</b> to resolve ODATA-829 as proposed. Gerald seconds.</p>
+<p>ODATA-829 is RESOLVED as proposed</p>
+<p><b>Hubert</b>: I <b>move</b> to close ODATA-829 as applied. Gerald seconds.</p>
+
+<p>ODATA-829 is CLOSED</p>
+
+<h5>5.1.3 WD03 zip file</h5>
+
+<h6>5.1.3.1 <a href="https://www.oasis-open.org/committees/download.php/56092/odata-data-aggregation-ext-v4.0-wd03-final-2015-07-14.zip" target="_blank">https://www.oasis-open.org/committees/download.php/56092/odata-data-aggregation-ext-v4.0-wd03-final-2015-07-14.zip</a></h6>
+
+<p>New zip file: <a href="https://www.oasis-open.org/committees/download.php/56118/odata-data-aggregation-ext-v4.0-wd03-final-2015-07-16.zip" target="_blank">https://www.oasis-open.org/committees/download.php/56118/odata-data-aggregation-ext-v4.0-wd03-final-2015-07-16.zip</a>
+
+<h5>5.1.4 Motion to approve CSD03 and start 15-day public review</h5>
+
+<p><b>Hubert</b>: I <b>move</b> that the TC approve OData Extension for Data Aggregation Version 1.0 Working Draft 03 and all associated artifacts packaged together in <a href="https://www.oasis-open.org/committees/download.php/56118/odata-data-aggregation-ext-v4.0-wd03-final-2015-07-16.zip" target="_blank">https://www.oasis-open.org/committees/download.php/56118/odata-data-aggregation-ext-v4.0-wd03-final-2015-07-16.zip</a> as Committee Specification Draft 03, designate the Microsoft Word version of the specification as authoritative, and submit it for 15 days of public review. Matt seconds.</p>
+<p>No objection, motion passes</p>
+
+
+<h3>6. Next meeting</h3>
+<p>Tentatively scheduled bi-weekly meetings:</p>
+<ul><li>Thursday July 30</li>
+<li>Thursday August 13</li>
+<li>Thursday August 27</li></ul>
+
+<p>Thus next tentatively scheduled: Thursday Jul 30, 2015 during 8-10am PDT / 17:00-19:00 CEST</p>
+<p>Note: These may be cancelled on short notice if no agenda items have come up via mailing lists</p>
+
+<p>In any case we will meet again Thursday September 10, 2015 during 8-10am PDT / 17:00-19:00 CEST</p>
+<p>Accepted</p>
+
+<h3>7. AOB and wrap up</h3>
+
+<p>None</p>
+
+<h3>Meeting adjourned</h3>
+
+</body>
+</html>
