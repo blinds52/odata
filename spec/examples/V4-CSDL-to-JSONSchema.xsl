@@ -951,6 +951,7 @@
     <xsl:param name="name" />
     <xsl:param name="key" select="'Name'" />
     <xsl:param name="after" select="'something'" />
+    <xsl:param name="constantProperties" />
     <xsl:if test="position()=1">
       <xsl:if test="$after">
         <xsl:text>,</xsl:text>
@@ -976,6 +977,7 @@
       <xsl:text>,</xsl:text>
     </xsl:if>
     <xsl:if test="position()=last()">
+      <xsl:value-of select="$constantProperties" />
       <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
