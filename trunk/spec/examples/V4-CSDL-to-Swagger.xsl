@@ -6,17 +6,14 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger JSON.
 
     TODO:
-    - Multi-part keys
-    - FunctionImports
-    - ActionImports
-    - Bound Functions on top-level entities
-    - Bound Actions on top-level entities
+    - system query options for actions/functions/imports depending on "Collection("
+    - security/authentication
     - Singletons
     - 200 response for PATCH
     - If-Match for PATCH
     - summary/title and description from @Core.(Long)Description (or Common.Label->title, Core.Description->description)
-    - verbose allOf to please Swagger-UI -> check with JSON Schema, create GitHub issue
-    - security/authentication
+    - suppress annotations/constructs (relation, ...) that are not strictly Swagger?
+    - remove duplicated code
   -->
 
   <xsl:import href="V4-CSDL-to-JSONSchema.xsl" />
@@ -58,6 +55,7 @@
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$host"></xsl:value-of>
         <xsl:value-of select="$basePath"></xsl:value-of>
+        <xsl:text>/</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <!-- TODO: version -->
@@ -74,7 +72,7 @@
     <xsl:text>,"consumes":["application/json"]</xsl:text>
     <xsl:text>,"produces":["application/json"]</xsl:text>
     <xsl:apply-templates select="edmx:DataServices/edm:Schema" />
-    <xsl:text>,"parameters":{"expand":{"name":"$expand","in":"query","description":"expand navigation property","type":"string"},"select":{"name":"$select","in":"query","description":"select structural property","type":"string"},"orderby":{"name":"$orderby","in":"query","description":"order by some property","type":"string"},"top":{"name":"$top","in":"query","description":"top elements","type":"integer"},"skip":{"name":"$skip","in":"query","description":"skip elements","type":"integer"},"count":{"name":"$count","in":"query","description":"include count in response","type":"boolean"}}</xsl:text>
+    <xsl:text>,"parameters":{"expand":{"name":"$expand","in":"query","description":"expand navigation property","type":"string"},"select":{"name":"$select","in":"query","description":"select structural property","type":"string"},"orderby":{"name":"$orderby","in":"query","description":"order by some property","type":"string"},"top":{"name":"$top","in":"query","description":"top elements","type":"integer"},"skip":{"name":"$skip","in":"query","description":"skip elements","type":"integer"},"count":{"name":"$count","in":"query","description":"include count in response","type":"boolean"},"filter":{"name":"$filter","in":"query","description":"filter elements by property values","type":"string"}}</xsl:text>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -143,8 +141,7 @@
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
-    <!-- TODO: reference parameters instead of repeating it, unless we want to provide default values for e.g. $expand -->
-    <xsl:text>,"parameters":[{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"},{"$ref":"#/parameters/orderby"},{"$ref":"#/parameters/top"},{"$ref":"#/parameters/skip"},{"$ref":"#/parameters/count"}]</xsl:text>
+    <xsl:text>,"parameters":[{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"},{"$ref":"#/parameters/orderby"},{"$ref":"#/parameters/top"},{"$ref":"#/parameters/skip"},{"$ref":"#/parameters/count"}]</xsl:text>
     <xsl:text>,"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","schema":{"type":"object","properties":{"value":{"type":"array","items":{"$ref":"</xsl:text>
@@ -170,7 +167,6 @@
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
     <xsl:text>"}}]</xsl:text>
-    <!-- TODO: responses -->
     <xsl:text>,"responses":{"201":{"description":"Created entity","schema":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
@@ -234,10 +230,9 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="parameter" />
+      mode="list" />
     <xsl:text>,{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"}],"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
-    <!-- TODO: variable for schema URL or use local definitions -->
     <xsl:text>","schema":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
@@ -256,7 +251,7 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="parameter" />
+      mode="list" />
     <xsl:text>,{"name":"</xsl:text>
     <xsl:value-of select="$type" />
     <xsl:text>","in":"body","description":"The entity to patch","schema":{"$ref":"</xsl:text>
@@ -277,7 +272,7 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="parameter" />
+      mode="list" />
     <xsl:text>,{"name":"If-Match","in":"header","description":"If-Match header","type":"string"}]</xsl:text>
     <xsl:text>,"responses":{"204":{"description":"Empty response"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
     <xsl:text>}</xsl:text>
@@ -286,7 +281,7 @@
 
     <xsl:apply-templates
       select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="entity"
+      mode="bound"
     >
       <xsl:with-param name="entitySet" select="@Name" />
       <xsl:with-param name="namespace" select="$namespace" />
@@ -294,7 +289,7 @@
     </xsl:apply-templates>
     <xsl:apply-templates
       select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
-      mode="entity"
+      mode="bound"
     >
       <xsl:with-param name="entitySet" select="@Name" />
       <xsl:with-param name="namespace" select="$namespace" />
@@ -305,20 +300,30 @@
   <xsl:template match="edm:PropertyRef" mode="path">
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
-    <!-- TODO: inheritance - maybe XSLT isn't the best choice for this -->
-    <!-- TODO: handling of more than one key: name={@Name}, comma before all but first -->
-    <xsl:choose>
-      <xsl:when test="$type='Edm.Int64'" />
-      <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
-      <xsl:otherwise>
-        <xsl:text>'</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
+    <!-- TODO: inheritance - find key definition in base type (recursively) -->
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:if test="last()>1">
+      <xsl:value-of select="@Name" />
+      <xsl:text>=</xsl:text>
+    </xsl:if>
+    <xsl:call-template name="pathValuePrefix">
+      <xsl:with-param name="type" select="$type" />
+    </xsl:call-template>
     <xsl:text>{</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>}</xsl:text>
+    <xsl:call-template name="pathValueSuffix">
+      <xsl:with-param name="type" select="$type" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="pathValuePrefix">
+    <xsl:param name="type" />
     <xsl:choose>
-      <xsl:when test="$type='Edm.Int64'" />
+      <xsl:when
+        test="$type='Edm.Int64' or $type='Edm.Int32' or $type='Edm.Int16' or $type='Edm.SByte' or $type='Edm.Byte' or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid'" />
       <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
       <xsl:otherwise>
         <xsl:text>'</xsl:text>
@@ -326,13 +331,22 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm:PropertyRef" mode="parameter">
+  <xsl:template name="pathValueSuffix">
+    <xsl:param name="type" />
+    <xsl:choose>
+      <xsl:when
+        test="$type='Edm.Int64' or $type='Edm.Int32' or $type='Edm.Int16' or $type='Edm.SByte' or $type='Edm.Byte' or $type='Edm.Double' or $type='Edm.Single' or $type='Edm.Date' or $type='Edm.DateTimeOffset' or $type='Edm.Guid'" />
+      <!-- TODO: handle other Edm types, enumeration types, and type definitions -->
+      <xsl:otherwise>
+        <xsl:text>'</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="edm:PropertyRef">
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
-    <!-- TODO: inheritance - maybe XSLT isn't the best choice for this -->
-    <xsl:if test="position()!=1">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
+    <!-- TODO: inheritance - find key definition in base type (recursively) -->
     <xsl:text>{"name":"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","in":"path","required":true,"description":"key: </xsl:text>
@@ -354,27 +368,163 @@
   </xsl:template>
 
   <xsl:template match="edm:ActionImport">
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="@Action" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="namespace">
+      <xsl:choose>
+        <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qualifier" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="action">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="@Action" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+
     <xsl:text>"/</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{</xsl:text>
-    <!-- TODO: POST -->
-    <!-- TODO: action parameter body -->
-    <xsl:text>}</xsl:text>
+    <xsl:text>":{"post":{"summary":"Invoke action import </xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","tags":["</xsl:text>
+    <xsl:choose>
+      <xsl:when test="@EntitySet">
+        <xsl:value-of select="@EntitySet" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Service Operations</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:text>{"name":"body","in":"body","description":"Request body","schema":{"type":"object"</xsl:text>
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action]/edm:Parameter"
+      mode="hash"
+    >
+      <xsl:with-param name="name" select="'properties'" />
+    </xsl:apply-templates>
+    <xsl:text>}}]</xsl:text>
+
+    <xsl:call-template name="responses">
+      <xsl:with-param name="type"
+        select="//edm:Schema[@Namespace=$namespace]/edm:Action[@Name=$action]/edm:ReturnType/@Type" />
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template match="edm:FunctionImport">
-    <xsl:text>"/</xsl:text>
-    <xsl:value-of select="@Name" />
-    <!-- TODO; function parameters in path -->
-    <xsl:text>":{</xsl:text>
-    <!-- TODO: GET -->
-    <xsl:text>}</xsl:text>
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="@Function" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="namespace">
+      <xsl:choose>
+        <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qualifier" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="function">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="@Function" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- need to apply templates for all function overloads that match the function name -->
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:Function[@Name=$function]"
+      mode="import"
+    >
+      <xsl:with-param name="functionImport" select="@Name" />
+      <xsl:with-param name="entitySet" select="@EntitySet" />
+    </xsl:apply-templates>
   </xsl:template>
 
-  <xsl:template match="edm:Action" mode="entity">
+  <xsl:template match="edm:Function" mode="import">
+    <xsl:param name="functionImport" />
+    <xsl:param name="entitySet" />
+
+    <xsl:text>"/</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>(</xsl:text>
+    <xsl:apply-templates select="edm:Parameter" mode="path" />
+    <xsl:text>)</xsl:text>
+    <xsl:text>":{"get":{"summary":"Invoke function import </xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","tags":["</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$entitySet">
+        <xsl:value-of select="$entitySet" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Service Operations</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:apply-templates select="edm:Parameter" mode="list" />
+    <xsl:text>]</xsl:text>
+
+    <xsl:call-template name="responses">
+      <xsl:with-param name="type" select="edm:ReturnType/@Type" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="responses">
+    <xsl:param name="type" />
+    <xsl:variable name="singleType">
+      <xsl:choose>
+        <xsl:when test="starts-with($type,'Collection(')">
+          <xsl:value-of select="substring-before(substring-after($type,'('),')')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$type" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!-- TODO: alias-qualified to namespace-qualified in singleType-->
+
+    <xsl:text>,"responses":{</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$singleType=''">
+        <xsl:text>"204":{"description":"Empty response"}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"200":{"description":"Success","schema":{</xsl:text>
+        <xsl:if test="starts-with($type,'Collection(')">
+          <xsl:text>"type":"array","items":{</xsl:text>
+        </xsl:if>
+        <xsl:text>"$ref":"</xsl:text>
+        <xsl:value-of select="$metadata" />
+        <xsl:text>#/definitions/</xsl:text>
+        <xsl:value-of select="$singleType" />
+        <xsl:text>"}</xsl:text>
+        <xsl:if test="starts-with($type,'Collection(')">
+          <xsl:text>}</xsl:text>
+        </xsl:if>
+        <xsl:text>}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>,"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}}}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Action" mode="bound">
     <xsl:param name="entitySet" />
     <xsl:param name="namespace" />
     <xsl:param name="type" />
+
     <xsl:text>,"/</xsl:text>
     <xsl:value-of select="$entitySet" />
     <xsl:text>(</xsl:text>
@@ -388,16 +538,34 @@
     <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
-    <xsl:text>"],"parameters":{</xsl:text>
-    <xsl:text>},"responses":{</xsl:text>
-    <xsl:text>"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}}}</xsl:text>
-    <!-- TODO: action -->
+    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef" />
+    <xsl:text>,{"name":"body","in":"body","description":"Request body","schema":{"type":"object"</xsl:text>
+    <xsl:apply-templates select="edm:Parameter[position()>1]" mode="hash">
+      <xsl:with-param name="name" select="'properties'" />
+    </xsl:apply-templates>
+    <xsl:text>}}]</xsl:text>
+
+    <xsl:call-template name="responses">
+      <xsl:with-param name="type" select="edm:ReturnType/@Type" />
+    </xsl:call-template>
   </xsl:template>
 
-  <xsl:template match="edm:Function" mode="entity">
+  <xsl:template match="edm:Function" mode="bound">
     <xsl:param name="entitySet" />
     <xsl:param name="namespace" />
     <xsl:param name="type" />
+    <xsl:variable name="singleReturnType">
+      <xsl:choose>
+        <xsl:when test="starts-with(edm:ReturnType/@Type,'Collection(')">
+          <xsl:value-of select="substring-before(substring-after(edm:ReturnType/@Type,'('),')')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="edm:ReturnType/@Type" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <xsl:text>,"/</xsl:text>
     <xsl:value-of select="$entitySet" />
     <xsl:text>(</xsl:text>
@@ -407,17 +575,64 @@
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>()":{"get":{"summary":"Invoke function </xsl:text>
+    <xsl:text>(</xsl:text>
+    <xsl:apply-templates select="edm:Parameter[position()>1]" mode="path" />
+    <xsl:text>)":{"get":{"summary":"Invoke function </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
-    <xsl:text>"],"parameters":{</xsl:text>
-    <xsl:text>},"responses":{</xsl:text>
-    <xsl:text>"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}}}</xsl:text>
-    <!-- TODO: function -->
+    <xsl:text>"],"parameters":[</xsl:text>
+    <xsl:apply-templates
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|edm:Parameter[position()>1]"
+      mode="list" />
+    <xsl:text>]</xsl:text>
+
+    <xsl:call-template name="responses">
+      <xsl:with-param name="type" select="edm:ReturnType/@Type" />
+    </xsl:call-template>
   </xsl:template>
 
-  <!-- TODO: adapt to restrictions of Swagger -->
+  <xsl:template match="edm:Action/edm:Parameter" mode="hashvalue">
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="@Type" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="edm:Function/edm:Parameter">
+    <xsl:text>{"name":"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","in":"path",</xsl:text>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="@Type" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Parameter/@MaxLength">
+    <xsl:if test=".!='max'">
+      <xsl:text>,"maxLength":</xsl:text>
+      <xsl:value-of select="." />
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template match="edm:Function/edm:Parameter" mode="path">
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:value-of select="@Name" />
+    <xsl:text>=</xsl:text>
+    <xsl:call-template name="pathValueSuffix">
+      <xsl:with-param name="type" select="@Type" />
+    </xsl:call-template>
+    <xsl:text>{</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>}</xsl:text>
+    <xsl:call-template name="pathValueSuffix">
+      <xsl:with-param name="type" select="@Type" />
+    </xsl:call-template>
+  </xsl:template>
+
   <xsl:template name="type">
     <xsl:param name="type" />
     <xsl:variable name="nullable" select="'false'" />
@@ -539,6 +754,41 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{</xsl:text>
+    <xsl:if test="@BaseType">
+      <xsl:text>"allOf":[{</xsl:text>
+      <xsl:call-template name="ref">
+        <xsl:with-param name="qualifier">
+          <xsl:call-template name="substring-before-last">
+            <xsl:with-param name="input" select="@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:with-param>
+        <xsl:with-param name="typeName">
+          <xsl:call-template name="substring-after-last">
+            <xsl:with-param name="input" select="@BaseType" />
+            <xsl:with-param name="marker" select="'.'" />
+          </xsl:call-template>
+        </xsl:with-param>
+      </xsl:call-template>
+      <xsl:text>},{</xsl:text>
+    </xsl:if>
+    <xsl:text>"type":"object"</xsl:text>
+    <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
+      <xsl:with-param name="name" select="'properties'" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:if test="@BaseType">
+      <xsl:text>}]</xsl:text>
+    </xsl:if>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
   <xsl:template match="edm:Annotation">
     <xsl:param name="target" />
     <xsl:variable name="name">
@@ -561,6 +811,7 @@
         <xsl:apply-templates select="@String|edm:String" />
       </xsl:when>
       <xsl:otherwise>
+        <!-- TODO: filter out all annotations that don't map to swagger? -->
         <xsl:text>"</xsl:text>
         <xsl:value-of select="$name" />
         <xsl:text>":</xsl:text>
