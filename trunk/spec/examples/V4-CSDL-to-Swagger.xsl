@@ -8,10 +8,12 @@
     TODO:
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
-    - Singletons
+    - primitive types in function/action return types
+    - Singletons: should be almost identical to single entities, just without the keys
     - 200 response for PATCH
     - If-Match for PATCH
-    - summary/title and description from @Core.(Long)Description (or Common.Label->title, Core.Description->description)
+    - property description for key parameters in single-entity requests
+    - better description for operations
     - suppress annotations/constructs (relation, ...) that are not strictly Swagger?
     - remove duplicated code
   -->
@@ -29,11 +31,14 @@
   -->
   <xsl:variable name="metadata" select="''" />
 
+  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace='Org.OData.Core.V1']/@Alias" />
+  <xsl:variable name="coreDescription" select="concat($coreAlias,'.Description')" />
+
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"swagger":"2.0"</xsl:text>
     <xsl:text>,"info":{"title":"</xsl:text>
     <xsl:variable name="title"
-      select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.Description']/@String" />
+      select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.Description' or @Term=$coreDescription]/@String" />
     <xsl:choose>
       <xsl:when test="$title">
         <xsl:value-of select="$title"></xsl:value-of>
@@ -44,7 +49,7 @@
     </xsl:choose>
     <xsl:text>","description":"</xsl:text>
     <xsl:variable name="description"
-      select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.LongDescription']/@String" />
+      select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.LongDescription' or @Term=concat($coreAlias,'.LongDescription')]/@String" />
     <xsl:choose>
       <xsl:when test="$description">
         <xsl:value-of select="$description"></xsl:value-of>
@@ -136,8 +141,8 @@
     <xsl:text>"get":{</xsl:text>
     <xsl:text>"summary":"Get entities from entity set </xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>","description":"Entity type </xsl:text>
-    <xsl:value-of select="@EntityType" />
+    <xsl:text>","description":"Get entities from entity set </xsl:text>
+    <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
@@ -155,14 +160,20 @@
     <xsl:text>,"post":{</xsl:text>
     <xsl:text>"summary":"Post a new entity to entity set </xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>","description":"Entity type </xsl:text>
-    <xsl:value-of select="@EntityType" />
+    <xsl:text>","description":"Post a new entity to entity set </xsl:text>
+    <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[{"name":"</xsl:text>
     <xsl:value-of select="$type" />
-    <xsl:text>","in":"body","description":"The entity to post","schema":{"$ref":"</xsl:text>
+    <xsl:text>","in":"body"</xsl:text>
+    <xsl:call-template name="entityTypeDescription">
+      <xsl:with-param name="namespace" select="$namespace" />
+      <xsl:with-param name="type" select="$type" />
+      <xsl:with-param name="default" select="'The new entity'" />
+    </xsl:call-template>
+    <xsl:text>,"schema":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
@@ -254,7 +265,13 @@
       mode="list" />
     <xsl:text>,{"name":"</xsl:text>
     <xsl:value-of select="$type" />
-    <xsl:text>","in":"body","description":"The entity to patch","schema":{"$ref":"</xsl:text>
+    <xsl:text>","in":"body"</xsl:text>
+    <xsl:call-template name="entityTypeDescription">
+      <xsl:with-param name="namespace" select="$namespace" />
+      <xsl:with-param name="type" select="$type" />
+      <xsl:with-param name="default" select="'The entity to patch'" />
+    </xsl:call-template>
+    <xsl:text>,"schema":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
@@ -494,7 +511,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!-- TODO: alias-qualified to namespace-qualified in singleType-->
+    <!-- TODO: alias-qualified to namespace-qualified in singleType -->
 
     <xsl:text>,"responses":{</xsl:text>
     <xsl:choose>
@@ -789,6 +806,24 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template name="entityTypeDescription">
+    <xsl:param name="namespace" />
+    <xsl:param name="type" />
+    <xsl:param name="default" />
+    <xsl:text>,"description":"</xsl:text>
+    <xsl:variable name="description"
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term='Org.OData.Core.V1.Description' or @Term=$coreDescription]/@String" />
+    <xsl:choose>
+      <xsl:when test="$description">
+        <xsl:value-of select="$description" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$default" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"</xsl:text>
+  </xsl:template>
+
   <xsl:template match="edm:Annotation">
     <xsl:param name="target" />
     <xsl:variable name="name">
@@ -801,12 +836,7 @@
       </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <!-- TODO: Core.Description: handle aliases and fully qualified names and Core.LongDescription -->
-      <xsl:when test="$name='@Core.Description'">
-        <xsl:text>"title":</xsl:text>
-        <xsl:apply-templates select="@String|edm:String" />
-      </xsl:when>
-      <xsl:when test="$name='@Core.LongDescription'">
+      <xsl:when test="$name='@Org.OData.Core.V1.Description' or $name=concat('@',$coreDescription)">
         <xsl:text>"description":</xsl:text>
         <xsl:apply-templates select="@String|edm:String" />
       </xsl:when>
