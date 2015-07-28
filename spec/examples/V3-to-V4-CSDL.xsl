@@ -49,7 +49,7 @@
 
   <xsl:template match="edmx1:Edmx|edmx3:Edmx">
     <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
-      <edmx:Reference Uri="http://tinyurl.com/Org-OData-Core">
+      <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Core.V1.xml">
         <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
       </edmx:Reference>
       <xsl:apply-templates />

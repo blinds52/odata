@@ -23,6 +23,11 @@
 
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
+      <edmx:Reference
+        Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Core.V1.xml"
+      >
+        <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+      </edmx:Reference>
       <xsl:apply-templates />
     </edmx:Edmx>
   </xsl:template>
@@ -292,7 +297,7 @@
     <Annotation>
       <xsl:attribute name="Term">
         <xsl:text>TODO.</xsl:text>
-        <xsl:value-of select="local-name()" />
+        <xsl:value-of select="translate(local-name(),'-','_' )" />
       </xsl:attribute>
       <xsl:attribute name="String">
         <xsl:value-of select="." />
