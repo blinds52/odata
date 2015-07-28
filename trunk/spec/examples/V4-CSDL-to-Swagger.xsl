@@ -632,7 +632,6 @@
     </xsl:if>
   </xsl:template>
 
-
   <xsl:template match="edm:Function/edm:Parameter" mode="path">
     <xsl:if test="position()>1">
       <xsl:text>,</xsl:text>
@@ -806,6 +805,42 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
+    <xsl:variable name="nullable">
+      <xsl:call-template name="nullableFacetValue">
+        <xsl:with-param name="type" select="@Type" />
+        <xsl:with-param name="nullable" select="@Nullable" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="starts-with(@Type,'Collection(')">
+      <xsl:text>"type":"array","items":{</xsl:text>
+    </xsl:if>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="@Type" />
+    </xsl:call-template>
+    <xsl:if test="starts-with(@Type,'Collection(')">
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="local-name()='Property'">
+        <xsl:apply-templates select="@SRID|@Unicode|*[local-name()!='Annotation']" mode="list2" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>,"x-relationship":{</xsl:text>
+        <xsl:apply-templates
+          select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable']|node()[local-name()!='ReferentialConstraint' and local-name()!='Annotation']"
+          mode="list" />
+        <xsl:apply-templates select="edm:ReferentialConstraint" mode="hash">
+          <xsl:with-param name="after"
+            select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable']|node()[local-name()!='ReferentialConstraint' and local-name()!='Annotation']" />
+          <xsl:with-param name="key" select="'Property'" />
+        </xsl:apply-templates>
+        <xsl:text>}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+  </xsl:template>
+
   <xsl:template name="entityTypeDescription">
     <xsl:param name="namespace" />
     <xsl:param name="type" />
@@ -828,7 +863,7 @@
     <xsl:param name="target" />
     <xsl:variable name="name">
       <xsl:value-of select="$target" />
-      <xsl:text>@</xsl:text>
+      <xsl:text>x-</xsl:text>
       <xsl:value-of select="@Term" />
       <xsl:if test="@Qualifier">
         <xsl:text>#</xsl:text>
