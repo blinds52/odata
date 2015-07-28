@@ -871,7 +871,7 @@
       </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$name='@Org.OData.Core.V1.Description' or $name=concat('@',$coreDescription)">
+      <xsl:when test="$name='x-Org.OData.Core.V1.Description' or $name=concat('x-',$coreDescription)">
         <xsl:text>"description":</xsl:text>
         <xsl:apply-templates select="@String|edm:String" />
       </xsl:when>
