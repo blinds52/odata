@@ -501,21 +501,10 @@
 
   <xsl:template name="responses">
     <xsl:param name="type" />
-    <xsl:variable name="singleType">
-      <xsl:choose>
-        <xsl:when test="starts-with($type,'Collection(')">
-          <xsl:value-of select="substring-before(substring-after($type,'('),')')" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$type" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <!-- TODO: alias-qualified to namespace-qualified in singleType -->
 
     <xsl:text>,"responses":{</xsl:text>
     <xsl:choose>
-      <xsl:when test="$singleType=''">
+      <xsl:when test="not($type)">
         <xsl:text>"204":{"description":"Empty response"}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
@@ -523,11 +512,10 @@
         <xsl:if test="starts-with($type,'Collection(')">
           <xsl:text>"type":"array","items":{</xsl:text>
         </xsl:if>
-        <xsl:text>"$ref":"</xsl:text>
-        <xsl:value-of select="$metadata" />
-        <xsl:text>#/definitions/</xsl:text>
-        <xsl:value-of select="$singleType" />
-        <xsl:text>"}</xsl:text>
+        <xsl:call-template name="type">
+          <xsl:with-param name="type" select="$type" />
+        </xsl:call-template>
+        <xsl:text>}</xsl:text>
         <xsl:if test="starts-with($type,'Collection(')">
           <xsl:text>}</xsl:text>
         </xsl:if>
