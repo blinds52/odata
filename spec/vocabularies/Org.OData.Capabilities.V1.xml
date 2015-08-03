@@ -268,7 +268,26 @@
         <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)">
           <Annotation Term="Core.Description" String="These properties cannot be used in $filter expressions" />
         </Property>
+        <Property Name="FilterExpressionRestrictions" Type="Collection(Capabilities.FilterExpressionRestrictionType)">
+          <Annotation Term="Core.Description" String="These properties only allow a subset of expressions" />
+        </Property>
       </ComplexType>
+      <ComplexType Name="FilterExpressionRestrictionType">
+        <Property Name="Property" Type="Edm.PropertyPath" />
+        <Property Name="AllowedExpressions" Type="Capabilities.FilterExpressionType" />
+      </ComplexType>
+      <EnumType Name="FilterExpressionType">
+        <Member Name="SingleValue">
+          <Annotation Term="Core.Description" String="a single 'eq' clause" />
+        </Member>
+        <Member Name="MultiValue">
+          <Annotation Term="Core.Description" String="one or more 'eq' clauses, separated by 'or'" />
+        </Member>
+        <Member Name="SingleInterval">
+          <Annotation Term="Core.Description"
+            String="at most one 'ge' and one 'le' clause, separated by 'and', alternatively a single 'eq' clause" />
+        </Member>
+      </EnumType>
 
       <Term Name="SortRestrictions" Type="Capabilities.SortRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on $orderby expressions" />
