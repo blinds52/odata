@@ -1,8 +1,8 @@
 {
 	"swagger":"2.0",
 	"info":{
-		"title":"The TripPin OData Service",
-		"description":"This is a modified clone of https://github.com/OData/ODataSamples/blob/master/swagger/trippin.json referencing a JSON $metadata file instead of inlining the type definitions",
+		"title":"TripPin service is a sample service for OData V4.",
+		"description":"The OData Service at http://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW/",
 		"version":"0.1.0",
 		"x-odata-version":"4.0"
 	},
@@ -20,54 +20,47 @@
 	"paths":{
 		"/Photos":{
 			"get":{
-				"summary":"Get EntitySet Photos",
-				"description":"Returns the EntitySet Photos",
+				"summary":"Get entities from entity set Photos",
+				"description":"Get entities from entity set Photos",
 				"tags":[
 					"Photos"
 				],
 				"parameters":[
 					{
-						"name":"$expand",
-						"in":"query",
-						"description":"Expand navigation property",
-						"type":"string"
+						"$ref":"#/parameters/filter"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"select structural property",
-						"type":"string"
+						"$ref":"#/parameters/expand"
 					},
 					{
-						"name":"$orderby",
-						"in":"query",
-						"description":"order by some property",
-						"type":"string"
+						"$ref":"#/parameters/select"
 					},
 					{
-						"name":"$top",
-						"in":"query",
-						"description":"top elements",
-						"type":"integer"
+						"$ref":"#/parameters/orderby"
 					},
 					{
-						"name":"$skip",
-						"in":"query",
-						"description":"skip elements",
-						"type":"integer"
+						"$ref":"#/parameters/top"
 					},
 					{
-						"name":"$count",
-						"in":"query",
-						"description":"inlcude count in response",
-						"type":"boolean"
+						"$ref":"#/parameters/skip"
+					},
+					{
+						"$ref":"#/parameters/count"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet Photos",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+							"type":"object",
+							"properties":{
+								"value":{
+									"type":"array",
+									"items":{
+										"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+									}
+								}
+							}
 						}
 					},
 					"default":{
@@ -79,8 +72,8 @@
 				}
 			},
 			"post":{
-				"summary":"Post a new entity to EntitySet Photos",
-				"description":"Post a new entity to EntitySet Photos",
+				"summary":"Post a new entity to entity set Photos",
+				"description":"Post a new entity to entity set Photos",
 				"tags":[
 					"Photos"
 				],
@@ -88,17 +81,17 @@
 					{
 						"name":"Photo",
 						"in":"body",
-						"description":"The entity to post",
+						"description":"The new entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
 						}
 					}
 				],
 				"responses":{
-					"200":{
-						"description":"EntitySet Photos",
+					"201":{
+						"description":"Created entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
 						}
 					},
 					"default":{
@@ -121,22 +114,23 @@
 					{
 						"name":"Id",
 						"in":"path",
+						"required":true,
 						"description":"key: Id",
 						"type":"integer",
 						"format":"int64"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"description",
-						"type":"string"
+						"$ref":"#/parameters/expand"
+					},
+					{
+						"$ref":"#/parameters/select"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet Photos",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
 						}
 					},
 					"default":{
@@ -157,6 +151,7 @@
 					{
 						"name":"Id",
 						"in":"path",
+						"required":true,
 						"description":"key: Id",
 						"type":"integer",
 						"format":"int64"
@@ -166,7 +161,7 @@
 						"in":"body",
 						"description":"The entity to patch",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
 						}
 					}
 				],
@@ -192,6 +187,7 @@
 					{
 						"name":"Id",
 						"in":"path",
+						"required":true,
 						"description":"key: Id",
 						"type":"integer",
 						"format":"int64"
@@ -218,55 +214,47 @@
 		},
 		"/People":{
 			"get":{
-				"summary":"Get EntitySet People",
-				"description":"Returns the EntitySet People",
+				"summary":"Get entities from entity set People",
+				"description":"Get entities from entity set People",
 				"tags":[
 					"People"
 				],
 				"parameters":[
 					{
-						"name":"$expand",
-						"in":"query",
-						"description":"Expand navigation property",
-						"type":"string",
-						"default":"Friends"
+						"$ref":"#/parameters/filter"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"select structural property",
-						"type":"string"
+						"$ref":"#/parameters/expand"
 					},
 					{
-						"name":"$orderby",
-						"in":"query",
-						"description":"order by some property",
-						"type":"string"
+						"$ref":"#/parameters/select"
 					},
 					{
-						"name":"$top",
-						"in":"query",
-						"description":"top elements",
-						"type":"integer"
+						"$ref":"#/parameters/orderby"
 					},
 					{
-						"name":"$skip",
-						"in":"query",
-						"description":"skip elements",
-						"type":"integer"
+						"$ref":"#/parameters/top"
 					},
 					{
-						"name":"$count",
-						"in":"query",
-						"description":"inlcude count in response",
-						"type":"boolean"
+						"$ref":"#/parameters/skip"
+					},
+					{
+						"$ref":"#/parameters/count"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet People",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+							"type":"object",
+							"properties":{
+								"value":{
+									"type":"array",
+									"items":{
+										"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+									}
+								}
+							}
 						}
 					},
 					"default":{
@@ -278,8 +266,8 @@
 				}
 			},
 			"post":{
-				"summary":"Post a new entity to EntitySet People",
-				"description":"Post a new entity to EntitySet People",
+				"summary":"Post a new entity to entity set People",
+				"description":"Post a new entity to entity set People",
 				"tags":[
 					"People"
 				],
@@ -287,17 +275,17 @@
 					{
 						"name":"Person",
 						"in":"body",
-						"description":"The entity to post",
+						"description":"The new entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
 						}
 					}
 				],
 				"responses":{
-					"200":{
-						"description":"EntitySet People",
+					"201":{
+						"description":"Created entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
 						}
 					},
 					"default":{
@@ -320,21 +308,22 @@
 					{
 						"name":"UserName",
 						"in":"path",
+						"required":true,
 						"description":"key: UserName",
 						"type":"string"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"description",
-						"type":"string"
+						"$ref":"#/parameters/expand"
+					},
+					{
+						"$ref":"#/parameters/select"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet People",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
 						}
 					},
 					"default":{
@@ -355,6 +344,7 @@
 					{
 						"name":"UserName",
 						"in":"path",
+						"required":true,
 						"description":"key: UserName",
 						"type":"string"
 					},
@@ -363,7 +353,7 @@
 						"in":"body",
 						"description":"The entity to patch",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
 						}
 					}
 				],
@@ -389,6 +379,7 @@
 					{
 						"name":"UserName",
 						"in":"path",
+						"required":true,
 						"description":"key: UserName",
 						"type":"string"
 					},
@@ -412,56 +403,164 @@
 				}
 			}
 		},
+		"/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline()":{
+			"get":{
+				"summary":"Invoke function GetFavoriteAirline",
+				"tags":[
+					"People"
+				],
+				"parameters":[
+					{
+						"name":"UserName",
+						"in":"path",
+						"required":true,
+						"description":"key: UserName",
+						"type":"string"
+					}
+				],
+				"responses":{
+					"200":{
+						"description":"Success",
+						"schema":{
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+						}
+					},
+					"default":{
+						"description":"Unexpected error",
+						"schema":{
+							"$ref":"#/definitions/_Error"
+						}
+					}
+				}
+			}
+		},
+		"/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips(userName='{userName}')":{
+			"get":{
+				"summary":"Invoke function GetFriendsTrips",
+				"tags":[
+					"People"
+				],
+				"parameters":[
+					{
+						"name":"UserName",
+						"in":"path",
+						"required":true,
+						"description":"key: UserName",
+						"type":"string"
+					},
+					{
+						"name":"userName",
+						"in":"path",
+						"type":"string"
+					}
+				],
+				"responses":{
+					"200":{
+						"description":"Success",
+						"schema":{
+							"type":"array",
+							"items":{
+								"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+							}
+						}
+					},
+					"default":{
+						"description":"Unexpected error",
+						"schema":{
+							"$ref":"#/definitions/_Error"
+						}
+					}
+				}
+			}
+		},
+		"/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.ShareTrip":{
+			"post":{
+				"summary":"Invoke action ShareTrip",
+				"tags":[
+					"People"
+				],
+				"parameters":[
+					{
+						"name":"UserName",
+						"in":"path",
+						"required":true,
+						"description":"key: UserName",
+						"type":"string"
+					},
+					{
+						"name":"body",
+						"in":"body",
+						"description":"Request body",
+						"schema":{
+							"type":"object",
+							"properties":{
+								"userName":{
+									"type":"string"
+								},
+								"tripId":{
+									"type":"integer",
+									"format":"int32"
+								}
+							}
+						}
+					}
+				],
+				"responses":{
+					"204":{
+						"description":"Empty response"
+					},
+					"default":{
+						"description":"Unexpected error",
+						"schema":{
+							"$ref":"#/definitions/_Error"
+						}
+					}
+				}
+			}
+		},
 		"/Airlines":{
 			"get":{
-				"summary":"Get EntitySet Airlines",
-				"description":"Returns the EntitySet Airlines",
+				"summary":"Get entities from entity set Airlines",
+				"description":"Get entities from entity set Airlines",
 				"tags":[
 					"Airlines"
 				],
 				"parameters":[
 					{
-						"name":"$expand",
-						"in":"query",
-						"description":"Expand navigation property",
-						"type":"string"
+						"$ref":"#/parameters/filter"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"select structural property",
-						"type":"string"
+						"$ref":"#/parameters/expand"
 					},
 					{
-						"name":"$orderby",
-						"in":"query",
-						"description":"order by some property",
-						"type":"string"
+						"$ref":"#/parameters/select"
 					},
 					{
-						"name":"$top",
-						"in":"query",
-						"description":"top elements",
-						"type":"integer"
+						"$ref":"#/parameters/orderby"
 					},
 					{
-						"name":"$skip",
-						"in":"query",
-						"description":"skip elements",
-						"type":"integer"
+						"$ref":"#/parameters/top"
 					},
 					{
-						"name":"$count",
-						"in":"query",
-						"description":"inlcude count in response",
-						"type":"boolean"
+						"$ref":"#/parameters/skip"
+					},
+					{
+						"$ref":"#/parameters/count"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet Airlines",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+							"type":"object",
+							"properties":{
+								"value":{
+									"type":"array",
+									"items":{
+										"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+									}
+								}
+							}
 						}
 					},
 					"default":{
@@ -473,8 +572,8 @@
 				}
 			},
 			"post":{
-				"summary":"Post a new entity to EntitySet Airlines",
-				"description":"Post a new entity to EntitySet Airlines",
+				"summary":"Post a new entity to entity set Airlines",
+				"description":"Post a new entity to entity set Airlines",
 				"tags":[
 					"Airlines"
 				],
@@ -482,17 +581,17 @@
 					{
 						"name":"Airline",
 						"in":"body",
-						"description":"The entity to post",
+						"description":"The new entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
 						}
 					}
 				],
 				"responses":{
-					"200":{
-						"description":"EntitySet Airlines",
+					"201":{
+						"description":"Created entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
 						}
 					},
 					"default":{
@@ -515,21 +614,22 @@
 					{
 						"name":"AirlineCode",
 						"in":"path",
+						"required":true,
 						"description":"key: AirlineCode",
 						"type":"string"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"description",
-						"type":"string"
+						"$ref":"#/parameters/expand"
+					},
+					{
+						"$ref":"#/parameters/select"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet Airlines",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
 						}
 					},
 					"default":{
@@ -550,6 +650,7 @@
 					{
 						"name":"AirlineCode",
 						"in":"path",
+						"required":true,
 						"description":"key: AirlineCode",
 						"type":"string"
 					},
@@ -558,7 +659,7 @@
 						"in":"body",
 						"description":"The entity to patch",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
 						}
 					}
 				],
@@ -584,6 +685,7 @@
 					{
 						"name":"AirlineCode",
 						"in":"path",
+						"required":true,
 						"description":"key: AirlineCode",
 						"type":"string"
 					},
@@ -609,54 +711,47 @@
 		},
 		"/Airports":{
 			"get":{
-				"summary":"Get EntitySet Airports",
-				"description":"Returns the EntitySet Airports",
+				"summary":"Get entities from entity set Airports",
+				"description":"Get entities from entity set Airports",
 				"tags":[
 					"Airports"
 				],
 				"parameters":[
 					{
-						"name":"$expand",
-						"in":"query",
-						"description":"Expand navigation property",
-						"type":"string"
+						"$ref":"#/parameters/filter"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"select structural property",
-						"type":"string"
+						"$ref":"#/parameters/expand"
 					},
 					{
-						"name":"$orderby",
-						"in":"query",
-						"description":"order by some property",
-						"type":"string"
+						"$ref":"#/parameters/select"
 					},
 					{
-						"name":"$top",
-						"in":"query",
-						"description":"top elements",
-						"type":"integer"
+						"$ref":"#/parameters/orderby"
 					},
 					{
-						"name":"$skip",
-						"in":"query",
-						"description":"skip elements",
-						"type":"integer"
+						"$ref":"#/parameters/top"
 					},
 					{
-						"name":"$count",
-						"in":"query",
-						"description":"inlcude count in response",
-						"type":"boolean"
+						"$ref":"#/parameters/skip"
+					},
+					{
+						"$ref":"#/parameters/count"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet Airports",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+							"type":"object",
+							"properties":{
+								"value":{
+									"type":"array",
+									"items":{
+										"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+									}
+								}
+							}
 						}
 					},
 					"default":{
@@ -668,8 +763,8 @@
 				}
 			},
 			"post":{
-				"summary":"Post a new entity to EntitySet Airports",
-				"description":"Post a new entity to EntitySet Airports",
+				"summary":"Post a new entity to entity set Airports",
+				"description":"Post a new entity to entity set Airports",
 				"tags":[
 					"Airports"
 				],
@@ -677,17 +772,17 @@
 					{
 						"name":"Airport",
 						"in":"body",
-						"description":"The entity to post",
+						"description":"The new entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
 						}
 					}
 				],
 				"responses":{
-					"200":{
-						"description":"EntitySet Airports",
+					"201":{
+						"description":"Created entity",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
 						}
 					},
 					"default":{
@@ -710,21 +805,22 @@
 					{
 						"name":"IcaoCode",
 						"in":"path",
+						"required":true,
 						"description":"key: IcaoCode",
 						"type":"string"
 					},
 					{
-						"name":"$select",
-						"in":"query",
-						"description":"description",
-						"type":"string"
+						"$ref":"#/parameters/expand"
+					},
+					{
+						"$ref":"#/parameters/select"
 					}
 				],
 				"responses":{
 					"200":{
 						"description":"EntitySet Airports",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
 						}
 					},
 					"default":{
@@ -745,6 +841,7 @@
 					{
 						"name":"IcaoCode",
 						"in":"path",
+						"required":true,
 						"description":"key: IcaoCode",
 						"type":"string"
 					},
@@ -753,7 +850,7 @@
 						"in":"body",
 						"description":"The entity to patch",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
 						}
 					}
 				],
@@ -779,6 +876,7 @@
 					{
 						"name":"IcaoCode",
 						"in":"path",
+						"required":true,
 						"description":"key: IcaoCode",
 						"type":"string"
 					},
@@ -804,32 +902,29 @@
 		},
 		"/GetNearestAirport(lat={lat},lon={lon})":{
 			"get":{
-				"summary":"Call operation import  GetNearestAirport",
-				"description":"Call operation import  GetNearestAirport",
+				"summary":"Invoke function import GetNearestAirport",
 				"tags":[
-					"Function Import"
+					"Airports"
 				],
 				"parameters":[
 					{
 						"name":"lat",
 						"in":"path",
-						"description":"parameter: lat",
 						"type":"number",
 						"format":"double"
 					},
 					{
 						"name":"lon",
 						"in":"path",
-						"description":"parameter: lon",
 						"type":"number",
 						"format":"double"
 					}
 				],
 				"responses":{
 					"200":{
-						"description":"Response from GetNearestAirport",
+						"description":"Success",
 						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
 						}
 					},
 					"default":{
@@ -841,129 +936,19 @@
 				}
 			}
 		},
-		"/ResetDataSource()":{
+		"/ResetDataSource":{
 			"post":{
-				"summary":"Call operation import  ResetDataSource",
-				"description":"Call operation import  ResetDataSource",
+				"summary":"Invoke action import ResetDataSource",
 				"tags":[
-					"Action Import"
-				],
-				"responses":{
-					"204":{
-						"description":"Empty response"
-					},
-					"default":{
-						"description":"Unexpected error",
-						"schema":{
-							"$ref":"#/definitions/_Error"
-						}
-					}
-				}
-			}
-		},
-		"/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline()":{
-			"get":{
-				"summary":"Call operation  GetFavoriteAirline",
-				"description":"Call operation  GetFavoriteAirline",
-				"tags":[
-					"People",
-					"Function"
+					"Service Operations"
 				],
 				"parameters":[
 					{
-						"name":"UserName",
-						"in":"path",
-						"description":"key: UserName",
-						"type":"string"
-					}
-				],
-				"responses":{
-					"200":{
-						"description":"Response from GetFavoriteAirline",
-						"schema":{
-							"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
-						}
-					},
-					"default":{
-						"description":"Unexpected error",
-						"schema":{
-							"$ref":"#/definitions/_Error"
-						}
-					}
-				}
-			}
-		},
-		"/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips(userName='{userName}')":{
-			"get":{
-				"summary":"Call operation  GetFriendsTrips",
-				"description":"Call operation  GetFriendsTrips",
-				"tags":[
-					"People",
-					"Function"
-				],
-				"parameters":[
-					{
-						"name":"UserName",
-						"in":"path",
-						"description":"key: UserName",
-						"type":"string"
-					},
-					{
-						"name":"userName",
-						"in":"path",
-						"description":"parameter: userName",
-						"type":"string"
-					}
-				],
-				"responses":{
-					"200":{
-						"description":"Response from GetFriendsTrips",
-						"schema":{
-							"type":"array",
-							"items":{
-								"$ref":"http://localhost/examples/TripPin.jsonschema#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
-							}
-						}
-					},
-					"default":{
-						"description":"Unexpected error",
-						"schema":{
-							"$ref":"#/definitions/_Error"
-						}
-					}
-				}
-			}
-		},
-		"/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.ShareTrip()":{
-			"post":{
-				"summary":"Call operation  ShareTrip",
-				"description":"Call operation  ShareTrip",
-				"tags":[
-					"People",
-					"Action"
-				],
-				"parameters":[
-					{
-						"name":"UserName",
-						"in":"path",
-						"description":"key: UserName",
-						"type":"string"
-					},
-					{
-						"name":"userName",
+						"name":"body",
 						"in":"body",
-						"description":"parameter: userName",
+						"description":"Request body",
 						"schema":{
-							"type":"string"
-						}
-					},
-					{
-						"name":"tripId",
-						"in":"body",
-						"description":"parameter: tripId",
-						"schema":{
-							"type":"integer",
-							"format":"int32"
+							"type":"object"
 						}
 					}
 				],
@@ -982,6 +967,325 @@
 		}
 	},
 	"definitions":{
+		"Microsoft.OData.SampleService.Models.TripPin.PersonGender":{
+			"enum":[
+				"Male",
+				"Female",
+				"Unknown"
+			],
+			"Male@odata.value":0,
+			"Female@odata.value":1,
+			"Unknown@odata.value":2
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.City":{
+			"type":"object",
+			"properties":{
+				"CountryRegion":{
+					"type":"string"
+				},
+				"Name":{
+					"type":"string"
+				},
+				"Region":{
+					"type":"string"
+				}
+			}
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Location":{
+			"type":"object",
+			"properties":{
+				"Address":{
+					"type":"string"
+				},
+				"City":{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.City"
+				}
+			}
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.EventLocation":{
+			"allOf":[
+				{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+				},
+				{
+					"type":"object",
+					"properties":{
+						"BuildingInfo":{
+							"type":"string"
+						}
+					}
+				}
+			]
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.AirportLocation":{
+			"allOf":[
+				{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+				},
+				{
+					"type":"object",
+					"properties":{
+						"Loc":{
+							"type":"string",
+							"srid":"4326"
+						}
+					}
+				}
+			]
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Photo":{
+			"type":"object",
+			"properties":{
+				"Id":{
+					"type":"integer",
+					"format":"int64",
+					"x-Org.OData.Core.V1.Permissions":"Read"
+				},
+				"Name":{
+					"type":"string"
+				}
+			},
+			"x-Org.OData.Core.V1.AcceptableMediaTypes":[
+				"image\/jpeg"
+			]
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Person":{
+			"type":"object",
+			"properties":{
+				"UserName":{
+					"type":"string",
+					"x-Org.OData.Core.V1.Permissions":"Read"
+				},
+				"FirstName":{
+					"type":"string"
+				},
+				"LastName":{
+					"type":"string"
+				},
+				"Emails":{
+					"type":"array",
+					"items":{
+						"type":"string"
+					}
+				},
+				"AddressInfo":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+					}
+				},
+				"Gender":{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PersonGender"
+				},
+				"Concurrency":{
+					"type":"integer",
+					"format":"int64",
+					"x-Org.OData.Core.V1.Computed":true
+				},
+				"Friends":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+					},
+					"x-relationship":{
+						
+					}
+				},
+				"Trips":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+					},
+					"x-relationship":{
+						"containsTarget":true
+					}
+				},
+				"Photo":{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo",
+					"x-relationship":{
+						
+					}
+				}
+			}
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Airline":{
+			"type":"object",
+			"properties":{
+				"AirlineCode":{
+					"type":"string",
+					"x-Org.OData.Core.V1.Permissions":"Read"
+				},
+				"Name":{
+					"type":"string"
+				}
+			}
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Airport":{
+			"type":"object",
+			"properties":{
+				"IcaoCode":{
+					"type":"string",
+					"x-Org.OData.Core.V1.Permissions":"Read"
+				},
+				"Name":{
+					"type":"string"
+				},
+				"IataCode":{
+					"type":"string",
+					"x-Org.OData.Core.V1.Immutable":true
+				},
+				"Location":{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
+				}
+			}
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.PlanItem":{
+			"type":"object",
+			"properties":{
+				"PlanItemId":{
+					"type":"integer",
+					"format":"int32",
+					"x-Org.OData.Core.V1.Permissions":"Read"
+				},
+				"ConfirmationCode":{
+					"type":"string"
+				},
+				"StartsAt":{
+					"type":"string",
+					"format":"date-time"
+				},
+				"EndsAt":{
+					"type":"string",
+					"format":"date-time"
+				},
+				"Duration":{
+					"type":"string"
+				}
+			}
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.PublicTransportation":{
+			"allOf":[
+				{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+				},
+				{
+					"type":"object",
+					"properties":{
+						"SeatNumber":{
+							"type":"string"
+						}
+					}
+				}
+			]
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Flight":{
+			"allOf":[
+				{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation"
+				},
+				{
+					"type":"object",
+					"properties":{
+						"FlightNumber":{
+							"type":"string"
+						},
+						"From":{
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
+							"x-relationship":{
+								
+							}
+						},
+						"To":{
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
+							"x-relationship":{
+								
+							}
+						},
+						"Airline":{
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline",
+							"x-relationship":{
+								
+							}
+						}
+					}
+				}
+			]
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Event":{
+			"allOf":[
+				{
+					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+				},
+				{
+					"type":"object",
+					"properties":{
+						"Description":{
+							"type":"string"
+						},
+						"OccursAt":{
+							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
+						}
+					}
+				}
+			]
+		},
+		"Microsoft.OData.SampleService.Models.TripPin.Trip":{
+			"type":"object",
+			"properties":{
+				"TripId":{
+					"type":"integer",
+					"format":"int32",
+					"x-Org.OData.Core.V1.Permissions":"Read"
+				},
+				"ShareId":{
+					"type":"string"
+				},
+				"Description":{
+					"type":"string"
+				},
+				"Name":{
+					"type":"string"
+				},
+				"Budget":{
+					"type":"number",
+					"format":"float",
+					"x-Org.OData.Measures.V1.ISOCurrency":"USD",
+					"x-Org.OData.Measures.V1.Scale":2
+				},
+				"StartsAt":{
+					"type":"string",
+					"format":"date-time"
+				},
+				"EndsAt":{
+					"type":"string",
+					"format":"date-time"
+				},
+				"Tags":{
+					"type":"array",
+					"items":{
+						"type":"string"
+					}
+				},
+				"Photos":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+					},
+					"x-relationship":{
+						
+					}
+				},
+				"PlanItems":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+					},
+					"x-relationship":{
+						"containsTarget":true
+					}
+				}
+			}
+		},
 		"_Error":{
 			"properties":{
 				"error":{
@@ -998,6 +1302,50 @@
 					"type":"string"
 				}
 			}
+		}
+	},
+	"parameters":{
+		"expand":{
+			"name":"$expand",
+			"in":"query",
+			"description":"expand navigation property",
+			"type":"string"
+		},
+		"select":{
+			"name":"$select",
+			"in":"query",
+			"description":"select structural property",
+			"type":"string"
+		},
+		"orderby":{
+			"name":"$orderby",
+			"in":"query",
+			"description":"order by some property",
+			"type":"string"
+		},
+		"top":{
+			"name":"$top",
+			"in":"query",
+			"description":"top elements",
+			"type":"integer"
+		},
+		"skip":{
+			"name":"$skip",
+			"in":"query",
+			"description":"skip elements",
+			"type":"integer"
+		},
+		"count":{
+			"name":"$count",
+			"in":"query",
+			"description":"include count in response",
+			"type":"boolean"
+		},
+		"filter":{
+			"name":"$filter",
+			"in":"query",
+			"description":"filter elements by property values",
+			"type":"string"
 		}
 	}
 }
