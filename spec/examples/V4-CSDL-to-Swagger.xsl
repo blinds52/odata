@@ -847,11 +847,25 @@
     <xsl:text>"</xsl:text>
   </xsl:template>
 
+  <xsl:template match="edm:Member" mode="annotation">
+    <xsl:if test="@Value">
+      <!-- prefix with x- to satisfy Swagger restriction for extension names -->
+      <xsl:text>,"x-</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>@odata.value":</xsl:text>
+      <xsl:value-of select="@Value" />
+    </xsl:if>
+    <xsl:apply-templates select="edm:Annotation" mode="list2">
+      <xsl:with-param name="target" select="@Name" />
+    </xsl:apply-templates>
+  </xsl:template>
+
   <xsl:template match="edm:Annotation">
     <xsl:param name="target" />
     <xsl:variable name="name">
-      <xsl:value-of select="$target" />
+      <!-- prefix with x- to satisfy Swagger restriction for extension names -->
       <xsl:text>x-</xsl:text>
+      <xsl:value-of select="$target" />
       <xsl:value-of select="@Term" />
       <xsl:if test="@Qualifier">
         <xsl:text>#</xsl:text>
