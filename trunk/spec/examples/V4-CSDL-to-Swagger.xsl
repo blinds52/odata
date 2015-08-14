@@ -829,6 +829,12 @@
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
   </xsl:template>
 
+  <xsl:template match="@SRID">
+    <xsl:text>"x-srid":"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>"</xsl:text>
+  </xsl:template>
+
   <xsl:template name="entityTypeDescription">
     <xsl:param name="namespace" />
     <xsl:param name="type" />
