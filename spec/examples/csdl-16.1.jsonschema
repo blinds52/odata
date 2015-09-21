@@ -24,38 +24,30 @@
 					}
 				},
 				"ReleaseDate":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"date"
 				},
 				"DiscontinuedDate":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"date"
 				},
 				"Rating":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"integer",
+						"null"
+					],
+					"format":"int32"
 				},
 				"Price":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"multipleOf":1,
@@ -101,7 +93,8 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Name":{
 					"type":"string",
@@ -144,7 +137,8 @@
 					"$ref":"#/definitions/ODataDemo.Address"
 				},
 				"Concurrency":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Products":{
 					"type":"array",
@@ -232,15 +226,18 @@
 	},
 	"schemas":{
 		"Org.OData.Core.V1":{
-			"uri":"http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml",
-			"alias":"Core"
+			"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json"
+		},
+		"Core":{
+			"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json"
 		},
 		"Org.OData.Measures.V1":{
-			"uri":"http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml",
-			"alias":"UoM"
+			"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json"
+		},
+		"UoM":{
+			"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json"
 		},
 		"ODataDemo":{
-			"alias":null,
 			"functions":[
 				{
 					"name":"ProductsByRating",
@@ -309,22 +306,6 @@
 						"entitySet":"Products",
 						"function":"ODataDemo.ProductsByRating"
 					}
-				}
-			}
-		}
-	},
-	"references":{
-		"http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml":{
-			"includes":{
-				"Org.OData.Core.V1":{
-					"alias":"Core"
-				}
-			}
-		},
-		"http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml":{
-			"includes":{
-				"Org.OData.Measures.V1":{
-					"alias":"UoM"
 				}
 			}
 		}

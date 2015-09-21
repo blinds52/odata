@@ -80,7 +80,11 @@
 			],
 			"properties":{
 				"Id":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int64",
+					"type":[
+						"integer",
+						"string"
+					],
+					"format":"int64",
 					"@Org.OData.Core.V1.Permissions":"Read"
 				},
 				"Name":{
@@ -136,7 +140,11 @@
 					]
 				},
 				"Concurrency":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int64",
+					"type":[
+						"integer",
+						"string"
+					],
+					"format":"int64",
 					"@Org.OData.Core.V1.Computed":true
 				},
 				"Friends":{
@@ -222,7 +230,8 @@
 			],
 			"properties":{
 				"PlanItemId":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32",
+					"type":"integer",
+					"format":"int32",
 					"@Org.OData.Core.V1.Permissions":"Read"
 				},
 				"ConfirmationCode":{
@@ -232,49 +241,28 @@
 					]
 				},
 				"StartsAt":{
-					"anyOf":[
-						{
-							"allOf":[
-								{
-									"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-								}
-							],
-							"pattern":"^[^.]*$"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"date-time",
+					"pattern":"^[^.]*$"
 				},
 				"EndsAt":{
-					"anyOf":[
-						{
-							"allOf":[
-								{
-									"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-								}
-							],
-							"pattern":"^[^.]*$"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"date-time",
+					"pattern":"^[^.]*$"
 				},
 				"Duration":{
-					"anyOf":[
-						{
-							"allOf":[
-								{
-									"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Duration"
-								}
-							],
-							"pattern":"^[^.]*$"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"duration",
+					"pattern":"^[^.]*$"
 				}
 			}
 		},
@@ -354,18 +342,16 @@
 			],
 			"properties":{
 				"TripId":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32",
+					"type":"integer",
+					"format":"int32",
 					"@Org.OData.Core.V1.Permissions":"Read"
 				},
 				"ShareId":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Guid"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"uuid"
 				},
 				"Description":{
 					"type":[
@@ -377,24 +363,22 @@
 					"type":"string"
 				},
 				"Budget":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Single",
+					"type":[
+						"number",
+						"string"
+					],
+					"format":"single",
 					"@Org.OData.Measures.V1.ISOCurrency":"USD",
 					"@Org.OData.Measures.V1.Scale":2
 				},
 				"StartsAt":{
-					"allOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-						}
-					],
+					"type":"string",
+					"format":"date-time",
 					"pattern":"^[^.]*$"
 				},
 				"EndsAt":{
-					"allOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-						}
-					],
+					"type":"string",
+					"format":"date-time",
 					"pattern":"^[^.]*$"
 				},
 				"Tags":{
@@ -425,8 +409,10 @@
 		}
 	},
 	"schemas":{
+		"TripPin":{
+			"$ref":"#/schemas/Microsoft.OData.SampleService.Models.TripPin"
+		},
 		"Microsoft.OData.SampleService.Models.TripPin":{
-			"alias":"TripPin",
 			"actions":[
 				{
 					"name":"ResetDataSource"

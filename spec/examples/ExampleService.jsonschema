@@ -116,7 +116,8 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Category":{
 					"$ref":"#/definitions/OData.Demo.Category",
@@ -146,7 +147,8 @@
 					}
 				},
 				"Rating":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"OrderItems":{
 					"type":"array",
@@ -158,17 +160,15 @@
 					}
 				},
 				"ReleaseDate":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
+					"type":"string",
+					"format":"date"
 				},
 				"DiscontinuedDate":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"date"
 				},
 				"LifeTime":{
 					"type":"string"
@@ -179,6 +179,7 @@
 				"TaxRate":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"multipleOf":1e-6,
@@ -205,7 +206,8 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Items":{
 					"type":"array",
@@ -247,10 +249,14 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Amount":{
-					"type":"number",
+					"type":[
+						"number",
+						"string"
+					],
 					"multipleOf":1
 				},
 				"Products":{
@@ -282,7 +288,8 @@
 			],
 			"properties":{
 				"OrderID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"ItemID":{
 					"type":"string"
@@ -305,7 +312,10 @@
 					"type":"string"
 				},
 				"Price":{
-					"type":"number",
+					"type":[
+						"number",
+						"string"
+					],
 					"multipleOf":1
 				},
 				"Product":{
@@ -331,10 +341,14 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Amount":{
-					"type":"number",
+					"type":[
+						"number",
+						"string"
+					],
 					"multipleOf":1
 				},
 				"Time":{
@@ -423,7 +437,8 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Manager":{
 					"$ref":"#/definitions/OData.Demo.Manager",
@@ -577,7 +592,8 @@
 			],
 			"properties":{
 				"Date":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
+					"type":"string",
+					"format":"date"
 				},
 				"Year":{
 					"type":"string",
@@ -666,7 +682,8 @@
 					"type":"string"
 				},
 				"FractionalDigits":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Byte"
+					"type":"integer",
+					"format":"uint8"
 				}
 			}
 		},
@@ -679,7 +696,8 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Guid"
+					"type":"string",
+					"format":"uuid"
 				},
 				"Name":{
 					"type":"string"
@@ -708,11 +726,15 @@
 	},
 	"schemas":{
 		"Org.OData.Core.V1":{
-			"uri":"http://tinyurl.com/Org-OData-Core",
-			"alias":"Core"
+			"$ref":"http://tinyurl.com/Org-OData-Core"
+		},
+		"Core":{
+			"$ref":"http://tinyurl.com/Org-OData-Core"
+		},
+		"Model":{
+			"$ref":"#/schemas/OData.Demo"
 		},
 		"OData.Demo":{
-			"alias":"Model",
 			"entityContainer":{
 				"name":"Container",
 				"entitySets":{
@@ -872,15 +894,6 @@
 					"Cities":{
 						"entityType":"Model.City"
 					}
-				}
-			}
-		}
-	},
-	"references":{
-		"http://tinyurl.com/Org-OData-Core":{
-			"includes":{
-				"Org.OData.Core.V1":{
-					"alias":"Core"
 				}
 			}
 		}

@@ -11,7 +11,10 @@
 					"default":"Unspecified"
 				},
 				"Length":{
-					"type":"number",
+					"type":[
+						"number",
+						"string"
+					],
 					"multipleOf":1e-2,
 					"minimum":-9999999999999999.99,
 					"maximum":9999999999999999.99
@@ -30,17 +33,15 @@
 				"SuggestedTimes":{
 					"type":"array",
 					"items":{
-						"allOf":[
-							{
-								"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-							}
-						],
+						"type":"string",
+						"format":"date-time",
 						"pattern":"(^[^.]*$|[.][0-9]{1,6}$)"
 					}
 				},
 				"Amount9":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"multipleOf":1e-2,
@@ -50,6 +51,7 @@
 				"Amount11":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"minimum":-999,
@@ -179,6 +181,7 @@
 				"AnnualBudget":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"multipleOf":1
@@ -203,7 +206,8 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Name":{
 					"type":[
@@ -240,22 +244,16 @@
 			"type":"object",
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Created":{
-					"anyOf":[
-						{
-							"allOf":[
-								{
-									"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-								}
-							],
-							"pattern":"^[^.]*$"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"date-time",
+					"pattern":"^[^.]*$"
 				}
 			}
 		},
@@ -271,10 +269,12 @@
 			],
 			"properties":{
 				"OrderID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"LineNumber":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				}
 			}
 		},
@@ -282,15 +282,24 @@
 			"type":"object",
 			"properties":{
 				"Height":{
-					"type":"number",
+					"type":[
+						"number",
+						"string"
+					],
 					"multipleOf":1
 				},
 				"Weight":{
-					"type":"number",
+					"type":[
+						"number",
+						"string"
+					],
 					"multipleOf":1
 				},
 				"Length":{
-					"type":"number",
+					"type":[
+						"number",
+						"string"
+					],
 					"multipleOf":1
 				}
 			}
@@ -420,11 +429,13 @@
 			"BlueYellowStriped@odata.value":22
 		},
 		"org.example.Length":{
-			"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32",
+			"type":"integer",
+			"format":"int32",
 			"@Org.OData.Measurements.V1.Unit":"Centimeters"
 		},
 		"org.example.Weight":{
-			"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32",
+			"type":"integer",
+			"format":"int32",
 			"@Org.OData.Measurements.V1.Unit":"Kilograms"
 		},
 		"org.example.Size":{
@@ -461,7 +472,8 @@
 			],
 			"properties":{
 				"ID":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
+					"type":"integer",
+					"format":"int32"
 				},
 				"Name":{
 					"type":[
@@ -528,51 +540,42 @@
 					"default":false
 				},
 				"BinaryValue":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Binary"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"string",
+						"null"
 					],
+					"format":"base64url",
 					"default":"T0RhdGE"
 				},
 				"IntegerValue":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int32"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"integer",
+						"null"
 					],
+					"format":"int32",
 					"default":-128
 				},
 				"DoubleValue":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Double"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"number",
+						"string",
+						"null"
 					],
+					"format":"double",
 					"default":3.1415926535897931
 				},
 				"SingleValue":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Single"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"number",
+						"string",
+						"null"
+					],
+					"format":"single"
 				},
 				"DecimalValue":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"default":34.95
@@ -585,84 +588,55 @@
 					"default":"Say \"Hello\",\nthen go"
 				},
 				"DateValue":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"string",
+						"null"
 					],
+					"format":"date",
 					"default":"2012-12-03"
 				},
 				"DateTimeOffsetValue":{
-					"anyOf":[
-						{
-							"allOf":[
-								{
-									"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-								}
-							],
-							"pattern":"^[^.]*$"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"string",
+						"null"
 					],
+					"format":"date-time",
+					"pattern":"^[^.]*$",
 					"default":"2012-12-03T07:16:23Z"
 				},
 				"DurationValue":{
-					"anyOf":[
-						{
-							"allOf":[
-								{
-									"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Duration"
-								}
-							],
-							"pattern":"(^[^.]*$|[.][0-9]{1,12}S$)"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"string",
+						"null"
 					],
+					"format":"duration",
+					"pattern":"(^[^.]*$|[.][0-9]{1,12}S$)",
 					"default":"P12DT23H59M59.999999999999S"
 				},
 				"TimeOfDayValue":{
-					"anyOf":[
-						{
-							"allOf":[
-								{
-									"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.TimeOfDay"
-								}
-							],
-							"pattern":"(^[^.]*$|[.][0-9]{1,6}$)"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"string",
+						"null"
 					],
+					"format":"time",
+					"pattern":"(^[^.]*$|[.][0-9]{1,6}$)",
 					"default":"07:59:59.999"
 				},
 				"GuidValue":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Guid"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"string",
+						"null"
 					],
+					"format":"uuid",
 					"default":"1234567-89ab-cdef-0123-456789abcdef"
 				},
 				"Int64Value":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int64"
-						},
-						{
-							"type":"null"
-						}
+					"type":[
+						"integer",
+						"string",
+						"null"
 					],
+					"format":"int64",
 					"default":0
 				},
 				"ColorEnumValue":{
@@ -785,19 +759,17 @@
 				"Dates":{
 					"type":"array",
 					"items":{
-						"anyOf":[
-							{
-								"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
-							},
-							{
-								"type":"null"
-							}
-						]
+						"type":[
+							"string",
+							"null"
+						],
+						"format":"date"
 					}
 				},
 				"Price":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"multipleOf":1e-3,
@@ -805,12 +777,12 @@
 					"maximum":999999999999.999
 				},
 				"Permission":{
-					"$ref":"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml#/definitions/Org.OData.Core.V1.Permission"
+					"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Permission"
 				},
 				"AliasPermission":{
 					"anyOf":[
 						{
-							"$ref":"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml#/definitions/Org.OData.Core.V1.Permission"
+							"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Permission"
 						},
 						{
 							"type":"null"
@@ -982,7 +954,8 @@
 				"Numbers":{
 					"type":"array",
 					"items":{
-						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int16"
+						"type":"integer",
+						"format":"int16"
 					}
 				}
 			}
@@ -1033,6 +1006,7 @@
 				"Quantity":{
 					"type":[
 						"number",
+						"string",
 						"null"
 					],
 					"multipleOf":1,
@@ -1051,34 +1025,41 @@
 			}
 		},
 		"Model1.SpecialByte":{
-			"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Byte"
+			"type":"integer",
+			"format":"uint8"
 		},
 		"Model1.Text50":{
 			"type":"string",
 			"maxLength":50
 		},
 		"Model1.IntegerDecimal":{
-			"type":"number",
+			"type":[
+				"number",
+				"string"
+			],
 			"multipleOf":1,
 			"@Core.Description":"A decimal without fractional part"
 		},
 		"Model1.IntegerDecimal10":{
-			"type":"number",
+			"type":[
+				"number",
+				"string"
+			],
 			"multipleOf":1,
 			"minimum":-9999999999,
 			"maximum":9999999999,
 			"@Core.Description":"A ten-digit integer"
 		},
 		"Model1.VariableDecimal":{
-			"type":"number",
+			"type":[
+				"number",
+				"string"
+			],
 			"@Core.Description":"A floating decimal"
 		},
 		"Model1.ExactTimestamp":{
-			"allOf":[
-				{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.DateTimeOffset"
-				}
-			],
+			"type":"string",
+			"format":"date-time",
 			"pattern":"(^[^.]*$|[.][0-9]{1,12}$)"
 		},
 		"Schema.One.Waldo":{
@@ -1173,14 +1154,11 @@
 			],
 			"properties":{
 				"ArchivedAt":{
-					"anyOf":[
-						{
-							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Date"
-						},
-						{
-							"type":"null"
-						}
-					]
+					"type":[
+						"string",
+						"null"
+					],
+					"format":"date"
 				}
 			},
 			"@custom.IsA":"X.Movie"
@@ -1216,25 +1194,33 @@
 	},
 	"schemas":{
 		"Org.OData.Core.V1":{
-			"uri":"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml",
-			"alias":"Core"
+			"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json"
+		},
+		"Core":{
+			"$ref":"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json"
 		},
 		"Org.OData.Measures.V1":{
-			"uri":"http://tinyurl.com/Org-OData-Measures-V1",
-			"alias":"Measures"
+			"$ref":"http://tinyurl.com/Org-OData-Measures-V1"
+		},
+		"Measures":{
+			"$ref":"http://tinyurl.com/Org-OData-Measures-V1"
 		},
 		"anotherOne":{
-			"uri":"http://tinyurl.com/Org-OData-Measures-V1"
+			"$ref":"http://tinyurl.com/Org-OData-Measures-V1"
 		},
 		"Org.OData.Capabilities.V1":{
-			"uri":"http://vocabs.odata.org/capabilities/v1"
+			"$ref":"http://vocabs.odata.org/capabilities/v1"
 		},
 		"org.example.Display":{
-			"uri":"http://vocabs.odata.org/display/v1",
-			"alias":"UI"
+			"$ref":"http://vocabs.odata.org/display/v1"
+		},
+		"UI":{
+			"$ref":"http://vocabs.odata.org/display/v1"
+		},
+		"Self":{
+			"$ref":"#/schemas/org.example"
 		},
 		"org.example":{
-			"alias":"Self",
 			"@Core.Description":"Examples from Part 3: CSDL",
 			"functions":[
 				{
@@ -1326,7 +1312,6 @@
 			}
 		},
 		"org.example2":{
-			"alias":null,
 			"@Core.Description":"Examples from Part 3: CSDL - second schema",
 			"terms":{
 				"IsURI":{
@@ -1627,8 +1612,10 @@
 				}
 			]
 		},
+		"M1":{
+			"$ref":"#/schemas/Model1"
+		},
 		"Model1":{
-			"alias":"M1",
 			"@UI.ReferenceFacet":{
 				"@odata.type":"#AnnotationPath",
 				"value":"@UI.LineItem"
@@ -1904,8 +1891,10 @@
 				"@Core.Description":"The Sales Container"
 			}
 		},
+		"One":{
+			"$ref":"#/schemas/Schema.One"
+		},
 		"Schema.One":{
-			"alias":"One",
 			"actions":[
 				{
 					"name":"Rejection",
@@ -1954,8 +1943,10 @@
 				}
 			}
 		},
+		"Two":{
+			"$ref":"#/schemas/Schema.Two"
+		},
 		"Schema.Two":{
-			"alias":"Two",
 			"entityContainer":{
 				"name":"Default",
 				"entitySets":{
@@ -1991,7 +1982,6 @@
 			}
 		},
 		"X":{
-			"alias":null,
 			"terms":{
 				"Person":{
 					"type":"X.PersonType"
@@ -2009,7 +1999,6 @@
 			}
 		},
 		"Y":{
-			"alias":null,
 			"terms":{
 				"Developer":{
 					"baseTerm":"X.Person",
@@ -2112,22 +2101,7 @@
 		}
 	},
 	"references":{
-		"http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml":{
-			"includes":{
-				"Org.OData.Core.V1":{
-					"alias":"Core"
-				}
-			}
-		},
 		"http://tinyurl.com/Org-OData-Measures-V1":{
-			"includes":{
-				"Org.OData.Measures.V1":{
-					"alias":"Measures"
-				},
-				"anotherOne":{
-					
-				}
-			},
 			"@Some.Term":{
 				
 			}
@@ -2151,20 +2125,6 @@
 					"termNamespace":"Name.Space"
 				}
 			]
-		},
-		"http://vocabs.odata.org/capabilities/v1":{
-			"includes":{
-				"Org.OData.Capabilities.V1":{
-					
-				}
-			}
-		},
-		"http://vocabs.odata.org/display/v1":{
-			"includes":{
-				"org.example.Display":{
-					"alias":"UI"
-				}
-			}
 		},
 		"http://odata.org/ann/b":{
 			"includeAnnotations":[

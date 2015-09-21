@@ -1,6 +1,5 @@
-@echo off
-set FILES=csdl-16.1.jsonschema csdl-16.2.jsonschema ExampleService.jsonschema miscellaneous.jsonschema MetadataService.jsonschema TM1$metadata.jsonschema TripPin.jsonschema Org.OData.Core.V1.jsonschema 
-@rem Org.OData.Capabilities.V1.jsonschema Org.OData.Measures.V1.jsonschema
+@echo off 
+set FILES=csdl-16.1.jsonschema csdl-16.2.jsonschema ExampleService.jsonschema miscellaneous.jsonschema MetadataService.jsonschema TM1$metadata.jsonschema TripPin.jsonschema ../vocabularies/Org.OData.Capabilities.V1.json ../vocabularies/Org.OData.Core.V1.json ../vocabularies/Org.OData.Measures.V1.json
 
 @rem check syntax of all schemas
 java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax ../schemas/edm.json %FILES%

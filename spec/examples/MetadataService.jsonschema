@@ -204,7 +204,7 @@
 					"type":"boolean"
 				},
 				"OpenType":{
-					"type":"string"
+					"type":"boolean"
 				},
 				"Properties":{
 					"type":"array",
@@ -399,7 +399,11 @@
 					"type":"string"
 				},
 				"Value":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Int64"
+					"type":[
+						"integer",
+						"string"
+					],
+					"format":"int64"
 				},
 				"EnumType":{
 					"$ref":"#/definitions/Edm.Metadata.EnumType",
@@ -1650,19 +1654,21 @@
 		}
 	},
 	"schemas":{
+		"Meta":{
+			"$ref":"#/schemas/Edm.Metadata"
+		},
 		"Edm.Metadata":{
-			"alias":"Meta",
 			"functions":[
 				{
 					"name":"AllProperties",
 					"isBound":true,
 					"parameters":{
 						"Type":{
-							"type":"Edm.Metadata.StructuredType"
+							"type":"Meta.StructuredType"
 						}
 					},
 					"returnType":{
-						"type":"Collection(Edm.Metadata.Property)"
+						"type":"Collection(Meta.Property)"
 					}
 				},
 				{
@@ -1670,11 +1676,11 @@
 					"isBound":true,
 					"parameters":{
 						"Type":{
-							"type":"Edm.Metadata.StructuredType"
+							"type":"Meta.StructuredType"
 						}
 					},
 					"returnType":{
-						"type":"Collection(Edm.Metadata.NavigationProperty)"
+						"type":"Collection(Meta.NavigationProperty)"
 					}
 				},
 				{
@@ -1682,11 +1688,11 @@
 					"isBound":true,
 					"parameters":{
 						"Type":{
-							"type":"Edm.Metadata.EntityType"
+							"type":"Meta.EntityType"
 						}
 					},
 					"returnType":{
-						"type":"Collection(Edm.Metadata.EntitySet)"
+						"type":"Collection(Meta.EntitySet)"
 					}
 				}
 			],
@@ -1694,7 +1700,7 @@
 				"name":"MetadataContainer",
 				"entitySets":{
 					"Schemata":{
-						"entityType":"Edm.Metadata.Schema",
+						"entityType":"Meta.Schema",
 						"navigationPropertyBindings":{
 							"EntityContainer":{
 								"target":"EntityContainer"
@@ -1720,7 +1726,7 @@
 						}
 					},
 					"Properties":{
-						"entityType":"Edm.Metadata.Property",
+						"entityType":"Meta.Property",
 						"navigationPropertyBindings":{
 							"Annotations":{
 								"target":"Annotations"
@@ -1734,7 +1740,7 @@
 						}
 					},
 					"EntitySets":{
-						"entityType":"Edm.Metadata.EntitySet",
+						"entityType":"Meta.EntitySet",
 						"navigationPropertyBindings":{
 							"EntityContainer":{
 								"target":"EntityContainer"
@@ -1751,7 +1757,7 @@
 						}
 					},
 					"NavigationProperties":{
-						"entityType":"Edm.Metadata.NavigationProperty",
+						"entityType":"Meta.NavigationProperty",
 						"navigationPropertyBindings":{
 							"Partner":{
 								"target":"NavigationProperties"
@@ -1771,7 +1777,7 @@
 						}
 					},
 					"FunctionImports":{
-						"entityType":"Edm.Metadata.FunctionImport",
+						"entityType":"Meta.FunctionImport",
 						"navigationPropertyBindings":{
 							"EntityContainer":{
 								"target":"EntityContainer"
@@ -1788,7 +1794,7 @@
 						}
 					},
 					"NavigationPropertyBindings":{
-						"entityType":"Edm.Metadata.NavigationPropertyBinding",
+						"entityType":"Meta.NavigationPropertyBinding",
 						"navigationPropertyBindings":{
 							"NavigationProperty":{
 								"target":"NavigationProperties"
@@ -1796,36 +1802,36 @@
 						}
 					},
 					"Types":{
-						"entityType":"Edm.Metadata.Type",
+						"entityType":"Meta.Type",
 						"navigationPropertyBindings":{
-							"Edm.Metadata.EntityType/DerivedTypes":{
+							"Meta.EntityType/DerivedTypes":{
 								"target":"Types"
 							},
-							"Edm.Metadata.EntityType/BaseType":{
+							"Meta.EntityType/BaseType":{
 								"target":"Types"
 							},
-							"Edm.Metadata.ComplexType/DerivedTypes":{
+							"Meta.ComplexType/DerivedTypes":{
 								"target":"Types"
 							},
-							"Edm.Metadata.ComplexType/BaseType":{
+							"Meta.ComplexType/BaseType":{
 								"target":"Types"
 							},
-							"Edm.Metadata.EntityType/EntitySets":{
+							"Meta.EntityType/EntitySets":{
 								"target":"EntitySets"
 							},
-							"Edm.Metadata.EnumType/UnderlyingType":{
+							"Meta.EnumType/UnderlyingType":{
 								"target":"Types"
 							},
-							"Edm.Metadata.PrimitiveType/EnumTypes":{
+							"Meta.PrimitiveType/EnumTypes":{
 								"target":"Types"
 							},
-							"Edm.Metadata.EnumType/Members":{
+							"Meta.EnumType/Members":{
 								"target":"EnumTypeMembers"
 							},
-							"Edm.Metadata.TypeDefinition/UnderlyingType":{
+							"Meta.TypeDefinition/UnderlyingType":{
 								"target":"Types"
 							},
-							"Edm.Metadata.PrimitiveType/TypeDefinitions":{
+							"Meta.PrimitiveType/TypeDefinitions":{
 								"target":"Types"
 							},
 							"Annotations":{
@@ -1834,16 +1840,16 @@
 							"Schema":{
 								"target":"Schemata"
 							},
-							"Edm.Metadata.StructuredType/NavigationProperties":{
+							"Meta.StructuredType/NavigationProperties":{
 								"target":"NavigationProperties"
 							},
-							"Edm.Metadata.StructuredType/Properties":{
+							"Meta.StructuredType/Properties":{
 								"target":"Properties"
 							}
 						}
 					},
 					"Terms":{
-						"entityType":"Edm.Metadata.Term",
+						"entityType":"Meta.Term",
 						"navigationPropertyBindings":{
 							"Schema":{
 								"target":"Schemata"
@@ -1860,7 +1866,7 @@
 						}
 					},
 					"EnumTypeMembers":{
-						"entityType":"Edm.Metadata.EnumTypeMember",
+						"entityType":"Meta.EnumTypeMember",
 						"navigationPropertyBindings":{
 							"EnumType":{
 								"target":"Types"
@@ -1871,7 +1877,7 @@
 						}
 					},
 					"Annotations":{
-						"entityType":"Edm.Metadata.Annotation",
+						"entityType":"Meta.Annotation",
 						"navigationPropertyBindings":{
 							"Term":{
 								"target":"Terms"
@@ -1879,7 +1885,7 @@
 						}
 					},
 					"Functions":{
-						"entityType":"Edm.Metadata.Function",
+						"entityType":"Meta.Function",
 						"navigationPropertyBindings":{
 							"FunctionImports":{
 								"target":"FunctionImports"
@@ -1890,7 +1896,7 @@
 						}
 					},
 					"Singletons":{
-						"entityType":"Edm.Metadata.Singleton",
+						"entityType":"Meta.Singleton",
 						"navigationPropertyBindings":{
 							"EntityContainer":{
 								"target":"EntityContainer"
@@ -1907,7 +1913,7 @@
 						}
 					},
 					"Actions":{
-						"entityType":"Edm.Metadata.Action",
+						"entityType":"Meta.Action",
 						"navigationPropertyBindings":{
 							"ActionImports":{
 								"target":"ActionImports"
@@ -1918,7 +1924,7 @@
 						}
 					},
 					"ActionImports":{
-						"entityType":"Edm.Metadata.ActionImport",
+						"entityType":"Meta.ActionImport",
 						"navigationPropertyBindings":{
 							"Action":{
 								"target":"Actions"
@@ -1935,7 +1941,7 @@
 						}
 					},
 					"References":{
-						"entityType":"Edm.Metadata.Reference",
+						"entityType":"Meta.Reference",
 						"navigationPropertyBindings":{
 							"Include/Schema":{
 								"target":"Schemata"
@@ -1945,7 +1951,7 @@
 				},
 				"singletons":{
 					"EntityContainer":{
-						"type":"Edm.Metadata.EntityContainer",
+						"type":"Meta.EntityContainer",
 						"navigationPropertyBindings":{
 							"Schema":{
 								"target":"Schemata"

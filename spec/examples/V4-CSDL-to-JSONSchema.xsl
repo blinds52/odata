@@ -6,12 +6,12 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
-    - add inlined "alias" definitions for used Edm types to shorten $ref URLs?
     - DefaultValue: determine underlying type of type definitions, use for quoting decision
-    - IEEE754Compatible: use type: ["number","string"] for Int64 and Decimal so that both flavors can be validated?
+    - Facets for properties based on type definitions: Precision, Scale, MaxLength, Unicode, SRID: allOf pattern
+    - IncludeAnnotations: also fold into schemas?
+    - IEEE754compatible: pattern for string variant of Decimal and Int64?
+    - Pattern for OData-specific formats uuid, time, ...?
     - Core.Description -> title/description?
-    - Include: fold/duplicate into schemas with uri and optional alias? In addition to references/.../includes/...?
-    - IEEE754compatible: alternative string format for Edm.Decimal and Edm.Int64? With pattern?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -29,7 +29,7 @@
     <xsl:text>#"</xsl:text>
     <xsl:apply-templates select="@*" mode="list2" />
     <xsl:apply-templates select="edmx:DataServices" />
-    <xsl:apply-templates select="edmx:Reference" mode="hash">
+    <xsl:apply-templates select="edmx:Reference[edmx:IncludeAnnotations|edm:Annotation]" mode="hash">
       <xsl:with-param name="key" select="'Uri'" />
     </xsl:apply-templates>
     <xsl:text>}</xsl:text>
@@ -43,58 +43,15 @@
 
   <xsl:template match="edmx:Reference" mode="hashvalue">
     <xsl:apply-templates select="@*[local-name()!='Uri']" />
-    <xsl:apply-templates select="edmx:Include" mode="hash">
-      <xsl:with-param name="key" select="'Namespace'" />
+    <xsl:apply-templates select="edmx:IncludeAnnotations" mode="array">
       <xsl:with-param name="after" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="edmx:IncludeAnnotations" mode="array">
-      <xsl:with-param name="after" select="edmx:Include" />
-    </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotation" mode="list">
-      <xsl:with-param name="after" select="edmx:Include|edmx:IncludeAnnotations" />
+      <xsl:with-param name="after" select="edmx:IncludeAnnotations" />
     </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
-    <!-- TODO: append or prepend the used Edm types to "definitions" if it is present
-      <xsl:text>,"edmTypes":[</xsl:text>
-      <xsl:for-each
-      select="edm:Schema/edm:EntityType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:ComplexType/edm:Property/@Type[generate-id()=generate-id(key('types',.)[1])]|edm:Schema/edm:TypeDefinition/@UnderlyingType[generate-id()=generate-id(key('types',.)[1])]"
-      >
-      <xsl:if test="position()=1">
-      <xsl:text>null</xsl:text>
-      </xsl:if>
-      <xsl:variable name="singleType">
-      <xsl:choose>
-      <xsl:when test="starts-with(.,'Collection(')">
-      <xsl:value-of select="substring-before(substring-after(.,'('),')')" />
-      </xsl:when>
-      <xsl:otherwise>
-      <xsl:value-of select="." />
-      </xsl:otherwise>
-      </xsl:choose>
-      </xsl:variable>
-      <xsl:variable name="qualifier">
-      <xsl:call-template name="substring-before-last">
-      <xsl:with-param name="input" select="$singleType" />
-      <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-      </xsl:variable>
-      <xsl:choose>
-      <xsl:when test="$singleType='Edm.Boolean'" />
-      <xsl:when test="$singleType='Edm.Decimal'" />
-      <xsl:when test="$singleType='Edm.String'" />
-      <xsl:when test="$qualifier='Edm'">
-      <xsl:if test="$singleType=. or not(key('types',$singleType))">
-      <xsl:text>,"</xsl:text>
-      <xsl:value-of select="$singleType" />
-      <xsl:text>"</xsl:text>
-      </xsl:if>
-      </xsl:when>
-      </xsl:choose>
-      </xsl:for-each>
-      <xsl:text>]</xsl:text>
-    -->
     <xsl:apply-templates
       select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType|edm:Schema/edm:TypeDefinition|edm:Schema/edm:EnumType"
       mode="hash"
@@ -107,37 +64,53 @@
     </xsl:apply-templates>
   </xsl:template>
 
-  <xsl:template match="edmx:Include" mode="hashvalue">
-    <xsl:param name="name" />
-    <xsl:choose>
-      <xsl:when test="$name='schemas'">
-        <xsl:apply-templates select="@Alias|../@Uri" mode="list" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="@Alias" />
-      </xsl:otherwise>
-    </xsl:choose>
+  <xsl:template match="edmx:Include" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Namespace" />
+    <xsl:text>":{"$ref":"</xsl:text>
+    <xsl:call-template name="json-url">
+      <xsl:with-param name="url" select="../@Uri" />
+    </xsl:call-template>
+    <xsl:text>"}</xsl:text>
+    <xsl:if test="@Alias">
+      <xsl:text>,"</xsl:text>
+      <xsl:value-of select="@Alias" />
+      <xsl:text>":{"$ref":"</xsl:text>
+      <xsl:call-template name="json-url">
+        <xsl:with-param name="url" select="../@Uri" />
+      </xsl:call-template>
+      <xsl:text>"}</xsl:text>
+    </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm:Schema" mode="hashvalue">
-    <!-- always force alias here even if it is not present in XML -->
-    <xsl:text>"alias":</xsl:text>
-    <xsl:choose>
-      <xsl:when test="@Alias">
-        <xsl:text>"</xsl:text>
-        <xsl:value-of select="@Alias" />
-        <xsl:text>"</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>null</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    <xsl:apply-templates select="edm:Action" mode="array" />
-    <xsl:apply-templates select="edm:Function" mode="array" />
-    <xsl:apply-templates select="edm:Term" mode="hash" />
-    <xsl:apply-templates select="edm:EntityContainer" />
-    <xsl:apply-templates select="edm:Annotations" mode="array" />
+  <xsl:template match="edm:Schema" mode="hashpair">
+    <xsl:if test="@Alias">
+      <xsl:text>"</xsl:text>
+      <xsl:value-of select="@Alias" />
+      <xsl:text>":{"$ref":"#/schemas/</xsl:text>
+      <xsl:value-of select="@Namespace" />
+      <xsl:text>"},</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Namespace" />
+    <xsl:text>":{</xsl:text>
+    <xsl:apply-templates select="edm:Annotation" mode="list" />
+    <xsl:apply-templates select="edm:Action" mode="array">
+      <xsl:with-param name="after" select="edm:Annotation" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:Function" mode="array">
+      <xsl:with-param name="after" select="edm:Annotation|edm:Action" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:Term" mode="hash">
+      <xsl:with-param name="after" select="edm:Annotation|edm:Action|edm:Function" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:EntityContainer" mode="list">
+      <xsl:with-param name="after" select="edm:Annotation|edm:Action|edm:Function|edm:Term" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:Annotations" mode="array">
+      <xsl:with-param name="after" select="edm:Annotation|edm:Action|edm:Function|edm:Term|edm:EntityContainer" />
+    </xsl:apply-templates>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EnumType" mode="hashpair">
@@ -338,6 +311,15 @@
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
       </xsl:when>
+      <xsl:when test="$singleType='Edm.Binary'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"base64url"</xsl:text>
+        <!-- TODO: ODATA-858 -->
+        <xsl:apply-templates select="@MaxLength" />
+      </xsl:when>
       <xsl:when test="$singleType='Edm.Boolean'">
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'boolean'" />
@@ -346,7 +328,7 @@
       </xsl:when>
       <xsl:when test="$singleType='Edm.Decimal'">
         <xsl:call-template name="nullableType">
-          <xsl:with-param name="type" select="'number'" />
+          <xsl:with-param name="type" select="'number,string'" />
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:choose>
@@ -361,7 +343,6 @@
           </xsl:when>
         </xsl:choose>
         <xsl:if test="@Precision">
-          <!-- TODO: add "precision":@Precision, -->
           <xsl:variable name="scale">
             <xsl:choose>
               <xsl:when test="not(@Scale)">
@@ -394,7 +375,120 @@
           <xsl:value-of select="$limit" />
         </xsl:if>
       </xsl:when>
-      <!-- TODO: inline integer types -->
+      <xsl:when test="$singleType='Edm.Byte'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'integer'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"uint8"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.SByte'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'integer'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"int8"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Int16'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'integer'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"int16"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Int32'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'integer'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"int32"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Int64'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'integer,string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"int64"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Date'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"date"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Double'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'number,string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"double"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Single'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'number,string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"single"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Guid'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"uuid"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.DateTimeOffset'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"date-time"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="@Precision > 0">
+            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
+            <xsl:value-of select="@Precision" />
+            <xsl:text>}$)"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.TimeOfDay'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"time"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="@Precision > 0">
+            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
+            <xsl:value-of select="@Precision" />
+            <xsl:text>}$)"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$singleType='Edm.Duration'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+        <xsl:text>,"format":"duration"</xsl:text>
+        <xsl:choose>
+          <xsl:when test="@Precision > 0">
+            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
+            <xsl:value-of select="@Precision" />
+            <xsl:text>}S$)"</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
       <xsl:when test="$qualifier='Edm'">
         <xsl:if test="not($nullable='false')">
           <xsl:text>"anyOf":[{</xsl:text>
@@ -445,6 +539,7 @@
         <xsl:if test="not($nullable='false')">
           <xsl:text>"anyOf":[{</xsl:text>
         </xsl:if>
+        <!-- TODO: allOf if facet attributes are present -->
         <xsl:call-template name="ref">
           <xsl:with-param name="qualifier" select="$qualifier" />
           <xsl:with-param name="typeName">
@@ -479,7 +574,9 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:text>"$ref":"</xsl:text>
-    <xsl:value-of select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
+    <xsl:call-template name="json-url">
+      <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
+    </xsl:call-template>
     <xsl:text>#/definitions/</xsl:text>
     <xsl:choose>
       <xsl:when test="$internalNamespace">
@@ -513,14 +610,21 @@
     <xsl:param name="type" />
     <xsl:param name="nullable" />
     <xsl:text>"type":</xsl:text>
-    <xsl:if test="not($nullable='false')">
+    <xsl:if test="not($nullable='false') or contains($type,',')">
       <xsl:text>[</xsl:text>
     </xsl:if>
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="$type" />
+    <xsl:call-template name="replace-all">
+      <xsl:with-param name="string" select="$type" />
+      <xsl:with-param name="old" select="','" />
+      <xsl:with-param name="new" select="'&quot;,&quot;'" />
+    </xsl:call-template>
     <xsl:text>"</xsl:text>
     <xsl:if test="not($nullable='false')">
-      <xsl:text>,"null"]</xsl:text>
+      <xsl:text>,"null"</xsl:text>
+    </xsl:if>
+    <xsl:if test="not($nullable='false') or contains($type,',')">
+      <xsl:text>]</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -599,7 +703,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityContainer">
-    <xsl:text>,"entityContainer":{</xsl:text>
+    <xsl:text>"entityContainer":{</xsl:text>
     <xsl:apply-templates select="@*" mode="list" />
     <xsl:apply-templates select="edm:EntitySet" mode="hash" />
     <xsl:apply-templates select="edm:Singleton" mode="hash" />
@@ -876,26 +980,6 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template name="replace-all">
-    <xsl:param name="string" />
-    <xsl:param name="old" />
-    <xsl:param name="new" />
-    <xsl:choose>
-      <xsl:when test="contains($string,$old)">
-        <xsl:value-of select="substring-before($string,$old)" />
-        <xsl:value-of select="$new" />
-        <xsl:call-template name="replace-all">
-          <xsl:with-param name="string" select="substring-after($string,$old)" />
-          <xsl:with-param name="old" select="$old" />
-          <xsl:with-param name="new" select="''" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$string" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
   <!-- name : object -->
   <xsl:template match="@*|*" mode="object">
     <xsl:param name="name" />
@@ -1119,6 +1203,53 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$input" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="replace-all">
+    <xsl:param name="string" />
+    <xsl:param name="old" />
+    <xsl:param name="new" />
+    <xsl:choose>
+      <xsl:when test="contains($string,$old)">
+        <xsl:value-of select="substring-before($string,$old)" />
+        <xsl:value-of select="$new" />
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string" select="substring-after($string,$old)" />
+          <xsl:with-param name="old" select="$old" />
+          <xsl:with-param name="new" select="''" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$string" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="json-url">
+    <xsl:param name="url" />
+    <xsl:choose>
+      <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
+        <xsl:choose>
+          <xsl:when test="substring($url,0,34) = 'http://docs.oasis-open.org/odata/'">
+            <xsl:text>https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/</xsl:text>
+            <xsl:variable name="filename">
+              <xsl:call-template name="substring-after-last">
+                <xsl:with-param name="input" select="$url" />
+                <xsl:with-param name="marker" select="'/'" />
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:value-of select="substring($filename,0,string-length($filename)-3)" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="substring($url,0,string-length($url)-3)" />
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:value-of select="'.json'" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$url" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
