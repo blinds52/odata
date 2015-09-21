@@ -71,6 +71,8 @@
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="../@Uri" />
     </xsl:call-template>
+    <xsl:text>#/schemas/</xsl:text>
+    <xsl:value-of select="@Namespace" />
     <xsl:text>"}</xsl:text>
     <xsl:if test="@Alias">
       <xsl:text>,"</xsl:text>
@@ -79,6 +81,8 @@
       <xsl:call-template name="json-url">
         <xsl:with-param name="url" select="../@Uri" />
       </xsl:call-template>
+      <xsl:text>#/schemas/</xsl:text>
+      <xsl:value-of select="@Namespace" />
       <xsl:text>"}</xsl:text>
     </xsl:if>
   </xsl:template>
