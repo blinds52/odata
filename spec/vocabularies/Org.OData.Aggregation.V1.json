@@ -1,0 +1,270 @@
+{
+	"$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+	"odata-version":"4.0",
+	"definitions":{
+		"Org.OData.Aggregation.V1.ApplySupportedType":{
+			"type":"object",
+			"properties":{
+				"Transformations":{
+					"type":"array",
+					"items":{
+						"type":"string"
+					},
+					"@Core.Description":"Transformations that can be used in $apply"
+				},
+				"CustomAggregationMethods":{
+					"type":"array",
+					"items":{
+						"type":"string"
+					},
+					"@Core.Description":"Qualified names of custom aggregation methods that can be used in aggregate(...with...)"
+				},
+				"Rollup":{
+					"anyOf":[
+						{
+							"$ref":"#/definitions/Org.OData.Aggregation.V1.RollupType"
+						},
+						{
+							"type":"null"
+						}
+					],
+					"default":"MultipleHierarchies",
+					"@Core.Description":"The service supports rollup hierarchies in a groupby transformation"
+				},
+				"PropertyRestrictions":{
+					"type":[
+						"boolean",
+						"null"
+					],
+					"default":false,
+					"@Core.Description":"Only properties tagged as Groupable can be used in the groupby transformation, and only those tagged as Aggregatable can be used in the aggregate transformation"
+				}
+			}
+		},
+		"Org.OData.Aggregation.V1.RollupType":{
+			"enum":[
+				"None",
+				"SingleHierarchy",
+				"MultipleHierarchies"
+			],
+			"@Core.Description":"The number of rollup operators allowed in a groupby transformation"
+		},
+		"Org.OData.Aggregation.V1.RecursiveHierarchyType":{
+			"type":"object",
+			"properties":{
+				"NodeProperty":{
+					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath",
+					"@Core.Description":"Property holding the hierarchy node value"
+				},
+				"ParentNavigationProperty":{
+					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.NavigationPropertyPath",
+					"@Core.Description":"Property for navigating to the parent node"
+				},
+				"DistanceFromRootProperty":{
+					"anyOf":[
+						{
+							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+						},
+						{
+							"type":"null"
+						}
+					],
+					"@Core.Description":"Property holding the number of edges between the node and the root node"
+				},
+				"IsLeafProperty":{
+					"anyOf":[
+						{
+							"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+						},
+						{
+							"type":"null"
+						}
+					],
+					"@Core.RequiresType":"Edm.Boolean",
+					"@Core.Description":"Property indicating whether the node is a leaf of the hierarchy"
+				}
+			}
+		},
+		"Org.OData.Aggregation.V1.AvailableOnAggregatesType":{
+			"type":"object",
+			"properties":{
+				"RequiredProperties":{
+					"type":"array",
+					"items":{
+						"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+					}
+				}
+			}
+		}
+	},
+	"schemas":{
+		"Org.OData.Core.V1":{
+			"$ref":"http://docs.oasis-open.org/odata/odata/v4.0/cs02/vocabularies/Org.OData.Core.V1.json"
+		},
+		"Core":{
+			"$ref":"http://docs.oasis-open.org/odata/odata/v4.0/cs02/vocabularies/Org.OData.Core.V1.json"
+		},
+		"Aggregation":{
+			"$ref":"#/schemas/Org.OData.Aggregation.V1"
+		},
+		"Org.OData.Aggregation.V1":{
+			"@Core.Description":"Terms to describe which data in a given entity model can be aggregated, and how.",
+			"functions":[
+				{
+					"name":"isroot",
+					"isBound":true,
+					"parameters":{
+						"Entity":{
+							"type":"Edm.EntityType",
+							"nullable":false
+						},
+						"Hierarchy":{
+							"type":"Edm.String",
+							"nullable":false
+						}
+					},
+					"returnType":{
+						"type":"Edm.Boolean"
+					},
+					"@Core.Description":"Returns true, if and only if the value of the node property of the specified hierarchy is the root of the hierarchy"
+				},
+				{
+					"name":"isdescendant",
+					"isBound":true,
+					"parameters":{
+						"Entity":{
+							"type":"Edm.EntityType",
+							"nullable":false
+						},
+						"Hierarchy":{
+							"type":"Edm.String",
+							"nullable":false
+						},
+						"Node":{
+							"type":"Edm.PrimitiveType",
+							"nullable":false
+						},
+						"MaxDistance":{
+							"type":"Edm.Int16"
+						}
+					},
+					"returnType":{
+						"type":"Edm.Boolean"
+					},
+					"@Core.Description":"Returns true, if and only if the value of the node property of the specified hierarchy is a descendant of the given parent node with a distance of less than or equal to the optionally specified maximum distance"
+				},
+				{
+					"name":"isancestor",
+					"isBound":true,
+					"parameters":{
+						"Entity":{
+							"type":"Edm.EntityType",
+							"nullable":false
+						},
+						"Hierarchy":{
+							"type":"Edm.String",
+							"nullable":false
+						},
+						"Node":{
+							"type":"Edm.PrimitiveType",
+							"nullable":false
+						},
+						"MaxDistance":{
+							"type":"Edm.Int16"
+						}
+					},
+					"returnType":{
+						"type":"Edm.Boolean"
+					},
+					"@Core.Description":"Returns true, if and only if the value of the node property of the specified hierarchy is an ancestor of the given child node with a distance of less than or equal to the optionally specified maximum distance"
+				},
+				{
+					"name":"issibling",
+					"isBound":true,
+					"parameters":{
+						"Entity":{
+							"type":"Edm.EntityType",
+							"nullable":false
+						},
+						"Hierarchy":{
+							"type":"Edm.String",
+							"nullable":false
+						},
+						"Node":{
+							"type":"Edm.PrimitiveType",
+							"nullable":false
+						}
+					},
+					"returnType":{
+						"type":"Edm.Boolean"
+					},
+					"@Core.Description":"Returns true, if and only if the value of the node property of the specified hierarchy has the same parent node as the specified node"
+				},
+				{
+					"name":"isleaf",
+					"isBound":true,
+					"parameters":{
+						"Entity":{
+							"type":" Edm.EntityType",
+							"nullable":false
+						},
+						"Hierarchy":{
+							"type":"Edm.String",
+							"nullable":false
+						}
+					},
+					"returnType":{
+						"type":"Edm.Boolean"
+					},
+					"@Core.Description":"Returns true, if and only if the value of the node property of the specified hierarchy has no descendants"
+				}
+			],
+			"terms":{
+				"ApplySupported":{
+					"type":"Aggregation.ApplySupportedType",
+					"appliesTo":"EntityType ComplexType EntityContainer",
+					"@Core.Description":"This structured type or entity container supports the $apply system query option"
+				},
+				"Groupable":{
+					"type":"Core.Tag",
+					"appliesTo":"Property NavigationProperty",
+					"defaultValue":"true",
+					"@Core.Description":"This property can be used in the groupby transformation"
+				},
+				"Aggregatable":{
+					"type":"Core.Tag",
+					"appliesTo":"Property NavigationProperty",
+					"defaultValue":"true",
+					"@Core.Description":"This property can be used in the aggregate transformation"
+				},
+				"CustomAggregate":{
+					"type":"Edm.String",
+					"appliesTo":"EntityType ComplexType EntityContainer",
+					"@Core.Description":"Dynamic property that can be used in the aggregate transformation",
+					"@Core.LongDescription":"This term MUST be applied with a Qualifier, the Qualifier value is the name of the dynamic property. The value of the annotation MUST be the qualified name of a primitive type. The aggregated values will be of that type."
+				},
+				"ContextDefiningProperties":{
+					"type":"Collection(Edm.PropertyPath)",
+					"appliesTo":"Property Annotation",
+					"@Core.Description":"The annotated property or custom aggregate is only well-defined in the context of these properties",
+					"@Core.LongDescription":"The context-defining properties need either be part of the result entities, or be restricted to a single value by a pre-filter operation. Examples are postal codes within a country, or monetary amounts whose context is the unit of currency."
+				},
+				"LeveledHierarchy":{
+					"type":"Collection(Edm.PropertyPath)",
+					"appliesTo":"EntityType ComplexType",
+					"@Core.Description":"Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy"
+				},
+				"RecursiveHierarchy":{
+					"type":"Aggregation.RecursiveHierarchyType",
+					"appliesTo":"EntityType ComplexType",
+					"@Core.Description":"Defines a recursive hierarchy."
+				},
+				"AvailableOnAggregates":{
+					"type":"Aggregation.AvailableOnAggregatesType",
+					"appliesTo":"Action Function",
+					"@Core.Description":"This action or function is available on aggregated entities if the RequiredProperties are still defined"
+				}
+			}
+		}
+	}
+}
