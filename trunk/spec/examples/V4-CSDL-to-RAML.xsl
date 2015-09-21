@@ -194,6 +194,12 @@
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
       mode="path" />
     <xsl:text>):</xsl:text>
+    
+    <!-- TODO: uriParameters: only once, valid for all methods
+      <xsl:text>,"parameters":[</xsl:text>
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
+      mode="list" />
+     -->
 
     <!-- GET -->
     <xsl:text>&#x0A;  get:</xsl:text>
@@ -204,9 +210,6 @@
       <xsl:text>","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>"]</xsl:text>
-      <xsl:text>,"parameters":[</xsl:text>
-      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="list" />
       <xsl:text>,{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"}],"responses":{"200":{"description":"EntitySet
       </xsl:text>
       <xsl:value-of select="@Name" />

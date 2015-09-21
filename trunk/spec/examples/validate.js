@@ -3,7 +3,9 @@ var fs = require('fs');
 // files
 var draft04 = JSON.parse(fs.readFileSync("json-schema-draft-04.json"));
 var edm = JSON.parse(fs.readFileSync("../schemas/edm.json"));
-var core = JSON.parse(fs.readFileSync("Org.OData.Core.V1.jsonschema"));
+var capabilities = JSON.parse(fs.readFileSync("../vocabularies/Org.OData.Capabilities.V1.json"));
+var core = JSON.parse(fs.readFileSync("../vocabularies/Org.OData.Core.V1.json"));
+var measures = JSON.parse(fs.readFileSync("../vocabularies/Org.OData.Measures.V1.json"));
 
 var csdl_16_1 = JSON.parse(fs.readFileSync("csdl-16.1.jsonschema"));
 var csdl_16_2 = JSON.parse(fs.readFileSync("csdl-16.2.jsonschema"));
@@ -36,7 +38,7 @@ ZSchema.registerFormat("duration", function(str) {
 ZSchema.registerFormat("double", function(str) {
   return true;
 });
-ZSchema.registerFormat("float", function(str) {
+ZSchema.registerFormat("single", function(str) {
   return true;
 });
 ZSchema.registerFormat("int64", function(str) {
@@ -51,20 +53,37 @@ ZSchema.registerFormat("int16", function(str) {
 ZSchema.registerFormat("int8", function(str) {
   return true;
 });
-ZSchema.registerFormat("byte", function(str) {
+ZSchema.registerFormat("uint8", function(str) {
   return true;
 });
 
-// for stricter validation
-// var validator = new ZSchema({ assumeAdditional : true });
+
 var validator = new ZSchema();
 validator.setRemoteReference(
     "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json", edm);
 validator
     .setRemoteReference(
-        "http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml",
+        "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json",
         core);
+validator
+    .setRemoteReference(
+        "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json",
+        measures);
+//TODO: replace dummy references with real ones        
+validator
+    .setRemoteReference(
+        "http://vocabs.odata.org/display/v1",
+        {});        
+validator
+    .setRemoteReference(
+        "http://tinyurl.com/Org-OData-Measures-V1",
+        measures);        
+validator
+    .setRemoteReference(
+        "http://vocabs.odata.org/capabilities/v1",
+        {});        
 
+        
 var failed = false;
 function check(validator, text, input, schema) {
   var valid = validator.validate(input, schema);
@@ -97,6 +116,9 @@ checkSchema("miscellaneous", miscellaneous);
 checkSchema("MetadataService", metadataService);
 checkSchema("TM1", tm1);
 //checkSchema("merged_metadata", merged_metadata);
+checkSchema("Capabilities", capabilities);
+checkSchema("Core", core);
+checkSchema("Measures", measures);
 
 // validate example category and product entities
 validator.setRemoteReference("csdl-16.1.jsonschema", csdl_16_1);
