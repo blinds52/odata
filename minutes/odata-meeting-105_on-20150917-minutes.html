@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #105 Thursday Sep 17, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #105 Thursday Sep 17, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-09-17 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Martin Zurmuehl (SAP SE) 
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39116">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from September 10, 2015 TC meeting #104: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/56488/odata-meeting-104_on-20150910-minutes.html">https://www.oasis-open.org/committees/download.php/56488/odata-meeting-104_on-20150910-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due September 17, 2015</h4>
+<p>None</p>
+
+<h3>5. OData JSON Format for CSDL Version 4.</h3>
+
+<p>Current document revision:  <a href="https://www.oasis-open.org/committees/document.php?document_id=56448&wg_abbrev=odata" target="_blank">odata-json-csdl-v4.0-wd01-2015-09-10.docx: https://www.oasis-open.org/committees/document.php?document_id=56448&wg_abbrev=odata</a></p>
+
+<p>Issues for JSON Format for CSDL in New or Open state:</p>
+
+<h4>5.2.1 JSON Format for CSDL</h4>
+
+<h5>5.2.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-805" target="_blank">ODATA-805</a> Add term to Capabilities vocabulary for supported metadata formats</h5>
+
+<p>Ralf: New term</p>
+
+<pre>
+      &lt;Term Name="SupportedMetadataFormats" Type="Collection(Edm.String)" AppliesTo="EntityContainer"> 
+         &lt;Annotation Term="Core.Description" String="Media types of supported formats for $metadata, including format parameters" /> 
+         &lt;Annotation Term="Core.IsMediaType" /> 
+       &lt;/Term>
+</pre>
+
+<p>Ralf: ODATA-805 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-805 as proposed. Hubert seconds.</p>
+<p>ODATA-805 is resolved as proposed</p>
+
+<p>Ralf: Mike to open Jira issue regarding support for HEAD or OPTIONS to find out available formats without receiving one of them</p>
+
+
+<h5>5.2.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-841" target="_blank">ODATA-841</a> Representation of Precision and Scale</h5>
+
+<p>Ralf: Precision="5" and Scale="2"</p>
+
+<ul>
+<li>multipleOf: 1e-2 </li>
+<li>minimum: -999.99 </li>
+<li>maximum: 999.99 </li>
+</ul>
+
+<p>Ralf: ODATA-841 is OPEN</p>
+
+<p>Mike: add annotations for minimum and maximum to OData so we can be as precise as JSON Schema</p>
+<p>Mike: add pattern annotation while we are at it These could be part of a new Validation vocabulary</p>
+<p>Mike: add precision and scale extension keywords to JSON Schema; propose these for a future version of JSON Schema
+Similar for temporal values: here Precision="7" would have to be -translated into a regular _expression_ 
+ - "pattern":"(^[^.]*$|[.][0-9]{1,7}$)"
+</p>
+ 
+
+<p>Hubert: Feels it makes sense to use as much of JSON Schema as makes sense. 
+If there is an existing representation in JSON Schema that is not lossy, why not just use it.</p>
+<p>Mike: Table this issue and revisit it later when we have a more holistic view</p>
+
+
+
+<h5>5.2.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-842" target="_blank">ODATA-842</a> Represent primitive types as JSON Schema formats</h5>
+
+<p>Ralf: Many OData primitive types are JSON Schema primitive types combined with a set of restrictions, e.g. Edm.Int64 is </p>
+
+<ul>
+<li>"type":"integer", </li>
+<li>"minimum":-9223372036854775808, </li>
+<li>"maximum":9223372036854775807</li>
+</ul>
+
+<p>Ralf: or Edm.Guid is </p>
+
+<ul>
+<li>"type":"string", </li>
+<li>"pattern":"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"</li>
+</ul>
+ 
+<p>Mike: Tabling discussion to review in context of greater spec -- is this a one-off issue or a case of a more general issue</p>
+ 
+<p>Ralf:</p>
+
+<ul>
+<li>type: string</li> 
+<li>format: guid</li>
+<li>type: integer</li>
+<li>format: int64</li>
+</ul>
+
+<p>Ralf: ODATA-842 is OPEN</p>
+ 
+<p>Ramesh: If we drop the Edm out, and follow the Swagger would't that conflict with XML type checking system with clients?</p>
+<p>All discuss</p> 
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-842 as proposed. Hubert seconds.</p>
+<p>ODATA-842 is resolved as proposed</p>
+
+<h5>5.2.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-843" target="_blank">ODATA-843</a> Nullable as anyOf or as OData-specific keyword</h5>
+
+<p>Ralf: JSON Schema treats null as a separate data type, requiring an "anyOf" construct for nullable properties: </p>
+ 
+ <pre>
+         "Supplier":{ 
+           "anyOf":[{ 
+               "$ref":"#/definitions/ODataDemo.Supplier" 
+             }, { 
+               "type":"null" 
+             } 
+           ],
+         "Supplier":{ 
+               "$ref":"#/definitions/ODataDemo.Supplier", 
+               "nullable":true 
+             }
+         
+         "type":["string","null"]
+
+         "format":"uuid"
+ </pre>
+
+<p>Mike: Discussion: for primitive types, represent as:</p>
+<pre>
+"type":["string","null"],
+"format":"date-time"
+</pre>
+
+<p>Mike: For non-primitive types, use existing json schema.</p>
+ 
+<p>Mike: See if we can add "nullable" to json-schema.</p>
+ 
+
+<p><b>Hubert</b>: I move to resolved ODATA-843 as per our discussion and accordingly updated proposal. Mike seconds.</p>
+<p>ODATA-843 is resolved as proposed</p>
+
+
+<h5>5.2.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-844" target="_blank">ODATA-844</a> Provide JSON versions of the Core, Capabilities, Measures, and Aggregation vocabularies</h5>
+
+<p>Ralf: ODATA-844 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-844 as proposed. Mike seconds.</p>
+<p>ODATA-844 is resolved as proposed</p>
+
+<h5>5.2.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-845" target="_blank">ODATA-845</a> Translate edmx:Reference/edmx:Include into a schema reference</h5>
+
+<p>Ralf:</p>
+<pre>
+Example 38: references
+  "references": {
+    "http://tinyurl.com/Org-OData-Measures-V1": {
+      "includes": ,
+      "@Some.Term": 
+    },
+    "http://somewhere/Vocabulary/V1": {
+      "includeAnnotations": 
+    }
+  }
+
+"includes": {
+        "Org.OData.Measures.V1": {
+          "alias": "Core"
+        },
+        "Another.Namespace": {}
+      }
+
+"schemas":{
+  "Org.OData.Core.V1":{
+   "$ref":"http://docs.oasis-open.org/odata/odata/v4.0/Org.OData.Core.V1.json",
+   "alias":"Core"
+  },
+  "Org.OData.Measures.V1":{
+   "$ref":"http://docs.oasis-open.org/odata/odata/v4.0/Org.OData.Measures.V1.json",
+   "alias":"UoM"
+  },
+  "ODataDemo":{
+   "alias":null,
+   "functions":[
+    {
+     "name":"ProductsByRating",
+     "parameters":{
+      "Rating":{
+       "type":"Edm.Int32"
+      }
+     },
+     "returnType":{
+      "type":"Collection(ODataDemo.Product)"
+     }
+    }
+   ],
+</pre>
+
+<p>Ralf: ODATA-845 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-845 as proposed. Hubert seconds.</p>
+<p>ODATA-845 is resolved as proposed</p>
+
+<h3>6. Next meeting</h3>
+<p>Thursday September 24, 2015 during 8-10am PT</p>
+<p>Agreed</p>
+
+<h3>7. AOB</h3>
+
+<h4>7.1 Extension for Data Aggregation</h4>
+
+<p>Public Review ended without comments</p>
+<p>Two issues that are non-material and can be fixed without new public review</p>
+<p><a href="https://issues.oasis-open.org/browse/ODATA-839" target="_blank">ODATA-839</a> is requesting a new feature</p>
+<p>Gerald is fine with postponing that and moving the current document forward to CS02</p>
+<p>Ralf: Will put motion for publishing CS02 on agenda for one of the next meetings</p>
+
+<h4>7.2 Grouping proposal of issues for V4.01 (by Mike)</h4>
+
+<p>Mike: Suggests the following grouping of issues. The titles of the new groups are:</p>
+
+<ol>
+<li>Decimal</li> 
+<li>Vocabularies Definitions/AppliesTo</li> 
+<li>Set Operations</li> 
+<li>Simplified Syntax</li> 
+<li>Simplified Payload</li> 
+<li>Batch Requests</li> 
+<li>Complex Types as Atomic Values</li> 
+<li>Interfaces</li> 
+<li>Enum Inheritance</li> 
+<li>New Query Capabilities</li> 
+</ol>
+
+<p>Additionally already existing groupings:</p>
+<ul>
+<li>OData CSDL</li> 
+<li>OData JSON Format</li> 
+<li>OData Protocol</li> 
+<li>OData Vocabularies</li> 
+</ul>
+
+<p>The rest of the section lists these groups as written to the chat.</p>
+
+<h5>Decimal:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-557" target="_blank">ODATA-557</a> Allow exponential notation for Edm.Decimal</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-747" target="_blank">ODATA-747</a> Allow IEEE 754 constants [-]INF and NaN also for Edm.Decimal</li>
+</ul>
+ 
+<h5>Vocabularies Definitions/AppliesTo:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-516" target="_blank">ODATA-516</a> Add super type Edm.AnyPath for Edm.PropertyPath, Edm.NavigationPropertyPath, and Edm.AnnotationPath</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-631" target="_blank">ODATA-631</a> Allow expressing that a term can be applied any collection and is not restricted to entity sets</li>
+</ul>
+ 
+<h5>Set Operations:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-836" target="_blank">ODATA-836</a> Allow applying actions to a filtered collection of entities</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-614" target="_blank">ODATA-614</a> Allow $expand, $select, ... with POST/PATCH/PUT in combination with return=representation to specify the response shape</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-615" target="_blank">ODATA-615</a> Allow PATCH and DELETE with $filter on collections to modify or delete all (and only) the matching entities</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-616" target="_blank">ODATA-616</a> Allow POST to collections of complex and primitive types, and DELETE with $filter</li>
+</ul>
+ 
+<h5>Simplified Syntax:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-664" target="_blank">ODATA-664</a> Consider supporting parameterless function imports with no parens</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-812" target="_blank">ODATA-812</a> Allow omitting namespaces for unambiguous functions/actions</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-834" target="_blank">ODATA-834</a> Make type prefix optional for enumeration literals in URLs</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-763" target="_blank">ODATA-763</a> Allowing implicit aliasing of parameters (public comment c201412e00001)</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-799" target="_blank">ODATA-799</a> Define Key-As-Segment URL convention for resource paths</li>
+</ul>
+ 
+<h5>Simplified Payload:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-813" target="_blank">ODATA-813</a> Allow no metadata for non-OData clients</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-561" target="_blank">ODATA-561</a> odata.type shouldn't require "#"</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-630" target="_blank">ODATA-630</a> Consider making odata the default namespace for annotations</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-809" target="_blank">ODATA-809</a> Define non-message format for final response of async request</li>
+</ul>
+ 
+<h5>Batch Requests:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-541" target="_blank">ODATA-541</a> Allow the If-Match header to reference the ETag that resulted from an earlier operation in a batch request</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-480" target="_blank">ODATA-480</a> $batch: remove restriction "within the same change set " for Content-ID referencing</li>
+</ul>
+ 
+<h5>Complex Types as Atomic Values:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-617" target="_blank">ODATA-617</a> Allow eq/ne comparison of instances of same structured (complex or entity) type, allow eq/ne comparison with null for 0..1 nav props</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-572" target="_blank">ODATA-572</a> Clarify that eq, ne can be used with complex type</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-560" target="_blank">ODATA-560</a> Allow arbitrary properties in referential constraints</li>
+</ul>
+ 
+<h5>Interfaces:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-696" target="_blank">ODATA-696</a> Support "interfaces" for casting entities to multiple different types</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-619" target="_blank">ODATA-619</a> Attach action and function signatures to terms, i.e. make a term definition an interface definition</li>
+</ul>
+ 
+<h5>Enum Inheritance:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-494" target="_blank">ODATA-494</a> Define inheritance for enumeration types</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-849" target="_blank">ODATA-849</a> Add possibility for enumeration types to "extend" other enumerations</li>
+</ul>
+ 
+<h5>New Query Capabilities:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-556" target="_blank">ODATA-556</a> Add "in" operator as syntactic sugar for a chain of "or" expressions</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-820" target="_blank">ODATA-820</a> Allow indexing into collections</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-827" target="_blank">ODATA-827</a> introduce $compute query option</li>
+</ul>
+ 
+<h5>OData CSDL:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-618" target="_blank">ODATA-618</a> Allow using term names in positions that allow type names</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-735" target="_blank">ODATA-735</a> Enhance the CSDL for instance annotations</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-786" target="_blank">ODATA-786</a> Extend definition of edmhttp://webconf.soaphub.org/conf/images/tongue.gifath _expression_</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-811" target="_blank">ODATA-811</a> Define propagation and (partial) overriding of annotations</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-674" target="_blank">ODATA-674</a> Specify navigation property binding combined with containment</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-817" target="_blank">ODATA-817</a> Add client-side function odata.matchesRegularExpression</li>
+</ul>
+ 
+<h5>OData JSON Format:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-814" target="_blank">ODATA-814</a> Don't need TargetId in a deleted link for a to 0..1 relationship</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-838" target="_blank">ODATA-838</a> Allow inclusion of "untyped JSON" into JSON requests and responses</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-656" target="_blank">ODATA-656</a> Requesting clarity on payload ordering constraints for clients</li>
+</ul>
+ 
+<h5>OData Protocol:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-613" target="_blank">ODATA-613</a> Allow POST to entity sets using the delta-response format</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-666" target="_blank">ODATA-666</a> Define Deep Update and Deep Upsert operations</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-824" target="_blank">ODATA-824</a> Header Content-Transfer-Encoding not used in HTTP</li>
+</ul>
+ 
+<h5>OData Vocabularies:</h5>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-816" target="_blank">ODATA-816</a> Add Capability term for filter _expression_ restrictions</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-571" target="_blank">ODATA-571</a> Add annotation for properties that are (not) part of the default selection if no $select is specified</li>
+</ul>
+
+
+<h3>Meeting adjourned</h3>
+
+</body>
+</html>
