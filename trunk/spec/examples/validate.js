@@ -1,4 +1,10 @@
+// Primitive test script for OData JSON CSDL
+//
+// TODO: switch to unit test tool - mocha and chai
+// TODO: add negative test cases that expect an error
+
 var fs = require('fs');
+var util = require('util');
 
 // files
 var draft04 = JSON.parse(fs.readFileSync("json-schema-draft-04.json"));
@@ -17,93 +23,93 @@ var tm1 = JSON.parse(fs.readFileSync("TM1$metadata.jsonschema"));
 
 var ZSchema = require("z-schema");
 
-ZSchema.registerFormat("base64url", function(str) {
-  return true;
+ZSchema.registerFormat("base64url", function (str) {
+	return true;
 });
-ZSchema.registerFormat("uuid", function(str) {
-  return true;
+ZSchema.registerFormat("uuid", function (str) {
+	return true;
 });
-ZSchema.registerFormat("date-time", function(str) {
-  return true;
+ZSchema.registerFormat("date-time", function (str) {
+	return true;
 });
-ZSchema.registerFormat("date", function(str) {
-  return true;
+ZSchema.registerFormat("date", function (str) {
+	return true;
 });
-ZSchema.registerFormat("time", function(str) {
-  return true;
+ZSchema.registerFormat("time", function (str) {
+	return true;
 });
-ZSchema.registerFormat("duration", function(str) {
-  return true;
+ZSchema.registerFormat("duration", function (str) {
+	return true;
 });
-ZSchema.registerFormat("double", function(str) {
-  return true;
+ZSchema.registerFormat("double", function (str) {
+	return true;
 });
-ZSchema.registerFormat("single", function(str) {
-  return true;
+ZSchema.registerFormat("single", function (str) {
+	return true;
 });
-ZSchema.registerFormat("int64", function(str) {
-  return true;
+ZSchema.registerFormat("int64", function (str) {
+	return true;
 });
-ZSchema.registerFormat("int32", function(str) {
-  return true;
+ZSchema.registerFormat("int32", function (str) {
+	return true;
 });
-ZSchema.registerFormat("int16", function(str) {
-  return true;
+ZSchema.registerFormat("int16", function (str) {
+	return true;
 });
-ZSchema.registerFormat("int8", function(str) {
-  return true;
+ZSchema.registerFormat("int8", function (str) {
+	return true;
 });
-ZSchema.registerFormat("uint8", function(str) {
-  return true;
+ZSchema.registerFormat("uint8", function (str) {
+	return true;
 });
-
 
 var validator = new ZSchema();
 validator.setRemoteReference(
-    "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json", edm);
+	"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json", edm);
 validator
-    .setRemoteReference(
-        "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json",
-        core);
+.setRemoteReference(
+	"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Capabilities.V1.json",
+	capabilities);
 validator
-    .setRemoteReference(
-        "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json",
-        measures);
-//TODO: replace dummy references with real ones        
+.setRemoteReference(
+	"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json",
+	core);
 validator
-    .setRemoteReference(
-        "http://vocabs.odata.org/display/v1",
-        {});        
+.setRemoteReference(
+	"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json",
+	measures);
 validator
-    .setRemoteReference(
-        "http://tinyurl.com/Org-OData-Measures-V1",
-        measures);        
+.setRemoteReference(
+	"http://vocabs.odata.org/capabilities/v1",
+	capabilities);
 validator
-    .setRemoteReference(
-        "http://vocabs.odata.org/capabilities/v1",
-        {});        
+.setRemoteReference(
+	"http://tinyurl.com/Org-OData-Measures-V1",
+	measures);
+validator
+.setRemoteReference(
+	"http://vocabs.odata.org/display/v1", {});
 
-        
 var failed = false;
 function check(validator, text, input, schema) {
-  var valid = validator.validate(input, schema);
-  if (valid != true) {
-    failed = true;
-    console.log(text + " fails:");
-    var errors = validator.getLastErrors();
-    console.log(errors[0]);
-  }
+	var valid = validator.validate(input, schema);
+	if (valid != true) {
+		failed = true;
+		console.log(text + " fails:");
+		var errors = validator.getLastErrors();
+		// TODO: log more errors: console.log(util.inspect(myObject, {showHidden: false, depth: null}));
+		console.log(errors[0]);
+	}
 }
 
 function checkSchema(text, schema) {
-  check(validator, text + " vs. draft04", schema, draft04);
-  check(validator, text + " vs. edm", schema, edm);
+	check(validator, text + " vs. draft04", schema, draft04);
+	check(validator, text + " vs. edm", schema, edm);
 }
 
-// TODO: extract tests into a JSON file, parse it, then run each test as an "it"
 
 check(validator, "Check wiring", "string", {
-  "type": "string"
+	"type" : "string"
 });
 
 check(validator, "edm.json", edm, draft04);
@@ -124,23 +130,21 @@ checkSchema("Measures", measures);
 validator.setRemoteReference("csdl-16.1.jsonschema", csdl_16_1);
 
 var categorySchema = {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "allOf": [
-      {
-        "$ref": "csdl-16.1.jsonschema#/definitions/ODataDemo.Category"
-      }
-    ]
+	"$schema" : "http://json-schema.org/draft-04/schema#",
+	"allOf" : [{
+			"$ref" : "csdl-16.1.jsonschema#/definitions/ODataDemo.Category"
+		}
+	]
 };
 var category = JSON.parse(fs.readFileSync("csdl-16.1-Category.json"));
 check(validator, "Category entity", category, categorySchema);
 
 var productSchema = {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "allOf": [
-      {
-        "$ref": "csdl-16.1.jsonschema#/definitions/ODataDemo.Product"
-      }
-    ]
+	"$schema" : "http://json-schema.org/draft-04/schema#",
+	"allOf" : [{
+			"$ref" : "csdl-16.1.jsonschema#/definitions/ODataDemo.Product"
+		}
+	]
 };
 var product = JSON.parse(fs.readFileSync("csdl-16.1-Product.json"));
 check(validator, "Product entity", product, productSchema);
@@ -149,21 +153,20 @@ check(validator, "Product entity", product, productSchema);
 validator.setRemoteReference("miscellaneous.jsonschema", miscellaneous);
 
 var primitiveTypesSchema = {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "allOf": [
-      {
-        "$ref": "miscellaneous.jsonschema#/definitions/Model1.PrimitiveTypes"
-      }
-    ]
+	"$schema" : "http://json-schema.org/draft-04/schema#",
+	"allOf" : [{
+			"$ref" : "miscellaneous.jsonschema#/definitions/Model1.PrimitiveTypes"
+		}
+	]
 };
 var primitiveTypes = JSON.parse(fs
-    .readFileSync("miscellaneous-PrimitiveTypes.json"));
+		.readFileSync("miscellaneous-PrimitiveTypes.json"));
 check(validator, "Primitive types", primitiveTypes, primitiveTypesSchema);
 
 check(validator, "another primitive types", {
-  "NullValue": true
+	"NullValue" : true
 }, primitiveTypesSchema);
 
 if (!failed) {
-  console.log("validation: SUCCESS");
+	console.log("validation: SUCCESS");
 }
