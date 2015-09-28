@@ -1,702 +1,702 @@
 {
-	"$schema":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
-	"odata-version":"4.0",
-	"definitions":{
-		"Microsoft.OData.SampleService.Models.TripPin.PersonGender":{
-			"enum":[
-				"Male",
-				"Female",
-				"Unknown"
-			],
-			"Male@odata.value":0,
-			"Female@odata.value":1,
-			"Unknown@odata.value":2
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.City":{
-			"type":"object",
-			"properties":{
-				"CountryRegion":{
-					"type":"string"
-				},
-				"Name":{
-					"type":"string"
-				},
-				"Region":{
-					"type":"string"
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Location":{
-			"type":"object",
-			"openType":true,
-			"properties":{
-				"Address":{
-					"type":"string"
-				},
-				"City":{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.City"
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.EventLocation":{
-			"type":"object",
-			"allOf":[
-				{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
-				}
-			],
-			"openType":true,
-			"properties":{
-				"BuildingInfo":{
-					"type":[
-						"string",
-						"null"
-					]
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.AirportLocation":{
-			"type":"object",
-			"allOf":[
-				{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
-				}
-			],
-			"openType":true,
-			"properties":{
-				"Loc":{
-					"$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint",
-					"srid":"4326"
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Photo":{
-			"type":"object",
-			"mediaEntity":true,
-			"keys":[
-				{
-					"name":"Id"
-				}
-			],
-			"properties":{
-				"Id":{
-					"type":[
-						"integer",
-						"string"
-					],
-					"format":"int64",
-					"@Org.OData.Core.V1.Permissions":"Read"
-				},
-				"Name":{
-					"type":[
-						"string",
-						"null"
-					]
-				}
-			},
-			"@Org.OData.Core.V1.AcceptableMediaTypes":[
-				"image\/jpeg"
-			]
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Person":{
-			"type":"object",
-			"openType":true,
-			"keys":[
-				{
-					"name":"UserName"
-				}
-			],
-			"properties":{
-				"UserName":{
-					"type":"string",
-					"@Org.OData.Core.V1.Permissions":"Read"
-				},
-				"FirstName":{
-					"type":"string"
-				},
-				"LastName":{
-					"type":"string"
-				},
-				"Emails":{
-					"type":"array",
-					"items":{
-						"type":"string"
-					}
-				},
-				"AddressInfo":{
-					"type":"array",
-					"items":{
-						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
-					}
-				},
-				"Gender":{
-					"anyOf":[
-						{
-							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PersonGender"
-						},
-						{
-							"type":"null"
-						}
-					]
-				},
-				"Concurrency":{
-					"type":[
-						"integer",
-						"string"
-					],
-					"format":"int64",
-					"@Org.OData.Core.V1.Computed":true
-				},
-				"Friends":{
-					"type":"array",
-					"items":{
-						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
-					},
-					"relationship":{
-						
-					}
-				},
-				"Trips":{
-					"type":"array",
-					"items":{
-						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
-					},
-					"relationship":{
-						"containsTarget":true
-					}
-				},
-				"Photo":{
-					"anyOf":[
-						{
-							"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
-						},
-						{
-							"type":"null"
-						}
-					],
-					"relationship":{
-						
-					}
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Airline":{
-			"type":"object",
-			"keys":[
-				{
-					"name":"AirlineCode"
-				}
-			],
-			"properties":{
-				"AirlineCode":{
-					"type":"string",
-					"@Org.OData.Core.V1.Permissions":"Read"
-				},
-				"Name":{
-					"type":"string"
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Airport":{
-			"type":"object",
-			"keys":[
-				{
-					"name":"IcaoCode"
-				}
-			],
-			"properties":{
-				"IcaoCode":{
-					"type":"string",
-					"@Org.OData.Core.V1.Permissions":"Read"
-				},
-				"Name":{
-					"type":"string"
-				},
-				"IataCode":{
-					"type":"string",
-					"@Org.OData.Core.V1.Immutable":true
-				},
-				"Location":{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.PlanItem":{
-			"type":"object",
-			"keys":[
-				{
-					"name":"PlanItemId"
-				}
-			],
-			"properties":{
-				"PlanItemId":{
-					"type":"integer",
-					"format":"int32",
-					"@Org.OData.Core.V1.Permissions":"Read"
-				},
-				"ConfirmationCode":{
-					"type":[
-						"string",
-						"null"
-					]
-				},
-				"StartsAt":{
-					"type":[
-						"string",
-						"null"
-					],
-					"format":"date-time",
-					"pattern":"^[^.]*$"
-				},
-				"EndsAt":{
-					"type":[
-						"string",
-						"null"
-					],
-					"format":"date-time",
-					"pattern":"^[^.]*$"
-				},
-				"Duration":{
-					"type":[
-						"string",
-						"null"
-					],
-					"format":"duration",
-					"pattern":"^[^.]*$"
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.PublicTransportation":{
-			"type":"object",
-			"allOf":[
-				{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
-				}
-			],
-			"properties":{
-				"SeatNumber":{
-					"type":[
-						"string",
-						"null"
-					]
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Flight":{
-			"type":"object",
-			"allOf":[
-				{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation"
-				}
-			],
-			"properties":{
-				"FlightNumber":{
-					"type":"string"
-				},
-				"From":{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
-					"relationship":{
-						
-					}
-				},
-				"To":{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
-					"relationship":{
-						
-					}
-				},
-				"Airline":{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline",
-					"relationship":{
-						
-					}
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Event":{
-			"type":"object",
-			"allOf":[
-				{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
-				}
-			],
-			"openType":true,
-			"properties":{
-				"Description":{
-					"type":[
-						"string",
-						"null"
-					]
-				},
-				"OccursAt":{
-					"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
-				}
-			}
-		},
-		"Microsoft.OData.SampleService.Models.TripPin.Trip":{
-			"type":"object",
-			"keys":[
-				{
-					"name":"TripId"
-				}
-			],
-			"properties":{
-				"TripId":{
-					"type":"integer",
-					"format":"int32",
-					"@Org.OData.Core.V1.Permissions":"Read"
-				},
-				"ShareId":{
-					"type":[
-						"string",
-						"null"
-					],
-					"format":"uuid"
-				},
-				"Description":{
-					"type":[
-						"string",
-						"null"
-					]
-				},
-				"Name":{
-					"type":"string"
-				},
-				"Budget":{
-					"type":[
-						"number",
-						"string"
-					],
-					"format":"single",
-					"@Org.OData.Measures.V1.ISOCurrency":"USD",
-					"@Org.OData.Measures.V1.Scale":2
-				},
-				"StartsAt":{
-					"type":"string",
-					"format":"date-time",
-					"pattern":"^[^.]*$"
-				},
-				"EndsAt":{
-					"type":"string",
-					"format":"date-time",
-					"pattern":"^[^.]*$"
-				},
-				"Tags":{
-					"type":"array",
-					"items":{
-						"type":"string"
-					}
-				},
-				"Photos":{
-					"type":"array",
-					"items":{
-						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
-					},
-					"relationship":{
-						
-					}
-				},
-				"PlanItems":{
-					"type":"array",
-					"items":{
-						"$ref":"#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
-					},
-					"relationship":{
-						"containsTarget":true
-					}
-				}
-			}
-		}
-	},
-	"schemas":{
-		"TripPin":{
-			"$ref":"#/schemas/Microsoft.OData.SampleService.Models.TripPin"
-		},
-		"Microsoft.OData.SampleService.Models.TripPin":{
-			"actions":[
-				{
-					"name":"ResetDataSource"
-				},
-				{
-					"name":"ShareTrip",
-					"isBound":true,
-					"parameters":{
-						"person":{
-							"type":"Microsoft.OData.SampleService.Models.TripPin.Person",
-							"nullable":false
-						},
-						"userName":{
-							"type":"Edm.String",
-							"nullable":false
-						},
-						"tripId":{
-							"type":"Edm.Int32",
-							"nullable":false
-						}
-					}
-				}
-			],
-			"functions":[
-				{
-					"name":"GetFavoriteAirline",
-					"isBound":true,
-					"entitySetPath":"person/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline",
-					"isComposable":true,
-					"parameters":{
-						"person":{
-							"type":"Microsoft.OData.SampleService.Models.TripPin.Person",
-							"nullable":false
-						}
-					},
-					"returnType":{
-						"type":"Microsoft.OData.SampleService.Models.TripPin.Airline",
-						"nullable":false
-					}
-				},
-				{
-					"name":"GetInvolvedPeople",
-					"isBound":true,
-					"isComposable":true,
-					"parameters":{
-						"trip":{
-							"type":"Microsoft.OData.SampleService.Models.TripPin.Trip",
-							"nullable":false
-						}
-					},
-					"returnType":{
-						"type":"Collection(Microsoft.OData.SampleService.Models.TripPin.Person)",
-						"nullable":false
-					}
-				},
-				{
-					"name":"GetFriendsTrips",
-					"isBound":true,
-					"entitySetPath":"person/Friends/Trips",
-					"isComposable":true,
-					"parameters":{
-						"person":{
-							"type":"Microsoft.OData.SampleService.Models.TripPin.Person",
-							"nullable":false
-						},
-						"userName":{
-							"type":"Edm.String",
-							"nullable":false
-						}
-					},
-					"returnType":{
-						"type":"Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)",
-						"nullable":false
-					}
-				},
-				{
-					"name":"GetNearestAirport",
-					"isComposable":true,
-					"parameters":{
-						"lat":{
-							"type":"Edm.Double",
-							"nullable":false
-						},
-						"lon":{
-							"type":"Edm.Double",
-							"nullable":false
-						}
-					},
-					"returnType":{
-						"type":"Microsoft.OData.SampleService.Models.TripPin.Airport",
-						"nullable":false
-					}
-				}
-			],
-			"entityContainer":{
-				"name":"DefaultContainer",
-				"entitySets":{
-					"Photos":{
-						"entityType":"Microsoft.OData.SampleService.Models.TripPin.Photo",
-						"@Org.OData.Core.V1.ResourcePath":"Photos",
-						"@Org.OData.Capabilities.V1.SearchRestrictions":{
-							"Searchable":true,
-							"UnsupportedExpressions":"none"
-						},
-						"@Org.OData.Capabilities.V1.InsertRestrictions":{
-							"Insertable":true,
-							"NonInsertableNavigationProperties":[
-								
-							]
-						}
-					},
-					"People":{
-						"entityType":"Microsoft.OData.SampleService.Models.TripPin.Person",
-						"navigationPropertyBindings":{
-							"Friends":{
-								"target":"People"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Flight/Airline":{
-								"target":"Airlines"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Flight/From":{
-								"target":"Airports"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Flight/To":{
-								"target":"Airports"
-							},
-							"Photo":{
-								"target":"Photos"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Trip/Photos":{
-								"target":"Photos"
-							}
-						},
-						"@Org.OData.Core.V1.OptimisticConcurrency":[
-							{
-								"@odata.type":"#PropertyPath",
-								"value":"Concurrency"
-							}
-						],
-						"@Org.OData.Core.V1.ResourcePath":"People",
-						"@Org.OData.Capabilities.V1.NavigationRestrictions":{
-							"Navigability":"None",
-							"RestrictedProperties":[
-								{
-									"NavigationProperty":{
-										"@odata.type":"#NavigationPropertyPath",
-										"value":"Friends"
-									},
-									"Navigability":"Recursive"
-								}
-							]
-						},
-						"@Org.OData.Capabilities.V1.SearchRestrictions":{
-							"Searchable":true,
-							"UnsupportedExpressions":"none"
-						},
-						"@Org.OData.Capabilities.V1.InsertRestrictions":{
-							"Insertable":true,
-							"NonInsertableNavigationProperties":[
-								{
-									"@odata.type":"#NavigationPropertyPath",
-									"value":"Trips"
-								},
-								{
-									"@odata.type":"#NavigationPropertyPath",
-									"value":"Friends"
-								}
-							]
-						}
-					},
-					"Airlines":{
-						"entityType":"Microsoft.OData.SampleService.Models.TripPin.Airline",
-						"@Org.OData.Core.V1.ResourcePath":"Airlines",
-						"@Org.OData.Capabilities.V1.SearchRestrictions":{
-							"Searchable":true,
-							"UnsupportedExpressions":"none"
-						},
-						"@Org.OData.Capabilities.V1.InsertRestrictions":{
-							"Insertable":true,
-							"NonInsertableNavigationProperties":[
-								
-							]
-						}
-					},
-					"Airports":{
-						"entityType":"TripPin.Airport",
-						"@Org.OData.Core.V1.ResourcePath":"Airports",
-						"@Org.OData.Capabilities.V1.SearchRestrictions":{
-							"Searchable":true,
-							"UnsupportedExpressions":"none"
-						},
-						"@Org.OData.Capabilities.V1.InsertRestrictions":{
-							"Insertable":false,
-							"NonInsertableNavigationProperties":[
-								
-							]
-						},
-						"@Org.OData.Capabilities.V1.DeleteRestrictions":{
-							"Deletable":false,
-							"NonDeletableNavigationProperties":[
-								
-							]
-						}
-					}
-				},
-				"singletons":{
-					"Me":{
-						"type":"Microsoft.OData.SampleService.Models.TripPin.Person",
-						"navigationPropertyBindings":{
-							"Friends":{
-								"target":"People"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Flight/Airline":{
-								"target":"Airlines"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Flight/From":{
-								"target":"Airports"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Flight/To":{
-								"target":"Airports"
-							},
-							"Photo":{
-								"target":"Photos"
-							},
-							"Microsoft.OData.SampleService.Models.TripPin.Trip/Photos":{
-								"target":"Photos"
-							}
-						},
-						"@Org.OData.Core.V1.ResourcePath":"Me"
-					}
-				},
-				"actionImports":{
-					"ResetDataSource":{
-						"action":"Microsoft.OData.SampleService.Models.TripPin.ResetDataSource"
-					}
-				},
-				"functionImports":{
-					"GetNearestAirport":{
-						"function":"Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport",
-						"entitySet":"Airports",
-						"includeInServiceDocument":true,
-						"@Org.OData.Core.V1.ResourcePath":"Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport"
-					}
-				},
-				"@Org.OData.Core.V1.Description":"TripPin service is a sample service for OData V4."
-			},
-			"annotations":[
-				{
-					"target":"Microsoft.OData.SampleService.Models.TripPin.DefaultContainer",
-					"@Org.OData.Core.V1.DereferenceableIDs":true,
-					"@Org.OData.Core.V1.ConventionalIDs":true,
-					"@Org.OData.Capabilities.V1.ConformanceLevel":"Advanced",
-					"@Org.OData.Capabilities.V1.SupportedFormats":[
-						"application\/json;odata.metadata=full;IEEE754Compatible=false;odata.streaming=true",
-						"application\/json;odata.metadata=minimal;IEEE754Compatible=false;odata.streaming=true",
-						"application\/json;odata.metadata=none;IEEE754Compatible=false;odata.streaming=true"
-					],
-					"@Org.OData.Capabilities.V1.AsynchronousRequestsSupported":true,
-					"@Org.OData.Capabilities.V1.BatchContinueOnErrorSupported":false,
-					"@Org.OData.Capabilities.V1.FilterFunctions":[
-						"contains",
-						"endswith",
-						"startswith",
-						"length",
-						"indexof",
-						"substring",
-						"tolower",
-						"toupper",
-						"trim",
-						"concat",
-						"year",
-						"month",
-						"day",
-						"hour",
-						"minute",
-						"second",
-						"round",
-						"floor",
-						"ceiling",
-						"cast",
-						"isof"
-					]
-				}
-			]
-		}
-	}
+    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+    "odata-version": "4.0",
+    "definitions": {
+        "Microsoft.OData.SampleService.Models.TripPin.PersonGender": {
+            "enum": [
+                "Male",
+                "Female",
+                "Unknown"
+            ],
+            "Male@odata.value": 0,
+            "Female@odata.value": 1,
+            "Unknown@odata.value": 2
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.City": {
+            "type": "object",
+            "properties": {
+                "CountryRegion": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Region": {
+                    "type": "string"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Location": {
+            "type": "object",
+            "openType": true,
+            "properties": {
+                "Address": {
+                    "type": "string"
+                },
+                "City": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.City"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.EventLocation": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                }
+            ],
+            "openType": true,
+            "properties": {
+                "BuildingInfo": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.AirportLocation": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                }
+            ],
+            "openType": true,
+            "properties": {
+                "Loc": {
+                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint",
+                    "srid": "4326"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Photo": {
+            "type": "object",
+            "mediaEntity": true,
+            "keys": [
+                {
+                    "name": "Id"
+                }
+            ],
+            "properties": {
+                "Id": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64",
+                    "@Org.OData.Core.V1.Permissions": "Read"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "@Org.OData.Core.V1.AcceptableMediaTypes": [
+                "image/jpeg"
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Person": {
+            "type": "object",
+            "openType": true,
+            "keys": [
+                {
+                    "name": "UserName"
+                }
+            ],
+            "properties": {
+                "UserName": {
+                    "type": "string",
+                    "@Org.OData.Core.V1.Permissions": "Read"
+                },
+                "FirstName": {
+                    "type": "string"
+                },
+                "LastName": {
+                    "type": "string"
+                },
+                "Emails": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "AddressInfo": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                    }
+                },
+                "Gender": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PersonGender"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "Concurrency": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64",
+                    "@Org.OData.Core.V1.Computed": true
+                },
+                "Friends": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    },
+                    "relationship": {
+
+                    }
+                },
+                "Trips": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                    },
+                    "relationship": {
+                        "containsTarget": true
+                    }
+                },
+                "Photo": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Airline": {
+            "type": "object",
+            "keys": [
+                {
+                    "name": "AirlineCode"
+                }
+            ],
+            "properties": {
+                "AirlineCode": {
+                    "type": "string",
+                    "@Org.OData.Core.V1.Permissions": "Read"
+                },
+                "Name": {
+                    "type": "string"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Airport": {
+            "type": "object",
+            "keys": [
+                {
+                    "name": "IcaoCode"
+                }
+            ],
+            "properties": {
+                "IcaoCode": {
+                    "type": "string",
+                    "@Org.OData.Core.V1.Permissions": "Read"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "IataCode": {
+                    "type": "string",
+                    "@Org.OData.Core.V1.Immutable": true
+                },
+                "Location": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.PlanItem": {
+            "type": "object",
+            "keys": [
+                {
+                    "name": "PlanItemId"
+                }
+            ],
+            "properties": {
+                "PlanItemId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "@Org.OData.Core.V1.Permissions": "Read"
+                },
+                "ConfirmationCode": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "StartsAt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "pattern": "^[^.]*$"
+                },
+                "EndsAt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time",
+                    "pattern": "^[^.]*$"
+                },
+                "Duration": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "duration",
+                    "pattern": "^[^.]*$"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                }
+            ],
+            "properties": {
+                "SeatNumber": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Flight": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation"
+                }
+            ],
+            "properties": {
+                "FlightNumber": {
+                    "type": "string"
+                },
+                "From": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
+                    "relationship": {
+
+                    }
+                },
+                "To": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
+                    "relationship": {
+
+                    }
+                },
+                "Airline": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline",
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Event": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                }
+            ],
+            "openType": true,
+            "properties": {
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "OccursAt": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Trip": {
+            "type": "object",
+            "keys": [
+                {
+                    "name": "TripId"
+                }
+            ],
+            "properties": {
+                "TripId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "@Org.OData.Core.V1.Permissions": "Read"
+                },
+                "ShareId": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "uuid"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Budget": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "single",
+                    "@Org.OData.Measures.V1.ISOCurrency": "USD",
+                    "@Org.OData.Measures.V1.Scale": 2
+                },
+                "StartsAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^[^.]*$"
+                },
+                "EndsAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^[^.]*$"
+                },
+                "Tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Photos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                    },
+                    "relationship": {
+
+                    }
+                },
+                "PlanItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                    },
+                    "relationship": {
+                        "containsTarget": true
+                    }
+                }
+            }
+        }
+    },
+    "schemas": {
+        "TripPin": {
+            "$ref": "#/schemas/Microsoft.OData.SampleService.Models.TripPin"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin": {
+            "actions": [
+                {
+                    "name": "ResetDataSource"
+                },
+                {
+                    "name": "ShareTrip",
+                    "isBound": true,
+                    "parameters": {
+                        "person": {
+                            "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
+                            "nullable": false
+                        },
+                        "userName": {
+                            "type": "Edm.String",
+                            "nullable": false
+                        },
+                        "tripId": {
+                            "type": "Edm.Int32",
+                            "nullable": false
+                        }
+                    }
+                }
+            ],
+            "functions": [
+                {
+                    "name": "GetFavoriteAirline",
+                    "isBound": true,
+                    "entitySetPath": "person/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline",
+                    "isComposable": true,
+                    "parameters": {
+                        "person": {
+                            "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
+                            "nullable": false
+                        }
+                    },
+                    "returnType": {
+                        "type": "Microsoft.OData.SampleService.Models.TripPin.Airline",
+                        "nullable": false
+                    }
+                },
+                {
+                    "name": "GetInvolvedPeople",
+                    "isBound": true,
+                    "isComposable": true,
+                    "parameters": {
+                        "trip": {
+                            "type": "Microsoft.OData.SampleService.Models.TripPin.Trip",
+                            "nullable": false
+                        }
+                    },
+                    "returnType": {
+                        "type": "Collection(Microsoft.OData.SampleService.Models.TripPin.Person)",
+                        "nullable": false
+                    }
+                },
+                {
+                    "name": "GetFriendsTrips",
+                    "isBound": true,
+                    "entitySetPath": "person/Friends/Trips",
+                    "isComposable": true,
+                    "parameters": {
+                        "person": {
+                            "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
+                            "nullable": false
+                        },
+                        "userName": {
+                            "type": "Edm.String",
+                            "nullable": false
+                        }
+                    },
+                    "returnType": {
+                        "type": "Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)",
+                        "nullable": false
+                    }
+                },
+                {
+                    "name": "GetNearestAirport",
+                    "isComposable": true,
+                    "parameters": {
+                        "lat": {
+                            "type": "Edm.Double",
+                            "nullable": false
+                        },
+                        "lon": {
+                            "type": "Edm.Double",
+                            "nullable": false
+                        }
+                    },
+                    "returnType": {
+                        "type": "Microsoft.OData.SampleService.Models.TripPin.Airport",
+                        "nullable": false
+                    }
+                }
+            ],
+            "entityContainer": {
+                "name": "DefaultContainer",
+                "entitySets": {
+                    "Photos": {
+                        "entityType": "Microsoft.OData.SampleService.Models.TripPin.Photo",
+                        "@Org.OData.Core.V1.ResourcePath": "Photos",
+                        "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                            "Searchable": true,
+                            "UnsupportedExpressions": "none"
+                        },
+                        "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                            "Insertable": true,
+                            "NonInsertableNavigationProperties": [
+
+                            ]
+                        }
+                    },
+                    "People": {
+                        "entityType": "Microsoft.OData.SampleService.Models.TripPin.Person",
+                        "navigationPropertyBindings": {
+                            "Friends": {
+                                "target": "People"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Flight/Airline": {
+                                "target": "Airlines"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Flight/From": {
+                                "target": "Airports"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Flight/To": {
+                                "target": "Airports"
+                            },
+                            "Photo": {
+                                "target": "Photos"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Trip/Photos": {
+                                "target": "Photos"
+                            }
+                        },
+                        "@Org.OData.Core.V1.OptimisticConcurrency": [
+                            {
+                                "@odata.type": "#PropertyPath",
+                                "value": "Concurrency"
+                            }
+                        ],
+                        "@Org.OData.Core.V1.ResourcePath": "People",
+                        "@Org.OData.Capabilities.V1.NavigationRestrictions": {
+                            "Navigability": "None",
+                            "RestrictedProperties": [
+                                {
+                                    "NavigationProperty": {
+                                        "@odata.type": "#NavigationPropertyPath",
+                                        "value": "Friends"
+                                    },
+                                    "Navigability": "Recursive"
+                                }
+                            ]
+                        },
+                        "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                            "Searchable": true,
+                            "UnsupportedExpressions": "none"
+                        },
+                        "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                            "Insertable": true,
+                            "NonInsertableNavigationProperties": [
+                                {
+                                    "@odata.type": "#NavigationPropertyPath",
+                                    "value": "Trips"
+                                },
+                                {
+                                    "@odata.type": "#NavigationPropertyPath",
+                                    "value": "Friends"
+                                }
+                            ]
+                        }
+                    },
+                    "Airlines": {
+                        "entityType": "Microsoft.OData.SampleService.Models.TripPin.Airline",
+                        "@Org.OData.Core.V1.ResourcePath": "Airlines",
+                        "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                            "Searchable": true,
+                            "UnsupportedExpressions": "none"
+                        },
+                        "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                            "Insertable": true,
+                            "NonInsertableNavigationProperties": [
+
+                            ]
+                        }
+                    },
+                    "Airports": {
+                        "entityType": "TripPin.Airport",
+                        "@Org.OData.Core.V1.ResourcePath": "Airports",
+                        "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                            "Searchable": true,
+                            "UnsupportedExpressions": "none"
+                        },
+                        "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                            "Insertable": false,
+                            "NonInsertableNavigationProperties": [
+
+                            ]
+                        },
+                        "@Org.OData.Capabilities.V1.DeleteRestrictions": {
+                            "Deletable": false,
+                            "NonDeletableNavigationProperties": [
+
+                            ]
+                        }
+                    }
+                },
+                "singletons": {
+                    "Me": {
+                        "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
+                        "navigationPropertyBindings": {
+                            "Friends": {
+                                "target": "People"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Flight/Airline": {
+                                "target": "Airlines"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Flight/From": {
+                                "target": "Airports"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Flight/To": {
+                                "target": "Airports"
+                            },
+                            "Photo": {
+                                "target": "Photos"
+                            },
+                            "Microsoft.OData.SampleService.Models.TripPin.Trip/Photos": {
+                                "target": "Photos"
+                            }
+                        },
+                        "@Org.OData.Core.V1.ResourcePath": "Me"
+                    }
+                },
+                "actionImports": {
+                    "ResetDataSource": {
+                        "action": "Microsoft.OData.SampleService.Models.TripPin.ResetDataSource"
+                    }
+                },
+                "functionImports": {
+                    "GetNearestAirport": {
+                        "function": "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport",
+                        "entitySet": "Airports",
+                        "includeInServiceDocument": true,
+                        "@Org.OData.Core.V1.ResourcePath": "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport"
+                    }
+                },
+                "@Org.OData.Core.V1.Description": "TripPin service is a sample service for OData V4."
+            },
+            "annotations": [
+                {
+                    "target": "Microsoft.OData.SampleService.Models.TripPin.DefaultContainer",
+                    "@Org.OData.Core.V1.DereferenceableIDs": true,
+                    "@Org.OData.Core.V1.ConventionalIDs": true,
+                    "@Org.OData.Capabilities.V1.ConformanceLevel": "Advanced",
+                    "@Org.OData.Capabilities.V1.SupportedFormats": [
+                        "application/json;odata.metadata=full;IEEE754Compatible=false;odata.streaming=true",
+                        "application/json;odata.metadata=minimal;IEEE754Compatible=false;odata.streaming=true",
+                        "application/json;odata.metadata=none;IEEE754Compatible=false;odata.streaming=true"
+                    ],
+                    "@Org.OData.Capabilities.V1.AsynchronousRequestsSupported": true,
+                    "@Org.OData.Capabilities.V1.BatchContinueOnErrorSupported": false,
+                    "@Org.OData.Capabilities.V1.FilterFunctions": [
+                        "contains",
+                        "endswith",
+                        "startswith",
+                        "length",
+                        "indexof",
+                        "substring",
+                        "tolower",
+                        "toupper",
+                        "trim",
+                        "concat",
+                        "year",
+                        "month",
+                        "day",
+                        "hour",
+                        "minute",
+                        "second",
+                        "round",
+                        "floor",
+                        "ceiling",
+                        "cast",
+                        "isof"
+                    ]
+                }
+            ]
+        }
+    }
 }

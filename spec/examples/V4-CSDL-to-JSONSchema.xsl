@@ -844,13 +844,6 @@
           <xsl:with-param name="new" select="'\\'" />
         </xsl:call-template>
       </xsl:when>
-      <xsl:when test="contains($string,'/')">
-        <xsl:call-template name="replace">
-          <xsl:with-param name="string" select="$string" />
-          <xsl:with-param name="old" select="'/'" />
-          <xsl:with-param name="new" select="'\/'" />
-        </xsl:call-template>
-      </xsl:when>
       <xsl:when test="contains($string,'&#x0A;')">
         <xsl:call-template name="replace">
           <xsl:with-param name="string" select="$string" />
