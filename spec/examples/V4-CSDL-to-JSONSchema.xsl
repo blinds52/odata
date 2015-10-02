@@ -6,11 +6,10 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
+    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856
     - DefaultValue: determine underlying type of type definitions, use for quoting decision
-    - Facets for properties based on type definitions: Precision, Scale, MaxLength, Unicode, SRID: allOf pattern
+    - Facets for properties based on type definitions: Precision, Scale, MaxLength, Unicode, SRID: allOf
     - IncludeAnnotations: also fold into schemas?
-    - IEEE754compatible: pattern for string variant of Decimal and Int64?
-    - Pattern for OData-specific formats uuid, time, ...?
     - Core.Description -> title/description?
   -->
 
@@ -321,8 +320,9 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:text>,"format":"base64url"</xsl:text>
-        <!-- TODO: ODATA-858 -->
-        <xsl:apply-templates select="@MaxLength" />
+        <xsl:apply-templates select="@MaxLength">
+          <xsl:with-param name="byteLength" select="'yes'" />
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Boolean'">
         <xsl:call-template name="nullableType">
@@ -335,13 +335,13 @@
           <xsl:with-param name="type" select="'number,string'" />
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
+        <xsl:text>,"format":"decimal"</xsl:text>
+        <xsl:apply-templates select="@Precision|@Scale[.!=0]" mode="list2" />
         <xsl:choose>
           <xsl:when test="not(@Scale) or @Scale='0'">
-            <!-- TODO: add "scale":0, -->
             <xsl:text>,"multipleOf":1</xsl:text>
           </xsl:when>
           <xsl:when test="@Scale!='variable'">
-            <!-- TODO: add "scale":@Scale, -->
             <xsl:text>,"multipleOf":1e-</xsl:text>
             <xsl:value-of select="@Scale" />
           </xsl:when>
@@ -448,16 +448,7 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:text>,"format":"date-time"</xsl:text>
-        <xsl:choose>
-          <xsl:when test="@Precision > 0">
-            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
-            <xsl:value-of select="@Precision" />
-            <xsl:text>}$)"</xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates select="@Precision" mode="list2" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.TimeOfDay'">
         <xsl:call-template name="nullableType">
@@ -465,16 +456,7 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:text>,"format":"time"</xsl:text>
-        <xsl:choose>
-          <xsl:when test="@Precision > 0">
-            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
-            <xsl:value-of select="@Precision" />
-            <xsl:text>}$)"</xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates select="@Precision" mode="list2" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.Duration'">
         <xsl:call-template name="nullableType">
@@ -482,59 +464,16 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:text>,"format":"duration"</xsl:text>
-        <xsl:choose>
-          <xsl:when test="@Precision > 0">
-            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
-            <xsl:value-of select="@Precision" />
-            <xsl:text>}S$)"</xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
         <xsl:if test="not($nullable='false')">
           <xsl:text>"anyOf":[{</xsl:text>
-        </xsl:if>
-        <xsl:variable name="precision">
-          <xsl:choose>
-            <xsl:when test="@Precision">
-              <xsl:value-of select="@Precision" />
-            </xsl:when>
-            <xsl:when test="$singleType='Edm.DateTimeOffset' or $singleType='Edm.Duration' or $singleType='Edm.TimeOfDay'">
-              <xsl:value-of select="0" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="-1" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:if test="$precision>=0">
-          <xsl:text>"allOf":[{</xsl:text>
         </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
         <xsl:value-of select="$edmUri" />
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
-        <xsl:if test="$precision>=0">
-          <xsl:text>}]</xsl:text>
-        </xsl:if>
-        <xsl:choose>
-          <xsl:when test="$precision>0">
-            <xsl:text>,"pattern":"(^[^.]*$|[.][0-9]{1,</xsl:text>
-            <xsl:value-of select="$precision" />
-            <xsl:text>}</xsl:text>
-            <xsl:if test="$singleType='Edm.Duration'">
-              <xsl:text>S</xsl:text>
-            </xsl:if>
-            <xsl:text>$)"</xsl:text>
-          </xsl:when>
-          <xsl:when test="$precision=0">
-            <xsl:text>,"pattern":"^[^.]*$"</xsl:text>
-          </xsl:when>
-        </xsl:choose>
         <xsl:if test="not($nullable='false')">
           <xsl:text>},{"type":"null"}]</xsl:text>
         </xsl:if>
@@ -633,10 +572,32 @@
   </xsl:template>
 
   <xsl:template match="edm:Property/@MaxLength|edm:TypeDefinition/@MaxLength">
+    <xsl:param name="byteLength" />
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
+      <xsl:if test="$byteLength">
+        <xsl:value-of select="4*ceiling(. div 3)" />
+        <xsl:text>,"byteLength":</xsl:text>
+      </xsl:if>
       <xsl:value-of select="." />
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="@Precision">
+    <xsl:text>"precision":</xsl:text>
+    <xsl:value-of select="." />
+  </xsl:template>
+
+  <xsl:template match="@Scale">
+    <xsl:text>"scale":</xsl:text>
+    <xsl:choose>
+      <xsl:when test=".='variable'">
+        <xsl:text>"variable"</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="." />
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm:Property/@DefaultValue">

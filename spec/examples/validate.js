@@ -41,6 +41,9 @@ ZSchema.registerFormat("time", function (str) {
 ZSchema.registerFormat("duration", function (str) {
 	return true;
 });
+ZSchema.registerFormat("decimal", function (str) {
+	return true;
+});
 ZSchema.registerFormat("double", function (str) {
 	return true;
 });
