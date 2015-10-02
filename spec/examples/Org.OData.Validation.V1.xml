@@ -63,24 +63,23 @@
         <String>Terms describing validation rules</String>
       </Annotation>
 
-
-      <Term Name="Pattern" Type="Edm.String">
+      <Term Name="Pattern" Type="Edm.String" AppliesTo="Property Parameter Term">
         <Annotation Term="OData.Description"
           String="The pattern that a string property or parameter must match. This SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect." />
+        <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
 
-      <Term Name="Minimum" Type="Validation.Limit">
+      <Term Name="Minimum" Type="Edm.Decimal" AppliesTo="Property Parameter Term">
         <Annotation Term="OData.Description" String="Minimum value that a property or parameter can have." />
       </Term>
 
-      <Term Name="Maximum" Type="Validation.Limit">
+      <Term Name="Maximum" Type="Edm.Decimal" AppliesTo="Property Parameter Term">
         <Annotation Term="OData.Description" String="Maximum value that a property or parameter can have." />
       </Term>
 
-      <ComplexType Name="Limit">
-        <Property Name="Value" Type="Edm.PrimitiveType" Nullable="false" /> <!-- or Edm.Number -->
-        <Property Name="Exclusive" Type="Edm.Boolean" Nullable="false" DefaultValue="false" />
-      </ComplexType>
+      <Term Name="Exclusive" Type="Core.Tag" DefaultValue="true" AppliesTo="Annotation">
+        <Annotation Term="OData.Description" String="Tags a Minimum or Maximum as exclusive, i.e. an open interval boundary." />
+      </Term>
 
     </Schema>
   </edmx:DataServices>
