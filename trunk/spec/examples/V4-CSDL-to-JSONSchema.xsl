@@ -7,7 +7,7 @@
 
     TODO:
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856
-    -- inline and explace style
+    - - inline and explace style
     - Core.Description -> title/description?
   -->
 
