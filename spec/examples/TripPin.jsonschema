@@ -65,7 +65,11 @@
             "openType": true,
             "properties": {
                 "Loc": {
-                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint",
+                    "anyOf": [
+                        {
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+                        }
+                    ],
                     "srid": "4326"
                 }
             }
@@ -417,16 +421,14 @@
                     "isBound": true,
                     "parameters": {
                         "person": {
-                            "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
-                            "nullable": false
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         },
                         "userName": {
-                            "type": "Edm.String",
-                            "nullable": false
+                            "type": "string"
                         },
                         "tripId": {
-                            "type": "Edm.Int32",
-                            "nullable": false
+                            "type": "integer",
+                            "format": "int32"
                         }
                     }
                 }
@@ -439,13 +441,11 @@
                     "isComposable": true,
                     "parameters": {
                         "person": {
-                            "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
-                            "nullable": false
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         }
                     },
                     "returnType": {
-                        "type": "Microsoft.OData.SampleService.Models.TripPin.Airline",
-                        "nullable": false
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
                     }
                 },
                 {
@@ -454,13 +454,14 @@
                     "isComposable": true,
                     "parameters": {
                         "trip": {
-                            "type": "Microsoft.OData.SampleService.Models.TripPin.Trip",
-                            "nullable": false
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
                         }
                     },
                     "returnType": {
-                        "type": "Collection(Microsoft.OData.SampleService.Models.TripPin.Person)",
-                        "nullable": false
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
                     }
                 },
                 {
@@ -470,17 +471,17 @@
                     "isComposable": true,
                     "parameters": {
                         "person": {
-                            "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
-                            "nullable": false
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         },
                         "userName": {
-                            "type": "Edm.String",
-                            "nullable": false
+                            "type": "string"
                         }
                     },
                     "returnType": {
-                        "type": "Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)",
-                        "nullable": false
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                        }
                     }
                 },
                 {
@@ -488,17 +489,22 @@
                     "isComposable": true,
                     "parameters": {
                         "lat": {
-                            "type": "Edm.Double",
-                            "nullable": false
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "double"
                         },
                         "lon": {
-                            "type": "Edm.Double",
-                            "nullable": false
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "double"
                         }
                     },
                     "returnType": {
-                        "type": "Microsoft.OData.SampleService.Models.TripPin.Airport",
-                        "nullable": false
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
                     }
                 }
             ],

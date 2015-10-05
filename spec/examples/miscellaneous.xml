@@ -19,7 +19,7 @@
   <!-- 3 Entity Model Wrapper -->
   <!-- Example 3 -->
   <edmx:Reference Uri="http://vocabs.odata.org/capabilities/v1">
-    <edmx:Include Namespace="Org.OData.Capabilities.V1" />
+    <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
   </edmx:Reference>
   <edmx:Reference Uri="http://vocabs.odata.org/display/v1">
     <edmx:Include Alias="UI" Namespace="org.example.Display" />
@@ -578,7 +578,7 @@
     </Schema>
 
     <Schema Namespace="Model1" Alias="M1">
-      <ComplexType Name="PrimitiveTypes">
+      <ComplexType Name="NullablePrimitiveTypes">
         <Property Name="NullValue" Type="Edm.Boolean" DefaultValue="null" />
         <Property Name="TrueValue" Type="Edm.Boolean" DefaultValue="true" />
         <Property Name="FalseValue" Type="Edm.Boolean" DefaultValue="false" />
@@ -597,8 +597,37 @@
         <Property Name="ColorEnumValue" Type="M1.Color" DefaultValue="yellow" />
         <Property Name="GeographyPoint" Type="Edm.GeographyPoint" DefaultValue="SRID=0;Point(142.1 64.1)" />
         <Property Name="StreamValue" Type="Edm.Stream" />
-        <Property Name="TypeDefValue" Type="M1.IntegerDecimal" DefaultValue="42" />
+        <Property Name="TypeDefValue" Type="M1.IntegerDecimal" Precision="20" DefaultValue="42" />
         <Property Name="PrimitiveValue" Type="Edm.PrimitiveType" />
+      </ComplexType>
+
+      <ComplexType Name="NonNullablePrimitiveTypes">
+        <Property Name="NullValue" Type="Edm.Boolean" DefaultValue="null" Nullable="false" />
+        <Property Name="TrueValue" Type="Edm.Boolean" DefaultValue="true" Nullable="false" />
+        <Property Name="FalseValue" Type="Edm.Boolean" DefaultValue="false" Nullable="false" />
+        <Property Name="BinaryValue" Type="Edm.Binary" MaxLength="31" DefaultValue="T0RhdGE" Nullable="false" />
+        <Property Name="IntegerValue" Type="Edm.Int32" DefaultValue="-128" Nullable="false" />
+        <Property Name="DoubleValue" Type="Edm.Double" DefaultValue="3.1415926535897931" Nullable="false" />
+        <Property Name="SingleValue" Type="Edm.Single" Nullable="false" />
+        <Property Name="DecimalValue" Type="Edm.Decimal" Scale="variable" DefaultValue="34.95" Nullable="false" />
+        <Property Name="StringValue" Type="Edm.String" DefaultValue="Say &quot;Hello&quot;,&#x0A;then go"
+          Nullable="false" />
+        <Property Name="DateValue" Type="Edm.Date" DefaultValue="2012-12-03" Nullable="false" />
+        <Property Name="DateTimeOffsetValue" Type="Edm.DateTimeOffset" DefaultValue="2012-12-03T07:16:23Z"
+          Nullable="false" />
+        <Property Name="DurationValue" Type="Edm.Duration" Precision="12" DefaultValue="P12DT23H59M59.999999999999S"
+          Nullable="false" />
+        <Property Name="TimeOfDayValue" Type="Edm.TimeOfDay" Precision="6" DefaultValue="07:59:59.999"
+          Nullable="false" />
+        <Property Name="GuidValue" Type="Edm.Guid" DefaultValue="1234567-89ab-cdef-0123-456789abcdef" Nullable="false" />
+        <Property Name="Int64Value" Type="Edm.Int64" DefaultValue="0" Nullable="false" />
+        <Property Name="ColorEnumValue" Type="M1.Color" DefaultValue="yellow" Nullable="false" />
+        <Property Name="GeographyPoint" Type="Edm.GeographyPoint" DefaultValue="SRID=0;Point(142.1 64.1)"
+          Nullable="false" />
+        <Property Name="StreamValue" Type="Edm.Stream" Nullable="false" />
+        <Property Name="TypeDefValue" Type="M1.IntegerDecimal" Precision="20" DefaultValue="42" Nullable="false" />
+        <Property Name="TextValue" Type="M1.Text" MaxLength="60" DefaultValue="42" Nullable="false" />
+        <Property Name="PrimitiveValue" Type="Edm.PrimitiveType" Nullable="false" />
       </ComplexType>
 
       <Function Name="CreatedEntities">
@@ -886,6 +915,8 @@
 
       <TypeDefinition Name="Text50" MaxLength="50" UnderlyingType="Edm.String" />
 
+      <TypeDefinition Name="Text" UnderlyingType="Edm.String" />
+
       <TypeDefinition Name="IntegerDecimal" UnderlyingType="Edm.Decimal" Scale="0">
         <Annotation Term="Core.Description" String="A decimal without fractional part" />
       </TypeDefinition>
@@ -914,7 +945,7 @@
 
     <Schema Namespace="Schema.One" Alias="One">
       <Function Name="Foo">
-        <ReturnType Type="Edm.String" />
+        <ReturnType Type="Edm.String" MaxLength="42" />
       </Function>
       <Function Name="OddWaldos" IsBound="true" EntitySetPath="in">
         <Parameter Name="in" Type="Collection(One.Waldo)" />
@@ -1040,7 +1071,7 @@
         </Annotation>
       </Annotations>
 
-      <Term Name="Movies" Type="Collection(X.Movie)" />
+      <Term Name="Movies" Type="Collection(X.MovieType)" />
       <Annotations Target="Some.EntityType">
         <Annotation Term="Y.Movies">
           <Path>AllMyMovies</Path>
@@ -1101,6 +1132,17 @@
           </Record>
         </Annotation>
       </Annotations>
+
+      <Term Name="AdvancedChangeTracking" BaseTerm="Capabilities.ChangeTracking" Type="Y.ChangeTrackingType"
+        AppliesTo="EntityContainer EntitySet" Nullable="false"
+      >
+        <Annotation Term="Core.Description" String="Advanced change tracking capabilities of this service or entity set" />
+      </Term>
+      <ComplexType Name="ChangeTrackingType">
+        <Property Name="InlineableStreamProperties" Type="Collection(Edm.PropertyPath)">
+          <Annotation Term="Core.Description" String="Change tracking supports inlining these stream properties" />
+        </Property>
+      </ComplexType>
     </Schema>
 
   </edmx:DataServices>

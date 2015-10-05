@@ -35,85 +35,166 @@
             "@Core.Description": "Core terms needed to write vocabularies",
             "terms": {
                 "Description": {
-                    "type": "Edm.String",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "@Core.Description": "A brief description of a model element",
                     "@Core.IsLanguageDependent": {
 
                     }
                 },
                 "LongDescription": {
-                    "type": "Edm.String",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "@Core.Description": "A lengthy description of a model element",
                     "@Core.IsLanguageDependent": {
 
                     }
                 },
                 "IsLanguageDependent": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
-                    "appliesTo": "Term Property",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
+                    "appliesTo": [
+                        "Term",
+                        "Property"
+                    ],
                     "@Core.Description": "Properties and terms annotated with this term are language-dependent",
                     "@Core.RequiresType": "Edm.String"
                 },
                 "RequiresType": {
-                    "type": "Edm.String",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "appliesTo": "Term",
                     "@Core.Description": "Terms annotated with this term can only be applied to elements that have a type that is identical to or derived from the given type name"
                 },
                 "ResourcePath": {
-                    "type": "Edm.String",
-                    "appliesTo": "EntitySet Singleton ActionImport FunctionImport",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "appliesTo": [
+                        "EntitySet",
+                        "Singleton",
+                        "ActionImport",
+                        "FunctionImport"
+                    ],
                     "@Core.Description": "Resource path for entity container child, can be relative to xml:base and the request URL",
                     "@Core.IsURL": {
 
                     }
                 },
                 "DereferenceableIDs": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Entity-ids are URLs that locate the identified entity"
                 },
                 "ConventionalIDs": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Entity-ids follow OData URL conventions"
                 },
                 "Permissions": {
-                    "type": "Core.Permission",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Permission"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "Property",
                     "@Core.Description": "Permissions available for a property.The value of 2 is reserved for future use."
                 },
                 "Immutable": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "Property",
                     "@Core.Description": "A value for this non-key property can be provided on insert and remains unchanged on update"
                 },
                 "Computed": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "Property",
                     "@Core.Description": "A value for this property is generated on both insert and update"
                 },
                 "IsURL": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
-                    "appliesTo": "Property Term",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
+                    "appliesTo": [
+                        "Property",
+                        "Term"
+                    ],
                     "@Core.Description": "Properties and terms annotated with this term MUST contain a valid URL",
                     "@Core.RequiresType": "Edm.String"
                 },
                 "AcceptableMediaTypes": {
-                    "type": "Collection(Edm.String)",
-                    "appliesTo": "EntityType Property",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "appliesTo": [
+                        "EntityType",
+                        "Property"
+                    ],
                     "@Core.Description": "Lists the MIME types acceptable for the annotated entity type marked with HasStream=\"true\" or the annotated stream property",
                     "@Core.IsMediaType": {
 
                     }
                 },
                 "MediaType": {
-                    "type": "Edm.String",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "appliesTo": "Property",
                     "@Core.IsMediaType": {
 
@@ -121,33 +202,70 @@
                     "@Core.RequiresType": "Edm.Binary"
                 },
                 "IsMediaType": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
-                    "appliesTo": "Property Term",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
+                    "appliesTo": [
+                        "Property",
+                        "Term"
+                    ],
                     "@Core.Description": "Properties and terms annotated with this term MUST contain a valid MIME type",
                     "@Core.RequiresType": "Edm.String"
                 },
                 "OptimisticConcurrency": {
-                    "type": "Collection(Edm.PropertyPath)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+                    },
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Data modification requires the use of Etags. A non-empty collection contains the set of properties that are used to compute the ETag"
                 },
                 "AdditionalProperties": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
-                    "appliesTo": "EntityType ComplexType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
+                    "appliesTo": [
+                        "EntityType",
+                        "ComplexType"
+                    ],
                     "@Core.Description": "Instances of this type may contain properties in addition to those declared in $metadata",
                     "@Core.LongDescription": "If specified as false clients can assume that instances will not contain dynamic properties, irrespective of the value of the OpenType attribute."
                 },
                 "AutoExpand": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "NavigationProperty",
                     "@Core.Description": "The service will automatically expand this navigation property even if not requested with $expand"
                 },
                 "AutoExpandReferences": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "NavigationProperty",
                     "@Core.Description": "The service will automatically expand this navigation property as entity references even if not requested with $expand=.../$ref"
                 }

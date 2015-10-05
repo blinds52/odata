@@ -43,7 +43,7 @@
                         "string",
                         "null"
                     ],
-                    "@Core.Description": "Protcol Identifier"
+                    "@Core.Description": "Protocol Identifier"
                 },
                 "UrlTemplate": {
                     "type": [
@@ -433,11 +433,21 @@
             "@Core.LongDescription": "\n          There are some capabilities which are strongly recommended for services to support even\n          though they are optional. Support for $top and $skip is a good example as\n          supporting these query options helps with performance of a service and are essential. Such\n          capabilities are assumed to be default capabilities of an OData service even in\n          the case that a capabilities annotation doesn’t exist. Capabilities annotations are\n          mainly expected to be used to explicitly specify that a service doesn’t support such\n          capabilities. Capabilities annotations can as well be used to declaratively\n          specify the support of such capabilities.\n\n          On the other hand, there are some capabilities that a service may choose to support or\n          not support and in varying degrees. $filter and $orderby are such good examples.\n          This vocabulary aims to define terms to specify support or no support for such\n          capabilities.\n\n          A service is assumed to support by default the following capabilities even though an\n          annotation doesn’t exist:\n          - Countability ($count)\n          - Client pageability ($top, $skip)\n          - Expandability ($expand)\n          - Indexability by key\n          - Batch support ($batch)\n          - Navigability of navigation properties\n\n          A service is expected to support the following capabilities. If not supported, the\n          service is expected to call out the restrictions using annotations:\n          - Filterability ($filter)\n          - Sortability ($orderby)\n          - Queryability of top level entity sets\n          - Query functions\n\n          A client cannot assume that a service supports certain capabilities. A client can try, but\n          it needs to be prepared to handle an error in case the following capabilities are not\n          supported:\n          - Insertability\n          - Updatability\n          - Deletability\n        ",
             "terms": {
                 "ConformanceLevel": {
-                    "type": "Capabilities.ConformanceLevelType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.ConformanceLevelType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntityContainer"
                 },
                 "SupportedFormats": {
-                    "type": "Collection(Edm.String)",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Media types of supported formats, including format parameters",
                     "@Core.IsMediaType": {
@@ -445,7 +455,10 @@
                     }
                 },
                 "SupportedMetadataFormats": {
-                    "type": "Collection(Edm.String)",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Media types of supported formats for $metadata, including format parameters",
                     "@Core.IsMediaType": {
@@ -453,120 +466,275 @@
                     }
                 },
                 "AcceptableEncodings": {
-                    "type": "Collection(Edm.String)",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "List of acceptable compression methods for ($batch) requests, e.g. gzip"
                 },
                 "AsynchronousRequestsSupported": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Service supports the asynchronous request preference"
                 },
                 "BatchContinueOnErrorSupported": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Service supports the continue on error preference"
                 },
                 "IsolationSupported": {
-                    "type": "Capabilities.IsolationLevel",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.IsolationLevel"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Supported odata.isolation levels"
                 },
                 "CallbackSupported": {
-                    "type": "Capabilities.CallbackType",
-                    "appliesTo": "EntityContainer EntitySet",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.CallbackType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "appliesTo": [
+                        "EntityContainer",
+                        "EntitySet"
+                    ],
                     "@Core.Description": "Supports callbacks for the specified protocols"
                 },
                 "CrossJoinSupported": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Supports cross joins for the entity sets in this container"
                 },
                 "ChangeTracking": {
-                    "type": "Capabilities.ChangeTrackingType",
-                    "appliesTo": "EntityContainer EntitySet",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.ChangeTrackingType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "appliesTo": [
+                        "EntityContainer",
+                        "EntitySet"
+                    ],
                     "@Core.Description": "Change tracking capabilities of this service or entity set"
                 },
                 "CountRestrictions": {
-                    "type": "Capabilities.CountRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.CountRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on /$count path suffix and $count=true system query option"
                 },
                 "NavigationRestrictions": {
-                    "type": "Capabilities.NavigationRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.NavigationRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on navigating properties according to OData URL conventions"
                 },
                 "IndexableByKey": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Supports key values according to OData URL conventions"
                 },
                 "TopSupported": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Supports $top"
                 },
                 "SkipSupported": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Supports $skip"
                 },
                 "BatchSupported": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Supports $batch requests"
                 },
                 "BatchContentIdReferencingInRequestBodiesSupported": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "EntityContainer",
                     "@Core.Description": "Service supports Content-ID referencing in request bodies"
                 },
                 "FilterFunctions": {
-                    "type": "Collection(Edm.String)",
-                    "appliesTo": "EntityContainer EntitySet",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "appliesTo": [
+                        "EntityContainer",
+                        "EntitySet"
+                    ],
                     "@Core.Description": "List of functions supported in $filter"
                 },
                 "FilterRestrictions": {
-                    "type": "Capabilities.FilterRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.FilterRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on $filter expressions"
                 },
                 "SortRestrictions": {
-                    "type": "Capabilities.SortRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.SortRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on $orderby expressions"
                 },
                 "ExpandRestrictions": {
-                    "type": "Capabilities.ExpandRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.ExpandRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on $expand expressions"
                 },
                 "SearchRestrictions": {
-                    "type": "Capabilities.SearchRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.SearchRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on $search expressions"
                 },
                 "InsertRestrictions": {
-                    "type": "Capabilities.InsertRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.InsertRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on insert operations"
                 },
                 "UpdateRestrictions": {
-                    "type": "Capabilities.UpdateRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.UpdateRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on update operations"
                 },
                 "DeleteRestrictions": {
-                    "type": "Capabilities.DeleteRestrictionsType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Capabilities.V1.DeleteRestrictionsType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
                     "appliesTo": "EntitySet",
                     "@Core.Description": "Restrictions on delete operations"
                 }

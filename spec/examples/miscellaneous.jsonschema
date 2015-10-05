@@ -527,7 +527,7 @@
                 }
             }
         },
-        "Model1.PrimitiveTypes": {
+        "Model1.NullablePrimitiveTypes": {
             "type": "object",
             "properties": {
                 "NullValue": {
@@ -687,7 +687,8 @@
                             "type": "null"
                         }
                     ],
-                    "default": "42"
+                    "precision": 20,
+                    "default": 42
                 },
                 "PrimitiveValue": {
                     "anyOf": [
@@ -698,6 +699,137 @@
                             "type": "null"
                         }
                     ]
+                }
+            }
+        },
+        "Model1.NonNullablePrimitiveTypes": {
+            "type": "object",
+            "properties": {
+                "NullValue": {
+                    "type": "boolean",
+                    "default": null
+                },
+                "TrueValue": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "FalseValue": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "BinaryValue": {
+                    "type": "string",
+                    "format": "base64url",
+                    "maxLength": 44,
+                    "byteLength": 31,
+                    "default": "T0RhdGE"
+                },
+                "IntegerValue": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": -128
+                },
+                "DoubleValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "double",
+                    "default": 3.1415926535897931
+                },
+                "SingleValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "single"
+                },
+                "DecimalValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "scale": "variable",
+                    "default": 34.95
+                },
+                "StringValue": {
+                    "type": "string",
+                    "default": "Say \"Hello\",\nthen go"
+                },
+                "DateValue": {
+                    "type": "string",
+                    "format": "date",
+                    "default": "2012-12-03"
+                },
+                "DateTimeOffsetValue": {
+                    "type": "string",
+                    "format": "date-time",
+                    "default": "2012-12-03T07:16:23Z"
+                },
+                "DurationValue": {
+                    "type": "string",
+                    "format": "duration",
+                    "default": "P12DT23H59M59.999999999999S"
+                },
+                "TimeOfDayValue": {
+                    "type": "string",
+                    "format": "time",
+                    "precision": 6,
+                    "default": "07:59:59.999"
+                },
+                "GuidValue": {
+                    "type": "string",
+                    "format": "uuid",
+                    "default": "1234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Int64Value": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64",
+                    "default": 0
+                },
+                "ColorEnumValue": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Model1.Color"
+                        }
+                    ],
+                    "default": "yellow"
+                },
+                "GeographyPoint": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+                        }
+                    ],
+                    "default": "SRID=0;Point(142.1 64.1)"
+                },
+                "StreamValue": {
+                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Stream"
+                },
+                "TypeDefValue": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Model1.IntegerDecimal"
+                        }
+                    ],
+                    "precision": 20,
+                    "default": 42
+                },
+                "TextValue": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Model1.Text"
+                        }
+                    ],
+                    "maxLength": 60,
+                    "default": "42"
+                },
+                "PrimitiveValue": {
+                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
                 }
             }
         },
@@ -1050,6 +1182,9 @@
             "type": "string",
             "maxLength": 50
         },
+        "Model1.Text": {
+            "type": "string"
+        },
         "Model1.IntegerDecimal": {
             "type": [
                 "number",
@@ -1213,6 +1348,18 @@
                     "@custom.ItemIsA": "X.Friend"
                 }
             }
+        },
+        "Y.ChangeTrackingType": {
+            "type": "object",
+            "properties": {
+                "InlineableStreamProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "@Core.Description": "Change tracking supports inlining these stream properties"
+                }
+            }
         }
     },
     "schemas": {
@@ -1229,6 +1376,9 @@
             "$ref": "http://tinyurl.com/Org-OData-Measures-V1#/schemas/Org.OData.Measures.V1"
         },
         "Org.OData.Capabilities.V1": {
+            "$ref": "http://vocabs.odata.org/capabilities/v1#/schemas/Org.OData.Capabilities.V1"
+        },
+        "Capabilities": {
             "$ref": "http://vocabs.odata.org/capabilities/v1#/schemas/Org.OData.Capabilities.V1"
         },
         "org.example.Display": {
@@ -1250,13 +1400,23 @@
                     "name": "TopSellingProducts",
                     "parameters": {
                         "Year": {
-                            "type": "Edm.Decimal",
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "format": "decimal",
                             "precision": 4,
-                            "scale": 0
+                            "multipleOf": 1,
+                            "minimum": -9999,
+                            "maximum": 9999
                         }
                     },
                     "returnType": {
-                        "type": "Collection(Model.Product)"
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Model.Product"
+                        }
                     }
                 }
             ],
@@ -1338,8 +1498,15 @@
             "@Core.Description": "Examples from Part 3: CSDL - second schema",
             "terms": {
                 "IsURI": {
-                    "type": "Core.Tag",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
                     "appliesTo": "Property",
                     "@Core.Description": "Properties and terms annotated with this term MUST contain a valid URI",
                     "@Core.RequiresType": "Edm.String"
@@ -1859,31 +2026,55 @@
                     "name": "CreatedEntities",
                     "parameters": {
                         "before": {
-                            "type": "Edm.DateTimeOffset",
-                            "nullable": true
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "date-time"
                         },
                         "after": {
-                            "type": "Edm.DateTimeOffset",
-                            "nullable": true
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "date-time"
                         }
                     },
                     "returnType": {
-                        "type": "Collection(Edm.EntityType)",
-                        "nullable": true
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ]
+                        }
                     }
                 },
                 {
                     "name": "TopSellingProducts",
                     "parameters": {
                         "Year": {
-                            "type": "Edm.Decimal",
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "format": "decimal",
                             "precision": 4,
-                            "scale": 0,
-                            "nullable": true
+                            "multipleOf": 1,
+                            "minimum": -9999,
+                            "maximum": 9999
                         }
                     },
                     "returnType": {
-                        "type": "Collection(Model.Product)",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Model.Product"
+                        },
                         "@A.B": "Works"
                     }
                 }
@@ -1924,9 +2115,10 @@
                     "isBound": true,
                     "parameters": {
                         "Reason": {
-                            "type": "Edm.String",
-                            "maxLength": "max",
-                            "nullable": true
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     }
                 }
@@ -1935,7 +2127,11 @@
                 {
                     "name": "Foo",
                     "returnType": {
-                        "type": "Edm.String"
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 42
                     }
                 },
                 {
@@ -1944,11 +2140,17 @@
                     "entitySetPath": "in",
                     "parameters": {
                         "in": {
-                            "type": "Collection(One.Waldo)"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Schema.One.Waldo"
+                            }
                         }
                     },
                     "returnType": {
-                        "type": "Collection(One.Waldo)"
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Schema.One.Waldo"
+                        }
                     }
                 }
             ],
@@ -2007,44 +2209,113 @@
         "X": {
             "terms": {
                 "Person": {
-                    "type": "X.PersonType"
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/X.PersonType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "Team": {
-                    "type": "Collection(X.PersonType)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/X.PersonType"
+                    },
                     "@custom.ItemIsA": "X.Person"
                 },
                 "Movie": {
-                    "type": "X.MovieType"
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/X.MovieType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "Friend": {
-                    "type": "X.FriendType"
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/X.FriendType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 }
             }
         },
         "Y": {
             "terms": {
                 "Developer": {
-                    "baseTerm": "X.Person",
-                    "type": "Y.DeveloperType"
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Y.DeveloperType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "baseTerm": {
+                        "$ref": "#/schemas/X/terms/Person"
+                    }
                 },
                 "DevelopmentTeam": {
-                    "type": "Collection(Y.DeveloperType)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Y.DeveloperType"
+                    },
                     "@custom.ItemIsA": "Y.Developer",
                     "@custom.IsA": "X.Team"
                 },
                 "ScrumTeam": {
-                    "baseTerm": "Y.DevelopmentTeam",
-                    "type": "Y.ScrumTeamType"
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Y.ScrumTeamType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "baseTerm": {
+                        "$ref": "#/schemas/Y/terms/DevelopmentTeam"
+                    }
                 },
                 "Movies": {
-                    "type": "Collection(X.Movie)"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/X.MovieType"
+                    }
                 },
                 "ArchivedMovies": {
-                    "type": "Collection(Y.ArchivedMovieType)",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Y.ArchivedMovieType"
+                    },
                     "@custom.ItemIsA": "X.Movie"
                 },
                 "SomeThing": {
-                    "type": "Y.SomeThingType"
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Y.SomeThingType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "AdvancedChangeTracking": {
+                    "$ref": "#/definitions/Y.ChangeTrackingType",
+                    "baseTerm": {
+                        "$ref": "http://vocabs.odata.org/capabilities/v1#/schemas/Org.OData.Capabilities.V1/terms/ChangeTracking"
+                    },
+                    "appliesTo": [
+                        "EntityContainer",
+                        "EntitySet"
+                    ],
+                    "@Core.Description": "Advanced change tracking capabilities of this service or entity set"
                 }
             },
             "annotations": [
