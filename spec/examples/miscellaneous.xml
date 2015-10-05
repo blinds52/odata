@@ -257,7 +257,7 @@
         <EntitySet Name="Orders" EntityType="Self.Order" />
 
         <!-- Example 31: function import returning the top ten revenue-generating products for a given fiscal year -->
-        <FunctionImport Name="TopSellingProducts" Function="Model.TopSellingProducts" EntitySet="Products" />
+        <FunctionImport Name="TopSellingProducts" Function="Model1.TopSellingProducts" EntitySet="Products" />
 
         <!-- Example 32: An entity container aggregates entity sets, singletons, action imports, and function imports. -->
         <EntitySet Name="Products" EntityType="Self.Product">
@@ -275,11 +275,10 @@
           <NavigationPropertyBinding Path="Products" Target="Self.DemoService.Products" />
         </EntitySet>
         <Singleton Name="Contoso" Type="Self.Supplier" />
-        <FunctionImport Name="ProductsByRating" Function="Self.ProductsByRating" EntitySet="Products" />
       </EntityContainer>
     </Schema>
 
-    <Schema Namespace="org.example2">
+    <Schema Namespace="org.example2" Alias="Model">
       <Annotation Term="Core.Description" String="Examples from Part 3: CSDL - second schema" />
 
       <!--
@@ -991,9 +990,9 @@
         <NavigationProperty Name="Waldos" Type="Collection(Two.Waldo)" />
       </EntityType>
       <EntityContainer Name="Default">
-        <FunctionImport Name="Bar" Function="Other.Foo" IncludeInServiceDocument="true"
+        <FunctionImport Name="Bar" Function="One.Foo" IncludeInServiceDocument="true"
           EntitySet="Namespace.Container/Freds" />
-        <FunctionImport Name="CreatedEntities" Function="Model.CreatedEntities" EntitySet="Waldos" />
+        <FunctionImport Name="CreatedEntities" Function="Model1.CreatedEntities" EntitySet="Waldos" />
         <EntitySet Name="Waldos" EntityType="Two.Waldo" />
         <EntitySet Name="Freds" EntityType="Two.Fred">
           <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
