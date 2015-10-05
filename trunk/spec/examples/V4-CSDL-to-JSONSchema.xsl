@@ -6,8 +6,8 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
-    - Actions/Functions: hash with array value for overloads, otherwise $ref doesn't work
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856
+    -- inline and explace style
     - Core.Description -> title/description?
   -->
 
@@ -15,6 +15,10 @@
   <xsl:strip-space elements="*" />
 
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
+
+  <!-- TODO: can these keys be combined? -->
+  <xsl:key name="methods"
+    match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function" use="concat(../@Namespace,'.',@Name)" />
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"$schema":"</xsl:text>
@@ -92,10 +96,14 @@
     <xsl:value-of select="@Namespace" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list" />
-    <xsl:apply-templates select="edm:Action" mode="array">
+    <xsl:apply-templates select="edm:Action[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
+      mode="hash"
+    >
       <xsl:with-param name="after" select="edm:Annotation" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Function" mode="array">
+    <xsl:apply-templates select="edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
+      mode="hash"
+    >
       <xsl:with-param name="after" select="edm:Annotation|edm:Action" />
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Term" mode="hash">
@@ -772,13 +780,31 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Action|edm:Function" mode="item">
-    <xsl:text>{</xsl:text>
-    <xsl:apply-templates select="@*" mode="list" />
-    <xsl:apply-templates select="edm:Parameter" mode="hash" />
-    <xsl:apply-templates select="edm:ReturnType" mode="list2" />
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    <xsl:text>}</xsl:text>
+  <xsl:template match="edm:Action|edm:Function" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":</xsl:text>
+    <xsl:if test="count(key('methods', concat(../@Namespace,'.',@Name)))>1">
+      <xsl:text>[</xsl:text>
+    </xsl:if>
+    <xsl:for-each select="key('methods', concat(../@Namespace,'.',@Name))">
+      <xsl:if test="position()>1">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>{</xsl:text>
+      <xsl:apply-templates select="@*[local-name()!='Name']" mode="list" />
+      <xsl:apply-templates select="edm:Parameter" mode="hash">
+        <xsl:with-param name="after" select="@*[local-name()!='Name']" />
+      </xsl:apply-templates>
+      <xsl:apply-templates select="edm:ReturnType" mode="list">
+        <xsl:with-param name="after" select="@*[local-name()!='Name']|edm:Parameter" />
+      </xsl:apply-templates>
+      <xsl:apply-templates select="edm:Annotation" mode="list2" />
+      <xsl:text>}</xsl:text>
+    </xsl:for-each>
+    <xsl:if test="count(key('methods', concat(../@Namespace,'.',@Name)))>1">
+      <xsl:text>]</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm:Parameter" mode="hashvalue">
