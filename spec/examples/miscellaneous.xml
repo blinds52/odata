@@ -74,6 +74,20 @@
         <Property Type="Edm.String" Name="ID" Nullable="false" />
       </EntityType>
 
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.String" Name="ID" Nullable="false" />
+      </EntityType>
+
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Type="Edm.Int64" Name="ID" Nullable="false" />
+      </EntityType>
+
       <EntityType Name="Category" HasStream="false">
         <Key>
           <PropertyRef Name="ID" />
@@ -227,7 +241,7 @@
         as a parameter of the function with the edm:Parameter element. -->
       <Function Name="TopSellingProducts">
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" />
-        <ReturnType Type="Collection(Model.Product)" />
+        <ReturnType Type="Collection(Self.Product)" />
       </Function>
 
       <!-- 13 Entity Container -->
@@ -261,7 +275,6 @@
           <NavigationPropertyBinding Path="Products" Target="Self.DemoService.Products" />
         </EntitySet>
         <Singleton Name="Contoso" Type="Self.Supplier" />
-        <ActionImport Name="LeaveRequestApproval" Action="Self.Approval" />
         <FunctionImport Name="ProductsByRating" Function="Self.ProductsByRating" EntitySet="Products" />
       </EntityContainer>
     </Schema>
@@ -637,7 +650,7 @@
       </Function>
       <Function Name="TopSellingProducts">
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" Nullable="true" />
-        <ReturnType Type="Collection(Model.Product)">
+        <ReturnType Type="Collection(Self.Product)">
           <Annotation Term="A.B" String="Works" />
         </ReturnType>
       </Function>
