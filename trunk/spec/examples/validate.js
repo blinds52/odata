@@ -158,7 +158,7 @@ validator.setRemoteReference("miscellaneous.jsonschema", miscellaneous);
 var primitiveTypesSchema = {
 	"$schema" : "http://json-schema.org/draft-04/schema#",
 	"allOf" : [{
-			"$ref" : "miscellaneous.jsonschema#/definitions/Model1.PrimitiveTypes"
+			"$ref" : "miscellaneous.jsonschema#/definitions/Model1.NullablePrimitiveTypes"
 		}
 	]
 };

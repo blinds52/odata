@@ -115,16 +115,17 @@
                     "isBound": true,
                     "parameters": {
                         "Entity": {
-                            "type": "Edm.EntityType",
-                            "nullable": false
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
                         },
                         "Hierarchy": {
-                            "type": "Edm.String",
-                            "nullable": false
+                            "type": "string"
                         }
                     },
                     "returnType": {
-                        "type": "Edm.Boolean"
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     },
                     "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is the root of the hierarchy"
                 },
@@ -133,23 +134,27 @@
                     "isBound": true,
                     "parameters": {
                         "Entity": {
-                            "type": "Edm.EntityType",
-                            "nullable": false
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
                         },
                         "Hierarchy": {
-                            "type": "Edm.String",
-                            "nullable": false
+                            "type": "string"
                         },
                         "Node": {
-                            "type": "Edm.PrimitiveType",
-                            "nullable": false
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
                         },
                         "MaxDistance": {
-                            "type": "Edm.Int16"
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "format": "int16"
                         }
                     },
                     "returnType": {
-                        "type": "Edm.Boolean"
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     },
                     "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is a descendant of the given parent node with a distance of less than or equal to the optionally specified maximum distance"
                 },
@@ -158,23 +163,27 @@
                     "isBound": true,
                     "parameters": {
                         "Entity": {
-                            "type": "Edm.EntityType",
-                            "nullable": false
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
                         },
                         "Hierarchy": {
-                            "type": "Edm.String",
-                            "nullable": false
+                            "type": "string"
                         },
                         "Node": {
-                            "type": "Edm.PrimitiveType",
-                            "nullable": false
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
                         },
                         "MaxDistance": {
-                            "type": "Edm.Int16"
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "format": "int16"
                         }
                     },
                     "returnType": {
-                        "type": "Edm.Boolean"
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     },
                     "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is an ancestor of the given child node with a distance of less than or equal to the optionally specified maximum distance"
                 },
@@ -183,20 +192,20 @@
                     "isBound": true,
                     "parameters": {
                         "Entity": {
-                            "type": "Edm.EntityType",
-                            "nullable": false
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
                         },
                         "Hierarchy": {
-                            "type": "Edm.String",
-                            "nullable": false
+                            "type": "string"
                         },
                         "Node": {
-                            "type": "Edm.PrimitiveType",
-                            "nullable": false
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
                         }
                     },
                     "returnType": {
-                        "type": "Edm.Boolean"
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     },
                     "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy has the same parent node as the specified node"
                 },
@@ -205,63 +214,134 @@
                     "isBound": true,
                     "parameters": {
                         "Entity": {
-                            "type": " Edm.EntityType",
-                            "nullable": false
+                            "$ref": "#/definitions/ Edm.EntityType"
                         },
                         "Hierarchy": {
-                            "type": "Edm.String",
-                            "nullable": false
+                            "type": "string"
                         }
                     },
                     "returnType": {
-                        "type": "Edm.Boolean"
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     },
                     "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy has no descendants"
                 }
             ],
             "terms": {
                 "ApplySupported": {
-                    "type": "Aggregation.ApplySupportedType",
-                    "appliesTo": "EntityType ComplexType EntityContainer",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Aggregation.V1.ApplySupportedType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "appliesTo": [
+                        "EntityType",
+                        "ComplexType",
+                        "EntityContainer"
+                    ],
                     "@Core.Description": "This structured type or entity container supports the $apply system query option"
                 },
                 "Groupable": {
-                    "type": "Core.Tag",
-                    "appliesTo": "Property NavigationProperty",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
+                    "appliesTo": [
+                        "Property",
+                        "NavigationProperty"
+                    ],
                     "@Core.Description": "This property can be used in the groupby transformation"
                 },
                 "Aggregatable": {
-                    "type": "Core.Tag",
-                    "appliesTo": "Property NavigationProperty",
-                    "defaultValue": "true",
+                    "anyOf": [
+                        {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": true,
+                    "appliesTo": [
+                        "Property",
+                        "NavigationProperty"
+                    ],
                     "@Core.Description": "This property can be used in the aggregate transformation"
                 },
                 "CustomAggregate": {
-                    "type": "Edm.String",
-                    "appliesTo": "EntityType ComplexType EntityContainer",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "appliesTo": [
+                        "EntityType",
+                        "ComplexType",
+                        "EntityContainer"
+                    ],
                     "@Core.Description": "Dynamic property that can be used in the aggregate transformation",
                     "@Core.LongDescription": "This term MUST be applied with a Qualifier, the Qualifier value is the name of the dynamic property. The value of the annotation MUST be the qualified name of a primitive type. The aggregated values will be of that type."
                 },
                 "ContextDefiningProperties": {
-                    "type": "Collection(Edm.PropertyPath)",
-                    "appliesTo": "Property Annotation",
+                    "type": "array",
+                    "items": {
+                        "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "appliesTo": [
+                        "Property",
+                        "Annotation"
+                    ],
                     "@Core.Description": "The annotated property or custom aggregate is only well-defined in the context of these properties",
                     "@Core.LongDescription": "The context-defining properties need either be part of the result entities, or be restricted to a single value by a pre-filter operation. Examples are postal codes within a country, or monetary amounts whose context is the unit of currency."
                 },
                 "LeveledHierarchy": {
-                    "type": "Collection(Edm.PropertyPath)",
-                    "appliesTo": "EntityType ComplexType",
+                    "type": "array",
+                    "items": {
+                        "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "appliesTo": [
+                        "EntityType",
+                        "ComplexType"
+                    ],
                     "@Core.Description": "Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy"
                 },
                 "RecursiveHierarchy": {
-                    "type": "Aggregation.RecursiveHierarchyType",
-                    "appliesTo": "EntityType ComplexType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Aggregation.V1.RecursiveHierarchyType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "appliesTo": [
+                        "EntityType",
+                        "ComplexType"
+                    ],
                     "@Core.Description": "Defines a recursive hierarchy."
                 },
                 "AvailableOnAggregates": {
-                    "type": "Aggregation.AvailableOnAggregatesType",
-                    "appliesTo": "Action Function",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Aggregation.V1.AvailableOnAggregatesType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "appliesTo": [
+                        "Action",
+                        "Function"
+                    ],
                     "@Core.Description": "This action or function is available on aggregated entities if the RequiredProperties are still defined"
                 }
             }
