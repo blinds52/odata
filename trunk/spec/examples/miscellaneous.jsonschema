@@ -121,6 +121,36 @@
                 }
             }
         },
+        "org.example.Customer": {
+            "type": "object",
+            "keys": [
+                {
+                    "name": "ID"
+                }
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                }
+            }
+        },
+        "org.example.Order": {
+            "type": "object",
+            "keys": [
+                {
+                    "name": "ID"
+                }
+            ],
+            "properties": {
+                "ID": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64"
+                }
+            }
+        },
         "org.example.Category": {
             "type": "object",
             "keys": [
@@ -1415,7 +1445,7 @@
                     "returnType": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/definitions/Model.Product"
+                            "$ref": "#/definitions/org.example.Product"
                         }
                     }
                 }
@@ -1424,7 +1454,9 @@
                 "name": "DemoService",
                 "entitySets": {
                     "StandardCustomers": {
-                        "entityType": "Self.Customer",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        },
                         "navigationPropertyBindings": {
                             "Orders": {
                                 "target": "Orders"
@@ -1432,7 +1464,9 @@
                         }
                     },
                     "PreferredCustomers": {
-                        "entityType": "Self.Customer",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        },
                         "navigationPropertyBindings": {
                             "Orders": {
                                 "target": "Orders"
@@ -1440,10 +1474,14 @@
                         }
                     },
                     "Orders": {
-                        "entityType": "Self.Order"
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Order"
+                        }
                     },
                     "Products": {
-                        "entityType": "Self.Product",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Product"
+                        },
                         "navigationPropertyBindings": {
                             "Category": {
                                 "target": "Self.DemoService.Categories"
@@ -1455,7 +1493,9 @@
                         "@org.example.display.DisplayName": "Product Catalog"
                     },
                     "Categories": {
-                        "entityType": "Self.Category",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Category"
+                        },
                         "navigationPropertyBindings": {
                             "Products": {
                                 "target": "Self.DemoService.Products"
@@ -1463,7 +1503,9 @@
                         }
                     },
                     "Suppliers": {
-                        "entityType": "Self.Supplier",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        },
                         "navigationPropertyBindings": {
                             "Products": {
                                 "target": "Self.DemoService.Products"
@@ -1474,21 +1516,22 @@
                 },
                 "singletons": {
                     "Contoso": {
-                        "type": "Self.Supplier"
-                    }
-                },
-                "actionImports": {
-                    "LeaveRequestApproval": {
-                        "action": "Self.Approval"
+                        "type": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
                     }
                 },
                 "functionImports": {
                     "TopSellingProducts": {
-                        "function": "Model.TopSellingProducts",
+                        "function": {
+                            "$ref": "#/schemas/Model/functions/TopSellingProducts"
+                        },
                         "entitySet": "Products"
                     },
                     "ProductsByRating": {
-                        "function": "Self.ProductsByRating",
+                        "function": {
+                            "$ref": "#/schemas/org.example/functions/ProductsByRating"
+                        },
                         "entitySet": "Products"
                     }
                 }
@@ -1517,7 +1560,9 @@
                 "extends": "org.example.DemoService",
                 "entitySets": {
                     "Categories34": {
-                        "entityType": "org.example.Category",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Category"
+                        },
                         "navigationPropertyBindings": {
                             "Products": {
                                 "target": "Products"
@@ -1525,7 +1570,9 @@
                         }
                     },
                     "Categories35": {
-                        "entityType": "org.example.Category",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Category"
+                        },
                         "navigationPropertyBindings": {
                             "Products": {
                                 "target": "org.example.DemoService/Products"
@@ -2073,7 +2120,7 @@
                     "returnType": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/definitions/Model.Product"
+                            "$ref": "#/definitions/org.example.Product"
                         },
                         "@A.B": "Works"
                     }
@@ -2083,7 +2130,9 @@
                 "name": "Sales",
                 "entitySets": {
                     "StandardCustomers": {
-                        "entityType": "Self.Customer",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        },
                         "navigationPropertyBindings": {
                             "Orders": {
                                 "target": "Orders"
@@ -2091,7 +2140,9 @@
                         }
                     },
                     "PreferredCustomer": {
-                        "entityType": "Self.Customer",
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        },
                         "navigationPropertyBindings": {
                             "Orders": {
                                 "target": "Orders"
@@ -2099,7 +2150,9 @@
                         }
                     },
                     "Orders": {
-                        "entityType": "Self.Order"
+                        "entityType": {
+                            "$ref": "#/definitions/org.example.Order"
+                        }
                     }
                 },
                 "@Core.Description": "The Sales Container"
@@ -2158,12 +2211,16 @@
                 "name": "Default",
                 "entitySets": {
                     "Waldos": {
-                        "entityType": "One.Waldo"
+                        "entityType": {
+                            "$ref": "#/definitions/Schema.One.Waldo"
+                        }
                     }
                 },
                 "functionImports": {
                     "Bar": {
-                        "function": "One.Foo"
+                        "function": {
+                            "$ref": "#/schemas/Schema.One/functions/Foo"
+                        }
                     }
                 }
             }
@@ -2176,10 +2233,14 @@
                 "name": "Default",
                 "entitySets": {
                     "Waldos": {
-                        "entityType": "Two.Waldo"
+                        "entityType": {
+                            "$ref": "#/definitions/Schema.Two.Waldo"
+                        }
                     },
                     "Freds": {
-                        "entityType": "Two.Fred",
+                        "entityType": {
+                            "$ref": "#/definitions/Schema.Two.Fred"
+                        },
                         "navigationPropertyBindings": {
                             "Waldos": {
                                 "target": "Waldos"
@@ -2195,12 +2256,16 @@
                 },
                 "functionImports": {
                     "Bar": {
-                        "function": "Other.Foo",
+                        "function": {
+                            "$ref": "#/schemas/Other/functions/Foo"
+                        },
                         "includeInServiceDocument": true,
                         "entitySet": "Namespace.Container/Freds"
                     },
                     "CreatedEntities": {
-                        "function": "Model.CreatedEntities",
+                        "function": {
+                            "$ref": "#/schemas/Model/functions/CreatedEntities"
+                        },
                         "entitySet": "Waldos"
                     }
                 }

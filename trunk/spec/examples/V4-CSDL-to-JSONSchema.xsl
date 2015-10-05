@@ -6,19 +6,15 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
+    - Actions/Functions: hash with array value for overloads, otherwise $ref doesn't work
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856
     - Core.Description -> title/description?
-    - Actions/Functions: hash with array value for overloads?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
   <xsl:strip-space elements="*" />
 
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
-
-  <xsl:key name="types"
-    match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:EntityType/edm:Property/@Type|edmx:Edmx/edmx:DataServices/edm:Schema/edm:ComplexType/edm:Property/@Type|edmx:Edmx/edmx:DataServices/edm:Schema/edm:TypeDefinition/@UnderlyingType"
-    use="." />
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"$schema":"</xsl:text>
@@ -697,7 +693,6 @@
   <xsl:template match="@DefaultValue">
     <xsl:param name="type" />
     <xsl:text>,"default":</xsl:text>
-    <!-- TODO: look up non-Edm types to get edm:TypeDefinition/@UnderlyingType -->
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
         <xsl:with-param name="input" select="$type" />
@@ -821,6 +816,37 @@
       <xsl:with-param name="key" select="'Path'" />
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
+  </xsl:template>
+
+  <xsl:template match="edm:EntitySet/@EntityType|edm:Singleton/@Type">
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="lowerCamelCase">
+      <xsl:with-param name="name" select="local-name()" />
+    </xsl:call-template>
+    <xsl:text>":{</xsl:text>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="." />
+      <xsl:with-param name="nullableFacet" select="'false'" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:ActionImport/@Action">
+    <xsl:text>"action":{</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="." />
+      <xsl:with-param name="element" select="'actions'" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:FunctionImport/@Function">
+    <xsl:text>"function":{</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="." />
+      <xsl:with-param name="element" select="'functions'" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Annotations" mode="item">
