@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #107 Thursday Oct 01, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #107 Thursday Oct 01, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-10-01 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE) 
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39118">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from September 24, 2015 TC meeting #106: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/56600/odata-meeting-106_on-20150924-minutes.html">https://www.oasis-open.org/committees/download.php/56600/odata-meeting-106_on-20150924-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due October 01, 2015</h4>
+<p>None</p>
+
+<h3>5. Process issues [Issues list: https://issues.oasis-open.org/issues/?jql=project%20%3D%20ODATA]</h3>
+
+<h4>5.1 Issues for JSON Format for CSDL in Applied state</h4>
+
+<h5>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-805" target="_blank">ODATA-805</a> Add term to Capabilities vocabulary for supported metadata formats</h5>
+
+<p>Ralf:</p>
+<pre>
+&lt;Term Name="SupportedMetadataFormats" Type="Collection(Edm.String)" AppliesTo="EntityContainer"> 
+    &lt;Annotation Term="Core.Description" String="Media types of supported formats for $metadata, including format parameters" /> 
+    &lt;Annotation Term="Core.IsMediaType" /> 
+&lt;/Term>
+</pre>
+
+<p><b>Hubert</b>: I <b>move</b> to close ODATA-805 as applied. Martin seconds.</p>
+
+<p>ODATA-805 is CLOSED as applied</p>
+
+<h5>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-842" target="_blank">ODATA-842</a> Represent primitive types as JSON Schema formats</h5>
+
+<p>Ralf: Example:</p>
+
+<pre>
+"DoubleValue": {
+    "type": [
+        "number",
+        "string",
+        "null"
+    ],
+    "format": "double",
+    "default": 3.1415926535897931
+},
+</pre>
+<p>Ralf: Complete syntax:</p>
+<pre>
+"Edm.Double": {
+    "anyOf": [
+        {
+            "type": "number",
+            "format": "double"
+        },
+        {
+            "enum": [
+                "-INF",
+                "INF",
+                "NaN"
+            ]
+        }
+    ]
+},
+</pre>
+<p>Ralf:</p>
+<pre>
+ "Edm.Binary": {
+            "type": "string",
+            "format": "base64url",
+            "pattern": "^([A-Za-z0-9_-]{4})*([A-Za-z0-9_-]{3}[A-Za-z0-9_-]|[A-Za-z0-9_-]{2}[AEIMQUYcgkosw048]=?|[A-Za-z0-9_-][AQgw](==)?)?$"
+        },
+</pre>
+<p>Ralf: Edm.Byte:</p>
+<pre>
+"Model1.SpecialByte": {
+            "type": "integer",
+            "format": "uint8"
+        },
+</pre>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-842 as applied. Hubert seconds.</p>
+
+<p>ODATA-842 is closed as applied</p>
+
+
+<h5>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-843" target="_blank">ODATA-843</a> Nullable as anyOf or as OData-specific keyword</h5>
+
+<p>Ralf:</p>
+<pre>
+ "Supplier":{ 
+           "anyOf":[{ 
+               "$ref":"#/definitions/ODataDemo.Supplier" 
+             }, { 
+               "type":"null" 
+             } 
+           ],
+</pre>
+<p><b>Hubert</b>: I <b>move</b> we close ODATA-843 as applied. Mike seconds.</p>
+
+<p>ODATA-843 is CLOSED as applied</p>
+
+
+<h5>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-844" target="_blank">ODATA-844</a> Provide JSON versions of the Core, Capabilities, Measures, and Aggregation vocabularies</h5>
+
+<p>Ralf: </p>
+<pre>
+{
+    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+    "odata-version": "4.0",
+    "schemas": {
+        "Org.OData.Core.V1": {
+            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+        },
+        "Core": {
+            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+        },
+        "Measures": {
+            "$ref": "#/schemas/Org.OData.Measures.V1"
+        },
+        "Org.OData.Measures.V1": {
+            "@Core.Description": "Terms describing monetary amounts and measured quantities",
+            "terms": {
+                "ISOCurrency": {
+                    "type": "Edm.String",
+                    "appliesTo": "Property",
+                    "@Core.Description": "The currency for this monetary amount as an ISO 4217 currency code"
+                },
+                "Scale": {
+                    "type": "Edm.Byte",
+                    "appliesTo": "Property",
+                    "@Core.Description": "The number of significant decimal places in the scale part (less than or equal to the number declared in the Scale facet)",
+                    "@Core.RequiresType": "Edm.Decimal"
+                },
+                "Unit": {
+                    "type": "Edm.String",
+                    "appliesTo": "Property",
+                    "@Core.Description": "The unit of measure for this measured quantity, e.g. cm for centimeters or % for percentages"
+                }
+            }
+        }
+    }
+}
+</pre>
+
+<p>Ralf: ODATA-844 is kept in APPLIED state as a reminder to refresh the vocabularies with future changes of the transformation</p>
+
+
+<h5>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-845" target="_blank">ODATA-845</a> Translate edmx:Reference/edmx:Include into a schema reference</h5>
+
+<p>Ralf: XML:</p>
+<pre>
+  &lt;edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml">
+    &lt;edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  &lt;/edmx:Reference>
+</pre>
+
+<p>Ralf: JSON:</p>
+<pre>
+"schemas": {
+    "Org.OData.Core.V1": {
+        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+    },
+    "Core": {
+        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+    },
+</pre>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-845 as applied. Hubert seconds</p>
+
+<p>ODATA-845 is CLOSED as applied</p>
+
+
+<h4>5.2 Issues for JSON Format for CSDL in New or Open state</h4>
+
+<h5>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-841" target="_blank">ODATA-841</a> Representation of Precision and Scale</h5>
+         
+<p>Ralf: For a String:</p>
+<pre>
+{ 
+   "type":"string", 
+   "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,9})?$", 
+   "precision":9 
+ }
+ </pre>
+<p>Ralf: For example a property of type Edm.TimeOfDay with precision 9 would be represented as </p>
+<pre>
+ { 
+   "type":"string", 
+   "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,9})?$", 
+   "precision":9 
+ }
+ </pre>
+<p>Mark: I need to drop off the call for today.  Will join again next week if we have a call next week</p>
+<p>Ralf: Full example</p>
+<pre>
+ { 
+   "type":"string", 
+   "format":"time",
+   "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,9})?$", 
+   "precision":9 
+ }
+</pre>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-841 as proposed. Hubert seconds.</p>
+
+<p>ODATA-841 is resolved as proposed</p>
+
+
+<h5>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-855" target="_blank">ODATA-855</a> Should we define patterns for some of the primitive types</h5>
+
+<p>Ralf:</p>
+<ul>
+<li>Binary<br> 
+ "pattern": "^([A-Za-z0-9_-]{4})*([A-Za-z0-9_-]{3}[A-Za-z0-9_-]|[A-Za-z0-9_-]{2}[AEIMQUYcgkosw048]=?|[A-Za-z0-9_-][AQgw](==)?)?$" </li>
+<li>Guid <br>
+ "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" </li>
+<li>Date <br>
+ "pattern": "^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$" </li>
+<li>TimeOfDay including Precision <br>
+ "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" - for Precision=0 <br>
+ "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?$" for Precision=12 </li>
+
+ <li>Duration including Precision <br>
+ "pattern": "^-?P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+S)?)?$" - for Precision=0 <br>
+ "pattern": "^-?P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+([.][0-9]{1,12})?S)?)?$" - for Precision=12</li>
+ </ul>
+
+<p>Mike: JSON Schema wiki page for format definitions: https://github.com/json-schema/json-schema/wiki/%22format%22-suggestions
+
+<p>ODATA-855 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-855 as "Won't Fix", in order to keep the schemas smaller/simpler, and given that we can add these patterns later if there is demand. Hubert seconds.</p>
+
+<p>ODATA-855 is resolved as WON'T FIX</p>
+
+
+<h5>5.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-856" target="_blank">ODATA-856</a> Add annotations for Min/Max/Pattern</h5>
+
+<p>Ralf:</p>
+<pre>
+&lt;edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  &lt;edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml">
+    &lt;edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  &lt;/edmx:Reference>
+  &lt;edmx:DataServices>
+    &lt;Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Validation.V1" Alias="Validation">
+      &lt;Annotation Term="Core.Description">
+        &lt;String>Terms describing validation rules&lt;/String>
+      &lt;/Annotation>
+
+
+      &lt;Term Name="Pattern" Type="Edm.String">
+        &lt;Annotation Term="OData.Description"
+          String="The pattern that a string property or parameter must match. This SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect." />
+      &lt;/Term>
+
+      &lt;Term Name="Minimum" Type="Validation.Limit">
+        &lt;Annotation Term="OData.Description" String="Minimum value that a property or parameter can have." />
+      &lt;/Term>
+
+      &lt;Term Name="Maximum" Type="Validation.Limit">
+        &lt;Annotation Term="OData.Description" String="Maximum value that a property or parameter can have." />
+      &lt;/Term>
+
+      &lt;ComplexType Name="Limit">
+        &lt;Property Name="Value" Type="Edm.PrimitiveType" Nullable="false" /> &lt;!-- or Edm.Number -->
+        &lt;Property Name="Exclusive" Type="Edm.Boolean" Nullable="false" DefaultValue="false" />
+      &lt;/ComplexType>
+
+    &lt;/Schema>
+  &lt;/edmx:DataServices>
+&lt;/edmx:Edmx>
+</pre>
+
+<p>Ralf: Example for nested annotation:</p>
+<pre>
+&lt;Annotation Term="Validation.Minimum" Decimal="3.14">
+  &lt;Annotation Term="Validation.ExcludeLimit" />
+&lt;/Annotation>
+</pre>
+
+<p>Ralf: JSON Schema:</p>
+<pre>
+"minimum":"3.14",
+"excludeMinimum":true
+</pre>
+
+<p>Ralf: ODATA-856 is OPEN</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-856 by adding the pattern term as proposed, with minimum and maximum terms of type Edm.Decimal and an annotation "Validation.Exclusive" that can be applied to the minimum and maximum terms. Martin seconds</p>
+
+<p>ODATA-856 is resolved with the amended proposal</p>
+
+
+<h5>5.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-858" target="_blank">ODATA-858</a> Define meaning of MaxLength for String, Binary, and Stream</h5>
+
+<p>Ralf: ODATA-858 is OPEN</p>
+<p>Matt: byte length for Binary and Stream</p>
+<p>Hubert: agrees</p>
+<p>Ralf: XML MaxLength="333"</p>
+<p>Ralf: JSON Schema maxLength: 444</p>
+<p>Ralf: byteLength: 333</p>
+<p>Mike: byte length in XML CSDL for Stream and Binary, Unicode character length for String</p>
+<p>Ralf: octetLength: 444</p>
+<p>Ralf: maxLength: 8 --> octetLength: 4 / 5 / 6</p>
+<p>Mike: Proposal: <br>
+<ul><li>In XML, use character length for string and octet length for binary/stream</li>
+<li>In JSON Schema, the maxlength of these string properties must be the maximum number of characters in the string representation, so we will add byteLength keywords for binary and stream values as the byte length in octets.</li></ul>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-858 according to the above proposal. Matt seconds.</p>
+
+<p>ODATA-858 is resolved as proposed</p>
+
+
+<h3>7. Next meeting</h3>
+<p>Thursday October 08, 2015 during 8-10am PT</p>
+<p>Agreed</p>
+
+<h3>8. AOB</h3>
+<p>Hubert: When will we have the next face-to-face meeting?</p>
+<p>Mike: put that on the agenda for next week</p>
+
+<h3>Meeting adjourned</h3>
+
+</body>
+</html>
+
