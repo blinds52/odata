@@ -16,7 +16,6 @@
 
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
 
-  <!-- TODO: can these keys be combined? -->
   <xsl:key name="methods"
     match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function" use="concat(../@Namespace,'.',@Name)" />
 
@@ -630,8 +629,10 @@
     </xsl:choose>
     <xsl:text>/</xsl:text>
     <xsl:value-of select="$element" />
-    <xsl:text>/</xsl:text>
-    <xsl:value-of select="$name" />
+    <xsl:if test="$element!='entityContainer'">
+      <xsl:text>/</xsl:text>
+      <xsl:value-of select="$name" />
+    </xsl:if>
     <xsl:text>"</xsl:text>
   </xsl:template>
 
@@ -836,6 +837,15 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template match="@Extends">
+    <xsl:text>"extends":{</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="." />
+      <xsl:with-param name="element" select="'entityContainer'" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
   <xsl:template match="edm:EntitySet|edm:Singleton" mode="hashvalue">
     <xsl:apply-templates select="@*[local-name()!='Name']" mode="list" />
     <xsl:apply-templates select="edm:NavigationPropertyBinding" mode="hash">
@@ -857,28 +867,19 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:ActionImport/@Action">
-    <xsl:text>"action":{</xsl:text>
+  <xsl:template match="edm:ActionImport/@Action|edm:FunctionImport/@Function">
+    <xsl:variable name="name">
+      <xsl:call-template name="lowerCamelCase">
+        <xsl:with-param name="name" select="local-name()" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="$name" />
+    <xsl:text>":{</xsl:text>
     <xsl:call-template name="schema-ref">
       <xsl:with-param name="qualifiedName" select="." />
-      <xsl:with-param name="element" select="'actions'" />
+      <xsl:with-param name="element" select="concat($name,'s')" />
     </xsl:call-template>
-    <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="edm:FunctionImport/@Function">
-    <xsl:text>"function":{</xsl:text>
-    <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="." />
-      <xsl:with-param name="element" select="'functions'" />
-    </xsl:call-template>
-    <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="edm:Annotations" mode="item">
-    <xsl:text>{</xsl:text>
-    <xsl:apply-templates select="@*" mode="list" />
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
