@@ -12,6 +12,7 @@ var edm = JSON.parse(fs.readFileSync("../schemas/edm.json"));
 var capabilities = JSON.parse(fs.readFileSync("../vocabularies/Org.OData.Capabilities.V1.json"));
 var core = JSON.parse(fs.readFileSync("../vocabularies/Org.OData.Core.V1.json"));
 var measures = JSON.parse(fs.readFileSync("../vocabularies/Org.OData.Measures.V1.json"));
+var validation = {};
 
 var csdl_16_1 = JSON.parse(fs.readFileSync("csdl-16.1.jsonschema"));
 var csdl_16_2 = JSON.parse(fs.readFileSync("csdl-16.2.jsonschema"));
@@ -80,6 +81,10 @@ validator
 validator
 .setRemoteReference(
 	"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json",
+	measures);
+validator
+.setRemoteReference(
+	"https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Validation.V1.json",
 	measures);
 validator
 .setRemoteReference(
