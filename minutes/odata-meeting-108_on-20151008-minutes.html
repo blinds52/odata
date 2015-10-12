@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #108 Thursday Oct 08, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #108 Thursday Oct 08, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-10-08 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Maleika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39119">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from October 01, 2015 TC meeting #107: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/56641/odata-meeting-107_on-20151001-minutes.html">https://www.oasis-open.org/committees/download.php/56641/odata-meeting-107_on-20151001-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due October 08, 2015</h4>
+<p>None</p>
+
+<h3>5. Planning and Next Steps</h3>
+
+<h4>5.1 Extension for Data Aggregation</h4>
+
+<h5>5.1.1 Public Review passed without comments</h5>
+
+<p> </p>
+
+<h5>5.1.2 Next possible steps</h5>
+
+<ol>
+<li>Promote it to CS02 with minor corrections, see agenda item 6.a.
+Allows shipping of implementations based on it, especially with compute</li>
+<li>Hold it back to get feedback from implementation teams
+Makes shipping with post-CS01 features legally slippery</li>
+</ol>
+
+<p>Ralf: Agreement on proceeding Data Aggregation to CS02. Authors to prepare revised revision of the document</p>
+
+<p>Ramesh: that would be good for newer members like me</p>
+
+<p>Ralf: To be voted on in two weeks if no negative feedback from implementation teams comes up</p>
+<p>Mike: review document with applied changes next week</p>
+
+
+<h4>5.2 JSON CSDL</h4>
+
+<h5>5.2.1 Most issues resolved and applied</h5>
+
+<p> </p>
+
+<h5>5.2.2 Next steps</h5>
+
+<ol>
+<li>Finish document</li>
+<li>Initiate first public review</li>
+</ol>
+
+<h5>5.2.3 Put this on agenda every week to get it out the door?</h5>
+
+<p>Mike: split meeting time 50/50 between JSON CSDL and V4.01</p>
+<p>Ramesh: JSON CSDL has been the most asked for topic recently, so this is appropriate</p>
+
+
+<h4>5.3 Version 4.01</h4>
+
+<h5>5.3.1 Issues grouped and initially discussed</h5>
+
+<p> </p>
+
+<h5>5.3.2 Next steps</h5>
+
+<ol>
+<li>Decide on document structure, see <a href="https://issues.oasis-open.org/browse/ODATA-743" target="_blank">ODATA-743</a></li>
+<li>Request starter documents</li>
+<li>Resolve and apply remaining 13 issues for Errata03 before forking off V4.01 documents?</li>
+</ol>
+
+<p>Mike: put priority on issues that affect both Errata03 and V4.01</p>
+
+
+<h3>6. Process issues [Issues list: https://issues.oasis-open.org/issues/?jql=project%20%3D%20ODATA]</h3>
+
+a.Issues for Data Aggregation in New or Open state
+
+<h5>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-833" target="_blank">ODATA-833</a> Example 40 applies term RecursiveHierarchy term incorrectly</h5>
+
+<p>Ralf: ODATA-833 is OPEN</p>
+
+<p><b>Gerald</b>: I <b>move</b> to solve OData-833 as proposed. <b>Mike</b> seconds</p>
+<p>ODATA-833 is resolved as proposed</p>
+
+
+<h5>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-851" target="_blank">ODATA-851</a> groupby(): ABNF still allows more than two parameters</h5>
+
+<p>Ralf: Change line 136 from <br>
+<br> 
+groupbyTrafo = 'groupby' OPEN BWS groupbyList *( BWS COMMA BWS applyExpr) BWS CLOSE<br>
+<br> 
+to <br>
+<br> 
+groupbyTrafo = 'groupby' OPEN BWS groupbyList [ BWS COMMA BWS applyExpr ] BWS CLOSE<br>
+<br>
+</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolved ODATA-851 as proposed. <b>Gerald</b> seconds</p>
+<p>ODATA-851 is resolved as proposed</p>
+
+<h5>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-857" target="_blank">ODATA-857</a> Example 5: use two aggregate expressions</h5>
+
+<p>Ralf: ODATA-857 is OPEN</p>
+
+<p>Ralf: Example 5:</p>
+<pre>
+GET ~/Sales?$apply=aggregate(Amount with sum as Total,Amount with max as MxA)
+results in
+{
+  "@odata.context": "$metadata#Sales(Total,MxA)",
+  "value": [
+    { "@odata.id": null, "Total": 24, "MxA": 8 }
+  ]
+}
+</pre>
+<p>Ralf: Example 5:</p>
+<pre>
+GET ~/Sales?$apply=aggregate(Amount with sum as Total,Amount with max as MxA)
+results in
+{
+  "@odata.context": "$metadata#Sales(Total,MxA)",
+  "value": [
+    { "@odata.id": null, "Total": 24, "MxA": 8 }
+  ]
+}
+</pre>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-857 as proposed. <b>Gerald</b> seconds.</p>
+<p>ODATA-857 is resolved as proposed</p>
+
+
+<h5>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-860" target="_blank">ODATA-860</a> Move definition of Custom Aggregation Method to separate subsection.</h5>
+
+<p>Ralf: <br>
+3.1.3.6 Custom Aggregation Methods<br>
+Services can define custom aggregation methods if the functionality offered by the standard aggregation methods is not sufficient for the intended consumers. <br>
+Custom aggregation methods MUST use a namespace-qualified name (see [OData-ABNF]), i.e. contain at least one dot. Dot-less names are reserved for future versions of this specification.<br>
+3.1.4 Keyword from<br>
+<br>
+</p>
+<p>Mike: add example</p>
+<p>Ralf: ODATA-860 is OPEN</p>
+ 
+
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-860 as proposed, including adding a new example for custom aggregations. <b>Mark</b> seconds.</p>
+<p>ODATA-860 is resolved as proposed, including adding a new example for custom aggregation</p>
+
+
+<h3>7. Next meeting</h3>
+
+<h4>7.1 Thursday October 15, 2015 during 8-10am PT?</h4>
+<p>No objections</p>
+
+<h3>8. AOB and wrap up</h3>
+ 
+<p>Mike: New process for highlighting issues for discussion: mark the "Environment" field with [Needs Discussion]. We will add these to the agenda, along with new and proposed issues to be discussed.</p>
+ 
+
+<h3>8.1 Process issues Errata03</h3>
+
+<p>All: Walk through Change document</p>
+
+ 
+<h5>8.1.1 Misc. batch resolutions:</h5>
+
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-833" target="_blank">ODATA-833</a> Example 40 applies term RecursiveHierarchy term incorrectly</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-851" target="_blank">ODATA-851</a> groupby(): ABNF still allows more than two parameters</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-857" target="_blank">ODATA-857</a> Example 5: use two aggregate expressions</li>
+</ul>
+
+<p><b>Mike</b>: I <b>move</b> we close ODATA-833, ODATA-851, and ODATA-857 as applied. <b>Ramesh</b> seconds.</p>
+<p>ODATA-833, ODATA-851, and ODATA-857 are CLOSED as applied</p>
+
+
+<h5>8.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-840" target="_blank">ODATA-840</a> Add example for $expand=NavProp/$count</h5>
+
+<p>Ralf: ODATA-840 is OPEN</p>
+
+<p>Ralf:</p> 
+<ul><li>Add example to URL conventions using $expand=NavProp/$count. </li>
+<li>Add section/example to JSON Format describing that in this case the navigation property is NOT represented other than via instance annotations, and that NavProp@odata.count annotation is part of the response.</li>
+</ul>
+
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-840 as proposed. Ted seconds.</p>
+
+<p>ODATA-840 is resolved as proposed</p>
+
+
+<h5>8.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-837" target="_blank">ODATA-837</a> Example 28: replace $deltaToken with a valid custom query option</h5>
+
+<p>Ralf: Use server-generated-secret instead of $deltaToken</p>
+<p>Ralf: ODATA-837 is OPEN</p>
+
+
+<h5>8.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-853" target="_blank">ODATA-853</a> 8.3.3: last sentence should use "header" instead of "preference"</h5>
+
+<p>Ralf: 8.3.3 Header OData-EntityId<br>
+
+A response to a create operation that returns 204 No Content MUST include an OData-EntityId response header. The value of the header is the entity-id of the entity that was acted on by the request. The syntax of the OData-EntityId preference is specified in [OData-ABNF].<br>
+</p>
+
+<p>Ralf: ODATA-853 is OPEN</p>
+ 
+
+<p><b>Mark</b>: I <b>move</b> to resolve OData-853 as propose. <b>Gerald</b> seconds.</p>
+ 
+<p>ODATA-853 is resolved as proposed</p>
+
+<h5>8.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-852" target="_blank">ODATA-852</a> 8.3.1: superfluous text paragraph 3, sentence 1</h5>
+
+<p>Ralf: Change from (OLD):<br>
+<br>
+As OData allows multiple formats for representing the same structured information, services SHOULD use weak ETags that only depend on the format-independent entity state is recommended.<br>
+<br>
+to (NEW):<br>
+<br>
+As OData allows multiple formats for representing the same structured information, services SHOULD use weak ETags that only depend on the format-independent entity state.<br>
+<br>
+</p>
+
+<p>Ralf: ODATA-852 is OPEN</p>
+
+<p><b>Mark</b>: I <b>move</b> to resolve OData-852 as proposed. <b>Gerald</b> seconds.</p>
+<p>ODATA-852 is resolved as proposed</p>
+
+<h5>8.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-835" target="_blank">ODATA-835</a> 5.1: PATCH missing in list of operations that do not allow system query options</h5>
+
+<p>Ralf: Change from (OLD):<br>
+<br>
+POST requests to entity sets as well as all PUT and DELETE requests do not allow system query options.<br>
+<br>
+to (NEW):<br>
+<br>
+POST requests to entity sets as well as all PATCH, PUT and DELETE requests do not allow system query options.<br>
+<br>
+</p>
+
+<p>Ralf: ODATA-835 is OPEN</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-835 as proposed. <b>Gerald</b> seconds.</p>
+<p>ODATA-835 is resolved as proposed</p>
+
+
+<h5>8.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-828" target="_blank">ODATA-828</a> Update I-JSON reference</h5>
+
+<p>Ralf: Update from (OLD)<br>
+<br>
+[I-JSON] Bray, T., Ed., "The I-JSON Message Format" draft-bray-i-json-01, 06 January 2014. http://tools.ietf.org/html/draft-bray-i-json-01 <br>
+<br> 
+ to (NEW): <br>
+<br> 
+[RFC7493] Bray, T., Ed., "The I-JSON Message Format", RFC 7493, March 2015. https://tools.ietf.org/html/rfc7493<br>
+<br>
+<p>
+
+<p>Ralf: ODATA-828 is OPEN</p>
+
+<p><b>Mark</b> is going to check if there are significant changes between the two document versions</p>
+
+
+<h5>8.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-861" target="_blank">ODATA-861</a> ODATA-813 / Define behavior when neither accept header or $format query parameter is specified</h5>
+
+<p>Ralf: As far as I could find, the spec does not define what the expected behavior should be when neither an accept header nor a $format query parameter is specified in a request. Does the server return the response in a spec defined default format or does the server get to choose which format to return results in. <br>
+ <br>
+ We should also cover the case of ambiguous Accept headers containing */*: currently the Olingo server library responds to requests from IE and Chrome with Atom-XML: <br>
+ - Internet Explorer sends Accept: text/html, application/xhtml+xml, */* <br>
+ - Chrome sends Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8 <br>
+ As application/json isn't explicitly mentioned, they use application/xml<br>
+<br>
+</p>
+
+<p>Ralf: ODATA-861 is OPEN</p>
+ 
+
+<p><b>Mike</b>: Proposal: Clarify in specification that, in absence of $format or accept header, service is allowed to return results in any format.<br>
+<br>
+The current olingo behavior is, unfortunately, correct given the headers specified by IE and Chrome.<br>
+<br>
+</p>
+
+<p><b>Ramesh</b>: I <b>move</b> to resolve ODATA-861 as proposed. <b>Mark</b> seconds.</p>
+
+<p>ODATA-861 is resolved as proposed</p>
+ 
+
+<h3>Meeting adjourned</h3>
+
+</body>
+</html>
+
