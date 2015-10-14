@@ -7,18 +7,33 @@
         }
     ],
     "properties": {
+        "odata-version": {
+            "enum": [
+                "4.0"
+            ]
+        },
         "schemas": {
             "type": "object",
-            "@TODO": "define",
             "patternProperties": {
                 "": {
-                    "$ref": "#/definitions/odata.schema"
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/odata.schema-ref"
+                        },
+                        {
+                            "$ref": "#/definitions/odata.schema"
+                        }
+                    ]
                 }
             }
         },
         "references": {
-            "@TODO": "define",
-            "includeAnnotations@TODO": "uniqueItems:true"
+            "type": "object",
+            "patternProperties": {
+                "": {
+                    "$ref": "#/definitions/odata.reference"
+                }
+            }
         }
     },
     "definitions": {
@@ -338,17 +353,189 @@
             },
             "minItems": 2
         },
+        "odata.annotation": {
+            "description": "Annotations can be any OData JSON type"
+        },
+        "odata.action": {
+            "type": "object",
+            "properties": {
+                "isBound": {
+                    "type": "boolean"
+                },
+                "entitySetPath": {
+                    "type": "string"
+                },
+                "parameters": {
+                    "type": "object",
+                    "patternProperties": {
+                        "": {
+                            "$ref": "http://json-schema.org/draft-04/schema#"
+                        }
+                    }
+                },
+                "returnType": {
+                    "$ref": "http://json-schema.org/draft-04/schema#"
+                }
+            }
+        },
+        "odata.entityContainer": {
+            "type": "object",
+            "@TODO": "define"
+        },
         "odata.error": {
             "type": "object",
             "properties": {
-                "": {
-                    
+                "error": {
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                            "type": "string"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "target": {
+                            "type": "string"
+                        },
+                        "details": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "target": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "innererror": {
+                            "description": "The contents of this object are service-defined"
+                        }
+                    }
+                }
+            }
+        },
+        "odata.function": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/odata.action"
+                }
+            ],
+            "properties": {
+                "isComposable ": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "odata.reference": {
+            "type": "object",
+            "properties": {
+                "includeAnnotations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "termNamespace": {
+                                "type": "string"
+                            },
+                            "targetNamespace": {
+                                "type": "string"
+                            },
+                            "qualifier": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "uniqueItems": true
                 }
             },
-            "@TODO": "define"
+            "patternProperties": {
+                "^@": {
+                    "$ref": "#/definitions/odata.annotation"
+                }
+            }
         },
         "odata.schema": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "patternProperties": {
+                            "^@": {
+                                "$ref": "#/definitions/odata.annotation"
+                            }
+                        }
+                    }
+                },
+                "actions": {
+                    "type": "object",
+                    "patternProperties": {
+                        "": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/odata.action"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/odata.action"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "functions": {
+                    "type": "object",
+                    "patternProperties": {
+                        "": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/odata.function"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/odata.function"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "terms": {
+                    "@TODO": "define"
+                },
+                "entityContainer": {
+                    "$ref": "#/definitions/odata.entityContainer"
+                }
+            },
+            "patternProperties": {
+                "^@": {
+                    "$ref": "#/definitions/odata.annotation"
+                }
+            }
+        },
+        "odata.schema-ref": {
+            "type": "object",
+            "properties": {
+                "$ref": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "required": [
+                "$ref"
+            ]
         }
     }
 }
