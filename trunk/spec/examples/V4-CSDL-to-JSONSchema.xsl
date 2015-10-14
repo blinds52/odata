@@ -16,6 +16,9 @@
 
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
 
+  <xsl:variable name="validationNamespace" select="'Org.OData.Core.V1'" />
+  <xsl:variable name="validationAlias" select="//edmx:Include[@Namespace=$validationNamespace]/@Alias" />
+
   <xsl:key name="methods"
     match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function" use="concat(../@Namespace,'.',@Name)" />
 
