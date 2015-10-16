@@ -14,25 +14,21 @@
         },
         "schemas": {
             "type": "object",
-            "patternProperties": {
-                "": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/odata.schema-ref"
-                        },
-                        {
-                            "$ref": "#/definitions/odata.schema"
-                        }
-                    ]
-                }
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "$ref": "#/definitions/odata.ref"
+                    },
+                    {
+                        "$ref": "#/definitions/odata.schema"
+                    }
+                ]
             }
         },
         "references": {
             "type": "object",
-            "patternProperties": {
-                "": {
-                    "$ref": "#/definitions/odata.reference"
-                }
+            "additionalProperties": {
+                "$ref": "#/definitions/odata.reference"
             }
         }
     },
@@ -367,10 +363,8 @@
                 },
                 "parameters": {
                     "type": "object",
-                    "patternProperties": {
-                        "": {
-                            "$ref": "http://json-schema.org/draft-04/schema#"
-                        }
+                    "additionalProperties": {
+                        "$ref": "http://json-schema.org/draft-04/schema#"
                     }
                 },
                 "returnType": {
@@ -378,7 +372,41 @@
                 }
             }
         },
+        "odata.actionImport": {
+            "type": "object",
+            "@TODO": "define"
+        },
         "odata.entityContainer": {
+            "type": "object",
+            "@TODO": "define",
+            "properties": {
+                "entitySets": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/odata.entitySet"
+                    }
+                },
+                "singletons": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/odata.singleton"
+                    }
+                },
+                "actionImports": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/odata.actionImport"
+                    }
+                },
+                "functionImports": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/odata.functionImport"
+                    }
+                }
+            }
+        },
+        "odata.entitySet": {
             "type": "object",
             "@TODO": "define"
         },
@@ -434,6 +462,23 @@
                 }
             }
         },
+        "odata.functionImport": {
+            "type": "object",
+            "@TODO": "define"
+        },
+        "odata.ref": {
+            "description": "JSON Reference to a CSDL element",
+            "type": "object",
+            "properties": {
+                "$ref": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "required": [
+                "$ref"
+            ]
+        },
         "odata.reference": {
             "type": "object",
             "properties": {
@@ -478,38 +523,34 @@
                 },
                 "actions": {
                     "type": "object",
-                    "patternProperties": {
-                        "": {
-                            "anyOf": [
-                                {
+                    "additionalProperties": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/odata.action"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
                                     "$ref": "#/definitions/odata.action"
-                                },
-                                {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/odata.action"
-                                    }
                                 }
-                            ]
-                        }
+                            }
+                        ]
                     }
                 },
                 "functions": {
                     "type": "object",
-                    "patternProperties": {
-                        "": {
-                            "anyOf": [
-                                {
+                    "additionalProperties": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/odata.function"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
                                     "$ref": "#/definitions/odata.function"
-                                },
-                                {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/odata.function"
-                                    }
                                 }
-                            ]
-                        }
+                            }
+                        ]
                     }
                 },
                 "terms": {
@@ -525,17 +566,9 @@
                 }
             }
         },
-        "odata.schema-ref": {
+        "odata.singleton": {
             "type": "object",
-            "properties": {
-                "$ref": {
-                    "type": "string",
-                    "format": "uri"
-                }
-            },
-            "required": [
-                "$ref"
-            ]
+            "@TODO": "define"
         }
     }
 }

@@ -432,7 +432,7 @@
             "FirstClass@Core.Description": "Shipped with highest priority",
             "TwoDay@Core.Description": "Shipped within two days",
             "Overnight@Core.Description": "Shipped overnight",
-            "@Core.Description": "Method of shipping"
+            "description": "Method of shipping"
         },
         "org.example.Pattern": {
             "anyOf": [
@@ -473,12 +473,12 @@
         "org.example.Length": {
             "type": "integer",
             "format": "int32",
-            "@Org.OData.Measurements.V1.Unit": "Centimeters"
+            "@Org.OData.Measures.V1.Unit": "Centimeters"
         },
         "org.example.Weight": {
             "type": "integer",
             "format": "int32",
-            "@Org.OData.Measurements.V1.Unit": "Kilograms"
+            "@Org.OData.Measures.V1.Unit": "Kilograms"
         },
         "org.example.Size": {
             "type": "object",
@@ -865,11 +865,16 @@
         },
         "Model1.Size": {
             "enum": [
-                "Small",
-                "Medium",
-                "Large"
+                "S",
+                "M",
+                "L"
             ],
-            "@Core.Description": "Sizes"
+            "S@Core.Description": "Small",
+            "M@Core.Description": "Medium",
+            "L@Core.Description": "Large",
+            "description": "T-Shirt Size",
+            "@Core.Description#alt": "Size (S, M, L)",
+            "@Core.LongDescription": "Size, expressed with letters familiar from e.g. T-Shirt sizes"
         },
         "Model1.Color": {
             "anyOf": [
@@ -1200,7 +1205,7 @@
                         "string",
                         "null"
                     ],
-                    "@Core.Description": "Contains the unit for property Quantity"
+                    "description": "Contains the unit for property Quantity"
                 }
             }
         },
@@ -1222,7 +1227,7 @@
             ],
             "format": "decimal",
             "multipleOf": 1,
-            "@Core.Description": "A decimal without fractional part"
+            "description": "A decimal without fractional part"
         },
         "Model1.IntegerDecimal10": {
             "type": [
@@ -1234,7 +1239,7 @@
             "multipleOf": 1,
             "minimum": -9999999999,
             "maximum": 9999999999,
-            "@Core.Description": "A ten-digit integer"
+            "description": "A ten-digit integer"
         },
         "Model1.VariableDecimal": {
             "type": [
@@ -1243,7 +1248,7 @@
             ],
             "format": "decimal",
             "scale": "variable",
-            "@Core.Description": "A floating decimal"
+            "description": "A floating decimal"
         },
         "Model1.ExactTimestamp": {
             "type": "string",
@@ -1387,7 +1392,7 @@
                     "items": {
                         "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
                     },
-                    "@Core.Description": "Change tracking supports inlining these stream properties"
+                    "description": "Change tracking supports inlining these stream properties"
                 }
             }
         }
@@ -1430,7 +1435,7 @@
             "$ref": "#/schemas/org.example"
         },
         "org.example": {
-            "@Core.Description": "Examples from Part 3: CSDL",
+            "description": "Examples from Part 3: CSDL",
             "functions": {
                 "TopSellingProducts": {
                     "parameters": {
@@ -1540,7 +1545,7 @@
             "$ref": "#/schemas/org.example2"
         },
         "org.example2": {
-            "@Core.Description": "Examples from Part 3: CSDL - second schema",
+            "description": "Examples from Part 3: CSDL - second schema",
             "terms": {
                 "IsURI": {
                     "anyOf": [
@@ -1553,7 +1558,7 @@
                     ],
                     "default": true,
                     "appliesTo": "Property",
-                    "@Core.Description": "Properties and terms annotated with this term MUST contain a valid URI",
+                    "description": "Properties and terms annotated with this term MUST contain a valid URI",
                     "@Core.RequiresType": "Edm.String"
                 }
             },
@@ -2160,7 +2165,7 @@
                         }
                     }
                 },
-                "@Core.Description": "The Sales Container"
+                "description": "The Sales Container"
             }
         },
         "One": {
@@ -2187,10 +2192,7 @@
                                 "$ref": "#/definitions/Schema.One.Waldo"
                             },
                             "Reason": {
-                                "type": [
-                                    "string",
-                                    "null"
-                                ]
+                                "type": "string"
                             }
                         }
                     }
@@ -2398,7 +2400,7 @@
                         "EntityContainer",
                         "EntitySet"
                     ],
-                    "@Core.Description": "Advanced change tracking capabilities of this service or entity set"
+                    "description": "Advanced change tracking capabilities of this service or entity set"
                 }
             },
             "annotations": [
@@ -2409,6 +2411,12 @@
                     },
                     "@Y.Developer": {
 
+                    },
+                    "description": "External description",
+                    "@Org.OData.Core.V1.Description#alt": "Alternative description",
+                    "@Core.Description": {
+                        "@odata.type": "#Path",
+                        "value": "SomeProperty"
                     }
                 },
                 {

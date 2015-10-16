@@ -8,7 +8,7 @@
     TODO:
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856
     - - inline and explace style
-    - Core.Description -> title/description?
+     - default for Geo types in GeoJSON
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -16,8 +16,10 @@
 
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
 
-  <xsl:variable name="validationNamespace" select="'Org.OData.Core.V1'" />
-  <xsl:variable name="validationAlias" select="//edmx:Include[@Namespace=$validationNamespace]/@Alias" />
+  <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
+  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias" />
+  <xsl:variable name="coreDescription" select="concat('@',$coreNamespace,'.Description')" />
+  <xsl:variable name="coreDescriptionAliased" select="concat('@',$coreAlias,'.Description')" />
 
   <xsl:key name="methods"
     match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function" use="concat(../@Namespace,'.',@Name)" />
@@ -898,7 +900,14 @@
       </xsl:if>
     </xsl:variable>
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="$name" />
+    <xsl:choose>
+      <xsl:when test="($name=$coreDescription or $name=$coreDescriptionAliased) and (@String or edm:String)">
+        <xsl:text>description</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$name" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>":</xsl:text>
     <xsl:apply-templates select="@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation']"
       mode="list"
