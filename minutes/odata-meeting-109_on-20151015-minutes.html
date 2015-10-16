@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #109 Thursday Oct 15, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #109 Thursday Oct 15, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-10-15 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Maleika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39120">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Agenda approved as published. </p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from October 08, 2015 TC meeting #108: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/56677/odata-meeting-108_on-20151008-minutes.html">https://www.oasis-open.org/committees/download.php/56677/odata-meeting-108_on-20151008-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due October 15, 2015</h4>
+<p>None</p>
+
+<h3>5. Extension for Data Aggregation</h3>
+
+<h4>5.1 Issues for Data Aggregation in New or Open state</h4>
+
+<h5>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-866" target="_blank">ODATA-866</a> - 3.14 Transformation compute: add reference to numeric promotion rules</h5>
+
+Ralf Handl (SAP): Explicitly refer to URL Conventions and add sentence: 
+
+ 
+
+The type of the property is determined by the rules for evaluating $filter expressions and numeric promotion defined in [OData-URL].
+
+Ralf Handl (SAP): ODATA-866 is OPEN
+
+Hubert Heijkers: I move to resolve ODATA-866 as proposed.
+Gerald Krause (SAP): I second.
+
+Ralf Handl (SAP): ODATA-866 is resolved as proposed
+
+
+<h4>5.2 Review documents</h4>
+
+<h5>5.2.1 Specification document:</h5>
+<a href="https://www.oasis-open.org/committees/download.php/56661/odata-data-aggregation-ext-v4.0-wd04-2015-10-09.docx" target="_blank">https://www.oasis-open.org/committees/download.php/56661/odata-data-aggregation-ext-v4.0-wd04-2015-10-09.docx</a>
+
+<h5>5.2.2 Summary of changes:</h5>
+<a href="https://www.oasis-open.org/committees/download.php/56662/odata-data-aggregation%20CSD03%20Summary%20of%20Non-Material%20Changes.docx" target="_blank">https://www.oasis-open.org/committees/download.php/56662/odata-data-aggregation%20CSD03%20Summary%20of%20Non-Material%20Changes.docx</a>
+
+<h5>5.2.3 ABNF Changes:</h5>
+<a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-abnf.txt?op=diff&amp;rev=729" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-abnf.txt?op=diff&amp;rev=729</a> 
+
+<h5>5.2.4 ABNF Testcases:</h5>
+<a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-testcases.xml?op=diff&amp;rev=752" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-testcases.xml?op=diff&amp;rev=752</a>
+
+<h5>5.2.5 Misc.</h5>
+
+<p>Ralf: Fix version V4.0_CS02</p>
+
+<p>Ralf: Affects version: V4.0_CSD03</p>
+
+<h5>5.2.6 <a href="https://issues.oasis-open.org/browse/ODATA-871" target="_blank">ODATA-871</a> - Clarify that properties added with Compute MUST include the odata.type (if not described in $metadata)</h5>
+
+<p>Ralf: ODATA-871 is OPEN</p>
+
+<p>Ralf: Proposal: Clarify that properties added with Compute or Aggregated MUST include the odata.type following rules defined for dynamic properties</p>
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-871 as proposed. <b>Mike</b> seconds.</p>
+
+<p>ODATA-871 is resolved as proposed</p>
+
+<h3>6. JSON CSDL</h3>
+
+<h4>6.1 Issues for JSON Format for CSDL in New or Open state</h4>
+
+<h5>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-862" target="_blank">ODATA-862</a> - Represent all type references as JSON Schema types/references</h5>
+
+<p>Ralf: ODATA-862 is OPEN</p>
+
+<p>Ralf: Example for entity sets:</p>
+
+<pre>
+"entitySets": {
+    "Waldos": {
+        "entityType": {
+            "$ref": "#/definitions/Schema.Two.Waldo"
+        }
+    },
+    "Freds": {
+        "entityType": {
+            "$ref": "#/definitions/Schema.Two.Fred"
+        },
+        "navigationPropertyBindings": {
+            "Waldos": {
+                "target": "Waldos"
+            },
+            "MoreWaldos": {
+                "target": "Namespace.Container/Freds"
+            },
+            "EvenMoreWaldos": {
+                "target": "Namespace.Container/Orders/Items/M.E/Nav"
+            }
+        }
+    }
+</pre>
+<p>Ralf: before:</p>
+<pre>
+ "entitySets": {
+      "Waldos": {
+          "entityType": {
+              "$ref": "#/definitions/Schema.Two.Waldo"
+          }
+      },
+      "Freds": {
+          "entityType": {
+              "$ref": "#/definitions/Schema.Two.Fred"
+          },
+          "navigationPropertyBindings": {
+              "Waldos": {
+                  "target": "Waldos"
+              },
+              "MoreWaldos": {
+                  "target": "Namespace.Container/Freds"
+              },
+              "EvenMoreWaldos": {
+                  "target": "Namespace.Container/Orders/Items/M.E/Nav"
+              }
+          }
+      }
+</pre>
+<pre>
+"entitySets": {
+    "Waldos": {
+        "entityType": {
+            "$ref": "#/definitions/Schema.Two.Waldo"
+        }
+    },
+    "Freds": {
+        "entityType": {
+            "$ref": "#/definitions/Schema.Two.Fred"
+        },
+        "navigationPropertyBindings": {
+            "Waldos": {
+                "target": "Waldos"
+            },
+            "MoreWaldos": {
+                "target": "Namespace.Container/Freds"
+            },
+            "EvenMoreWaldos": {
+                "target": "Namespace.Container/Orders/Items/M.E/Nav"
+            }
+        }
+    }
+</pre>
+<p>Ralf:</p>
+<pre>
+"Freds": {
+    "entityType": "Schema.Two.Fred"
+},
+</pre>
+<p>Ralf:</p>
+<pre>
+"functionImports": {
+    "Bar": {
+        "function": {
+            "$ref": "#/schemas/Schema.One/functions/Foo"
+        },
+        "includeInServiceDocument": true,
+        "entitySet": "Namespace.Container/Freds"
+    },
+    "CreatedEntities": {
+        "function": {
+            "$ref": "#/schemas/Model1/functions/CreatedEntities"
+        },
+        "entitySet": "Waldos"
+    }
+}
+</pre>
+<p>Ralf:</p>
+<pre>
+"functions": {
+    "Foo": {
+        "returnType": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "maxLength": 42
+        }
+    },
+</pre>
+<p>Ralf:</p>
+<pre>
+"Schema.One": {
+    "actions": {
+        "Rejection": [
+            {
+            },
+            {
+                "isBound": true,
+                "parameters": {
+                    "in": {
+                        "$ref": "#/definitions/Schema.One.Waldo"
+                    }
+                }
+            },
+            {
+                "isBound": true,
+                "parameters": {
+                    "in": {
+                        "$ref": "#/definitions/Schema.One.Waldo"
+                    },
+                    "Reason": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+</pre>
+<p>Ralf: JSON Payloads with function advertising:</p>
+<pre>
+{
+  "@odata.context": "http://host/service/$metadata#LeaveRequests/$entity",
+  "#Model.Approval": {},
+  ...
+}
+</pre>
+<p>Mike: should we include patternProperties in all schemas for entity types and complex types for annotations and for action/function advertisement?</p>
+<p>Mike to open a Jira issue</p>
+
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-862 as proposed. <b>Hubert</b> seconds.</p>
+
+<p>ODATA-862 is resolved as proposed</p>
+
+<p><b>Mike</b>: I <b>move</b> we close ODATA_862 as applied. <b>Hubert</b> seconds.</p>
+
+<p>ODATA-862 is closed as applied</p>
+
+
+<h5>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-863" target="_blank">ODATA-863</a> - ODATA-618 / Represent Terms similar to Types</h5>
+
+<p>Ralf: ODATA-863 is OPEN</p>
+
+<p>Ralf:</p>
+<pre>
+$ref:#/definitions/Namespace.Typename
+$ref:#/schemas/Namespace/functions/Functionname
+</pre>
+
+<p>Ralf: Defer ODATA-863 until we resolve ODATA-618</p>
+
+<h5>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-864" target="_blank">ODATA-864</a> - Translate @Core.Description annotations into JSON Schema description keywords</h5>
+
+<p>Ralf:</p>
+<pre>
+"Model1.Size": {
+    "enum": [
+        "Small",
+        "Medium",
+        "Large"
+    ],
+    "@Core.Description": "Sizes"
+},
+</pre>
+
+<p>Ralf:</p>
+<pre>
+"Model1.Size": {
+    "enum": [
+        "Small",
+        "Medium",
+        "Large"
+    ],
+    "description": "Sizes"
+},
+</pre>
+
+<p>Ralf: ODATA-864 is OPEN</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-864 as proposed. <b>Hubert</b> seconds.</p>
+
+<p>ODATA-864 is resolved as proposed</p>
+
+<h4>6.2 Issues for JSON Format for CSDL in Applied state</h4>
+
+<h5>6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-841" target="_blank">ODATA-841</a> - Representation of Precision and Scale</h5>
+
+<p>Ralf:</p>
+<pre>
+"Price": {
+    "type": [
+        "number",
+        "string",
+        "null"
+    ],
+    "format": "decimal",
+    "precision": 15,
+    "scale": 3,
+    "multipleOf": 1e-3,
+    "minimum": -999999999999.999,
+    "maximum": 999999999999.999
+},
+</pre>
+
+<p>Hubert: precision and scale missing in Example 14: nullable property Price of type Edm.Decimal with precision 15 and scale 3</p>
+<p>Mike: add precision and scale to table, comment that these are OData-specific keywords</p>
+<p>Mike: Added to issue:<br>
+<br>
+Add "precision/scale" to primitive types table in 4.1.2.1, Primitive Properties.<br>
+<br>
+Also add precision, scale and format (decimal) to "Price" in example 14 as per description.<br>
+<br>
+In Example 8, add multipleOf, minimum, maximum, and precision to "DecimalValue"<br>
+<br>
+Price in Example 44 looks correct, just a little weird at first (and thus good to have the example).<br>
+<br>
+(also update numbering of examples)<br>
+<br>
+</p>
+
+<p>Ralf/Mike: add comments to example 44 explaining the weirdness.</p>
+
+<h5>6.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-855" target="_blank">ODATA-855</a> - Should we define patterns for some of the primitive types</h5>
+
+<p>Ralf:</p>
+
+<pre>
+"TimeOfDayValue": {
+    "type": [
+        "string",
+        "null"
+    ],
+    "format": "time",
+    "precision": 6,
+    "default": "07:59:59.999"
+},
+</pre>
+
+<h5>6.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-856" target="_blank">ODATA-856</a> - Add annotations for Min/Max/Pattern</h5>
+
+<p>Mike: Example 15 still has a pattern for "Created"<br>
+Example 20 still has a pattern for "ExactTimeStamp"</p>
+
+<h3>7. Next meeting</h3>
+
+<h4>7.1 Thursday October 22, 2015 during 8-10am PT?</h4>
+
+<p>Agreed</p>
+
+<h3>8. AOB and wrap up</h3>
+
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</body>
+</html>
+
