@@ -229,11 +229,11 @@
       <!-- 11 Type Definition -->
       <!-- Example 27 -->
       <TypeDefinition Name="Length" UnderlyingType="Edm.Int32">
-        <Annotation Term="Org.OData.Measurements.V1.Unit" String="Centimeters" />
+        <Annotation Term="Org.OData.Measures.V1.Unit" String="Centimeters" />
       </TypeDefinition>
 
       <TypeDefinition Name="Weight" UnderlyingType="Edm.Int32">
-        <Annotation Term="Org.OData.Measurements.V1.Unit" String="Kilograms" />
+        <Annotation Term="Org.OData.Measures.V1.Unit" String="Kilograms" />
       </TypeDefinition>
 
       <ComplexType Name="Size">
@@ -792,10 +792,20 @@
       </Annotation>
 
       <EnumType Name="Size" IsFlags="false">
-        <Annotation Term="Core.Description" String="Sizes" />
-        <Member Name="Small" />
-        <Member Name="Medium" />
-        <Member Name="Large" />
+        <Annotation Term="Core.Description" String="T-Shirt Size" />
+        <Annotation Term="Core.Description" String="Size (S, M, L)" Qualifier="alt" />
+        <Annotation Term="Core.LongDescription" String="Size, expressed with letters familiar from e.g. T-Shirt sizes" />
+        <Member Name="S">
+          <Annotation Term="Core.Description" String="Small" />
+        </Member>
+        <Member Name="M">
+          <Annotation Term="Core.Description" String="Medium" />
+        </Member>
+
+        <Member Name="L">
+          <Annotation Term="Core.Description" String="Large" />
+        </Member>
+
       </EnumType>
 
       <EnumType Name="Color" UnderlyingType="Edm.Int64" IsFlags="true">
@@ -975,7 +985,7 @@
       </Action>
       <Action Name="Rejection" IsBound="true">
         <Parameter Name="in" Type="One.Waldo" Nullable="false" />
-        <Parameter Name="Reason" Type="Edm.String" MaxLength="max" Nullable="true" />
+        <Parameter Name="Reason" Type="Edm.String" MaxLength="max" Nullable="false" />
       </Action>
       <EntityType Name="Waldo">
         <Key>
@@ -1049,6 +1059,9 @@
             <!-- property values not already specified in the base term annotation go here -->
           </Record>
         </Annotation>
+        <Annotation Term="Org.OData.Core.V1.Description" String="External description" />
+        <Annotation Term="Org.OData.Core.V1.Description" String="Alternative description" Qualifier="alt" />
+        <Annotation Term="Core.Description" Path="SomeProperty" />
       </Annotations>
 
       <Term Name="DevelopmentTeam" Type="Collection(Y.DeveloperType)">
