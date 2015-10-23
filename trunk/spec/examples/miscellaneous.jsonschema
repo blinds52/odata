@@ -254,9 +254,7 @@
                         "string",
                         "null"
                     ],
-                    "@Core.IsLanguageDependent": {
-
-                    }
+                    "@Core.IsLanguageDependent": true
                 }
             }
         },
@@ -890,9 +888,7 @@
                 }
             ],
             "Yellow@odata.value": 1,
-            "Yellow@Does.Work": {
-
-            },
+            "Yellow@Does.Work": true,
             "Yellow@For.Testing": {
                 "@odata.type": "#IsOf",
                 "type": "Edm.Binary",
@@ -1176,9 +1172,7 @@
         },
         "Model1.AnnotationOnly": {
             "type": "object",
-            "@Some.Tag": {
-
-            }
+            "@Some.Tag": true
         },
         "Model1.Order": {
             "type": "object",
@@ -1438,8 +1432,9 @@
             "description": "Examples from Part 3: CSDL",
             "functions": {
                 "TopSellingProducts": {
-                    "parameters": {
-                        "Year": {
+                    "parameters": [
+                        {
+                            "name": "Year",
                             "type": [
                                 "number",
                                 "string",
@@ -1451,7 +1446,7 @@
                             "minimum": -9999,
                             "maximum": 9999
                         }
-                    },
+                    ],
                     "returnType": {
                         "type": "array",
                         "items": {
@@ -1895,21 +1890,13 @@
             },
             "@Is.Null": {
                 "@odata.type": "#Null",
-                "@Within.Null": {
-
-                }
+                "@Within.Null": true
             },
-            "@Is.Null@Next.to.Null": {
-
-            },
+            "@Is.Null@Next.to.Null": true,
             "@Vocabulary1.SubTitle": 1234,
-            "@Vocabulary1.SubTitle@For.Constant": {
-
-            },
+            "@Vocabulary1.SubTitle@For.Constant": true,
             "@A.Bool": true,
-            "@A.Bool@Annotate.A.Bool": {
-
-            },
+            "@A.Bool@Annotate.A.Bool": true,
             "@A.Decimal": 12.34,
             "@A.Float": 1.23456789e4,
             "@A.Float#inf": "INF",
@@ -1956,9 +1943,7 @@
                         },
                         ")"
                     ],
-                    "@In.Apply": {
-
-                    }
+                    "@In.Apply": true
                 }
             },
             "@org.example.display.DisplayName#if": {
@@ -1971,9 +1956,7 @@
                     "Female",
                     "Male"
                 ],
-                "@In.If": {
-
-                }
+                "@In.If": true
             },
             "@UI.CollectionFacet#Contacts": [
                 {
@@ -2004,9 +1987,7 @@
                                                 "@odata.type": "#Null"
                                             }
                                         ],
-                                        "@In.Ge": {
-
-                                        }
+                                        "@In.Ge": true
                                     },
                                     {
                                         "@odata.type": "#Gt",
@@ -2082,22 +2063,24 @@
             },
             "functions": {
                 "CreatedEntities": {
-                    "parameters": {
-                        "before": {
+                    "parameters": [
+                        {
+                            "name": "before",
                             "type": [
                                 "string",
                                 "null"
                             ],
                             "format": "date-time"
                         },
-                        "after": {
+                        {
+                            "name": "after",
                             "type": [
                                 "string",
                                 "null"
                             ],
                             "format": "date-time"
                         }
-                    },
+                    ],
                     "returnType": {
                         "type": "array",
                         "items": {
@@ -2113,8 +2096,9 @@
                     }
                 },
                 "TopSellingProducts": {
-                    "parameters": {
-                        "Year": {
+                    "parameters": [
+                        {
+                            "name": "Year",
                             "type": [
                                 "number",
                                 "string",
@@ -2126,7 +2110,7 @@
                             "minimum": -9999,
                             "maximum": 9999
                         }
-                    },
+                    ],
                     "returnType": {
                         "type": "array",
                         "items": {
@@ -2175,31 +2159,39 @@
             "actions": {
                 "Rejection": [
                     {
+                        "parameters": [
 
+                        ]
                     },
                     {
-                        "isBound": true,
-                        "parameters": {
-                            "in": {
+                        "parameters": [
+                            {
+                                "name": "foo",
                                 "$ref": "#/definitions/Schema.One.Waldo"
                             }
-                        }
+                        ],
+                        "isBound": true
                     },
                     {
-                        "isBound": true,
-                        "parameters": {
-                            "in": {
+                        "parameters": [
+                            {
+                                "name": "bar",
                                 "$ref": "#/definitions/Schema.One.Waldo"
                             },
-                            "Reason": {
+                            {
+                                "name": "Reason",
                                 "type": "string"
                             }
-                        }
+                        ],
+                        "isBound": true
                     }
                 ]
             },
             "functions": {
                 "Foo": {
+                    "parameters": [
+
+                    ],
                     "returnType": {
                         "type": [
                             "string",
@@ -2209,22 +2201,23 @@
                     }
                 },
                 "OddWaldos": {
-                    "isBound": true,
-                    "entitySetPath": "in",
-                    "parameters": {
-                        "in": {
+                    "parameters": [
+                        {
+                            "name": "waldos",
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/Schema.One.Waldo"
                             }
                         }
-                    },
+                    ],
                     "returnType": {
                         "type": "array",
                         "items": {
                             "$ref": "#/definitions/Schema.One.Waldo"
                         }
-                    }
+                    },
+                    "isBound": true,
+                    "entitySetPath": "waldos"
                 }
             },
             "entityContainer": {
@@ -2311,14 +2304,7 @@
                     "@custom.ItemIsA": "X.Person"
                 },
                 "Movie": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/X.MovieType"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
+                    "$ref": "#/definitions/X.MovieType"
                 },
                 "Friend": {
                     "anyOf": [
@@ -2335,14 +2321,7 @@
         "Y": {
             "terms": {
                 "Developer": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Y.DeveloperType"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
+                    "$ref": "#/definitions/Y.DeveloperType",
                     "baseTerm": {
                         "$ref": "#/schemas/X/terms/Person"
                     }
@@ -2487,9 +2466,7 @@
     },
     "references": {
         "http://tinyurl.com/Org-OData-Measures-V1": {
-            "@Some.Term": {
-
-            }
+            "@Some.Term": true
         },
         "http://somewhere/Vocabulary/V1": {
             "includeAnnotations": [
