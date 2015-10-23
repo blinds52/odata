@@ -6,9 +6,11 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
-    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856
-    - - inline and explace style
-     - default for Geo types in GeoJSON
+    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
+    - default for Geo types in GeoJSON
+    - annotations without explicit value: default from term definition (if inline)
+    - different representation for path expressions (tbd)
+    - place keywords within JSON Reference next to $ref, or wrap reference in anyOf or similar construct? Best practice?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -17,7 +19,7 @@
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
-  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias" />
+  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat('@',$coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat('@',$coreAlias,'.Description')" />
 
@@ -798,13 +800,11 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>{</xsl:text>
-      <xsl:apply-templates select="@*[local-name()!='Name']" mode="list" />
-      <xsl:apply-templates select="edm:Parameter" mode="hash">
-        <xsl:with-param name="after" select="@*[local-name()!='Name']" />
-      </xsl:apply-templates>
-      <xsl:apply-templates select="edm:ReturnType" mode="list">
-        <xsl:with-param name="after" select="@*[local-name()!='Name']|edm:Parameter" />
-      </xsl:apply-templates>
+      <xsl:text>"parameters":[</xsl:text>
+      <xsl:apply-templates select="edm:Parameter" mode="list" />
+      <xsl:text>]</xsl:text>
+      <xsl:apply-templates select="edm:ReturnType" mode="list2" />
+      <xsl:apply-templates select="@*[local-name()!='Name']" mode="list2" />
       <xsl:apply-templates select="edm:Annotation" mode="list2" />
       <xsl:text>}</xsl:text>
     </xsl:for-each>
@@ -813,12 +813,16 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="edm:Parameter" mode="hashvalue">
+  <xsl:template match="edm:Parameter">
+    <xsl:text>{</xsl:text>
+    <xsl:apply-templates select="@Name" />
+    <xsl:text>,</xsl:text>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
     </xsl:call-template>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:ReturnType">
@@ -919,7 +923,8 @@
     </xsl:apply-templates>
     <!-- for tagging terms -->
     <xsl:if test="count(@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation'])=0">
-      <xsl:text>{}</xsl:text>
+      <!-- TODO: try to get default value from term definition, use true if not possible -->
+      <xsl:text>true</xsl:text>
     </xsl:if>
   </xsl:template>
 
