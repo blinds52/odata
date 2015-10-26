@@ -83,7 +83,11 @@
                     "type": "string"
                 },
                 "Category": {
-                    "$ref": "#/definitions/org.example.Category",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    ],
                     "relationship": {
                         "partner": "Products",
                         "referentialConstraints": {
@@ -1214,6 +1218,11 @@
         "Model1.Text": {
             "type": "string"
         },
+        "Model1.LanguageDependentText": {
+            "type": "string",
+            "@Core.IsLanguageDependent": true,
+            "@Core.IsLanguageDependent@Core.DefaultLanguage": "en-US"
+        },
         "Model1.IntegerDecimal": {
             "type": [
                 "number",
@@ -2167,7 +2176,11 @@
                         "parameters": [
                             {
                                 "name": "foo",
-                                "$ref": "#/definitions/Schema.One.Waldo"
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/definitions/Schema.One.Waldo"
+                                    }
+                                ]
                             }
                         ],
                         "isBound": true
@@ -2176,7 +2189,11 @@
                         "parameters": [
                             {
                                 "name": "bar",
-                                "$ref": "#/definitions/Schema.One.Waldo"
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/definitions/Schema.One.Waldo"
+                                    }
+                                ]
                             },
                             {
                                 "name": "Reason",

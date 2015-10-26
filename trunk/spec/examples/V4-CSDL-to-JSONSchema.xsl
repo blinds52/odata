@@ -10,7 +10,6 @@
     - default for Geo types in GeoJSON
     - annotations without explicit value: default from term definition (if inline)
     - different representation for path expressions (tbd)
-    - place keywords within JSON Reference next to $ref, or wrap reference in anyOf or similar construct? Best practice?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -19,7 +18,8 @@
   <xsl:variable name="edmUri" select="'http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json'" />
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
-  <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
+  <xsl:variable name="coreAlias"
+    select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat('@',$coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat('@',$coreAlias,'.Description')" />
 
@@ -241,6 +241,7 @@
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
+      <xsl:with-param name="wrap" select="local-name()='NavigationProperty'" />
     </xsl:call-template>
     <xsl:choose>
       <xsl:when test="local-name()='Property'">
@@ -320,6 +321,7 @@
   <xsl:template name="type">
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
+    <xsl:param name="wrap" select="false" />
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
         <xsl:with-param name="type" select="$type" />
@@ -342,7 +344,10 @@
         <xsl:with-param name="marker" select="'.'" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="starts-with($type,'Collection(')">
+    <xsl:variable name="collection" select="starts-with($type,'Collection(')" />
+    <xsl:variable name="anyOf"
+      select="not($nullable='false') or (not($collection) and ($wrap or @DefaultValue or @MaxLength or @Precision or @SRID))" />
+    <xsl:if test="$collection">
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
     <xsl:choose>
@@ -510,7 +515,7 @@
         <xsl:text>,"format":"duration"</xsl:text>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
-        <xsl:if test="not($nullable='false') or @DefaultValue or @SRID">
+        <xsl:if test="$anyOf">
           <xsl:text>"anyOf":[{</xsl:text>
         </xsl:if>
         <xsl:text>"$ref":"</xsl:text>
@@ -521,13 +526,13 @@
         <xsl:if test="not($nullable='false')">
           <xsl:text>},{"type":"null"</xsl:text>
         </xsl:if>
-        <xsl:if test="not($nullable='false') or @DefaultValue or @SRID">
+        <xsl:if test="$anyOf">
           <xsl:text>}]</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="@SRID" mode="list2" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:if test="not($nullable='false') or @DefaultValue or @MaxLength or @Precision">
+        <xsl:if test="$anyOf">
           <xsl:text>"anyOf":[{</xsl:text>
         </xsl:if>
         <xsl:call-template name="ref">
@@ -542,7 +547,7 @@
         <xsl:if test="not($nullable='false')">
           <xsl:text>},{"type":"null"</xsl:text>
         </xsl:if>
-        <xsl:if test="not($nullable='false') or @DefaultValue or @MaxLength or @Precision">
+        <xsl:if test="$anyOf">
           <xsl:text>}]</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="@MaxLength" />
@@ -552,7 +557,7 @@
     <xsl:apply-templates select="@DefaultValue">
       <xsl:with-param name="type" select="$singleType" />
     </xsl:apply-templates>
-    <xsl:if test="starts-with(@Type,'Collection(')">
+    <xsl:if test="$collection">
       <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -820,6 +825,7 @@
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
+      <xsl:with-param name="wrap" select="'yes'" />
     </xsl:call-template>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
@@ -918,14 +924,14 @@
     >
       <xsl:with-param name="target" select="$name" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Annotation" mode="list2">
-      <xsl:with-param name="target" select="$name" />
-    </xsl:apply-templates>
-    <!-- for tagging terms -->
     <xsl:if test="count(@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation'])=0">
+      <!-- tagging term -->
       <!-- TODO: try to get default value from term definition, use true if not possible -->
       <xsl:text>true</xsl:text>
     </xsl:if>
+    <xsl:apply-templates select="edm:Annotation" mode="list2">
+      <xsl:with-param name="target" select="$name" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <!-- name : unquoted direct value or annotated quoted special value -->
