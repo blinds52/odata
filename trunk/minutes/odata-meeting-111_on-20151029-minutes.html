@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #111 Thursday Oct 29, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #111 Thursday Oct 29, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-10-29 0800-1000 PDT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE) 
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39122">normative attendance sheet for this meeting</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+<p>Mike: add ODATA-877 and ODATA-876 to Agenda, both regard Change Tracking / Delta</p>
+<p>Mike: Proposal ready for V4.01 Simplified Syntax issue group, agenda item 8.a.x, move this up</p>
+
+<p>Agenda approved as published and ammended by suggestion from Mike.</p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from October 22, 2015 TC meeting #110: </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/56756/odata-meeting-110_on-20151022-minutes.html">https://www.oasis-open.org/committees/download.php/56756/odata-meeting-110_on-20151022-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due October 29, 2015</h4>
+<h5>4.1.1 Propose factoring of CSDL documents (Mike Pizzo)</h5>
+<p>Mike showed an approach where we have three documents: one for JSON, one for XML, and one for the shared parts. The format-specific documents link in sections of the shared part to have all necessary content for the format. Seems to work with change-tracking as well as HTML export</p>
+<p>Mike to check with Chet Ensign of TC Administration whether we can use this approach</p>
+
+<h3>5. JSON Format for CSDL</h3>
+
+<h4>Issues for JSON Format for CSDL in New or Open state</h4>
+
+<ol>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-875" target="_blank">ODATA-875</a> - Use of $ref for referencing elements in a JSON Schema</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-872" target="_blank">ODATA-872</a> - Consider defining structure of bound actions/functions</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-863" target="_blank">ODATA-863</a> - ODATA-618 / Represent Terms similar to Types</li>
+</ol>
+
+<h5><a href="https://issues.oasis-open.org/browse/ODATA-875" target="_blank">ODATA-875</a> - Use of $ref for referencing elements in a JSON Schema</h5>
+<p>Ralf: ODATA-875 is OPEN</p>
+<p>Ralf: <br></p>
+<pre>
+"ODataDemo.Supplier": {
+    "type": "object",
+    "keys": [
+        {
+            "name": "ID"
+        }
+    ],
+    "properties": {
+        "ID": {
+            "type": "string"
+        },
+        "Name": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "Address": {
+            "$ref": "#/definitions/ODataDemo.Address"
+        },
+        "Concurrency": {
+            "type": "integer",
+            "format": "int32"
+        },
+        "Products": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/ODataDemo.Product"
+            },
+            "relationship": {
+                "partner": "Supplier"
+            }
+        }
+    }
+},
+</pre>
+
+<p>Mike: explore ways to make sure that /definitions/ schemas only use $ref to reference structured types and forbid inline definition of structured types</p>
+<p>Ralf: <br></p>
+<pre>
+"schemas": {
+    "Org.OData.Core.V1": {
+        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+    },
+    "Core": {
+        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+    },
+    "Org.OData.Measures.V1": {
+        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json#/schemas/Org.OData.Measures.V1"
+    },
+    "UoM": {
+        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json#/schemas/Org.OData.Measures.V1"
+    },
+</pre>
+
+<p>Ralf: <br></p>
+<pre>
+"entitySets": {
+    "Products": {
+        "entityType": {
+            "$ref": "#/definitions/ODataDemo.Product"
+        },
+        "navigationPropertyBindings": {
+            "Category": {
+                "target": "Categories"
+            }
+        }
+    },
+</pre>
+
+<p>Ralf: <br></p>
+<pre>
+"entitySets": {
+    "Products": {
+        "entityType": "ODataDemo.Product",
+        "navigationPropertyBindings": {
+            "Category": {
+                "target": "Categories"
+            }
+        }
+    },
+</pre>
+
+<p>Ralf: <br></p>
+<pre>
+"singletons": {
+        "Contoso": {
+            "type": {
+                "$ref": "#/definitions/ODataDemo.Supplier"
+            },
+            "navigationPropertyBindings": {
+                "Products": {
+                    "target": "Products"
+                }
+            }
+        }
+    },
+    "functionImports": {
+        "ProductsByRating": {
+            "entitySet": "Products",
+            "function": {
+                "$ref": "#/schemas/ODataDemo/functions/ProductsByRating"
+            }
+        }
+    }
+</pre>
+
+<p>Ralf: <br></p>
+<pre>
+"ODataDemo": {
+    "functions": {
+        "ProductsByRating": {
+            "parameters": [
+                {
+                    "name": "Rating",
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "format": "int32"
+                }
+            ],
+            "returnType": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/ODataDemo.Product"
+                }
+            }
+        }
+    },
+</pre>
+
+<p>Mike: we should consistently refer to named types via $ref</p>
+<p>Mike: One option: <br>
+1) Always use $ref to reference a named type (complex, entity, typedef, enum)<br>
+2) We use odata paths to represent entity sets and singletons<br>
+3) For functions and actions, use $ref<br>
+</p>
+<p>Mike: (we could go either way on 3), we just need to pick one...)</p>
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-875 as proposed. <b>Mark</b> seconds.</p>
+<p>ODATA-875 is resolved as proposed</p>
+
+<h5><a href="https://issues.oasis-open.org/browse/ODATA-872" target="_blank">ODATA-872</a> - Consider defining structure of bound actions/functions</h5>
+[17:17] Ralf Handl (SAP): Services that want to explicitly advertise actions or function can do this via 
+
+    "properties": { 
+        ..., 
+        "#My.SpecificFunction":{ 
+            "$ref":"http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/odata.actionFunctionAdvertisement" 
+        } 
+    } 
+
+or more generic via a patternProperty for pattern "^#".
+[17:19] Ralf Handl (SAP): Mike: also have definition that defines this patternProperty use and can be included using anyOf
+[17:20] Ralf Handl (SAP): annotatableStructuredType
+[17:22] Ralf Handl (SAP): bindableStructuredType
+
+<p>Mike: Proposal:<br>
+1) Define the structure of a function or action<br>
+2) Define an bindableStructuredType that includes property patterns for:functions/actions (that uses the structure above) <br>
+3) Define an annotatableStructuredType that includes property patterns for annotations<br>
+</p>
+<p>Ralf: <br>
+1) Define the structure of a function or action advertisement<br>
+</p>
+<p>Mike: updated: <br>
+1) Define the structure of a function or action advertisement<br>
+2) Define an bindableStructuredType that includes property patterns for:functions/actions (that uses the structure above) <br>
+3) Define an annotatableStructuredType that includes property patterns for annotations<br>
+</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-872 as proposed, <b>Mark</b> seconds.</p>
+<p>ODATA-872 is resolved as proposed</p>
+
+<h3>6. Next Face-to-Face Meeting</h3>
+<h4>6.1 When?</h4>
+<p>Ralf: First week of February 2016, 01-05</p>
+
+<h4>6.2 Where/hosted by whom?</h4>
+<p>All: check til next meeting whether this works, alternatives, and possible locations</p>
+<p>Ralf: Topics: </p>
+<ul>
+<li>Finish CSD01 for JSON CSDL</li>
+<li>Get agreement on scope and shape of V4.01</li>
+<li>Prepare respective draft documents</li></ul>
+
+<h3>7. V4.0 ERRATA03</h3>
+<h4>7.1 <a href="https://issues.oasis-open.org/browse/ODATA-877" target="_blank">ODATA-877</a> - Must delta responses continue to track "orphaned" entities?</h4>
+<p>Mike: we already specify that entities no longer matching the filter of the initial request fall out</p>
+<p>Ralf: What about entities that were only expanded into the result and would now no longer be expanded</p>
+<p>Ralf: The tricky bit is whether tombstones have to be sent if an expanded entity becomes disconnected</p>
+<p>Matt: would be nice for the client to get a tombstone to clean up the local store, but might be hard for the server to figure out when to do that</p>
+<p>Mike: two books by the same author: one book drops out - author stays, second book drops out - author also drops out</p>
+<p>Ralf: ODATA-877 is OPEN</p>
+<p>Ralf: Mike to prepare proposal</p>
+
+<h4>7.2 <a href="https://issues.oasis-open.org/browse/ODATA-876" target="_blank">ODATA-876</a> - Allow services to return contained entities inline for delta responses</h4>
+<p>Mike: please take a look at ODATA-876 and get some direction</p>
+<p>Ralf: ODATA-876 is OPEN</p>
+
+<h3>8. Next meeting</h3>
+
+<h4>8.1 Thursday November 05, 2015 during 8-10am PT?</h4>
+
+<p>Agreed</p>
+
+<h3>9. AOB and wrap up</h3>
+
+<p>Meeting adjourned by chair.</p>
+
+</body>
+</html>
