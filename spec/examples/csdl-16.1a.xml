@@ -12,21 +12,18 @@
         <edm:Key>
           <edm:PropertyRef Name="ID" />
         </edm:Key>
-        <edm:Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <edm:Property Name="Name" Type="Edm.String" Nullable="true" />
-        <edm:Property Name="Description" Type="Edm.String" Nullable="true" />
-        <edm:Property Name="ReleaseDate" Type="Edm.Date" Nullable="false" />
-        <edm:Property Name="DiscontinuedDate" Type="Edm.Date" Nullable="true" />
-        <edm:Property Name="Rating" Type="Edm.Int32" Nullable="false" />
-        <edm:Property Name="Price" Type="Edm.Decimal" Nullable="false">
+        <edm:Property Name="ID" Type="Edm.String" Nullable="false" />
+        <edm:Property Name="Description" Type="Edm.String" >
+          <edm:Annotation Term="Core.IsLanguageDependent" />
+        </edm:Property>
+        <edm:Property Name="ReleaseDate" Type="Edm.Date" />
+        <edm:Property Name="DiscontinuedDate" Type="Edm.Date" />
+        <edm:Property Name="Rating" Type="Edm.Int32" />
+        <edm:Property Name="Price" Type="Edm.Decimal" >
           <edm:Annotation Term="Org.OData.Measures.V1.ISOCurrency" Path="Currency" />
         </edm:Property>
-        <edm:Property Name="Currency" Type="Edm.String" Nullable="false" MaxLength="3" />
-        <edm:NavigationProperty Name="Category" Type="ODataDemo.Category" Nullable="false"
-          Partner="Products"
-        >
-          <edm:OnDelete Action="Cascade" />
-        </edm:NavigationProperty>
+        <edm:Property Name="Currency" Type="Edm.String" MaxLength="3" />
+        <edm:NavigationProperty Name="Category" Type="ODataDemo.Category" Nullable="false" Partner="Products" />
         <edm:NavigationProperty Name="Supplier" Type="ODataDemo.Supplier" Partner="Products" />
       </edm:EntityType>
       <edm:EntityType Name="Category">
@@ -34,26 +31,28 @@
           <edm:PropertyRef Name="ID" />
         </edm:Key>
         <edm:Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <edm:Property Name="Name" Type="Edm.String" Nullable="true" />
-        <edm:NavigationProperty Name="Products" Partner="Category" Type="Collection(ODataDemo.Product)" />
-      </edm:EntityType>
+        <edm:Property Name="Name" Type="Edm.String" Nullable="false">
+          <edm:Annotation Term="Core.IsLanguageDependent" />
+        </edm:Property>
+        <edm:NavigationProperty Name="Products" Partner="Category" Type="Collection(ODataDemo.Product)" >
+          <edm:OnDelete Action="Cascade" />
+        </edm:NavigationProperty>   
+   </edm:EntityType>
       <edm:EntityType Name="Supplier">
         <edm:Key>
           <edm:PropertyRef Name="ID" />
         </edm:Key>
-        <edm:Property Name="ID" Type="Edm.Int32" Nullable="false" />
-        <edm:Property Name="Name" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="ID" Type="Edm.String" Nullable="false" />
+        <edm:Property Name="Name" Type="Edm.String" />
         <edm:Property Name="Address" Type="ODataDemo.Address" Nullable="false" />
         <edm:Property Name="Concurrency" Type="Edm.Int32" Nullable="false" />
         <edm:NavigationProperty Name="Products" Partner="Supplier" Type="Collection(ODataDemo.Product)" />
-        <edm:NavigationProperty Name="Country" Type="ODataDemo.Country">
-          <edm:ReferentialConstraint Property="Address/Country" ReferencedProperty="Name" />
-        </edm:NavigationProperty>
       </edm:EntityType>
       <edm:EntityType Name="Country">
         <edm:Key>
-          <edm:PropertyRef Name="Name" />
+          <edm:PropertyRef Name="Code" />
         </edm:Key>
+        <edm:Property Name="Code" Type="Edm.String" MaxLength="2" Nullable="false" />
         <edm:Property Name="Name" Type="Edm.String" />
       </edm:EntityType>
       <edm:ComplexType Name="Address">
@@ -61,20 +60,34 @@
         <edm:Property Name="City" Type="Edm.String" Nullable="true" />
         <edm:Property Name="State" Type="Edm.String" Nullable="true" />
         <edm:Property Name="ZipCode" Type="Edm.String" Nullable="true" />
-        <edm:Property Name="Country" Type="Edm.String" Nullable="true" />
+        <edm:Property Name="CountryName" Type="Edm.String" Nullable="true" />
+       <edm:NavigationProperty Name="Country" Type="ODataDemo.Country">
+          <edm:ReferentialConstraint Property="CountryName" ReferencedProperty="Name" />
+        </edm:NavigationProperty>
       </edm:ComplexType>
-      <edm:EntityContainer Name="DemoService">
+      <edm:Function Name="ProductsByRating">
+        <edm:Parameter Name="Rating" Type="Edm.Int32" />
+        <edm:ReturnType Type="Collection(ODataDemo.Product)" />
+      </edm:Function>
+     <edm:EntityContainer Name="DemoService">
         <edm:EntitySet Name="Products" EntityType="ODataDemo.Product">
-          <edm:NavigationPropertyBinding Path="Category" Target="ODataDemo.DemoService.Products" />
-          <edm:NavigationPropertyBinding Path="Supplier" Target="ODataDemo.DemoService.Suppliers" />
+          <edm:NavigationPropertyBinding Path="Category" Target="Categories" />
         </edm:EntitySet>
         <edm:EntitySet Name="Categories" EntityType="ODataDemo.Category">
-          <edm:NavigationPropertyBinding Path="Products" Target="ODataDemo.DemoService.Products" />
+          <edm:NavigationPropertyBinding Path="Products" Target="Products" />
         </edm:EntitySet>
         <edm:EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier">
-          <edm:NavigationPropertyBinding Path="Products" Target="ODataDemo.DemoService.Products" />
+          <edm:NavigationPropertyBinding Path="Products" Target="Products" />
+          <edm:NavigationPropertyBinding Path="Address/Country" Target="Countries" />
+          <edm:Annotation Term="Core.OptimisticConcurrency">
+            <edm:Collection>
+              <edm:PropertyPath>Concurrency</edm:PropertyPath>
+            </edm:Collection>
+          </edm:Annotation>
         </edm:EntitySet>
-        <edm:Singleton Name="Contoso" Type="Self.Supplier" />
+        <edm:Singleton Name="Contoso" Type="ODataDemo.Supplier">
+         <edm:NavigationPropertyBinding Path="Products" Target="Products" />
+        </edm:Singleton>
         <edm:EntitySet Name="Countries" EntityType="ODataDemo.Country" />
         <edm:FunctionImport Name="ProductsByRating" EntitySet="Products" Function="ODataDemo.ProductsByRating" />
       </edm:EntityContainer>

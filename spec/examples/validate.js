@@ -89,8 +89,12 @@ function checkSchema(text, schema) {
 	check(validator, text + " vs. edm", schema, edm);
 }
 
-var validator = new ZSchema();
-
+//var validator = new ZSchema();
+var validator = new ZSchema({
+        //noExtraKeywords : true
+        assumeAdditional : ["$ref"]
+    });
+    
 check(validator, "Check wiring", "string", {
 	"type" : "string"
 });
