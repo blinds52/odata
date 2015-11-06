@@ -817,12 +817,12 @@
   <xsl:template match="edm:Parameter">
     <xsl:text>{</xsl:text>
     <xsl:apply-templates select="@Name" />
-    <xsl:text>,</xsl:text>
+    <xsl:text>,"parameterType":{</xsl:text>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
-      <xsl:with-param name="wrap" select="'yes'" />
     </xsl:call-template>
+    <xsl:text>}</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
