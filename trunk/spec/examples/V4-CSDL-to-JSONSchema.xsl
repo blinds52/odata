@@ -6,7 +6,7 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
-    - actions, functions, terms, entity container as top-level constructs with qualified names, $ref to them
+    - entity container as top-level constructs with qualified names, $ref to them
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
     - default for Geo types in GeoJSON
     - annotations without explicit value: default from term definition (if inline)
@@ -66,6 +66,13 @@
       <xsl:with-param name="key" select="'Namespace'" />
       <xsl:with-param name="name" select="'schemas'" />
     </xsl:apply-templates>
+    <xsl:apply-templates
+      select="edm:Schema/edm:Action[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
+      mode="hash" />
+    <xsl:apply-templates
+      select="edm:Schema/edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
+      mode="hash" />
+    <xsl:apply-templates select="edm:Schema/edm:Term" mode="hash" />
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="hashpair">
@@ -103,24 +110,12 @@
     <xsl:value-of select="@Namespace" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list" />
-    <xsl:apply-templates select="edm:Action[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
-      mode="hash"
-    >
+    <!-- TODO: pull up to top level -->
+    <xsl:apply-templates select="edm:EntityContainer" mode="list">
       <xsl:with-param name="after" select="edm:Annotation" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
-      mode="hash"
-    >
-      <xsl:with-param name="after" select="edm:Annotation|edm:Action" />
-    </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Term" mode="hash">
-      <xsl:with-param name="after" select="edm:Annotation|edm:Action|edm:Function" />
-    </xsl:apply-templates>
-    <xsl:apply-templates select="edm:EntityContainer" mode="list">
-      <xsl:with-param name="after" select="edm:Annotation|edm:Action|edm:Function|edm:Term" />
-    </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotations" mode="array">
-      <xsl:with-param name="after" select="edm:Annotation|edm:Action|edm:Function|edm:Term|edm:EntityContainer" />
+      <xsl:with-param name="after" select="edm:Annotation|edm:EntityContainer" />
     </xsl:apply-templates>
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -264,12 +259,18 @@
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
   </xsl:template>
 
-  <xsl:template match="edm:Term" mode="hashvalue">
+  <xsl:template match="edm:Term" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{</xsl:text>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
     </xsl:call-template>
     <xsl:apply-templates select="@AppliesTo|@BaseTerm|edm:Annotation" mode="list2" />
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="@AppliesTo">
@@ -598,6 +599,7 @@
     <xsl:text>"</xsl:text>
   </xsl:template>
 
+  <!-- TODO: combine this with or delegate to "ref", rename -->
   <xsl:template name="schema-ref">
     <xsl:param name="qualifiedName" />
     <xsl:param name="element" />
@@ -628,7 +630,9 @@
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
     </xsl:call-template>
-    <xsl:text>#/schemas/</xsl:text>
+    <xsl:text>#/</xsl:text>
+    <xsl:value-of select="$element" />
+    <xsl:text>/</xsl:text>
     <xsl:choose>
       <xsl:when test="$internalNamespace">
         <xsl:value-of select="$internalNamespace" />
@@ -640,10 +644,8 @@
         <xsl:value-of select="$qualifier" />
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>/</xsl:text>
-    <xsl:value-of select="$element" />
     <xsl:if test="$element!='entityContainer'">
-      <xsl:text>/</xsl:text>
+      <xsl:text>.</xsl:text>
       <xsl:value-of select="$name" />
     </xsl:if>
     <xsl:text>"</xsl:text>
@@ -796,6 +798,8 @@
 
   <xsl:template match="edm:Action|edm:Function" mode="hashpair">
     <xsl:text>"</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":[</xsl:text>
     <xsl:for-each select="key('methods', concat(../@Namespace,'.',@Name))">
