@@ -1439,35 +1439,6 @@
         },
         "org.example": {
             "description": "Examples from Part 3: CSDL",
-            "functions": {
-                "TopSellingProducts": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "Year",
-                                "parameterType": {
-                                    "type": [
-                                        "number",
-                                        "string",
-                                        "null"
-                                    ],
-                                    "format": "decimal",
-                                    "precision": 4,
-                                    "multipleOf": 1,
-                                    "minimum": -9999,
-                                    "maximum": 9999
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/org.example.Product"
-                            }
-                        }
-                    }
-                ]
-            },
             "entityContainer": {
                 "name": "DemoService",
                 "entitySets": {
@@ -1542,7 +1513,7 @@
                 "functionImports": {
                     "TopSellingProducts": {
                         "function": {
-                            "$ref": "#/schemas/Model1/functions/TopSellingProducts"
+                            "$ref": "#/functions/Model1.TopSellingProducts"
                         },
                         "entitySet": "Products"
                     }
@@ -1554,26 +1525,10 @@
         },
         "org.example2": {
             "description": "Examples from Part 3: CSDL - second schema",
-            "terms": {
-                "IsURI": {
-                    "anyOf": [
-                        {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": true,
-                    "appliesTo": "Property",
-                    "description": "Properties and terms annotated with this term MUST contain a valid URI",
-                    "@Core.RequiresType": "Edm.String"
-                }
-            },
             "entityContainer": {
                 "name": "Extending",
                 "extends": {
-                    "$ref": "#/schemas/org.example/entityContainer"
+                    "$ref": "#/entityContainer/org.example"
                 },
                 "entitySets": {
                     "Categories34": {
@@ -2074,75 +2029,6 @@
                     }
                 ]
             },
-            "functions": {
-                "CreatedEntities": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "before",
-                                "parameterType": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "format": "date-time"
-                                }
-                            },
-                            {
-                                "name": "after",
-                                "parameterType": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ],
-                                    "format": "date-time"
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "type": "array",
-                            "items": {
-                                "anyOf": [
-                                    {
-                                        "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
-                                    },
-                                    {
-                                        "type": "null"
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                ],
-                "TopSellingProducts": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "Year",
-                                "parameterType": {
-                                    "type": [
-                                        "number",
-                                        "string",
-                                        "null"
-                                    ],
-                                    "format": "decimal",
-                                    "precision": 4,
-                                    "multipleOf": 1,
-                                    "minimum": -9999,
-                                    "maximum": 9999
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/org.example.Product"
-                            },
-                            "@A.B": "Works"
-                        }
-                    }
-                ]
-            },
             "entityContainer": {
                 "name": "Sales",
                 "entitySets": {
@@ -2179,82 +2065,6 @@
             "$ref": "#/schemas/Schema.One"
         },
         "Schema.One": {
-            "actions": {
-                "Rejection": [
-                    {
-                        "parameters": [
-
-                        ]
-                    },
-                    {
-                        "parameters": [
-                            {
-                                "name": "foo",
-                                "parameterType": {
-                                    "$ref": "#/definitions/Schema.One.Waldo"
-                                }
-                            }
-                        ],
-                        "isBound": true
-                    },
-                    {
-                        "parameters": [
-                            {
-                                "name": "bar",
-                                "parameterType": {
-                                    "$ref": "#/definitions/Schema.One.Waldo"
-                                }
-                            },
-                            {
-                                "name": "Reason",
-                                "parameterType": {
-                                    "type": "string"
-                                }
-                            }
-                        ],
-                        "isBound": true
-                    }
-                ]
-            },
-            "functions": {
-                "Foo": [
-                    {
-                        "parameters": [
-
-                        ],
-                        "returnType": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "maxLength": 42
-                        }
-                    }
-                ],
-                "OddWaldos": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "waldos",
-                                "parameterType": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Schema.One.Waldo"
-                                    }
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Schema.One.Waldo"
-                            }
-                        },
-                        "isBound": true,
-                        "entitySetPath": "waldos"
-                    }
-                ]
-            },
             "entityContainer": {
                 "name": "Default",
                 "entitySets": {
@@ -2267,7 +2077,7 @@
                 "functionImports": {
                     "Bar": {
                         "function": {
-                            "$ref": "#/schemas/Schema.One/functions/Foo"
+                            "$ref": "#/functions/Schema.One.Foo"
                         }
                     }
                 }
@@ -2305,14 +2115,14 @@
                 "functionImports": {
                     "Bar": {
                         "function": {
-                            "$ref": "#/schemas/Schema.One/functions/Foo"
+                            "$ref": "#/functions/Schema.One.Foo"
                         },
                         "includeInServiceDocument": true,
                         "entitySet": "Namespace.Container/Freds"
                     },
                     "CreatedEntities": {
                         "function": {
-                            "$ref": "#/schemas/Model1/functions/CreatedEntities"
+                            "$ref": "#/functions/Model1.CreatedEntities"
                         },
                         "entitySet": "Waldos"
                     }
@@ -2320,111 +2130,9 @@
             }
         },
         "X": {
-            "terms": {
-                "Person": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/X.PersonType"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "Team": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/X.PersonType"
-                    },
-                    "@custom.ItemIsA": "X.Person"
-                },
-                "Movie": {
-                    "$ref": "#/definitions/X.MovieType"
-                },
-                "Friend": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/X.FriendType"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                }
-            }
+
         },
         "Y": {
-            "terms": {
-                "Developer": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Y.DeveloperType"
-                        }
-                    ],
-                    "baseTerm": {
-                        "$ref": "#/schemas/X/terms/Person"
-                    }
-                },
-                "DevelopmentTeam": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Y.DeveloperType"
-                    },
-                    "@custom.ItemIsA": "Y.Developer",
-                    "@custom.IsA": "X.Team"
-                },
-                "ScrumTeam": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Y.ScrumTeamType"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "baseTerm": {
-                        "$ref": "#/schemas/Y/terms/DevelopmentTeam"
-                    }
-                },
-                "Movies": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/X.MovieType"
-                    }
-                },
-                "ArchivedMovies": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Y.ArchivedMovieType"
-                    },
-                    "@custom.ItemIsA": "X.Movie"
-                },
-                "SomeThing": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Y.SomeThingType"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "AdvancedChangeTracking": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Y.ChangeTrackingType"
-                        }
-                    ],
-                    "baseTerm": {
-                        "$ref": "http://vocabs.odata.org/capabilities/v1#/schemas/Org.OData.Capabilities.V1/terms/ChangeTracking"
-                    },
-                    "appliesTo": [
-                        "EntityContainer",
-                        "EntitySet"
-                    ],
-                    "description": "Advanced change tracking capabilities of this service or entity set"
-                }
-            },
             "annotations": [
                 {
                     "target": "Some.EntityType",
@@ -2505,6 +2213,291 @@
                     }
                 }
             ]
+        }
+    },
+    "actions": {
+        "Schema.One.Rejection": [
+            {
+                "parameters": [
+
+                ]
+            },
+            {
+                "parameters": [
+                    {
+                        "name": "foo",
+                        "parameterType": {
+                            "$ref": "#/definitions/Schema.One.Waldo"
+                        }
+                    }
+                ],
+                "isBound": true
+            },
+            {
+                "parameters": [
+                    {
+                        "name": "bar",
+                        "parameterType": {
+                            "$ref": "#/definitions/Schema.One.Waldo"
+                        }
+                    },
+                    {
+                        "name": "Reason",
+                        "parameterType": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "isBound": true
+            }
+        ]
+    },
+    "functions": {
+        "org.example.TopSellingProducts": [
+            {
+                "parameters": [
+                    {
+                        "name": "Year",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "format": "decimal",
+                            "precision": 4,
+                            "multipleOf": 1,
+                            "minimum": -9999,
+                            "maximum": 9999
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/org.example.Product"
+                    }
+                }
+            }
+        ],
+        "Model1.CreatedEntities": [
+            {
+                "parameters": [
+                    {
+                        "name": "before",
+                        "parameterType": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "after",
+                        "parameterType": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "Model1.TopSellingProducts": [
+            {
+                "parameters": [
+                    {
+                        "name": "Year",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "format": "decimal",
+                            "precision": 4,
+                            "multipleOf": 1,
+                            "minimum": -9999,
+                            "maximum": 9999
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/org.example.Product"
+                    },
+                    "@A.B": "Works"
+                }
+            }
+        ],
+        "Schema.One.Foo": [
+            {
+                "parameters": [
+
+                ],
+                "returnType": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "maxLength": 42
+                }
+            }
+        ],
+        "Schema.One.OddWaldos": [
+            {
+                "parameters": [
+                    {
+                        "name": "waldos",
+                        "parameterType": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Schema.One.Waldo"
+                            }
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Schema.One.Waldo"
+                    }
+                },
+                "isBound": true,
+                "entitySetPath": "waldos"
+            }
+        ]
+    },
+    "terms": {
+        "org.example2.IsURI": {
+            "anyOf": [
+                {
+                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": true,
+            "appliesTo": "Property",
+            "description": "Properties and terms annotated with this term MUST contain a valid URI",
+            "@Core.RequiresType": "Edm.String"
+        },
+        "X.Person": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/X.PersonType"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "X.Team": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/X.PersonType"
+            },
+            "@custom.ItemIsA": "X.Person"
+        },
+        "X.Movie": {
+            "$ref": "#/definitions/X.MovieType"
+        },
+        "X.Friend": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/X.FriendType"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "Y.Developer": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/Y.DeveloperType"
+                }
+            ],
+            "baseTerm": {
+                "$ref": "#/terms/X.Person"
+            }
+        },
+        "Y.DevelopmentTeam": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Y.DeveloperType"
+            },
+            "@custom.ItemIsA": "Y.Developer",
+            "@custom.IsA": "X.Team"
+        },
+        "Y.ScrumTeam": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/Y.ScrumTeamType"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "baseTerm": {
+                "$ref": "#/terms/Y.DevelopmentTeam"
+            }
+        },
+        "Y.Movies": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/X.MovieType"
+            }
+        },
+        "Y.ArchivedMovies": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Y.ArchivedMovieType"
+            },
+            "@custom.ItemIsA": "X.Movie"
+        },
+        "Y.SomeThing": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/Y.SomeThingType"
+                },
+                {
+                    "type": "null"
+                }
+            ]
+        },
+        "Y.AdvancedChangeTracking": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/Y.ChangeTrackingType"
+                }
+            ],
+            "baseTerm": {
+                "$ref": "http://vocabs.odata.org/capabilities/v1#/terms/Org.OData.Capabilities.V1.ChangeTracking"
+            },
+            "appliesTo": [
+                "EntityContainer",
+                "EntitySet"
+            ],
+            "description": "Advanced change tracking capabilities of this service or entity set"
         }
     },
     "references": {

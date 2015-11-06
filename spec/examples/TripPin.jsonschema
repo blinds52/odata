@@ -424,138 +424,6 @@
             "$ref": "#/schemas/Microsoft.OData.SampleService.Models.TripPin"
         },
         "Microsoft.OData.SampleService.Models.TripPin": {
-            "actions": {
-                "ResetDataSource": [
-                    {
-                        "parameters": [
-
-                        ]
-                    }
-                ],
-                "ShareTrip": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "person",
-                                "parameterType": {
-                                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
-                                }
-                            },
-                            {
-                                "name": "userName",
-                                "parameterType": {
-                                    "type": "string"
-                                }
-                            },
-                            {
-                                "name": "tripId",
-                                "parameterType": {
-                                    "type": "integer",
-                                    "format": "int32"
-                                }
-                            }
-                        ],
-                        "isBound": true
-                    }
-                ]
-            },
-            "functions": {
-                "GetFavoriteAirline": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "person",
-                                "parameterType": {
-                                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
-                        },
-                        "isBound": true,
-                        "entitySetPath": "person/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline",
-                        "isComposable": true
-                    }
-                ],
-                "GetInvolvedPeople": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "trip",
-                                "parameterType": {
-                                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
-                            }
-                        },
-                        "isBound": true,
-                        "isComposable": true
-                    }
-                ],
-                "GetFriendsTrips": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "person",
-                                "parameterType": {
-                                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
-                                }
-                            },
-                            {
-                                "name": "userName",
-                                "parameterType": {
-                                    "type": "string"
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
-                            }
-                        },
-                        "isBound": true,
-                        "entitySetPath": "person/Friends/Trips",
-                        "isComposable": true
-                    }
-                ],
-                "GetNearestAirport": [
-                    {
-                        "parameters": [
-                            {
-                                "name": "lat",
-                                "parameterType": {
-                                    "type": [
-                                        "number",
-                                        "string"
-                                    ],
-                                    "format": "double"
-                                }
-                            },
-                            {
-                                "name": "lon",
-                                "parameterType": {
-                                    "type": [
-                                        "number",
-                                        "string"
-                                    ],
-                                    "format": "double"
-                                }
-                            }
-                        ],
-                        "returnType": {
-                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
-                        },
-                        "isComposable": true
-                    }
-                ]
-            },
             "entityContainer": {
                 "name": "DefaultContainer",
                 "entitySets": {
@@ -706,14 +574,14 @@
                 "actionImports": {
                     "ResetDataSource": {
                         "action": {
-                            "$ref": "#/schemas/Microsoft.OData.SampleService.Models.TripPin/actions/ResetDataSource"
+                            "$ref": "#/actions/Microsoft.OData.SampleService.Models.TripPin.ResetDataSource"
                         }
                     }
                 },
                 "functionImports": {
                     "GetNearestAirport": {
                         "function": {
-                            "$ref": "#/schemas/Microsoft.OData.SampleService.Models.TripPin/functions/GetNearestAirport"
+                            "$ref": "#/functions/Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport"
                         },
                         "entitySet": "Airports",
                         "includeInServiceDocument": true,
@@ -761,5 +629,137 @@
                 }
             ]
         }
+    },
+    "actions": {
+        "Microsoft.OData.SampleService.Models.TripPin.ResetDataSource": [
+            {
+                "parameters": [
+
+                ]
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.ShareTrip": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    {
+                        "name": "userName",
+                        "parameterType": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tripId",
+                        "parameterType": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "isBound": true
+            }
+        ]
+    },
+    "functions": {
+        "Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                },
+                "isBound": true,
+                "entitySetPath": "person/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline",
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople": [
+            {
+                "parameters": [
+                    {
+                        "name": "trip",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    }
+                },
+                "isBound": true,
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    {
+                        "name": "userName",
+                        "parameterType": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                    }
+                },
+                "isBound": true,
+                "entitySetPath": "person/Friends/Trips",
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport": [
+            {
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "double"
+                        }
+                    },
+                    {
+                        "name": "lon",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "double"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                },
+                "isComposable": true
+            }
+        ]
     }
 }
