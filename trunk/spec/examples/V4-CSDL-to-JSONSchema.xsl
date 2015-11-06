@@ -6,10 +6,11 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
+    - actions, functions, terms, entity container as top-level constructs with qualified names, $ref to them
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
     - default for Geo types in GeoJSON
     - annotations without explicit value: default from term definition (if inline)
-    - different representation for path expressions (tbd)
+    - different representation for edm:*Path dynamic expressions (tbd)
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -346,7 +347,7 @@
     </xsl:variable>
     <xsl:variable name="collection" select="starts-with($type,'Collection(')" />
     <xsl:variable name="anyOf"
-      select="not($nullable='false') or (not($collection) and ($wrap or @DefaultValue or @MaxLength or @Precision or @SRID))" />
+      select="not($nullable='false') or (not($collection) and ($wrap or @BaseTerm or @DefaultValue or @MaxLength or @Precision or @SRID))" />
     <xsl:if test="$collection">
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
@@ -796,10 +797,7 @@
   <xsl:template match="edm:Action|edm:Function" mode="hashpair">
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":</xsl:text>
-    <xsl:if test="count(key('methods', concat(../@Namespace,'.',@Name)))>1">
-      <xsl:text>[</xsl:text>
-    </xsl:if>
+    <xsl:text>":[</xsl:text>
     <xsl:for-each select="key('methods', concat(../@Namespace,'.',@Name))">
       <xsl:if test="position()>1">
         <xsl:text>,</xsl:text>
@@ -813,9 +811,7 @@
       <xsl:apply-templates select="edm:Annotation" mode="list2" />
       <xsl:text>}</xsl:text>
     </xsl:for-each>
-    <xsl:if test="count(key('methods', concat(../@Namespace,'.',@Name)))>1">
-      <xsl:text>]</xsl:text>
-    </xsl:if>
+    <xsl:text>]</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Parameter">

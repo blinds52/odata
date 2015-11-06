@@ -1440,29 +1440,31 @@
         "org.example": {
             "description": "Examples from Part 3: CSDL",
             "functions": {
-                "TopSellingProducts": {
-                    "parameters": [
-                        {
-                            "name": "Year",
-                            "type": [
-                                "number",
-                                "string",
-                                "null"
-                            ],
-                            "format": "decimal",
-                            "precision": 4,
-                            "multipleOf": 1,
-                            "minimum": -9999,
-                            "maximum": 9999
-                        }
-                    ],
-                    "returnType": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/org.example.Product"
+                "TopSellingProducts": [
+                    {
+                        "parameters": [
+                            {
+                                "name": "Year",
+                                "type": [
+                                    "number",
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "decimal",
+                                "precision": 4,
+                                "multipleOf": 1,
+                                "minimum": -9999,
+                                "maximum": 9999
+                            }
+                        ],
+                        "returnType": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/org.example.Product"
+                            }
                         }
                     }
-                }
+                ]
             },
             "entityContainer": {
                 "name": "DemoService",
@@ -2071,63 +2073,67 @@
                 ]
             },
             "functions": {
-                "CreatedEntities": {
-                    "parameters": [
-                        {
-                            "name": "before",
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "format": "date-time"
-                        },
-                        {
-                            "name": "after",
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "format": "date-time"
-                        }
-                    ],
-                    "returnType": {
-                        "type": "array",
-                        "items": {
-                            "anyOf": [
-                                {
-                                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
-                                },
-                                {
-                                    "type": "null"
-                                }
-                            ]
+                "CreatedEntities": [
+                    {
+                        "parameters": [
+                            {
+                                "name": "before",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            },
+                            {
+                                "name": "after",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "date-time"
+                            }
+                        ],
+                        "returnType": {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ]
+                            }
                         }
                     }
-                },
-                "TopSellingProducts": {
-                    "parameters": [
-                        {
-                            "name": "Year",
-                            "type": [
-                                "number",
-                                "string",
-                                "null"
-                            ],
-                            "format": "decimal",
-                            "precision": 4,
-                            "multipleOf": 1,
-                            "minimum": -9999,
-                            "maximum": 9999
+                ],
+                "TopSellingProducts": [
+                    {
+                        "parameters": [
+                            {
+                                "name": "Year",
+                                "type": [
+                                    "number",
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "decimal",
+                                "precision": 4,
+                                "multipleOf": 1,
+                                "minimum": -9999,
+                                "maximum": 9999
+                            }
+                        ],
+                        "returnType": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/org.example.Product"
+                            },
+                            "@A.B": "Works"
                         }
-                    ],
-                    "returnType": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/org.example.Product"
-                        },
-                        "@A.B": "Works"
                     }
-                }
+                ]
             },
             "entityContainer": {
                 "name": "Sales",
@@ -2205,37 +2211,41 @@
                 ]
             },
             "functions": {
-                "Foo": {
-                    "parameters": [
+                "Foo": [
+                    {
+                        "parameters": [
 
-                    ],
-                    "returnType": {
-                        "type": [
-                            "string",
-                            "null"
                         ],
-                        "maxLength": 42
+                        "returnType": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "maxLength": 42
+                        }
                     }
-                },
-                "OddWaldos": {
-                    "parameters": [
-                        {
-                            "name": "waldos",
+                ],
+                "OddWaldos": [
+                    {
+                        "parameters": [
+                            {
+                                "name": "waldos",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/Schema.One.Waldo"
+                                }
+                            }
+                        ],
+                        "returnType": {
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/Schema.One.Waldo"
                             }
-                        }
-                    ],
-                    "returnType": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/Schema.One.Waldo"
-                        }
-                    },
-                    "isBound": true,
-                    "entitySetPath": "waldos"
-                }
+                        },
+                        "isBound": true,
+                        "entitySetPath": "waldos"
+                    }
+                ]
             },
             "entityContainer": {
                 "name": "Default",
@@ -2338,7 +2348,11 @@
         "Y": {
             "terms": {
                 "Developer": {
-                    "$ref": "#/definitions/Y.DeveloperType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Y.DeveloperType"
+                        }
+                    ],
                     "baseTerm": {
                         "$ref": "#/schemas/X/terms/Person"
                     }
@@ -2388,7 +2402,11 @@
                     ]
                 },
                 "AdvancedChangeTracking": {
-                    "$ref": "#/definitions/Y.ChangeTrackingType",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Y.ChangeTrackingType"
+                        }
+                    ],
                     "baseTerm": {
                         "$ref": "http://vocabs.odata.org/capabilities/v1#/schemas/Org.OData.Capabilities.V1/terms/ChangeTracking"
                     },
