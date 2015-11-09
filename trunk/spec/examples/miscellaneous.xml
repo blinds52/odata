@@ -280,18 +280,10 @@
           <NavigationPropertyBinding Path="Products" Target="Self.DemoService.Products" />
         </EntitySet>
         <Singleton Name="Contoso" Type="Self.Supplier" />
-      </EntityContainer>
-    </Schema>
 
-    <Schema Namespace="org.example2" Alias="Model">
-      <Annotation Term="Core.Description" String="Examples from Part 3: CSDL - second schema" />
+        <!-- Example 33: see miscellaneous2.xml -->
 
-      <!--
-        Example 33: the entity container Extending will contain all child elements that it defines itself, plus all child
-        elements of the Base entity container located in SomeOtherSchema
-      -->
-      <EntityContainer Name="Extending" Extends="org.example.DemoService">
-        <!-- Example 34: for an entity set in the same container as the enclosing entity set Categories -->
+        <!-- Example 34: for an entity set in the same container as the enclosing entity set -->
         <EntitySet Name="Categories34" EntityType="org.example.Category">
           <NavigationPropertyBinding Path="Products" Target="Products" />
         </EntitySet>
@@ -301,6 +293,10 @@
           <NavigationPropertyBinding Path="Products" Target="org.example.DemoService/Products" />
         </EntitySet>
       </EntityContainer>
+    </Schema>
+
+    <Schema Namespace="org.example2" Alias="Model">
+      <Annotation Term="Core.Description" String="Examples from Part 3: CSDL - second schema" />
 
       <!-- 14 Vocabulary and Annotation -->
       <!--
@@ -965,70 +961,7 @@
 
       <TypeDefinition Name="ExactTimestamp" UnderlyingType="Edm.DateTimeOffset" Precision="12" />
 
-      <EntityContainer Name="Sales">
-        <Annotation Term="Core.Description" String="The Sales Container" />
-        <EntitySet Name="StandardCustomers" EntityType="Self.Customer">
-          <NavigationPropertyBinding Path="Orders" Target="Orders" />
-        </EntitySet>
-        <EntitySet Name="PreferredCustomer" EntityType="Self.Customer">
-          <NavigationPropertyBinding Path="Orders" Target="Orders" />
-        </EntitySet>
-        <EntitySet Name="Orders" EntityType="Self.Order" />
-      </EntityContainer>
     </Schema>
-
-    <Schema Namespace="Schema.One" Alias="One">
-      <Function Name="Foo">
-        <ReturnType Type="Edm.String" MaxLength="42" />
-      </Function>
-      <Function Name="OddWaldos" IsBound="true" EntitySetPath="waldos">
-        <Parameter Name="waldos" Type="Collection(One.Waldo)" />
-        <ReturnType Type="Collection(One.Waldo)" />
-      </Function>
-      <Action Name="Rejection" />
-      <Action Name="Rejection" IsBound="true">
-        <Parameter Name="foo" Type="One.Waldo" Nullable="false" />
-      </Action>
-      <Action Name="Rejection" IsBound="true">
-        <Parameter Name="bar" Type="One.Waldo" Nullable="false" />
-        <Parameter Name="Reason" Type="Edm.String" MaxLength="max" Nullable="false" />
-      </Action>
-      <EntityType Name="Waldo">
-        <Key>
-          <PropertyRef Name="ID" />
-        </Key>
-        <Property Name="ID" Type="Edm.String" Nullable="false" />
-      </EntityType>
-      <EntityContainer Name="Default">
-        <FunctionImport Name="Bar" Function="One.Foo" />
-        <EntitySet Name="Waldos" EntityType="One.Waldo" />
-      </EntityContainer>
-    </Schema>
-
-    <Schema Namespace="Schema.Two" Alias="Two">
-      <EntityType Name="Waldo" Abstract="true">
-        <Property Name="Fred" Type="Edm.String" />
-      </EntityType>
-      <EntityType Name="Fred">
-        <Key>
-          <PropertyRef Name="ID" />
-        </Key>
-        <Property Name="ID" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Waldos" Type="Collection(Two.Waldo)" />
-      </EntityType>
-      <EntityContainer Name="Default">
-        <FunctionImport Name="Bar" Function="One.Foo" IncludeInServiceDocument="true"
-          EntitySet="Namespace.Container/Freds" />
-        <FunctionImport Name="CreatedEntities" Function="Model1.CreatedEntities" EntitySet="Waldos" />
-        <EntitySet Name="Waldos" EntityType="Two.Waldo" />
-        <EntitySet Name="Freds" EntityType="Two.Fred">
-          <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
-          <NavigationPropertyBinding Target="Namespace.Container/Freds" Path="MoreWaldos" />
-          <NavigationPropertyBinding Target="Namespace.Container/Orders/Items/M.E/Nav" Path="EvenMoreWaldos" />
-        </EntitySet>
-      </EntityContainer>
-    </Schema>
-
 
     <!-- Examples for ODATA-535 -->
     <Schema Namespace="X">

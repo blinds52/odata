@@ -239,75 +239,7 @@
             "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json#/schemas/Org.OData.Measures.V1"
         },
         "ODataDemo": {
-            "entityContainer": {
-                "name": "DemoService",
-                "entitySets": {
-                    "Products": {
-                        "entityType": {
-                            "$ref": "#/definitions/ODataDemo.Product"
-                        },
-                        "navigationPropertyBindings": {
-                            "Category": {
-                                "target": "Categories"
-                            }
-                        }
-                    },
-                    "Categories": {
-                        "entityType": {
-                            "$ref": "#/definitions/ODataDemo.Category"
-                        },
-                        "navigationPropertyBindings": {
-                            "Products": {
-                                "target": "Products"
-                            }
-                        }
-                    },
-                    "Suppliers": {
-                        "entityType": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
-                        },
-                        "navigationPropertyBindings": {
-                            "Products": {
-                                "target": "Products"
-                            },
-                            "Address/Country": {
-                                "target": "Countries"
-                            }
-                        },
-                        "@Core.OptimisticConcurrency": [
-                            {
-                                "@odata.type": "#PropertyPath",
-                                "value": "Concurrency"
-                            }
-                        ]
-                    },
-                    "Countries": {
-                        "entityType": {
-                            "$ref": "#/definitions/ODataDemo.Country"
-                        }
-                    }
-                },
-                "singletons": {
-                    "Contoso": {
-                        "type": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
-                        },
-                        "navigationPropertyBindings": {
-                            "Products": {
-                                "target": "Products"
-                            }
-                        }
-                    }
-                },
-                "functionImports": {
-                    "ProductsByRating": {
-                        "entitySet": "Products",
-                        "function": {
-                            "$ref": "#/functions/ODataDemo.ProductsByRating"
-                        }
-                    }
-                }
-            }
+
         }
     },
     "functions": {
@@ -333,5 +265,74 @@
                 }
             }
         ]
+    },
+    "entityContainer": {
+        "name": "DemoService",
+        "entitySets": {
+            "Products": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Product"
+                },
+                "navigationPropertyBindings": {
+                    "Category": {
+                        "target": "Categories"
+                    }
+                }
+            },
+            "Categories": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Category"
+                },
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Suppliers": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Supplier"
+                },
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    },
+                    "Address/Country": {
+                        "target": "Countries"
+                    }
+                },
+                "@Core.OptimisticConcurrency": [
+                    {
+                        "@odata.type": "#PropertyPath",
+                        "value": "Concurrency"
+                    }
+                ]
+            },
+            "Countries": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Country"
+                }
+            }
+        },
+        "singletons": {
+            "Contoso": {
+                "type": {
+                    "$ref": "#/definitions/ODataDemo.Supplier"
+                },
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            }
+        },
+        "functionImports": {
+            "ProductsByRating": {
+                "entitySet": "Products",
+                "function": {
+                    "$ref": "#/functions/ODataDemo.ProductsByRating"
+                }
+            }
+        }
     }
 }
