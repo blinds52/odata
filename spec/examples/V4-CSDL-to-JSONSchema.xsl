@@ -6,7 +6,6 @@
     This style sheet transforms OData 4.0 XML CSDL documents into JSON Schema with OData extensions
 
     TODO:
-    - entity container as top-level constructs with qualified names, $ref to them
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
     - default for Geo types in GeoJSON
     - annotations without explicit value: default from term definition (if inline)
@@ -73,6 +72,7 @@
       select="edm:Schema/edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
       mode="hash" />
     <xsl:apply-templates select="edm:Schema/edm:Term" mode="hash" />
+    <xsl:apply-templates select="edm:Schema/edm:EntityContainer" mode="list2" />
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="hashpair">
@@ -110,12 +110,8 @@
     <xsl:value-of select="@Namespace" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list" />
-    <!-- TODO: pull up to top level -->
-    <xsl:apply-templates select="edm:EntityContainer" mode="list">
-      <xsl:with-param name="after" select="edm:Annotation" />
-    </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotations" mode="array">
-      <xsl:with-param name="after" select="edm:Annotation|edm:EntityContainer" />
+      <xsl:with-param name="after" select="edm:Annotation" />
     </xsl:apply-templates>
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -207,7 +203,7 @@
             <xsl:with-param name="marker" select="'.'" />
           </xsl:call-template>
         </xsl:with-param>
-        <xsl:with-param name="typeName">
+        <xsl:with-param name="name">
           <xsl:call-template name="substring-after-last">
             <xsl:with-param name="input" select="@BaseType" />
             <xsl:with-param name="marker" select="'.'" />
@@ -539,7 +535,7 @@
         </xsl:if>
         <xsl:call-template name="ref">
           <xsl:with-param name="qualifier" select="$qualifier" />
-          <xsl:with-param name="typeName">
+          <xsl:with-param name="name">
             <xsl:call-template name="substring-after-last">
               <xsl:with-param name="input" select="$singleType" />
               <xsl:with-param name="marker" select="'.'" />
@@ -566,55 +562,8 @@
 
   <xsl:template name="ref">
     <xsl:param name="qualifier" />
-    <xsl:param name="typeName" />
-    <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
-    <xsl:variable name="externalNamespace">
-      <xsl:choose>
-        <xsl:when test="//edmx:Include[@Alias=$qualifier]/@Namespace">
-          <xsl:value-of select="//edmx:Include[@Alias=$qualifier]/@Namespace" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="//edmx:Include[@Namespace=$qualifier]/@Namespace" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:text>"$ref":"</xsl:text>
-    <xsl:call-template name="json-url">
-      <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
-    </xsl:call-template>
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$internalNamespace">
-        <xsl:value-of select="$internalNamespace" />
-      </xsl:when>
-      <xsl:when test="string-length($externalNamespace)>0">
-        <xsl:value-of select="$externalNamespace" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$qualifier" />
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="$typeName" />
-    <xsl:text>"</xsl:text>
-  </xsl:template>
-
-  <!-- TODO: combine this with or delegate to "ref", rename -->
-  <xsl:template name="schema-ref">
-    <xsl:param name="qualifiedName" />
-    <xsl:param name="element" />
-    <xsl:variable name="qualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$qualifiedName" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="name">
-      <xsl:call-template name="substring-after-last">
-        <xsl:with-param name="input" select="$qualifiedName" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:param name="name" />
+    <xsl:param name="element" select="'definitions'" />
     <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
     <xsl:variable name="externalNamespace">
       <xsl:choose>
@@ -632,23 +581,43 @@
     </xsl:call-template>
     <xsl:text>#/</xsl:text>
     <xsl:value-of select="$element" />
-    <xsl:text>/</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$internalNamespace">
-        <xsl:value-of select="$internalNamespace" />
-      </xsl:when>
-      <xsl:when test="string-length($externalNamespace)>0">
-        <xsl:value-of select="$externalNamespace" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$qualifier" />
-      </xsl:otherwise>
-    </xsl:choose>
     <xsl:if test="$element!='entityContainer'">
+      <xsl:text>/</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$internalNamespace">
+          <xsl:value-of select="$internalNamespace" />
+        </xsl:when>
+        <xsl:when test="string-length($externalNamespace)>0">
+          <xsl:value-of select="$externalNamespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qualifier" />
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>.</xsl:text>
       <xsl:value-of select="$name" />
     </xsl:if>
     <xsl:text>"</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="schema-ref">
+    <xsl:param name="qualifiedName" />
+    <xsl:param name="element" />
+    <xsl:call-template name="ref">
+      <xsl:with-param name="qualifier">
+        <xsl:call-template name="substring-before-last">
+          <xsl:with-param name="input" select="$qualifiedName" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="name">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="input" select="$qualifiedName" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="element" select="$element" />
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="repeat">

@@ -21,6 +21,7 @@ var csdl_16_1 = JSON.parse(fs.readFileSync("csdl-16.1.jsonschema"));
 var csdl_16_2 = JSON.parse(fs.readFileSync("csdl-16.2.jsonschema"));
 var exampleService = JSON.parse(fs.readFileSync("ExampleService.jsonschema"));
 var miscellaneous = JSON.parse(fs.readFileSync("miscellaneous.jsonschema"));
+var miscellaneous2 = JSON.parse(fs.readFileSync("miscellaneous2.jsonschema"));
 var metadataService = JSON.parse(fs.readFileSync("MetadataService.jsonschema"));
 var tm1 = JSON.parse(fs.readFileSync("TM1$metadata.jsonschema"));
 // var merged_metadata =
@@ -126,12 +127,15 @@ validator.setRemoteReference("http://vocabs.odata.org/capabilities/v1",
 validator.setRemoteReference("http://tinyurl.com/Org-OData-Measures-V1",
 		measures);
 validator.setRemoteReference("http://vocabs.odata.org/display/v1", {});
+validator.setRemoteReference("miscellaneous.json", miscellaneous);
+
 
 // validate schemas against draft04 and edm
 checkSchema("CSDL-16.1", csdl_16_1);
 checkSchema("CSDL-16.2", csdl_16_2);
 checkSchema("ExampleService", exampleService);
 checkSchema("miscellaneous", miscellaneous);
+checkSchema("miscellaneous2", miscellaneous2);
 checkSchema("MetadataService", metadataService);
 checkSchema("TM1", tm1);
 // checkSchema("merged_metadata", merged_metadata);
