@@ -86,14 +86,18 @@ function check(validator, text, input, schema) {
 }
 
 function checkSchema(text, schema) {
+  validator.options.noExtraKeywords = false;
+  validator.options.assumeAdditional = false;
 	check(validator, text + " vs. draft04", schema, draft04);
+  //validator.options.noExtraKeywords = true;
+  //validator.options.assumeAdditional = ["$ref","__$compiled","__$schemaResolved","__$refResolved"];
 	check(validator, text + " vs. edm", schema, edm);
 }
 
 //var validator = new ZSchema();
 var validator = new ZSchema({
         //noExtraKeywords : true
-        //assumeAdditional : ["$ref"]
+        //assumeAdditional : ["$ref","__$compiled"]
     });
     
 check(validator, "Check wiring", "string", {
