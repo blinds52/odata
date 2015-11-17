@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #113 Thursday Nov 12, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #113 Thursday Nov 12, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-11-12 0800-1000 PT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE) 
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39124">normative attendance sheet for this meeting (event_id=39124)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+
+<p>Agenda approved unchanged as published.</p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from November 05, 2015 TC meeting #1112 </h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/56868/odata-meeting-112_on-20151105-minutes.html">https://www.oasis-open.org/committees/download.php/56868/odata-meeting-112_on-20151105-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due November 12, 2015</h4>
+<p>None</p>
+
+<h3>5. JSON Format for CSDL</h3>
+<h4>5.1 Document Walk-through</h4>
+<h5>5.1.1 <a href="https://www.oasis-open.org/committees/download.php/56882/odata-json-csdl-v4.0-wd01-2015-11-09.docx" target="_blank">odata-json-csdl-v4.0-wd01-2015-11-09.docx</a></h5>
+<p><b>Discussion</b>:</p>
+<p>Ralf: Representation of keys: shorter form</p>
+<pre>
+  "keys":[
+    "ID",
+    "ID2",
+    {"aliasName":"complex/Path"}
+  ],
+</pre>
+<p>Ralf: Plain string for unaliased key properties, object for aliased key property</p>
+<p>Ralf: Shorter syntax for dynamic expressions, e.g.</p>
+<pre>
+"@Org.OData.Measures.V1.ISOCurrency":{
+  "@odata.path":"Currency"
+}
+ 
+  "@odata.if":[
+    {
+      "@odata.path":"IsFemale"
+    },
+    "Female",
+    "Male"
+  ]
+ 
+  "@odata.apply":{
+    "function":"odata.concat",
+    "parameterValues":[
+      "Products(",
+      {
+        "@odata.path":"ID"
+      },
+      ")"
+    ]
+  }
+</pre>
+<h5>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-875" target="_blank">ODATA-875</a> - Use of $ref for referencing elements in a JSON Schema</h5>
+
+<p><b>Mike</b>: I <b>move</b> we close ODATA-875 as applied. <b>Mark</b> seconds.</p>
+
+<p>ODATA-875 is closed as applied</p>
+
+<h3>6. Issues for V4.0_ERRATA03 in New or Open state</h3>
+<h4>6.1 OData CSDL</h4>
+<h5>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-825" target="_blank">ODATA-825</a> - AnnotationPath and Path _expression_: traversal of multiple collection-valued scalar or navigation properties</h5>
+
+<p>Ralf: ODATA-825 is OPEN</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-825 as proposed. <b>Matt</b> seconds.</p>
+<p>ODATA-825 is resolved as proposed</p>
+
+<h5>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-865" target="_blank">ODATA-865</a> - 14.2.1 Attribute Target: complete list of externally targetable CSDL elements</h5>
+Ralf Handl (SAP): ODATA-865 is OPEN
+ 
+
+<p><b>Mark</b>: I <b>move</b> we resolve ODATA-865 as proposed. <b>Mike</b> seconds.</p>
+<p>ODATA-865 is resolved as proposed</p>
+
+<h5>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-878" target="_blank">ODATA-878</a> - Example 84: EntityContainer is a Singleton, not an EntitySet</h5>
+
+<p>Ralf: ODATA-878 is OPEN</p>
+
+<p><b>Matt</b>: I <b>move</b> we resolve ODATA-878 as proposed. <b>Gerald</b> seconds.</p>
+<p>ODATA-878 is resolved as proposed</p>
+
+<h5>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-880" target="_blank">ODATA-880</a> - 14.5.10: edm:Null can have edm:Annotation child elements</h5>
+<p>Ralf: ODATA-880 is OPEN</p>
+<p>Ralf:14.5.10 _expression_ edm:Null<br>
+The edm:Null _expression_ returns an untyped null value. The null _expression_ MUST NOT contain any other elements or expressions.
+The null _expression_ MUST be written with element notation.<br>
+Example 65:<br></p>
+<pre> 
+&lt;Annotation Term="org.example.display.DisplayName">
+  &lt;Null/>
+&lt;/Annotation>
+</pre>
+
+<p>Mike: alternate wording:<br>
+"The only allowed child element of the null _expression_ is an edm:AnnotationType element.".</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-880 by replacing the current sentence prohibiting child elements of the null _expression_ with the following text: "The only allowed child element of the null _expression_ is an edm:Annotation element.". <b>Mark</b> seconds</p>
+<p>ODATA-880 is resolved as proposed</p>
+
+<h4>6.2 OData JSON Format</h4>
+<h5>6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-656" target="_blank">ODATA-656</a> - Requesting clarity on payload ordering constraints for clients</h5>
+
+<p>Ralf: ODATA-656 is OPEN</p>
+ 
+
+<p>Mike: proposal:<br> 
+Clarify in Section 4.4 Payload Ordering Constraints that services may use the odata.streaming=true format parameter to specify that the contents of the payload supplied by the client follow the ordering constraints. In the absence of such a type parameter the service must assume that the properties of json objects are unordered.</p>
+
+<p>Mike: amended:<br> 
+Clarify in Section 4.4 Payload Ordering Constraints that clients may use the odata.streaming=true format parameter to specify that the contents of the payload supplied by the client follow the ordering constraints. In the absence of such a type parameter the service must assume that the properties of json objects are unordered.
+</p> 
+
+<p><b>Mark</b>: I <b>move</b> we resolve ODATA-656 as ammended. <b>Matt</b> seconds</p>
+<p>ODATA-656 is resolved as proposed</p>
+
+<h3>7. Issues for V4.01_WD01 in New or Open state</h3>
+<h4>7.1 Adoption Blocker</h4>
+<h5>7.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-881" target="_blank">ODATA-881</a> - Add support for Edm.Untyped</h5>
+<p>Ralf: ODATA-881 is OPEN</p>
+
+
+<h3>8. Next meeting</h3>
+
+<h4>8.1 Thursday November 19, 2015 during 8-10am PT?</h4>
+<p>Date and time of next meeting agreed</p>
+
+<h4>8.2 No meeting on Thursday November 26, 2015?</h4>
+<p>Cancellation of meeting on November 26, 2015 agreed</p>
+
+<h3>9. AOB and wrap up</h3>
+
+<p>Meeting adjourned by chair.</p>
+
+</body>
+</html>
