@@ -1113,18 +1113,9 @@
   </xsl:template>
 
   <xsl:template match="edm:Null">
-    <xsl:choose>
-      <xsl:when test="node()">
-        <xsl:text>{"@odata.type":"#</xsl:text>
-        <xsl:value-of select="local-name()" />
-        <xsl:text>"</xsl:text>
-        <xsl:apply-templates select="@*|node()" mode="list2" />
-        <xsl:text>}</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>null</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:text>{"@odata.null":{</xsl:text>
+    <xsl:apply-templates select="@*|node()" mode="list" />
+    <xsl:text>}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Not|edm:UrlRef">
