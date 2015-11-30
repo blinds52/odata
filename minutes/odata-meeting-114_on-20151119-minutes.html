@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #114 Thursday Nov 19, 2015</title>
+</head>
+<body>
+<h1>OData TC meeting #114 Thursday Nov 19, 2015</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2015-11-19 0800-1000 PT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        HUbert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE) 
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=39125">normative attendance sheet for this meeting (event_id=39125)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+
+<p>Agenda approved unchanged as published.</p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from November 12, 2015 TC meeting #113</h4>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/56937/latest/odata-meeting-113_on-20151112-minutes.html">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/56937/latest/odata-meeting-113_on-20151112-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due November 19, 2015</h4>
+<p>None</p>
+
+<h3>5. JSON Format for CSDL</h3>
+<h4>5.1 Document Walk-through</h4>
+<h5>5.1.1 <a href="https://www.oasis-open.org/committees/download.php/56934/odata-json-csdl-v4.0-wd01-2015-11-13.docx" target="_blank">https://www.oasis-open.org/committees/download.php/56934/odata-json-csdl-v4.0-wd01-2015-11-13.docx</a></h5>
+<p><b>Discussion</b>:</p>
+<p>Ralf to prepare cleaned-up version that we may publish as a first review draft</p>
+<p>Ralf: Planning to have at least a second public review before moving it to Committee Specification</p>
+
+<h3>6. V4.0 ERRATA03 - Issues in New or Open state</h3>
+<h4>6.1 OData Protocol</h4>
+<h5>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-830" target="_blank">ODATA-830</a> - Header OData-EntityId: when required</h5>
+
+<p>Ralf: 8.3.3: change "create operation" to "create or upsert operation" </p>
+ 
+<p>Ralf: 13.1.1 item 24: change "POST/PATCH" to "create or upsert operation"</p>
+<p>Ralf: ODATA-830 is OPEN</p>
+ 
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-830 as proposed. <b>Matt</b> seconds.</p>
+<p>ODATA-830 is resolved as proposed</p>
+
+<h5>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-837" target="_blank">ODATA-837</a> - Example 28: replace $deltaToken with a valid custom query option</h5>
+<p>Ralf: Example 28: resource URL and corresponding context URL</p>
+<pre>
+http://host/service/Customers?$deltaToken=1234<br>
+http://host/service/$metadata#Customers/$delta
+</pre>
+<p>Ralf: Proposal: treat $deltaToken as a reserved token that services can use in delta links, similar to how we have reserved $skipToken.</p>
+<p>Ralf: Proposal: treat $deltatoken as a reserved token that services can use in delta links, similar to how we have reserved $skiptoken. (lower-case t)</p>
+ 
+<p>Mike: Proposal: Treat $deltatoken (all lower-case) as a reserved token that services can use in delta links, similar to how we have reserved $skiptoken.</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-830 as proposed. <b>Hubert</b> seconds.</p>
+ 
+<p>ODATA-837 is resolved as proposed</p>
+
+<h5>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-869" target="_blank">ODATA-869</a> - Explicitly state the location of the Content-ID header in a change set</h5>
+
+<p>Ralf: State explicitly that the Content-ID header MUST be part of the MIME-part-header section and not part of the inner OData request.</p>
+
+<p>Ralf: ODATA-869 is OPEN</p>
+
+<p><b>Matt</b>: I <b>move</b> we resolve ODATA-869 as proposed. <b>Mike</b> seconds.</p>
+<p>ODATA-869 is resolved as proposed</p>
+
+<h5>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-870" target="_blank">ODATA-870</a> - Round-off description for creating related entities when creating an entity</h5>
+
+<p>Ralf: Don't describe any rules in 11.4.2.2, but merely refer to 11.4.2, like this: <br>
+"A request to create an entity that includes related entities, represented using the appropriate inline representation, is referred to as a deep insert. Media entities, whose binary representation cannot be represented inline, cannot be created within a deep insert. <br>
+<br> 
+The entity is created observing the rules described in section 11.4.2 as if it was posted against the original target URL extended with the navigation property for this related entity. <br>
+<br> 
+On success, the service  <br>
+"<br></p>
+
+<p>Ralf: ODATA-870 is OPEN</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-870 as proposed. <b>Hubert</b> seconds.</p>
+<p>ODATA-870 is resolved as proposed</p>
+
+<h5>6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-882" target="_blank">ODATA-882</a> - Mismatch between 11.2.6 Requesting Related Entities and 11.2.7 Requesting Entity References</h5>
+
+<p>Ralf: 11.2.6 defines that requests to nullable single-valued navigation properties return 204 No Content if no entity is currently related.<br>
+11.2.7 defines that all requests for references to a single entity return 404 Not Found, not distinguishing between "direct" resource paths and resource paths to related entities. <br>
+<br>
+This leads to:</p> 
+<pre>
+GET Employees('TheBigBoss')/Manager --&gt; 204 No Content 
+GET Employees('TheBigBoss')/Manager/$ref --&gt; 404 Not Found 
+</pre>
+<p>
+Clarify whether this is intentional: <br>
+A) Of course, the related Manager is empty, so the reference does not exist, or <br>
+B) Ooops, of course both requests should return the same response code because /$ref is just a briefer representation of the non-existing related entity <br>
+<br> 
+Also clarify what happens if other path segments are added, e.g. properties or navigation properties: <br></p> 
+<pre>
+GET Employees('TheBigBoss')/Manager/Name --&gt; ??? <br>
+GET Employees('TheBigBoss')/Manager/Department --&gt; ???<br>
+</pre>
+
+<p>Ralf: ODATA-882 is OPEN</p>
+
+<p>Ralf: If the property is single-valued and has the null value, the service responds with 204 No Content.<br>
+If the property is not available, for example due to permissions, the service responds with 404 Not Found.<br>
+Ralf Handl (SAP): A $value request for a property that is null results in a 204 No Content response.<br>
+If the property is not available, for example due to permissions, the service responds with 404 Not Found.<br></p>
+
+<p>Mike: look at other implementations and find out what they do</p>
+
+<h3>7. Next meeting</h3>
+
+<h4>7.1 Thursday December 03, 2015 during 8-10am PT?</h4>
+<p>Date and time of next meeting agreed</p>
+
+<h3>8. AOB and wrap up</h3>
+
+<p>Ralf (Ram): "Ballots for OData ISO have started, will end in January"</p>
+<p>Ralf: Ram to give more insight in the next meeting!</p>
+
+<p>Ralf: Put Face-to-face on next agenda</p>
+<p>Ralf: Make formal motion for F2F date</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</body>
+</html>
