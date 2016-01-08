@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #116 Thursday Jan 07, 2016</title>
+</head>
+<body>
+<h1>OData TC meeting #116 Thursday Jan 07, 2016</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2016-01-07 0800-1000 PT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Gerald Krause (SAP SE)
+        HUbert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41444">normative attendance sheet for this meeting (event_id=41444)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+
+<p>Agenda approved unchanged as published.</p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from December 03, 2015 TC meeting #115</h4>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57047/odata-meeting-115_on-20151203-minutes.html">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57047/odata-meeting-115_on-20151203-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due January 07, 2016</h4>
+<p>None</p>
+
+<h3>5. Potential agenda items for F2F</h3>
+
+<p>Ram: </p>
+<ol>
+<li>JSON Schema </li>
+<li>Errata 3 </li>
+<li>OData 4.1 </li>
+<li>OData Extensions for Data Aggregation </li>
+<li>Extensions for Temporal Data</li>
+</ol>
+
+<h3>6. Version 4.0 Errata 3 Issues</h3>
+
+<h4>6.1 <a href="https://issues.oasis-open.org/browse/ODATA-882" target="_blank">ODATA-882</a> - Mismatch between 11.2.6 Requesting Related Entities and 11.2.7 Requesting Entity References</h4>
+
+<p>Ram: ODATA-882 is OPEN</p>
+
+<p>Ram: In errata 3 - be lenient and allow for both to accommodate current implementations. This issue should be fixed in v4.1 (potential breaking change) - we need to determine the exact semantics.</p>
+<p>Mike:</p> 
+<p>Unclear whether behavior should be 204 or 404.  We return 204 for Employees('TheBigBoss')/Manager because the question is valid and the answer is that there is no related resource (all agree).
+</p>
+
+<p>Argument for 404: When asking for Employees('TheBigBoss')/Manager/$ref, you are asking for the (absolute) reference to something that doesn't exist. This is similar to asking for the address of an object (i.e., the address of an object-valued property of an instance) that doesn't exist and should be an error (404).
+</p>
+
+<p>Argument for 204: It's the same question, asked in a different way. In both cases you're asking for the resource. In one case you're asking for the resource, in another case you're asking for an alternate representation (the $ref) of the resource.
+</p>
+
+<p>Ram: We need to specify a one or the other behavior, so as to set the expectations for the client.</p>
+
+
+<h4>6.2 <a href="https://issues.oasis-open.org/browse/ODATA-784" target="_blank">ODATA-784</a> - Need to specify the behaviour of arithmetic operators on Decimal type</h4>
+
+<p>Ram: ODATA-784: Need to specify the behaviour of arithmetic operators on Decimal type [Open] [Proposed]</p>
+
+<p>Mike: So all of the implementations follow Evan's proposed rules for add/sub/mult. None of the implementations appear to follow Evan's rule for div.</p>
+<p>Susan: IEEE 754-2008 and ISO/IEC/IEEE 60559:2011</p>
+
+<p>Ram: For v4.1, should we require scale up for div?</p>
+<p>Mike: Most of the Div examples seems to return the value in the max scale of the underlying type.</p>
+<p>Mike: It appears that Evan's proposal for div (of Scale(A)) does not agree with his later comments (Scale(A)+Scale(B)).</p>
+<p>Mike: Added to Issue:</p>
+<p>Mike: All of the implementations follow Evan's proposed rules for add/sub/mult. None of the implementations appear to follow Evan's rule for div.</p>
+
+<p>Mike:</p>
+<p>
+Most of the Div examples seems to return the value in the max scale of the underlying type.  <br>
+=>How would a client know this value?<br>
+=>If an implementation is aggregating data from multiple underlying sources, how could it return (or even correct for) a single value for max scale? Would it be forced to convert everything to the min max scale?<br>
+<br>
+There seem to be at least 5 proposals for div:<br><br>
+Scale(A)<br>
+Scale(A)+Scale(B)<br>
+Scale(A)-Scale(B)<br>
+>= Scale(A)  (doesn't seem to address Evan's second case  (A div 3) gt 0.3)<br>
+max precision of decimal<br>
+</p>
+<p>Susan: Will look to see what IEEE 754-2008 (ISO/IEC/IEEE 60559:2011) specifies. (<em>Update after the meeting: Info has been added to the issue</em>)</p>
+
+<h3>7. Next meeting</h3>
+
+<h4>7.1 Thursday January 14, 2016 during 8-10am PT?</h4>
+<p>Date and time of next meeting agreed</p>
+<p>Ram: Next week: Focus on issues on Enums, simplified syntax, payload processing, and other issues that may have proposals.</p>
+<p>Ram: Next week: We will discuss status of the various docs and timeline, and what we plan to accomplish by June 2016</p>
+
+<h3>8. AOB and wrap up</h3>
+
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</body>
+</html>
