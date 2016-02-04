@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OData TC meeting #119 Thursday Feb 04, 2016</title>
+</head>
+<body>
+<h1>OData TC meeting #119 Thursday Feb 04, 2016</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2016-02-04 0800-1000 PT
+</pre>
+<h3>1. Roll call</h3>
+
+<h4>1.1 Members present</h4>
+<pre>
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ram Jeyaraman (Microsoft)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41448">normative attendance sheet for this meeting (event_id=41444)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h3>2. Approve agenda</h3>
+
+<p>Agenda approved with one correction: We will wait for Gerald to discuss the issues on set operations.</p>
+
+<h3>3. Approve minutes from previous meeting(s)</h3>
+
+<h4>3.1 Minutes from January 28, 2016 TC meeting #118</h4>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57436/odata-meeting-118_on-20160128-minutes.html">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57436/odata-meeting-118_on-20160128-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3>4. Review action items</h3>
+<h4>4.1 Action items due February 04, 2016</h4>
+<p>None</p>
+
+<h3>7. Issue Processing</h3>
+
+<h4>V4.01 issues - Simplified Syntax: Proposal by Mike Pizzo: OData 4.1 URL Syntax Simplification Proposal</h4>
+<a href="https://www.oasis-open.org/apps/org/workgroup/odata/email/archives/201511/msg00007.html" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/email/archives/201511/msg00007.html</a>
+
+<h5>The proposal (with links to issues)</h5>
+
+<p><b>Introduction:</b></p>
+
+<p>The existing OData URL conventions were designed such that a URL could be unambiguously parsed for any valid model. Unfortunately, being unambiguous leads to strict rules on namespace qualification of types and operations, as well as key syntax, that run counter to common REST practices. Indeed, in many (most?) scenarios the strict rules are unnecessary when the service has some control over the model and/or the data. For such services, the inability to present the desired URLs has become an adoption blocker in many instances.
+</p>
+<p>A collection of Jira issues were opened in order to attempt to enable a service to expose simpler URL conventions in cases where theoretical ambiguities were impossible (or highly unlikely). For example, when unqualified action/function names are known not to conflict with property names, or when key values can't conflict with action/function/type names.
+</p>
+<p>This proposal seeks to address those issues as a whole by attempting to provide an expanded set of conventions and precedence rules that a service can follow in order to allow a more relaxed set of URL patterns.
+</p>
+ 
+<p><b>Proposal:</b></p>
+
+<p><b>Note</b>: OData already requires that all children of a schema (entity/complex/enum types, typedefs, terms, actions, functions) must be unique.</p>
+
+<p><b>Proposal Part I:</b></p>
+<p>
+Define the concept of “Default Namespaces”. A new Boolean annotation, “Core.DefaultNamespace”, can be applied to the &lt;Schema> element to specify that that namespace is a default namespace as well as to the &lt;Include> element to specify that the included namespace is a default namespace. The semantics of the default namespaces are as follows:
+<ol>
+<li>Data modelers should ensure uniqueness of schema children across all default namespaces</li>
+<li>Data modelers should avoid naming bound actions and functions the same as a property on the bound type</li>
+<li>Data modelers should avoid naming derived types the same as a property defined on a base type</li>
+<li>Undefined what happens if there is a conflict across schemas. Client should handle by always qualifying</li>
+<li>Services may disallow dynamic properties whose names conflict with a bound action, bound function, or derived type in a default namespace</li>
+<li>Services may disallow key values whose names conflict with a bound action, bound function, or derived types in a default namespace</li>
+</ol>
+
+</p> 
+
+<p><b>Proposal Part II:</b></p>
+
+<ol>
+<li>Types, functions, actions, and enums defined within default namespaces can be referenced in a URL without namespace/alias qualification.</li>
+<li>URLs segments are resolved according to the following precedence rules:
+<ol>
+<li>Following an entity collection segment:
+<ol>
+  <li>Does it match an OData segment (starting with “$”)</li>
+  <li>Does it match an alias-qualified bound action name, bound function overload, or type name?</li>
+  <li>Does it match a namespace-qualified bound action name, bound function overload, or type name?</li>
+  <li>Does it match an unqualified bound action name, bound function overload, or type name in a default namespace?
+  <ol>
+    <li>This addresses <a href="https://issues.oasis-open.org/browse/ODATA-812" target="_blank">ODATA-812</a>, which proposes to make the namespace optional for bound actions and functions.</li>
+    <li>It also makes the namespace optional for cast segments, although that scenario was not called out in the Jira issue.</li>
+  </ol>
+  </li>
+  <li>Treat as a key
+  <ol>
+    <li>This addresses <a href="https://issues.oasis-open.org/browse/ODATA-799" target="_blank">ODATA-799</a>, enable key-as-segment, by defining precedence rules for evaluating unmatched segments as keys.</li>
+    <li>For maximum interoperability, services SHOULD also support parens format, to avoid ambiguity, and to support multi-part keys</li>
+    <li>The syntax of ContextUrl always uses parens syntax</li>
+    <li>If services didn't support unqualified bound action/function/type names following a collection segment then it would be much more common for services to unambiguously support key-as-segment syntax by restricting the key from containing "." If we continue to require functions to be suffixed with parenthesis-enclosed parameters we help avoid conflicts with keys as long as the key value doesn't contain open/close parens, which means in most cases we only have to worry about conflicts with unqualified bound action and type names.</li>
+  </ol>
+  </li>
+</ol>
+<li>Following a single entity segment:
+<ol>
+  <li>Does it match an OData segment (starting with “$”)</li>
+  <li>Does it match a declared property?</li>
+  <li>Does it match an alias-qualified bound action name, bound function overload, or type name?</li>
+  <li>Does it match a namespace-qualified bound action name, bound function overload, or type name?</li>
+  <li>Does it match a bound action, bound function overload, or type in a default namespace? (<a href="https://issues.oasis-open.org/browse/ODATA-812" target="_blank">ODATA-812</a>)</li>
+  <li>Treat as open property</li>
+</ol>
+</li>
+<li>Following a scalar value segment:
+<ol>
+  <li>Does it match an OData segment (starting with “$”)</li>
+  <li>Does it match an alias-qualified bound action name, bound function overload, or type name?</li>
+  <li>Does it match a namespace-qualified bound action name, bound function overload, or type name?</li>
+  <li>Does it match a bound action, bound function overload, or type in a default namespace? (<a href="https://issues.oasis-open.org/browse/ODATA-812" target="_blank">ODATA-812</a>)</li>
+</ol>
+</li>
+</li>
+</ol>
+</li>
+</ol>
+
+
+<p><b>Proposal Part III:</b></p>
+
+<p>Services support Implicit cast from string to enum in URL (<a href="https://issues.oasis-open.org/browse/ODATA-834" target="_blank">ODATA-834</a>). This allows the use of the string value of the enum in place of the full value, as in:
+<br>
+<pre>
+$filter=Color eq 'Yellow' in addition to the existing $filter=Color eq ns.Color'Yellow'.
+</pre>
+</p>
+ 
+
+<p><b>Proposal Part IV:</b></p>
+
+<p>A service may support invoking a function as the last segment in a path by omitting the parens and supplying the named parameters as query options prefixed with the "@" sign (<a href="https://issues.oasis-open.org/browse/ODATA-763" target="_blank">ODATA-763</a>)</p>
+
+<h6>End of Proposal</h6>
+
+<h4>7.2 <a href="https://issues.oasis-open.org/browse/ODATA-812" target="_blank">ODATA-812</a> - Allow omitting namespaces for unambiguous functions/actions [Open]</h4>
+<p>Ram: Issue is now open. No objections.</p>
+<p>Ram: Mike to open separate issue for include annotations</p>
+
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-812 as proposed. <b>Mark</b> seconds.</p>
+
+<p>Motion passes, no objections</p>
+
+<h4>7.3 <a href="https://issues.oasis-open.org/browse/ODATA-834" target="_blank">ODATA-834</a> - Make type prefix optional for enumeration literals in URLs</h4>
+<p>Ram: Issue is now open. No objections.</p>
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-834 as proposed. <b>Ralf</b> seconds.</p>
+<p>Motion passes, no objections</p>
+<p>Ram: ODATA-834 has been resolved.</p>
+
+<p><b>Ralf</b>: I <b>move</b> to extend ODATA-834 to also allow omitting the prefix for duration literals. <b>Mark</b> seconds.</p>
+
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-834 again with the scope extended to duration literals. <b>Mark</b> seconds.</p>
+<p>No objections, the scope of ODATA-834 has been extended.</p>
+<p>Motion passes, no objections, the change (addition) to ODATA-834 resolution has been approved as documented in the Jira ticket.</p>
+
+<h4>7.4 <a href="https://issues.oasis-open.org/browse/ODATA-563" target="_blank">ODATA-563</a> - 5.1.1.4.29: Allow casting strings to primitive types if the string contains the literal representation of an instance of the target type</h4>
+<p>Ram: Issue is now open. No objections.</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-563 as proposed. <b>Martin</b> seconds.</p>
+<p>Motion passes, no objections, ODATA-563 is resolved.</p>
+
+<h4>7.5 <a href="https://issues.oasis-open.org/browse/ODATA-799" target="_blank">ODATA-799</a> - Define Key-As-Segment URL convention for resource paths</h4>
+<p>Ram: ODATA-799 is now open. No objections.</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-799 as proposed. <b>Mike</b> seconds.</p>
+<p>Motion passes, no objections, ODATA-799 has been resolved.</p>
+
+<h4>7.6 <a href="https://issues.oasis-open.org/browse/ODATA-556" target="_blank">ODATA-556</a> - Add "in" operator as syntactic sugar for a chain of "or" expressions</h4>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-556 as proposed. <b>Martin</b> seconds.</p> 
+<p>Motion passes, no objections, ODATA-556 has been resolved.</p>
+
+<h3>8. Next meeting</h3>
+
+<h4>8.1 Thursday February 11, 2016 during 8-10am PT?</h4>
+
+<p>Date and time of next meeting agreed</p>
+
+<h3>9. AOB and wrap up</h3>
+
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</body>
+</html>
