@@ -13,18 +13,20 @@
                         "None",
                         "Read",
                         "Write",
-                        "ReadWrite"
+                        "ReadWrite",
+                        "Invoke"
                     ]
                 },
                 {
                     "type": "string",
-                    "pattern": "^(None|Read|Write|ReadWrite|[1-9][0-9]*)(,(None|Read|Write|ReadWrite|[1-9][0-9]*))*$"
+                    "pattern": "^(None|Read|Write|ReadWrite|Invoke|[1-9][0-9]*)(,(None|Read|Write|ReadWrite|Invoke|[1-9][0-9]*))*$"
                 }
             ],
             "None@odata.value": 0,
             "Read@odata.value": 1,
             "Write@odata.value": 2,
-            "ReadWrite@odata.value": 3
+            "ReadWrite@odata.value": 3,
+            "Invoke@odata.value": 4
         }
     },
     "schemas": {
@@ -126,8 +128,17 @@
                     "type": "null"
                 }
             ],
-            "appliesTo": "Property",
-            "description": "Permissions available for a property.The value of 2 is reserved for future use."
+            "appliesTo": [
+                "Property",
+                "ComplexType",
+                "TypeDefinition",
+                "EntityType",
+                "EntitySet",
+                "NavigationProperty",
+                "Action",
+                "Function"
+            ],
+            "description": "Permissions for accessing a resource"
         },
         "Org.OData.Core.V1.Immutable": {
             "anyOf": [
@@ -190,6 +201,7 @@
                 "null"
             ],
             "appliesTo": "Property",
+            "description": "The media type of a binary resource",
             "@Core.IsMediaType": true,
             "@Core.RequiresType": "Edm.Binary"
         },
