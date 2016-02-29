@@ -9,7 +9,6 @@
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
     - default for Geo types in GeoJSON
     - annotations without explicit value: default from term definition (if inline)
-    - different representation for edm:*Path dynamic expressions (tbd)
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -25,6 +24,10 @@
 
   <xsl:key name="methods"
     match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function" use="concat(../@Namespace,'.',@Name)" />
+
+  <xsl:key name="targets" match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations" use="concat(../@Namespace,'/',@Target)" />
+
+  <xsl:key name="includeannotations" match="edmx:Edmx/edmx:Reference/edmx:IncludeAnnotations" use="concat(../@Uri,'|',@TermNamespace)" />
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"$schema":"</xsl:text>
@@ -46,12 +49,31 @@
 
   <xsl:template match="edmx:Reference" mode="hashvalue">
     <xsl:apply-templates select="@*[local-name()!='Uri']" />
-    <xsl:apply-templates select="edmx:IncludeAnnotations" mode="array">
+    <xsl:apply-templates
+      select="edmx:IncludeAnnotations[generate-id() = generate-id(key('includeannotations', concat(../@Uri,'|',@TermNamespace))[1])]"
+      mode="hash"
+    >
       <xsl:with-param name="after" />
+      <xsl:with-param name="key" select="'TermNamespace'" />
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotation" mode="list">
       <xsl:with-param name="after" select="edmx:IncludeAnnotations" />
     </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="edmx:IncludeAnnotations" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@TermNamespace" />
+    <xsl:text>":[</xsl:text>
+    <xsl:for-each select="key('includeannotations', concat(../@Uri,'|',@TermNamespace))">
+      <xsl:if test="position()>1">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>{</xsl:text>
+      <xsl:apply-templates select="@*[name()!='TermNamespace']" mode="list" />
+      <xsl:text>}</xsl:text>
+    </xsl:for-each>
+    <xsl:text>]</xsl:text>
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
@@ -110,7 +132,10 @@
     <xsl:value-of select="@Namespace" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list" />
-    <xsl:apply-templates select="edm:Annotations" mode="array">
+    <xsl:apply-templates
+      select="edm:Annotations[generate-id() = generate-id(key('targets', concat(../@Namespace,'/',@Target))[1])]" mode="hash"
+    >
+      <xsl:with-param name="key" select="'Target'" />
       <xsl:with-param name="after" select="edm:Annotation" />
     </xsl:apply-templates>
     <xsl:text>}</xsl:text>
@@ -340,9 +365,7 @@
     </xsl:if>
     <xsl:choose>
       <xsl:when test="$singleType='Edm.Stream'">
-        <xsl:text>"$ref":"</xsl:text>
-        <xsl:value-of select="$edmUri" />
-        <xsl:text>#/definitions/Edm.Stream"</xsl:text>
+        <xsl:call-template name="Edm.Stream" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.String'">
         <xsl:call-template name="nullableType">
@@ -470,7 +493,7 @@
           <xsl:with-param name="type" select="'number,string'" />
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
-        <xsl:text>,"format":"single"</xsl:text>
+        <xsl:call-template name="single-format" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.Guid'">
         <xsl:call-template name="nullableType">
@@ -503,41 +526,20 @@
         <xsl:text>,"format":"duration"</xsl:text>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
-        <xsl:if test="$anyOf">
-          <xsl:text>"anyOf":[{</xsl:text>
-        </xsl:if>
-        <xsl:text>"$ref":"</xsl:text>
-        <xsl:value-of select="$edmUri" />
-        <xsl:text>#/definitions/</xsl:text>
-        <xsl:value-of select="$singleType" />
-        <xsl:text>"</xsl:text>
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>},{"type":"null"</xsl:text>
-        </xsl:if>
-        <xsl:if test="$anyOf">
-          <xsl:text>}]</xsl:text>
-        </xsl:if>
+        <xsl:call-template name="Edm.Geo">
+          <xsl:with-param name="anyOf" select="$anyOf" />
+          <xsl:with-param name="singleType" select="$singleType" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
         <xsl:apply-templates select="@SRID" mode="list2" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:if test="$anyOf">
-          <xsl:text>"anyOf":[{</xsl:text>
-        </xsl:if>
-        <xsl:call-template name="ref">
+        <xsl:call-template name="otherType">
+          <xsl:with-param name="anyOf" select="$anyOf" />
           <xsl:with-param name="qualifier" select="$qualifier" />
-          <xsl:with-param name="name">
-            <xsl:call-template name="substring-after-last">
-              <xsl:with-param name="input" select="$singleType" />
-              <xsl:with-param name="marker" select="'.'" />
-            </xsl:call-template>
-          </xsl:with-param>
+          <xsl:with-param name="singleType" select="$singleType" />
+          <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
-        <xsl:if test="not($nullable='false')">
-          <xsl:text>},{"type":"null"</xsl:text>
-        </xsl:if>
-        <xsl:if test="$anyOf">
-          <xsl:text>}]</xsl:text>
-        </xsl:if>
         <xsl:apply-templates select="@MaxLength" />
         <xsl:apply-templates select="@Precision" mode="list2" />
       </xsl:otherwise>
@@ -547,6 +549,61 @@
     </xsl:apply-templates>
     <xsl:if test="$collection">
       <xsl:text>}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="single-format">
+    <xsl:text>,"format":"single"</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="Edm.Stream">
+    <xsl:text>"$ref":"</xsl:text>
+    <xsl:value-of select="$edmUri" />
+    <xsl:text>#/definitions/Edm.Stream"</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="Edm.Geo">
+    <xsl:param name="anyOf" />
+    <xsl:param name="singleType" />
+    <xsl:param name="nullable" />
+    <xsl:if test="$anyOf">
+      <xsl:text>"anyOf":[{</xsl:text>
+    </xsl:if>
+    <xsl:text>"$ref":"</xsl:text>
+    <xsl:value-of select="$edmUri" />
+    <xsl:text>#/definitions/</xsl:text>
+    <xsl:value-of select="$singleType" />
+    <xsl:text>"</xsl:text>
+    <xsl:if test="not($nullable='false')">
+      <xsl:text>},{"type":"null"</xsl:text>
+    </xsl:if>
+    <xsl:if test="$anyOf">
+      <xsl:text>}]</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="otherType">
+    <xsl:param name="anyOf" />
+    <xsl:param name="qualifier" />
+    <xsl:param name="singleType" />
+    <xsl:param name="nullable" />
+    <xsl:if test="$anyOf">
+      <xsl:text>"anyOf":[{</xsl:text>
+    </xsl:if>
+    <xsl:call-template name="ref">
+      <xsl:with-param name="qualifier" select="$qualifier" />
+      <xsl:with-param name="name">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="input" select="$singleType" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:with-param>
+    </xsl:call-template>
+    <xsl:if test="not($nullable='false')">
+      <xsl:text>},{"type":"null"</xsl:text>
+    </xsl:if>
+    <xsl:if test="$anyOf">
+      <xsl:text>}]</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -868,15 +925,32 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template match="edm:Annotations" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Target" />
+    <xsl:text>":{</xsl:text>
+    <xsl:for-each select="key('targets', concat(../@Namespace,'/',@Target))">
+      <xsl:if test="position()>1">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:apply-templates select="*" mode="list">
+        <xsl:with-param name="qualifier" select="@Qualifier" />
+      </xsl:apply-templates>
+    </xsl:for-each>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
   <xsl:template match="edm:Annotation">
     <xsl:param name="target" />
+    <xsl:param name="qualifier" />
     <xsl:variable name="name">
       <xsl:value-of select="$target" />
       <xsl:text>@</xsl:text>
       <xsl:value-of select="@Term" />
-      <xsl:if test="@Qualifier">
+      <xsl:if test="@Qualifier or $qualifier">
         <xsl:text>#</xsl:text>
         <xsl:value-of select="@Qualifier" />
+        <xsl:value-of select="$qualifier" />
       </xsl:if>
     </xsl:variable>
     <xsl:text>"</xsl:text>
@@ -1235,6 +1309,7 @@
   <!-- comma-separated list -->
   <xsl:template match="@*|*" mode="list">
     <xsl:param name="target" />
+    <xsl:param name="qualifier" />
     <xsl:param name="after" />
     <xsl:choose>
       <xsl:when test="position() > 1">
@@ -1246,15 +1321,18 @@
     </xsl:choose>
     <xsl:apply-templates select=".">
       <xsl:with-param name="target" select="$target" />
+      <xsl:with-param name="qualifier" select="$qualifier" />
     </xsl:apply-templates>
   </xsl:template>
 
   <!-- continuation of comma-separated list -->
   <xsl:template match="@*|*" mode="list2">
     <xsl:param name="target" />
+    <xsl:param name="qualifier" />
     <xsl:text>,</xsl:text>
     <xsl:apply-templates select=".">
       <xsl:with-param name="target" select="$target" />
+      <xsl:with-param name="qualifier" select="$qualifier" />
     </xsl:apply-templates>
   </xsl:template>
 

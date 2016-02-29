@@ -1349,16 +1349,11 @@
         },
         "org.example2": {
             "description": "Examples from Part 3: CSDL - second schema",
-            "annotations": [
-                {
-                    "target": "Self.Person",
-                    "qualifier": "Tablet",
+            "annotations": {
+                "Self.Person": {
                     "@org.example.display.DisplayName#Tablet": {
                         "@odata.path": "FirstName"
-                    }
-                },
-                {
-                    "target": "Self.Person",
+                    },
                     "@org.example.display.Thumbnail": "T0RhdGE",
                     "@org.example.display.Thumbnail#element": "T0RhdGE",
                     "@org.example.display.ReadOnly": true,
@@ -1572,7 +1567,7 @@
                         "@odata.urlRef": "http://host/wiki/HowToUse"
                     }
                 }
-            ]
+            }
         },
         "M1": {
             "$ref": "#/schemas/Model1"
@@ -1770,9 +1765,8 @@
 
         },
         "Y": {
-            "annotations": [
-                {
-                    "target": "Some.EntityType",
+            "annotations": {
+                "Some.EntityType": {
                     "@X.Person": {
 
                     },
@@ -1783,17 +1777,7 @@
                     "@Org.OData.Core.V1.Description#alt": "Alternative description",
                     "@Core.Description": {
                         "@odata.path": "SomeProperty"
-                    }
-                },
-                {
-                    "target": "Some.EntityType",
-                    "@Y.DevelopmentTeam": {
-                        "@odata.path": "SomeCollectionNavProp/@Y.Developer"
                     },
-                    "@Y.DevelopmentTeam@custom.IsA": "X.Team"
-                },
-                {
-                    "target": "Some.EntityType",
                     "@Y.DevelopmentTeam": {
                         "@odata.path": "SomeCollectionNavProp/@Y.Developer"
                     },
@@ -1803,29 +1787,14 @@
 
                         },
                         "ScrumMaster@custom.IsA": "Y.Developer X.Person"
-                    }
-                },
-                {
-                    "target": "Some.EntityType",
+                    },
                     "@Y.Movies": {
                         "@odata.path": "AllMyMovies"
-                    }
-                },
-                {
-                    "target": "MySchema.MyEntityContainer/MyEntitySet/MySchema.MyEntityType/MyProperty",
-                    "@Y.Movies": {
-                        "@odata.path": "AllMyMovies"
-                    }
-                },
-                {
-                    "target": "Some.EntityType",
+                    },
                     "@Y.ArchivedMovies": {
                         "@odata.path": "MoviesInStorage"
                     },
-                    "@Y.ArchivedMovies@custom.ItemIsA": "X.Movie"
-                },
-                {
-                    "target": "Some.EntityType",
+                    "@Y.ArchivedMovies@custom.ItemIsA": "X.Movie",
                     "@Y.Something": {
                         "SomeProperty": "Some Thing",
                         "AnotherProperty": "A string with spaces",
@@ -1840,8 +1809,13 @@
                         },
                         "VIPs@custom.ItemIsA": "X.Person"
                     }
+                },
+                "MySchema.MyEntityContainer/MyEntitySet/MySchema.MyEntityType/MyProperty": {
+                    "@Y.Movies": {
+                        "@odata.path": "AllMyMovies"
+                    }
                 }
-            ]
+            }
         }
     },
     "functions": {
@@ -2160,44 +2134,46 @@
             "@Some.Term": true
         },
         "http://somewhere/Vocabulary/V1": {
-            "includeAnnotations": [
-                {
-                    "termNamespace": "Name.Space",
-                    "targetNamespace": "Target.Space"
-                },
-                {
-                    "termNamespace": "Name.Space",
-                    "targetNamespace": "Target.Space",
-                    "qualifier": "SomeName"
-                },
-                {
-                    "termNamespace": "NameSpace",
-                    "qualifier": "SomeName"
-                },
-                {
-                    "termNamespace": "Name.Space"
-                }
-            ]
+            "includeAnnotations": {
+                "Name.Space": [
+                    {
+                        "targetNamespace": "Target.Space"
+                    },
+                    {
+                        "targetNamespace": "Target.Space",
+                        "qualifier": "SomeName"
+                    },
+                    {
+                        "qualifier": "SomeName"
+                    },
+                    {
+
+                    }
+                ]
+            }
         },
         "http://odata.org/ann/b": {
-            "includeAnnotations": [
-                {
-                    "termNamespace": "org.example.validation"
-                },
-                {
-                    "termNamespace": "org.example.display",
-                    "qualifier": "Tablet"
-                },
-                {
-                    "termNamespace": "org.example.hcm",
-                    "targetNamespace": "com.contoso.Sales"
-                },
-                {
-                    "termNamespace": "org.example.hcm",
-                    "qualifier": "Tablet",
-                    "targetNamespace": "com.contoso.Person"
-                }
-            ]
+            "includeAnnotations": {
+                "org.example.validation": [
+                    {
+
+                    }
+                ],
+                "org.example.display": [
+                    {
+                        "qualifier": "Tablet"
+                    }
+                ],
+                "org.example.hcm": [
+                    {
+                        "targetNamespace": "com.contoso.Sales"
+                    },
+                    {
+                        "qualifier": "Tablet",
+                        "targetNamespace": "com.contoso.Person"
+                    }
+                ]
+            }
         }
     }
 }
