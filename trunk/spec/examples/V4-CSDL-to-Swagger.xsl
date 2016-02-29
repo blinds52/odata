@@ -6,7 +6,8 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger JSON
 
     TODO:
-    - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from property names
+    - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
+    property names
     - $orderby: both asc (no suffix) and desc in enumeration
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
@@ -84,12 +85,6 @@
   </xsl:template>
 
   <xsl:template match="edm:Schema">
-    <xsl:text>,"paths":{</xsl:text>
-    <xsl:apply-templates
-      select="edm:EntityContainer/edm:EntitySet|edm:EntityContainer/edm:FunctionImport|edm:EntityContainer/edm:ActionImport"
-      mode="list" />
-    <xsl:text>}</xsl:text>
-
     <xsl:apply-templates select="edm:EntityType|edm:ComplexType|edm:TypeDefinition|edm:EnumType"
       mode="hash"
     >
@@ -99,6 +94,11 @@
       </xsl:with-param>
     </xsl:apply-templates>
 
+    <xsl:text>,"paths":{</xsl:text>
+    <xsl:apply-templates
+      select="edm:EntityContainer/edm:EntitySet|edm:EntityContainer/edm:FunctionImport|edm:EntityContainer/edm:ActionImport"
+      mode="list" />
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:EntitySet">
@@ -511,16 +511,11 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>"200":{"description":"Success","schema":{</xsl:text>
-        <xsl:if test="starts-with($type,'Collection(')">
-          <xsl:text>"type":"array","items":{</xsl:text>
-        </xsl:if>
         <xsl:call-template name="type">
           <xsl:with-param name="type" select="$type" />
+          <xsl:with-param name="nullableFacet" select="'false'" />
         </xsl:call-template>
         <xsl:text>}</xsl:text>
-        <xsl:if test="starts-with($type,'Collection(')">
-          <xsl:text>}</xsl:text>
-        </xsl:if>
         <xsl:text>}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
@@ -602,6 +597,7 @@
   <xsl:template match="edm:Action/edm:Parameter" mode="hashvalue">
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
+      <xsl:with-param name="nullableFacet" select="'false'" />
     </xsl:call-template>
   </xsl:template>
 
@@ -611,6 +607,7 @@
     <xsl:text>","in":"path",</xsl:text>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
+      <xsl:with-param name="nullableFacet" select="'false'" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -639,125 +636,58 @@
     </xsl:call-template>
   </xsl:template>
 
-  <xsl:template name="type">
+  <xsl:template name="nullableType">
     <xsl:param name="type" />
-    <xsl:variable name="nullable" select="'false'" />
-    <xsl:variable name="singleType">
-      <xsl:choose>
-        <xsl:when test="starts-with($type,'Collection(')">
-          <xsl:value-of select="substring-before(substring-after($type,'('),')')" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$type" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="qualifier">
-      <xsl:call-template name="substring-before-last">
-        <xsl:with-param name="input" select="$singleType" />
-        <xsl:with-param name="marker" select="'.'" />
-      </xsl:call-template>
-    </xsl:variable>
+    <xsl:param name="nullable" />
+    <xsl:text>"type":"</xsl:text>
     <xsl:choose>
-      <xsl:when test="$singleType='Edm.Stream'">
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.String'">
-        <xsl:text>"type":"string"</xsl:text>
-        <xsl:apply-templates select="@MaxLength" />
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Boolean'">
-        <xsl:text>"type":"boolean"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Double'">
-        <xsl:text>"type":"number","format":"double"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Single'">
-        <xsl:text>"type":"number","format":"float"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Date'">
-        <xsl:text>"type":"string","format":"date"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.DateTimeOffset'">
-        <xsl:text>"type":"string","format":"date-time"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Int64'">
-        <xsl:text>"type":"integer","format":"int64"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Int32'">
-        <xsl:text>"type":"integer","format":"int32"</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Int16'">
-        <xsl:text>"type":"integer","minimum":-32768,"maximum":32767</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.SByte'">
-        <xsl:text>"type":"integer","minimum":-128,"maximum":127</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Byte'">
-        <xsl:text>"type":"integer","minimum":0,"maximum":255</xsl:text>
-      </xsl:when>
-      <xsl:when test="$singleType='Edm.Decimal'">
-        <xsl:text>"type":"number"</xsl:text>
-        <xsl:choose>
-          <xsl:when test="not(@Scale) or @Scale='0'">
-            <xsl:text>,"multipleOf":1</xsl:text>
-          </xsl:when>
-          <xsl:when test="@Scale!='variable'">
-            <xsl:text>,"multipleOf":1e-</xsl:text>
-            <xsl:value-of select="@Scale" />
-          </xsl:when>
-        </xsl:choose>
-        <xsl:if test="@Precision">
-          <xsl:variable name="scale">
-            <xsl:choose>
-              <xsl:when test="not(@Scale)">
-                <xsl:value-of select="0" />
-              </xsl:when>
-              <xsl:when test="@Scale='variable'">
-                <xsl:value-of select="0" />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="@Scale" />
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable>
-          <xsl:variable name="limit">
-            <xsl:call-template name="repeat">
-              <xsl:with-param name="string" select="'9'" />
-              <xsl:with-param name="count" select="@Precision - $scale" />
-            </xsl:call-template>
-            <xsl:if test="$scale > 0">
-              <xsl:text>.</xsl:text>
-              <xsl:call-template name="repeat">
-                <xsl:with-param name="string" select="'9'" />
-                <xsl:with-param name="count" select="$scale" />
-              </xsl:call-template>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:text>,"minimum":-</xsl:text>
-          <xsl:value-of select="$limit" />
-          <xsl:text>,"maximum":</xsl:text>
-          <xsl:value-of select="$limit" />
-        </xsl:if>
-      </xsl:when>
-      <xsl:when test="$qualifier='Edm'">
-        <!-- TODO: default remaining types to string, or default to object for Geo*, string for others? -->
-        <xsl:text>"type":"string"</xsl:text>
+      <xsl:when test="contains($type,',')">
+        <xsl:value-of select="substring-before($type,',')" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="ref">
-          <xsl:with-param name="qualifier" select="$qualifier" />
-          <xsl:with-param name="typeName">
-            <xsl:call-template name="substring-after-last">
-              <xsl:with-param name="input" select="$singleType" />
-              <xsl:with-param name="marker" select="'.'" />
-            </xsl:call-template>
-          </xsl:with-param>
-        </xsl:call-template>
+        <xsl:value-of select="$type" />
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates select="@DefaultValue">
-      <xsl:with-param name="type" select="$singleType" />
-    </xsl:apply-templates>
+    <xsl:text>"</xsl:text>
+    <xsl:if test="not($nullable='false')">
+      <xsl:text>,"x-nullable":true</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="Edm.Stream">
+    "description": "unfulfillable constraint, no inline representation of Edm.Stream",
+    "type": "string",
+    "enum": [ null ]
+  </xsl:template>
+
+  <xsl:template name="single-format">
+    <xsl:text>,"format":"float"</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="Edm.Geo">
+    <xsl:param name="singleType" />
+    <xsl:text>"description": "GeoJSON object </xsl:text>
+    <xsl:value-of select="$singleType" />
+    <xsl:text>","type": "object"</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="otherType">
+    <xsl:param name="anyOf" />
+    <xsl:param name="qualifier" />
+    <xsl:param name="singleType" />
+    <xsl:param name="nullable" />
+    <xsl:call-template name="ref">
+      <xsl:with-param name="qualifier" select="$qualifier" />
+      <xsl:with-param name="name">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="input" select="$singleType" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:with-param>
+    </xsl:call-template>
+    <xsl:if test="not($nullable='false')">
+      <xsl:text>,"x-nullable":true</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
@@ -775,7 +705,7 @@
             <xsl:with-param name="marker" select="'.'" />
           </xsl:call-template>
         </xsl:with-param>
-        <xsl:with-param name="typeName">
+        <xsl:with-param name="name">
           <xsl:call-template name="substring-after-last">
             <xsl:with-param name="input" select="@BaseType" />
             <xsl:with-param name="marker" select="'.'" />
@@ -785,6 +715,16 @@
       <xsl:text>},{</xsl:text>
     </xsl:if>
     <xsl:text>"type":"object"</xsl:text>
+    <xsl:if test="@Abstract='true'">
+      <xsl:text>,"x-abstract":true</xsl:text>
+      <xsl:if test="local-name()='EntityType' and not(edm:Key)">
+        <xsl:text>,"x-keys":[]</xsl:text>
+      </xsl:if>
+    </xsl:if>
+    <xsl:if test="@HasStream='true'">
+      <xsl:text>,"x-mediaEntity":true</xsl:text>
+    </xsl:if>
+    <xsl:apply-templates select="@OpenType|edm:Key" mode="list2" />
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
@@ -795,25 +735,35 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template match="@OpenType|@Unicode">
+    <xsl:text>"x-</xsl:text>
+    <xsl:call-template name="lowerCamelCase">
+      <xsl:with-param name="name" select="local-name()" />
+    </xsl:call-template>
+    <xsl:text>":</xsl:text>
+    <xsl:value-of select="." />
+  </xsl:template>
+
+  <xsl:template match="edm:Key">
+    <xsl:text>"x-keys":[</xsl:text>
+    <!-- TODO -->
+    <xsl:text>]</xsl:text>
+  </xsl:template>
+
   <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
         <xsl:with-param name="type" select="@Type" />
-        <xsl:with-param name="nullable" select="@Nullable" />
+        <xsl:with-param name="nullableFacet" select="@Nullable" />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="starts-with(@Type,'Collection(')">
-      <xsl:text>"type":"array","items":{</xsl:text>
-    </xsl:if>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
+      <xsl:with-param name="nullableFacet" select="@Nullable" />
     </xsl:call-template>
-    <xsl:if test="starts-with(@Type,'Collection(')">
-      <xsl:text>}</xsl:text>
-    </xsl:if>
     <xsl:choose>
       <xsl:when test="local-name()='Property'">
-        <xsl:apply-templates select="@SRID|@Unicode|*[local-name()!='Annotation']" mode="list2" />
+        <xsl:apply-templates select="@Unicode|*[local-name()!='Annotation']" mode="list2" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>,"x-relationship":{</xsl:text>
@@ -868,6 +818,7 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <!-- TODO: also reduce to exception overrides -->
   <xsl:template match="edm:Annotation">
     <xsl:param name="target" />
     <xsl:variable name="name">
@@ -898,9 +849,10 @@
         <xsl:apply-templates select="edm:Annotation" mode="list2">
           <xsl:with-param name="target" select="$name" />
         </xsl:apply-templates>
-        <!-- for tagging terms -->
         <xsl:if test="count(@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation'])=0">
-          <xsl:text>{}</xsl:text>
+          <!-- tagging term -->
+          <!-- TODO: try to get default value from term definition, use true if not possible -->
+          <xsl:text>true</xsl:text>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>

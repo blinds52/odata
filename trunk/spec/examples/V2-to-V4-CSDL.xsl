@@ -13,9 +13,10 @@
 
     In addition the SAP annotations are translated into corresponding V4 annotations in the OASIS vocabularies or SAP vocabularies.
 
+    TODO: sap-annotations:creatable updatable deletable pageable addressable sortable filterable unit/semantics=currency-code/semantics=unit-of-measure
+    semantics=emai semantics=tel
     TODO: TimeOfDay as target for Time
     TODO: IsComposable for functions generated from function imports
-    TODO: translate more sap: annotations
 
   -->
   <xsl:output method="xml" indent="yes" />
@@ -291,6 +292,9 @@
         <xsl:value-of select="." />
       </xsl:attribute>
     </Annotation>
+  </xsl:template>
+
+  <xsl:template match="@sap:creatable" mode="capabilities">
   </xsl:template>
 
   <xsl:template match="@sap:*">
