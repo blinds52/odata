@@ -29,6 +29,8 @@
 
   <xsl:key name="includeannotations" match="edmx:Edmx/edmx:Reference/edmx:IncludeAnnotations" use="concat(../@Uri,'|',@TermNamespace)" />
 
+  <xsl:variable name="extension-prefix" select="''" />
+
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"$schema":"</xsl:text>
     <xsl:value-of select="$edmUri" />
@@ -150,7 +152,7 @@
     <xsl:if test="@IsFlags='true'">
       <xsl:text>"anyOf":[{</xsl:text>
     </xsl:if>
-    <xsl:text>"enum":[</xsl:text>
+    <xsl:text>"type":"string","enum":[</xsl:text>
     <xsl:apply-templates select="edm:Member" mode="list" />
     <xsl:text>]</xsl:text>
     <xsl:if test="@IsFlags='true'">
@@ -785,7 +787,17 @@
   </xsl:template>
 
   <!-- name : unquoted boolean value -->
-  <xsl:template match="@Nullable|@OpenType|@ContainsTarget|@IsBound|@IsComposable|@IncludeInServiceDocument|@Unicode">
+  <xsl:template match="@Nullable|@OpenType|@Unicode">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="$extension-prefix" />
+    <xsl:call-template name="lowerCamelCase">
+      <xsl:with-param name="name" select="local-name()" />
+    </xsl:call-template>
+    <xsl:text>":</xsl:text>
+    <xsl:value-of select="." />
+  </xsl:template>
+
+  <xsl:template match="@ContainsTarget|@IsBound|@IsComposable|@IncludeInServiceDocument">
     <xsl:text>"</xsl:text>
     <xsl:call-template name="lowerCamelCase">
       <xsl:with-param name="name" select="local-name()" />
@@ -795,7 +807,9 @@
   </xsl:template>
 
   <xsl:template match="edm:Key">
-    <xsl:text>"keys":[</xsl:text>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="$extension-prefix" />
+    <xsl:text>keys":[</xsl:text>
     <xsl:apply-templates select="edm:PropertyRef" mode="list" />
     <xsl:text>]</xsl:text>
   </xsl:template>
@@ -1393,6 +1407,7 @@
     <xsl:param name="name" />
     <xsl:choose>
       <xsl:when test="$name='SRID'">
+        <xsl:value-of select="$extension-prefix" />
         <xsl:text>srid</xsl:text>
       </xsl:when>
       <xsl:otherwise>
