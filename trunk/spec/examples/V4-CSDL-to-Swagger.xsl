@@ -6,6 +6,10 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger JSON
 
     TODO:
+    - x-resourcetype on container children with values EntitySet, Singleton, ...
+    - annotations
+    - action and function definitions
+    - edmx:Reference/edmx:Include reflected in human-readable description of service, with links to parameterized Swagger UI
     - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
     property names
     - $orderby: both asc (no suffix) and desc in enumeration
@@ -36,6 +40,8 @@
 
   <xsl:variable name="coreAlias" select="//edmx:Include[@Namespace='Org.OData.Core.V1']/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreAlias,'.Description')" />
+
+  <xsl:variable name="extension-prefix" select="'x-'" />
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"swagger":"2.0"</xsl:text>
@@ -80,7 +86,15 @@
     <xsl:text>,"consumes":["application/json"]</xsl:text>
     <xsl:text>,"produces":["application/json"]</xsl:text>
     <xsl:apply-templates select="edmx:DataServices/edm:Schema" />
-    <xsl:text>,"parameters":{"expand":{"name":"$expand","in":"query","description":"expand navigation property","type":"string"},"select":{"name":"$select","in":"query","description":"select structural property","type":"string"},"orderby":{"name":"$orderby","in":"query","description":"order by some property","type":"string"},"top":{"name":"$top","in":"query","description":"top elements","type":"integer"},"skip":{"name":"$skip","in":"query","description":"skip elements","type":"integer"},"count":{"name":"$count","in":"query","description":"include count in response","type":"boolean"},"filter":{"name":"$filter","in":"query","description":"filter elements by property values","type":"string"}}</xsl:text>
+    <xsl:text>,"parameters":{
+        "expand":{"name":"$expand","in":"query","description":"Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)","type":"string"},
+        "select":{"name":"$select","in":"query","description":"Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)","type":"string"},
+        "orderby":{"name":"$orderby","in":"query","description":"Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)","type":"string"},
+        "top":{"name":"$top","in":"query","description":"Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)","type":"integer"},
+        "skip":{"name":"$skip","in":"query","description":"Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)","type":"integer"},
+        "count":{"name":"$count","in":"query","description":"Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)","type":"boolean"},
+        "filter":{"name":"$filter","in":"query","description":"Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)","type":"string"},
+        "search":{"name":"$search","in":"query","description":"Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)","type":"string"}}</xsl:text>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -148,7 +162,7 @@
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"},{"$ref":"#/parameters/orderby"},{"$ref":"#/parameters/top"},{"$ref":"#/parameters/skip"},{"$ref":"#/parameters/count"}]</xsl:text>
+    <xsl:text>,"parameters":[{"$ref":"#/parameters/top"},{"$ref":"#/parameters/skip"},{"$ref":"#/parameters/orderby"},{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"},{"$ref":"#/parameters/select"},{"$ref":"#/parameters/expand"}]</xsl:text>
     <xsl:text>,"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","schema":{"type":"object","properties":{"value":{"type":"array","items":{"$ref":"</xsl:text>
@@ -243,7 +257,7 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="list" />
+      mode="parameter" />
     <xsl:text>,{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"}],"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","schema":{"$ref":"</xsl:text>
@@ -264,7 +278,7 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="list" />
+      mode="parameter" />
     <xsl:text>,{"name":"</xsl:text>
     <xsl:value-of select="$type" />
     <xsl:text>","in":"body"</xsl:text>
@@ -291,7 +305,7 @@
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="list" />
+      mode="parameter" />
     <xsl:text>,{"name":"If-Match","in":"header","description":"If-Match header","type":"string"}]</xsl:text>
     <xsl:text>,"responses":{"204":{"description":"Empty response"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
     <xsl:text>}</xsl:text>
@@ -362,10 +376,13 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm:PropertyRef">
+  <xsl:template match="edm:PropertyRef" mode="parameter">
     <xsl:variable name="name" select="@Name" />
     <xsl:variable name="type" select="../../edm:Property[@Name=$name]/@Type" />
     <!-- TODO: inheritance - find key definition in base type (recursively) -->
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
     <xsl:text>{"name":"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","in":"path","required":true,"description":"key: </xsl:text>
@@ -541,7 +558,8 @@
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
     <xsl:text>"],"parameters":[</xsl:text>
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef" />
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
+      mode="parameter" />
     <xsl:text>,{"name":"body","in":"body","description":"Request body","schema":{"type":"object"</xsl:text>
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
@@ -586,7 +604,7 @@
     <xsl:text>"],"parameters":[</xsl:text>
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|edm:Parameter[position()>1]"
-      mode="list" />
+      mode="parameter" />
     <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">
@@ -610,6 +628,11 @@
       <xsl:with-param name="nullableFacet" select="'false'" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Function/edm:Parameter" mode="parameter">
+    <xsl:text>,</xsl:text>
+    <xsl:apply-templates select="." />
   </xsl:template>
 
   <xsl:template match="edm:Parameter/@MaxLength">
@@ -735,28 +758,7 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="@OpenType|@Unicode">
-    <xsl:text>"x-</xsl:text>
-    <xsl:call-template name="lowerCamelCase">
-      <xsl:with-param name="name" select="local-name()" />
-    </xsl:call-template>
-    <xsl:text>":</xsl:text>
-    <xsl:value-of select="." />
-  </xsl:template>
-
-  <xsl:template match="edm:Key">
-    <xsl:text>"x-keys":[</xsl:text>
-    <!-- TODO -->
-    <xsl:text>]</xsl:text>
-  </xsl:template>
-
   <xsl:template match="edm:Property|edm:NavigationProperty" mode="hashvalue">
-    <xsl:variable name="nullable">
-      <xsl:call-template name="nullableFacetValue">
-        <xsl:with-param name="type" select="@Type" />
-        <xsl:with-param name="nullableFacet" select="@Nullable" />
-      </xsl:call-template>
-    </xsl:variable>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="@Nullable" />
@@ -779,12 +781,6 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
-  </xsl:template>
-
-  <xsl:template match="@SRID">
-    <xsl:text>"x-srid":"</xsl:text>
-    <xsl:value-of select="." />
-    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="entityTypeDescription">
@@ -825,6 +821,7 @@
       <!-- prefix with x- to satisfy Swagger restriction for extension names -->
       <xsl:text>x-</xsl:text>
       <xsl:value-of select="$target" />
+      <xsl:text>@</xsl:text>
       <xsl:value-of select="@Term" />
       <xsl:if test="@Qualifier">
         <xsl:text>#</xsl:text>
@@ -832,7 +829,7 @@
       </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$name='x-Org.OData.Core.V1.Description' or $name=concat('x-',$coreDescription)">
+      <xsl:when test="$name='x-@Org.OData.Core.V1.Description' or $name=concat('x-@',$coreDescription)">
         <xsl:text>"description":</xsl:text>
         <xsl:apply-templates select="@String|edm:String" />
       </xsl:when>

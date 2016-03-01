@@ -2,15 +2,15 @@
     "swagger": "2.0",
     "info": {
         "title": "TripPin service is a sample service for OData V4.",
-        "description": "The OData Service at http://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW/",
+        "description": "The OData Service at http://localhost/service-root/",
         "version": "0.1.0",
         "x-odata-version": "4.0"
     },
-    "host": "services.odata.org",
+    "host": "localhost",
     "schemes": [
         "http"
     ],
-    "basePath": "/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW",
+    "basePath": "/service-root",
     "consumes": [
         "application/json"
     ],
@@ -19,6 +19,7 @@
     ],
     "definitions": {
         "Microsoft.OData.SampleService.Models.TripPin.PersonGender": {
+            "type": "string",
             "enum": [
                 "Male",
                 "Female",
@@ -93,20 +94,20 @@
             "type": "object",
             "x-mediaEntity": true,
             "x-keys": [
-                
+                "Id"
             ],
             "properties": {
                 "Id": {
                     "type": "integer",
                     "format": "int64",
-                    "x-Org.OData.Core.V1.Permissions": "Read"
+                    "x-@Org.OData.Core.V1.Permissions": "Read"
                 },
                 "Name": {
                     "type": "string",
                     "x-nullable": true
                 }
             },
-            "x-Org.OData.Core.V1.AcceptableMediaTypes": [
+            "x-@Org.OData.Core.V1.AcceptableMediaTypes": [
                 "image/jpeg"
             ]
         },
@@ -114,12 +115,12 @@
             "type": "object",
             "x-openType": true,
             "x-keys": [
-                
+                "UserName"
             ],
             "properties": {
                 "UserName": {
                     "type": "string",
-                    "x-Org.OData.Core.V1.Permissions": "Read"
+                    "x-@Org.OData.Core.V1.Permissions": "Read"
                 },
                 "FirstName": {
                     "type": "string"
@@ -146,7 +147,7 @@
                 "Concurrency": {
                     "type": "integer",
                     "format": "int64",
-                    "x-Org.OData.Core.V1.Computed": true
+                    "x-@Org.OData.Core.V1.Computed": true
                 },
                 "Friends": {
                     "type": "array",
@@ -154,7 +155,7 @@
                         "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                     },
                     "x-relationship": {
-                        
+
                     }
                 },
                 "Trips": {
@@ -170,7 +171,7 @@
                     "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo",
                     "x-nullable": true,
                     "x-relationship": {
-                        
+
                     }
                 }
             }
@@ -178,12 +179,12 @@
         "Microsoft.OData.SampleService.Models.TripPin.Airline": {
             "type": "object",
             "x-keys": [
-                
+                "AirlineCode"
             ],
             "properties": {
                 "AirlineCode": {
                     "type": "string",
-                    "x-Org.OData.Core.V1.Permissions": "Read"
+                    "x-@Org.OData.Core.V1.Permissions": "Read"
                 },
                 "Name": {
                     "type": "string"
@@ -193,19 +194,19 @@
         "Microsoft.OData.SampleService.Models.TripPin.Airport": {
             "type": "object",
             "x-keys": [
-                
+                "IcaoCode"
             ],
             "properties": {
                 "IcaoCode": {
                     "type": "string",
-                    "x-Org.OData.Core.V1.Permissions": "Read"
+                    "x-@Org.OData.Core.V1.Permissions": "Read"
                 },
                 "Name": {
                     "type": "string"
                 },
                 "IataCode": {
                     "type": "string",
-                    "x-Org.OData.Core.V1.Immutable": true
+                    "x-@Org.OData.Core.V1.Immutable": true
                 },
                 "Location": {
                     "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
@@ -215,13 +216,13 @@
         "Microsoft.OData.SampleService.Models.TripPin.PlanItem": {
             "type": "object",
             "x-keys": [
-                
+                "PlanItemId"
             ],
             "properties": {
                 "PlanItemId": {
                     "type": "integer",
                     "format": "int32",
-                    "x-Org.OData.Core.V1.Permissions": "Read"
+                    "x-@Org.OData.Core.V1.Permissions": "Read"
                 },
                 "ConfirmationCode": {
                     "type": "string",
@@ -274,19 +275,19 @@
                         "From": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
                             "x-relationship": {
-                                
+
                             }
                         },
                         "To": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
                             "x-relationship": {
-                                
+
                             }
                         },
                         "Airline": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline",
                             "x-relationship": {
-                                
+
                             }
                         }
                     }
@@ -316,13 +317,13 @@
         "Microsoft.OData.SampleService.Models.TripPin.Trip": {
             "type": "object",
             "x-keys": [
-                
+                "TripId"
             ],
             "properties": {
                 "TripId": {
                     "type": "integer",
                     "format": "int32",
-                    "x-Org.OData.Core.V1.Permissions": "Read"
+                    "x-@Org.OData.Core.V1.Permissions": "Read"
                 },
                 "ShareId": {
                     "type": "string",
@@ -339,8 +340,8 @@
                 "Budget": {
                     "type": "number",
                     "format": "float",
-                    "x-Org.OData.Measures.V1.ISOCurrency": "USD",
-                    "x-Org.OData.Measures.V1.Scale": 2
+                    "x-@Org.OData.Measures.V1.ISOCurrency": "USD",
+                    "x-@Org.OData.Measures.V1.Scale": 2
                 },
                 "StartsAt": {
                     "type": "string",
@@ -362,7 +363,7 @@
                         "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
                     },
                     "x-relationship": {
-                        
+
                     }
                 },
                 "PlanItems": {
@@ -404,25 +405,28 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/filter"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    },
-                    {
-                        "$ref": "#/parameters/select"
-                    },
-                    {
-                        "$ref": "#/parameters/orderby"
-                    },
-                    {
                         "$ref": "#/parameters/top"
                     },
                     {
                         "$ref": "#/parameters/skip"
                     },
                     {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
                         "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -598,25 +602,28 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/filter"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    },
-                    {
-                        "$ref": "#/parameters/select"
-                    },
-                    {
-                        "$ref": "#/parameters/orderby"
-                    },
-                    {
                         "$ref": "#/parameters/top"
                     },
                     {
                         "$ref": "#/parameters/skip"
                     },
                     {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
                         "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -904,25 +911,28 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/filter"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    },
-                    {
-                        "$ref": "#/parameters/select"
-                    },
-                    {
-                        "$ref": "#/parameters/orderby"
-                    },
-                    {
                         "$ref": "#/parameters/top"
                     },
                     {
                         "$ref": "#/parameters/skip"
                     },
                     {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
                         "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -1095,25 +1105,28 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/filter"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    },
-                    {
-                        "$ref": "#/parameters/select"
-                    },
-                    {
-                        "$ref": "#/parameters/orderby"
-                    },
-                    {
                         "$ref": "#/parameters/top"
                     },
                     {
                         "$ref": "#/parameters/skip"
                     },
                     {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
                         "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -1347,43 +1360,49 @@
         "expand": {
             "name": "$expand",
             "in": "query",
-            "description": "expand navigation property",
+            "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
             "type": "string"
         },
         "select": {
             "name": "$select",
             "in": "query",
-            "description": "select structural property",
+            "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
             "type": "string"
         },
         "orderby": {
             "name": "$orderby",
             "in": "query",
-            "description": "order by some property",
+            "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
             "type": "string"
         },
         "top": {
             "name": "$top",
             "in": "query",
-            "description": "top elements",
+            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
             "type": "integer"
         },
         "skip": {
             "name": "$skip",
             "in": "query",
-            "description": "skip elements",
+            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
             "type": "integer"
         },
         "count": {
             "name": "$count",
             "in": "query",
-            "description": "include count in response",
+            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
             "type": "boolean"
         },
         "filter": {
             "name": "$filter",
             "in": "query",
-            "description": "filter elements by property values",
+            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
             "type": "string"
         }
     }
