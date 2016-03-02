@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #122 Wednesday Mar 02 and Thursday Mar 03, 2016 (Face to Face, Zurich, CH)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+  <h1>OData TC meeting #122 Wednesday Mar 02 and Thursday Mar 03, 2016 (Face to Face, Zurich, CH)</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+Meeting period: 2016-03-02 09:00 CET until 2016-03-03 17:00 CET
+Day 1 Lunch break will be 12:00 to 13:00 CET
+</pre>
+<h2>Draft Day 1/2</h2>
+
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41452">normative attendance sheet for this meeting (event_id=41452)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Proposed Agenda has been posted by Mike via <a href="https://lists.oasis-open.org/archives/odata/201603/msg00017.html" target="_blank">https://lists.oasis-open.org/archives/odata/201603/msg00017.html</a> (the dates should target March 2nd and 3rd though) and location reference as in mail from Hubert: <a href="https://lists.oasis-open.org/archives/odata/201601/msg00071.html" target="_blank">https://lists.oasis-open.org/archives/odata/201601/msg00071.html</a></p>
+<p>The agenda is approved.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from February 25, 2016 TC meeting #121</h3>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57641/odata-meeting-121_on-20160225-minutes.html" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57641/odata-meeting-121_on-20160225-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h2>4. Review action items</h2>
+<h3>4.1 Action items due March 02, 2016</h3>
+<p>None</p>
+
+<h2>5. Errata 3 Issues</h2>
+
+<h3>5.1 Review applications of Errata 3 issue resolutions (This is a carryover from previous meeting)</h3>
+
+<p>Ralf: We left in JSON Format, chapter 12</p>
+<p>Ralf: Agreement to issue application</p>
+<p>Mark: Review of JSON Format complete</p>
+<p>Mark: Reviewing changes to CSDL Document</p>
+
+<p>Ralf: Discussion on <a href="https://issues.oasis-open.org/browse/ODATA-803" target="_blank">ODATA-803</a> - Collection-valued property: Define default value for nullable facet</p>
+
+<p><b>Mike</b>: I <b>move</b> we reopen Issue ODATA-803 to consider meaning of absence of nullable facet for collections. <b>Mark</b> seconds.</p>
+
+<p>No objections, issue is reopened</p>
+
+<p>Hubert: I'd argue that Nullable being true for collection valued properties would be the exceptional case.</p>
+<p>Hubert: As such this changes what clients might expect to be able to do, insert null values in these collections, whereas before they, presumable, would have not assumed to be able to do so in the absence of the Nullable facet</p>
+<p>Mike: Upon reviewing, while clients can't assume that absence means you can insert a null value, saying that absence means true implies that the client can insert null values.  Then saying that they may not be able to insert null values even in this case makes the presence of nullable=true meaningless.</p>
+<p>Mike: in addition, this default is likely to be the wrong choice in most cases.</p>
+<p>Mike: Proposal:</p>
+<blockquote>Absence of nullable facet on collection means it's unknown if  you can insert nulls. You can try, but it may fail.
+Nullable=true means that the collection *may* contain null values (although attempting to insert a null value may still fail for a variety of reasons)
+Nullable=false means that the collection can not contain null values</blockquote>
+
+<p><b>Mark</b>: I <b>move</b> that we accept the revised proposal for ODATA-803. <b>Ramesh</b> seconds.</p>
+<p>No objections, motion passes</p>
+
+<p>Ralf: 13.1.2 Attribute Extends: make additional text a note because we don't want to introduce normative language in an erratum.</p>
+<p>Ralf: Finished CSDL document</p>
+<p>Ralf: Starting with Errata document for OData</p>
+
+<p>Ralf: No comments</p>
+<p>Ralf: Starting with Errata document for JSON Format</p>
+<p>Ralf: No comments</p>
+<p>Ralf: Finished with reviewing documents</p>
+<p><b>Ralf</b>: I <b>move</b> to close issues ODATA-656, ODATA-781, ODATA-819, ODATA-821, ODATA-822, ODATA-823, ODATA-825, ODATA-826, ODATA-828, ODATA-830, ODATA-831, ODATA-832, ODATA-835, ODATA-837, ODATA-840, ODATA-847, ODATA-850, ODATA-852, ODATA-853, ODATA-861, ODATA-865, ODATA-869, ODATA-870, ODATA-877, ODATA-878, ODATA-880, ODATA-885, ODATA-891, ODATA-892, ODATA-893, ODATA-896, ODATA-899, ODATA-903 as applied. <b>Mike</b> seconds.</p>
+<p>No objections, motion passes</p>
+
+<h4>List of the 33 issues closed above as applied:</h4>
+<ol>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-656" target="_blank">ODATA-656</a> - Requesting clarity on payload ordering constraints for clients</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-781" target="_blank">ODATA-781</a> - substring: what to return if the start index is outside the first argument string, or the desired length exceeds the remaining string length</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-819" target="_blank">ODATA-819</a> - 10.2.2: Clarify whether enum types allow multiple members with the same value</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-821" target="_blank">ODATA-821</a> - 14.2.1 Attribute Target: targeting of nested properties of structured types</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-822" target="_blank">ODATA-822</a> - Async Batch Request: Bug in example 85</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-823" target="_blank">ODATA-823</a> - Header Content-Transfer-Encoding not used in HTTP</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-825" target="_blank">ODATA-825</a> - AnnotationPath expression: traversal of multiple collection-valued scalar or navigation properties</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-826" target="_blank">ODATA-826</a> - Wrong Target attribute value in Edm.Metadata.Annotation/Target navigation property
+</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-828" target="_blank">ODATA-828</a> - Update I-JSON reference</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-830" target="_blank">ODATA-830</a> - Header OData-EntityId: when required</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-831" target="_blank">ODATA-831</a> - MetadataService.edmx: type of OpenType property should be Edm.Boolean</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-832" target="_blank">ODATA-832</a> - 15.6: typo in diagram (Function/Action swapped)</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-835" target="_blank">ODATA-835</a> - 5.1: PATCH missing in list of operations that do not allow system query options</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-837" target="_blank">ODATA-837</a> - Example 28: replace $deltaToken with a valid custom query option</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-840" target="_blank">ODATA-840</a> - Add example for $expand=NavProp/$count</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-847" target="_blank">ODATA-847</a> - Clarification: use of Schema namespace aliases within URLs</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-850" target="_blank">ODATA-850</a> - Improve document structure for functions used in common expressions</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-852" target="_blank">ODATA-852</a> - 8.3.1: superfluous text paragraph 3, sentence 1</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-853" target="_blank">ODATA-853</a> - 8.3.3: last sentence should use "header" instead of "preference"</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-861" target="_blank">ODATA-861</a> - Define behavior when neither accept header or $format query parameter is specified</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-865" target="_blank">ODATA-865</a> - 14.2.1 Attribute Target: complete list of externally targetable CSDL elements</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-869" target="_blank">ODATA-869</a> - Explicitly state the location of the Content-ID header in a change set</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-870" target="_blank">ODATA-870</a> - Round-off description for creating related entities when creating an entity</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-877" target="_blank">ODATA-877</a> - Must delta responses continue to track "orphaned" entities?</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-878" target="_blank">ODATA-878</a> - Example 84: EntityContainer is a Singleton, not an EntitySet</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-880" target="_blank">ODATA-880</a> - 14.5.10: edm:Null can have edm:Annotation child elements</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-885" target="_blank">ODATA-885</a> - Permissions should apply to more than just properties</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-891" target="_blank">ODATA-891</a> - Misleading reference to "open" in description of $select</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-892" target="_blank">ODATA-892</a> - Clarify dynamic properties support in $filter, $orderby, $expand</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-893" target="_blank">ODATA-893</a> - Is @odata.type required on update of a derived type</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-896" target="_blank">ODATA-896</a> - Reconsider guidance on odata.count position (public comment c201512e00001)</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-899" target="_blank">ODATA-899</a> - Type cast segment after $all</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-903" target="_blank">ODATA-903</a> - ABNF: should allow cast segment following collection of complex types</li>
+</ol>
+
+<h3>5.2 Errata 3 Issues in New/Open State - Issues for V4.0_ERRATA03 in New or Open state</h3>
+
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-908" target="_blank">ODATA-908</a> - 8.1.1 Header Content-Type: is only SHOULD in RFC7231</h4>
+
+<p>Ralf: ODATA-908 is now OPEN</p>
+<p>Mike: Proposal is to change Content-type from MUST to SHOULD for media types only.</p>
+<p><b>Mark</b>: I <b>move</b> that we accept ODATA-908 as proposed. <b>Mike</b> seconds.</p>
+<p>No objections. ODATA-908 is RESOLVED as proposed.</p>
+
+<h4>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-916" target="_blank">ODATA-916</a> - Define what services (and clients?) do with unknown format parameters</h4>
+
+<p>Ralf: ODATA-916 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> that we accept ODATA-916 as proposed. <b>Ramesh</b> seconds.</p>
+<p>No objections. ODATA-916 is RESOLVED as proposed.</p>
+
+<h4>5.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-913" target="_blank">ODATA-913</a> - Should we specify a default response format if neither Accept header nor system query $format are specified</h4>
+
+<p>Ralf: ODATA-913 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> that we accept ODATA-913 as proposed. <b>Mike</b> seconds.</p>
+<p>No objections. ODATA-913 is RESOLVED as proposed.</p>
+
+<h4>5.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-912" target="_blank">ODATA-912</a> - Clarify what clients should do if they see an unknown/invalid expression for a known annotation term</h4>
+
+<p>Ralf: ODATA-912 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> that we accept ODATA-912 as proposed. <b>Ramesh</b> seconds.</p>
+<p>No objections. ODATA-912 is RESOLVED as proposed.</p>
+
+<h4>5.2.5 <a href="https://issues.oasis-open.org/browse/ODATA-915" target="_blank">ODATA-915</a> - Be consistent in citing rules around namespace qualification</h4>
+
+<p>Ralf: ODATA-915 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> that we accept ODATA-915 as proposed. <b>Ramesh</b> seconds.</p>
+<p>No objections. ODATA-915 is RESOLVED as proposed.</p>
+
+<h4>5.2.6 <a href="https://issues.oasis-open.org/browse/ODATA-917" target="_blank">ODATA-917</a> - 5.1.1.2.1 Addition and 5.1.1.2.2 Subtraction: Date add/sub Duration is DateTimeOffset - but in which time zone?</h4>
+
+<p>Ralf: ODATA-917 is OPEN</p>
+
+<p><em>Lunch break ... until 13:00 CET</em></p>
+<!--
+
+<p><b>mmm</b>: I <b>move</b> that we accept ODATA-xxx as proposed. <b>sss</b> seconds.</p>
+<p>No objections. ODATA-xxx is RESOLVED as proposed.</p>
+<h4>5.2.7 <a href="https://issues.oasis-open.org/browse/ODATA-xxx" target="_blank">ODATA-xxx</a> - ttt</h4>
+
+<p>Ralf: ODATA-xxx is OPEN</p>
+<p><b>mmm</b>: I <b>move</b> that we accept ODATA-xxx as proposed. <b>sss</b> seconds.</p>
+<p>No objections. ODATA-xxx is RESOLVED as proposed.</p>
+
+<h4>5.2.8 <a href="https://issues.oasis-open.org/browse/ODATA-xxx" target="_blank">ODATA-xxx</a> - ttt</h4>
+
+<p>Ralf: ODATA-xxx is OPEN</p>
+<p><b>mmm</b>: I <b>move</b> that we accept ODATA-xxx as proposed. <b>sss</b> seconds.</p>
+<p>No objections. ODATA-xxx is RESOLVED as proposed.</p>
+
+-->
+<h4>Marker of current progress ...</h4>
+
+<h2>Near Real Time Draft of Minutes with timestamp 20160302T110000Z</h2>
+<p>This draft will be overwritten with successive revisions as the face to face meeting is ongoing. Hint: Before lunch break on day one.</p>
+</div>
+</body>
+</html>
