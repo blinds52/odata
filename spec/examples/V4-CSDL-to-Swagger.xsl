@@ -6,9 +6,10 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger JSON
 
     TODO:
+    - no x- prefix for annotations, instead wrap them in x-annotations object within Swagger markup
     - x-resourcetype on container children within /paths with values EntitySet, Singleton, ...
-    - no x- prefix for annotations within x-schemas etc.
-    - @Extends for entity container
+    - Swagger UI complains about correct $ref to #/x-schemas: bug or just represent aliases differently?
+    - @Extends for entity container: ideally should include /paths from referenced container
     - annotations (other than description) on the entity container
     - edmx:Reference/edmx:Include reflected in human-readable description of service, with links to parameterized Swagger
     UI
@@ -27,11 +28,10 @@
     - property description for key parameters in single-entity requests
     - better description for operations
     - remove duplicated code
-    - delegate more to JSONSchema translation, use variables / overridable sub-templates instead of copied templates
-    - or branch from JSONSchema and make this transformation self-contained
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
     - default for Geo types in GeoJSON
     - annotations without explicit value: default from term definition (if inline)
+    - trim leading and trailing \n from descriptions
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -59,55 +59,59 @@
   <xsl:key name="includeannotations" match="edmx:Edmx/edmx:Reference/edmx:IncludeAnnotations" use="concat(../@Uri,'|',@TermNamespace)" />
 
   <xsl:template match="edmx:Edmx">
-    <xsl:text>{"swagger":"2.0"</xsl:text>
-    <xsl:apply-templates select="@*" mode="list2" />
-    <xsl:text>,"info":{"title":"</xsl:text>
-    <!-- TODO: also cover element notation of string -->
-    <xsl:variable name="title"
-      select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String" />
-    <xsl:choose>
-      <xsl:when test="$title">
-        <xsl:value-of select="$title"></xsl:value-of>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>OData Service</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>","description":"</xsl:text>
-    <xsl:variable name="description"
-      select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.LongDescription' or @Term=concat($coreAlias,'.LongDescription')]/@String" />
-    <xsl:choose>
-      <xsl:when test="$description">
-        <xsl:value-of select="$description"></xsl:value-of>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>The OData Service at </xsl:text>
-        <xsl:value-of select="$scheme"></xsl:value-of>
-        <xsl:text>://</xsl:text>
-        <xsl:value-of select="$host"></xsl:value-of>
-        <xsl:value-of select="$basePath"></xsl:value-of>
-        <xsl:text>/</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <!-- TODO: service version as a Core annotation? - Jira issue -->
-    <xsl:text>","version":"0.1.0"}</xsl:text>
-    <xsl:text>,"host":"</xsl:text>
-    <xsl:value-of select="$host" />
-    <xsl:text>"</xsl:text>
-    <xsl:text>,"schemes":["</xsl:text>
-    <xsl:value-of select="$scheme"></xsl:value-of>
-    <xsl:text>"],"basePath":"</xsl:text>
-    <xsl:value-of select="$basePath" />
-    <xsl:text>"</xsl:text>
-    <!-- TODO: Capabilities.SupportedFormats -->
-    <xsl:text>,"consumes":["application/json"]</xsl:text>
-    <xsl:text>,"produces":["application/json"]</xsl:text>
+    <xsl:text>{</xsl:text>
+    <xsl:apply-templates select="@*" mode="list" />
+    <xsl:if test="//edm:EntityContainer">
+      <xsl:text>,"swagger":"2.0"</xsl:text>
+      <xsl:text>,"info":{"title":"</xsl:text>
+      <!-- TODO: also cover element notation of string -->
+      <xsl:variable name="title"
+        select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String" />
+      <xsl:choose>
+        <xsl:when test="$title">
+          <xsl:value-of select="$title"></xsl:value-of>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>OData Service</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>","description":"</xsl:text>
+      <xsl:variable name="description"
+        select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.LongDescription' or @Term=concat($coreAlias,'.LongDescription')]/@String" />
+      <xsl:choose>
+        <xsl:when test="$description">
+          <xsl:value-of select="$description"></xsl:value-of>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>The OData Service at </xsl:text>
+          <xsl:value-of select="$scheme"></xsl:value-of>
+          <xsl:text>://</xsl:text>
+          <xsl:value-of select="$host"></xsl:value-of>
+          <xsl:value-of select="$basePath"></xsl:value-of>
+          <xsl:text>/</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <!-- TODO: service version as a Core annotation? - Jira issue -->
+      <xsl:text>","version":"0.1.0"}</xsl:text>
+      <xsl:text>,"host":"</xsl:text>
+      <xsl:value-of select="$host" />
+      <xsl:text>"</xsl:text>
+      <xsl:text>,"schemes":["</xsl:text>
+      <xsl:value-of select="$scheme"></xsl:value-of>
+      <xsl:text>"],"basePath":"</xsl:text>
+      <xsl:value-of select="$basePath" />
+      <xsl:text>"</xsl:text>
+      <!-- TODO: Capabilities.SupportedFormats -->
+      <xsl:text>,"consumes":["application/json"]</xsl:text>
+      <xsl:text>,"produces":["application/json"]</xsl:text>
+    </xsl:if>
     <xsl:apply-templates select="edmx:DataServices" />
     <xsl:apply-templates select="edmx:Reference[edmx:IncludeAnnotations|edm:Annotation]" mode="hash">
       <xsl:with-param name="key" select="'Uri'" />
     </xsl:apply-templates>
-    <!-- TODO: external file -->
-    <xsl:text>,"parameters":{
+    <xsl:if test="//edm:EntityContainer">
+      <!-- TODO: external file -->
+      <xsl:text>,"parameters":{
         "expand":{"name":"$expand","in":"query","description":"Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)","type":"string"},
         "select":{"name":"$select","in":"query","description":"Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)","type":"string"},
         "orderby":{"name":"$orderby","in":"query","description":"Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)","type":"string"},
@@ -116,6 +120,7 @@
         "count":{"name":"$count","in":"query","description":"Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)","type":"boolean"},
         "filter":{"name":"$filter","in":"query","description":"Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)","type":"string"},
         "search":{"name":"$search","in":"query","description":"Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)","type":"string"}}</xsl:text>
+    </xsl:if>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -161,10 +166,12 @@
     >
       <xsl:with-param name="name" select="'definitions'" />
       <xsl:with-param name="constantProperties">
-        <xsl:text>
+        <xsl:if test="//edm:EntityContainer">
+          <xsl:text>
           ,"Edm.Stream":{"type":"object","description": "Edm.Stream is never part of message bodies"}
           ,"_Error":{"properties":{"error":{"$ref":"#/definitions/_InError"}}}
           ,"_InError":{"properties":{"code":{"type":"string"},"message":{"type":"string"}}}</xsl:text>
+        </xsl:if>
       </xsl:with-param>
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Schema|../edmx:Reference/edmx:Include" mode="hash">
@@ -197,7 +204,7 @@
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="../@Uri" />
     </xsl:call-template>
-    <xsl:text>#/schemas/</xsl:text>
+    <xsl:text>#/x-schemas/</xsl:text>
     <xsl:value-of select="@Namespace" />
     <xsl:text>"}</xsl:text>
     <xsl:if test="@Alias">
@@ -207,7 +214,7 @@
       <xsl:call-template name="json-url">
         <xsl:with-param name="url" select="../@Uri" />
       </xsl:call-template>
-      <xsl:text>#/schemas/</xsl:text>
+      <xsl:text>#/x-schemas/</xsl:text>
       <xsl:value-of select="@Namespace" />
       <xsl:text>"}</xsl:text>
     </xsl:if>
@@ -217,7 +224,7 @@
     <xsl:if test="@Alias">
       <xsl:text>"</xsl:text>
       <xsl:value-of select="@Alias" />
-      <xsl:text>":{"$ref":"#/schemas/</xsl:text>
+      <xsl:text>":{"$ref":"#/x-schemas/</xsl:text>
       <xsl:value-of select="@Namespace" />
       <xsl:text>"},</xsl:text>
     </xsl:if>
