@@ -29,9 +29,7 @@ p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight
 <p>Acting chair: Ralf</p>
 <pre>Chat transcript from room: odatatc
 Meeting period: 2016-03-02 09:00 CET until 2016-03-03 17:00 CET
-Day 2 Lunch break will be 13:00 to 14:00 CET
 </pre>
-<h2>Draft Day 2/2</h2>
 
 <h2>1. Roll call</h2>
 
@@ -283,9 +281,9 @@ Nullable=false means that the collection can not contain null values</blockquote
 
 <h2>8. V4.01 issues - Issues for V4.01_WD01 in New or Open state</h2>
 
-<h3>Set Operations</h3>
+<h3>8.1 Set Operations</h3>
 
-<h4>Review Revised Proposal</h4>
+<h4>8.1.1 Review Revised Proposal</h4>
 
 <p>All go over the revised proposal based on the mail from Mike: <a href="https://lists.oasis-open.org/archives/odata/201603/msg00018.html" target="_blank">https://lists.oasis-open.org/archives/odata/201603/msg00018.html</a> which addresses the following 6 issues in context:</p>
 <ol>
@@ -297,11 +295,113 @@ Nullable=false means that the collection can not contain null values</blockquote
 <li><a href="https://issues.oasis-open.org/browse/ODATA-876" target="_blank">ODATA-876</a> - Allow services to return contained entities inline for delta responses</li>
 </ol> 
 
-<p><em>Lunch break on day two</em></p>
+<h3>8.2 Extensions to URL conventions</h3>
+
+<h4>8.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-617" target="_blank">ODATA-617</a> - Allow eq/ne comparison of instances of same structured (complex or entity) type, allow eq/ne comparison with null for 0..1 nav props</h4>
+
+<p>Ralf: ODATA-617 is OPEN</p>
+
+<p>Mike: Proposal:<br>
+can compare ordered collections: same members, same position<br>
+can compare unordered collections: same members, any order. don't expect this to work though...<br>
+can compare complex types by value (may fail if complex type contains unordered collection)<br>
+can compare two entities (as being the same reference)</p>
+<pre>
+  ex: Person(1)/BestFriend eq Person(2)/WorstEnemy
+  ex: Person(1)/BestFriend eq {"@odata.id":"/People(1)"}
+</pre>
+<p>can compare entities to null:</p>
+<pre>
+  ex: Person(1)/BestFriend eq null
+</pre>
+
+
+<p><b>Mike</b>: I <b>move</b> that we accept ODATA-617 as proposed. <b>Mark</b> seconds.</p>
+<p>No objections. ODATA-617 is RESOLVED as proposed.</p>
+
+<h4>8.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-572" target="_blank">ODATA-572</a> - Clarify that eq, ne can be used with complex type</h4>
+
+<p>Ralf: ODATA-572 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve the now opened ODATA-572 as a duplicate of ODATA-617. <b>Mark</b> seconds.</p>
+<p>No objections. ODATA-572 is RESOLVED as proposed.</p>
+
+<p><b>Mike</b>: I <b>move</b> further clarify the rules around comparing complex types containing navigation properties:</p>
+<ul>
+<li>single-valued navigation properties reference the same entities</li>
+<li>any collections of entities compare as equal
+  <ul>
+    <li>if unordered, reference the same entities in any order</li>
+    <li>if ordered, reference the same entities in same order</li>
+  </ul>
+  </li>
+</ul>
+<p><b>Mark</b> seconds.</p>
+<p>No objections. Motion passes.</p>
+
+<h4>8.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-897" target="_blank">ODATA-897</a> - Allow the count of a filtered/searched collection in common expressions (proposed)</h4>
+
+<p>Ralf: ODATA-897 is OPEN</p>
+<p>Ralf: Already allowed:</p>
+<pre>
+expandItem        = STAR [ ref / OPEN levels CLOSE ]
+                  / expandPath
+                    [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
+                    / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
+expandCountOption = filter
+                  / search
+</pre>
+
+<p>Mike: So we already support this in expand; we just can't use it in an expression ($filter or $orderby)</p>
+
+<p><b>Mike</b>: I <b>move</b> that we resolve ODATA-897 as proposed. <b>Mark</b> seconds.</p>
+<p>No objections. ODATA-897 is RESOLVED as proposed.</p>
+
+<h4>8.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-888" target="_blank">ODATA-888</a> - ttt</h4>
+
+<p>Ralf: ODATA-888 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> that ODATA-888 be RESOLVED as proposed. <b>Mike</b> seconds.</p>
+<p>No objections. ODATA-888 is RESOLVED as proposed.</p>
+
+
+<h4>8.2.5 <a href="https://issues.oasis-open.org/browse/ODATA-901" target="_blank">ODATA-901</a> - substring: Define negative index for substring function</h4>
+
+<p>Ralf: ODATA-901 is OPEN</p>
+<p>Mike: Discussion of ODATA-901</p>
+<p><b>Mark</b>: I <b>move</b> we resolve ODATA-901 as proposed. <b>Gerald</b> seconds.</p>
+<p>Mike: Seems a useful shorthand, especially for long expressions.</p>
+<p>No objections. ODATA-901 is RESOLVED as proposed.</p>
+
+<h4>8.2.6 <a href="https://issues.oasis-open.org/browse/ODATA-482" target="_blank">ODATA-482</a> - Allow inlining stream properties and media resources</h4>
+
+<p>Ralf: ODATA-482 is OPEN</p>
+<p>All discuss and update the issues proposal</p>
+<p>Ralf: <a href="http://services.odata.org/V4/OData/OData.svc/PersonDetails?$select=Photo&amp;$format=application/json;odata.metadata=full" target="_blank">http://services.odata.org/V4/OData/OData.svc/PersonDetails?$select=Photo&amp;$format=application/json;odata.metadata=full</a></p>
+
+<p>Mike: Proposal:</p>
+<ol type="1">
+<li>Allow payloads to contain Base64-encoded streams
+  <ol type="a">
+  <li>GET response payloads</li>
+  <li>POST/PUT/PATCH requests</li>
+  <li>Delta payloads</li>
+  </ol></li>
+<li>Media streams in the payload are named using the name of the property</li>
+<li>Media-entity stream is represented with a property named "$value"</li>
+<li>Generalize $expand to also allow stream properties and represent the related content in Base64-encoded form.</li>
+</ol>
+<p>For stream property: GET People(1)?$expand=photo<br>
+For media entity: GET Resumes(1)?$expand=$value<br>
+<br>
+Expand=*  =>only navigation properties - streams are not included automatically by * but may be included explicitly.</p>
+
+<p><b>Ramesh</b>: I <b>move</b> ODATA-482 be resolved as proposed. <b>Mark</b> seconds.</p>
+<p>No objections. ODATA-482 is RESOLVED as proposed.</p>
+
+<p>Break of 5 minutes</p>
 
 <!--
 
-<h4>8.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-xxx" target="_blank">ODATA-xxx</a> - ttt</h4>
+<h4>8.2.7 <a href="https://issues.oasis-open.org/browse/ODATA-xxx" target="_blank">ODATA-xxx</a> - ttt</h4>
 
 <p>Ralf: ODATA-xxx is OPEN</p>
 <p><b>mmm</b>: I <b>move</b> that we accept ODATA-xxx as proposed. <b>sss</b> seconds.</p>
@@ -312,8 +412,8 @@ Nullable=false means that the collection can not contain null values</blockquote
 -->
 <h4>Marker of current progress ...</h4>
 
-<h2>Near Real Time Draft of Minutes with timestamp 20160303T120000Z</h2>
-<p>This draft will be overwritten with successive revisions as the face to face meeting is ongoing. Hint: Before lunch break on day two.</p>
+<h2>Near Real Time Draft of Minutes with timestamp 20160303T150000Z</h2>
+<p>This draft will be overwritten with successive revisions as the face to face meeting is ongoing. Hint: Before tea break on day two.</p>
 </div>
 </body>
 </html>
