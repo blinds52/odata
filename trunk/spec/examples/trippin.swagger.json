@@ -1,16 +1,16 @@
 {
     "swagger": "2.0",
+    "x-odata-version": "4.0",
     "info": {
         "title": "TripPin service is a sample service for OData V4.",
-        "description": "The OData Service at http://localhost/service-root/",
-        "version": "0.1.0",
-        "x-odata-version": "4.0"
+        "description": "The OData Service at http://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW/",
+        "version": "0.1.0"
     },
-    "host": "localhost",
+    "host": "services.odata.org",
     "schemes": [
         "http"
     ],
-    "basePath": "/service-root",
+    "basePath": "/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW",
     "consumes": [
         "application/json"
     ],
@@ -82,8 +82,8 @@
                     "x-openType": true,
                     "properties": {
                         "Loc": {
-                            "description": "GeoJSON object Edm.GeographyPoint",
                             "type": "object",
+                            "format": "Edm.GeographyPoint",
                             "x-srid": "4326"
                         }
                     }
@@ -377,6 +377,10 @@
                 }
             }
         },
+        "Edm.Stream": {
+            "type": "object",
+            "description": "Edm.Stream is never part of message bodies"
+        },
         "_Error": {
             "properties": {
                 "error": {
@@ -394,6 +398,170 @@
                 }
             }
         }
+    },
+    "x-schemas": {
+        "TripPin": {
+            "$ref": "#/schemas/Microsoft.OData.SampleService.Models.TripPin"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin": {
+            "annotations": {
+                "Microsoft.OData.SampleService.Models.TripPin.DefaultContainer": {
+                    "x-@Org.OData.Core.V1.DereferenceableIDs": true,
+                    "x-@Org.OData.Core.V1.ConventionalIDs": true,
+                    "x-@Org.OData.Capabilities.V1.ConformanceLevel": "Advanced",
+                    "x-@Org.OData.Capabilities.V1.SupportedFormats": [
+                        "application/json;odata.metadata=full;IEEE754Compatible=false;odata.streaming=true",
+                        "application/json;odata.metadata=minimal;IEEE754Compatible=false;odata.streaming=true",
+                        "application/json;odata.metadata=none;IEEE754Compatible=false;odata.streaming=true"
+                    ],
+                    "x-@Org.OData.Capabilities.V1.AsynchronousRequestsSupported": true,
+                    "x-@Org.OData.Capabilities.V1.BatchContinueOnErrorSupported": false,
+                    "x-@Org.OData.Capabilities.V1.FilterFunctions": [
+                        "contains",
+                        "endswith",
+                        "startswith",
+                        "length",
+                        "indexof",
+                        "substring",
+                        "tolower",
+                        "toupper",
+                        "trim",
+                        "concat",
+                        "year",
+                        "month",
+                        "day",
+                        "hour",
+                        "minute",
+                        "second",
+                        "round",
+                        "floor",
+                        "ceiling",
+                        "cast",
+                        "isof"
+                    ]
+                }
+            }
+        }
+    },
+    "x-actions": {
+        "Microsoft.OData.SampleService.Models.TripPin.ResetDataSource": [
+            {
+                "parameters": [
+
+                ]
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.ShareTrip": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    {
+                        "name": "userName",
+                        "parameterType": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tripId",
+                        "parameterType": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "isBound": true
+            }
+        ]
+    },
+    "x-functions": {
+        "Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "in": "path",
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    }
+                ],
+                "returnType": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                },
+                "isBound": true,
+                "entitySetPath": "person/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline",
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople": [
+            {
+                "parameters": [
+                    {
+                        "name": "trip",
+                        "in": "path",
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    }
+                },
+                "isBound": true,
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "in": "path",
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    },
+                    {
+                        "name": "userName",
+                        "in": "path",
+                        "type": "string"
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                    }
+                },
+                "isBound": true,
+                "entitySetPath": "person/Friends/Trips",
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport": [
+            {
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "path",
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "lon",
+                        "in": "path",
+                        "type": "number",
+                        "format": "double"
+                    }
+                ],
+                "returnType": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                },
+                "isComposable": true
+            }
+        ]
     },
     "paths": {
         "/Photos": {
@@ -1333,14 +1501,7 @@
                     "Service Operations"
                 ],
                 "parameters": [
-                    {
-                        "name": "body",
-                        "in": "body",
-                        "description": "Request body",
-                        "schema": {
-                            "type": "object"
-                        }
-                    }
+
                 ],
                 "responses": {
                     "204": {

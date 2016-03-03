@@ -1,0 +1,113 @@
+{
+    "swagger": "2.0",
+    "x-odata-version": "4.0",
+    "info": {
+        "title": "OData Service",
+        "description": "The OData Service at http://localhost/service-root/",
+        "version": "0.1.0"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/service-root",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "x-schemas": {
+        "ODataDemo": {
+            "$ref": "http://host/service/$metadata#/schemas/ODataDemo"
+        },
+        "Some.Vocabulary.V1": {
+            "$ref": "http://somewhere/Vocabulary/V1#/schemas/Some.Vocabulary.V1"
+        },
+        "Vocabulary1": {
+            "$ref": "http://somewhere/Vocabulary/V1#/schemas/Some.Vocabulary.V1"
+        },
+        "External.Annotations": {
+            "annotations": {
+                "ODataDemo.Supplier": {
+                    "x-@Vocabulary1.EMail": {
+                        "@odata.null": {
+
+                        }
+                    },
+                    "x-@Vocabulary1.AccountID": {
+                        "@odata.path": "ID"
+                    },
+                    "x-@Vocabulary1.Title": "Supplier Info",
+                    "x-@Vocabulary1.DisplayName": {
+                        "@odata.apply": "odata.concat",
+                        "parameterValues": [
+                            {
+                                "@odata.path": "Name"
+                            },
+                            " in ",
+                            {
+                                "@odata.path": "Address/CountryName"
+                            }
+                        ]
+                    }
+                },
+                "ODataDemo.Product": {
+                    "x-@Self.Tags": [
+                        "MasterData"
+                    ]
+                }
+            }
+        }
+    },
+    "parameters": {
+        "expand": {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+            "type": "string"
+        },
+        "select": {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+            "type": "string"
+        },
+        "orderby": {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+            "type": "string"
+        },
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "type": "integer"
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "type": "integer"
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "type": "boolean"
+        },
+        "filter": {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "type": "string"
+        }
+    }
+}

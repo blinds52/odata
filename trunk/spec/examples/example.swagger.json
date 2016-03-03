@@ -1,0 +1,1940 @@
+{
+    "swagger": "2.0",
+    "x-odata-version": "4.0",
+    "info": {
+        "title": "OData Service",
+        "description": "The OData Service at http://services.odata.org/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc/",
+        "version": "0.1.0"
+    },
+    "host": "services.odata.org",
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/V4/OData/(S(nsga2k1tyctb0cn0ofcgcn4o))/OData.svc",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "definitions": {
+        "ODataDemo.Product": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "Description": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "ReleaseDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "DiscontinuedDate": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "format": "date-time"
+                },
+                "Rating": {
+                    "type": "integer",
+                    "format": "int16"
+                },
+                "Price": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "Categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Category"
+                    },
+                    "x-relationship": {
+                        "partner": "Products"
+                    }
+                },
+                "Supplier": {
+                    "$ref": "#/definitions/ODataDemo.Supplier",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "Products"
+                    }
+                },
+                "ProductDetail": {
+                    "$ref": "#/definitions/ODataDemo.ProductDetail",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "Product"
+                    }
+                }
+            }
+        },
+        "ODataDemo.FeaturedProduct": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ODataDemo.Product"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Advertisement": {
+                            "$ref": "#/definitions/ODataDemo.Advertisement",
+                            "x-nullable": true,
+                            "x-relationship": {
+                                "partner": "FeaturedProduct"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "ODataDemo.ProductDetail": {
+            "type": "object",
+            "x-keys": [
+                "ProductID"
+            ],
+            "properties": {
+                "ProductID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Details": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "Product": {
+                    "$ref": "#/definitions/ODataDemo.Product",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "ProductDetail"
+                    }
+                }
+            }
+        },
+        "ODataDemo.Category": {
+            "type": "object",
+            "x-openType": true,
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    },
+                    "x-relationship": {
+                        "partner": "Categories"
+                    }
+                }
+            }
+        },
+        "ODataDemo.Supplier": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "Address": {
+                    "$ref": "#/definitions/ODataDemo.Address",
+                    "x-nullable": true
+                },
+                "Location": {
+                    "type": "object",
+                    "format": "Edm.GeographyPoint",
+                    "x-srid": "Variable"
+                },
+                "Concurrency": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    },
+                    "x-relationship": {
+                        "partner": "Supplier"
+                    }
+                }
+            }
+        },
+        "ODataDemo.Address": {
+            "type": "object",
+            "properties": {
+                "Street": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "City": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "State": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "ZipCode": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "Country": {
+                    "type": "string",
+                    "x-nullable": true
+                }
+            }
+        },
+        "ODataDemo.Person": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "PersonDetail": {
+                    "$ref": "#/definitions/ODataDemo.PersonDetail",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "Person"
+                    }
+                }
+            }
+        },
+        "ODataDemo.Customer": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ODataDemo.Person"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "TotalExpense": {
+                            "type": "number",
+                            "format": "decimal",
+                            "multipleOf": 1
+                        }
+                    }
+                }
+            ]
+        },
+        "ODataDemo.Employee": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/ODataDemo.Person"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "EmployeeID": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "HireDate": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "Salary": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    }
+                }
+            ]
+        },
+        "ODataDemo.PersonDetail": {
+            "type": "object",
+            "x-keys": [
+                "PersonID"
+            ],
+            "properties": {
+                "PersonID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Age": {
+                    "type": "integer",
+                    "format": "uint8"
+                },
+                "Gender": {
+                    "type": "boolean"
+                },
+                "Phone": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "Address": {
+                    "$ref": "#/definitions/ODataDemo.Address",
+                    "x-nullable": true
+                },
+                "Photo": {
+                    "$ref": "#/definitions/Edm.Stream"
+                },
+                "Person": {
+                    "$ref": "#/definitions/ODataDemo.Person",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "PersonDetail"
+                    }
+                }
+            }
+        },
+        "ODataDemo.Advertisement": {
+            "type": "object",
+            "x-mediaEntity": true,
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "Name": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "AirDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "FeaturedProduct": {
+                    "$ref": "#/definitions/ODataDemo.FeaturedProduct",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "Advertisement"
+                    }
+                }
+            }
+        },
+        "Edm.Stream": {
+            "type": "object",
+            "description": "Edm.Stream is never part of message bodies"
+        },
+        "_Error": {
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/_InError"
+                }
+            }
+        },
+        "_InError": {
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "x-schemas": {
+        "ODataDemo": {
+            "annotations": {
+                "ODataDemo.DemoService": {
+                    "x-@Org.OData.Display.V1.Description": "This is a sample OData service with vocabularies"
+                },
+                "ODataDemo.Product": {
+                    "x-@Org.OData.Display.V1.Description": "All Products available in the online store"
+                },
+                "ODataDemo.Product/Name": {
+                    "x-@Org.OData.Display.V1.DisplayName": "Product Name"
+                },
+                "ODataDemo.DemoService/Suppliers": {
+                    "x-@Org.OData.Publication.V1.PublisherName": "Microsoft Corp.",
+                    "x-@Org.OData.Publication.V1.PublisherId": "MSFT",
+                    "x-@Org.OData.Publication.V1.Keywords": "Inventory, Supplier, Advertisers, Sales, Finance",
+                    "x-@Org.OData.Publication.V1.AttributionUrl": "http://www.odata.org/",
+                    "x-@Org.OData.Publication.V1.AttributionDescription": "All rights reserved",
+                    "x-@Org.OData.Publication.V1.DocumentationUrl ": "http://www.odata.org/",
+                    "x-@Org.OData.Publication.V1.TermsOfUseUrl": "All rights reserved",
+                    "x-@Org.OData.Publication.V1.PrivacyPolicyUrl": "http://www.odata.org/",
+                    "x-@Org.OData.Publication.V1.LastModified": "4/2/2013",
+                    "x-@Org.OData.Publication.V1.ImageUrl ": "http://www.odata.org/"
+                }
+            }
+        }
+    },
+    "x-actions": {
+        "ODataDemo.Discount": [
+            {
+                "parameters": [
+                    {
+                        "name": "product",
+                        "parameterType": {
+                            "$ref": "#/definitions/ODataDemo.Product",
+                            "x-nullable": true
+                        }
+                    },
+                    {
+                        "name": "discountPercentage",
+                        "parameterType": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "isBound": true
+            }
+        ],
+        "ODataDemo.IncreaseSalaries": [
+            {
+                "parameters": [
+                    {
+                        "name": "percentage",
+                        "parameterType": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "paths": {
+        "/Products": {
+            "get": {
+                "summary": "Get entities from entity set Products",
+                "description": "Get entities from entity set Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Products",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.Product"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Products",
+                "description": "Post a new entity to entity set Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Product"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Products({ID})": {
+            "get": {
+                "summary": "Get entity from Products by key.",
+                "description": "Returns the entity with the key from Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Products",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Product"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Products",
+                "description": "Update entity in EntitySet Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Products",
+                "description": "Delete entity in EntitySet Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Products({ID})/ODataDemo.Discount": {
+            "post": {
+                "summary": "Invoke action Discount",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Request body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "discountPercentage": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "number",
+                            "format": "double"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ProductDetails": {
+            "get": {
+                "summary": "Get entities from entity set ProductDetails",
+                "description": "Get entities from entity set ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet ProductDetails",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.ProductDetail"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set ProductDetails",
+                "description": "Post a new entity to entity set ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductDetail",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.ProductDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.ProductDetail"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ProductDetails({ProductID})": {
+            "get": {
+                "summary": "Get entity from ProductDetails by key.",
+                "description": "Returns the entity with the key from ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ProductID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet ProductDetails",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.ProductDetail"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet ProductDetails",
+                "description": "Update entity in EntitySet ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ProductID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "ProductDetail",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.ProductDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet ProductDetails",
+                "description": "Delete entity in EntitySet ProductDetails",
+                "tags": [
+                    "ProductDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "ProductID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ProductID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories": {
+            "get": {
+                "summary": "Get entities from entity set Categories",
+                "description": "Get entities from entity set Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.Category"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Categories",
+                "description": "Post a new entity to entity set Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories({ID})": {
+            "get": {
+                "summary": "Get entity from Categories by key.",
+                "description": "Returns the entity with the key from Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Categories",
+                "description": "Update entity in EntitySet Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Categories",
+                "description": "Delete entity in EntitySet Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Suppliers": {
+            "get": {
+                "summary": "Get entities from entity set Suppliers",
+                "description": "Get entities from entity set Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Suppliers",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.Supplier"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Suppliers",
+                "description": "Post a new entity to entity set Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "Supplier",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Supplier"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Suppliers({ID})": {
+            "get": {
+                "summary": "Get entity from Suppliers by key.",
+                "description": "Returns the entity with the key from Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Suppliers",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Supplier"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Suppliers",
+                "description": "Update entity in EntitySet Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Supplier",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Suppliers",
+                "description": "Delete entity in EntitySet Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Persons": {
+            "get": {
+                "summary": "Get entities from entity set Persons",
+                "description": "Get entities from entity set Persons",
+                "tags": [
+                    "Persons"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Persons",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.Person"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Persons",
+                "description": "Post a new entity to entity set Persons",
+                "tags": [
+                    "Persons"
+                ],
+                "parameters": [
+                    {
+                        "name": "Person",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Person"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Persons({ID})": {
+            "get": {
+                "summary": "Get entity from Persons by key.",
+                "description": "Returns the entity with the key from Persons",
+                "tags": [
+                    "Persons"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Persons",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Person"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Persons",
+                "description": "Update entity in EntitySet Persons",
+                "tags": [
+                    "Persons"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Person",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Persons",
+                "description": "Delete entity in EntitySet Persons",
+                "tags": [
+                    "Persons"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/PersonDetails": {
+            "get": {
+                "summary": "Get entities from entity set PersonDetails",
+                "description": "Get entities from entity set PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet PersonDetails",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.PersonDetail"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set PersonDetails",
+                "description": "Post a new entity to entity set PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonDetail",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.PersonDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.PersonDetail"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/PersonDetails({PersonID})": {
+            "get": {
+                "summary": "Get entity from PersonDetails by key.",
+                "description": "Returns the entity with the key from PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: PersonID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet PersonDetails",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.PersonDetail"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet PersonDetails",
+                "description": "Update entity in EntitySet PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: PersonID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "PersonDetail",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.PersonDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet PersonDetails",
+                "description": "Delete entity in EntitySet PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: PersonID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Advertisements": {
+            "get": {
+                "summary": "Get entities from entity set Advertisements",
+                "description": "Get entities from entity set Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Advertisements",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.Advertisement"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Advertisements",
+                "description": "Post a new entity to entity set Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "Advertisement",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Advertisement"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Advertisement"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Advertisements({ID})": {
+            "get": {
+                "summary": "Get entity from Advertisements by key.",
+                "description": "Returns the entity with the key from Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Advertisements",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Advertisement"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Advertisements",
+                "description": "Update entity in EntitySet Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Advertisement",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/ODataDemo.Advertisement"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Advertisements",
+                "description": "Delete entity in EntitySet Advertisements",
+                "tags": [
+                    "Advertisements"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/IncreaseSalaries": {
+            "post": {
+                "summary": "Invoke action import IncreaseSalaries",
+                "tags": [
+                    "Service Operations"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Request body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "percentage": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "expand": {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+            "type": "string"
+        },
+        "select": {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+            "type": "string"
+        },
+        "orderby": {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+            "type": "string"
+        },
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "type": "integer"
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "type": "integer"
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "type": "boolean"
+        },
+        "filter": {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "type": "string"
+        }
+    }
+}
