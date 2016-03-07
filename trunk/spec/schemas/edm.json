@@ -1,6 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "description": "OData JSON Format for Common Schema Definition Language (CSDL) Version 4.0",
+    "@TODO":"don't 'inherit' from JSON Schema, instead clone/reference it",
     "allOf": [
         {
             "$ref": "http://json-schema.org/draft-04/schema#"
@@ -523,18 +524,21 @@
             "type": "object",
             "properties": {
                 "includeAnnotations": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "termNamespace": {
-                                "type": "string"
-                            },
-                            "targetNamespace": {
-                                "type": "string"
-                            },
-                            "qualifier": {
-                                "type": "string"
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "termNamespace": {
+                                    "type": "string"
+                                },
+                                "targetNamespace": {
+                                    "type": "string"
+                                },
+                                "qualifier": {
+                                    "type": "string"
+                                }
                             }
                         }
                     },
@@ -551,8 +555,8 @@
             "type": "object",
             "properties": {
                 "annotations": {
-                    "type": "array",
-                    "items": {
+                    "type": "object",
+                    "additionalProperties": {
                         "type": "object",
                         "patternProperties": {
                             "^@": {
