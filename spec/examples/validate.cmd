@@ -1,20 +1,15 @@
 @echo off 
-set FILES=csdl-16.1.jsonschema csdl-16.2.jsonschema ExampleService.jsonschema miscellaneous.jsonschema miscellaneous2.jsonschema MetadataService.jsonschema TM1$metadata.jsonschema TripPin.jsonschema ../vocabularies/Org.OData.Capabilities.V1.json ../vocabularies/Org.OData.Core.V1.json ../vocabularies/Org.OData.Measures.V1.json
 
-@rem check syntax of all schemas
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax ../schemas/edm.json %FILES%
-@rem validate metadata documents against edm schema
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar ../schemas/edm.json %FILES%
+set FILES=csdl-16.1.swagger.json Example.swagger.json Northwind.swagger.json TripPin.swagger.json TM1.swagger.json
+REM csdl-16.2 ExampleService.jsonschema miscellaneous.jsonschema miscellaneous2.jsonschema MetadataService.jsonschema 
+REM ../vocabularies/Org.OData.Capabilities.V1.json ../vocabularies/Org.OData.Core.V1.json ../vocabularies/Org.OData.Measures.V1.json
 
-@rem validate example responses against metadata document as schema
-pushd ..\schemas
+REM TODO:
+REM - make sure jetty is running
 
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/ ../examples/csdl-16.1-Category.jsonschema ../examples/csdl-16.1-Category.json
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/ ../examples/csdl-16.1-Product.jsonschema ../examples/csdl-16.1-Product.json
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --fakeroot http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/ ../examples/miscellaneous-PrimitiveTypes.jsonschema ../examples/miscellaneous-PrimitiveTypes.json
+for %%F in (%FILES%) do (
+  echo %%F 
+  
+  c:\bin\curl.exe -s localhost:8002/debug?url=http://localhost/examples/%%F | c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe
 
-popd
-
-echo --- BEGIN node validate.js
-node validate.js
-echo --- END node validate.js
+)

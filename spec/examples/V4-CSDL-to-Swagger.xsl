@@ -9,6 +9,8 @@
     - no x- prefix for annotations, instead wrap them in x-annotations object within Swagger markup
     - x-resourcetype on container children within /paths with values EntitySet, Singleton, ...
     - Swagger UI complains about correct $ref to #/x-schemas: bug or just represent aliases differently?
+    - reconsider $ref for type/action/function referencing: Sweagger resolves local references *after* resolving external
+    references, i.e. local references in referenced files are processed in the wrong context
     - @Extends for entity container: ideally should include /paths from referenced container
     - annotations (other than description) on the entity container
     - edmx:Reference/edmx:Include reflected in human-readable description of service, with links to parameterized Swagger
@@ -168,7 +170,6 @@
       <xsl:with-param name="constantProperties">
         <xsl:if test="//edm:EntityContainer">
           <xsl:text>
-          ,"Edm.Stream":{"type":"object","description": "Edm.Stream is never part of message bodies"}
           ,"_Error":{"properties":{"error":{"$ref":"#/definitions/_InError"}}}
           ,"_InError":{"properties":{"code":{"type":"string"},"message":{"type":"string"}}}</xsl:text>
         </xsl:if>
@@ -224,7 +225,7 @@
     <xsl:if test="@Alias">
       <xsl:text>"</xsl:text>
       <xsl:value-of select="@Alias" />
-      <xsl:text>":{"$ref":"#/x-schemas/</xsl:text>
+      <xsl:text>":{"aliasFor":"</xsl:text>
       <xsl:value-of select="@Namespace" />
       <xsl:text>"},</xsl:text>
     </xsl:if>
@@ -248,17 +249,19 @@
     <xsl:value-of select="@Name" />
     <xsl:text>":{"type":"string",</xsl:text>
     <xsl:text>"enum":[</xsl:text>
-    <xsl:apply-templates select="edm:Member" mode="list" />
+    <xsl:apply-templates select="edm:Member" mode="enum" />
     <xsl:text>]</xsl:text>
     <xsl:if test="@IsFlags='true'">
       <xsl:text>,"x-isFlags":true</xsl:text>
     </xsl:if>
-    <xsl:apply-templates select="edm:Member" mode="annotation" />
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:call-template name="x-annotations">
+      <xsl:with-param name="annotations" select="edm:Annotation" />
+      <xsl:with-param name="members" select="edm:Member/@Value|edm:Member/edm:Annotation" />
+    </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Member" mode="list">
+  <xsl:template match="edm:Member" mode="enum">
     <xsl:if test="position() > 1">
       <xsl:text>,</xsl:text>
     </xsl:if>
@@ -267,14 +270,15 @@
     <xsl:text>"</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Member" mode="annotation">
-    <xsl:if test="@Value">
-      <xsl:text>,"x-</xsl:text>
-      <xsl:value-of select="@Name" />
-      <xsl:text>@odata.value":</xsl:text>
-      <xsl:value-of select="@Value" />
-    </xsl:if>
-    <xsl:apply-templates select="edm:Annotation" mode="list2">
+  <xsl:template match="edm:Member/@Value">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="../@Name" />
+    <xsl:text>@odata.value":</xsl:text>
+    <xsl:value-of select="." />
+  </xsl:template>
+
+  <xsl:template match="edm:Member/edm:Annotation">
+    <xsl:apply-templates select=".">
       <xsl:with-param name="target" select="@Name" />
     </xsl:apply-templates>
   </xsl:template>
@@ -289,6 +293,7 @@
       <xsl:with-param name="type" select="@UnderlyingType" />
       <xsl:with-param name="nullableFacet" select="'false'" />
     </xsl:call-template>
+    <!-- TODO: test annotations within TypeDefinition -->
     <xsl:apply-templates select="node()" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -321,7 +326,9 @@
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:call-template name="x-annotations">
+      <xsl:with-param name="annotations" select="edm:Annotation" />
+    </xsl:call-template>
     <xsl:if test="@BaseType">
       <xsl:text>}]</xsl:text>
     </xsl:if>
@@ -350,7 +357,9 @@
         <xsl:text>}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:call-template name="x-annotations">
+      <xsl:with-param name="annotations" select="edm:Annotation" />
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template match="edm:Term" mode="hashpair">
@@ -448,7 +457,7 @@
     </xsl:if>
     <xsl:choose>
       <xsl:when test="$singleType='Edm.Stream'">
-        <xsl:text>"$ref": "#/definitions/Edm.Stream"</xsl:text>
+        <xsl:text>"type":"string","readOnly":true</xsl:text>
       </xsl:when>
       <xsl:when test="$singleType='Edm.String'">
         <xsl:call-template name="nullableType">
@@ -742,12 +751,12 @@
   </xsl:template>
 
   <xsl:template match="@Precision">
-    <xsl:text>"precision":</xsl:text>
+    <xsl:text>"x-precision":</xsl:text>
     <xsl:value-of select="." />
   </xsl:template>
 
   <xsl:template match="@Scale">
-    <xsl:text>"scale":</xsl:text>
+    <xsl:text>"x-scale":</xsl:text>
     <xsl:choose>
       <xsl:when test=".='variable'">
         <xsl:text>"variable"</xsl:text>
@@ -1473,7 +1482,7 @@
   <xsl:template match="edm:Function/edm:Parameter">
     <xsl:text>{"name":"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>","in":"path",</xsl:text>
+    <xsl:text>","in":"path","required":true,</xsl:text>
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="'false'" />
@@ -1525,11 +1534,30 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template name="x-annotations">
+    <xsl:param name="annotations" />
+    <xsl:param name="members" />
+    <xsl:apply-templates
+      select="$annotations[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier) and (@String or edm:String)]"
+      mode="list2" />
+    <xsl:variable name="remaining"
+      select="$annotations[not((@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier) and (@String or edm:String))]" />
+    <xsl:if test="$remaining or $members">
+      <xsl:text>,"x-annotations":{</xsl:text>
+      <xsl:apply-templates select="$remaining" mode="list" />
+      <xsl:if test="$members">
+        <xsl:apply-templates select="$members" mode="list">
+          <xsl:with-param name="after" select="$remaining" />
+        </xsl:apply-templates>
+      </xsl:if>
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="edm:Annotation">
     <xsl:param name="target" />
     <xsl:param name="qualifier" />
     <xsl:variable name="name">
-      <xsl:text>x-</xsl:text>
       <xsl:value-of select="$target" />
       <xsl:text>@</xsl:text>
       <xsl:value-of select="@Term" />
@@ -1542,7 +1570,7 @@
     <xsl:text>"</xsl:text>
     <xsl:choose>
       <xsl:when
-        test="(substring($name,4)=$coreDescription or substring($name,4)=$coreDescriptionAliased) and (@String or edm:String)"
+        test="(substring($name,2)=$coreDescription or substring($name,2)=$coreDescriptionAliased) and (@String or edm:String)"
       >
         <xsl:text>description</xsl:text>
       </xsl:when>
