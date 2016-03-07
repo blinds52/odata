@@ -3,13 +3,17 @@
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/"
 >
   <!--
-    This style sheet transforms OData 4.0 XML CSDL documents into Swagger JSON
+    This style sheet transforms OData 4.0 XML CSDL documents into Swagger 2.0 JSON
 
     TODO:
-    - no x- prefix for annotations, instead wrap them in x-annotations object within Swagger markup
+    - represent entity container twice: once as /paths, once OData-specific to preserve navigation property bindings and
+    annotations
     - x-resourcetype on container children within /paths with values EntitySet, Singleton, ...
+    - x-actions/x-functions still necessary? If yes, repair function parameter representation, now uses Swagger style with
+    unwrapped $ref
+    - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases
     - Swagger UI complains about correct $ref to #/x-schemas: bug or just represent aliases differently?
-    - reconsider $ref for type/action/function referencing: Sweagger resolves local references *after* resolving external
+    - reconsider $ref for type/action/function referencing: Swagger seems to resolve local references *after* resolving external
     references, i.e. local references in referenced files are processed in the wrong context
     - @Extends for entity container: ideally should include /paths from referenced container
     - annotations (other than description) on the entity container
@@ -24,9 +28,8 @@
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
     - primitive types in function/action return types
-    - Singletons: should be almost identical to single entities, just without the keys
     - 200 response for PATCH
-    - If-Match for PATCH
+    - ETag / If-Match for PATCH
     - property description for key parameters in single-entity requests
     - better description for operations
     - remove duplicated code
@@ -920,7 +923,8 @@
       <xsl:apply-templates select="@*" mode="list" />
       <xsl:apply-templates select="edm:Annotation" mode="list2" />
     -->
-    <xsl:apply-templates select="edm:EntitySet|edm:FunctionImport|edm:ActionImport" mode="list" />
+    <xsl:apply-templates select="edm:EntitySet|edm:Singleton|edm:FunctionImport|edm:ActionImport"
+      mode="list" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -1167,6 +1171,103 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <xsl:template match="edm:Singleton">
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="@Type" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="namespace">
+      <xsl:choose>
+        <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+          <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$qualifier" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="type">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="@Type" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="qualifiedType">
+      <xsl:value-of select="$namespace" />
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="$type" />
+    </xsl:variable>
+    <xsl:variable name="aliasQualifiedType">
+      <xsl:value-of select="//edm:Schema[@Namespace=$namespace]/@Alias" />
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="$type" />
+    </xsl:variable>
+
+    <!-- singleton path template -->
+    <xsl:text>"/</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{</xsl:text>
+
+    <!-- GET -->
+    <xsl:text>"get":{</xsl:text>
+    <xsl:text>"summary":"Get singleton"</xsl:text>
+    <xsl:text>,"tags":["</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"]</xsl:text>
+    <xsl:text>,"parameters":[</xsl:text>
+    <xsl:text>{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"}],"responses":{"200":{"description":"EntitySet </xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","schema":{"$ref":"</xsl:text>
+    <xsl:value-of select="$metadata" />
+    <xsl:text>#/definitions/</xsl:text>
+    <xsl:value-of select="$qualifiedType" />
+    <xsl:text>"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
+    <xsl:text>}</xsl:text>
+
+    <!-- PATCH -->
+    <xsl:text>,"patch":{</xsl:text>
+    <xsl:text>"summary":"Update singleton"</xsl:text>
+    <xsl:text>,"tags":["</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"]</xsl:text>
+    <xsl:text>,"parameters":[</xsl:text>
+    <xsl:text>{"name":"</xsl:text>
+    <xsl:value-of select="$type" />
+    <xsl:text>","in":"body"</xsl:text>
+    <xsl:call-template name="entityTypeDescription">
+      <xsl:with-param name="namespace" select="$namespace" />
+      <xsl:with-param name="type" select="$type" />
+      <xsl:with-param name="default" select="'The singleton to patch'" />
+    </xsl:call-template>
+    <xsl:text>,"schema":{"$ref":"</xsl:text>
+    <xsl:value-of select="$metadata" />
+    <xsl:text>#/definitions/</xsl:text>
+    <xsl:value-of select="$qualifiedType" />
+    <xsl:text>"}}],"responses":{"204":{"description":"Empty response"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
+    <xsl:text>}</xsl:text>
+
+    <xsl:text>}</xsl:text>
+
+    <xsl:apply-templates
+      select="//edm:Function[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+      mode="bound"
+    >
+      <xsl:with-param name="singleton" select="@Name" />
+      <xsl:with-param name="namespace" select="$namespace" />
+      <xsl:with-param name="type" select="$type" />
+    </xsl:apply-templates>
+    <xsl:apply-templates
+      select="//edm:Action[@IsBound='true' and (edm:Parameter[1]/@Type=$qualifiedType or edm:Parameter[1]/@Type=$aliasQualifiedType)]"
+      mode="bound"
+    >
+      <xsl:with-param name="singleton" select="@Name" />
+      <xsl:with-param name="namespace" select="$namespace" />
+      <xsl:with-param name="type" select="$type" />
+    </xsl:apply-templates>
+  </xsl:template>
+
   <xsl:template name="entityTypeDescription">
     <xsl:param name="namespace" />
     <xsl:param name="type" />
@@ -1401,15 +1502,24 @@
 
   <xsl:template match="edm:Action" mode="bound">
     <xsl:param name="entitySet" />
+    <xsl:param name="singleton" />
     <xsl:param name="namespace" />
     <xsl:param name="type" />
 
     <xsl:text>,"/</xsl:text>
-    <xsl:value-of select="$entitySet" />
-    <xsl:text>(</xsl:text>
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="path" />
-    <xsl:text>)/</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$entitySet">
+        <xsl:value-of select="$entitySet" />
+        <xsl:text>(</xsl:text>
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
+          mode="path" />
+        <xsl:text>)</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleton">
+        <xsl:value-of select="$singleton" />
+      </xsl:when>
+    </xsl:choose>
+    <xsl:text>/</xsl:text>
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
@@ -1417,10 +1527,14 @@
     <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
+    <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="parameter" />
-    <xsl:text>,{"name":"body","in":"body","description":"Request body","schema":{"type":"object"</xsl:text>
+    <xsl:if test="$entitySet">
+      <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
+        mode="parameter" />
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>{"name":"body","in":"body","description":"Request body","schema":{"type":"object"</xsl:text>
     <xsl:apply-templates select="edm:Parameter[position()>1]" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
     </xsl:apply-templates>
@@ -1433,6 +1547,7 @@
 
   <xsl:template match="edm:Function" mode="bound">
     <xsl:param name="entitySet" />
+    <xsl:param name="singleton" />
     <xsl:param name="namespace" />
     <xsl:param name="type" />
     <xsl:variable name="singleReturnType">
@@ -1447,11 +1562,19 @@
     </xsl:variable>
 
     <xsl:text>,"/</xsl:text>
-    <xsl:value-of select="$entitySet" />
-    <xsl:text>(</xsl:text>
-    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
-      mode="path" />
-    <xsl:text>)/</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$entitySet">
+        <xsl:value-of select="$entitySet" />
+        <xsl:text>(</xsl:text>
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef"
+          mode="path" />
+        <xsl:text>)</xsl:text>
+      </xsl:when>
+      <xsl:when test="$singleton">
+        <xsl:value-of select="$singleton" />
+      </xsl:when>
+    </xsl:choose>
+    <xsl:text>/</xsl:text>
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
@@ -1461,9 +1584,10 @@
     <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="$entitySet" />
+    <xsl:value-of select="$singleton" />
     <xsl:text>"],"parameters":[</xsl:text>
     <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|edm:Parameter[position()>1]"
+      select="//edm:Schema[@Namespace=$namespace and $entitySet]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|edm:Parameter[position()>1]"
       mode="parameter" />
     <xsl:text>]</xsl:text>
 
@@ -1491,7 +1615,9 @@
   </xsl:template>
 
   <xsl:template match="edm:Function/edm:Parameter" mode="parameter">
-    <xsl:text>,</xsl:text>
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
     <xsl:apply-templates select="." />
   </xsl:template>
 

@@ -1483,6 +1483,159 @@
                 }
             }
         },
+        "/Me": {
+            "get": {
+                "summary": "Get singleton",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Me",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update singleton",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "name": "Person",
+                        "in": "body",
+                        "description": "The singleton to patch",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Me/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline()": {
+            "get": {
+                "summary": "Invoke function GetFavoriteAirline",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Me/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips(userName='{userName}')": {
+            "get": {
+                "summary": "Invoke function GetFriendsTrips",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "name": "userName",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Me/Microsoft.OData.SampleService.Models.TripPin.ShareTrip": {
+            "post": {
+                "summary": "Invoke action ShareTrip",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Request body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "userName": {
+                                    "type": "string"
+                                },
+                                "tripId": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/_Error"
+                        }
+                    }
+                }
+            }
+        },
         "/GetNearestAirport(lat={lat},lon={lon})": {
             "get": {
                 "summary": "Invoke function import GetNearestAirport",
