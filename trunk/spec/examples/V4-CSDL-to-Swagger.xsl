@@ -6,6 +6,7 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger 2.0 JSON
 
     TODO:
+    - within parameters type does not allow array of primitives: only take first one, add x-nullable
     - represent entity container twice: once as /paths, once OData-specific to preserve navigation property bindings and
     annotations
     - x-resourcetype on container children within /paths with values EntitySet, Singleton, ...
@@ -204,21 +205,15 @@
   <xsl:template match="edmx:Include" mode="hashpair">
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Namespace" />
-    <xsl:text>":{"$ref":"</xsl:text>
+    <xsl:text>":{"uri":"</xsl:text>
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="../@Uri" />
     </xsl:call-template>
-    <xsl:text>#/x-schemas/</xsl:text>
-    <xsl:value-of select="@Namespace" />
     <xsl:text>"}</xsl:text>
     <xsl:if test="@Alias">
       <xsl:text>,"</xsl:text>
       <xsl:value-of select="@Alias" />
-      <xsl:text>":{"$ref":"</xsl:text>
-      <xsl:call-template name="json-url">
-        <xsl:with-param name="url" select="../@Uri" />
-      </xsl:call-template>
-      <xsl:text>#/x-schemas/</xsl:text>
+      <xsl:text>":{"aliasFor":"</xsl:text>
       <xsl:value-of select="@Namespace" />
       <xsl:text>"}</xsl:text>
     </xsl:if>
@@ -726,18 +721,22 @@
   <xsl:template name="nullableType">
     <xsl:param name="type" />
     <xsl:param name="nullable" />
-    <xsl:text>"type":"</xsl:text>
-    <xsl:choose>
-      <xsl:when test="contains($type,',')">
-        <xsl:value-of select="substring-before($type,',')" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$type" />
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:text>"type":</xsl:text>
+    <xsl:if test="not($nullable='false') or contains($type,',')">
+      <xsl:text>[</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="replace-all">
+      <xsl:with-param name="string" select="$type" />
+      <xsl:with-param name="old" select="','" />
+      <xsl:with-param name="new" select="'&quot;,&quot;'" />
+    </xsl:call-template>
     <xsl:text>"</xsl:text>
     <xsl:if test="not($nullable='false')">
-      <xsl:text>,"x-nullable":true</xsl:text>
+      <xsl:text>,"null"</xsl:text>
+    </xsl:if>
+    <xsl:if test="not($nullable='false') or contains($type,',')">
+      <xsl:text>]</xsl:text>
     </xsl:if>
   </xsl:template>
 
