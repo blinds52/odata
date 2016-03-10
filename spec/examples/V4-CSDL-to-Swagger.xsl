@@ -6,9 +6,14 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger 2.0 JSON
 
     TODO:
-    - within parameters type does not allow array of primitives: only take first one, add x-nullable
+    - primitive type mapping: Swagger Editor gracefully accepts arrays of primitive types even within parameters, Swagger
+    UI breaks on parameters and can't render examples: only use parameters
+    - external $ref-erences: check resolution of nested complex types, e.g. error response or Geo types from edm.json
+    - extract common /definitions to OData.v4.0.OpenAPI.json
+    - extract /parameters to OData.v4.0.OpenAPI.json and use external references
     - represent entity container twice: once as /paths, once OData-specific to preserve navigation property bindings and
     annotations
+    - cross-service references: decide by URL whether it's /$metadata or just vocabulary/annotations/types
     - x-resourcetype on container children within /paths with values EntitySet, Singleton, ...
     - x-actions/x-functions still necessary? If yes, repair function parameter representation, now uses Swagger style with
     unwrapped $ref
@@ -20,8 +25,6 @@
     - annotations (other than description) on the entity container
     - edmx:Reference/edmx:Include reflected in human-readable description of service, with links to parameterized Swagger
     UI
-    - extract /parameters to OData.v4.0.OpenAPI.json and use external references
-    - extract common /definitions to OData.v4.0.OpenAPI.json
     - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
     property names
     - $orderby: both asc (no suffix) and desc in enumeration
@@ -718,6 +721,25 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Remark: Swagger spec and Editor allow arrays in Schema objects, Swagger UI has some (minor) issues with it
+    <xsl:template name="alternative-nullableType">
+    <xsl:param name="type" />
+    <xsl:param name="nullable" />
+    <xsl:text>"type":"</xsl:text>
+    <xsl:choose>
+    <xsl:when test="contains($type,',')">
+    <xsl:value-of select="substring-before($type,',')" />
+    </xsl:when>
+    <xsl:otherwise>
+    <xsl:value-of select="$type" />
+    </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"</xsl:text>
+    <xsl:if test="not($nullable='false')">
+    <xsl:text>,"x-nullable":true</xsl:text>
+    </xsl:if>
+    </xsl:template>
+  -->
   <xsl:template name="nullableType">
     <xsl:param name="type" />
     <xsl:param name="nullable" />
