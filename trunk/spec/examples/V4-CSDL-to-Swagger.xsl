@@ -41,7 +41,7 @@
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
-  <xsl:param name="odata-schema" select="'../schemas/edm.json'" />
+  <xsl:param name="odata-schema" select="'https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json'" />
   <!-- TODO: consider splitting /paths file == core Swagger description from /definitions == JSON $metadata
     <xsl:param name="metadata" select="'$metadata'" />
   -->
