@@ -6,25 +6,18 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger 2.0 JSON
 
     TODO:
-    - primitive type mapping: Swagger Editor gracefully accepts arrays of primitive types even within parameters, Swagger
-    UI breaks on parameters and can't render examples: only use parameters
-    - external $ref-erences: check resolution of nested complex types, e.g. error response or Geo types from edm.json
-    - extract common /definitions to OData.v4.0.OpenAPI.json
-    - extract /parameters to OData.v4.0.OpenAPI.json and use external references
     - represent entity container twice: once as /paths, once OData-specific to preserve navigation property bindings and
     annotations
     - cross-service references: decide by URL whether it's /$metadata or just vocabulary/annotations/types
+    - edmx:Reference/edmx:Include reflected in human-readable description of service, with link to parameterized Swagger 
+    UI for $metadata
     - x-resourcetype on container children within /paths with values EntitySet, Singleton, ...
-    - x-actions/x-functions still necessary? If yes, repair function parameter representation, now uses Swagger style with
-    unwrapped $ref
-    - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases
+    - x-actions/x-functions: repair function parameter representation, now uses Swagger style with unwrapped $ref
+    - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias 
+    option of type string
     - Swagger UI complains about correct $ref to #/x-schemas: bug or just represent aliases differently?
-    - reconsider $ref for type/action/function referencing: Swagger seems to resolve local references *after* resolving external
-    references, i.e. local references in referenced files are processed in the wrong context
+    - reconsider $ref for type/action/function referencing: better use qualified names
     - @Extends for entity container: ideally should include /paths from referenced container
-    - annotations (other than description) on the entity container
-    - edmx:Reference/edmx:Include reflected in human-readable description of service, with links to parameterized Swagger
-    UI
     - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
     property names
     - $orderby: both asc (no suffix) and desc in enumeration
@@ -38,7 +31,6 @@
     - better description for operations
     - remove duplicated code
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
-    - default for Geo types in GeoJSON
     - annotations without explicit value: default from term definition (if inline)
     - trim leading and trailing \n from descriptions
   -->
@@ -49,7 +41,7 @@
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
-  <xsl:param name="odata-definitions" select="'http://localhost/examples/OData.V4.OpenAPI.json'" />
+  <xsl:param name="odata-schema" select="'../schemas/edm.json'" />
   <!-- TODO: consider splitting /paths file == core Swagger description from /definitions == JSON $metadata
     <xsl:param name="metadata" select="'$metadata'" />
   -->
@@ -60,6 +52,12 @@
     select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
+
+  <xsl:variable name="defaultResponse">
+    <xsl:text>"default":{"description":"Unexpected error","schema":{"$ref":"</xsl:text>
+    <xsl:value-of select="$odata-schema" />
+    <xsl:text>#/definitions/odata.error"}}</xsl:text>
+  </xsl:variable>
 
   <xsl:key name="methods"
     match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function" use="concat(../@Namespace,'.',@Name)" />
@@ -78,7 +76,7 @@
         select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String" />
       <xsl:choose>
         <xsl:when test="$title">
-          <xsl:value-of select="$title"></xsl:value-of>
+          <xsl:value-of select="$title" />
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>OData Service</xsl:text>
@@ -174,13 +172,6 @@
       mode="hash"
     >
       <xsl:with-param name="name" select="'definitions'" />
-      <xsl:with-param name="constantProperties">
-        <xsl:if test="//edm:EntityContainer">
-          <xsl:text>
-          ,"_Error":{"properties":{"error":{"$ref":"#/definitions/_InError"}}}
-          ,"_InError":{"properties":{"code":{"type":"string"},"message":{"type":"string"}}}</xsl:text>
-        </xsl:if>
-      </xsl:with-param>
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Schema|../edmx:Reference/edmx:Include" mode="hash">
       <xsl:with-param name="key" select="'Namespace'" />
@@ -427,7 +418,8 @@
   <xsl:template name="type">
     <xsl:param name="type" />
     <xsl:param name="nullableFacet" />
-    <xsl:param name="wrap" select="false" />
+    <xsl:param name="wrap" select="false()" />
+    <xsl:param name="noArray" select="false()" />
     <xsl:variable name="nullable">
       <xsl:call-template name="nullableFacetValue">
         <xsl:with-param name="type" select="$type" />
@@ -464,6 +456,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
       </xsl:when>
@@ -471,6 +464,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"base64url"</xsl:text>
         <xsl:apply-templates select="@MaxLength">
@@ -481,12 +475,14 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'boolean'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Decimal'">
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'number,string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"decimal"</xsl:text>
         <xsl:apply-templates select="@Precision|@Scale[.!=0]" mode="list2" />
@@ -536,6 +532,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'integer'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"uint8"</xsl:text>
       </xsl:when>
@@ -543,6 +540,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'integer'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int8"</xsl:text>
       </xsl:when>
@@ -550,6 +548,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'integer'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int16"</xsl:text>
       </xsl:when>
@@ -557,6 +556,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'integer'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int32"</xsl:text>
       </xsl:when>
@@ -564,6 +564,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'integer,string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"int64"</xsl:text>
       </xsl:when>
@@ -571,6 +572,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"date"</xsl:text>
       </xsl:when>
@@ -578,6 +580,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'number,string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"double"</xsl:text>
       </xsl:when>
@@ -585,6 +588,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'number,string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"float"</xsl:text>
       </xsl:when>
@@ -592,6 +596,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"uuid"</xsl:text>
       </xsl:when>
@@ -599,6 +604,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"date-time"</xsl:text>
         <xsl:apply-templates select="@Precision" mode="list2" />
@@ -607,6 +613,7 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"time"</xsl:text>
         <xsl:apply-templates select="@Precision" mode="list2" />
@@ -615,11 +622,14 @@
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
+          <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"duration"</xsl:text>
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
-        <xsl:text>"type": "object","format":"</xsl:text>
+        <xsl:text>"$ref":"</xsl:text>
+        <xsl:value-of select="$odata-schema" />
+        <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
         <xsl:apply-templates select="@SRID" mode="list2" />
@@ -743,21 +753,29 @@
   <xsl:template name="nullableType">
     <xsl:param name="type" />
     <xsl:param name="nullable" />
+    <xsl:param name="noArray" />
     <xsl:text>"type":</xsl:text>
-    <xsl:if test="not($nullable='false') or contains($type,',')">
+    <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
       <xsl:text>[</xsl:text>
     </xsl:if>
     <xsl:text>"</xsl:text>
-    <xsl:call-template name="replace-all">
-      <xsl:with-param name="string" select="$type" />
-      <xsl:with-param name="old" select="','" />
-      <xsl:with-param name="new" select="'&quot;,&quot;'" />
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$noArray and contains($type,',')">
+        <xsl:value-of select="substring-before($type,',')" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string" select="$type" />
+          <xsl:with-param name="old" select="','" />
+          <xsl:with-param name="new" select="'&quot;,&quot;'" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>"</xsl:text>
-    <xsl:if test="not($nullable='false')">
+    <xsl:if test="not($noArray) and not($nullable='false')">
       <xsl:text>,"null"</xsl:text>
     </xsl:if>
-    <xsl:if test="not($nullable='false') or contains($type,',')">
+    <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
       <xsl:text>]</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -1003,8 +1021,9 @@
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}}}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
-    <xsl:text>}</xsl:text>
+    <xsl:text>"}}}}},</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}</xsl:text>
 
     <!-- POST -->
     <xsl:text>,"post":{</xsl:text>
@@ -1032,8 +1051,9 @@
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
-    <xsl:text>}</xsl:text>
+    <xsl:text>"}},</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}</xsl:text>
 
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -1124,8 +1144,9 @@
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
-    <xsl:text>}</xsl:text>
+    <xsl:text>"}},</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}</xsl:text>
 
     <!-- PATCH -->
     <xsl:text>,"patch":{</xsl:text>
@@ -1152,8 +1173,9 @@
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}],"responses":{"204":{"description":"Empty response"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
-    <xsl:text>}</xsl:text>
+    <xsl:text>"}}],"responses":{"204":{"description":"Empty response"},</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}</xsl:text>
 
     <!-- DELETE -->
     <xsl:text>,"delete":{</xsl:text>
@@ -1169,8 +1191,9 @@
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
       mode="parameter" />
     <xsl:text>,{"name":"If-Match","in":"header","description":"If-Match header","type":"string"}]</xsl:text>
-    <xsl:text>,"responses":{"204":{"description":"Empty response"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
-    <xsl:text>}</xsl:text>
+    <xsl:text>,"responses":{"204":{"description":"Empty response"},</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}</xsl:text>
 
     <xsl:text>}</xsl:text>
 
@@ -1244,8 +1267,9 @@
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
-    <xsl:text>}</xsl:text>
+    <xsl:text>"}},</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}</xsl:text>
 
     <!-- PATCH -->
     <xsl:text>,"patch":{</xsl:text>
@@ -1266,8 +1290,9 @@
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}],"responses":{"204":{"description":"Empty response"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}</xsl:text>
-    <xsl:text>}</xsl:text>
+    <xsl:text>"}}],"responses":{"204":{"description":"Empty response"},</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}</xsl:text>
 
     <xsl:text>}</xsl:text>
 
@@ -1518,7 +1543,9 @@
         <xsl:text>}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>,"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/_Error"}}}}}</xsl:text>
+    <xsl:text>,</xsl:text>
+    <xsl:value-of select="$defaultResponse" />
+    <xsl:text>}}}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Action" mode="bound">
@@ -1631,6 +1658,7 @@
     <xsl:call-template name="type">
       <xsl:with-param name="type" select="@Type" />
       <xsl:with-param name="nullableFacet" select="'false'" />
+      <xsl:with-param name="noArray" select="true()" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -1683,7 +1711,7 @@
 
   <xsl:template name="x-annotations">
     <xsl:param name="annotations" />
-    <xsl:param name="members" />
+    <xsl:param name="members" select="null" />
     <xsl:apply-templates
       select="$annotations[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier) and (@String or edm:String)]"
       mode="list2" />

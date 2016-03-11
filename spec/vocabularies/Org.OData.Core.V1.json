@@ -1,43 +1,38 @@
 {
-    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
-    "odata-version": "4.0",
+    "x-odata-version": "4.0",
     "definitions": {
         "Org.OData.Core.V1.Tag": {
             "type": "boolean",
             "description": "This is the type to use for all tagging terms"
         },
         "Org.OData.Core.V1.Permission": {
-            "anyOf": [
-                {
-                    "enum": [
-                        "None",
-                        "Read",
-                        "Write",
-                        "ReadWrite",
-                        "Invoke"
-                    ]
-                },
-                {
-                    "type": "string",
-                    "pattern": "^(None|Read|Write|ReadWrite|Invoke|[1-9][0-9]*)(,(None|Read|Write|ReadWrite|Invoke|[1-9][0-9]*))*$"
-                }
+            "type": "string",
+            "enum": [
+                "None",
+                "Read",
+                "Write",
+                "ReadWrite",
+                "Invoke"
             ],
-            "None@odata.value": 0,
-            "Read@odata.value": 1,
-            "Write@odata.value": 2,
-            "ReadWrite@odata.value": 3,
-            "Invoke@odata.value": 4
+            "x-isFlags": true,
+            "x-annotations": {
+                "None@odata.value": 0,
+                "Read@odata.value": 1,
+                "Write@odata.value": 2,
+                "ReadWrite@odata.value": 3,
+                "Invoke@odata.value": 4
+            }
         }
     },
-    "schemas": {
+    "x-schemas": {
         "Core": {
-            "$ref": "#/schemas/Org.OData.Core.V1"
+            "aliasFor": "Org.OData.Core.V1"
         },
         "Org.OData.Core.V1": {
             "description": "Core terms needed to write vocabularies"
         }
     },
-    "terms": {
+    "x-terms": {
         "Org.OData.Core.V1.Description": {
             "type": [
                 "string",
@@ -55,14 +50,8 @@
             "@Core.IsLanguageDependent": true
         },
         "Org.OData.Core.V1.IsLanguageDependent": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": [
                 "Term",
@@ -94,40 +83,22 @@
             "@Core.IsURL": true
         },
         "Org.OData.Core.V1.DereferenceableIDs": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": "EntityContainer",
             "description": "Entity-ids are URLs that locate the identified entity"
         },
         "Org.OData.Core.V1.ConventionalIDs": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": "EntityContainer",
             "description": "Entity-ids follow OData URL conventions"
         },
         "Org.OData.Core.V1.Permissions": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Permission"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Permission",
+            "x-nullable": true,
             "appliesTo": [
                 "Property",
                 "ComplexType",
@@ -141,40 +112,22 @@
             "description": "Permissions for accessing a resource"
         },
         "Org.OData.Core.V1.Immutable": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": "Property",
             "description": "A value for this non-key property can be provided on insert and remains unchanged on update"
         },
         "Org.OData.Core.V1.Computed": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": "Property",
             "description": "A value for this property is generated on both insert and update"
         },
         "Org.OData.Core.V1.IsURL": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": [
                 "Property",
@@ -206,14 +159,8 @@
             "@Core.RequiresType": "Edm.Binary"
         },
         "Org.OData.Core.V1.IsMediaType": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": [
                 "Property",
@@ -225,20 +172,14 @@
         "Org.OData.Core.V1.OptimisticConcurrency": {
             "type": "array",
             "items": {
-                "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+                "$ref": "../schemas/edm.json#/definitions/Edm.PropertyPath"
             },
             "appliesTo": "EntitySet",
             "description": "Data modification requires the use of ETags. A non-empty collection contains the set of properties that are used to compute the ETag."
         },
         "Org.OData.Core.V1.AdditionalProperties": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": [
                 "EntityType",
@@ -248,27 +189,15 @@
             "@Core.LongDescription": "If specified as false clients can assume that instances will not contain dynamic properties, irrespective of the value of the OpenType attribute."
         },
         "Org.OData.Core.V1.AutoExpand": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": "NavigationProperty",
             "description": "The service will automatically expand this navigation property even if not requested with $expand"
         },
         "Org.OData.Core.V1.AutoExpandReferences": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
+            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
             "default": true,
             "appliesTo": "NavigationProperty",
             "description": "The service will automatically expand this navigation property as entity references even if not requested with $expand=.../$ref"
