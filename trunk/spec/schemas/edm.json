@@ -1,19 +1,15 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "description": "OData JSON Format for Common Schema Definition Language (CSDL) Version 4.0",
-    "@TODO":"don't 'inherit' from JSON Schema, instead clone/reference it",
-    "allOf": [
-        {
-            "$ref": "http://json-schema.org/draft-04/schema#"
-        }
-    ],
+    "@TODO": "add descriptions in all appropriate places",
+    "@TODO#2": "add examples for Geo types",
     "properties": {
-        "odata-version": {
+        "x-odata-version": {
             "enum": [
                 "4.0"
             ]
         },
-        "actions": {
+        "x-actions": {
             "type": "object",
             "additionalProperties": {
                 "type": "array",
@@ -22,10 +18,10 @@
                 }
             }
         },
-        "entityContainer": {
+        "x-entityContainer": {
             "$ref": "#/definitions/odata.entityContainer"
         },
-        "functions": {
+        "x-functions": {
             "type": "object",
             "additionalProperties": {
                 "type": "array",
@@ -34,13 +30,13 @@
                 }
             }
         },
-        "references": {
+        "x-references": {
             "type": "object",
             "additionalProperties": {
                 "$ref": "#/definitions/odata.reference"
             }
         },
-        "schemas": {
+        "x-schemas": {
             "type": "object",
             "additionalProperties": {
                 "anyOf": [
@@ -53,8 +49,15 @@
                 ]
             }
         },
-        "terms": {
+        "x-terms": {
             "description": "@TODO:define"
+        },
+        "definitions": {
+            "@TODO": "reference Swagger definitions object instead",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "http://json-schema.org/draft-04/schema#"
+            }
         }
     },
     "definitions": {
@@ -69,6 +72,39 @@
                 "boolean",
                 "number",
                 "string"
+            ]
+        },
+        "Edm.AnnotationPath": {
+            "type": "object",
+            "properties": {
+                "@odata.annotationPath": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@odata.annotationPath"
+            ]
+        },
+        "Edm.NavigationPropertyPath": {
+            "type": "object",
+            "properties": {
+                "@odata.navigationPropertyPath": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@odata.navigationPropertyPath"
+            ]
+        },
+        "Edm.PropertyPath": {
+            "type": "object",
+            "properties": {
+                "@odata.propertyPath": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@odata.propertyPath"
             ]
         },
         "Edm.Binary": {
@@ -194,6 +230,7 @@
         },
         "Edm.Geometry": {
             "type": "object",
+            "@TODO": "This is not allowed in OpenAPI 2.0 - place it in description and reduce the structure to type property with enum list of all seven subtypes",
             "anyOf": [
                 {
                     "$ref": "#/definitions/Edm.GeometryPoint"
@@ -222,9 +259,11 @@
             "type": "object",
             "properties": {
                 "type": {
+                    "type": "string",
                     "enum": [
                         "Point"
-                    ]
+                    ],
+                    "default": "Point"
                 },
                 "coordinates": {
                     "$ref": "#/definitions/GeoJSON.position"
@@ -455,38 +494,44 @@
             "type": "object",
             "properties": {
                 "error": {
-                    "type": "object",
-                    "properties": {
-                        "code": {
-                            "type": "string"
-                        },
-                        "message": {
-                            "type": "string"
-                        },
-                        "target": {
-                            "type": "string"
-                        },
-                        "details": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "code": {
-                                        "type": "string"
-                                    },
-                                    "message": {
-                                        "type": "string"
-                                    },
-                                    "target": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        },
-                        "innererror": {
-                            "description": "The contents of this object are service-defined"
-                        }
+                    "$ref": "#/definitions/odata.error.main"
+                }
+            }
+        },
+        "odata.error.main": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/odata.error.detail"
                     }
+                },
+                "innererror": {
+                    "description": "The contents of this object are service-defined"
+                }
+            }
+        },
+        "odata.error.detail": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
                 }
             }
         },

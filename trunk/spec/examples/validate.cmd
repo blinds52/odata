@@ -1,15 +1,19 @@
 @echo off 
+set FILES=csdl-16.1.swagger.json Northwind.swagger.json ExampleService.swagger.json Example.swagger.json TM1.swagger.json TripPin.swagger.json
+set ANNOS=csdl-16.2.swagger.json
+set VOCABS=Core Measures
+rem Capabilities Aggregation
 
-set FILES=csdl-16.1.swagger.json Example.swagger.json Northwind.swagger.json TripPin.swagger.json TM1.swagger.json
-REM csdl-16.2 ExampleService.jsonschema miscellaneous.jsonschema miscellaneous2.jsonschema MetadataService.jsonschema 
-REM ../vocabularies/Org.OData.Capabilities.V1.json ../vocabularies/Org.OData.Core.V1.json ../vocabularies/Org.OData.Measures.V1.json
+@rem check syntax of edm schema
+java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax ../schemas/edm.json
 
-REM TODO:
-REM - make sure jetty is running
+@rem validate metadata documents against swagger schema
+java -jar c:\Java\json-schema-validator-2.2.5-lib.jar swagger.schema.json %FILES%
 
-for %%F in (%FILES%) do (
-  echo %%F 
-  
-  c:\bin\curl.exe -s localhost:8002/debug?url=http://localhost/examples/%%F | c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe
+@rem validate annotation files against edm schema
+java -jar c:\Java\json-schema-validator-2.2.5-lib.jar ../schemas/edm.json %ANNOS%
 
+@rem validate vocabularies against edm schema
+for %%V in (%VOCABS%) do (
+  java -jar c:\Java\json-schema-validator-2.2.5-lib.jar ../schemas/edm.json Org.OData.%%V.V1.swagger.json
 )
