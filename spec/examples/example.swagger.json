@@ -88,6 +88,7 @@
             }
         },
         "ODataDemo.FeaturedProduct": {
+            "x-baseType": "ODataDemo.Product",
             "allOf": [
                 {
                     "$ref": "#/definitions/ODataDemo.Product"
@@ -181,6 +182,7 @@
                 },
                 "Location": {
                     "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.GeographyPoint",
+                    "x-nullable": true,
                     "x-srid": "Variable"
                 },
                 "Concurrency": {
@@ -259,6 +261,7 @@
             }
         },
         "ODataDemo.Customer": {
+            "x-baseType": "ODataDemo.Person",
             "allOf": [
                 {
                     "$ref": "#/definitions/ODataDemo.Person"
@@ -279,6 +282,7 @@
             ]
         },
         "ODataDemo.Employee": {
+            "x-baseType": "ODataDemo.Person",
             "allOf": [
                 {
                     "$ref": "#/definitions/ODataDemo.Person"
@@ -448,6 +452,81 @@
                 ]
             }
         ]
+    },
+    "x-entityContainer": {
+        "name": "DemoService",
+        "entitySets": {
+            "Products": {
+                "entityType": "ODataDemo.Product",
+                "navigationPropertyBindings": {
+                    "ODataDemo.FeaturedProduct/Advertisement": {
+                        "target": "Advertisements"
+                    },
+                    "Categories": {
+                        "target": "Categories"
+                    },
+                    "Supplier": {
+                        "target": "Suppliers"
+                    },
+                    "ProductDetail": {
+                        "target": "ProductDetails"
+                    }
+                }
+            },
+            "ProductDetails": {
+                "entityType": "ODataDemo.ProductDetail",
+                "navigationPropertyBindings": {
+                    "Product": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Categories": {
+                "entityType": "ODataDemo.Category",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Suppliers": {
+                "entityType": "ODataDemo.Supplier",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Persons": {
+                "entityType": "ODataDemo.Person",
+                "navigationPropertyBindings": {
+                    "PersonDetail": {
+                        "target": "PersonDetails"
+                    }
+                }
+            },
+            "PersonDetails": {
+                "entityType": "ODataDemo.PersonDetail",
+                "navigationPropertyBindings": {
+                    "Person": {
+                        "target": "Persons"
+                    }
+                }
+            },
+            "Advertisements": {
+                "entityType": "ODataDemo.Advertisement",
+                "navigationPropertyBindings": {
+                    "FeaturedProduct": {
+                        "target": "Products"
+                    }
+                }
+            }
+        },
+        "actionImports": {
+            "IncreaseSalaries": {
+                "action": "ODataDemo.IncreaseSalaries"
+            }
+        }
     },
     "paths": {
         "/Products": {

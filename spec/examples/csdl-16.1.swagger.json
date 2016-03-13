@@ -245,10 +245,13 @@
                 "parameters": [
                     {
                         "name": "Rating",
-                        "in": "path",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "parameterType": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "format": "int32"
+                        }
                     }
                 ],
                 "returnType": {
@@ -259,6 +262,62 @@
                 }
             }
         ]
+    },
+    "x-entityContainer": {
+        "name": "DemoService",
+        "entitySets": {
+            "Products": {
+                "entityType": "ODataDemo.Product",
+                "navigationPropertyBindings": {
+                    "Category": {
+                        "target": "Categories"
+                    }
+                }
+            },
+            "Categories": {
+                "entityType": "ODataDemo.Category",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Suppliers": {
+                "entityType": "ODataDemo.Supplier",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    },
+                    "Address/Country": {
+                        "target": "Countries"
+                    }
+                },
+                "@Core.OptimisticConcurrency": [
+                    {
+                        "@odata.propertyPath": "Concurrency"
+                    }
+                ]
+            },
+            "Countries": {
+                "entityType": "ODataDemo.Country"
+            }
+        },
+        "singletons": {
+            "MainSupplier": {
+                "type": "ODataDemo.Supplier",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            }
+        },
+        "functionImports": {
+            "ProductsByRating": {
+                "entitySet": "Products",
+                "function": "ODataDemo.ProductsByRating"
+            }
+        }
     },
     "paths": {
         "/Products": {
