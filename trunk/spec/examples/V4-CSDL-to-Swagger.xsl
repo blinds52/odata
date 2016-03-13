@@ -6,22 +6,19 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Swagger 2.0 JSON
 
     TODO:
-    - represent entity container twice: once as /paths, once OData-specific to preserve navigation property bindings and
-    annotations
     - cross-service references: decide by URL whether it's /$metadata or just vocabulary/annotations/types
-    - edmx:Reference/edmx:Include reflected in human-readable description of service, with link to parameterized Swagger 
+    - edmx:Reference/edmx:Include reflected in human-readable description of service, with link to parameterized Swagger
     UI for $metadata
+    - also create /swagger, /info, and empty /paths if file doesn't contain an entity container
+    - x-nullable also for nullable primitive properties, see https://issues.oasis-open.org/browse/ODATA-911
     - x-resourcetype on container children within /paths with values EntitySet, Singleton, ...
-    - x-actions/x-functions: repair function parameter representation, now uses Swagger style with unwrapped $ref
-    - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias 
+    - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
     option of type string
-    - Swagger UI complains about correct $ref to #/x-schemas: bug or just represent aliases differently?
-    - reconsider $ref for type/action/function referencing: better use qualified names
     - @Extends for entity container: ideally should include /paths from referenced container
     - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
     property names
     - $orderby: both asc (no suffix) and desc in enumeration
-    - try again for both "clickable" and freestyle $orderby
+    - try again for both "clickable" and freestyle $expand, $select, $orderby
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
     - primitive types in function/action return types
@@ -29,10 +26,9 @@
     - ETag / If-Match for PATCH
     - property description for key parameters in single-entity requests
     - better description for operations
-    - remove duplicated code
+    - remove duplicated code in /paths production
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
     - annotations without explicit value: default from term definition (if inline)
-    - trim leading and trailing \n from descriptions
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -41,7 +37,8 @@
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
-  <xsl:param name="odata-schema" select="'https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json'" />
+  <xsl:param name="odata-schema"
+    select="'https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json'" />
   <!-- TODO: consider splitting /paths file == core Swagger description from /definitions == JSON $metadata
     <xsl:param name="metadata" select="'$metadata'" />
   -->
@@ -71,12 +68,13 @@
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"swagger":"2.0"</xsl:text>
       <xsl:text>,"info":{"title":"</xsl:text>
-      <!-- TODO: also cover element notation of string -->
       <xsl:variable name="title"
-        select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String" />
+        select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String|edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/edm:String" />
       <xsl:choose>
         <xsl:when test="$title">
-          <xsl:value-of select="$title" />
+          <xsl:call-template name="escape">
+            <xsl:with-param name="string" select="normalize-space($title)" />
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>OData Service</xsl:text>
@@ -84,17 +82,19 @@
       </xsl:choose>
       <xsl:text>","description":"</xsl:text>
       <xsl:variable name="description"
-        select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.LongDescription' or @Term=concat($coreAlias,'.LongDescription')]/@String" />
+        select="edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.LongDescription' or @Term=concat($coreAlias,'.LongDescription')]/@String|edmx:DataServices/edm:Schema/edm:EntityContainer/edm:Annotation[@Term='Org.OData.Core.V1.LongDescription' or @Term=concat($coreAlias,'.LongDescription')]/edm:String" />
       <xsl:choose>
         <xsl:when test="$description">
-          <xsl:value-of select="$description"></xsl:value-of>
+          <xsl:call-template name="escape">
+            <xsl:with-param name="string" select="normalize-space($description)" />
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>The OData Service at </xsl:text>
-          <xsl:value-of select="$scheme"></xsl:value-of>
+          <xsl:value-of select="$scheme" />
           <xsl:text>://</xsl:text>
-          <xsl:value-of select="$host"></xsl:value-of>
-          <xsl:value-of select="$basePath"></xsl:value-of>
+          <xsl:value-of select="$host" />
+          <xsl:value-of select="$basePath" />
           <xsl:text>/</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
@@ -104,7 +104,7 @@
       <xsl:value-of select="$host" />
       <xsl:text>"</xsl:text>
       <xsl:text>,"schemes":["</xsl:text>
-      <xsl:value-of select="$scheme"></xsl:value-of>
+      <xsl:value-of select="$scheme" />
       <xsl:text>"],"basePath":"</xsl:text>
       <xsl:value-of select="$basePath" />
       <xsl:text>"</xsl:text>
@@ -117,7 +117,7 @@
       <xsl:with-param name="key" select="'Uri'" />
     </xsl:apply-templates>
     <xsl:if test="//edm:EntityContainer">
-      <!-- TODO: external file -->
+      <!-- TODO: external file? -->
       <xsl:text>,"parameters":{
         "expand":{"name":"$expand","in":"query","description":"Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)","type":"string"},
         "select":{"name":"$select","in":"query","description":"Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)","type":"string"},
@@ -193,7 +193,8 @@
     <xsl:apply-templates select="edm:Schema/edm:Term" mode="hash">
       <xsl:with-param name="name" select="'x-terms'" />
     </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Schema/edm:EntityContainer" mode="list2" />
+    <xsl:apply-templates select="edm:Schema/edm:EntityContainer" />
+    <xsl:apply-templates select="edm:Schema/edm:EntityContainer" mode="paths" />
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="hashpair">
@@ -262,16 +263,34 @@
     <xsl:text>"</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:Member/@Value">
+  <xsl:template match="edm:Member/@Value" mode="member">
+    <xsl:param name="after" />
+    <xsl:choose>
+      <xsl:when test="position() > 1">
+        <xsl:text>,</xsl:text>
+      </xsl:when>
+      <xsl:when test="$after">
+        <xsl:text>,</xsl:text>
+      </xsl:when>
+    </xsl:choose>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Name" />
     <xsl:text>@odata.value":</xsl:text>
     <xsl:value-of select="." />
   </xsl:template>
 
-  <xsl:template match="edm:Member/edm:Annotation">
+  <xsl:template match="edm:Member/edm:Annotation" mode="member">
+    <xsl:param name="after" />
+    <xsl:choose>
+      <xsl:when test="position() > 1">
+        <xsl:text>,</xsl:text>
+      </xsl:when>
+      <xsl:when test="$after">
+        <xsl:text>,</xsl:text>
+      </xsl:when>
+    </xsl:choose>
     <xsl:apply-templates select=".">
-      <xsl:with-param name="target" select="@Name" />
+      <xsl:with-param name="target" select="../@Name" />
     </xsl:apply-templates>
   </xsl:template>
 
@@ -297,7 +316,11 @@
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
     <xsl:if test="@BaseType">
-      <xsl:text>"allOf":[{</xsl:text>
+      <xsl:text>"x-baseType":"</xsl:text>
+      <xsl:call-template name="namespaceQualifiedName">
+        <xsl:with-param name="qualifiedName" select="@BaseType" />
+      </xsl:call-template>
+      <xsl:text>","allOf":[{</xsl:text>
       <xsl:call-template name="schema-ref">
         <xsl:with-param name="qualifiedName" select="@BaseType" />
         <xsl:with-param name="element" select="'definitions'" />
@@ -391,12 +414,11 @@
   </xsl:template>
 
   <xsl:template match="@BaseTerm">
-    <xsl:text>"baseTerm":{</xsl:text>
-    <xsl:call-template name="schema-ref">
+    <xsl:text>"baseTerm":"</xsl:text>
+    <xsl:call-template name="namespaceQualifiedName">
       <xsl:with-param name="qualifiedName" select="." />
-      <xsl:with-param name="element" select="'terms'" />
     </xsl:call-template>
-    <xsl:text>}</xsl:text>
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="nullableFacetValue">
@@ -443,8 +465,6 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="collection" select="starts-with($type,'Collection(')" />
-    <xsl:variable name="anyOf"
-      select="not($nullable='false') or (not($collection) and ($wrap or @BaseTerm or @DefaultValue or @MaxLength or @Precision or @SRID))" />
     <xsl:if test="$collection">
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
@@ -632,6 +652,9 @@
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
+        <xsl:if test="not($nullable='false')">
+          <xsl:text>,"x-nullable":true</xsl:text>
+        </xsl:if>
         <xsl:apply-templates select="@SRID" mode="list2" />
       </xsl:when>
       <xsl:otherwise>
@@ -662,7 +685,6 @@
   <xsl:template name="ref">
     <xsl:param name="qualifier" />
     <xsl:param name="name" />
-    <xsl:param name="element" select="'definitions'" />
     <xsl:variable name="internalNamespace" select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
     <xsl:variable name="externalNamespace">
       <xsl:choose>
@@ -678,30 +700,25 @@
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="//edmx:Include[@Namespace=$externalNamespace]/../@Uri" />
     </xsl:call-template>
-    <xsl:text>#/</xsl:text>
-    <xsl:value-of select="$element" />
-    <xsl:if test="$element!='entityContainer'">
-      <xsl:text>/</xsl:text>
-      <xsl:choose>
-        <xsl:when test="$internalNamespace">
-          <xsl:value-of select="$internalNamespace" />
-        </xsl:when>
-        <xsl:when test="string-length($externalNamespace)>0">
-          <xsl:value-of select="$externalNamespace" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$qualifier" />
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:text>.</xsl:text>
-      <xsl:value-of select="$name" />
-    </xsl:if>
+    <xsl:text>#/definitions/</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$internalNamespace">
+        <xsl:value-of select="$internalNamespace" />
+      </xsl:when>
+      <xsl:when test="string-length($externalNamespace)>0">
+        <xsl:value-of select="$externalNamespace" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$qualifier" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="$name" />
     <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template name="schema-ref">
     <xsl:param name="qualifiedName" />
-    <xsl:param name="element" />
     <xsl:call-template name="ref">
       <xsl:with-param name="qualifier">
         <xsl:call-template name="substring-before-last">
@@ -715,7 +732,6 @@
           <xsl:with-param name="marker" select="'.'" />
         </xsl:call-template>
       </xsl:with-param>
-      <xsl:with-param name="element" select="$element" />
     </xsl:call-template>
   </xsl:template>
 
@@ -957,11 +973,64 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityContainer">
-    <xsl:text>"paths":{</xsl:text>
-    <!-- TODO: where to put these?
-      <xsl:apply-templates select="@*" mode="list" />
-      <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    -->
+    <xsl:text>,"x-entityContainer":{</xsl:text>
+    <xsl:apply-templates select="@*" mode="list" />
+    <xsl:apply-templates select="edm:EntitySet" mode="hash" />
+    <xsl:apply-templates select="edm:Singleton" mode="hash" />
+    <xsl:apply-templates select="edm:ActionImport" mode="hash" />
+    <xsl:apply-templates select="edm:FunctionImport" mode="hash" />
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:EntitySet|edm:Singleton" mode="hashvalue">
+    <xsl:apply-templates select="@*[local-name()!='Name']" mode="list" />
+    <xsl:apply-templates select="edm:NavigationPropertyBinding" mode="hash">
+      <xsl:with-param name="key" select="'Path'" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+  </xsl:template>
+
+  <xsl:template match="edm:EntitySet/@EntityType|edm:Singleton/@Type|edm:ActionImport/@Action|edm:FunctionImport/@Function">
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="lowerCamelCase">
+      <xsl:with-param name="name" select="local-name()" />
+    </xsl:call-template>
+    <xsl:text>":"</xsl:text>
+    <xsl:call-template name="namespaceQualifiedName">
+      <xsl:with-param name="qualifiedName" select="." />
+    </xsl:call-template>
+    <xsl:text>"</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="namespaceQualifiedName">
+    <xsl:param name="qualifiedName" />
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="$qualifiedName" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="//edm:Schema[@Alias=$qualifier]">
+        <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+      </xsl:when>
+      <xsl:when test="//edmx:Include[@Alias=$qualifier]">
+        <xsl:value-of select="//edmx:Include[@Alias=$qualifier]/@Namespace" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$qualifier" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>.</xsl:text>
+    <xsl:call-template name="substring-after-last">
+      <xsl:with-param name="input" select="$qualifiedName" />
+      <xsl:with-param name="marker" select="'.'" />
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="edm:EntityContainer" mode="paths">
+    <xsl:text>,"paths":{</xsl:text>
     <xsl:apply-templates select="edm:EntitySet|edm:Singleton|edm:FunctionImport|edm:ActionImport"
       mode="list" />
     <xsl:text>}</xsl:text>
@@ -1321,10 +1390,12 @@
     <xsl:text>,"description":"</xsl:text>
     <!-- TODO: also allow element notation - extract into template and reuse -->
     <xsl:variable name="description"
-      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String" />
+      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String|//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/edm:String" />
     <xsl:choose>
       <xsl:when test="$description">
-        <xsl:value-of select="$description" />
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="normalize-space($description)" />
+        </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$default" />
@@ -1517,7 +1588,7 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"],"parameters":[</xsl:text>
-    <xsl:apply-templates select="edm:Parameter" mode="list" />
+    <xsl:apply-templates select="edm:Parameter" mode="parameter" />
     <xsl:text>]</xsl:text>
 
     <xsl:call-template name="responses">
@@ -1651,7 +1722,10 @@
     </xsl:call-template>
   </xsl:template>
 
-  <xsl:template match="edm:Function/edm:Parameter">
+  <xsl:template match="edm:Function/edm:Parameter" mode="parameter">
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
     <xsl:text>{"name":"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","in":"path","required":true,</xsl:text>
@@ -1661,13 +1735,6 @@
       <xsl:with-param name="noArray" select="true()" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="edm:Function/edm:Parameter" mode="parameter">
-    <xsl:if test="position() > 1">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
-    <xsl:apply-templates select="." />
   </xsl:template>
 
   <xsl:template match="edm:Parameter/@MaxLength">
@@ -1721,7 +1788,7 @@
       <xsl:text>,"x-annotations":{</xsl:text>
       <xsl:apply-templates select="$remaining" mode="list" />
       <xsl:if test="$members">
-        <xsl:apply-templates select="$members" mode="list">
+        <xsl:apply-templates select="$members" mode="member">
           <xsl:with-param name="after" select="$remaining" />
         </xsl:apply-templates>
       </xsl:if>
@@ -1742,28 +1809,31 @@
         <xsl:value-of select="$qualifier" />
       </xsl:if>
     </xsl:variable>
-    <xsl:text>"</xsl:text>
     <xsl:choose>
       <xsl:when
         test="(substring($name,2)=$coreDescription or substring($name,2)=$coreDescriptionAliased) and (@String or edm:String)"
       >
-        <xsl:text>description</xsl:text>
+        <xsl:text>"description":</xsl:text>
+        <xsl:apply-templates select="@String|edm:String">
+          <xsl:with-param name="normalize" select="true()" />
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:text>"</xsl:text>
         <xsl:value-of select="$name" />
+        <xsl:text>":</xsl:text>
+        <xsl:apply-templates select="@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation']"
+          mode="list"
+        >
+          <xsl:with-param name="target" select="$name" />
+        </xsl:apply-templates>
+        <xsl:if test="count(@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation'])=0">
+          <!-- tagging term -->
+          <!-- TODO: try to get default value from term definition, use true if not possible -->
+          <xsl:text>true</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>":</xsl:text>
-    <xsl:apply-templates select="@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation']"
-      mode="list"
-    >
-      <xsl:with-param name="target" select="$name" />
-    </xsl:apply-templates>
-    <xsl:if test="count(@*[local-name()!='Term' and local-name()!='Qualifier']|*[local-name()!='Annotation'])=0">
-      <!-- tagging term -->
-      <!-- TODO: try to get default value from term definition, use true if not possible -->
-      <xsl:text>true</xsl:text>
-    </xsl:if>
     <xsl:apply-templates select="edm:Annotation" mode="list2">
       <xsl:with-param name="target" select="$name" />
     </xsl:apply-templates>
@@ -1824,17 +1894,27 @@
     </xsl:call-template>
     <xsl:text>":"</xsl:text>
     <xsl:call-template name="escape">
-      <xsl:with-param name="string" select="." />
+      <xsl:with-param name="string" select="normalize-space(.)" />
     </xsl:call-template>
     <xsl:text>"}</xsl:text>
   </xsl:template>
 
   <!-- escaped string value -->
   <xsl:template match="@String|edm:String">
+    <xsl:param name="normalize" select="false()" />
     <xsl:text>"</xsl:text>
-    <xsl:call-template name="escape">
-      <xsl:with-param name="string" select="." />
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$normalize">
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="normalize-space(.)" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="." />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>"</xsl:text>
   </xsl:template>
 
@@ -2011,28 +2091,6 @@
     </xsl:if>
     <xsl:if test="position()=last()">
       <xsl:text>}</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- name : array -->
-  <xsl:template match="*" mode="array">
-    <xsl:param name="after" select="'something'" />
-    <xsl:if test="position()=1">
-      <xsl:if test="$after">
-        <xsl:text>,</xsl:text>
-      </xsl:if>
-      <xsl:text>"</xsl:text>
-      <xsl:call-template name="pluralize">
-        <xsl:with-param name="name" select="local-name()" />
-      </xsl:call-template>
-      <xsl:text>":[</xsl:text>
-    </xsl:if>
-    <xsl:apply-templates select="." mode="item" />
-    <xsl:if test="position()!=last()">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
-    <xsl:if test="position()=last()">
-      <xsl:text>]</xsl:text>
     </xsl:if>
   </xsl:template>
 

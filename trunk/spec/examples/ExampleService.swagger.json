@@ -1,0 +1,3688 @@
+{
+    "x-odata-version": "4.0",
+    "swagger": "2.0",
+    "info": {
+        "title": "OData Service",
+        "description": "The OData Service at http://localhost/service-root/",
+        "version": "0.1.0"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/service-root",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "definitions": {
+        "OData.Demo.Customer": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Order"
+                    },
+                    "x-relationship": {
+                        "partner": "Customer"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "CompanyName": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "BirthDate": {
+                    "type": "string"
+                },
+                "CountryName": {
+                    "type": "string",
+                    "description": "This is weird, given that we have a Country entity type"
+                },
+                "Sales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Sales"
+                    },
+                    "x-relationship": {
+                        "partner": "Customer"
+                    }
+                },
+                "ContactName": {
+                    "type": "string"
+                },
+                "ContactTitle": {
+                    "type": "string"
+                },
+                "Fax": {
+                    "type": "string"
+                },
+                "Address": {
+                    "$ref": "#/definitions/OData.Demo.Address"
+                },
+                "EmailAddresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Phone": {
+                    "$ref": "#/definitions/OData.Demo.PhoneNumber"
+                }
+            }
+        },
+        "OData.Demo.Supplier": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Product"
+                    },
+                    "x-relationship": {
+                        "partner": "Supplier"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "EmailAddresses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Address"
+                    }
+                }
+            }
+        },
+        "OData.Demo.Product": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Category": {
+                    "$ref": "#/definitions/OData.Demo.Category",
+                    "x-relationship": {
+                        "partner": "Products"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Supplier": {
+                    "$ref": "#/definitions/OData.Demo.Supplier",
+                    "x-relationship": {
+                        "partner": "Products"
+                    }
+                },
+                "Description": {
+                    "type": "string"
+                },
+                "Thumbnail": {
+                    "type": "string"
+                },
+                "Sizes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Rating": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "OrderItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.OrderItem"
+                    },
+                    "x-relationship": {
+                        "partner": "Product"
+                    }
+                },
+                "ReleaseDate": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "DiscontinuedDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date"
+                },
+                "LifeTime": {
+                    "type": "string"
+                },
+                "Color": {
+                    "type": "string"
+                },
+                "TaxRate": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "x-precision": 10,
+                    "x-scale": 6,
+                    "multipleOf": 1e-6,
+                    "minimum": -9999.999999,
+                    "maximum": 9999.999999
+                },
+                "Sales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Sales"
+                    },
+                    "x-relationship": {
+                        "partner": "Product"
+                    }
+                }
+            }
+        },
+        "OData.Demo.Order": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.OrderItem"
+                    },
+                    "x-relationship": {
+                        "partner": "Order"
+                    }
+                },
+                "Completed": {
+                    "type": "boolean"
+                },
+                "Customer": {
+                    "$ref": "#/definitions/OData.Demo.Customer",
+                    "x-relationship": {
+                        "partner": "Orders"
+                    }
+                },
+                "ShippingAddress": {
+                    "$ref": "#/definitions/OData.Demo.Address"
+                }
+            }
+        },
+        "OData.Demo.VipCustomer": {
+            "x-baseType": "OData.Demo.Customer",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/OData.Demo.Customer"
+                },
+                {
+                    "type": "object"
+                }
+            ]
+        },
+        "OData.Demo.Category": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Amount": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Product"
+                    },
+                    "x-relationship": {
+                        "partner": "Category"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Thumbnail": {
+                    "type": "string"
+                }
+            }
+        },
+        "OData.Demo.OrderItem": {
+            "type": "object",
+            "x-keys": [
+                "OrderID",
+                "ItemID"
+            ],
+            "properties": {
+                "OrderID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "ItemID": {
+                    "type": "string"
+                },
+                "Order": {
+                    "$ref": "#/definitions/OData.Demo.Order",
+                    "x-relationship": {
+                        "partner": "Items",
+                        "onDelete": {
+                            "action": "Cascade"
+                        },
+                        "referentialConstraints": {
+                            "OrderID": {
+                                "referencedProperty": "ID"
+                            }
+                        }
+                    }
+                },
+                "Size": {
+                    "type": "string"
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Product": {
+                    "$ref": "#/definitions/OData.Demo.Product",
+                    "x-relationship": {
+                        "partner": "OrderItems"
+                    }
+                },
+                "Currency": {
+                    "$ref": "#/definitions/OData.Demo.Currency",
+                    "x-relationship": {
+
+                    }
+                }
+            }
+        },
+        "OData.Demo.Sales": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Amount": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Time": {
+                    "$ref": "#/definitions/OData.Demo.Time",
+                    "x-relationship": {
+                        "partner": "Sales"
+                    }
+                },
+                "Currency": {
+                    "$ref": "#/definitions/OData.Demo.Currency",
+                    "x-relationship": {
+                        "partner": "Sales"
+                    }
+                },
+                "Customer": {
+                    "$ref": "#/definitions/OData.Demo.Customer",
+                    "x-relationship": {
+                        "partner": "Sales"
+                    }
+                },
+                "SalesOrganization": {
+                    "$ref": "#/definitions/OData.Demo.SalesOrganization",
+                    "x-relationship": {
+                        "partner": "Sales"
+                    }
+                },
+                "Product": {
+                    "$ref": "#/definitions/OData.Demo.Product",
+                    "x-relationship": {
+                        "partner": "Sales"
+                    }
+                }
+            }
+        },
+        "OData.Demo.Employee": {
+            "type": "object",
+            "x-mediaEntity": true,
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "FirstName": {
+                    "type": "string"
+                },
+                "LastName": {
+                    "type": "string"
+                },
+                "Title": {
+                    "type": "string"
+                },
+                "Manager": {
+                    "$ref": "#/definitions/OData.Demo.Manager",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "Employees"
+                    }
+                },
+                "LeaveRequests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.LeaveRequest"
+                    },
+                    "x-relationship": {
+                        "partner": "Employee"
+                    }
+                }
+            }
+        },
+        "OData.Demo.LeaveRequest": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Manager": {
+                    "$ref": "#/definitions/OData.Demo.Manager",
+                    "x-relationship": {
+                        "partner": "Inbox"
+                    }
+                },
+                "Employee": {
+                    "$ref": "#/definitions/OData.Demo.Employee",
+                    "x-relationship": {
+                        "partner": "LeaveRequests"
+                    }
+                }
+            }
+        },
+        "OData.Demo.Address": {
+            "type": "object",
+            "properties": {
+                "Street": {
+                    "type": "string"
+                },
+                "Country": {
+                    "$ref": "#/definitions/Example.Country",
+                    "x-relationship": {
+
+                    }
+                },
+                "City": {
+                    "$ref": "#/definitions/Example.City",
+                    "x-relationship": {
+
+                    }
+                },
+                "Region": {
+                    "type": "string"
+                },
+                "PostalCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "OData.Demo.AddressWithLocation": {
+            "type": "object",
+            "properties": {
+                "Location": {
+                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.GeographyPoint"
+                }
+            }
+        },
+        "OData.Demo.Country": {
+            "type": "object",
+            "x-keys": [
+                "Code"
+            ],
+            "properties": {
+                "Code": {
+                    "type": "string",
+                    "maxLength": 2
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Continent": {
+                    "type": "string"
+                }
+            }
+        },
+        "OData.Demo.PreferredSupplier": {
+            "x-baseType": "OData.Demo.Supplier",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/OData.Demo.Supplier"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "AccountRepresentative": {
+                            "$ref": "#/definitions/OData.Demo.Employee",
+                            "x-nullable": true,
+                            "x-relationship": {
+                                "referentialConstraints": {
+                                    "EmployeeID": {
+                                        "referencedProperty": "ID",
+                                        "description": "The key account manager"
+                                    }
+                                }
+                            }
+                        },
+                        "EmployeeID": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ]
+        },
+        "OData.Demo.Pattern": {
+            "type": "string",
+            "enum": [
+                "Yellow",
+                "Solid"
+            ],
+            "x-isFlags": true,
+            "x-annotations": {
+                "Yellow@odata.value": 1,
+                "Solid@odata.value": 2
+            }
+        },
+        "OData.Demo.Manager": {
+            "x-baseType": "OData.Demo.Employee",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/OData.Demo.Employee"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Employees": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OData.Demo.Employee"
+                            },
+                            "x-relationship": {
+                                "partner": "Manager"
+                            }
+                        },
+                        "Inbox": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OData.Demo.LeaveRequest"
+                            },
+                            "x-relationship": {
+                                "partner": "Manager"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "OData.Demo.Time": {
+            "type": "object",
+            "x-keys": [
+                "Date"
+            ],
+            "properties": {
+                "Date": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "Year": {
+                    "type": "string",
+                    "maxLength": 4
+                },
+                "Quarter": {
+                    "type": "string"
+                },
+                "Month": {
+                    "type": "string"
+                },
+                "Sales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Sales"
+                    },
+                    "x-relationship": {
+                        "partner": "Time"
+                    }
+                }
+            }
+        },
+        "OData.Demo.SalesOrganization": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Sales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Sales"
+                    },
+                    "x-relationship": {
+                        "partner": "SalesOrganization"
+                    }
+                },
+                "Superordinate": {
+                    "$ref": "#/definitions/OData.Demo.SalesOrganization",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                }
+            }
+        },
+        "OData.Demo.Currency": {
+            "type": "object",
+            "x-keys": [
+                "Code"
+            ],
+            "properties": {
+                "Code": {
+                    "type": "string",
+                    "maxLength": 3
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Sales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OData.Demo.Sales"
+                    },
+                    "x-relationship": {
+                        "partner": "Currency"
+                    }
+                },
+                "Symbol": {
+                    "type": "string"
+                },
+                "FractionalDigits": {
+                    "type": "integer",
+                    "format": "uint8"
+                }
+            }
+        },
+        "OData.Demo.City": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "Name": {
+                    "type": "string"
+                }
+            }
+        },
+        "OData.Demo.PhoneNumber": {
+            "type": "object",
+            "properties": {
+                "Number": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                }
+            }
+        },
+        "OData.Demo.CellPhoneNumber": {
+            "type": "object",
+            "properties": {
+                "Carrier": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "x-schemas": {
+        "Org.OData.Core.V1": {
+            "uri": "http://tinyurl.com/Org-OData-Core"
+        },
+        "Core": {
+            "aliasFor": "Org.OData.Core.V1"
+        },
+        "Model": {
+            "aliasFor": "OData.Demo"
+        },
+        "OData.Demo": {
+
+        }
+    },
+    "x-entityContainer": {
+        "name": "Container",
+        "entitySets": {
+            "Customers": {
+                "entityType": "OData.Demo.Customer",
+                "navigationPropertyBindings": {
+                    "Orders": {
+                        "target": "Orders"
+                    },
+                    "Sales": {
+                        "target": "Sales"
+                    },
+                    "Address/Country": {
+                        "target": "Countries"
+                    }
+                }
+            },
+            "Suppliers": {
+                "entityType": "OData.Demo.Supplier",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    },
+                    "Model.PreferredSupplier/AccountRepresentative": {
+                        "target": "Employees"
+                    }
+                }
+            },
+            "Products": {
+                "entityType": "OData.Demo.Product",
+                "navigationPropertyBindings": {
+                    "Category": {
+                        "target": "Categories"
+                    },
+                    "Supplier": {
+                        "target": "Suppliers"
+                    },
+                    "OrderItems": {
+                        "target": "OrderItems"
+                    },
+                    "Sales": {
+                        "target": "Sales"
+                    }
+                }
+            },
+            "Orders": {
+                "entityType": "OData.Demo.Order",
+                "navigationPropertyBindings": {
+                    "Items": {
+                        "target": "OrderItems"
+                    },
+                    "Customer": {
+                        "target": "Customers"
+                    }
+                }
+            },
+            "Categories": {
+                "entityType": "OData.Demo.Category",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "OrderItems": {
+                "entityType": "OData.Demo.OrderItem",
+                "navigationPropertyBindings": {
+                    "Order": {
+                        "target": "Orders"
+                    },
+                    "Product": {
+                        "target": "Products"
+                    },
+                    "Currency": {
+                        "target": "Currencies"
+                    }
+                }
+            },
+            "Sales": {
+                "entityType": "OData.Demo.Sales",
+                "navigationPropertyBindings": {
+                    "Time": {
+                        "target": "Time"
+                    },
+                    "Currency": {
+                        "target": "Currencies"
+                    },
+                    "Customer": {
+                        "target": "Customers"
+                    },
+                    "SalesOrganization": {
+                        "target": "SalesOrganizations"
+                    },
+                    "Product": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Employees": {
+                "entityType": "OData.Demo.Employee",
+                "navigationPropertyBindings": {
+                    "Model.Manager/Employees": {
+                        "target": "Employees"
+                    },
+                    "Manager": {
+                        "target": "Employees"
+                    },
+                    "Model.Manager/Inbox": {
+                        "target": "LeaveRequests"
+                    },
+                    "LeaveRequests": {
+                        "target": "LeaveRequests"
+                    }
+                }
+            },
+            "LeaveRequests": {
+                "entityType": "OData.Demo.LeaveRequest",
+                "navigationPropertyBindings": {
+                    "Manager": {
+                        "target": "Employees"
+                    },
+                    "Employee": {
+                        "target": "Employees"
+                    }
+                }
+            },
+            "Countries": {
+                "entityType": "OData.Demo.Country"
+            },
+            "Time": {
+                "entityType": "OData.Demo.Time",
+                "navigationPropertyBindings": {
+                    "Sales": {
+                        "target": "Sales"
+                    }
+                }
+            },
+            "SalesOrganizations": {
+                "entityType": "OData.Demo.SalesOrganization",
+                "navigationPropertyBindings": {
+                    "Sales": {
+                        "target": "Sales"
+                    },
+                    "Superordinate": {
+                        "target": "SalesOrganizations"
+                    }
+                }
+            },
+            "Currencies": {
+                "entityType": "OData.Demo.Currency",
+                "navigationPropertyBindings": {
+                    "Sales": {
+                        "target": "Sales"
+                    }
+                }
+            },
+            "Cities": {
+                "entityType": "OData.Demo.City"
+            }
+        }
+    },
+    "paths": {
+        "/Customers": {
+            "get": {
+                "summary": "Get entities from entity set Customers",
+                "description": "Get entities from entity set Customers",
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Customers",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Customer"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Customers",
+                "description": "Post a new entity to entity set Customers",
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "name": "Customer",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Customer"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Customers('{ID}')": {
+            "get": {
+                "summary": "Get entity from Customers by key.",
+                "description": "Returns the entity with the key from Customers",
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Customers",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Customer"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Customers",
+                "description": "Update entity in EntitySet Customers",
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Customer",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Customers",
+                "description": "Delete entity in EntitySet Customers",
+                "tags": [
+                    "Customers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Suppliers": {
+            "get": {
+                "summary": "Get entities from entity set Suppliers",
+                "description": "Get entities from entity set Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Suppliers",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Supplier"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Suppliers",
+                "description": "Post a new entity to entity set Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "Supplier",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Supplier"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Suppliers('{ID}')": {
+            "get": {
+                "summary": "Get entity from Suppliers by key.",
+                "description": "Returns the entity with the key from Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Suppliers",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Supplier"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Suppliers",
+                "description": "Update entity in EntitySet Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Supplier",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Suppliers",
+                "description": "Delete entity in EntitySet Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Products": {
+            "get": {
+                "summary": "Get entities from entity set Products",
+                "description": "Get entities from entity set Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Products",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Product"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Products",
+                "description": "Post a new entity to entity set Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Product"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Products({ID})": {
+            "get": {
+                "summary": "Get entity from Products by key.",
+                "description": "Returns the entity with the key from Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Products",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Product"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Products",
+                "description": "Update entity in EntitySet Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Products",
+                "description": "Delete entity in EntitySet Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Orders": {
+            "get": {
+                "summary": "Get entities from entity set Orders",
+                "description": "Get entities from entity set Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Orders",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Order"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Orders",
+                "description": "Post a new entity to entity set Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Order",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Order"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Orders({ID})": {
+            "get": {
+                "summary": "Get entity from Orders by key.",
+                "description": "Returns the entity with the key from Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Orders",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Order"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Orders",
+                "description": "Update entity in EntitySet Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Order",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Orders",
+                "description": "Delete entity in EntitySet Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories": {
+            "get": {
+                "summary": "Get entities from entity set Categories",
+                "description": "Get entities from entity set Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Category"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Categories",
+                "description": "Post a new entity to entity set Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories({ID})": {
+            "get": {
+                "summary": "Get entity from Categories by key.",
+                "description": "Returns the entity with the key from Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Categories",
+                "description": "Update entity in EntitySet Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Categories",
+                "description": "Delete entity in EntitySet Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/OrderItems": {
+            "get": {
+                "summary": "Get entities from entity set OrderItems",
+                "description": "Get entities from entity set OrderItems",
+                "tags": [
+                    "OrderItems"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet OrderItems",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.OrderItem"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set OrderItems",
+                "description": "Post a new entity to entity set OrderItems",
+                "tags": [
+                    "OrderItems"
+                ],
+                "parameters": [
+                    {
+                        "name": "OrderItem",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.OrderItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.OrderItem"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/OrderItems(OrderID={OrderID},ItemID='{ItemID}')": {
+            "get": {
+                "summary": "Get entity from OrderItems by key.",
+                "description": "Returns the entity with the key from OrderItems",
+                "tags": [
+                    "OrderItems"
+                ],
+                "parameters": [
+                    {
+                        "name": "OrderID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: OrderID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "ItemID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ItemID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet OrderItems",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.OrderItem"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet OrderItems",
+                "description": "Update entity in EntitySet OrderItems",
+                "tags": [
+                    "OrderItems"
+                ],
+                "parameters": [
+                    {
+                        "name": "OrderID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: OrderID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "ItemID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ItemID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "OrderItem",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.OrderItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet OrderItems",
+                "description": "Delete entity in EntitySet OrderItems",
+                "tags": [
+                    "OrderItems"
+                ],
+                "parameters": [
+                    {
+                        "name": "OrderID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: OrderID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "ItemID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ItemID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Sales": {
+            "get": {
+                "summary": "Get entities from entity set Sales",
+                "description": "Get entities from entity set Sales",
+                "tags": [
+                    "Sales"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Sales",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Sales"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Sales",
+                "description": "Post a new entity to entity set Sales",
+                "tags": [
+                    "Sales"
+                ],
+                "parameters": [
+                    {
+                        "name": "Sales",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Sales"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Sales"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Sales({ID})": {
+            "get": {
+                "summary": "Get entity from Sales by key.",
+                "description": "Returns the entity with the key from Sales",
+                "tags": [
+                    "Sales"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Sales",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Sales"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Sales",
+                "description": "Update entity in EntitySet Sales",
+                "tags": [
+                    "Sales"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "Sales",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Sales"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Sales",
+                "description": "Delete entity in EntitySet Sales",
+                "tags": [
+                    "Sales"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Employees": {
+            "get": {
+                "summary": "Get entities from entity set Employees",
+                "description": "Get entities from entity set Employees",
+                "tags": [
+                    "Employees"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Employees",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Employee"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Employees",
+                "description": "Post a new entity to entity set Employees",
+                "tags": [
+                    "Employees"
+                ],
+                "parameters": [
+                    {
+                        "name": "Employee",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Employee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Employee"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Employees('{ID}')": {
+            "get": {
+                "summary": "Get entity from Employees by key.",
+                "description": "Returns the entity with the key from Employees",
+                "tags": [
+                    "Employees"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Employees",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Employee"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Employees",
+                "description": "Update entity in EntitySet Employees",
+                "tags": [
+                    "Employees"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Employee",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Employee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Employees",
+                "description": "Delete entity in EntitySet Employees",
+                "tags": [
+                    "Employees"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/LeaveRequests": {
+            "get": {
+                "summary": "Get entities from entity set LeaveRequests",
+                "description": "Get entities from entity set LeaveRequests",
+                "tags": [
+                    "LeaveRequests"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet LeaveRequests",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.LeaveRequest"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set LeaveRequests",
+                "description": "Post a new entity to entity set LeaveRequests",
+                "tags": [
+                    "LeaveRequests"
+                ],
+                "parameters": [
+                    {
+                        "name": "LeaveRequest",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.LeaveRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.LeaveRequest"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/LeaveRequests({ID})": {
+            "get": {
+                "summary": "Get entity from LeaveRequests by key.",
+                "description": "Returns the entity with the key from LeaveRequests",
+                "tags": [
+                    "LeaveRequests"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet LeaveRequests",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.LeaveRequest"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet LeaveRequests",
+                "description": "Update entity in EntitySet LeaveRequests",
+                "tags": [
+                    "LeaveRequests"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "LeaveRequest",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.LeaveRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet LeaveRequests",
+                "description": "Delete entity in EntitySet LeaveRequests",
+                "tags": [
+                    "LeaveRequests"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Countries": {
+            "get": {
+                "summary": "Get entities from entity set Countries",
+                "description": "Get entities from entity set Countries",
+                "tags": [
+                    "Countries"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Countries",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Country"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Countries",
+                "description": "Post a new entity to entity set Countries",
+                "tags": [
+                    "Countries"
+                ],
+                "parameters": [
+                    {
+                        "name": "Country",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Country"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Country"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Countries('{Code}')": {
+            "get": {
+                "summary": "Get entity from Countries by key.",
+                "description": "Returns the entity with the key from Countries",
+                "tags": [
+                    "Countries"
+                ],
+                "parameters": [
+                    {
+                        "name": "Code",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Code",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Countries",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Country"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Countries",
+                "description": "Update entity in EntitySet Countries",
+                "tags": [
+                    "Countries"
+                ],
+                "parameters": [
+                    {
+                        "name": "Code",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Code",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Country",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Country"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Countries",
+                "description": "Delete entity in EntitySet Countries",
+                "tags": [
+                    "Countries"
+                ],
+                "parameters": [
+                    {
+                        "name": "Code",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Code",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Time": {
+            "get": {
+                "summary": "Get entities from entity set Time",
+                "description": "Get entities from entity set Time",
+                "tags": [
+                    "Time"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Time",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Time"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Time",
+                "description": "Post a new entity to entity set Time",
+                "tags": [
+                    "Time"
+                ],
+                "parameters": [
+                    {
+                        "name": "Time",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Time"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Time({Date})": {
+            "get": {
+                "summary": "Get entity from Time by key.",
+                "description": "Returns the entity with the key from Time",
+                "tags": [
+                    "Time"
+                ],
+                "parameters": [
+                    {
+                        "name": "Date",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Date",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Time",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Time"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Time",
+                "description": "Update entity in EntitySet Time",
+                "tags": [
+                    "Time"
+                ],
+                "parameters": [
+                    {
+                        "name": "Date",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Date",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Time",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Time"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Time",
+                "description": "Delete entity in EntitySet Time",
+                "tags": [
+                    "Time"
+                ],
+                "parameters": [
+                    {
+                        "name": "Date",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Date",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/SalesOrganizations": {
+            "get": {
+                "summary": "Get entities from entity set SalesOrganizations",
+                "description": "Get entities from entity set SalesOrganizations",
+                "tags": [
+                    "SalesOrganizations"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet SalesOrganizations",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.SalesOrganization"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set SalesOrganizations",
+                "description": "Post a new entity to entity set SalesOrganizations",
+                "tags": [
+                    "SalesOrganizations"
+                ],
+                "parameters": [
+                    {
+                        "name": "SalesOrganization",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.SalesOrganization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.SalesOrganization"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/SalesOrganizations('{ID}')": {
+            "get": {
+                "summary": "Get entity from SalesOrganizations by key.",
+                "description": "Returns the entity with the key from SalesOrganizations",
+                "tags": [
+                    "SalesOrganizations"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet SalesOrganizations",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.SalesOrganization"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet SalesOrganizations",
+                "description": "Update entity in EntitySet SalesOrganizations",
+                "tags": [
+                    "SalesOrganizations"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "SalesOrganization",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.SalesOrganization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet SalesOrganizations",
+                "description": "Delete entity in EntitySet SalesOrganizations",
+                "tags": [
+                    "SalesOrganizations"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Currencies": {
+            "get": {
+                "summary": "Get entities from entity set Currencies",
+                "description": "Get entities from entity set Currencies",
+                "tags": [
+                    "Currencies"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Currencies",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.Currency"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Currencies",
+                "description": "Post a new entity to entity set Currencies",
+                "tags": [
+                    "Currencies"
+                ],
+                "parameters": [
+                    {
+                        "name": "Currency",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Currency"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Currency"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Currencies('{Code}')": {
+            "get": {
+                "summary": "Get entity from Currencies by key.",
+                "description": "Returns the entity with the key from Currencies",
+                "tags": [
+                    "Currencies"
+                ],
+                "parameters": [
+                    {
+                        "name": "Code",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Code",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Currencies",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Currency"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Currencies",
+                "description": "Update entity in EntitySet Currencies",
+                "tags": [
+                    "Currencies"
+                ],
+                "parameters": [
+                    {
+                        "name": "Code",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Code",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Currency",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.Currency"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Currencies",
+                "description": "Delete entity in EntitySet Currencies",
+                "tags": [
+                    "Currencies"
+                ],
+                "parameters": [
+                    {
+                        "name": "Code",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Code",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Cities": {
+            "get": {
+                "summary": "Get entities from entity set Cities",
+                "description": "Get entities from entity set Cities",
+                "tags": [
+                    "Cities"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Cities",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/OData.Demo.City"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Cities",
+                "description": "Post a new entity to entity set Cities",
+                "tags": [
+                    "Cities"
+                ],
+                "parameters": [
+                    {
+                        "name": "City",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.City"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.City"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Cities({ID})": {
+            "get": {
+                "summary": "Get entity from Cities by key.",
+                "description": "Returns the entity with the key from Cities",
+                "tags": [
+                    "Cities"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Cities",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.City"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Cities",
+                "description": "Update entity in EntitySet Cities",
+                "tags": [
+                    "Cities"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "City",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/OData.Demo.City"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Cities",
+                "description": "Delete entity in EntitySet Cities",
+                "tags": [
+                    "Cities"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "expand": {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+            "type": "string"
+        },
+        "select": {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+            "type": "string"
+        },
+        "orderby": {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+            "type": "string"
+        },
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "type": "integer"
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "type": "integer"
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "type": "boolean"
+        },
+        "filter": {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "type": "string"
+        }
+    }
+}
