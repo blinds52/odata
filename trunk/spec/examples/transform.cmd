@@ -1,5 +1,7 @@
 @echo off 
-REM XSLT command-line see https://xml.apache.org/xalan-j/commandline.html
+@rem XSLT command-line see https://xml.apache.org/xalan-j/commandline.html
+
+@rem TODO: accept command line parameters, only pull those from transform.txt, all if no parameters are provided
 
 setlocal
 

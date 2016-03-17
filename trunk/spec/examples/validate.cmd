@@ -1,8 +1,7 @@
 @echo off 
-set FILES=csdl-16.1.swagger.json Northwind.swagger.json ExampleService.swagger.json Example.swagger.json TM1.swagger.json TripPin.swagger.json
+set FILES=csdl-16.1.swagger.json Northwind.swagger.json ExampleService.swagger.json People.swagger.json Products.swagger.json Example.swagger.json TM1.swagger.json TripPin.swagger.json
 set ANNOS=csdl-16.2.swagger.json
-set VOCABS=Core Measures
-rem Capabilities Aggregation
+set VOCABS=Core Measures Capabilities Aggregation
 
 @rem check syntax of edm schema
 java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax ../schemas/edm.json
