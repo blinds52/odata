@@ -1,0 +1,3766 @@
+{
+    "x-odata-version": "4.0",
+    "swagger": "2.0",
+    "info": {
+        "title": "Examples from Part 3: CSDL",
+        "description": "This OData service is located at http://localhost/service-root/\n\nReferences:\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json)\n- [Org.OData.Measures.V1](http://localhost/swagger-ui/?url=http://tinyurl.com/Org-OData-Measures-V1)\n- [Org.OData.Validation.V1](http://localhost/swagger-ui/?url=https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Validation.V1.json)\n- [Org.OData.Capabilities.V1](http://localhost/swagger-ui/?url=http://vocabs.odata.org/capabilities/v1)\n- [org.example.Display](http://localhost/swagger-ui/?url=http://vocabs.odata.org/display/v1)\n- [anotherOne](http://localhost/swagger-ui/?url=http://vocabs.odata.org/display/v1)",
+        "version": "0.1.0"
+    },
+    "host": "localhost",
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/service-root",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "definitions": {
+        "org.example.Measurement": {
+            "type": "object",
+            "properties": {
+                "Dimension": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "default": "Unspecified"
+                },
+                "Length": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "x-precision": 18,
+                    "x-scale": 2,
+                    "multipleOf": 1e-2,
+                    "minimum": -9999999999999999.99,
+                    "maximum": 9999999999999999.99
+                }
+            }
+        },
+        "org.example.Example7to11": {
+            "type": "object",
+            "properties": {
+                "Units": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "SuggestedTimes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "date-time",
+                        "x-precision": 6
+                    }
+                },
+                "Amount9": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "decimal",
+                    "x-precision": 3,
+                    "x-scale": 2,
+                    "multipleOf": 1e-2,
+                    "minimum": -9.99,
+                    "maximum": 9.99
+                },
+                "Amount11": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "decimal",
+                    "x-precision": 3,
+                    "x-scale": "variable",
+                    "minimum": -999,
+                    "maximum": 999
+                }
+            }
+        },
+        "org.example.Product": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "CategoryID": {
+                    "type": "string"
+                },
+                "Category": {
+                    "$ref": "#/definitions/org.example.Category",
+                    "x-relationship": {
+                        "partner": "Products",
+                        "referentialConstraints": {
+                            "CategoryID": {
+                                "referencedProperty": "ID"
+                            }
+                        }
+                    }
+                },
+                "Supplier": {
+                    "$ref": "#/definitions/org.example.Supplier",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                }
+            }
+        },
+        "org.example.Supplier": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                }
+            }
+        },
+        "org.example.Customer": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                }
+            }
+        },
+        "org.example.Order": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64"
+                }
+            }
+        },
+        "org.example.Category": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/org.example.Product"
+                    },
+                    "x-relationship": {
+                        "partner": "Category",
+                        "onDelete": {
+                            "action": "Cascade",
+                            "description": "Delete all related entities"
+                        }
+                    }
+                }
+            }
+        },
+        "org.example.Employee": {
+            "type": "object",
+            "x-mediaEntity": true,
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "FirstName": {
+                    "type": "string"
+                },
+                "LastName": {
+                    "type": "string"
+                },
+                "Manager": {
+                    "$ref": "#/definitions/org.example.Manager",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                }
+            }
+        },
+        "org.example.Manager": {
+            "x-baseType": "org.example.Employee",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.Employee"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "AnnualBudget": {
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true,
+                            "format": "decimal",
+                            "multipleOf": 1
+                        },
+                        "Employees": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/org.example.Employee"
+                            },
+                            "x-relationship": {
+
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "org.example.Category17": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "x-annotations": {
+                        "@Core.IsLanguageDependent": true
+                    }
+                }
+            }
+        },
+        "org.example.Category18": {
+            "type": "object",
+            "x-keys": [
+                {
+                    "EntityInfoID": "Info/ID"
+                }
+            ],
+            "properties": {
+                "Info": {
+                    "$ref": "#/definitions/org.example.EntityInfo"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                }
+            }
+        },
+        "org.example.EntityInfo": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Created": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "date-time"
+                }
+            }
+        },
+        "org.example.OrderLine": {
+            "type": "object",
+            "x-keys": [
+                "OrderID",
+                "LineNumber"
+            ],
+            "properties": {
+                "OrderID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "LineNumber": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "org.example.Dimensions": {
+            "type": "object",
+            "properties": {
+                "Height": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Weight": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                },
+                "Length": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
+                }
+            }
+        },
+        "org.example.Product22": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "ProductDimensions": {
+                    "$ref": "#/definitions/org.example.Dimensions",
+                    "x-nullable": true
+                },
+                "ShippingDimensions": {
+                    "$ref": "#/definitions/org.example.Dimensions",
+                    "x-nullable": true
+                }
+            }
+        },
+        "org.example.ShipmentBox": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Dimensions": {
+                    "$ref": "#/definitions/org.example.Dimensions",
+                    "x-nullable": true
+                }
+            }
+        },
+        "org.example.FileAccess": {
+            "type": "string",
+            "enum": [
+                "Read",
+                "Write",
+                "Create",
+                "Delete"
+            ],
+            "x-isFlags": true,
+            "x-annotations": {
+                "Read@odata.value": 1,
+                "Read@Core.Description": "Read access permitted",
+                "Write@odata.value": 2,
+                "Create@odata.value": 4,
+                "Delete@odata.value": 8
+            }
+        },
+        "org.example.ShippingMethod": {
+            "type": "string",
+            "enum": [
+                "FirstClass",
+                "TwoDay",
+                "Overnight"
+            ],
+            "description": "Method of shipping",
+            "x-annotations": {
+                "FirstClass@Core.Description": "Shipped with highest priority",
+                "TwoDay@Core.Description": "Shipped within two days",
+                "Overnight@Core.Description": "Shipped overnight"
+            }
+        },
+        "org.example.Pattern": {
+            "type": "string",
+            "enum": [
+                "Plain",
+                "Red",
+                "Blue",
+                "Yellow",
+                "Solid",
+                "Striped",
+                "SolidRed",
+                "SolidBlue",
+                "SolidYellow",
+                "RedBlueStriped",
+                "RedYellowStriped",
+                "BlueYellowStriped"
+            ],
+            "x-isFlags": true,
+            "x-annotations": {
+                "Plain@odata.value": 0,
+                "Red@odata.value": 1,
+                "Blue@odata.value": 2,
+                "Yellow@odata.value": 4,
+                "Solid@odata.value": 8,
+                "Striped@odata.value": 16,
+                "SolidRed@odata.value": 9,
+                "SolidBlue@odata.value": 10,
+                "SolidYellow@odata.value": 12,
+                "RedBlueStriped@odata.value": 19,
+                "RedYellowStriped@odata.value": 21,
+                "BlueYellowStriped@odata.value": 22
+            }
+        },
+        "org.example.Length": {
+            "type": "integer",
+            "format": "int32",
+            "@Org.OData.Measures.V1.Unit": "Centimeters"
+        },
+        "org.example.Weight": {
+            "type": "integer",
+            "format": "int32",
+            "@Org.OData.Measures.V1.Unit": "Kilograms"
+        },
+        "org.example.Size": {
+            "type": "object",
+            "properties": {
+                "Height": {
+                    "$ref": "#/definitions/org.example.Length",
+                    "x-nullable": true
+                },
+                "Weight": {
+                    "$ref": "#/definitions/org.example.Weight",
+                    "x-nullable": true
+                }
+            }
+        },
+        "org.example2.Product": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                }
+            },
+            "x-annotations": {
+                "@UI.DisplayName": {
+                    "@odata.path": "Name"
+                },
+                "@SearchVocabulary.SearchResult": {
+                    "Title": {
+                        "@odata.path": "Name"
+                    },
+                    "Abstract": {
+                        "@odata.path": "Description"
+                    },
+                    "Url": {
+                        "@odata.apply": "odata.concat",
+                        "parameterValues": [
+                            "Products(",
+                            {
+                                "@odata.path": "ID"
+                            },
+                            ")"
+                        ]
+                    }
+                }
+            }
+        },
+        "Model1.NullablePrimitiveTypes": {
+            "type": "object",
+            "properties": {
+                "NullValue": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": null
+                },
+                "TrueValue": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true
+                },
+                "FalseValue": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": false
+                },
+                "BinaryValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "base64url",
+                    "maxLength": 44,
+                    "byteLength": 31,
+                    "default": "T0RhdGE"
+                },
+                "IntegerValue": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "int32",
+                    "default": -128
+                },
+                "DoubleValue": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "double",
+                    "default": 3.1415926535897931
+                },
+                "SingleValue": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "float"
+                },
+                "DecimalValue": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "decimal",
+                    "x-scale": "variable",
+                    "default": 34.95
+                },
+                "StringValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": "Say \"Hello\",\nthen go"
+                },
+                "DateValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "date",
+                    "default": "2012-12-03"
+                },
+                "DateTimeOffsetValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "date-time",
+                    "default": "2012-12-03T07:16:23Z"
+                },
+                "DurationValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "duration",
+                    "default": "P12DT23H59M59.999999999999S"
+                },
+                "TimeOfDayValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "time",
+                    "x-precision": 6,
+                    "default": "07:59:59.999"
+                },
+                "GuidValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "uuid",
+                    "default": "1234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Int64Value": {
+                    "type": [
+                        "integer",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "int64",
+                    "default": 0
+                },
+                "ColorEnumValue": {
+                    "$ref": "#/definitions/Model1.Color",
+                    "x-nullable": true,
+                    "default": "yellow"
+                },
+                "GeographyPoint": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
+                    "x-nullable": true,
+                    "default": "SRID=0;Point(142.1 64.1)"
+                },
+                "StreamValue": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "TypeDefValue": {
+                    "$ref": "#/definitions/Model1.IntegerDecimal",
+                    "x-nullable": true,
+                    "x-precision": 20,
+                    "default": 42
+                },
+                "PrimitiveValue": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PrimitiveType",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Model1.NonNullablePrimitiveTypes": {
+            "type": "object",
+            "properties": {
+                "NullValue": {
+                    "type": "boolean",
+                    "default": null
+                },
+                "TrueValue": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "FalseValue": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "BinaryValue": {
+                    "type": "string",
+                    "format": "base64url",
+                    "maxLength": 44,
+                    "byteLength": 31,
+                    "default": "T0RhdGE"
+                },
+                "IntegerValue": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": -128
+                },
+                "DoubleValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "double",
+                    "default": 3.1415926535897931
+                },
+                "SingleValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "float"
+                },
+                "DecimalValue": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "x-scale": "variable",
+                    "default": 34.95
+                },
+                "StringValue": {
+                    "type": "string",
+                    "default": "Say \"Hello\",\nthen go"
+                },
+                "DateValue": {
+                    "type": "string",
+                    "format": "date",
+                    "default": "2012-12-03"
+                },
+                "DateTimeOffsetValue": {
+                    "type": "string",
+                    "format": "date-time",
+                    "default": "2012-12-03T07:16:23Z"
+                },
+                "DurationValue": {
+                    "type": "string",
+                    "format": "duration",
+                    "default": "P12DT23H59M59.999999999999S"
+                },
+                "TimeOfDayValue": {
+                    "type": "string",
+                    "format": "time",
+                    "x-precision": 6,
+                    "default": "07:59:59.999"
+                },
+                "GuidValue": {
+                    "type": "string",
+                    "format": "uuid",
+                    "default": "1234567-89ab-cdef-0123-456789abcdef"
+                },
+                "Int64Value": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64",
+                    "default": 0
+                },
+                "ColorEnumValue": {
+                    "$ref": "#/definitions/Model1.Color",
+                    "default": "yellow"
+                },
+                "GeographyPoint": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
+                    "default": "SRID=0;Point(142.1 64.1)"
+                },
+                "StreamValue": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "TypeDefValue": {
+                    "$ref": "#/definitions/Model1.IntegerDecimal",
+                    "x-precision": 20,
+                    "default": 42
+                },
+                "TextValue": {
+                    "$ref": "#/definitions/Model1.Text",
+                    "maxLength": 60,
+                    "default": "42"
+                },
+                "PrimitiveValue": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PrimitiveType"
+                }
+            }
+        },
+        "Model1.Size": {
+            "type": "string",
+            "enum": [
+                "S",
+                "M",
+                "L"
+            ],
+            "description": "T-Shirt Size",
+            "x-annotations": {
+                "@Core.Description#alt": "Size (S, M, L)",
+                "@Core.LongDescription": "Size, expressed with letters familiar from e.g. T-Shirt sizes",
+                "S@Core.Description": "Small",
+                "M@Core.Description": "Medium",
+                "L@Core.Description": "Large"
+            }
+        },
+        "Model1.Color": {
+            "type": "string",
+            "enum": [
+                "Yellow",
+                "Striped"
+            ],
+            "x-isFlags": true,
+            "x-annotations": {
+                "Yellow@odata.value": 1,
+                "Yellow@Does.Work": true,
+                "Yellow@For.Testing": {
+                    "@odata.isOf": "Edm.Binary",
+                    "value": {
+                        "@odata.path": "Hugo"
+                    }
+                },
+                "Striped@odata.value": 2,
+                "Striped@Core.Description": "nicely striped"
+            }
+        },
+        "Model1.Weird": {
+            "type": "object",
+            "x-keys": [
+                "TheKey"
+            ],
+            "properties": {
+                "TheKey": {
+                    "type": "string"
+                },
+                "TheValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                },
+                "TheString": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "maxLength": 20
+                },
+                "Tags": {
+                    "type": "array",
+                    "items": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "x-nullable": true
+                    }
+                },
+                "Dates": {
+                    "type": "array",
+                    "items": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "x-nullable": true,
+                        "format": "date"
+                    }
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "decimal",
+                    "x-precision": 15,
+                    "x-scale": 3,
+                    "multipleOf": 1e-3,
+                    "minimum": -999999999999.999,
+                    "maximum": 999999999999.999
+                },
+                "Permission": {
+                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Permission"
+                },
+                "AliasPermission": {
+                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Permission",
+                    "x-nullable": true
+                }
+            },
+            "x-annotations": {
+                "@Collection.Of.Strings": [
+                    "SomeString",
+                    {
+                        "@odata.path": "MyAddress/vCard.Address#work/Street"
+                    },
+                    {
+                        "@odata.labeledElement": "Model1.Attribute",
+                        "value": "Hello"
+                    },
+                    {
+                        "@odata.labeledElementReference": "Model1.Attribute"
+                    },
+                    {
+                        "@odata.labeledElement": "Model1.Element",
+                        "value": "Hello"
+                    },
+                    {
+                        "@odata.labeledElementReference": "Model1.Element"
+                    }
+                ],
+                "@Collection.Of.Strings@Core.Description": "String-valued expressions",
+                "@Collection.Of.Records": [
+                    {
+                        "Egon": "1",
+                        "Hugo": "2",
+                        "Hugo@Some.Term": "Some Value",
+                        "@Some.Term": "Some Value"
+                    },
+                    {
+                        "@odata.labeledElement": "Model1.Record",
+                        "value": {
+
+                        }
+                    },
+                    {
+                        "@odata.labeledElementReference": "Model1.Record"
+                    }
+                ],
+                "@Collection.Of.Records@Core.Description": "Record-valued expressions",
+                "@Vocab.GIQSupplier": {
+                    "@odata.urlRef": "http://www.odata.org"
+                },
+                "@Vocab.GIQSupplier#two": {
+                    "@odata.urlRef": "http://www.odata.org"
+                },
+                "@Vocab.GIQSupplier#three": {
+                    "@odata.urlRef": {
+                        "@odata.apply": "odata.fillUriTemplate",
+                        "parameterValues": [
+                            "http://host/service/Suppliers({suppID})",
+                            {
+                                "@odata.labeledElement": "Model1.suppID",
+                                "value": {
+                                    "@odata.apply": "odata.UriEncode",
+                                    "parameterValues": [
+                                        {
+                                            "@odata.path": "@SupplierId"
+                                        },
+                                        "2013-04-08T23:00:00.0Z"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                "@org.example.display.DisplayName#cast": {
+                    "@odata.cast": "Edm.String",
+                    "maxLength": 30,
+                    "value": "Product Catalog"
+                },
+                "@org.example.display.DisplayName#cast2": {
+                    "@odata.cast": "Edm.Decimal",
+                    "x-precision": 30,
+                    "x-scale": "variable",
+                    "value": 3.14
+                },
+                "@Self.IsFloatingDecimal": {
+                    "@odata.isOf": "Edm.Decimal",
+                    "x-scale": "variable",
+                    "value": {
+                        "@odata.path": "Customer/$count"
+                    }
+                },
+                "@Some.Binary#two": "Zg",
+                "@Some.Binary#twoEqEq": "Zg==",
+                "@Some.Binary#three": "Zm8",
+                "@Some.Binary#threeEq": "Zm8=",
+                "@Some.Binary": "HugoHase-_ab"
+            }
+        },
+        "Model1.Address": {
+            "type": "object",
+            "x-openType": true,
+            "properties": {
+                "Street": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                },
+                "City": {
+                    "$ref": "#/definitions/Model1.City",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                },
+                "Region": {
+                    "$ref": "#/definitions/Model1.Region",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                },
+                "Country": {
+                    "$ref": "#/definitions/Model1.Country",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                },
+                "MapLocation": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
+                    "x-nullable": true,
+                    "x-srid": "variable"
+                },
+                "Numbers": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "format": "int16"
+                    }
+                }
+            }
+        },
+        "Model1.City": {
+            "type": "object"
+        },
+        "Model1.Region": {
+            "type": "object"
+        },
+        "Model1.Country": {
+            "type": "object"
+        },
+        "Model1.Planet": {
+            "type": "object"
+        },
+        "Model1.NavigationOnly": {
+            "type": "object",
+            "properties": {
+                "Planet": {
+                    "$ref": "#/definitions/Model1.Planet",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                }
+            }
+        },
+        "Model1.AnnotationOnly": {
+            "type": "object",
+            "x-annotations": {
+                "@Some.Tag": true
+            }
+        },
+        "Model1.Order": {
+            "type": "object",
+            "x-abstract": true,
+            "x-keys": [
+
+            ],
+            "properties": {
+                "Quantity": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "decimal",
+                    "multipleOf": 1,
+                    "x-annotations": {
+                        "@Measures.Unit": {
+                            "@odata.path": "ShippingUnit"
+                        }
+                    }
+                },
+                "ShippingUnit": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "description": "Contains the unit for property Quantity"
+                }
+            }
+        },
+        "Model1.SpecialByte": {
+            "type": "integer",
+            "format": "uint8"
+        },
+        "Model1.Text50": {
+            "type": "string",
+            "maxLength": 50
+        },
+        "Model1.Text": {
+            "type": "string"
+        },
+        "Model1.LanguageDependentText": {
+            "type": "string",
+            "@Core.IsLanguageDependent": true,
+            "@Core.IsLanguageDependent@Core.DefaultLanguage": "en-US"
+        },
+        "Model1.IntegerDecimal": {
+            "type": [
+                "number",
+                "string"
+            ],
+            "format": "decimal",
+            "multipleOf": 1,
+            "description": "A decimal without fractional part"
+        },
+        "Model1.IntegerDecimal10": {
+            "type": [
+                "number",
+                "string"
+            ],
+            "format": "decimal",
+            "x-precision": 10,
+            "multipleOf": 1,
+            "minimum": -9999999999,
+            "maximum": 9999999999,
+            "description": "A ten-digit integer"
+        },
+        "Model1.VariableDecimal": {
+            "type": [
+                "number",
+                "string"
+            ],
+            "format": "decimal",
+            "x-scale": "variable",
+            "description": "A floating decimal"
+        },
+        "Model1.ExactTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "x-precision": 12
+        },
+        "X.PersonType": {
+            "type": "object"
+        },
+        "X.MovieType": {
+            "type": "object"
+        },
+        "X.FriendType": {
+            "type": "object"
+        },
+        "Y.DeveloperType": {
+            "x-baseType": "X.PersonType",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.PersonType"
+                },
+                {
+                    "type": "object"
+                }
+            ]
+        },
+        "Y.ScrumTeamType": {
+            "type": "object",
+            "properties": {
+                "ScrumMaster": {
+                    "$ref": "#/definitions/Y.DeveloperType",
+                    "x-nullable": true,
+                    "x-annotations": {
+                        "@custom.IsA": "Y.Developer X.Person"
+                    }
+                }
+            }
+        },
+        "Y.ArchivedMovieType": {
+            "x-baseType": "X.MovieType",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/X.MovieType"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "ArchivedAt": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true,
+                            "format": "date"
+                        }
+                    },
+                    "x-annotations": {
+                        "@custom.IsA": "X.Movie"
+                    }
+                }
+            ]
+        },
+        "Y.SomeThingType": {
+            "type": "object",
+            "properties": {
+                "SomeProperty": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                },
+                "Contacts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/X.PersonType"
+                    },
+                    "x-annotations": {
+                        "@custom.ItemIsA": "X.Person"
+                    }
+                },
+                "VIPs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/X.FriendType"
+                    },
+                    "x-relationship": {
+
+                    },
+                    "x-annotations": {
+                        "@custom.ItemIsA": "X.Friend"
+                    }
+                }
+            }
+        },
+        "Y.ChangeTrackingType": {
+            "type": "object",
+            "properties": {
+                "InlineableStreamProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "Change tracking supports inlining these stream properties"
+                }
+            }
+        }
+    },
+    "x-schemas": {
+        "Org.OData.Core.V1": {
+            "uri": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json"
+        },
+        "Core": {
+            "aliasFor": "Org.OData.Core.V1"
+        },
+        "Org.OData.Measures.V1": {
+            "uri": "http://tinyurl.com/Org-OData-Measures-V1"
+        },
+        "Measures": {
+            "aliasFor": "Org.OData.Measures.V1"
+        },
+        "Org.OData.Validation.V1": {
+            "uri": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Validation.V1.json"
+        },
+        "Validation": {
+            "aliasFor": "Org.OData.Validation.V1"
+        },
+        "Org.OData.Capabilities.V1": {
+            "uri": "http://vocabs.odata.org/capabilities/v1"
+        },
+        "Capabilities": {
+            "aliasFor": "Org.OData.Capabilities.V1"
+        },
+        "org.example.Display": {
+            "uri": "http://vocabs.odata.org/display/v1"
+        },
+        "UI": {
+            "aliasFor": "org.example.Display"
+        },
+        "anotherOne": {
+            "uri": "http://vocabs.odata.org/display/v1"
+        },
+        "Self": {
+            "aliasFor": "org.example"
+        },
+        "org.example": {
+            "description": "Examples from Part 3: CSDL"
+        },
+        "Model": {
+            "aliasFor": "org.example2"
+        },
+        "org.example2": {
+            "description": "Examples from Part 3: CSDL - second schema",
+            "annotations": {
+                "Self.Person": {
+                    "@org.example.display.DisplayName#Tablet": {
+                        "@odata.path": "FirstName"
+                    },
+                    "@org.example.display.Thumbnail": "T0RhdGE",
+                    "@org.example.display.Thumbnail#element": "T0RhdGE",
+                    "@org.example.display.ReadOnly": true,
+                    "@org.example.display.ReadOnly#element": true,
+                    "@org.example.vCard.birthDay": "2000-01-01",
+                    "@org.example.vCard.birthDay#element": "2000-01-01",
+                    "@org.example.display.LastUpdated": "2000-01-01T16:00:00.000Z",
+                    "@org.example.display.LastUpdated#element": "2000-01-01T16:00:00.000-09:00",
+                    "@org.example.display.Width": 3.14,
+                    "@org.example.display.Width#element": 3.14,
+                    "@org.example.task.duration": "P7D",
+                    "@org.example.task.duration#element": "P11DT23H59M59.999999999999S",
+                    "@org.example.HasPattern": "Red",
+                    "@org.example.HasPattern#element": "Red",
+                    "@org.example.HasPattern#list": "Red,Striped",
+                    "@org.example.HasPattern#listelement": "Red,Striped",
+                    "@org.example.display.FloatWidth": 3.14,
+                    "@org.example.display.FloatWidth#element": 3.14,
+                    "@org.example.display.Id": "21EC2020-3AEA-1069-A2DD-08002B30309D",
+                    "@org.example.display.Id#element": "21EC2020-3AEA-1069-A2DD-08002B30309D",
+                    "@org.example.display.IntWidth": 42,
+                    "@org.example.display.IntWidth#element": 42,
+                    "@org.example.display.DisplayName": "Product Catalog",
+                    "@org.example.display.DisplayName#element": "Product Catalog",
+                    "@org.example.display.EndTime": "21:45:00",
+                    "@org.example.display.EndTime#element": "21:45:00",
+                    "@UI.ReferenceFacet": {
+                        "@odata.annotationPath": "Product/Supplier/@UI.LineItem"
+                    },
+                    "@UI.CollectionFacet#Contacts": [
+                        {
+                            "@odata.annotationPath": "Supplier/@Communication.Contact"
+                        },
+                        {
+                            "@odata.annotationPath": "Customer/@Communication.Contact"
+                        }
+                    ],
+                    "@org.example.display.DisplayName#apply": {
+                        "@odata.apply": "odata.concat",
+                        "parameterValues": [
+                            "Product: ",
+                            {
+                                "@odata.path": "ProductName"
+                            },
+                            " (",
+                            {
+                                "@odata.path": "Available/Quantity"
+                            },
+                            "",
+                            {
+                                "@odata.path": "Available/Unit"
+                            },
+                            " available)"
+                        ]
+                    },
+                    "@Some.Term#Example57": {
+                        "@odata.apply": "odata.fillUriTemplate",
+                        "parameterValues": [
+                            "http://host/service/Genres('{genreName}')",
+                            {
+                                "@odata.labeledElement": "org.example2.genreName",
+                                "value": {
+                                    "@odata.path": "NameOfMovieGenre"
+                                }
+                            }
+                        ]
+                    },
+                    "@Some.Term#Example58": {
+                        "@odata.apply": "odata.fillUriTemplate",
+                        "parameterValues": [
+                            "http://host/service/Genres({genreName2})",
+                            {
+                                "@odata.labeledElement": "org.example2.genreName2",
+                                "value": {
+                                    "@odata.apply": "odata.uriEncode",
+                                    "parameterValues": [
+                                        {
+                                            "@odata.path": "NameOfMovieGenre"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "@org.example.display.Threshold": {
+                        "@odata.cast": "Edm.Decimal",
+                        "value": {
+                            "@odata.path": "Average"
+                        }
+                    },
+                    "@org.example.seo.SeoTerms": [
+                        "Product",
+                        "Supplier",
+                        "Customer"
+                    ],
+                    "@org.example.person.Gender": {
+                        "@odata.if": [
+                            {
+                                "@odata.path": "IsFemale"
+                            },
+                            "Female",
+                            "Male"
+                        ]
+                    },
+                    "@Self.IsPreferredCustomer": {
+                        "@odata.isOf": "Self.PreferredCustomer",
+                        "value": {
+                            "@odata.path": "Customer"
+                        }
+                    },
+                    "@org.example.display.DisplayName#l": {
+                        "@odata.labeledElement": "org.example2.CustomerFirstName",
+                        "value": {
+                            "@odata.path": "FirstName"
+                        }
+                    },
+                    "@org.example.display.DisplayName#lelement": {
+                        "@odata.labeledElement": "org.example2.CustomerFirstName",
+                        "value": {
+                            "@odata.path": "FirstName"
+                        }
+                    },
+                    "@org.example.display.DisplayName#ref": {
+                        "@odata.labeledElementReference": "Model.CustomerFirstName"
+                    },
+                    "@org.example.display.DisplayName#null": {
+                        "@odata.null": {
+
+                        }
+                    },
+                    "@UI.HyperLink": {
+                        "@odata.navigationPropertyPath": "Supplier"
+                    },
+                    "@Capabilities.UpdateRestrictions#element": {
+                        "NonUpdatableNavigationProperties": [
+                            {
+                                "@odata.navigationPropertyPath": "Supplier"
+                            },
+                            {
+                                "@odata.navigationPropertyPath": "Category"
+                            }
+                        ]
+                    },
+                    "@org.example.display.DisplayName#path": {
+                        "@odata.path": "FirstName"
+                    },
+                    "@org.example.display.DisplayName#pathelement": {
+                        "@odata.path": "@vCard.Address#work/FullName"
+                    },
+                    "@UI.RefreshOnChangeOf": {
+                        "@odata.propertyPath": "ChangedAt"
+                    },
+                    "@Capabilities.UpdateRestrictions#element2": {
+                        "NonUpdatableProperties": [
+                            {
+                                "@odata.propertyPath": "CreatedAt"
+                            },
+                            {
+                                "@odata.propertyPath": "ChangedAt"
+                            }
+                        ]
+                    },
+                    "@org.example.person.Employee": {
+                        "GivenName": {
+                            "@odata.path": "FirstName"
+                        },
+                        "Surname": {
+                            "@odata.path": "LastName"
+                        },
+                        "Manager": {
+                            "@odata.path": "DirectSupervisor"
+                        },
+                        "CostCenter": {
+                            "@odata.urlRef": {
+                                "@odata.apply": "odata.fillUriTemplate",
+                                "parameterValues": [
+                                    "http://host/anotherservice/CostCenters('{ccid}')",
+                                    {
+                                        "@odata.labeledElement": "org.example2.ccid",
+                                        "value": {
+                                            "@odata.path": "CostCenterID"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "@Vocab.Supplier": {
+                        "@odata.urlRef": {
+                            "@odata.apply": "odata.fillUriTemplate",
+                            "parameterValues": [
+                                "http://host/service/Suppliers({suppID})",
+                                {
+                                    "@odata.labeledElement": "org.example2.suppID",
+                                    "value": {
+                                        "@odata.apply": "odata.uriEncode",
+                                        "parameterValues": [
+                                            {
+                                                "@odata.path": "SupplierId"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "@Core.LongDescription#element": {
+                        "@odata.urlRef": "http://host/wiki/HowToUse"
+                    },
+                    "@Core.LongDescription": {
+                        "@odata.urlRef": "http://host/wiki/HowToUse"
+                    }
+                }
+            }
+        },
+        "M1": {
+            "aliasFor": "Model1"
+        },
+        "Model1": {
+            "@UI.ReferenceFacet": {
+                "@odata.annotationPath": "@UI.LineItem"
+            },
+            "@UI.ReferenceFacet#OnNavPropTarget": {
+                "@odata.annotationPath": "Product/Supplier/@UI.LineItem"
+            },
+            "@UI.ReferenceFacet#OnNavProp": {
+                "@odata.annotationPath": "Product/Supplier@UI.LineItem"
+            },
+            "@UI.ReferenceFacet#OnNavPropQualified": {
+                "@odata.annotationPath": "Product/Supplier@UI.LineItem#Tablet"
+            },
+            "@UI.ReferenceFacet#ViaUrl": {
+                "@odata.urlRef": "http://LineItem"
+            },
+            "@UI.ReferenceFacet#complicated": {
+                "@odata.annotationPath": "@x.Supplier#X/Contacts@y.ViewVariants"
+            },
+            "@UI.HyperLink": {
+                "@odata.navigationPropertyPath": "Supplier"
+            },
+            "@Is.Null": {
+                "@odata.null": {
+                    "@Within.Null": true
+                }
+            },
+            "@Is.Null@Next.to.Null": true,
+            "@Vocabulary1.SubTitle": 1234,
+            "@Vocabulary1.SubTitle@For.Constant": true,
+            "@A.Bool": true,
+            "@A.Bool@Annotate.A.Bool": true,
+            "@A.Decimal": 12.34,
+            "@A.Float": 1.23456789e4,
+            "@A.Float#inf": "INF",
+            "@A.Float#minusInf": "-INF",
+            "@A.Float#nan": "NaN",
+            "@A.Float#Element": 1.23456789e4,
+            "@An.Int": 1234,
+            "@A.String": "1.23e4",
+            "@A.String#withAmp": "Fast&Furious",
+            "@A.String#ToBeEscaped": "A/\"good\"\r\nstory\\for\tkids",
+            "@A.Guid": "86a96539-871b-45cf-b96b-93dbc235105e",
+            "@A.Guid#Element": "86a96539-871b-45cf-b96b-93dbc235105e",
+            "@A.Date": "2013-10-09",
+            "@Capabilities.UpdateRestrictions": {
+                "Updatable": true,
+                "NonUpdatableNavigationProperties": [
+                    {
+                        "@odata.navigationPropertyPath": "Supplier"
+                    },
+                    {
+                        "@odata.navigationPropertyPath": "Category"
+                    }
+                ]
+            },
+            "@SearchVocabulary.SearchResult": {
+                "Title": {
+                    "@odata.path": "Name"
+                },
+                "Abstract": {
+                    "@odata.path": "Description"
+                },
+                "Url": {
+                    "@odata.apply": "odata.concat",
+                    "parameterValues": [
+                        "Products(",
+                        {
+                            "@odata.path": "ID"
+                        },
+                        ")"
+                    ],
+                    "@In.Apply": true
+                }
+            },
+            "@org.example.display.DisplayName#if": {
+                "@odata.if": [
+                    {
+                        "@odata.path": "IsFemale"
+                    },
+                    "Female",
+                    "Male"
+                ],
+                "@In.If": true
+            },
+            "@UI.CollectionFacet#Contacts": [
+                {
+                    "@odata.annotationPath": "Supplier/@Communication.Contact"
+                },
+                {
+                    "@odata.annotationPath": "Customer/@Communication.Contact"
+                }
+            ],
+            "@Some.Thing": {
+                "@odata.and": [
+                    {
+                        "@odata.or": [
+                            {
+                                "@odata.eq": [
+                                    {
+                                        "@odata.ge": [
+                                            {
+                                                "@odata.null": {
+
+                                                }
+                                            },
+                                            {
+                                                "@odata.null": {
+
+                                                }
+                                            }
+                                        ],
+                                        "@In.Ge": true
+                                    },
+                                    {
+                                        "@odata.gt": [
+                                            {
+                                                "@odata.null": {
+
+                                                }
+                                            },
+                                            {
+                                                "@odata.null": {
+
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "@odata.ne": [
+                                    {
+                                        "@odata.lt": [
+                                            {
+                                                "@odata.null": {
+
+                                                }
+                                            },
+                                            {
+                                                "@odata.null": {
+
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "@odata.null": {
+
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "@odata.not": {
+                            "@odata.le": [
+                                "INF",
+                                {
+                                    "@odata.null": {
+
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "@Onelegged.If": {
+                "@odata.if": [
+                    true,
+                    {
+                        "@odata.path": "Then"
+                    }
+                ]
+            },
+            "@Twolegged.If": {
+                "@odata.if": [
+                    false,
+                    {
+                        "@odata.path": "Then"
+                    },
+                    {
+                        "@odata.path": "Else"
+                    }
+                ]
+            }
+        },
+        "X": {
+
+        },
+        "Y": {
+            "annotations": {
+                "Some.EntityType": {
+                    "@X.Person": {
+
+                    },
+                    "@Y.Developer": {
+
+                    },
+                    "description": "External description",
+                    "@Org.OData.Core.V1.Description#alt": "Alternative description",
+                    "@Core.Description": {
+                        "@odata.path": "SomeProperty"
+                    },
+                    "@Y.DevelopmentTeam": {
+                        "@odata.path": "SomeCollectionNavProp/@Y.Developer"
+                    },
+                    "@Y.DevelopmentTeam@custom.IsA": "X.Team",
+                    "@Y.ScrumTeam": {
+                        "ScrumMaster": {
+
+                        },
+                        "ScrumMaster@custom.IsA": "Y.Developer X.Person"
+                    },
+                    "@Y.Movies": {
+                        "@odata.path": "AllMyMovies"
+                    },
+                    "@Y.ArchivedMovies": {
+                        "@odata.path": "MoviesInStorage"
+                    },
+                    "@Y.ArchivedMovies@custom.ItemIsA": "X.Movie",
+                    "@Y.Something": {
+                        "SomeProperty": "Some Thing",
+                        "AnotherProperty": "A string with spaces",
+                        "SomeTime": "P20D",
+                        "MoreTime": "P20D",
+                        "Contacts": {
+                            "@odata.path": "MyContacts"
+                        },
+                        "Contacts@custom.ItemIsA": "X.Person",
+                        "VIPs": {
+                            "@odata.path": "MyBestFriends"
+                        },
+                        "VIPs@custom.ItemIsA": "X.Person"
+                    }
+                },
+                "MySchema.MyEntityContainer/MyEntitySet/MySchema.MyEntityType/MyProperty": {
+                    "@Y.Movies": {
+                        "@odata.path": "AllMyMovies"
+                    }
+                }
+            }
+        }
+    },
+    "x-functions": {
+        "org.example.TopSellingProducts": [
+            {
+                "parameters": [
+                    {
+                        "name": "Year",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true,
+                            "format": "decimal",
+                            "x-precision": 4,
+                            "multipleOf": 1,
+                            "minimum": -9999,
+                            "maximum": 9999
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/org.example.Product"
+                    }
+                }
+            }
+        ],
+        "Model1.CreatedEntities": [
+            {
+                "parameters": [
+                    {
+                        "name": "before",
+                        "parameterType": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true,
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "after",
+                        "parameterType": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true,
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.EntityType",
+                        "x-nullable": true
+                    }
+                }
+            }
+        ],
+        "Model1.TopSellingProducts": [
+            {
+                "parameters": [
+                    {
+                        "name": "Year",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true,
+                            "format": "decimal",
+                            "x-precision": 4,
+                            "multipleOf": 1,
+                            "minimum": -9999,
+                            "maximum": 9999
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/org.example.Product"
+                    },
+                    "@A.B": "Works"
+                }
+            }
+        ]
+    },
+    "x-terms": {
+        "org.example2.IsURI": {
+            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "Property",
+            "description": "Properties and terms annotated with this term MUST contain a valid URI",
+            "@Core.RequiresType": "Edm.String"
+        },
+        "X.Person": {
+            "$ref": "#/definitions/X.PersonType",
+            "x-nullable": true
+        },
+        "X.Team": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/X.PersonType"
+            },
+            "@custom.ItemIsA": "X.Person"
+        },
+        "X.Movie": {
+            "$ref": "#/definitions/X.MovieType"
+        },
+        "X.Friend": {
+            "$ref": "#/definitions/X.FriendType",
+            "x-nullable": true
+        },
+        "Y.Developer": {
+            "$ref": "#/definitions/Y.DeveloperType",
+            "baseTerm": "X.Person"
+        },
+        "Y.DevelopmentTeam": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Y.DeveloperType"
+            },
+            "@custom.ItemIsA": "Y.Developer",
+            "@custom.IsA": "X.Team"
+        },
+        "Y.ScrumTeam": {
+            "$ref": "#/definitions/Y.ScrumTeamType",
+            "x-nullable": true,
+            "baseTerm": "Y.DevelopmentTeam"
+        },
+        "Y.Movies": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/X.MovieType"
+            }
+        },
+        "Y.ArchivedMovies": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Y.ArchivedMovieType"
+            },
+            "@custom.ItemIsA": "X.Movie"
+        },
+        "Y.SomeThing": {
+            "$ref": "#/definitions/Y.SomeThingType",
+            "x-nullable": true
+        },
+        "Y.AdvancedChangeTracking": {
+            "$ref": "#/definitions/Y.ChangeTrackingType",
+            "baseTerm": "Org.OData.Capabilities.V1.ChangeTracking",
+            "appliesTo": [
+                "EntityContainer",
+                "EntitySet"
+            ],
+            "description": "Advanced change tracking capabilities of this service or entity set"
+        }
+    },
+    "x-entityContainer": {
+        "name": "DemoService",
+        "resources": {
+            "StandardCustomers": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Customer",
+                "navigationPropertyBindings": {
+                    "Orders": {
+                        "target": "Orders"
+                    }
+                }
+            },
+            "PreferredCustomers": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Customer",
+                "navigationPropertyBindings": {
+                    "Orders": {
+                        "target": "Orders"
+                    }
+                }
+            },
+            "Orders": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Order"
+            },
+            "TopSellingProducts": {
+                "kind": "FunctionImport",
+                "function": "Model1.TopSellingProducts",
+                "entitySet": "Products"
+            },
+            "Products": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Product",
+                "navigationPropertyBindings": {
+                    "Category": {
+                        "target": "Self.DemoService.Categories"
+                    },
+                    "Supplier": {
+                        "target": "Self.DemoService.Suppliers"
+                    }
+                },
+                "@org.example.display.DisplayName": "Product Catalog"
+            },
+            "Categories": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Category",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Self.DemoService.Products"
+                    }
+                }
+            },
+            "Suppliers": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Supplier",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Self.DemoService.Products"
+                    }
+                },
+                "@org.example.display.DisplayName": "Supplier Directory"
+            },
+            "Contoso": {
+                "kind": "Singleton",
+                "type": "org.example.Supplier"
+            },
+            "Categories34": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Category",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Categories35": {
+                "kind": "EntitySet",
+                "entityType": "org.example.Category",
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "org.example.DemoService/Products"
+                    }
+                }
+            }
+        }
+    },
+    "x-references": {
+        "http://tinyurl.com/Org-OData-Measures-V1": {
+            "@Some.Term": true
+        },
+        "http://somewhere/Vocabulary/V1": {
+            "includeAnnotations": {
+                "Name.Space": [
+                    {
+                        "targetNamespace": "Target.Space"
+                    },
+                    {
+                        "targetNamespace": "Target.Space",
+                        "qualifier": "SomeName"
+                    },
+                    {
+                        "qualifier": "SomeName"
+                    },
+                    {
+
+                    }
+                ]
+            }
+        },
+        "http://odata.org/ann/b": {
+            "includeAnnotations": {
+                "org.example.validation": [
+                    {
+
+                    }
+                ],
+                "org.example.display": [
+                    {
+                        "qualifier": "Tablet"
+                    }
+                ],
+                "org.example.hcm": [
+                    {
+                        "targetNamespace": "com.contoso.Sales"
+                    },
+                    {
+                        "qualifier": "Tablet",
+                        "targetNamespace": "com.contoso.Person"
+                    }
+                ]
+            }
+        }
+    },
+    "paths": {
+        "/StandardCustomers": {
+            "get": {
+                "summary": "Get entities from entity set StandardCustomers",
+                "description": "Get entities from entity set StandardCustomers",
+                "tags": [
+                    "StandardCustomers"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet StandardCustomers",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Customer"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set StandardCustomers",
+                "description": "Post a new entity to entity set StandardCustomers",
+                "tags": [
+                    "StandardCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "Customer",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/StandardCustomers('{ID}')": {
+            "get": {
+                "summary": "Get entity from StandardCustomers by key.",
+                "description": "Returns the entity with the key from StandardCustomers",
+                "tags": [
+                    "StandardCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet StandardCustomers",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet StandardCustomers",
+                "description": "Update entity in EntitySet StandardCustomers",
+                "tags": [
+                    "StandardCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Customer",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet StandardCustomers",
+                "description": "Delete entity in EntitySet StandardCustomers",
+                "tags": [
+                    "StandardCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/PreferredCustomers": {
+            "get": {
+                "summary": "Get entities from entity set PreferredCustomers",
+                "description": "Get entities from entity set PreferredCustomers",
+                "tags": [
+                    "PreferredCustomers"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet PreferredCustomers",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Customer"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set PreferredCustomers",
+                "description": "Post a new entity to entity set PreferredCustomers",
+                "tags": [
+                    "PreferredCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "Customer",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/PreferredCustomers('{ID}')": {
+            "get": {
+                "summary": "Get entity from PreferredCustomers by key.",
+                "description": "Returns the entity with the key from PreferredCustomers",
+                "tags": [
+                    "PreferredCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet PreferredCustomers",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet PreferredCustomers",
+                "description": "Update entity in EntitySet PreferredCustomers",
+                "tags": [
+                    "PreferredCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Customer",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet PreferredCustomers",
+                "description": "Delete entity in EntitySet PreferredCustomers",
+                "tags": [
+                    "PreferredCustomers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Orders": {
+            "get": {
+                "summary": "Get entities from entity set Orders",
+                "description": "Get entities from entity set Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Orders",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Order"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Orders",
+                "description": "Post a new entity to entity set Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "Order",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Order"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Orders({ID})": {
+            "get": {
+                "summary": "Get entity from Orders by key.",
+                "description": "Returns the entity with the key from Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Orders",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Order"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Orders",
+                "description": "Update entity in EntitySet Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "Order",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Orders",
+                "description": "Delete entity in EntitySet Orders",
+                "tags": [
+                    "Orders"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/TopSellingProducts(Year='{Year}')": {
+            "get": {
+                "summary": "Invoke function import TopSellingProducts",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "Year",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "x-nullable": true,
+                        "format": "decimal",
+                        "x-precision": 4,
+                        "multipleOf": 1,
+                        "minimum": -9999,
+                        "maximum": 9999
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/org.example.Product"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Products": {
+            "get": {
+                "summary": "Get entities from entity set Products",
+                "description": "Get entities from entity set Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Products",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Product"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Products",
+                "description": "Post a new entity to entity set Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Product"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Products('{ID}')": {
+            "get": {
+                "summary": "Get entity from Products by key.",
+                "description": "Returns the entity with the key from Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Products",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Product"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Products",
+                "description": "Update entity in EntitySet Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Product",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Products",
+                "description": "Delete entity in EntitySet Products",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories": {
+            "get": {
+                "summary": "Get entities from entity set Categories",
+                "description": "Get entities from entity set Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Category"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Categories",
+                "description": "Post a new entity to entity set Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories('{ID}')": {
+            "get": {
+                "summary": "Get entity from Categories by key.",
+                "description": "Returns the entity with the key from Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Categories",
+                "description": "Update entity in EntitySet Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Categories",
+                "description": "Delete entity in EntitySet Categories",
+                "tags": [
+                    "Categories"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Suppliers": {
+            "get": {
+                "summary": "Get entities from entity set Suppliers",
+                "description": "Get entities from entity set Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Suppliers",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Supplier"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Suppliers",
+                "description": "Post a new entity to entity set Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "Supplier",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Suppliers('{ID}')": {
+            "get": {
+                "summary": "Get entity from Suppliers by key.",
+                "description": "Returns the entity with the key from Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Suppliers",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Suppliers",
+                "description": "Update entity in EntitySet Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Supplier",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Suppliers",
+                "description": "Delete entity in EntitySet Suppliers",
+                "tags": [
+                    "Suppliers"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Contoso": {
+            "get": {
+                "summary": "Get singleton",
+                "tags": [
+                    "Contoso"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Contoso",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update singleton",
+                "tags": [
+                    "Contoso"
+                ],
+                "parameters": [
+                    {
+                        "name": "Supplier",
+                        "in": "body",
+                        "description": "The singleton to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories34": {
+            "get": {
+                "summary": "Get entities from entity set Categories34",
+                "description": "Get entities from entity set Categories34",
+                "tags": [
+                    "Categories34"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories34",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Category"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Categories34",
+                "description": "Post a new entity to entity set Categories34",
+                "tags": [
+                    "Categories34"
+                ],
+                "parameters": [
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories34('{ID}')": {
+            "get": {
+                "summary": "Get entity from Categories34 by key.",
+                "description": "Returns the entity with the key from Categories34",
+                "tags": [
+                    "Categories34"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories34",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Categories34",
+                "description": "Update entity in EntitySet Categories34",
+                "tags": [
+                    "Categories34"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Categories34",
+                "description": "Delete entity in EntitySet Categories34",
+                "tags": [
+                    "Categories34"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories35": {
+            "get": {
+                "summary": "Get entities from entity set Categories35",
+                "description": "Get entities from entity set Categories35",
+                "tags": [
+                    "Categories35"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/orderby"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories35",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Category"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set Categories35",
+                "description": "Post a new entity to entity set Categories35",
+                "tags": [
+                    "Categories35"
+                ],
+                "parameters": [
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Categories35('{ID}')": {
+            "get": {
+                "summary": "Get entity from Categories35 by key.",
+                "description": "Returns the entity with the key from Categories35",
+                "tags": [
+                    "Categories35"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet Categories35",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet Categories35",
+                "description": "Update entity in EntitySet Categories35",
+                "tags": [
+                    "Categories35"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Category",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet Categories35",
+                "description": "Delete entity in EntitySet Categories35",
+                "tags": [
+                    "Categories35"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "expand": {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+            "type": "string"
+        },
+        "select": {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+            "type": "string"
+        },
+        "orderby": {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+            "type": "string"
+        },
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "type": "integer"
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "type": "integer"
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "type": "boolean"
+        },
+        "filter": {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "type": "string"
+        }
+    }
+}

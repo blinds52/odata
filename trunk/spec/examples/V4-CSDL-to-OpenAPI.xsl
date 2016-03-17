@@ -3,13 +3,9 @@
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/"
 >
   <!--
-    This style sheet transforms OData 4.0 XML CSDL documents into Swagger 2.0 JSON
+    This style sheet transforms OData 4.0 XML CSDL documents into OpenAPI 2.0 JSON
 
     TODO:
-    - cross-service references: decide by URL whether it's /$metadata or just vocabulary/annotations/types
-    - edmx:Reference/edmx:Include reflected in human-readable description of service, with link to parameterized Swagger
-    UI for $metadata
-
     - x-kind on container children within /paths with values EntitySet, Singleton, ...
     - reconsider representing terms similar to types, instead represent them OData-style
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
@@ -50,7 +46,7 @@
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json'" />
 
 
-  <!-- TODO: consider splitting /paths file == core Swagger description from /definitions == JSON $metadata
+  <!-- TODO: consider splitting /paths file == OpenAPI description from /definitions == JSON $metadata
     <xsl:param name="metadata" select="'$metadata'" />
   -->
   <xsl:variable name="metadata" select="''" />
@@ -797,7 +793,7 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- Remark: Swagger spec and Editor allow arrays in Schema objects, Swagger UI has some (minor) issues with it
+  <!-- Remark: OpenAPI spec and Swagger Editor allow arrays in Schema objects, Swagger UI has some (minor) issues with it
     <xsl:template name="alternative-nullableType">
     <xsl:param name="type" />
     <xsl:param name="nullable" />
@@ -2382,7 +2378,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="substring($url,0,string-length($url)-3)" />
-            <xsl:value-of select="'.swagger.json'" />
+            <xsl:value-of select="'.openapi.json'" />
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
