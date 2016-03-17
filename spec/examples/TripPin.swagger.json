@@ -3,7 +3,7 @@
     "swagger": "2.0",
     "info": {
         "title": "TripPin service is a sample service for OData V4.",
-        "description": "The OData Service at http://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW/",
+        "description": "This OData service is located at http://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW/",
         "version": "0.1.0"
     },
     "host": "services.odata.org",
@@ -71,7 +71,8 @@
                             "type": [
                                 "string",
                                 "null"
-                            ]
+                            ],
+                            "x-nullable": true
                         }
                     }
                 }
@@ -88,7 +89,7 @@
                     "x-openType": true,
                     "properties": {
                         "Loc": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.GeographyPoint",
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
                             "x-srid": "4326"
                         }
                     }
@@ -116,7 +117,8 @@
                     "type": [
                         "string",
                         "null"
-                    ]
+                    ],
+                    "x-nullable": true
                 }
             },
             "x-annotations": {
@@ -257,13 +259,15 @@
                     "type": [
                         "string",
                         "null"
-                    ]
+                    ],
+                    "x-nullable": true
                 },
                 "StartsAt": {
                     "type": [
                         "string",
                         "null"
                     ],
+                    "x-nullable": true,
                     "format": "date-time"
                 },
                 "EndsAt": {
@@ -271,6 +275,7 @@
                         "string",
                         "null"
                     ],
+                    "x-nullable": true,
                     "format": "date-time"
                 },
                 "Duration": {
@@ -278,6 +283,7 @@
                         "string",
                         "null"
                     ],
+                    "x-nullable": true,
                     "format": "duration"
                 }
             }
@@ -295,7 +301,8 @@
                             "type": [
                                 "string",
                                 "null"
-                            ]
+                            ],
+                            "x-nullable": true
                         }
                     }
                 }
@@ -349,7 +356,8 @@
                             "type": [
                                 "string",
                                 "null"
-                            ]
+                            ],
+                            "x-nullable": true
                         },
                         "OccursAt": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
@@ -376,13 +384,15 @@
                         "string",
                         "null"
                     ],
+                    "x-nullable": true,
                     "format": "uuid"
                 },
                 "Description": {
                     "type": [
                         "string",
                         "null"
-                    ]
+                    ],
+                    "x-nullable": true
                 },
                 "Name": {
                     "type": "string"
@@ -611,8 +621,9 @@
     },
     "x-entityContainer": {
         "name": "DefaultContainer",
-        "entitySets": {
+        "resources": {
             "Photos": {
+                "kind": "EntitySet",
                 "entityType": "Microsoft.OData.SampleService.Models.TripPin.Photo",
                 "@Org.OData.Core.V1.ResourcePath": "Photos",
                 "@Org.OData.Capabilities.V1.SearchRestrictions": {
@@ -627,6 +638,7 @@
                 }
             },
             "People": {
+                "kind": "EntitySet",
                 "entityType": "Microsoft.OData.SampleService.Models.TripPin.Person",
                 "navigationPropertyBindings": {
                     "Friends": {
@@ -682,6 +694,7 @@
                 }
             },
             "Airlines": {
+                "kind": "EntitySet",
                 "entityType": "Microsoft.OData.SampleService.Models.TripPin.Airline",
                 "@Org.OData.Core.V1.ResourcePath": "Airlines",
                 "@Org.OData.Capabilities.V1.SearchRestrictions": {
@@ -696,6 +709,7 @@
                 }
             },
             "Airports": {
+                "kind": "EntitySet",
                 "entityType": "Microsoft.OData.SampleService.Models.TripPin.Airport",
                 "@Org.OData.Core.V1.ResourcePath": "Airports",
                 "@Org.OData.Capabilities.V1.SearchRestrictions": {
@@ -714,10 +728,9 @@
 
                     ]
                 }
-            }
-        },
-        "singletons": {
+            },
             "Me": {
+                "kind": "Singleton",
                 "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
                 "navigationPropertyBindings": {
                     "Friends": {
@@ -740,19 +753,17 @@
                     }
                 },
                 "@Org.OData.Core.V1.ResourcePath": "Me"
-            }
-        },
-        "actionImports": {
-            "ResetDataSource": {
-                "action": "Microsoft.OData.SampleService.Models.TripPin.ResetDataSource"
-            }
-        },
-        "functionImports": {
+            },
             "GetNearestAirport": {
+                "kind": "FunctionImport",
                 "function": "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport",
                 "entitySet": "Airports",
                 "includeInServiceDocument": true,
                 "@Org.OData.Core.V1.ResourcePath": "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport"
+            },
+            "ResetDataSource": {
+                "kind": "ActionImport",
+                "action": "Microsoft.OData.SampleService.Models.TripPin.ResetDataSource"
             }
         },
         "description": "TripPin service is a sample service for OData V4."
@@ -809,7 +820,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -840,7 +851,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -879,7 +890,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -915,7 +926,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -949,7 +960,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1006,7 +1017,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1037,7 +1048,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1075,7 +1086,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1110,7 +1121,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1143,7 +1154,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1174,7 +1185,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1214,7 +1225,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1259,7 +1270,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1316,7 +1327,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1347,7 +1358,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1385,7 +1396,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1420,7 +1431,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1453,7 +1464,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1510,7 +1521,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1541,7 +1552,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1579,7 +1590,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1614,7 +1625,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1647,7 +1658,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1677,7 +1688,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1704,7 +1715,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1729,7 +1740,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1762,7 +1773,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1800,7 +1811,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1838,7 +1849,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }
@@ -1860,7 +1871,7 @@
                     "default": {
                         "description": "Unexpected error",
                         "schema": {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/odata.error"
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
                     }
                 }

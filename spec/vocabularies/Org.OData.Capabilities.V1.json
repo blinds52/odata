@@ -1,5 +1,11 @@
 {
     "x-odata-version": "4.0",
+    "swagger": "2.0",
+    "info": {
+        "title": "Terms describing capabilities of a service",
+        "description": "\nThere are some capabilities which are strongly recommended for services to support even\nthough they are optional. Support for $top and $skip is a good example as\nsupporting these query options helps with performance of a service and are essential. Such\ncapabilities are assumed to be default capabilities of an OData service even in\nthe case that a capabilities annotation doesn’t exist. Capabilities annotations are\nmainly expected to be used to explicitly specify that a service doesn’t support such\ncapabilities. Capabilities annotations can as well be used to declaratively\nspecify the support of such capabilities.\n\nOn the other hand, there are some capabilities that a service may choose to support or\nnot support and in varying degrees. $filter and $orderby are such good examples.\nThis vocabulary aims to define terms to specify support or no support for such\ncapabilities.\n\nA service is assumed to support by default the following capabilities even though an\nannotation doesn’t exist:\n- Countability ($count)\n- Client pageability ($top, $skip)\n- Expandability ($expand)\n- Indexability by key\n- Batch support ($batch)\n- Navigability of navigation properties\n\nA service is expected to support the following capabilities. If not supported, the\nservice is expected to call out the restrictions using annotations:\n- Filterability ($filter)\n- Sortability ($orderby)\n- Queryability of top level entity sets\n- Query functions\n\nA client cannot assume that a service supports certain capabilities. A client can try, but\nit needs to be prepared to handle an error in case the following capabilities are not\nsupported:\n- Insertability\n- Updatability\n- Deletability\n        \n\nReferences:\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json)",
+        "version": "0.1.0"
+    },
     "definitions": {
         "Org.OData.Capabilities.V1.ConformanceLevelType": {
             "type": "string",
@@ -39,6 +45,7 @@
                         "string",
                         "null"
                     ],
+                    "x-nullable": true,
                     "description": "Protocol Identifier"
                 },
                 "UrlTemplate": {
@@ -46,6 +53,7 @@
                         "string",
                         "null"
                     ],
+                    "x-nullable": true,
                     "description": "URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570"
                 },
                 "DocumentationUrl": {
@@ -53,6 +61,7 @@
                         "string",
                         "null"
                     ],
+                    "x-nullable": true,
                     "description": "Human readable description of the meaning of the URL Template parameters",
                     "x-annotations": {
                         "@Core.IsURL": true
@@ -68,20 +77,21 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "This entity set supports the odata.track-changes preference"
                 },
                 "FilterableProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "Change tracking supports filters on these properties"
                 },
                 "ExpandableProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.NavigationPropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
                     },
                     "description": "Change tracking supports these properties expanded"
                 }
@@ -95,20 +105,21 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "Entities can be counted"
                 },
                 "NonCountableProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "These collection properties do not allow /$count segments"
                 },
                 "NonCountableNavigationProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.NavigationPropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
                     },
                     "description": "These navigation properties do not allow /$count segments"
                 }
@@ -134,7 +145,7 @@
             "type": "object",
             "properties": {
                 "NavigationProperty": {
-                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.NavigationPropertyPath",
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath",
                     "x-nullable": true,
                     "description": "Navigation properties can be navigated"
                 },
@@ -166,6 +177,7 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "$filter is supported"
                 },
@@ -174,20 +186,21 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": false,
                     "description": "$filter is required"
                 },
                 "RequiredProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "These properties must be specified in the $filter clause (properties of derived types are not allowed here)"
                 },
                 "NonFilterableProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "These properties cannot be used in $filter expressions"
                 },
@@ -204,7 +217,7 @@
             "type": "object",
             "properties": {
                 "Property": {
-                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath",
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath",
                     "x-nullable": true
                 },
                 "AllowedExpressions": {
@@ -234,27 +247,28 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "$orderby is supported"
                 },
                 "AscendingOnlyProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "These properties can only be used for sorting in Ascending order"
                 },
                 "DescendingOnlyProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "These properties can only be used for sorting in Descending order"
                 },
                 "NonSortableProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "These properties cannot be used in $orderby expressions"
                 }
@@ -268,13 +282,14 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "$expand is supported"
                 },
                 "NonExpandableProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.NavigationPropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
                     },
                     "description": "These properties cannot be used in $expand expressions"
                 }
@@ -288,6 +303,7 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "$search is supported"
                 },
@@ -327,13 +343,14 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "Entities can be inserted"
                 },
                 "NonInsertableNavigationProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.NavigationPropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
                     },
                     "description": "These navigation properties do not allow deep inserts"
                 }
@@ -347,13 +364,14 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "Entities can be updated"
                 },
                 "NonUpdatableNavigationProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.NavigationPropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
                     },
                     "description": "These navigation properties do not allow rebinding"
                 }
@@ -367,13 +385,14 @@
                         "boolean",
                         "null"
                     ],
+                    "x-nullable": true,
                     "default": true,
                     "description": "Entities can be deleted"
                 },
                 "NonDeletableNavigationProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json#/definitions/Edm.NavigationPropertyPath"
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
                     },
                     "description": "These navigation properties do not allow DeleteLink requests"
                 }
@@ -392,7 +411,7 @@
         },
         "Org.OData.Capabilities.V1": {
             "description": "Terms describing capabilities of a service",
-            "@Core.LongDescription": "\n          There are some capabilities which are strongly recommended for services to support even\n          though they are optional. Support for $top and $skip is a good example as\n          supporting these query options helps with performance of a service and are essential. Such\n          capabilities are assumed to be default capabilities of an OData service even in\n          the case that a capabilities annotation doesn’t exist. Capabilities annotations are\n          mainly expected to be used to explicitly specify that a service doesn’t support such\n          capabilities. Capabilities annotations can as well be used to declaratively\n          specify the support of such capabilities.\n\n          On the other hand, there are some capabilities that a service may choose to support or\n          not support and in varying degrees. $filter and $orderby are such good examples.\n          This vocabulary aims to define terms to specify support or no support for such\n          capabilities.\n\n          A service is assumed to support by default the following capabilities even though an\n          annotation doesn’t exist:\n          - Countability ($count)\n          - Client pageability ($top, $skip)\n          - Expandability ($expand)\n          - Indexability by key\n          - Batch support ($batch)\n          - Navigability of navigation properties\n\n          A service is expected to support the following capabilities. If not supported, the\n          service is expected to call out the restrictions using annotations:\n          - Filterability ($filter)\n          - Sortability ($orderby)\n          - Queryability of top level entity sets\n          - Query functions\n\n          A client cannot assume that a service supports certain capabilities. A client can try, but\n          it needs to be prepared to handle an error in case the following capabilities are not\n          supported:\n          - Insertability\n          - Updatability\n          - Deletability\n        "
+            "@Core.LongDescription": "\nThere are some capabilities which are strongly recommended for services to support even\nthough they are optional. Support for $top and $skip is a good example as\nsupporting these query options helps with performance of a service and are essential. Such\ncapabilities are assumed to be default capabilities of an OData service even in\nthe case that a capabilities annotation doesn’t exist. Capabilities annotations are\nmainly expected to be used to explicitly specify that a service doesn’t support such\ncapabilities. Capabilities annotations can as well be used to declaratively\nspecify the support of such capabilities.\n\nOn the other hand, there are some capabilities that a service may choose to support or\nnot support and in varying degrees. $filter and $orderby are such good examples.\nThis vocabulary aims to define terms to specify support or no support for such\ncapabilities.\n\nA service is assumed to support by default the following capabilities even though an\nannotation doesn’t exist:\n- Countability ($count)\n- Client pageability ($top, $skip)\n- Expandability ($expand)\n- Indexability by key\n- Batch support ($batch)\n- Navigability of navigation properties\n\nA service is expected to support the following capabilities. If not supported, the\nservice is expected to call out the restrictions using annotations:\n- Filterability ($filter)\n- Sortability ($orderby)\n- Queryability of top level entity sets\n- Query functions\n\nA client cannot assume that a service supports certain capabilities. A client can try, but\nit needs to be prepared to handle an error in case the following capabilities are not\nsupported:\n- Insertability\n- Updatability\n- Deletability\n        "
         }
     },
     "x-terms": {
@@ -573,5 +592,8 @@
             "appliesTo": "EntitySet",
             "description": "Restrictions on delete operations"
         }
+    },
+    "paths": {
+
     }
 }
