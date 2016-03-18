@@ -10,8 +10,9 @@
     - reconsider representing terms similar to types, instead represent them OData-style
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
 
-    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
-    - Core annotation for service version - Jira issue
+    - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856, 
+    inline and explace style
+    - Core annotation for service/schema/model version - https://issues.oasis-open.org/browse/ODATA-925
 
     - create nice description for vocabulary files from terms and their description
     - check whether edm:UrlRef matches example in prose spec
@@ -126,6 +127,7 @@
         <!-- TODO: some useful text, e.g. bullet list of terms? -->
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:apply-templates select="//edm:Term" mode="description" />
     <xsl:apply-templates select="//edmx:Include" mode="description" />
     <!-- TODO: service version as a Core annotation? - Jira issue -->
     <xsl:text>","version":"0.1.0"}</xsl:text>
@@ -172,9 +174,8 @@
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="description">
-    <!-- TODO: edmx:Reference and edmx:Include as part of description -->
     <xsl:if test="position() = 1">
-      <xsl:text>\n\nReferences:</xsl:text>
+      <xsl:text>\n\n## References</xsl:text>
     </xsl:if>
     <xsl:text>\n- [</xsl:text>
     <xsl:value-of select="@Namespace" />
@@ -183,6 +184,22 @@
       <xsl:with-param name="url" select="../@Uri" />
     </xsl:call-template>
     <xsl:text>)</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Term" mode="description">
+    <xsl:if test="position() = 1">
+      <xsl:text>\n\n## Term Definitions\nTerm|Description\n----|----</xsl:text>
+    </xsl:if>
+    <xsl:text>\n</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:variable name="description"
+      select="edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String|edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/edm:String" />
+    <xsl:text>|</xsl:text>
+    <xsl:if test="$description">
+      <xsl:call-template name="escape">
+        <xsl:with-param name="string" select="$description" />
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edmx:Reference" mode="hashvalue">
@@ -2366,7 +2383,9 @@
       <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
         <xsl:choose>
           <xsl:when test="substring($url,0,34) = 'http://docs.oasis-open.org/odata/'">
-            <xsl:text>https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/</xsl:text>
+            <!-- TODO: use public location that support CORS, e.g. GitHub -->
+            <!-- OData-SVN: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/ -->
+            <xsl:text>http://localhost/examples/</xsl:text>
             <xsl:variable name="filename">
               <xsl:call-template name="substring-after-last">
                 <xsl:with-param name="input" select="$url" />
@@ -2374,7 +2393,8 @@
               </xsl:call-template>
             </xsl:variable>
             <xsl:value-of select="substring($filename,0,string-length($filename)-3)" />
-            <xsl:value-of select="'.json'" />
+            <!-- TODO: no .openapi in final destination -->
+            <xsl:value-of select="'.openapi.json'" />
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="substring($url,0,string-length($url)-3)" />
