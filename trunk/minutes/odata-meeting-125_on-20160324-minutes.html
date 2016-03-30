@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #125 Thursday Mar 24, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #125 Thursday Mar 24, 2016</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2016-03-24 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41455">normative attendance sheet for this meeting (event_id=41455)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Agenda (revised) with ODATA-926 added, approved. No other corrections.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from March 17, 2016 TC meeting #124</h3>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57790/odata-meeting-124_on-20160317-minutes.html" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57790/odata-meeting-124_on-20160317-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h2>4. Review action items</h2>
+<h3>4.1 Action items due March 24, 2016</h3>
+<h4>4.1.1 "Securing OData" AI#0029</h4>
+<p>Action item discussion:</p>
+<p>Hubert: We need to discuss about "Securing OData" AI#0029: <a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3638" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/members/action_item.php?action_item_id=3638</a></p>
+<p>Ram: SASL mechanism: <a href="http://www.ietf.org/rfc/rfc4422.txt" target="_blank">http://www.ietf.org/rfc/rfc4422.txt</a></p>
+<p>Hubert: Apparently integration of SAML for SASL has been defined already here: <a href="https://tools.ietf.org/html/rfc6595" target="_blank">https://tools.ietf.org/html/rfc6595</a></p>
+
+<h2>5. V4.01 issues - Issues for V4.01_WD01 in New or Open state</h2>
+<h3>5.1 Set Operations</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-922" target="_blank">ODATA-922</a> - Support DELETE/PUT to $ref of a collection-valued nav prop to remove/replace all links</h4>
+<p>Ram: ODATA-922 is OPEN, no objections</p>
+<p>Mike: For containment, the specified links would have to already be in the collection; any links not in the collection would be removed (and, because it's containment, deleted).</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-922 as proposed. <b>Ramesh</b> seconds.</p>
+<p>Motion passes, no objections. ODATA-922 is RESOLVED as proposed.</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-924" target="_blank">ODATA-924</a> - Define semantics for PUT against a single entity with nested content</h4>
+
+<p>Ram: ODATA-924 is OPEN, no objections</p>
+<p>Mike: Discussion: Semantics should align with POST;<br>
+1) You can include references (only) to existing entities (no content)<br>
+2) The end result of the PUT is that the existing (references) and new (entities) are the full set of entities related according to that relationship.</p>
+
+<p>Mike: Define that, when you do a PUT,<br>
+1) You can include new entities and references to existing entities, but not content for existing entities<br>
+2) The end result of the PUT is that the existing (references) and new (entities) are the full set of entities related according to that relationship.</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-924 as proposed. <b>Mark</b> seconds.</p>
+<p>No objections, issue resolved as proposed. ODATA-924 is RESOLVED as proposed.</p>
+
+<p id="back_from_5_1_3">Ram: Back from ODATA-927 (cf. <a href="#back_to_5_1_2">section 5.1.3</a> below)</p>
+
+<p>Ram: No objection to opening the discussion on the proposal for ODATA-924.</p>
+<p>Ram: The intention is to revise the previous resolution.</p>
+<p>Mike: Revised proposal to align with PATCH (as per ODATA-876)</p>
+<p>Mike: Define that, when you do a PUT,<br>
+1) You can include new entities, existing entities, and references to existing entities<br>
+2) Existing entities are updated using PUT semantics<br>
+a) entities to be updated must have either @odata.id or key fields, otherwise interpreted as an insert<br>
+3) The end result of the PUT is that the specified entities and entity references are the full set of entities related according to that relationship.</p>
+
+<p>Ralf: From 11.4.3: Key and other non-updatable properties, as well as dependent properties that are not tied to key properties of the principal entity, can be omitted from the request. If the request contains a value for one of these properties, the service MUST ignore that value when applying the update.</p>
+
+<p>Mike: Revised proposal for ODATA-924, to align with previously approved ODATA-876:<br>
+Align Semantics of PUT with PATCH, as specified in ODATA-876, by specifying that, when you do a PUT,<br>
+1) You can include new nested entities, existing entities, and references to existing entities<br>
+2) Existing entities are updated using PUT semantics<br>
+a) entities to be updated must have either @odata.id or key fields, otherwise interpreted as an insert<br>
+b) if @odata.id and key fields both exist but don't match, then request is invalid<br>
+3) The end result of the PUT is that the specified entities and entity references are the full set of entities related according to that relationship.</p>
+
+<p><b>Mike</b>: I <b>move</b> to revise the previously approved resolution to ODATA-924 as described in the revised proposal. <b>Matt</b> seconds.</p>
+<p>No objections, the motion passes with unanimous support. ODATA-924 is RESOLVED as proposed.</p>
+
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-927" target="_blank">ODATA-927</a> - Explicitly disallow existing nested items in Deep Insert</h4>
+
+<p>Mike: New related issue: ODATA-927</p>
+<p>Ram: ODATA-927 is now OPEN, no objections. Related issue: (<a href="https://issues.oasis-open.org/browse/ODATA-876" target="_blank">ODATA-876</a> - Allow services to return contained entities inline for delta responses).</p>
+<p>Matt: See also for reference: <a href="https://issues.oasis-open.org/browse/ODATA-873" target="_blank">ODATA-873</a> - Define a default order for deep inserted entities in responses</p>
+
+<p>Mike Pizzo: Copied proposal from PUT:</p>
+<p>Mike: Clarify that, when doing a POST:<br>
+1) You can include new entities and references to existing entities, but not content for existing entities<br>
+2) The end result of the POST is that the existing (references) and new (entities) are the full set of entities related according to that relationship.<br></p>
+
+
+<p>Mike (w.r.t. ODATA-927): Clarify that, when doing a POST:<br>
+1) You can include new entities and references to existing entities, but not content for existing entities<br>
+2) The end result of the POST is that the existing (references) and new (entities) are the full set of entities related according to that relationship.</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-927 as proposed. <b>Matt</b> seconds.</p>
+<p>No objections. ODATA-927 is RESOLVED as proposed.</p>
+
+<p id="back_to_5_1_2">Ram: Back to ODATA-947 (cf. <a href="#back_from_5_1_3">section 5.1.2</a> above)</p>
+
+
+<h3>6. Next meeting</h3>
+
+<h4>6.1 Next Meeting Thursday March 31, 2016 0800-1000 PDT</h4>
+<p>Agreed</p>
+
+<h3>7. AOB and wrap up</h3>
+
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+
+</div>
+</body>
+</html>
