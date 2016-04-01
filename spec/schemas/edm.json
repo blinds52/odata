@@ -51,13 +51,6 @@
         },
         "x-terms": {
             "description": "@TODO:define"
-        },
-        "definitions": {
-            "@TODO": "reference Swagger definitions object instead",
-            "type": "object",
-            "additionalProperties": {
-                "$ref": "http://json-schema.org/draft-04/schema#"
-            }
         }
     },
     "definitions": {
@@ -193,11 +186,9 @@
             ]
         },
         "Edm.Stream": {
-            "description": "unfulfillable constraint, no inline representation of Edm.Stream",
+            "description": "Edm.Stream properties aren't represented inline",
             "type": "string",
-            "enum": [
-                null
-            ]
+            "readOnly": true
         },
         "Edm.TimeOfDay": {
             "type": "string",
@@ -623,6 +614,56 @@
         "odata.singleton": {
             "type": "object",
             "description": "@TODO:define"
+        }
+    },
+    "parameters": {
+        "expand": {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+            "type": "string"
+        },
+        "select": {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+            "type": "string"
+        },
+        "orderby": {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+            "type": "string"
+        },
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "type": "integer"
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "type": "integer"
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "type": "boolean"
+        },
+        "filter": {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "type": "string"
         }
     }
 }
