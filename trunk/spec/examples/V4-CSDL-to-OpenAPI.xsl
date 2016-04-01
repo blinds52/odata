@@ -8,7 +8,8 @@
     TODO:
     - links to referenced files relative to current Swagger UI?
 
-    - x-kind on container children within /paths with values EntitySet, Singleton, ...
+    - x-kind on container children within /paths with values EntitySet, Singleton, ...?
+    - represent term type as termType nvp with a Schema Object for the type, similar to action/function parameter types?
     - reconsider representing terms similar to types, instead represent them OData-style
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
 
@@ -16,15 +17,14 @@
     inline and explace style
     - Core annotation for service/schema/model version - https://issues.oasis-open.org/browse/ODATA-925
 
-    - create nice description for vocabulary files from terms and their description
-    - check whether edm:UrlRef matches example in prose spec
+    - annotations within edm:UrlRef, with string value and expression value of edm:UrlRef
     - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
     option of type string
     - @Extends for entity container: ideally should include /paths from referenced container
     - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
     property names
-    - $orderby: both asc (no suffix) and desc in enumeration
     - try again for both "clickable" and freestyle $expand, $select, $orderby
+    - $orderby: both asc (no suffix) and desc in enumeration
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
     - primitive types in function/action return types
@@ -542,9 +542,16 @@
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
     <xsl:choose>
-      <xsl:when test="$singleType='Edm.Stream'">
-        <xsl:text>"type":"string","readOnly":true</xsl:text>
-      </xsl:when>
+      <!--
+        <xsl:when test="$singleType='Edm.Stream'">
+        <xsl:call-template name="nullableType">
+        <xsl:with-param name="type" select="'string'" />
+        <xsl:with-param name="nullable" select="$nullable" />
+        <xsl:with-param name="noArray" select="$noArray" />
+        </xsl:call-template>
+        <xsl:text>,"readOnly":true</xsl:text>
+        </xsl:when>
+      -->
       <xsl:when test="$singleType='Edm.String'">
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
@@ -1069,6 +1076,14 @@
       <xsl:with-param name="key" select="'Path'" />
     </xsl:apply-templates>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
+  </xsl:template>
+
+  <xsl:template match="edm:NavigationPropertyBinding" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Path" />
+    <xsl:text>":"</xsl:text>
+    <xsl:value-of select="@Target" />
+    <xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:ActionImport|edm:FunctionImport" mode="hashvalue">
@@ -2144,9 +2159,16 @@
   </xsl:template>
 
   <xsl:template match="edm:Null">
-    <xsl:text>{"@odata.null":{</xsl:text>
-    <xsl:apply-templates select="@*|node()" mode="list" />
-    <xsl:text>}}</xsl:text>
+    <xsl:choose>
+      <xsl:when test="@*|node()">
+        <xsl:text>{"@odata.null":{</xsl:text>
+        <xsl:apply-templates select="@*|node()" mode="list" />
+        <xsl:text>}}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>null</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm:Not|edm:UrlRef">
