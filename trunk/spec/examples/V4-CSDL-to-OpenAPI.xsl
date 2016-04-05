@@ -47,6 +47,7 @@
     select="'https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json'" />
   -->
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json'" />
+  <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
 
 
   <!-- TODO: consider splitting /paths file == OpenAPI description from /definitions == JSON $metadata
@@ -189,7 +190,9 @@
     </xsl:if>
     <xsl:text>\n- [</xsl:text>
     <xsl:value-of select="@Namespace" />
-    <xsl:text>](http://localhost/swagger-ui/?url=</xsl:text>
+    <xsl:text>](</xsl:text>
+    <xsl:value-of select="$swagger-ui" />
+    <xsl:text>/?url=</xsl:text>
     <xsl:call-template name="replace-all">
       <xsl:with-param name="string">
         <xsl:call-template name="json-url">
