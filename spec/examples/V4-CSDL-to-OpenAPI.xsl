@@ -190,8 +190,14 @@
     <xsl:text>\n- [</xsl:text>
     <xsl:value-of select="@Namespace" />
     <xsl:text>](http://localhost/swagger-ui/?url=</xsl:text>
-    <xsl:call-template name="json-url">
-      <xsl:with-param name="url" select="../@Uri" />
+    <xsl:call-template name="replace-all">
+      <xsl:with-param name="string">
+        <xsl:call-template name="json-url">
+          <xsl:with-param name="url" select="../@Uri" />
+        </xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="old" select="')'"/>
+      <xsl:with-param name="new" select="'%29'"/>
     </xsl:call-template>
     <xsl:text>)</xsl:text>
   </xsl:template>
