@@ -868,29 +868,29 @@ base64char  = ALPHA / DIGIT / "-" / "_"
 
 booleanValue = "true" / "false"
 
-decimalValue = [SIGN] 1*DIGIT ["." 1*DIGIT]
+decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ]
 
-doubleValue = decimalValue [ "e" [SIGN] 1*DIGIT ] / nanInfinity ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
+doubleValue = decimalValue [ "e" [ SIGN ] 1*DIGIT ] / nanInfinity ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
 singleValue = doubleValue                                       ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
 nanInfinity = 'NaN' / '-INF' / 'INF'
 
 guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
 
 byteValue  = 1*3DIGIT           ; numbers in the range from 0 to 255
-sbyteValue = [ sign ] 1*3DIGIT  ; numbers in the range from -128 to 127
-int16Value = [ sign ] 1*5DIGIT  ; numbers in the range from -32768 to 32767        
-int32Value = [ sign ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
-int64Value = [ sign ] 1*19DIGIT ; numbers in the range from -9223372036854775808 to 9223372036854775807
+sbyteValue = [ SIGN ] 1*3DIGIT  ; numbers in the range from -128 to 127
+int16Value = [ SIGN ] 1*5DIGIT  ; numbers in the range from -32768 to 32767        
+int32Value = [ SIGN ] 1*10DIGIT ; numbers in the range from -2147483648 to 2147483647
+int64Value = [ SIGN ] 1*19DIGIT ; numbers in the range from -9223372036854775808 to 9223372036854775807
 
 string           = SQUOTE *( SQUOTE-in-string / pchar-no-SQUOTE ) SQUOTE
 SQUOTE-in-string = SQUOTE SQUOTE ; two consecutive single quotes represent one within a string literal
 
 dateValue = year "-" month "-" day
 
-dateTimeOffsetValue = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / sign hour ":" minute )
+dateTimeOffsetValue = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / SIGN hour ":" minute )
 
 duration      = "duration" SQUOTE durationValue SQUOTE
-durationValue = [ sign ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
+durationValue = [ SIGN ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
      ; the above is an approximation of the rules for an xml dayTimeDuration.
      ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
