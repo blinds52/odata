@@ -6,34 +6,35 @@
     This style sheet transforms OData 4.0 XML CSDL documents into OpenAPI 2.0 JSON
 
     TODO:
-    - links to referenced files relative to current Swagger UI?
-
-    - x-kind on container children within /paths with values EntitySet, Singleton, ...?
     - represent term type as termType nvp with a Schema Object for the type, similar to action/function parameter types?
     - reconsider representing terms similar to types, instead represent them OData-style
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
-
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
     - Core annotation for service/schema/model version - https://issues.oasis-open.org/browse/ODATA-925
 
     - annotations within edm:UrlRef, with string value and expression value of edm:UrlRef
+    - primitive types in function/action return types
     - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
     option of type string
     - @Extends for entity container: ideally should include /paths from referenced container
+    - annotations without explicit value: default from term definition (if inline)
+
+    - links to referenced files relative to current Swagger UI?
     - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
     property names
     - try again for both "clickable" and freestyle $expand, $select, $orderby
     - $orderby: both asc (no suffix) and desc in enumeration
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
-    - primitive types in function/action return types
     - 200 response for PATCH
     - ETag / If-Match for PATCH
     - property description for key parameters in single-entity requests
     - better description for operations
     - remove duplicated code in /paths production
-    - annotations without explicit value: default from term definition (if inline)
+
+    - references to OASIS vocabularies not to localhost
+    - references to GW vocabularies with format parameter based on suffix )/$value
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -42,13 +43,10 @@
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
-  <!--
-    <xsl:param name="odata-schema"
-    select="'https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/schemas/edm.json'" />
-  -->
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json'" />
+  <xsl:param name="vocabulary-home" select="'http://localhost/examples'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
-
+  <xsl:param name="openapi-formatoption" select="''" />
 
   <!-- TODO: consider splitting /paths file == OpenAPI description from /definitions == JSON $metadata
     <xsl:param name="metadata" select="'$metadata'" />
@@ -199,8 +197,8 @@
           <xsl:with-param name="url" select="../@Uri" />
         </xsl:call-template>
       </xsl:with-param>
-      <xsl:with-param name="old" select="')'"/>
-      <xsl:with-param name="new" select="'%29'"/>
+      <xsl:with-param name="old" select="')'" />
+      <xsl:with-param name="new" select="'%29'" />
     </xsl:call-template>
     <xsl:text>)</xsl:text>
   </xsl:template>
@@ -2421,31 +2419,56 @@
 
   <xsl:template name="json-url">
     <xsl:param name="url" />
+    <xsl:variable name="jsonUrl">
+      <xsl:choose>
+        <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
+          <xsl:choose>
+            <xsl:when test="substring($url,1,33) = 'http://docs.oasis-open.org/odata/'">
+              <xsl:value-of select="$vocabulary-home" />
+              <xsl:text>/</xsl:text>
+              <xsl:variable name="filename">
+                <xsl:call-template name="substring-after-last">
+                  <xsl:with-param name="input" select="$url" />
+                  <xsl:with-param name="marker" select="'/'" />
+                </xsl:call-template>
+              </xsl:variable>
+              <xsl:value-of select="substring($filename,1,string-length($filename)-4)" />
+              <!-- TODO: no .openapi in final destination -->
+              <xsl:value-of select="'.openapi.json'" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="substring($url,1,string-length($url)-4)" />
+              <xsl:value-of select="'.openapi.json'" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="string-length($url) = 0">
+          <xsl:value-of select="$url" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$url" />
+          <xsl:value-of select="$openapi-formatoption" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:choose>
-      <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
-        <xsl:choose>
-          <xsl:when test="substring($url,0,34) = 'http://docs.oasis-open.org/odata/'">
-            <!-- TODO: use public location that support CORS, e.g. GitHub -->
-            <!-- OData-SVN: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/ -->
-            <xsl:text>http://localhost/examples/</xsl:text>
-            <xsl:variable name="filename">
-              <xsl:call-template name="substring-after-last">
-                <xsl:with-param name="input" select="$url" />
-                <xsl:with-param name="marker" select="'/'" />
-              </xsl:call-template>
-            </xsl:variable>
-            <xsl:value-of select="substring($filename,0,string-length($filename)-3)" />
-            <!-- TODO: no .openapi in final destination -->
-            <xsl:value-of select="'.openapi.json'" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="substring($url,0,string-length($url)-3)" />
-            <xsl:value-of select="'.openapi.json'" />
-          </xsl:otherwise>
-        </xsl:choose>
+      <xsl:when test="substring($jsonUrl,1,1) = '/'">
+        <xsl:value-of select="$scheme" />
+        <xsl:text>://</xsl:text>
+        <xsl:value-of select="$host" />
+        <xsl:value-of select="$jsonUrl" />
       </xsl:when>
+      <xsl:when test="substring($jsonUrl,1,3) = '../'">
+        <xsl:value-of select="$scheme" />
+        <xsl:text>://</xsl:text>
+        <xsl:value-of select="$host" />
+        <xsl:value-of select="$basePath" />
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$jsonUrl" />
+      </xsl:when>
+      <!-- TODO: more rules for recognizing relative URLs and doing the needful -->
       <xsl:otherwise>
-        <xsl:value-of select="$url" />
+        <xsl:value-of select="$jsonUrl" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
