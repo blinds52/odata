@@ -4,6 +4,8 @@
 >
   <!--
     This style sheet transforms OData 4.0 XML CSDL documents into OpenAPI 2.0 JSON
+    
+    Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
     - represent term type as termType nvp with a Schema Object for the type, similar to action/function parameter types?
