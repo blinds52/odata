@@ -32,9 +32,6 @@
     - property description for key parameters in single-entity requests
     - better description for operations
     - remove duplicated code in /paths production
-
-    - references to OASIS vocabularies not to localhost
-    - references to GW vocabularies with format parameter based on suffix )/$value
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -391,6 +388,17 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
+    <!-- collection wrapper -->
+    <xsl:text>"Collection(</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>)":{"type":"object","properties":{"value":{"type":"array","items":{"$ref": "#/definitions/</xsl:text>
+    <xsl:value-of select="../@Namespace" />
+    <xsl:text>.</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"}}}},</xsl:text>
+    <!-- single instance -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Namespace" />
     <xsl:text>.</xsl:text>
@@ -1194,11 +1202,11 @@
     <xsl:text>,{"$ref":"#/parameters/select"},{"$ref":"#/parameters/expand"}]</xsl:text>
     <xsl:text>,"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>","schema":{"type":"object","properties":{"value":{"type":"array","items":{"$ref":"</xsl:text>
+    <xsl:text>","schema":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
+    <xsl:text>#/definitions/Collection(</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}}}},</xsl:text>
+    <xsl:text>)"}},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 

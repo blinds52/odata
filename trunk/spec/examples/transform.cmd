@@ -7,7 +7,7 @@ setlocal
 
 set CLASSPATH=%CLASSPATH%;C:\eclipse-Luna\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;C:\eclipse-Luna\plugins\org.apache.xalan_2.7.1.v201005080400.jar
 
-for /F "eol=# tokens=1,2,3,4" %%F in (transform.txt) do (
+for /F "eol=# tokens=1,2,3,4" %%F in (%~n0.txt) do (
   echo %%~nF 
   
   java org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %%G -PARAM host %%H -PARAM basePath %%I -IN %%F -OUT %%~nF.jsontmp
