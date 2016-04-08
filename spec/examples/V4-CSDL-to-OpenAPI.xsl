@@ -4,7 +4,7 @@
 >
   <!--
     This style sheet transforms OData 4.0 XML CSDL documents into OpenAPI 2.0 JSON
-    
+
     Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
@@ -34,6 +34,7 @@
     - property description for key parameters in single-entity requests
     - better description for operations
     - remove duplicated code in /paths production
+    - call template schema-ref to produce $refs in /paths section
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -128,6 +129,7 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="//edm:Term" mode="description" />
+    <xsl:apply-templates select="//edm:EntityType" mode="description" />
     <xsl:apply-templates select="//edmx:Include" mode="description" />
     <!-- TODO: service version as a Core annotation? - Jira issue -->
     <xsl:text>","version":"0.1.0"}</xsl:text>
@@ -179,6 +181,106 @@
     <xsl:text>"x-odata-version":"</xsl:text>
     <xsl:value-of select="." />
     <xsl:text>"</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:EntityType" mode="description">
+    <xsl:if test="position() = 1">
+      <xsl:text>\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/</xsl:text>
+    </xsl:if>
+    <xsl:if test="position() > 1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:apply-templates select="@BaseType" mode="description" />
+    <xsl:text>[</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>]</xsl:text>
+    <xsl:apply-templates select="edm:NavigationProperty" mode="description" />
+    <xsl:if test="position() = last()">
+      <xsl:text>)</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="@BaseType" mode="description">
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="." />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="type">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="." />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:text>[</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$qualifier=../../@Namespace or $qualifier=../../@Alias">
+        <xsl:value-of select="$type" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@Type" />
+        <xsl:text>{bg:white}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>]^</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:NavigationProperty" mode="description">
+    <xsl:variable name="singleType">
+      <xsl:choose>
+        <xsl:when test="starts-with(@Type,'Collection(')">
+          <xsl:value-of select="substring-before(substring-after(@Type,'('),')')" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@Type" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="collection" select="starts-with(@Type,'Collection(')" />
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="type">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="$singleType" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="nullable">
+      <xsl:call-template name="nullableFacetValue">
+        <xsl:with-param name="type" select="@Type" />
+        <xsl:with-param name="nullableFacet" select="@Nullable" />
+      </xsl:call-template>
+    </xsl:variable>
+    <!--
+      [FeaturedProduct]&lt;0..1-0..1&gt;[Advertisement]
+    -->
+    <xsl:text>,[</xsl:text>
+    <xsl:value-of select="../@Name" />
+    <xsl:text>]-</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$collection">
+        <xsl:text>*</xsl:text>
+      </xsl:when>
+      <xsl:when test="$nullable">
+        <xsl:text>0..1</xsl:text>
+      </xsl:when>
+    </xsl:choose>
+    <xsl:text>>[</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$qualifier=../../@Namespace or $qualifier=../../@Alias">
+        <xsl:value-of select="$type" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@Type" />
+        <xsl:text>{bg:white}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>]</xsl:text>
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="description">
@@ -284,7 +386,9 @@
     <xsl:call-template name="json-url">
       <xsl:with-param name="url" select="../@Uri" />
     </xsl:call-template>
-    <xsl:text>"}</xsl:text>
+    <xsl:text>"</xsl:text>
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:text>}</xsl:text>
     <xsl:if test="@Alias">
       <xsl:text>,"</xsl:text>
       <xsl:value-of select="@Alias" />
