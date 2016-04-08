@@ -257,6 +257,7 @@
       </xsl:call-template>
     </xsl:variable>
     <!--
+      evaluate Partner to just have one arrow
       [FeaturedProduct]&lt;0..1-0..1&gt;[Advertisement]
     -->
     <xsl:text>,[</xsl:text>
@@ -276,7 +277,7 @@
         <xsl:value-of select="$type" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="@Type" />
+        <xsl:value-of select="$singleType" />
         <xsl:text>{bg:white}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
