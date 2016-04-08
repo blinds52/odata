@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #127 Thursday Apr 07, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #127 Thursday Apr 07, 2016</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2016-04-07 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41457">normative attendance sheet for this meeting (event_id=41457)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from March 31, 2016 TC meeting #126</h3>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57850/odata-meeting-126_on-20160331-minutes.html" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/57850/odata-meeting-126_on-20160331-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+
+<h2>4. Review action items</h2>
+<h3>4.1 Action items due May 19, 2016</h3>
+<h4>4.1.1 AI#0032 - "Overview presentation on HTTP/2 features"</h4>
+<p>Ongoing. AI#0032 still OPEN.</p>
+
+<h3>4.2 Action items due March 31, 2016</h3>
+<h4>4.2.1 AI#0035 - "Identify the right open source license for the OASIS Open Source repositories for vocabularies and libraries"</h4>
+<p>Ongoing. AI#0035 still OPEN.</p>
+
+<h2>5. V4.01 issues - Issues for V4.01_WD01 in New or Open state</h2>
+
+<h3>5.1 OData JSON CSDL</h3>
+
+<p>Ram: Side discussion on OData / Open API alignment</p>
+<p>Ram: The plan is to advance OData JSON CSDL to CSD02 (align with Swagger 2.0 spec) and then to CSD03 (align with Swagger/Open API 3.0), and then Committee Specification.</p>
+<p>Ram: On the OASIS open repo work relating to OData/Open API alignment, here are some work items we are contemplating:</p>
+<pre>
+Open Repo for OpenAPI
+- XSLT transformation
+- example XML files
+- example openapi.json files
+- preferably example files for the live odata.org services
+Open Repo for Vocabularies
+- read-only copies of OASIS vocabs
+- Validation vocab with the intention of evolving it there
+XSL transformation from XML to OpenAPI.json
+</pre>
+
+
+<h4>5.1.1 OData JSON CSDL - New Issues</h4>
+
+<h5>5.1.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-925" target="_blank">ODATA-925</a> - Define Core term for service/schema/model version</h5>
+<p>Ram: ODATA-925 is OPEN, no objections</p>
+
+<p>Ralf: Add a Core term for a service/schema/model version. </p>
+
+<pre>
+&lt;Term Name="SchemaVersion" Type="String" AppliesTo="Schema"> 
+    &lt;Annotation Term="Core.Description" String="Version of the schema (not to be confused with the protocol version)" /> 
+&lt;/Term> 
+</pre>
+<p>
+Clarify relationship between version and metadataEtag: first is semantic, second could be technically derived (timestamp of development artifacts), so the latter may change without the former changing, but if the former changes, the latter SHOULD/MUST change.</p>
+
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-925 as proposed. <b>Martin</b> seconds.</p>
+<p>Motion passes, no objections. ODATA-925 is RESOLVED as proposed.</p>
+
+
+<h4>5.1.2 OData JSON CSDL - "Parked" Issues</h4>
+
+<h5 id="sect_5_1_2_1">5.1.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-910" target="_blank">ODATA-910</a> - Consider format that is tailored for programmatic access (public comment c201602e00002)</h5>
+
+<p>Ralf: Inheritance: add "x-baseType" extension keyword in addition to "allOf" keyword. <br>
+<br>
+4.1.3 Enumeration Types: OpenAPI specification doesn't support "anyOf" keyword, so enumeration types are represented just as string enums without the ambiguous "pattern".<br>
+<br>
+4.3 Entity Container: use "resources" name/value pair whose value is an object with one name/value pair per entity container child. Add name/value pair "kind" to the object describing the container child <br>
+<br>
+EntitySet/@EntityType and Singleton/@Type: since we introduce keyless entity types for singletons we won't use complex types for singletons, so the JSON format can use the same keyword "entityType" for both resource kinds</p>
+
+<p>Ralf: Amendment to proposal: use "type" name/value pair for both entity sets and singletons</p>
+
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-910 with the amended proposal. <b>Hubert</b> seconds.</p>
+<p>Motion passes, no objections. ODATA-910 is RESOLVED as proposed.</p>
+
+<p>Ram: ODATA-910 has been parked for discussion in light of ODATA-812 (cf. <a href="#sect_5_1_2_3">5.1.2.3</a>).</p>
+
+
+<h5>5.1.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-906" target="_blank">ODATA-906</a> - Consider how to specify an included namespace as a default in JSON CSDL</h5>
+
+<p>Ralf: Both document-defined and included namespaces are represented as properties of the /x-schemas object. The Core.DefaultNamespace annotation will in both cases be represented as a name/value pair within the object describing the namespace, e.g. </p>
+<pre>
+"x-schemas": { 
+    "Org.OData.Core.V1": { 
+        "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json", 
+        "@Core.DefaultNamespace": true 
+    }, 
+    "Core": { 
+        "aliasFor": "Org.OData.Core.V1" 
+    }, 
+    "Org.OData.Measures.V1": { 
+        "uri": "http://localhost/examples/Org.OData.Measures.V1.openapi.json" 
+    }, 
+    "UoM": { 
+        "aliasFor": "Org.OData.Measures.V1" 
+    }, 
+    "ODataDemo": { 
+        "@Core.DefaultNamespace": true 
+    } 
+},
+</pre>
+<p>Stefan: This lead to reopening of ODATA-812 (cf. <a href="#sect_5_1_2_3">5.1.2.3</a>).</p>
+
+
+<h5 id="sect_5_1_2_3">5.1.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-812" target="_blank">ODATA-812</a> - Allow omitting namespaces for unambiguous functions/actions</h5>
+
+<p><b>Ralf</b>: I <b>move</b> to reopen ODATA-812. <b>Martin</b> seconds.</p>
+<p>Motion passes, no objections. ODATA-812 is again OPEN.</p>
+<p>Ram: We will discuss ODATA-812 at the next meeting</p>
+
+<p>This motion had an impact on above status of ODATA-910 (cf. <a href="#sect_5_1_2_1">5.1.2.1</a>).</p>
+
+
+<h5>5.1.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-890" target="_blank">ODATA-890</a> - Specify how to get from a JSON message to a JSON schema for validating this message</h5>
+
+<p>Ram: We will discuss this later, needs more thought and consideration</p>
+
+
+<h5>5.1.2.5 <a href="https://issues.oasis-open.org/browse/ODATA-863" target="_blank">ODATA-863</a> - Represent Terms similar to Types</h5>
+
+<p>Ram: ODATA-863 Represent Terms similar to Types</p>
+<p>Ram: This depends on <a href="https://issues.oasis-open.org/browse/ODATA-618" target="_blank">ODATA-618</a>. We need to consider this more before we can resolve.</p>
+<p>Ram: Preferred name for OData JSON CSDL is "ODATA CSDL JSON". No objections.</p>
+<p>Ram: Editors will change the name</p>
+
+<p>Mike: can we $ref from the document with "definitions" to a separate file with "paths"?</p>
+<p>Ram: Ralf to research this and report back.</p>
+
+
+<h4>5.1.3 OData JSON CSDL Next steps</h4>
+
+<h5>5.1.3.1 Discuss next steps for alignment with Swagger JSON schema</h5>
+
+<p>Ralf: Ralf to send links to Swagger UI referencing our example files</p>
+
+
+<h3>8. Next meeting</h3>
+
+<h4>8.1 Next Meeting Thursday April 14, 2016 0800-1000 PDT</h4>
+<p>Agreed</p>
+
+<h3>9. AOB and wrap up</h3>
+
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+
+</div>
+</body>
+</html>
