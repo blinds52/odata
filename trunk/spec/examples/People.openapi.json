@@ -2,15 +2,15 @@
     "x-odata-version": "4.0",
     "swagger": "2.0",
     "info": {
-        "title": "OData Service for namespace ODataDemo",
-        "description": "This OData service is located at http://localhost/service-root/\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Product],[Product]-0..1>[Category],[Product]-0..1>[Supplier],[Category],[Category]-*>[Product],[Supplier],[Supplier]-*>[Product],[Country])\n\n## References\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Core.V1.openapi.json)\n- [Org.OData.Measures.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Measures.V1.openapi.json)",
+        "title": "OData Service for namespace PeopleService",
+        "description": "This OData service is located at http://localhost/People.svc/\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Supplier],[Supplier]-*>[ProductService.Product{bg:white}],[Person],[Person]-0..1>[PersonDetail],[Person]^[Customer],[Person]^[Employee],[PersonDetail],[PersonDetail]-0..1>[Person])\n\n## References\n- [ProductService](http://localhost/swagger-ui/?url=http://localhost/examples/Products.openapi.json)",
         "version": "0.1.0"
     },
     "host": "localhost",
     "schemes": [
         "http"
     ],
-    "basePath": "/service-root",
+    "basePath": "/People.svc",
     "consumes": [
         "application/json"
     ],
@@ -18,89 +18,7 @@
         "application/json"
     ],
     "definitions": {
-        "ODataDemo.Product": {
-            "type": "object",
-            "x-mediaEntity": true,
-            "x-keys": [
-                "ID"
-            ],
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "Description": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "x-nullable": true,
-                    "x-annotations": {
-                        "@Core.IsLanguageDependent": true
-                    }
-                },
-                "ReleaseDate": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "x-nullable": true,
-                    "format": "date"
-                },
-                "DiscontinuedDate": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "x-nullable": true,
-                    "format": "date"
-                },
-                "Rating": {
-                    "type": [
-                        "integer",
-                        "null"
-                    ],
-                    "x-nullable": true,
-                    "format": "int32"
-                },
-                "Price": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "x-nullable": true,
-                    "format": "decimal",
-                    "multipleOf": 1,
-                    "x-annotations": {
-                        "@Org.OData.Measures.V1.ISOCurrency": {
-                            "@odata.path": "Currency"
-                        }
-                    }
-                },
-                "Currency": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "x-nullable": true,
-                    "maxLength": 3
-                },
-                "Category": {
-                    "$ref": "#/definitions/ODataDemo.Category",
-                    "x-relationship": {
-                        "partner": "Products"
-                    }
-                },
-                "Supplier": {
-                    "$ref": "#/definitions/ODataDemo.Supplier",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Products"
-                    }
-                }
-            }
-        },
-        "ODataDemo.Category": {
+        "PeopleService.Supplier": {
             "type": "object",
             "x-keys": [
                 "ID"
@@ -109,35 +27,6 @@
                 "ID": {
                     "type": "integer",
                     "format": "int32"
-                },
-                "Name": {
-                    "type": "string",
-                    "x-annotations": {
-                        "@Core.IsLanguageDependent": true
-                    }
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Category",
-                        "onDelete": {
-                            "action": "Cascade"
-                        }
-                    }
-                }
-            }
-        },
-        "ODataDemo.Supplier": {
-            "type": "object",
-            "x-keys": [
-                "ID"
-            ],
-            "properties": {
-                "ID": {
-                    "type": "string"
                 },
                 "Name": {
                     "type": [
@@ -147,7 +36,13 @@
                     "x-nullable": true
                 },
                 "Address": {
-                    "$ref": "#/definitions/ODataDemo.Address"
+                    "$ref": "#/definitions/PeopleService.Address",
+                    "x-nullable": true
+                },
+                "Location": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
+                    "x-nullable": true,
+                    "x-srid": "variable"
                 },
                 "Concurrency": {
                     "type": "integer",
@@ -156,7 +51,7 @@
                 "Products": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
+                        "$ref": "http://localhost/examples/Products.openapi.json#/definitions/ProductService.Product"
                     },
                     "x-relationship": {
                         "partner": "Supplier"
@@ -164,26 +59,7 @@
                 }
             }
         },
-        "ODataDemo.Country": {
-            "type": "object",
-            "x-keys": [
-                "Code"
-            ],
-            "properties": {
-                "Code": {
-                    "type": "string",
-                    "maxLength": 2
-                },
-                "Name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "x-nullable": true
-                }
-            }
-        },
-        "ODataDemo.Address": {
+        "PeopleService.Address": {
             "type": "object",
             "properties": {
                 "Street": {
@@ -214,596 +90,191 @@
                     ],
                     "x-nullable": true
                 },
-                "CountryName": {
+                "Country": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                }
+            }
+        },
+        "PeopleService.Person": {
+            "type": "object",
+            "x-keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
                     "type": [
                         "string",
                         "null"
                     ],
                     "x-nullable": true
                 },
-                "Country": {
-                    "$ref": "#/definitions/ODataDemo.Country",
+                "PersonDetail": {
+                    "$ref": "#/definitions/PeopleService.PersonDetail",
                     "x-nullable": true,
                     "x-relationship": {
-                        "referentialConstraints": {
-                            "CountryName": {
-                                "referencedProperty": "Name"
-                            }
+                        "partner": "Person"
+                    }
+                }
+            }
+        },
+        "PeopleService.Customer": {
+            "x-baseType": "PeopleService.Person",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/PeopleService.Person"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "TotalExpense": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "decimal",
+                            "multipleOf": 1
                         }
+                    }
+                }
+            ]
+        },
+        "PeopleService.Employee": {
+            "x-baseType": "PeopleService.Person",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/PeopleService.Person"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "EmployeeID": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ],
+                            "format": "int64"
+                        },
+                        "HireDate": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "Salary": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "float"
+                        }
+                    }
+                }
+            ]
+        },
+        "PeopleService.PersonDetail": {
+            "type": "object",
+            "x-keys": [
+                "PersonID"
+            ],
+            "properties": {
+                "PersonID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Age": {
+                    "type": "integer",
+                    "format": "uint8"
+                },
+                "Gender": {
+                    "type": "boolean"
+                },
+                "Phone": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                },
+                "Address": {
+                    "$ref": "#/definitions/PeopleService.Address",
+                    "x-nullable": true
+                },
+                "Photo": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.Stream"
+                },
+                "Person": {
+                    "$ref": "#/definitions/PeopleService.Person",
+                    "x-nullable": true,
+                    "x-relationship": {
+                        "partner": "PersonDetail"
                     }
                 }
             }
         }
     },
     "x-schemas": {
-        "Org.OData.Core.V1": {
-            "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json",
-            "@Core.DefaultNamespace": true
+        "ProductService": {
+            "uri": "http://localhost/examples/Products.openapi.json"
         },
-        "Core": {
-            "aliasFor": "Org.OData.Core.V1"
-        },
-        "Org.OData.Measures.V1": {
-            "uri": "http://localhost/examples/Org.OData.Measures.V1.openapi.json"
-        },
-        "UoM": {
-            "aliasFor": "Org.OData.Measures.V1"
-        },
-        "ODataDemo": {
-            "@Core.DefaultNamespace": true
-        }
-    },
-    "x-functions": {
-        "ODataDemo.ProductsByRating": [
-            {
-                "parameters": [
-                    {
-                        "name": "Rating",
-                        "parameterType": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "x-nullable": true,
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    }
+        "PeopleService": {
+            "annotations": {
+                "PeopleService.Container": {
+                    "@Org.OData.Display.V1.Description": "This is a sample OData service with vocabularies"
+                },
+                "PeopleService.Product": {
+                    "@Org.OData.Display.V1.Description": "All Products available in the online store"
+                },
+                "PeopleService.Product/Name": {
+                    "@Org.OData.Display.V1.DisplayName": "Product Name"
+                },
+                "PeopleService.Container/Suppliers": {
+                    "@Org.OData.Publication.V1.PublisherName": "Microsoft Corp.",
+                    "@Org.OData.Publication.V1.PublisherId": "MSFT",
+                    "@Org.OData.Publication.V1.Keywords": "Inventory, Supplier, Advertisers, Sales, Finance",
+                    "@Org.OData.Publication.V1.AttributionUrl": "http://www.odata.org/",
+                    "@Org.OData.Publication.V1.AttributionDescription": "All rights reserved",
+                    "@Org.OData.Publication.V1.DocumentationUrl ": "http://www.odata.org/",
+                    "@Org.OData.Publication.V1.TermsOfUseUrl": "All rights reserved",
+                    "@Org.OData.Publication.V1.PrivacyPolicyUrl": "http://www.odata.org/",
+                    "@Org.OData.Publication.V1.LastModified": "4/2/2013",
+                    "@Org.OData.Publication.V1.ImageUrl ": "http://www.odata.org/"
                 }
             }
-        ]
+        }
     },
     "x-entityContainer": {
-        "name": "DemoService",
+        "name": "Container",
         "resources": {
-            "Products": {
-                "kind": "EntitySet",
-                "entityType": "ODataDemo.Product",
-                "navigationPropertyBindings": {
-                    "Category": "Categories"
-                }
-            },
-            "Categories": {
-                "kind": "EntitySet",
-                "entityType": "ODataDemo.Category",
-                "navigationPropertyBindings": {
-                    "Products": "Products"
-                }
-            },
             "Suppliers": {
                 "kind": "EntitySet",
-                "entityType": "ODataDemo.Supplier",
+                "entityType": "PeopleService.Supplier",
                 "navigationPropertyBindings": {
-                    "Products": "Products",
-                    "Address/Country": "Countries"
-                },
-                "@Core.OptimisticConcurrency": [
-                    {
-                        "@odata.propertyPath": "Concurrency"
-                    }
-                ]
-            },
-            "MainSupplier": {
-                "kind": "Singleton",
-                "type": "ODataDemo.Supplier",
-                "navigationPropertyBindings": {
-                    "Products": "Products"
+                    "Products": "ProductService.Container.Products"
                 }
             },
-            "Countries": {
+            "People": {
                 "kind": "EntitySet",
-                "entityType": "ODataDemo.Country"
+                "entityType": "PeopleService.Person",
+                "navigationPropertyBindings": {
+                    "PersonDetail": "PersonDetails"
+                }
             },
-            "ProductsByRating": {
-                "kind": "FunctionImport",
-                "entitySet": "Products",
-                "function": "ODataDemo.ProductsByRating"
+            "PersonDetails": {
+                "kind": "EntitySet",
+                "entityType": "PeopleService.PersonDetail",
+                "navigationPropertyBindings": {
+                    "Person": "Persons"
+                }
             }
         }
     },
     "paths": {
-        "/Products": {
-            "get": {
-                "summary": "Get entities from entity set Products",
-                "description": "Get entities from entity set Products",
-                "tags": [
-                    "Products"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/top"
-                    },
-                    {
-                        "$ref": "#/parameters/skip"
-                    },
-                    {
-                        "$ref": "#/parameters/search"
-                    },
-                    {
-                        "$ref": "#/parameters/filter"
-                    },
-                    {
-                        "$ref": "#/parameters/count"
-                    },
-                    {
-                        "name": "$orderby",
-                        "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {
-                            "type": "string"
-                        },
-                        "enum": [
-                            "ID",
-                            "ID desc",
-                            "Description",
-                            "Description desc",
-                            "ReleaseDate",
-                            "ReleaseDate desc",
-                            "DiscontinuedDate",
-                            "DiscontinuedDate desc",
-                            "Rating",
-                            "Rating desc",
-                            "Price",
-                            "Price desc",
-                            "Currency",
-                            "Currency desc"
-                        ]
-                    },
-                    {
-                        "name": "$select",
-                        "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {
-                            "type": "string"
-                        },
-                        "enum": [
-                            "ID",
-                            "Description",
-                            "ReleaseDate",
-                            "DiscontinuedDate",
-                            "Rating",
-                            "Price",
-                            "Currency"
-                        ]
-                    },
-                    {
-                        "name": "$expand",
-                        "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {
-                            "type": "string"
-                        },
-                        "enum": [
-                            "Category",
-                            "Supplier"
-                        ]
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "EntitySet Products",
-                        "schema": {
-                            "type": "object",
-                            "title": "Collection of ODataDemo.Product",
-                            "properties": {
-                                "value": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/ODataDemo.Product"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "summary": "Post a new entity to entity set Products",
-                "description": "Post a new entity to entity set Products",
-                "tags": [
-                    "Products"
-                ],
-                "parameters": [
-                    {
-                        "name": "Product",
-                        "in": "body",
-                        "description": "The new entity",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Product"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created entity",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Product"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            }
-        },
-        "/Products('{ID}')": {
-            "get": {
-                "summary": "Get entity from Products by key.",
-                "description": "Returns the entity with the key from Products",
-                "tags": [
-                    "Products"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    },
-                    {
-                        "$ref": "#/parameters/select"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "EntitySet Products",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Product"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "summary": "Update entity in EntitySet Products",
-                "description": "Update entity in EntitySet Products",
-                "tags": [
-                    "Products"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Product",
-                        "in": "body",
-                        "description": "The entity to patch",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Product"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Empty response"
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Delete entity in EntitySet Products",
-                "description": "Delete entity in EntitySet Products",
-                "tags": [
-                    "Products"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "type": "string"
-                    },
-                    {
-                        "name": "If-Match",
-                        "in": "header",
-                        "description": "If-Match header",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Empty response"
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            }
-        },
-        "/Categories": {
-            "get": {
-                "summary": "Get entities from entity set Categories",
-                "description": "Get entities from entity set Categories",
-                "tags": [
-                    "Categories"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/top"
-                    },
-                    {
-                        "$ref": "#/parameters/skip"
-                    },
-                    {
-                        "$ref": "#/parameters/search"
-                    },
-                    {
-                        "$ref": "#/parameters/filter"
-                    },
-                    {
-                        "$ref": "#/parameters/count"
-                    },
-                    {
-                        "name": "$orderby",
-                        "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {
-                            "type": "string"
-                        },
-                        "enum": [
-                            "ID",
-                            "ID desc",
-                            "Name",
-                            "Name desc"
-                        ]
-                    },
-                    {
-                        "name": "$select",
-                        "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {
-                            "type": "string"
-                        },
-                        "enum": [
-                            "ID",
-                            "Name"
-                        ]
-                    },
-                    {
-                        "name": "$expand",
-                        "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {
-                            "type": "string"
-                        },
-                        "enum": [
-                            "Products"
-                        ]
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "EntitySet Categories",
-                        "schema": {
-                            "type": "object",
-                            "title": "Collection of ODataDemo.Category",
-                            "properties": {
-                                "value": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/ODataDemo.Category"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "summary": "Post a new entity to entity set Categories",
-                "description": "Post a new entity to entity set Categories",
-                "tags": [
-                    "Categories"
-                ],
-                "parameters": [
-                    {
-                        "name": "Category",
-                        "in": "body",
-                        "description": "The new entity",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Category"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created entity",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Category"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            }
-        },
-        "/Categories({ID})": {
-            "get": {
-                "summary": "Get entity from Categories by key.",
-                "description": "Returns the entity with the key from Categories",
-                "tags": [
-                    "Categories"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    },
-                    {
-                        "$ref": "#/parameters/select"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "EntitySet Categories",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Category"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "summary": "Update entity in EntitySet Categories",
-                "description": "Update entity in EntitySet Categories",
-                "tags": [
-                    "Categories"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "name": "Category",
-                        "in": "body",
-                        "description": "The entity to patch",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Category"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Empty response"
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Delete entity in EntitySet Categories",
-                "description": "Delete entity in EntitySet Categories",
-                "tags": [
-                    "Categories"
-                ],
-                "parameters": [
-                    {
-                        "name": "ID",
-                        "in": "path",
-                        "required": true,
-                        "description": "key: ID",
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "name": "If-Match",
-                        "in": "header",
-                        "description": "If-Match header",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Empty response"
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            }
-        },
         "/Suppliers": {
             "get": {
                 "summary": "Get entities from entity set Suppliers",
@@ -843,6 +314,8 @@
                             "Name desc",
                             "Address",
                             "Address desc",
+                            "Location",
+                            "Location desc",
                             "Concurrency",
                             "Concurrency desc"
                         ]
@@ -860,6 +333,7 @@
                             "ID",
                             "Name",
                             "Address",
+                            "Location",
                             "Concurrency"
                         ]
                     },
@@ -882,12 +356,12 @@
                         "description": "EntitySet Suppliers",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of ODataDemo.Supplier",
+                            "title": "Collection of PeopleService.Supplier",
                             "properties": {
                                 "value": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/definitions/ODataDemo.Supplier"
+                                        "$ref": "#/definitions/PeopleService.Supplier"
                                     }
                                 }
                             }
@@ -913,7 +387,7 @@
                         "in": "body",
                         "description": "The new entity",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
+                            "$ref": "#/definitions/PeopleService.Supplier"
                         }
                     }
                 ],
@@ -921,7 +395,7 @@
                     "201": {
                         "description": "Created entity",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
+                            "$ref": "#/definitions/PeopleService.Supplier"
                         }
                     },
                     "default": {
@@ -933,7 +407,7 @@
                 }
             }
         },
-        "/Suppliers('{ID}')": {
+        "/Suppliers({ID})": {
             "get": {
                 "summary": "Get entity from Suppliers by key.",
                 "description": "Returns the entity with the key from Suppliers",
@@ -946,7 +420,8 @@
                         "in": "path",
                         "required": true,
                         "description": "key: ID",
-                        "type": "string"
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
                         "$ref": "#/parameters/expand"
@@ -959,7 +434,7 @@
                     "200": {
                         "description": "EntitySet Suppliers",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
+                            "$ref": "#/definitions/PeopleService.Supplier"
                         }
                     },
                     "default": {
@@ -982,14 +457,15 @@
                         "in": "path",
                         "required": true,
                         "description": "key: ID",
-                        "type": "string"
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
                         "name": "Supplier",
                         "in": "body",
                         "description": "The entity to patch",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
+                            "$ref": "#/definitions/PeopleService.Supplier"
                         }
                     }
                 ],
@@ -1017,7 +493,8 @@
                         "in": "path",
                         "required": true,
                         "description": "key: ID",
-                        "type": "string"
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
                         "name": "If-Match",
@@ -1039,69 +516,12 @@
                 }
             }
         },
-        "/MainSupplier": {
+        "/People": {
             "get": {
-                "summary": "Get singleton",
+                "summary": "Get entities from entity set People",
+                "description": "Get entities from entity set People",
                 "tags": [
-                    "MainSupplier"
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/expand"
-                    },
-                    {
-                        "$ref": "#/parameters/select"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "EntitySet MainSupplier",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "summary": "Update singleton",
-                "tags": [
-                    "MainSupplier"
-                ],
-                "parameters": [
-                    {
-                        "name": "Supplier",
-                        "in": "body",
-                        "description": "The singleton to patch",
-                        "schema": {
-                            "$ref": "#/definitions/ODataDemo.Supplier"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Empty response"
-                    },
-                    "default": {
-                        "description": "Unexpected error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
-                    }
-                }
-            }
-        },
-        "/Countries": {
-            "get": {
-                "summary": "Get entities from entity set Countries",
-                "description": "Get entities from entity set Countries",
-                "tags": [
-                    "Countries"
+                    "People"
                 ],
                 "parameters": [
                     {
@@ -1129,8 +549,8 @@
                             "type": "string"
                         },
                         "enum": [
-                            "Code",
-                            "Code desc",
+                            "ID",
+                            "ID desc",
                             "Name",
                             "Name desc"
                         ]
@@ -1145,22 +565,35 @@
                             "type": "string"
                         },
                         "enum": [
-                            "Code",
+                            "ID",
                             "Name"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "PersonDetail"
                         ]
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Countries",
+                        "description": "EntitySet People",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of ODataDemo.Country",
+                            "title": "Collection of PeopleService.Person",
                             "properties": {
                                 "value": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/definitions/ODataDemo.Country"
+                                        "$ref": "#/definitions/PeopleService.Person"
                                     }
                                 }
                             }
@@ -1175,18 +608,18 @@
                 }
             },
             "post": {
-                "summary": "Post a new entity to entity set Countries",
-                "description": "Post a new entity to entity set Countries",
+                "summary": "Post a new entity to entity set People",
+                "description": "Post a new entity to entity set People",
                 "tags": [
-                    "Countries"
+                    "People"
                 ],
                 "parameters": [
                     {
-                        "name": "Country",
+                        "name": "Person",
                         "in": "body",
                         "description": "The new entity",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Country"
+                            "$ref": "#/definitions/PeopleService.Person"
                         }
                     }
                 ],
@@ -1194,7 +627,7 @@
                     "201": {
                         "description": "Created entity",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Country"
+                            "$ref": "#/definitions/PeopleService.Person"
                         }
                     },
                     "default": {
@@ -1206,20 +639,21 @@
                 }
             }
         },
-        "/Countries('{Code}')": {
+        "/People({ID})": {
             "get": {
-                "summary": "Get entity from Countries by key.",
-                "description": "Returns the entity with the key from Countries",
+                "summary": "Get entity from People by key.",
+                "description": "Returns the entity with the key from People",
                 "tags": [
-                    "Countries"
+                    "People"
                 ],
                 "parameters": [
                     {
-                        "name": "Code",
+                        "name": "ID",
                         "in": "path",
                         "required": true,
-                        "description": "key: Code",
-                        "type": "string"
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
                         "$ref": "#/parameters/expand"
@@ -1230,9 +664,9 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Countries",
+                        "description": "EntitySet People",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Country"
+                            "$ref": "#/definitions/PeopleService.Person"
                         }
                     },
                     "default": {
@@ -1244,25 +678,26 @@
                 }
             },
             "patch": {
-                "summary": "Update entity in EntitySet Countries",
-                "description": "Update entity in EntitySet Countries",
+                "summary": "Update entity in EntitySet People",
+                "description": "Update entity in EntitySet People",
                 "tags": [
-                    "Countries"
+                    "People"
                 ],
                 "parameters": [
                     {
-                        "name": "Code",
+                        "name": "ID",
                         "in": "path",
                         "required": true,
-                        "description": "key: Code",
-                        "type": "string"
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
-                        "name": "Country",
+                        "name": "Person",
                         "in": "body",
                         "description": "The entity to patch",
                         "schema": {
-                            "$ref": "#/definitions/ODataDemo.Country"
+                            "$ref": "#/definitions/PeopleService.Person"
                         }
                     }
                 ],
@@ -1279,18 +714,19 @@
                 }
             },
             "delete": {
-                "summary": "Delete entity in EntitySet Countries",
-                "description": "Delete entity in EntitySet Countries",
+                "summary": "Delete entity in EntitySet People",
+                "description": "Delete entity in EntitySet People",
                 "tags": [
-                    "Countries"
+                    "People"
                 ],
                 "parameters": [
                     {
-                        "name": "Code",
+                        "name": "ID",
                         "in": "path",
                         "required": true,
-                        "description": "key: Code",
-                        "type": "string"
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
                         "name": "If-Match",
@@ -1312,31 +748,240 @@
                 }
             }
         },
-        "/ProductsByRating(Rating={Rating})": {
+        "/PersonDetails": {
             "get": {
-                "summary": "Invoke function import ProductsByRating",
+                "summary": "Get entities from entity set PersonDetails",
+                "description": "Get entities from entity set PersonDetails",
                 "tags": [
-                    "Products"
+                    "PersonDetails"
                 ],
                 "parameters": [
                     {
-                        "name": "Rating",
-                        "in": "path",
-                        "required": true,
-                        "type": "integer",
-                        "x-nullable": true,
-                        "format": "int32"
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "PersonID",
+                            "PersonID desc",
+                            "Age",
+                            "Age desc",
+                            "Gender",
+                            "Gender desc",
+                            "Phone",
+                            "Phone desc",
+                            "Address",
+                            "Address desc",
+                            "Photo",
+                            "Photo desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "PersonID",
+                            "Age",
+                            "Gender",
+                            "Phone",
+                            "Address",
+                            "Photo"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "Person"
+                        ]
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success",
+                        "description": "EntitySet PersonDetails",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ODataDemo.Product"
+                            "type": "object",
+                            "title": "Collection of PeopleService.PersonDetail",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/PeopleService.PersonDetail"
+                                    }
+                                }
                             }
                         }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Post a new entity to entity set PersonDetails",
+                "description": "Post a new entity to entity set PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonDetail",
+                        "in": "body",
+                        "description": "The new entity",
+                        "schema": {
+                            "$ref": "#/definitions/PeopleService.PersonDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/PeopleService.PersonDetail"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/PersonDetails({PersonID})": {
+            "get": {
+                "summary": "Get entity from PersonDetails by key.",
+                "description": "Returns the entity with the key from PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: PersonID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
+                    },
+                    {
+                        "$ref": "#/parameters/select"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "EntitySet PersonDetails",
+                        "schema": {
+                            "$ref": "#/definitions/PeopleService.PersonDetail"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in EntitySet PersonDetails",
+                "description": "Update entity in EntitySet PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: PersonID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "PersonDetail",
+                        "in": "body",
+                        "description": "The entity to patch",
+                        "schema": {
+                            "$ref": "#/definitions/PeopleService.PersonDetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity in EntitySet PersonDetails",
+                "description": "Delete entity in EntitySet PersonDetails",
+                "tags": [
+                    "PersonDetails"
+                ],
+                "parameters": [
+                    {
+                        "name": "PersonID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: PersonID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "If-Match header",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Empty response"
                     },
                     "default": {
                         "description": "Unexpected error",

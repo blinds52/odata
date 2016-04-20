@@ -8,8 +8,9 @@ java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax ../schemas/edm.js
 @rem validate CSDL documents against openapi schema
 echo.
 echo = OpenAPI validation =
-java -jar c:\Java\json-schema-validator-2.2.5-lib.jar openapi.schema.json %FILES%
-
+for %%F in (%FILES%) do (
+  java -jar c:\Java\json-schema-validator-2.2.5-lib.jar openapi.schema.json %%F
+)
 for %%V in (%VOCABS%) do (
   java -jar c:\Java\json-schema-validator-2.2.5-lib.jar openapi.schema.json Org.OData.%%V.V1.openapi.json
 )
