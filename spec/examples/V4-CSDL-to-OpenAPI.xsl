@@ -23,9 +23,8 @@
     - annotations without explicit value: default from term definition (if inline)
 
     - links to referenced files relative to current Swagger UI?
-    - $expand, $select, $orderby with array of enum values derived from property names, with inheritance
+    - $expand, $select, $orderby: property lists with inheritance
     - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue
-    - $orderby: both asc (no suffix) and desc in enumeration
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
     - 200 response for PATCH
@@ -1496,7 +1495,11 @@
     <xsl:apply-templates
       select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
       mode="parameter" />
-    <xsl:text>,{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"}],"responses":{"200":{"description":"EntitySet </xsl:text>
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+      mode="select" />
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+      mode="expand" />
+    <xsl:text>],"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","schema":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
