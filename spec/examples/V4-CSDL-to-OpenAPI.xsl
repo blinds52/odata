@@ -23,9 +23,8 @@
     - annotations without explicit value: default from term definition (if inline)
 
     - links to referenced files relative to current Swagger UI?
-    - $expand, $select, $orderby per entity type used as base type of an entity set with array of enum values derived from
-    property names
-    - try again for both "clickable" and freestyle $expand, $select, $orderby
+    - $expand, $select, $orderby with array of enum values derived from property names, with inheritance
+    - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue
     - $orderby: both asc (no suffix) and desc in enumeration
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
@@ -35,6 +34,10 @@
     - better description for operations
     - remove duplicated code in /paths production
     - call template schema-ref to produce $refs in /paths section
+
+    - Swagger-UI issue: placement of enum for csv parameters is strange, would have expected it within items schema object,
+    not parameter object
+    - Swagger-UI issue: can't use same parameter name as freestyle string and as multiselect box
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -495,16 +498,17 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType" mode="hashpair">
-    <!-- collection wrapper -->
-    <xsl:text>"Collection(</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>)":{"type":"object","properties":{"value":{"type":"array","items":{"$ref": "#/definitions/</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"}}}},</xsl:text>
+    <!-- collection wrapper
+      <xsl:text>"Collection(</xsl:text>
+      <xsl:value-of select="../@Namespace" />
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>)":{"type":"object","properties":{"value":{"type":"array","items":{"$ref": "#/definitions/</xsl:text>
+      <xsl:value-of select="../@Namespace" />
+      <xsl:text>.</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"}}}},</xsl:text>
+    -->
     <!-- single instance -->
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Namespace" />
@@ -1305,15 +1309,24 @@
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[{"$ref":"#/parameters/top"},{"$ref":"#/parameters/skip"},{"$ref":"#/parameters/orderby"},{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"}</xsl:text>
-    <xsl:text>,{"$ref":"#/parameters/select"},{"$ref":"#/parameters/expand"}]</xsl:text>
-    <xsl:text>,"responses":{"200":{"description":"EntitySet </xsl:text>
+    <xsl:text>,"parameters":[{"$ref":"#/parameters/top"},{"$ref":"#/parameters/skip"},{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"}</xsl:text>
+
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+      mode="orderby" />
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+      mode="select" />
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+      mode="expand" />
+
+    <xsl:text>],"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>","schema":{"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/Collection(</xsl:text>
+    <xsl:text>","schema":{"type":"object","title":"Collection of </xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>)"}},</xsl:text>
+    <xsl:text>","properties":{"value":{"type":"array","items":{"$ref":"</xsl:text>
+    <xsl:value-of select="$metadata" />
+    <xsl:text>#/definitions/</xsl:text>
+    <xsl:value-of select="$qualifiedType" />
+    <xsl:text>"}}}}},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 
@@ -1348,6 +1361,59 @@
     <xsl:text>}}</xsl:text>
 
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:Property" mode="orderby">
+    <xsl:if test="position()=1">
+      <xsl:text>,{"name":"$orderby","in":"query","description":"Order by property values</xsl:text>
+      <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)"</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
+    </xsl:if>
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text> desc"</xsl:text>
+    <xsl:if test="position()=last()">
+      <xsl:text>]}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:Property" mode="select">
+    <xsl:if test="position()=1">
+      <xsl:text>,{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
+      <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)"</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
+    </xsl:if>
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"</xsl:text>
+    <xsl:if test="position()=last()">
+      <xsl:text>]}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="edm:NavigationProperty" mode="expand">
+    <xsl:if test="position()=1">
+      <xsl:text>,{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
+      <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)"</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
+    </xsl:if>
+    <xsl:if test="position()>1">
+      <xsl:text>,</xsl:text>
+    </xsl:if>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>"</xsl:text>
+    <xsl:if test="position()=last()">
+      <xsl:text>]}</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm:EntitySet" mode="entity">
