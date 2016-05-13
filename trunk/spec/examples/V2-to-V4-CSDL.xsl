@@ -14,7 +14,7 @@
     In addition the SAP annotations are translated into corresponding V4 annotations in the OASIS vocabularies or SAP vocabularies.
 
     TODO: sap-annotations:creatable updatable deletable pageable addressable sortable filterable unit/semantics=currency-code/semantics=unit-of-measure
-    semantics=emai semantics=tel
+    semantics=email semantics=tel
     TODO: TimeOfDay as target for Time
     TODO: IsComposable for functions generated from function imports
 
@@ -28,6 +28,11 @@
         Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Core.V1.xml"
       >
         <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+      </edmx:Reference>
+      <edmx:Reference
+        Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Capabilities.V1.xml"
+      >
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
       </edmx:Reference>
       <xsl:apply-templates />
     </edmx:Edmx>
@@ -294,7 +299,28 @@
     </Annotation>
   </xsl:template>
 
-  <xsl:template match="@sap:creatable" mode="capabilities">
+  <xsl:template match="edm2:EntitySet/@sap:creatable">
+    <Annotation Term="Capabilities.InsertRestrictions">
+      <Record>
+        <PropertyValue Property="Insertable" Bool="false" />
+      </Record>
+    </Annotation>
+  </xsl:template>
+
+  <xsl:template match="edm2:EntitySet/@sap:updatable">
+    <Annotation Term="Capabilities.UpdateRestrictions">
+      <Record>
+        <PropertyValue Property="Updatable" Bool="false" />
+      </Record>
+    </Annotation>
+  </xsl:template>
+
+  <xsl:template match="edm2:EntitySet/@sap:deletable">
+    <Annotation Term="Capabilities.DeleteRestrictions">
+      <Record>
+        <PropertyValue Property="Deletable" Bool="false" />
+      </Record>
+    </Annotation>
   </xsl:template>
 
   <xsl:template match="@sap:*">

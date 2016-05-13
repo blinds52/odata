@@ -60,6 +60,9 @@
     select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
+  <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
+  <xsl:variable name="capabilitiesAlias"
+    select="//edmx:Include[@Namespace=$capabilitiesNamespace]/@Alias|//edm:Schema[@Namespace=$capabilitiesNamespace]/@Alias" />
 
   <xsl:variable name="defaultResponse">
     <xsl:text>"default":{"description":"Unexpected error","schema":{"$ref":"</xsl:text>
@@ -716,7 +719,7 @@
             <xsl:text>,"multipleOf":1</xsl:text>
           </xsl:when>
           <xsl:when test="@Scale!='variable'">
-            <xsl:text>,"multipleOf":1e-</xsl:text>
+            <xsl:text>,"multipleOf":1.0e-</xsl:text>
             <xsl:value-of select="@Scale" />
           </xsl:when>
         </xsl:choose>
@@ -747,10 +750,12 @@
               </xsl:call-template>
             </xsl:if>
           </xsl:variable>
-          <xsl:text>,"minimum":-</xsl:text>
-          <xsl:value-of select="$limit" />
-          <xsl:text>,"maximum":</xsl:text>
-          <xsl:value-of select="$limit" />
+          <xsl:if test="@Precision &lt; 16">
+            <xsl:text>,"minimum":-</xsl:text>
+            <xsl:value-of select="$limit" />
+            <xsl:text>,"maximum":</xsl:text>
+            <xsl:value-of select="$limit" />
+          </xsl:if>
         </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Byte'">
@@ -1330,36 +1335,51 @@
     <xsl:text>}}</xsl:text>
 
     <!-- POST -->
-    <xsl:text>,"post":{</xsl:text>
-    <xsl:text>"summary":"Post a new entity to entity set </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","description":"Post a new entity to entity set </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[{"name":"</xsl:text>
-    <xsl:value-of select="$type" />
-    <xsl:text>","in":"body"</xsl:text>
-    <xsl:call-template name="entityTypeDescription">
-      <xsl:with-param name="namespace" select="$namespace" />
-      <xsl:with-param name="type" select="$type" />
-      <xsl:with-param name="default" select="'The new entity'" />
-    </xsl:call-template>
-    <xsl:text>,"schema":{"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}]</xsl:text>
-    <xsl:text>,"responses":{"201":{"description":"Created entity","schema":{"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}},</xsl:text>
-    <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}</xsl:text>
+    <xsl:variable name="insertable">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'InsertRestrictions'" />
+        <xsl:with-param name="property" select="'Insertable'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($insertable='false')">
+      <xsl:text>,"post":{</xsl:text>
+      <xsl:text>"summary":"Post a new entity to entity set </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","description":"Post a new entity to entity set </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","tags":["</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"]</xsl:text>
+      <xsl:text>,"parameters":[{"name":"</xsl:text>
+      <xsl:value-of select="$type" />
+      <xsl:text>","in":"body"</xsl:text>
+      <xsl:call-template name="entityTypeDescription">
+        <xsl:with-param name="namespace" select="$namespace" />
+        <xsl:with-param name="type" select="$type" />
+        <xsl:with-param name="default" select="'The new entity'" />
+      </xsl:call-template>
+      <xsl:text>,"schema":{"$ref":"</xsl:text>
+      <xsl:value-of select="$metadata" />
+      <xsl:text>#/definitions/</xsl:text>
+      <xsl:value-of select="$qualifiedType" />
+      <xsl:text>"}}]</xsl:text>
+      <xsl:text>,"responses":{"201":{"description":"Created entity","schema":{"$ref":"</xsl:text>
+      <xsl:value-of select="$metadata" />
+      <xsl:text>#/definitions/</xsl:text>
+      <xsl:value-of select="$qualifiedType" />
+      <xsl:text>"}},</xsl:text>
+      <xsl:value-of select="$defaultResponse" />
+      <xsl:text>}}</xsl:text>
+    </xsl:if>
 
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="capability">
+    <xsl:param name="term" />
+    <xsl:param name="property" />
+    <xsl:value-of
+      select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
   </xsl:template>
 
   <xsl:template match="edm:Property" mode="orderby">
@@ -1510,51 +1530,67 @@
     <xsl:text>}}</xsl:text>
 
     <!-- PATCH -->
-    <xsl:text>,"patch":{</xsl:text>
-    <xsl:text>"summary":"Update entity in EntitySet </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","description":"Update entity in EntitySet </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[</xsl:text>
-    <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
-      mode="parameter" />
-    <xsl:text>,{"name":"</xsl:text>
-    <xsl:value-of select="$type" />
-    <xsl:text>","in":"body"</xsl:text>
-    <xsl:call-template name="entityTypeDescription">
-      <xsl:with-param name="namespace" select="$namespace" />
-      <xsl:with-param name="type" select="$type" />
-      <xsl:with-param name="default" select="'The entity to patch'" />
-    </xsl:call-template>
-    <xsl:text>,"schema":{"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}],"responses":{"204":{"description":"Empty response"},</xsl:text>
-    <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}</xsl:text>
+    <xsl:variable name="updatable">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'UpdateRestrictions'" />
+        <xsl:with-param name="property" select="'Updatable'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($updatable='false')">
+      <xsl:text>,"patch":{</xsl:text>
+      <xsl:text>"summary":"Update entity in EntitySet </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","description":"Update entity in EntitySet </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","tags":["</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"]</xsl:text>
+      <xsl:text>,"parameters":[</xsl:text>
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
+        mode="parameter" />
+      <xsl:text>,{"name":"</xsl:text>
+      <xsl:value-of select="$type" />
+      <xsl:text>","in":"body"</xsl:text>
+      <xsl:call-template name="entityTypeDescription">
+        <xsl:with-param name="namespace" select="$namespace" />
+        <xsl:with-param name="type" select="$type" />
+        <xsl:with-param name="default" select="'The entity to patch'" />
+      </xsl:call-template>
+      <xsl:text>,"schema":{"$ref":"</xsl:text>
+      <xsl:value-of select="$metadata" />
+      <xsl:text>#/definitions/</xsl:text>
+      <xsl:value-of select="$qualifiedType" />
+      <xsl:text>"}}],"responses":{"204":{"description":"Empty response"},</xsl:text>
+      <xsl:value-of select="$defaultResponse" />
+      <xsl:text>}}</xsl:text>
+    </xsl:if>
 
     <!-- DELETE -->
-    <xsl:text>,"delete":{</xsl:text>
-    <xsl:text>"summary":"Delete entity in EntitySet </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","description":"Delete entity in EntitySet </xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>","tags":["</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[</xsl:text>
-    <xsl:apply-templates
-      select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
-      mode="parameter" />
-    <xsl:text>,{"name":"If-Match","in":"header","description":"If-Match header","type":"string"}]</xsl:text>
-    <xsl:text>,"responses":{"204":{"description":"Empty response"},</xsl:text>
-    <xsl:value-of select="$defaultResponse" />
-    <xsl:text>}}</xsl:text>
+    <xsl:variable name="deletable">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'DeleteRestrictions'" />
+        <xsl:with-param name="property" select="'Deletable'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($deletable='false')">
+      <xsl:text>,"delete":{</xsl:text>
+      <xsl:text>"summary":"Delete entity in EntitySet </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","description":"Delete entity in EntitySet </xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>","tags":["</xsl:text>
+      <xsl:value-of select="@Name" />
+      <xsl:text>"]</xsl:text>
+      <xsl:text>,"parameters":[</xsl:text>
+      <xsl:apply-templates
+        select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Key/edm:PropertyRef|//edm:Schema[@Namespace=$basetypeNamespace]/edm:EntityType[@Name=$basetype]/edm:Key/edm:PropertyRef"
+        mode="parameter" />
+      <xsl:text>,{"name":"If-Match","in":"header","description":"If-Match header","type":"string"}]</xsl:text>
+      <xsl:text>,"responses":{"204":{"description":"Empty response"},</xsl:text>
+      <xsl:value-of select="$defaultResponse" />
+      <xsl:text>}}</xsl:text>
+    </xsl:if>
 
     <xsl:text>}</xsl:text>
 
