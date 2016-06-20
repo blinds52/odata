@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #134 Thursday Jun 16, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #134 Thursday Jun 16, 2016</h1>
+<p>Acting chair: Ram</p>
+<pre>Chat transcript from room: odatatc
+2016-06-16 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ram Jeyaraman (Microsoft)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41467">normative attendance sheet for this meeting (event_id=41467)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from June 09, 2016 TC meeting (informal)</h3>
+<p><a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/58354/odata-meeting-133_on-20160609-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/58354/odata-meeting-133_on-20160609-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due May 22, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Ram: No progress on the one open action item - Action #0036 remains open</p>
+
+<h2>5. Use of null in OData</h2>
+<h3>5.1 Null in the OData Standard [by Ken Baclawski]</h3>
+<p>Ken: JavaScript distinguishes between null and undefined</p>
+<p>Ram: We should have a section on treatment of null in the spec</p>
+<p>Ram: Ken to open issues related to null treatment in OData</p>
+
+<h2>6. V4.01 Issues in New or Open state</h2>
+<h3>6.1 Issues deemed to be reasonably well understood suggesting processing</h3>
+
+<p>Mike:</p> 
+
+<ol>
+<li>ODATA-940: Define a validation term for valid values</li>
+<li>ODATA-560 - Allow arbitrary properties in referential constraints</li>
+<li>ODATA-696: Support "interfaces" for casting entities to multiple different types</li>
+<li>ODATA-809   Define non-message format for final response of async request</li> 
+<li>ODATA-798 - Semantic Key or Alternate Key for entity types</li>
+<li>ODATA-816 - Add Capability term for filter expression restrictions</li>
+</ol>
+
+<h4><a href="https://issues.oasis-open.org/browse/ODATA-940" rel="noopener noreferrer" target="_blank">ODATA-940</a> - Define a validation term for valid values</h4>
+
+
+<p>Ram: ODATA-940 is now open, no objection</p>
+<p>Mike: Modified proposal based on Ralf's comments that we don't need "Extends" or "Merges" (at this point) but should keep the structure for extensibility:</p>
+<pre>
+    &lt;Term Name="AllowedValues" Type="Validation.ValueEnumeration"> 
+        &lt;Annotation Term="Core.Description" 
+            String="A collection of valid values for the annotated property, parameter, or type definition" /> 
+    &lt;/Term> 
+    &lt;ComplexType Name="ValueEnumeration"> 
+        &lt;Property Name="Values" Type="Collection(Validation.AllowedValue)" /> 
+    &lt;/ComplexType> 
+
+    &lt;ComplexType Name="AllowedValue"> 
+        &lt;Property Name="Value" Type="Edm.PrimitiveType"> 
+            &lt;Annotation Term="Core.Description" String="An allowed value for the property, parameter, or type definition" /> 
+        &lt;/Property> 
+    &lt;/ComplexType>
+</pre>
+
+<p>Mike: Further simplifying the proposal:</p>
+<pre>
+    &lt;Term Name="AllowedValues" Type="Collection(Validation.AllowedValue)">
+        &lt;Annotation Term="Core.Description"
+            String="A collection of valid values for the annotated property, parameter, or type definition" />
+    &lt;/Term>
+
+    &lt;ComplexType Name="AllowedValue">
+        &lt;Property Name="Value" Type="Edm.PrimitiveType">
+           &lt;Annotation Term="Core.Description" String="An allowed value for the property, parameter, or type definition" />
+        &lt;/Property>
+    &lt;/ComplexType>
+</pre>
+
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-940 according to the revised proposal. <b>Ralf</b> seconds.</p>
+<p>Ram: No objections, motion passes</p>
+
+<h4><a href="https://issues.oasis-open.org/browse/ODATA-560" rel="noopener noreferrer" target="_blank">ODATA-560</a> - Allow arbitrary properties in referential constraints</h4>
+
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-560 as proposed. <b>Mike</b> seconds.</p>
+<p>Ram: No objections, motion passes</p>
+
+<h4><a href="https://issues.oasis-open.org/browse/ODATA-696" rel="noopener noreferrer" target="_blank">ODATA-696</a> - Support "interfaces" for casting entities to multiple different types</h4>
+
+<p>Ram: ODATA-696 open, no objections</p>
+<p>Ram: Issue proposal needs further discussion. We will do this at the next meeting</p>
+
+<h3>7. Next meeting</h3>
+
+<h4>7.1 Next Meeting Thursday June 23, 2016 0600-1000 PDT</h4>
+<p>Agreed</p>
+<p>(Scribe): Please all take note of the earlier meeting time and longer duration from 6am-10am PT.</p>
+
+<h3>8. AOB and wrap up</h3>
+
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+
+</div>
+</body>
+</html>
