@@ -756,7 +756,7 @@
     "paths": {
         "/Photos": {
             "get": {
-                "summary": "Get entities from entity set Photos",
+                "summary": "Get entities from Photos",
                 "description": "Get entities from entity set Photos",
                 "tags": [
                     "Photos"
@@ -833,7 +833,7 @@
                 }
             },
             "post": {
-                "summary": "Post a new entity to entity set Photos",
+                "summary": "Add new entity to Photos",
                 "description": "Post a new entity to entity set Photos",
                 "tags": [
                     "Photos"
@@ -866,7 +866,7 @@
         },
         "/Photos({Id})": {
             "get": {
-                "summary": "Get entity from Photos by key.",
+                "summary": "Get entity from Photos by key",
                 "description": "Returns the entity with the key from Photos",
                 "tags": [
                     "Photos"
@@ -911,8 +911,8 @@
                 }
             },
             "patch": {
-                "summary": "Update entity in EntitySet Photos",
-                "description": "Update entity in EntitySet Photos",
+                "summary": "Update entity in Photos",
+                "description": "Update entity in entity set Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -947,8 +947,8 @@
                 }
             },
             "delete": {
-                "summary": "Delete entity in EntitySet Photos",
-                "description": "Delete entity in EntitySet Photos",
+                "summary": "Delete entity from Photos",
+                "description": "Delete entity from entity set Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -983,7 +983,7 @@
         },
         "/People": {
             "get": {
-                "summary": "Get entities from entity set People",
+                "summary": "Get entities from People",
                 "description": "Get entities from entity set People",
                 "tags": [
                     "People"
@@ -1090,7 +1090,7 @@
                 }
             },
             "post": {
-                "summary": "Post a new entity to entity set People",
+                "summary": "Add new entity to People",
                 "description": "Post a new entity to entity set People",
                 "tags": [
                     "People"
@@ -1123,7 +1123,7 @@
         },
         "/People('{UserName}')": {
             "get": {
-                "summary": "Get entity from People by key.",
+                "summary": "Get entity from People by key",
                 "description": "Returns the entity with the key from People",
                 "tags": [
                     "People"
@@ -1187,8 +1187,8 @@
                 }
             },
             "patch": {
-                "summary": "Update entity in EntitySet People",
-                "description": "Update entity in EntitySet People",
+                "summary": "Update entity in People",
+                "description": "Update entity in entity set People",
                 "tags": [
                     "People"
                 ],
@@ -1222,8 +1222,8 @@
                 }
             },
             "delete": {
-                "summary": "Delete entity in EntitySet People",
-                "description": "Delete entity in EntitySet People",
+                "summary": "Delete entity from People",
+                "description": "Delete entity from entity set People",
                 "tags": [
                     "People"
                 ],
@@ -1373,7 +1373,7 @@
         },
         "/Airlines": {
             "get": {
-                "summary": "Get entities from entity set Airlines",
+                "summary": "Get entities from Airlines",
                 "description": "Get entities from entity set Airlines",
                 "tags": [
                     "Airlines"
@@ -1450,7 +1450,7 @@
                 }
             },
             "post": {
-                "summary": "Post a new entity to entity set Airlines",
+                "summary": "Add new entity to Airlines",
                 "description": "Post a new entity to entity set Airlines",
                 "tags": [
                     "Airlines"
@@ -1483,7 +1483,7 @@
         },
         "/Airlines('{AirlineCode}')": {
             "get": {
-                "summary": "Get entity from Airlines by key.",
+                "summary": "Get entity from Airlines by key",
                 "description": "Returns the entity with the key from Airlines",
                 "tags": [
                     "Airlines"
@@ -1527,8 +1527,8 @@
                 }
             },
             "patch": {
-                "summary": "Update entity in EntitySet Airlines",
-                "description": "Update entity in EntitySet Airlines",
+                "summary": "Update entity in Airlines",
+                "description": "Update entity in entity set Airlines",
                 "tags": [
                     "Airlines"
                 ],
@@ -1562,8 +1562,8 @@
                 }
             },
             "delete": {
-                "summary": "Delete entity in EntitySet Airlines",
-                "description": "Delete entity in EntitySet Airlines",
+                "summary": "Delete entity from Airlines",
+                "description": "Delete entity from entity set Airlines",
                 "tags": [
                     "Airlines"
                 ],
@@ -1597,7 +1597,7 @@
         },
         "/Airports": {
             "get": {
-                "summary": "Get entities from entity set Airports",
+                "summary": "Get entities from Airports",
                 "description": "Get entities from entity set Airports",
                 "tags": [
                     "Airports"
@@ -1682,7 +1682,7 @@
         },
         "/Airports('{IcaoCode}')": {
             "get": {
-                "summary": "Get entity from Airports by key.",
+                "summary": "Get entity from Airports by key",
                 "description": "Returns the entity with the key from Airports",
                 "tags": [
                     "Airports"
@@ -1728,8 +1728,8 @@
                 }
             },
             "patch": {
-                "summary": "Update entity in EntitySet Airports",
-                "description": "Update entity in EntitySet Airports",
+                "summary": "Update entity in Airports",
+                "description": "Update entity in entity set Airports",
                 "tags": [
                     "Airports"
                 ],
@@ -1765,16 +1765,44 @@
         },
         "/Me": {
             "get": {
-                "summary": "Get singleton",
+                "summary": "Get Me",
                 "tags": [
                     "Me"
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/parameters/expand"
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "UserName",
+                            "FirstName",
+                            "LastName",
+                            "Emails",
+                            "AddressInfo",
+                            "Gender",
+                            "Concurrency"
+                        ]
                     },
                     {
-                        "$ref": "#/parameters/select"
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "Friends",
+                            "Trips",
+                            "Photo"
+                        ]
                     }
                 ],
                 "responses": {
@@ -1793,7 +1821,7 @@
                 }
             },
             "patch": {
-                "summary": "Update singleton",
+                "summary": "Update Me",
                 "tags": [
                     "Me"
                 ],
@@ -1978,24 +2006,6 @@
         }
     },
     "parameters": {
-        "expand": {
-            "name": "$expand",
-            "in": "query",
-            "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
-            "type": "string"
-        },
-        "select": {
-            "name": "$select",
-            "in": "query",
-            "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
-            "type": "string"
-        },
-        "orderby": {
-            "name": "$orderby",
-            "in": "query",
-            "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
-            "type": "string"
-        },
         "top": {
             "name": "$top",
             "in": "query",

@@ -8,6 +8,9 @@
     Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
+    - x-nullable for all nullable properties
+    - numeric value of an annotation member with an annotation @value instead of @odata.value
+    - annotations on null annotation values with shorter syntax, e.g. "@Some.Term:null@Within.Null":true
     - represent term type as termType nvp with a Schema Object for the type, similar to action/function parameter types?
     - reconsider representing terms similar to types, instead represent them OData-style
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
@@ -30,7 +33,8 @@
     - 200 response for PATCH
     - ETag / If-Match for PATCH
     - property description for key parameters in single-entity requests
-    - better description for operations
+    - better description for operations from @Core.Description of entity set, singleton, action/function imports
+    - allow external targeting for @Core.Description and @Common.Label
     - remove duplicated code in /paths production
     - call template schema-ref to produce $refs in /paths section
 
@@ -60,9 +64,16 @@
     select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
+
   <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="capabilitiesAlias"
     select="//edmx:Include[@Namespace=$capabilitiesNamespace]/@Alias|//edm:Schema[@Namespace=$capabilitiesNamespace]/@Alias" />
+
+  <xsl:variable name="commonNamespace" select="'com.sap.vocabularies.Common.v1'" />
+  <xsl:variable name="commonAlias"
+    select="//edmx:Include[@Namespace=$commonNamespace]/@Alias|//edm:Schema[@Namespace=$commonNamespace]/@Alias" />
+  <xsl:variable name="commonLabel" select="concat($commonNamespace,'.Label')" />
+  <xsl:variable name="commonLabelAliased" select="concat($commonAlias,'.Label')" />
 
   <xsl:variable name="defaultResponse">
     <xsl:text>"default":{"description":"Unexpected error","schema":{"$ref":"</xsl:text>
@@ -77,6 +88,10 @@
   <xsl:key name="includeannotations" match="edmx:Edmx/edmx:Reference/edmx:IncludeAnnotations" use="concat(../@Uri,'|',@TermNamespace)" />
 
   <xsl:template match="edmx:Edmx">
+    <!--
+      <xsl:message><xsl:value-of select="$commonAlias"/></xsl:message>
+      <xsl:message><xsl:value-of select="$commonNamespace"/></xsl:message>
+    -->
     <xsl:text>{</xsl:text>
     <xsl:apply-templates select="@*" mode="list" />
     <xsl:text>,"swagger":"2.0"</xsl:text>
@@ -162,12 +177,6 @@
     <xsl:if test="//edm:EntityContainer">
       <!-- TODO: external file? -->
       <xsl:text>,"parameters":{</xsl:text>
-      <xsl:text>"expand":{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
-      <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)","type":"string"},</xsl:text>
-      <xsl:text>"select":{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
-      <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)","type":"string"},</xsl:text>
-      <xsl:text>"orderby":{"name":"$orderby","in":"query","description":"Order by property values</xsl:text>
-      <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)","type":"string"},</xsl:text>
       <xsl:text>"top":{"name":"$top","in":"query","description":"Show only the first n elements</xsl:text>
       <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)","type":"integer"},</xsl:text>
       <xsl:text>"skip":{"name":"$skip","in":"query","description":"Skip the first n elements</xsl:text>
@@ -321,7 +330,22 @@
     <xsl:text>|</xsl:text>
     <xsl:if test="$description">
       <xsl:call-template name="escape">
-        <xsl:with-param name="string" select="$description" />
+        <xsl:with-param name="string">
+          <xsl:call-template name="replace-all">
+            <xsl:with-param name="string">
+              <xsl:call-template name="replace-all">
+                <xsl:with-param name="string" select="$description" />
+                <xsl:with-param name="old" select="'&#x0A;'" />
+                <xsl:with-param name="new" select="' '" />
+              </xsl:call-template>
+            </xsl:with-param>
+            <xsl:with-param name="old" select="'|'" />
+            <!--TODO:
+              Should actually be '\|' but Swagger tools don't recognize this GFM escape sequence.
+              '&amp;#x7c;' works in Swagger Editor but not in Swagger UI -->
+            <xsl:with-param name="new" select="'&amp;#x2758;'" />
+          </xsl:call-template>
+        </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -494,8 +518,9 @@
       <xsl:with-param name="type" select="@UnderlyingType" />
       <xsl:with-param name="nullableFacet" select="'false'" />
     </xsl:call-template>
-    <!-- TODO: test annotations within TypeDefinition -->
-    <xsl:apply-templates select="node()" mode="list2" />
+    <xsl:call-template name="x-annotations">
+      <xsl:with-param name="annotations" select="edm:Annotation" />
+    </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -1306,7 +1331,7 @@
 
     <!-- GET -->
     <xsl:text>"get":{</xsl:text>
-    <xsl:text>"summary":"Get entities from entity set </xsl:text>
+    <xsl:text>"summary":"Get entities from </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","description":"Get entities from entity set </xsl:text>
     <xsl:value-of select="@Name" />
@@ -1343,7 +1368,7 @@
     </xsl:variable>
     <xsl:if test="not($insertable='false')">
       <xsl:text>,"post":{</xsl:text>
-      <xsl:text>"summary":"Post a new entity to entity set </xsl:text>
+      <xsl:text>"summary":"Add new entity to </xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>","description":"Post a new entity to entity set </xsl:text>
       <xsl:value-of select="@Name" />
@@ -1383,8 +1408,12 @@
   </xsl:template>
 
   <xsl:template match="edm:Property" mode="orderby">
+    <xsl:param name="after" select="'something'" />
     <xsl:if test="position()=1">
-      <xsl:text>,{"name":"$orderby","in":"query","description":"Order by property values</xsl:text>
+      <xsl:if test="$after">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>{"name":"$orderby","in":"query","description":"Order by property values</xsl:text>
       <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)"</xsl:text>
       <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
     </xsl:if>
@@ -1402,8 +1431,12 @@
   </xsl:template>
 
   <xsl:template match="edm:Property" mode="select">
+    <xsl:param name="after" select="'something'" />
     <xsl:if test="position()=1">
-      <xsl:text>,{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
+      <xsl:if test="$after">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
       <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)"</xsl:text>
       <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
     </xsl:if>
@@ -1419,8 +1452,12 @@
   </xsl:template>
 
   <xsl:template match="edm:NavigationProperty" mode="expand">
+    <xsl:param name="after" select="'something'" />
     <xsl:if test="position()=1">
-      <xsl:text>,{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
+      <xsl:if test="$after">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
       <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)"</xsl:text>
       <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
     </xsl:if>
@@ -1506,7 +1543,7 @@
     <xsl:text>"get":{</xsl:text>
     <xsl:text>"summary":"Get entity from </xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text> by key.","description":"Returns the entity with the key from </xsl:text>
+    <xsl:text> by key","description":"Returns the entity with the key from </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
@@ -1538,9 +1575,9 @@
     </xsl:variable>
     <xsl:if test="not($updatable='false')">
       <xsl:text>,"patch":{</xsl:text>
-      <xsl:text>"summary":"Update entity in EntitySet </xsl:text>
+      <xsl:text>"summary":"Update entity in </xsl:text>
       <xsl:value-of select="@Name" />
-      <xsl:text>","description":"Update entity in EntitySet </xsl:text>
+      <xsl:text>","description":"Update entity in entity set </xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
@@ -1575,9 +1612,9 @@
     </xsl:variable>
     <xsl:if test="not($deletable='false')">
       <xsl:text>,"delete":{</xsl:text>
-      <xsl:text>"summary":"Delete entity in EntitySet </xsl:text>
+      <xsl:text>"summary":"Delete entity from </xsl:text>
       <xsl:value-of select="@Name" />
-      <xsl:text>","description":"Delete entity in EntitySet </xsl:text>
+      <xsl:text>","description":"Delete entity from entity set </xsl:text>
       <xsl:value-of select="@Name" />
       <xsl:text>","tags":["</xsl:text>
       <xsl:value-of select="@Name" />
@@ -1653,12 +1690,22 @@
 
     <!-- GET -->
     <xsl:text>"get":{</xsl:text>
-    <xsl:text>"summary":"Get singleton"</xsl:text>
-    <xsl:text>,"tags":["</xsl:text>
+    <xsl:text>"summary":"Get </xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
-    <xsl:text>{"$ref":"#/parameters/expand"},{"$ref":"#/parameters/select"}],"responses":{"200":{"description":"EntitySet </xsl:text>
+
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
+      mode="select"
+    >
+      <xsl:with-param name="after" select="''" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
+      mode="expand" />
+
+    <xsl:text>],"responses":{"200":{"description":"EntitySet </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>","schema":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
@@ -1670,8 +1717,9 @@
 
     <!-- PATCH -->
     <xsl:text>,"patch":{</xsl:text>
-    <xsl:text>"summary":"Update singleton"</xsl:text>
-    <xsl:text>,"tags":["</xsl:text>
+    <xsl:text>"summary":"Update </xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
     <xsl:text>,"parameters":[</xsl:text>
@@ -2108,10 +2156,10 @@
     <xsl:param name="annotations" />
     <xsl:param name="members" select="null" />
     <xsl:apply-templates
-      select="$annotations[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier) and (@String or edm:String)]"
+      select="$annotations[(@Term=$coreDescription or @Term=$coreDescriptionAliased or @Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier) and (@String or edm:String)]"
       mode="list2" />
     <xsl:variable name="remaining"
-      select="$annotations[not((@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier) and (@String or edm:String))]" />
+      select="$annotations[not((@Term=$coreDescription or @Term=$coreDescriptionAliased or @Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier) and (@String or edm:String))]" />
     <xsl:if test="$remaining or $members">
       <xsl:text>,"x-annotations":{</xsl:text>
       <xsl:apply-templates select="$remaining" mode="list" />
@@ -2142,6 +2190,14 @@
         test="(substring($name,2)=$coreDescription or substring($name,2)=$coreDescriptionAliased) and (@String or edm:String)"
       >
         <xsl:text>"description":</xsl:text>
+        <xsl:apply-templates select="@String|edm:String">
+          <xsl:with-param name="normalize" select="true()" />
+        </xsl:apply-templates>
+      </xsl:when>
+      <xsl:when
+        test="(substring($name,2)=$commonLabel or substring($name,2)=$commonLabelAliased) and (@String or edm:String)"
+      >
+        <xsl:text>"title":</xsl:text>
         <xsl:apply-templates select="@String|edm:String">
           <xsl:with-param name="normalize" select="true()" />
         </xsl:apply-templates>

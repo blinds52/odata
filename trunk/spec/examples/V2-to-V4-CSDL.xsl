@@ -34,6 +34,11 @@
       >
         <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
       </edmx:Reference>
+      <edmx:Reference
+        Uri="http://localhost/examples/Common.xml"
+      >
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
+      </edmx:Reference>
       <xsl:apply-templates />
     </edmx:Edmx>
   </xsl:template>
