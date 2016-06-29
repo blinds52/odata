@@ -8,9 +8,6 @@
     Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - x-nullable for all nullable properties
-    - numeric value of an annotation member with an annotation @value instead of @odata.value
-    - annotations on null annotation values with shorter syntax, e.g. "@Some.Term:null@Within.Null":true
     - represent term type as termType nvp with a Schema Object for the type, similar to action/function parameter types?
     - reconsider representing terms similar to types, instead represent them OData-style
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
@@ -321,32 +318,21 @@
 
   <xsl:template match="edm:Term" mode="description">
     <xsl:if test="position() = 1">
-      <xsl:text>\n\n## Term Definitions\nTerm|Description\n----|----</xsl:text>
+      <xsl:text>\n\n## Term Definitions\n&lt;table>&lt;tr>&lt;td>&lt;strong>Term&lt;/strong>&lt;/td>&lt;td>&lt;b>Description&lt;/b>&lt;/td>&lt;/tr></xsl:text>
     </xsl:if>
-    <xsl:text>\n</xsl:text>
+    <xsl:text>&lt;tr>&lt;td></xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:variable name="description"
       select="edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String|edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/edm:String" />
-    <xsl:text>|</xsl:text>
+    <xsl:text>&lt;/td>&lt;td></xsl:text>
     <xsl:if test="$description">
       <xsl:call-template name="escape">
-        <xsl:with-param name="string">
-          <xsl:call-template name="replace-all">
-            <xsl:with-param name="string">
-              <xsl:call-template name="replace-all">
-                <xsl:with-param name="string" select="$description" />
-                <xsl:with-param name="old" select="'&#x0A;'" />
-                <xsl:with-param name="new" select="' '" />
-              </xsl:call-template>
-            </xsl:with-param>
-            <xsl:with-param name="old" select="'|'" />
-            <!--TODO:
-              Should actually be '\|' but Swagger tools don't recognize this GFM escape sequence.
-              '&amp;#x7c;' works in Swagger Editor but not in Swagger UI -->
-            <xsl:with-param name="new" select="'&amp;#x2758;'" />
-          </xsl:call-template>
-        </xsl:with-param>
+        <xsl:with-param name="string" select="$description" />
       </xsl:call-template>
+    </xsl:if>
+    <xsl:text>&lt;/td>&lt;/tr></xsl:text>
+    <xsl:if test="position() = last()">
+      <xsl:text>&lt;/table></xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -489,7 +475,7 @@
     </xsl:choose>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="../@Name" />
-    <xsl:text>@odata.value":</xsl:text>
+    <xsl:text>@value":</xsl:text>
     <xsl:value-of select="." />
   </xsl:template>
 
@@ -982,25 +968,6 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- Remark: OpenAPI spec and Swagger Editor allow arrays in Schema objects, Swagger UI has some (minor) issues with it
-    <xsl:template name="alternative-nullableType">
-    <xsl:param name="type" />
-    <xsl:param name="nullable" />
-    <xsl:text>"type":"</xsl:text>
-    <xsl:choose>
-    <xsl:when test="contains($type,',')">
-    <xsl:value-of select="substring-before($type,',')" />
-    </xsl:when>
-    <xsl:otherwise>
-    <xsl:value-of select="$type" />
-    </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>"</xsl:text>
-    <xsl:if test="not($nullable='false')">
-    <xsl:text>,"x-nullable":true</xsl:text>
-    </xsl:if>
-    </xsl:template>
-  -->
   <xsl:template name="nullableType">
     <xsl:param name="type" />
     <xsl:param name="nullable" />
