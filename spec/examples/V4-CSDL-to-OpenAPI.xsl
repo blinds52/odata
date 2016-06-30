@@ -47,6 +47,7 @@
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
   <xsl:param name="odata-schema" select="'https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json'" />
+  <xsl:param name="odata-version" select="'4.0'" />
   <xsl:param name="vocabulary-home" select="'http://localhost/examples'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
   <xsl:param name="openapi-formatoption" select="''" />
@@ -190,7 +191,7 @@
 
   <xsl:template match="edmx:Edmx/@Version">
     <xsl:text>"x-odata-version":"</xsl:text>
-    <xsl:value-of select="." />
+    <xsl:value-of select="$odata-version" />
     <xsl:text>"</xsl:text>
   </xsl:template>
 
@@ -318,21 +319,32 @@
 
   <xsl:template match="edm:Term" mode="description">
     <xsl:if test="position() = 1">
-      <xsl:text>\n\n## Term Definitions\n&lt;table>&lt;tr>&lt;td>&lt;strong>Term&lt;/strong>&lt;/td>&lt;td>&lt;b>Description&lt;/b>&lt;/td>&lt;/tr></xsl:text>
+      <xsl:text>\n\n## Term Definitions\nTerm|Description\n----|----</xsl:text>
     </xsl:if>
-    <xsl:text>&lt;tr>&lt;td></xsl:text>
+    <xsl:text>\n</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:variable name="description"
       select="edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/@String|edm:Annotation[@Term=$coreDescription or @Term=$coreDescriptionAliased]/edm:String" />
-    <xsl:text>&lt;/td>&lt;td></xsl:text>
+    <xsl:text>|</xsl:text>
     <xsl:if test="$description">
       <xsl:call-template name="escape">
-        <xsl:with-param name="string" select="$description" />
+        <xsl:with-param name="string">
+          <xsl:call-template name="replace-all">
+            <xsl:with-param name="string">
+              <xsl:call-template name="replace-all">
+                <xsl:with-param name="string" select="$description" />
+                <xsl:with-param name="old" select="'&#x0A;'" />
+                <xsl:with-param name="new" select="' '" />
+              </xsl:call-template>
+            </xsl:with-param>
+            <xsl:with-param name="old" select="'|'" />
+            <!--TODO:
+              Should actually be '\|' but Swagger tools don't recognize this GFM escape sequence.
+              '&amp;#x7c;' works in Swagger Editor but not in Swagger UI -->
+            <xsl:with-param name="new" select="'&amp;#x2758;'" />
+          </xsl:call-template>
+        </xsl:with-param>
       </xsl:call-template>
-    </xsl:if>
-    <xsl:text>&lt;/td>&lt;/tr></xsl:text>
-    <xsl:if test="position() = last()">
-      <xsl:text>&lt;/table></xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1426,12 +1438,9 @@
       </xsl:if>
       <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
       <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)"</xsl:text>
-      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
+      <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":["*"</xsl:text>
     </xsl:if>
-    <xsl:if test="position()>1">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
-    <xsl:text>"</xsl:text>
+    <xsl:text>,"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"</xsl:text>
     <xsl:if test="position()=last()">
