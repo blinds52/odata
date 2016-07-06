@@ -34,9 +34,7 @@
       >
         <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities" />
       </edmx:Reference>
-      <edmx:Reference
-        Uri="http://localhost/examples/Common.xml"
-      >
+      <edmx:Reference Uri="http://localhost/examples/Common.xml">
         <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
       </edmx:Reference>
       <xsl:apply-templates />
@@ -193,6 +191,7 @@
           <xsl:attribute name="Action">
             <xsl:value-of select="../../@Namespace" />.<xsl:value-of select="@Name" />
           </xsl:attribute>
+          <xsl:apply-templates select="@sap:*" />
         </ActionImport>
       </xsl:when>
       <xsl:otherwise>
@@ -296,6 +295,14 @@
   </xsl:template>
 
   <!-- SAP annotations -->
+  <xsl:template match="@sap:action-for">
+    <Annotation Term="SAP.ActionFor">
+      <xsl:attribute name="String">
+        <xsl:value-of select="." />
+      </xsl:attribute>
+    </Annotation>
+  </xsl:template>
+
   <xsl:template match="@sap:label">
     <Annotation Term="Common.Label">
       <xsl:attribute name="String">
