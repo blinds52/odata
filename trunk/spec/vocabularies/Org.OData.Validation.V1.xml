@@ -86,6 +86,23 @@
           String="The value of the annotated property, parameter, or term must be an integer multiple of this positive value. For temporal types, the value is measured in seconds." />
       </Term>
 
+      <Term Name="AllowedValues" Type="Validation.ValueEnumeration">
+        <Annotation Term="Core.Description"
+          String="A collection of valid values for the annotated property, parameter, or type definition" />
+      </Term>
+      <ComplexType Name="ValueEnumeration">
+        <Property Name="Extends" Type="Edm.String">
+          <Annotation Term="Core.Description"
+            String="The name of a type definition with the same underlying type that has an AllowedValues annotation whose values are extended by this annotation" />
+        </Property>
+        <Property Name="Values" Type="Collection(Validation.AllowedValue)" />
+      </ComplexType>
+      <ComplexType Name="AllowedValue">
+        <Property Name="Value" Type="Edm.PrimitiveType">
+          <Annotation Term="Core.Description" String="An allowed value for the annotated property, parameter, or type definition" />
+        </Property>
+      </ComplexType>
+
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
