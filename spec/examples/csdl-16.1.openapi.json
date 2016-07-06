@@ -17,8 +17,31 @@
     "produces": [
         "application/json"
     ],
+    "tags": [
+        {
+            "name": "Products",
+            "description": ""
+        },
+        {
+            "name": "Categories",
+            "description": ""
+        },
+        {
+            "name": "Suppliers",
+            "description": ""
+        },
+        {
+            "name": "MainSupplier",
+            "description": ""
+        },
+        {
+            "name": "Countries",
+            "description": ""
+        }
+    ],
     "definitions": {
         "ODataDemo.Product": {
+            "title": "Product",
             "type": "object",
             "x-mediaEntity": true,
             "x-keys": [
@@ -101,6 +124,7 @@
             }
         },
         "ODataDemo.Category": {
+            "title": "Category",
             "type": "object",
             "x-keys": [
                 "ID"
@@ -131,6 +155,7 @@
             }
         },
         "ODataDemo.Supplier": {
+            "title": "Supplier",
             "type": "object",
             "x-keys": [
                 "ID"
@@ -165,6 +190,7 @@
             }
         },
         "ODataDemo.Country": {
+            "title": "Country",
             "type": "object",
             "x-keys": [
                 "Code"
@@ -184,6 +210,7 @@
             }
         },
         "ODataDemo.Address": {
+            "title": "Address",
             "type": "object",
             "properties": {
                 "Street": {
@@ -330,7 +357,6 @@
         "/Products": {
             "get": {
                 "summary": "Get entities from Products",
-                "description": "Get entities from entity set Products",
                 "tags": [
                     "Products"
                 ],
@@ -353,7 +379,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -413,10 +439,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Products",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of ODataDemo.Product",
+                            "title": "Collection of Product",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -428,7 +454,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -437,7 +463,6 @@
             },
             "post": {
                 "summary": "Add new entity to Products",
-                "description": "Post a new entity to entity set Products",
                 "tags": [
                     "Products"
                 ],
@@ -445,7 +470,7 @@
                     {
                         "name": "Product",
                         "in": "body",
-                        "description": "The new entity",
+                        "description": "New entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Product"
                         }
@@ -459,7 +484,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -470,7 +495,6 @@
         "/Products('{ID}')": {
             "get": {
                 "summary": "Get entity from Products by key",
-                "description": "Returns the entity with the key from Products",
                 "tags": [
                     "Products"
                 ],
@@ -519,13 +543,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Products",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Product"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -534,7 +558,6 @@
             },
             "patch": {
                 "summary": "Update entity in Products",
-                "description": "Update entity in entity set Products",
                 "tags": [
                     "Products"
                 ],
@@ -549,7 +572,7 @@
                     {
                         "name": "Product",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Product"
                         }
@@ -557,10 +580,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -569,7 +592,6 @@
             },
             "delete": {
                 "summary": "Delete entity from Products",
-                "description": "Delete entity from entity set Products",
                 "tags": [
                     "Products"
                 ],
@@ -584,16 +606,16 @@
                     {
                         "name": "If-Match",
                         "in": "header",
-                        "description": "If-Match header",
+                        "description": "ETag",
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -604,7 +626,6 @@
         "/Categories": {
             "get": {
                 "summary": "Get entities from Categories",
-                "description": "Get entities from entity set Categories",
                 "tags": [
                     "Categories"
                 ],
@@ -627,7 +648,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -671,10 +692,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Categories",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of ODataDemo.Category",
+                            "title": "Collection of Category",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -686,7 +707,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -695,7 +716,6 @@
             },
             "post": {
                 "summary": "Add new entity to Categories",
-                "description": "Post a new entity to entity set Categories",
                 "tags": [
                     "Categories"
                 ],
@@ -703,7 +723,7 @@
                     {
                         "name": "Category",
                         "in": "body",
-                        "description": "The new entity",
+                        "description": "New entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Category"
                         }
@@ -717,7 +737,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -728,7 +748,6 @@
         "/Categories({ID})": {
             "get": {
                 "summary": "Get entity from Categories by key",
-                "description": "Returns the entity with the key from Categories",
                 "tags": [
                     "Categories"
                 ],
@@ -772,13 +791,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Categories",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Category"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -787,7 +806,6 @@
             },
             "patch": {
                 "summary": "Update entity in Categories",
-                "description": "Update entity in entity set Categories",
                 "tags": [
                     "Categories"
                 ],
@@ -803,7 +821,7 @@
                     {
                         "name": "Category",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Category"
                         }
@@ -811,10 +829,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -823,7 +841,6 @@
             },
             "delete": {
                 "summary": "Delete entity from Categories",
-                "description": "Delete entity from entity set Categories",
                 "tags": [
                     "Categories"
                 ],
@@ -839,16 +856,16 @@
                     {
                         "name": "If-Match",
                         "in": "header",
-                        "description": "If-Match header",
+                        "description": "ETag",
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -859,7 +876,6 @@
         "/Suppliers": {
             "get": {
                 "summary": "Get entities from Suppliers",
-                "description": "Get entities from entity set Suppliers",
                 "tags": [
                     "Suppliers"
                 ],
@@ -882,7 +898,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -932,10 +948,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Suppliers",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of ODataDemo.Supplier",
+                            "title": "Collection of Supplier",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -947,7 +963,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -956,7 +972,6 @@
             },
             "post": {
                 "summary": "Add new entity to Suppliers",
-                "description": "Post a new entity to entity set Suppliers",
                 "tags": [
                     "Suppliers"
                 ],
@@ -964,7 +979,7 @@
                     {
                         "name": "Supplier",
                         "in": "body",
-                        "description": "The new entity",
+                        "description": "New entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Supplier"
                         }
@@ -978,7 +993,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -989,7 +1004,6 @@
         "/Suppliers('{ID}')": {
             "get": {
                 "summary": "Get entity from Suppliers by key",
-                "description": "Returns the entity with the key from Suppliers",
                 "tags": [
                     "Suppliers"
                 ],
@@ -1034,13 +1048,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Suppliers",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Supplier"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1049,7 +1063,6 @@
             },
             "patch": {
                 "summary": "Update entity in Suppliers",
-                "description": "Update entity in entity set Suppliers",
                 "tags": [
                     "Suppliers"
                 ],
@@ -1064,7 +1077,7 @@
                     {
                         "name": "Supplier",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Supplier"
                         }
@@ -1072,10 +1085,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1084,7 +1097,6 @@
             },
             "delete": {
                 "summary": "Delete entity from Suppliers",
-                "description": "Delete entity from entity set Suppliers",
                 "tags": [
                     "Suppliers"
                 ],
@@ -1099,16 +1111,16 @@
                     {
                         "name": "If-Match",
                         "in": "header",
-                        "description": "If-Match header",
+                        "description": "ETag",
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1156,13 +1168,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet MainSupplier",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Supplier"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1178,7 +1190,7 @@
                     {
                         "name": "Supplier",
                         "in": "body",
-                        "description": "The singleton to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Supplier"
                         }
@@ -1186,10 +1198,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1200,7 +1212,6 @@
         "/Countries": {
             "get": {
                 "summary": "Get entities from Countries",
-                "description": "Get entities from entity set Countries",
                 "tags": [
                     "Countries"
                 ],
@@ -1223,7 +1234,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1253,10 +1264,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Countries",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of ODataDemo.Country",
+                            "title": "Collection of Country",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -1268,7 +1279,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1277,7 +1288,6 @@
             },
             "post": {
                 "summary": "Add new entity to Countries",
-                "description": "Post a new entity to entity set Countries",
                 "tags": [
                     "Countries"
                 ],
@@ -1285,7 +1295,7 @@
                     {
                         "name": "Country",
                         "in": "body",
-                        "description": "The new entity",
+                        "description": "New entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Country"
                         }
@@ -1299,7 +1309,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1310,7 +1320,6 @@
         "/Countries('{Code}')": {
             "get": {
                 "summary": "Get entity from Countries by key",
-                "description": "Returns the entity with the key from Countries",
                 "tags": [
                     "Countries"
                 ],
@@ -1339,13 +1348,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Countries",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Country"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1354,7 +1363,6 @@
             },
             "patch": {
                 "summary": "Update entity in Countries",
-                "description": "Update entity in entity set Countries",
                 "tags": [
                     "Countries"
                 ],
@@ -1369,7 +1377,7 @@
                     {
                         "name": "Country",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/ODataDemo.Country"
                         }
@@ -1377,10 +1385,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1389,7 +1397,6 @@
             },
             "delete": {
                 "summary": "Delete entity from Countries",
-                "description": "Delete entity from entity set Countries",
                 "tags": [
                     "Countries"
                 ],
@@ -1404,16 +1411,16 @@
                     {
                         "name": "If-Match",
                         "in": "header",
-                        "description": "If-Match header",
+                        "description": "ETag",
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1423,7 +1430,7 @@
         },
         "/ProductsByRating(Rating={Rating})": {
             "get": {
-                "summary": "Invoke function import ProductsByRating",
+                "summary": "Invoke function ProductsByRating",
                 "tags": [
                     "Products"
                 ],
@@ -1441,14 +1448,20 @@
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ODataDemo.Product"
+                            "title": "Result",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/ODataDemo.Product"
+                                    }
+                                }
                             }
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1461,31 +1474,31 @@
         "top": {
             "name": "$top",
             "in": "query",
-            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "description": "Show only the first n items, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
             "type": "integer"
         },
         "skip": {
             "name": "$skip",
             "in": "query",
-            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "description": "Skip the first n items, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
             "type": "integer"
         },
         "count": {
             "name": "$count",
             "in": "query",
-            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "description": "Include count of items, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
             "type": "boolean"
         },
         "filter": {
             "name": "$filter",
             "in": "query",
-            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
             "type": "string"
         },
         "search": {
             "name": "$search",
             "in": "query",
-            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "description": "Search items by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
             "type": "string"
         }
     }

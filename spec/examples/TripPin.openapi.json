@@ -17,6 +17,28 @@
     "produces": [
         "application/json"
     ],
+    "tags": [
+        {
+            "name": "Photos",
+            "description": ""
+        },
+        {
+            "name": "People",
+            "description": ""
+        },
+        {
+            "name": "Airlines",
+            "description": ""
+        },
+        {
+            "name": "Airports",
+            "description": ""
+        },
+        {
+            "name": "Me",
+            "description": "My person data"
+        }
+    ],
     "definitions": {
         "Microsoft.OData.SampleService.Models.TripPin.PersonGender": {
             "type": "string",
@@ -32,6 +54,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.City": {
+            "title": "City",
             "type": "object",
             "properties": {
                 "CountryRegion": {
@@ -46,6 +69,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.Location": {
+            "title": "Location",
             "type": "object",
             "x-openType": true,
             "properties": {
@@ -58,6 +82,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.EventLocation": {
+            "title": "EventLocation",
             "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.Location",
             "allOf": [
                 {
@@ -79,6 +104,7 @@
             ]
         },
         "Microsoft.OData.SampleService.Models.TripPin.AirportLocation": {
+            "title": "AirportLocation",
             "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.Location",
             "allOf": [
                 {
@@ -97,6 +123,7 @@
             ]
         },
         "Microsoft.OData.SampleService.Models.TripPin.Photo": {
+            "title": "Photo",
             "type": "object",
             "x-mediaEntity": true,
             "x-keys": [
@@ -128,6 +155,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.Person": {
+            "title": "Person",
             "type": "object",
             "x-openType": true,
             "x-keys": [
@@ -200,6 +228,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.Airline": {
+            "title": "Airline",
             "type": "object",
             "x-keys": [
                 "AirlineCode"
@@ -217,6 +246,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.Airport": {
+            "title": "Airport",
             "type": "object",
             "x-keys": [
                 "IcaoCode"
@@ -243,6 +273,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.PlanItem": {
+            "title": "PlanItem",
             "type": "object",
             "x-keys": [
                 "PlanItemId"
@@ -289,6 +320,7 @@
             }
         },
         "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation": {
+            "title": "PublicTransportation",
             "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.PlanItem",
             "allOf": [
                 {
@@ -309,6 +341,7 @@
             ]
         },
         "Microsoft.OData.SampleService.Models.TripPin.Flight": {
+            "title": "Flight",
             "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation",
             "allOf": [
                 {
@@ -343,6 +376,7 @@
             ]
         },
         "Microsoft.OData.SampleService.Models.TripPin.Event": {
+            "title": "Event",
             "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.PlanItem",
             "allOf": [
                 {
@@ -367,6 +401,7 @@
             ]
         },
         "Microsoft.OData.SampleService.Models.TripPin.Trip": {
+            "title": "Trip",
             "type": "object",
             "x-keys": [
                 "TripId"
@@ -737,6 +772,7 @@
                     "Photo": "Photos",
                     "Microsoft.OData.SampleService.Models.TripPin.Trip/Photos": "Photos"
                 },
+                "description": "My person data",
                 "@Org.OData.Core.V1.ResourcePath": "Me"
             },
             "GetNearestAirport": {
@@ -757,7 +793,6 @@
         "/Photos": {
             "get": {
                 "summary": "Get entities from Photos",
-                "description": "Get entities from entity set Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -780,7 +815,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -810,10 +845,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Photos",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of Microsoft.OData.SampleService.Models.TripPin.Photo",
+                            "title": "Collection of Photo",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -825,7 +860,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -834,7 +869,6 @@
             },
             "post": {
                 "summary": "Add new entity to Photos",
-                "description": "Post a new entity to entity set Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -842,7 +876,7 @@
                     {
                         "name": "Photo",
                         "in": "body",
-                        "description": "The new entity",
+                        "description": "New entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
                         }
@@ -856,7 +890,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -867,7 +901,6 @@
         "/Photos({Id})": {
             "get": {
                 "summary": "Get entity from Photos by key",
-                "description": "Returns the entity with the key from Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -897,13 +930,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Photos",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -912,7 +945,6 @@
             },
             "patch": {
                 "summary": "Update entity in Photos",
-                "description": "Update entity in entity set Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -928,7 +960,7 @@
                     {
                         "name": "Photo",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
                         }
@@ -936,10 +968,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -948,7 +980,6 @@
             },
             "delete": {
                 "summary": "Delete entity from Photos",
-                "description": "Delete entity from entity set Photos",
                 "tags": [
                     "Photos"
                 ],
@@ -964,16 +995,16 @@
                     {
                         "name": "If-Match",
                         "in": "header",
-                        "description": "If-Match header",
+                        "description": "ETag",
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -984,7 +1015,6 @@
         "/People": {
             "get": {
                 "summary": "Get entities from People",
-                "description": "Get entities from entity set People",
                 "tags": [
                     "People"
                 ],
@@ -1007,7 +1037,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1068,10 +1098,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet People",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of Microsoft.OData.SampleService.Models.TripPin.Person",
+                            "title": "Collection of Person",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -1083,7 +1113,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1092,7 +1122,6 @@
             },
             "post": {
                 "summary": "Add new entity to People",
-                "description": "Post a new entity to entity set People",
                 "tags": [
                     "People"
                 ],
@@ -1100,7 +1129,7 @@
                     {
                         "name": "Person",
                         "in": "body",
-                        "description": "The new entity",
+                        "description": "New entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         }
@@ -1114,7 +1143,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1125,7 +1154,6 @@
         "/People('{UserName}')": {
             "get": {
                 "summary": "Get entity from People by key",
-                "description": "Returns the entity with the key from People",
                 "tags": [
                     "People"
                 ],
@@ -1175,13 +1203,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet People",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1190,7 +1218,6 @@
             },
             "patch": {
                 "summary": "Update entity in People",
-                "description": "Update entity in entity set People",
                 "tags": [
                     "People"
                 ],
@@ -1205,7 +1232,7 @@
                     {
                         "name": "Person",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         }
@@ -1213,10 +1240,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1225,7 +1252,6 @@
             },
             "delete": {
                 "summary": "Delete entity from People",
-                "description": "Delete entity from entity set People",
                 "tags": [
                     "People"
                 ],
@@ -1240,16 +1266,16 @@
                     {
                         "name": "If-Match",
                         "in": "header",
-                        "description": "If-Match header",
+                        "description": "ETag",
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1280,7 +1306,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1313,14 +1339,20 @@
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                            "title": "Result",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                                    }
+                                }
                             }
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1345,7 +1377,7 @@
                     {
                         "name": "body",
                         "in": "body",
-                        "description": "Request body",
+                        "description": "Action parameters",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -1362,10 +1394,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1376,7 +1408,6 @@
         "/Airlines": {
             "get": {
                 "summary": "Get entities from Airlines",
-                "description": "Get entities from entity set Airlines",
                 "tags": [
                     "Airlines"
                 ],
@@ -1399,7 +1430,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1429,10 +1460,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Airlines",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of Microsoft.OData.SampleService.Models.TripPin.Airline",
+                            "title": "Collection of Airline",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -1444,7 +1475,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1453,7 +1484,6 @@
             },
             "post": {
                 "summary": "Add new entity to Airlines",
-                "description": "Post a new entity to entity set Airlines",
                 "tags": [
                     "Airlines"
                 ],
@@ -1461,7 +1491,7 @@
                     {
                         "name": "Airline",
                         "in": "body",
-                        "description": "The new entity",
+                        "description": "New entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
                         }
@@ -1475,7 +1505,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1486,7 +1516,6 @@
         "/Airlines('{AirlineCode}')": {
             "get": {
                 "summary": "Get entity from Airlines by key",
-                "description": "Returns the entity with the key from Airlines",
                 "tags": [
                     "Airlines"
                 ],
@@ -1515,13 +1544,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Airlines",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1530,7 +1559,6 @@
             },
             "patch": {
                 "summary": "Update entity in Airlines",
-                "description": "Update entity in entity set Airlines",
                 "tags": [
                     "Airlines"
                 ],
@@ -1545,7 +1573,7 @@
                     {
                         "name": "Airline",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
                         }
@@ -1553,10 +1581,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1565,7 +1593,6 @@
             },
             "delete": {
                 "summary": "Delete entity from Airlines",
-                "description": "Delete entity from entity set Airlines",
                 "tags": [
                     "Airlines"
                 ],
@@ -1580,16 +1607,16 @@
                     {
                         "name": "If-Match",
                         "in": "header",
-                        "description": "If-Match header",
+                        "description": "ETag",
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1600,7 +1627,6 @@
         "/Airports": {
             "get": {
                 "summary": "Get entities from Airports",
-                "description": "Get entities from entity set Airports",
                 "tags": [
                     "Airports"
                 ],
@@ -1623,7 +1649,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1659,10 +1685,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Airports",
+                        "description": "Retrieved entities",
                         "schema": {
                             "type": "object",
-                            "title": "Collection of Microsoft.OData.SampleService.Models.TripPin.Airport",
+                            "title": "Collection of Airport",
                             "properties": {
                                 "value": {
                                     "type": "array",
@@ -1674,7 +1700,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1685,7 +1711,6 @@
         "/Airports('{IcaoCode}')": {
             "get": {
                 "summary": "Get entity from Airports by key",
-                "description": "Returns the entity with the key from Airports",
                 "tags": [
                     "Airports"
                 ],
@@ -1716,13 +1741,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Airports",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1731,7 +1756,6 @@
             },
             "patch": {
                 "summary": "Update entity in Airports",
-                "description": "Update entity in entity set Airports",
                 "tags": [
                     "Airports"
                 ],
@@ -1746,7 +1770,7 @@
                     {
                         "name": "Airport",
                         "in": "body",
-                        "description": "The entity to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
                         }
@@ -1754,10 +1778,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1810,13 +1834,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "EntitySet Me",
+                        "description": "Retrieved entity",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1832,7 +1856,7 @@
                     {
                         "name": "Person",
                         "in": "body",
-                        "description": "The singleton to patch",
+                        "description": "New property values",
                         "schema": {
                             "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
                         }
@@ -1840,10 +1864,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1868,7 +1892,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1894,14 +1918,20 @@
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                            "title": "Result",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                                    }
+                                }
                             }
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1919,7 +1949,7 @@
                     {
                         "name": "body",
                         "in": "body",
-                        "description": "Request body",
+                        "description": "Action parameters",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -1936,10 +1966,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1949,7 +1979,7 @@
         },
         "/GetNearestAirport(lat={lat},lon={lon})": {
             "get": {
-                "summary": "Invoke function import GetNearestAirport",
+                "summary": "Invoke function GetNearestAirport",
                 "tags": [
                     "Airports"
                 ],
@@ -1977,7 +2007,7 @@
                         }
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -1987,7 +2017,7 @@
         },
         "/ResetDataSource": {
             "post": {
-                "summary": "Invoke action import ResetDataSource",
+                "summary": "Invoke action ResetDataSource",
                 "tags": [
                     "Service Operations"
                 ],
@@ -1996,10 +2026,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Empty response"
+                        "description": "Success"
                     },
                     "default": {
-                        "description": "Unexpected error",
+                        "description": "Error",
                         "schema": {
                             "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
                         }
@@ -2012,31 +2042,31 @@
         "top": {
             "name": "$top",
             "in": "query",
-            "description": "Show only the first n elements, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "description": "Show only the first n items, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
             "type": "integer"
         },
         "skip": {
             "name": "$skip",
             "in": "query",
-            "description": "Skip the first n elements, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "description": "Skip the first n items, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
             "type": "integer"
         },
         "count": {
             "name": "$count",
             "in": "query",
-            "description": "Include count of elements, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "description": "Include count of items, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
             "type": "boolean"
         },
         "filter": {
             "name": "$filter",
             "in": "query",
-            "description": "Filter elements by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
             "type": "string"
         },
         "search": {
             "name": "$search",
             "in": "query",
-            "description": "Search elements by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "description": "Search items by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
             "type": "string"
         }
     }
