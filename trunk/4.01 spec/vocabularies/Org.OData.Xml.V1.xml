@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Technical Committee:
+  OASIS Open Data Protocol (OData) TC
+  https://www.oasis-open.org/committees/odata
+
+Chairs:
+  - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+  - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+
+Editors:
+  - Stefan Drees (stefan@drees.name), Individual
+
+Additional artifacts: 
+  This CSDL document is one component of a Work Product that consists of:
+  - OData Extension for XML Data Version 4.0
+  - OData XML Vocabulary (this document)
+
+Related work:
+  This work product is related to:
+  - OData Version 4.0, a multi-part Work Product which includes:
+    - OData Version 4.0 Part 1: Protocol
+    - OData Version 4.0 Part 2: URL Conventions
+    - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
+    - OData ABNF Construction Rules Version 4.0
+    - OData ABNF Test Cases
+    - OData Core Vocabulary
+    - OData Measures Vocabulary
+    - OData Capabilities Vocabulary
+  - OData Atom Format Version 4.0
+  This specification replaces or supersedes:
+  - None
+
+Declared XML namespaces:
+  - none
+
+Abstract:
+  This specification defines how to interact with XML data 
+  using the Open Data Protocol (OData).
+
+Overview:
+  This document defines terms to describe which functions can be applied to 
+  XML properties and as found in SQL/XML:2011, and which extensions based 
+  on XQuery 1.0 are offered.
+  
+-->
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Xml.V1" Alias="Xml">
+      <Annotation Term="Core.Description">
+        <String>Terms to describe which functions can be applied to XML properties and as found in SQL/XML:2011, and which extensions based on XQuery 1.0 are offered.</String>
+      </Annotation>
+
+      <!-- TODO: consider if this mapping is relevant for enabling cpability communication for xml intra-entity capabilities -->
+      <Term Name="SupportsOperationABC" Type="Xml.SupportsOperationABCType" AppliesTo="EntitySet EntityContainer">
+        <Annotation Term="Core.Description">
+          <String>This entity set or entity container supports the ABC system query option or other operations.</String>
+        </Annotation>
+      </Term>
+      
+      <EnumType Name="SupportsOperationABCType">
+        <Annotation Term="Core.Description" String="The number of XML operators allowed in an ABC operation" />
+        <Member Name="None" />
+        <Member Name="XmlQuery" />
+        <Member Name="XmlExists" />
+        <Member Name="XmlCast" />
+        <Member Name="XmlPatch" />
+      </EnumType>
+
+      <!-- TODO: the real work starts here -->
+      <!-- PLAN:
+        
+        The following capabilities must be supported in this extension to OData:
+
+        * An OData Stream data type may be annotated to represent an XML data type
+        * XML properties may be returned separately from non-XML properties
+        * Entities may be filtered based on the content of their XML properties
+        * XML values that have been derived from XML properties may be retrieved
+        * Scalar values that have been derived from XML properties may be retrieved
+        * XMLQUERY, XMLEXISTS, and XMLCAST operations may be applied to XML properties
+        * The values of XML properties may be updated
+        
+        The design of this extension to OData should take the following direction:
+
+        * An OData vocabulary for XML shall be defined (this document!).
+        * An annotation from a common vocabulary defining the content type should be applied to a Stream property that represents XML documents.
+        * The XML vocabulary will define functions that can be applied to XML properties.
+        * These functions will be based on functions found in SQL/XML:2011, and by extension will be based on XQuery 1.0.
+        
+        # Open questions, issues and work items
+        
+        * Support may be provided for transforming an XML property by applying an XSLT stylesheet.
+        * The XML annotation may contain additional properties describing the XML document. These properties might include the location of the schema used to validate the document.
+        * Support may be provided for updating only a portion of an XML property.
+        * XML operations could define a default variable name for the document being processed. The document could be assigned as the context item for that query.
+        * OData could be extended to allow expressions in the $select query option, allowing derived values to be returned along with the properties of an entity.
+        * OData could be extended with an operator that returns the content of a Stream as either a String or Binary value.
+        * The OData.ContentType value annotation could be defined to allow multiple content types as its value.
+        * Support for a function similar to XSLTRANSFORM could be added.
+
+        -->
+      
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

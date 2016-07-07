@@ -1,0 +1,613 @@
+{
+    "x-odata-version": "4.0",
+    "swagger": "2.0",
+    "info": {
+        "title": "Terms describing capabilities of a service",
+        "description": "\nThere are some capabilities which are strongly recommended for services to support even\nthough they are optional. Support for $top and $skip is a good example as\nsupporting these query options helps with performance of a service and are essential. Such\ncapabilities are assumed to be default capabilities of an OData service even in\nthe case that a capabilities annotation doesn’t exist. Capabilities annotations are\nmainly expected to be used to explicitly specify that a service doesn’t support such\ncapabilities. Capabilities annotations can as well be used to declaratively\nspecify the support of such capabilities.\n\nOn the other hand, there are some capabilities that a service may choose to support or\nnot support and in varying degrees. $filter and $orderby are such good examples.\nThis vocabulary aims to define terms to specify support or no support for such\ncapabilities.\n\nA service is assumed to support by default the following capabilities even though an\nannotation doesn’t exist:\n- Countability ($count)\n- Client pageability ($top, $skip)\n- Expandability ($expand)\n- Indexability by key\n- Batch support ($batch)\n- Navigability of navigation properties\n\nA service is expected to support the following capabilities. If not supported, the\nservice is expected to call out the restrictions using annotations:\n- Filterability ($filter)\n- Sortability ($orderby)\n- Queryability of top level entity sets\n- Query functions\n\nA client cannot assume that a service supports certain capabilities. A client can try, but\nit needs to be prepared to handle an error in case the following capabilities are not\nsupported:\n- Insertability\n- Updatability\n- Deletability\n        \n\n## Term Definitions\nTerm|Description\n----|----\nConformanceLevel|The conformance level achieved by this service\nSupportedFormats|Media types of supported formats, including format parameters\nSupportedMetadataFormats|Media types of supported formats for $metadata, including format parameters\nAcceptableEncodings|List of acceptable compression methods for ($batch) requests, e.g. gzip\nAsynchronousRequestsSupported|Service supports the asynchronous request preference\nBatchContinueOnErrorSupported|Service supports the continue on error preference\nIsolationSupported|Supported odata.isolation levels\nCallbackSupported|Supports callbacks for the specified protocols\nCrossJoinSupported|Supports cross joins for the entity sets in this container\nChangeTracking|Change tracking capabilities of this service or entity set\nCountRestrictions|Restrictions on /$count path suffix and $count=true system query option\nNavigationRestrictions|Restrictions on navigating properties according to OData URL conventions\nIndexableByKey|Supports key values according to OData URL conventions\nTopSupported|Supports $top\nSkipSupported|Supports $skip\nBatchSupported|Supports $batch requests\nBatchContentIdReferencingInRequestBodiesSupported|Service supports Content-ID referencing in request bodies\nFilterFunctions|List of functions supported in $filter\nFilterRestrictions|Restrictions on $filter expressions\nSortRestrictions|Restrictions on $orderby expressions\nExpandRestrictions|Restrictions on $expand expressions\nSearchRestrictions|Restrictions on $search expressions\nInsertRestrictions|Restrictions on insert operations\nUpdateRestrictions|Restrictions on update operations\nDeleteRestrictions|Restrictions on delete operations\n\n## References\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Core.V1.openapi.json)",
+        "version": "0.1.0"
+    },
+    "definitions": {
+        "Org.OData.Capabilities.V1.ConformanceLevelType": {
+            "type": "string",
+            "enum": [
+                "Minimal",
+                "Intermediate",
+                "Advanced"
+            ]
+        },
+        "Org.OData.Capabilities.V1.IsolationLevel": {
+            "type": "string",
+            "enum": [
+                "Snapshot"
+            ],
+            "x-isFlags": true,
+            "x-annotations": {
+                "Snapshot@value": 1
+            }
+        },
+        "Org.OData.Capabilities.V1.CallbackType": {
+            "title": "CallbackType",
+            "type": "object",
+            "properties": {
+                "CallbackProtocols": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Org.OData.Capabilities.V1.CallbackProtocol"
+                    }
+                }
+            },
+            "description": "A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'"
+        },
+        "Org.OData.Capabilities.V1.CallbackProtocol": {
+            "title": "CallbackProtocol",
+            "type": "object",
+            "properties": {
+                "Id": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "description": "Protocol Identifier"
+                },
+                "UrlTemplate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "description": "URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570"
+                },
+                "DocumentationUrl": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "description": "Human readable description of the meaning of the URL Template parameters",
+                    "x-annotations": {
+                        "@Core.IsURL": true
+                    }
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.ChangeTrackingType": {
+            "title": "ChangeTrackingType",
+            "type": "object",
+            "properties": {
+                "Supported": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "This entity set supports the odata.track-changes preference"
+                },
+                "FilterableProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "Change tracking supports filters on these properties"
+                },
+                "ExpandableProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
+                    },
+                    "description": "Change tracking supports these properties expanded"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.CountRestrictionsType": {
+            "title": "CountRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Countable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "Entities can be counted"
+                },
+                "NonCountableProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "These collection properties do not allow /$count segments"
+                },
+                "NonCountableNavigationProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
+                    },
+                    "description": "These navigation properties do not allow /$count segments"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.NavigationRestrictionsType": {
+            "title": "NavigationRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Navigability": {
+                    "$ref": "#/definitions/Org.OData.Capabilities.V1.NavigationType",
+                    "x-nullable": true,
+                    "description": "Supported Navigability"
+                },
+                "RestrictedProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Org.OData.Capabilities.V1.NavigationPropertyRestriction"
+                    }
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.NavigationPropertyRestriction": {
+            "title": "NavigationPropertyRestriction",
+            "type": "object",
+            "properties": {
+                "NavigationProperty": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath",
+                    "x-nullable": true,
+                    "description": "Navigation properties can be navigated"
+                },
+                "Navigability": {
+                    "$ref": "#/definitions/Org.OData.Capabilities.V1.NavigationType",
+                    "x-nullable": true,
+                    "description": "Navigation properties can be navigated to this level"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.NavigationType": {
+            "type": "string",
+            "enum": [
+                "Recursive",
+                "Single",
+                "None"
+            ],
+            "x-annotations": {
+                "Recursive@Core.Description": "Navigation properties can be recursively navigated",
+                "Single@Core.Description": "Navigation properties can be navigated to a single level",
+                "None@Core.Description": "Navigation properties are not navigable"
+            }
+        },
+        "Org.OData.Capabilities.V1.FilterRestrictionsType": {
+            "title": "FilterRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Filterable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "$filter is supported"
+                },
+                "RequiresFilter": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": false,
+                    "description": "$filter is required"
+                },
+                "RequiredProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "These properties must be specified in the $filter clause (properties of derived types are not allowed here)"
+                },
+                "NonFilterableProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "These properties cannot be used in $filter expressions"
+                },
+                "FilterExpressionRestrictions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Org.OData.Capabilities.V1.FilterExpressionRestrictionType"
+                    },
+                    "description": "These properties only allow a subset of expressions"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.FilterExpressionRestrictionType": {
+            "title": "FilterExpressionRestrictionType",
+            "type": "object",
+            "properties": {
+                "Property": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath",
+                    "x-nullable": true
+                },
+                "AllowedExpressions": {
+                    "$ref": "#/definitions/Org.OData.Capabilities.V1.FilterExpressionType",
+                    "x-nullable": true
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.FilterExpressionType": {
+            "type": "string",
+            "enum": [
+                "SingleValue",
+                "MultiValue",
+                "SingleInterval"
+            ],
+            "x-annotations": {
+                "SingleValue@Core.Description": "a single 'eq' clause",
+                "MultiValue@Core.Description": "one or more 'eq' clauses, separated by 'or'",
+                "SingleInterval@Core.Description": "at most one 'ge' and one 'le' clause, separated by 'and', alternatively a single 'eq' clause"
+            }
+        },
+        "Org.OData.Capabilities.V1.SortRestrictionsType": {
+            "title": "SortRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Sortable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "$orderby is supported"
+                },
+                "AscendingOnlyProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "These properties can only be used for sorting in Ascending order"
+                },
+                "DescendingOnlyProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "These properties can only be used for sorting in Descending order"
+                },
+                "NonSortableProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
+                    },
+                    "description": "These properties cannot be used in $orderby expressions"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.ExpandRestrictionsType": {
+            "title": "ExpandRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Expandable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "$expand is supported"
+                },
+                "NonExpandableProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
+                    },
+                    "description": "These properties cannot be used in $expand expressions"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.SearchRestrictionsType": {
+            "title": "SearchRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Searchable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "$search is supported"
+                },
+                "UnsupportedExpressions": {
+                    "$ref": "#/definitions/Org.OData.Capabilities.V1.SearchExpressions",
+                    "x-nullable": true,
+                    "default": "none",
+                    "description": "Expressions not supported in $search"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.SearchExpressions": {
+            "type": "string",
+            "enum": [
+                "none",
+                "AND",
+                "OR",
+                "NOT",
+                "phrase",
+                "group"
+            ],
+            "x-isFlags": true,
+            "x-annotations": {
+                "none@value": 0,
+                "AND@value": 1,
+                "OR@value": 2,
+                "NOT@value": 4,
+                "phrase@value": 8,
+                "group@value": 16
+            }
+        },
+        "Org.OData.Capabilities.V1.InsertRestrictionsType": {
+            "title": "InsertRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Insertable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "Entities can be inserted"
+                },
+                "NonInsertableNavigationProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
+                    },
+                    "description": "These navigation properties do not allow deep inserts"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.UpdateRestrictionsType": {
+            "title": "UpdateRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Updatable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "Entities can be updated"
+                },
+                "NonUpdatableNavigationProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
+                    },
+                    "description": "These navigation properties do not allow rebinding"
+                }
+            }
+        },
+        "Org.OData.Capabilities.V1.DeleteRestrictionsType": {
+            "title": "DeleteRestrictionsType",
+            "type": "object",
+            "properties": {
+                "Deletable": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "default": true,
+                    "description": "Entities can be deleted"
+                },
+                "NonDeletableNavigationProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.NavigationPropertyPath"
+                    },
+                    "description": "These navigation properties do not allow DeleteLink requests"
+                }
+            }
+        }
+    },
+    "x-schemas": {
+        "Org.OData.Core.V1": {
+            "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json"
+        },
+        "Core": {
+            "aliasFor": "Org.OData.Core.V1"
+        },
+        "Capabilities": {
+            "aliasFor": "Org.OData.Capabilities.V1"
+        },
+        "Org.OData.Capabilities.V1": {
+            "description": "Terms describing capabilities of a service",
+            "@Core.LongDescription": "\nThere are some capabilities which are strongly recommended for services to support even\nthough they are optional. Support for $top and $skip is a good example as\nsupporting these query options helps with performance of a service and are essential. Such\ncapabilities are assumed to be default capabilities of an OData service even in\nthe case that a capabilities annotation doesn’t exist. Capabilities annotations are\nmainly expected to be used to explicitly specify that a service doesn’t support such\ncapabilities. Capabilities annotations can as well be used to declaratively\nspecify the support of such capabilities.\n\nOn the other hand, there are some capabilities that a service may choose to support or\nnot support and in varying degrees. $filter and $orderby are such good examples.\nThis vocabulary aims to define terms to specify support or no support for such\ncapabilities.\n\nA service is assumed to support by default the following capabilities even though an\nannotation doesn’t exist:\n- Countability ($count)\n- Client pageability ($top, $skip)\n- Expandability ($expand)\n- Indexability by key\n- Batch support ($batch)\n- Navigability of navigation properties\n\nA service is expected to support the following capabilities. If not supported, the\nservice is expected to call out the restrictions using annotations:\n- Filterability ($filter)\n- Sortability ($orderby)\n- Queryability of top level entity sets\n- Query functions\n\nA client cannot assume that a service supports certain capabilities. A client can try, but\nit needs to be prepared to handle an error in case the following capabilities are not\nsupported:\n- Insertability\n- Updatability\n- Deletability\n        "
+        }
+    },
+    "x-terms": {
+        "Org.OData.Capabilities.V1.ConformanceLevel": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.ConformanceLevelType",
+            "x-nullable": true,
+            "appliesTo": "EntityContainer",
+            "description": "The conformance level achieved by this service"
+        },
+        "Org.OData.Capabilities.V1.SupportedFormats": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "appliesTo": "EntityContainer",
+            "description": "Media types of supported formats, including format parameters",
+            "@Core.IsMediaType": true
+        },
+        "Org.OData.Capabilities.V1.SupportedMetadataFormats": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "appliesTo": "EntityContainer",
+            "description": "Media types of supported formats for $metadata, including format parameters",
+            "@Core.IsMediaType": true
+        },
+        "Org.OData.Capabilities.V1.AcceptableEncodings": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "appliesTo": "EntityContainer",
+            "description": "List of acceptable compression methods for ($batch) requests, e.g. gzip"
+        },
+        "Org.OData.Capabilities.V1.AsynchronousRequestsSupported": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntityContainer",
+            "description": "Service supports the asynchronous request preference"
+        },
+        "Org.OData.Capabilities.V1.BatchContinueOnErrorSupported": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntityContainer",
+            "description": "Service supports the continue on error preference"
+        },
+        "Org.OData.Capabilities.V1.IsolationSupported": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.IsolationLevel",
+            "x-nullable": true,
+            "appliesTo": "EntityContainer",
+            "description": "Supported odata.isolation levels"
+        },
+        "Org.OData.Capabilities.V1.CallbackSupported": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.CallbackType",
+            "x-nullable": true,
+            "appliesTo": [
+                "EntityContainer",
+                "EntitySet"
+            ],
+            "description": "Supports callbacks for the specified protocols"
+        },
+        "Org.OData.Capabilities.V1.CrossJoinSupported": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntityContainer",
+            "description": "Supports cross joins for the entity sets in this container"
+        },
+        "Org.OData.Capabilities.V1.ChangeTracking": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.ChangeTrackingType",
+            "x-nullable": true,
+            "appliesTo": [
+                "EntityContainer",
+                "EntitySet"
+            ],
+            "description": "Change tracking capabilities of this service or entity set"
+        },
+        "Org.OData.Capabilities.V1.CountRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.CountRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on /$count path suffix and $count=true system query option"
+        },
+        "Org.OData.Capabilities.V1.NavigationRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.NavigationRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on navigating properties according to OData URL conventions"
+        },
+        "Org.OData.Capabilities.V1.IndexableByKey": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntitySet",
+            "description": "Supports key values according to OData URL conventions"
+        },
+        "Org.OData.Capabilities.V1.TopSupported": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntitySet",
+            "description": "Supports $top"
+        },
+        "Org.OData.Capabilities.V1.SkipSupported": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntitySet",
+            "description": "Supports $skip"
+        },
+        "Org.OData.Capabilities.V1.BatchSupported": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntityContainer",
+            "description": "Supports $batch requests"
+        },
+        "Org.OData.Capabilities.V1.BatchContentIdReferencingInRequestBodiesSupported": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "EntityContainer",
+            "description": "Service supports Content-ID referencing in request bodies"
+        },
+        "Org.OData.Capabilities.V1.FilterFunctions": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "appliesTo": [
+                "EntityContainer",
+                "EntitySet"
+            ],
+            "description": "List of functions supported in $filter"
+        },
+        "Org.OData.Capabilities.V1.FilterRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.FilterRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on $filter expressions"
+        },
+        "Org.OData.Capabilities.V1.SortRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.SortRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on $orderby expressions"
+        },
+        "Org.OData.Capabilities.V1.ExpandRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.ExpandRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on $expand expressions"
+        },
+        "Org.OData.Capabilities.V1.SearchRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.SearchRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on $search expressions"
+        },
+        "Org.OData.Capabilities.V1.InsertRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.InsertRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on insert operations"
+        },
+        "Org.OData.Capabilities.V1.UpdateRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.UpdateRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on update operations"
+        },
+        "Org.OData.Capabilities.V1.DeleteRestrictions": {
+            "$ref": "#/definitions/Org.OData.Capabilities.V1.DeleteRestrictionsType",
+            "x-nullable": true,
+            "appliesTo": "EntitySet",
+            "description": "Restrictions on delete operations"
+        }
+    },
+    "paths": {
+
+    }
+}

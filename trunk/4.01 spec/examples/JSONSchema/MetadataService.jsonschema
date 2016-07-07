@@ -1,0 +1,2151 @@
+{
+    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+    "odata-version": "4.0",
+    "definitions": {
+        "Edm.Metadata.Reference": {
+            "type": "object",
+            "keys": [
+                "Uri"
+            ],
+            "properties": {
+                "Uri": {
+                    "type": "string"
+                },
+                "Include": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Include"
+                    }
+                },
+                "IncludeAnnotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.IncludeAnnotations"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Include": {
+            "type": "object",
+            "properties": {
+                "Alias": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Schema": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Schema"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.IncludeAnnotations": {
+            "type": "object",
+            "properties": {
+                "TargetNamespace": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "TermNamespace": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Qualifier": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            }
+        },
+        "Edm.Metadata.Schema": {
+            "type": "object",
+            "keys": [
+                "Namespace"
+            ],
+            "properties": {
+                "Namespace": {
+                    "type": "string"
+                },
+                "Alias": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Reference": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Reference"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "Types": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Type"
+                    },
+                    "relationship": {
+                        "partner": "Schema"
+                    }
+                },
+                "Actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Action"
+                    },
+                    "relationship": {
+                        "partner": "Schema"
+                    }
+                },
+                "Functions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Function"
+                    },
+                    "relationship": {
+                        "partner": "Schema"
+                    }
+                },
+                "EntityContainer": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityContainer"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Schema"
+                    }
+                },
+                "Terms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Term"
+                    },
+                    "relationship": {
+                        "partner": "Schema"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Type": {
+            "type": "object",
+            "abstract": true,
+            "keys": [
+                "QualifiedName"
+            ],
+            "properties": {
+                "QualifiedName": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Schema": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Schema"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Types"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.StructuredType": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.Type"
+                }
+            ],
+            "abstract": true,
+            "keys": [
+
+            ],
+            "properties": {
+                "Abstract": {
+                    "type": "boolean"
+                },
+                "OpenType": {
+                    "type": "boolean"
+                },
+                "Properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Property"
+                    },
+                    "relationship": {
+                        "partner": "DeclaringType"
+                    }
+                },
+                "NavigationProperties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.NavigationProperty"
+                    },
+                    "relationship": {
+                        "partner": "DeclaringType"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.EntityType": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.StructuredType"
+                }
+            ],
+            "properties": {
+                "Key": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.KeyProperty"
+                    }
+                },
+                "HasStream": {
+                    "type": "boolean"
+                },
+                "BaseType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "DerivedTypes"
+                    }
+                },
+                "DerivedTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.EntityType"
+                    },
+                    "relationship": {
+                        "partner": "BaseType"
+                    }
+                },
+                "EntitySets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.EntitySet"
+                    },
+                    "relationship": {
+                        "partner": "EntityType"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.KeyProperty": {
+            "type": "object",
+            "properties": {
+                "PropertyPath": {
+                    "type": "string"
+                },
+                "Alias": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Property": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Property"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.ComplexType": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.StructuredType"
+                }
+            ],
+            "properties": {
+                "BaseType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.ComplexType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "DerivedTypes"
+                    }
+                },
+                "DerivedTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.ComplexType"
+                    },
+                    "relationship": {
+                        "partner": "BaseType"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.PrimitiveType": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.Type"
+                }
+            ],
+            "properties": {
+                "TypeDefinitions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.TypeDefinition"
+                    },
+                    "relationship": {
+                        "partner": "UnderlyingType"
+                    }
+                },
+                "EnumTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.EnumType"
+                    },
+                    "relationship": {
+                        "partner": "UnderlyingType"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.EnumType": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.PrimitiveType"
+                }
+            ],
+            "properties": {
+                "IsFlags": {
+                    "type": "boolean"
+                },
+                "UnderlyingType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.PrimitiveType"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "EnumTypes"
+                    }
+                },
+                "Members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.EnumTypeMember"
+                    },
+                    "relationship": {
+                        "partner": "EnumType"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.EnumTypeMember": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Value": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64"
+                },
+                "EnumType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EnumType"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Members"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.TypeDefinition": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.PrimitiveType"
+                }
+            ],
+            "properties": {
+                "Facets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Facet"
+                    }
+                },
+                "UnderlyingType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.PrimitiveType"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "TypeDefinitions"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Facet": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "$ref": "#/definitions/Edm.Metadata.FacetName"
+                },
+                "Value": {
+                    "type": "string"
+                }
+            }
+        },
+        "Edm.Metadata.FacetName": {
+            "enum": [
+                "MaxLength",
+                "Unicode",
+                "Precision",
+                "Scale",
+                "SRID"
+            ]
+        },
+        "Edm.Metadata.Property": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Nullable": {
+                    "type": "boolean"
+                },
+                "DefaultValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Facets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Facet"
+                    }
+                },
+                "IsCollection": {
+                    "type": "boolean"
+                },
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Type"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "DeclaringType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.StructuredType"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Properties"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.NavigationProperty": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Nullable": {
+                    "type": "boolean"
+                },
+                "ContainsTarget": {
+                    "type": "boolean"
+                },
+                "OnDelete": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Include"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "ReferentialConstraints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.ReferentialConstraint"
+                    }
+                },
+                "IsCollection": {
+                    "type": "boolean"
+                },
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityType"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "Partner": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.NavigationProperty"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "NavigationPropertyBindings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.NavigationPropertyBinding"
+                    },
+                    "relationship": {
+                        "partner": "NavigationProperty"
+                    }
+                },
+                "DeclaringType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.StructuredType"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "NavigationProperties"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.OnDelete": {
+            "type": "object",
+            "properties": {
+                "Action": {
+                    "$ref": "#/definitions/Edm.Metadata.OnDeleteAction"
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.OnDeleteAction": {
+            "enum": [
+                "Cascade",
+                "None",
+                "SetDefault",
+                "SetNull"
+            ]
+        },
+        "Edm.Metadata.ReferentialConstraint": {
+            "type": "object",
+            "properties": {
+                "Property": {
+                    "type": "string"
+                },
+                "ReferencedProperty": {
+                    "type": "string"
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Action": {
+            "type": "object",
+            "keys": [
+                "QualifiedName"
+            ],
+            "properties": {
+                "QualifiedName": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Overloads": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.ActionOverload"
+                    }
+                },
+                "ActionImports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.ActionImport"
+                    },
+                    "relationship": {
+                        "partner": "Action"
+                    }
+                },
+                "Schema": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Schema"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Actions"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.ActionOverload": {
+            "type": "object",
+            "properties": {
+                "IsBound": {
+                    "type": "boolean"
+                },
+                "ReturnType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.ReturnType"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "EntitySetPath": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Parameter"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Function": {
+            "type": "object",
+            "keys": [
+                "QualifiedName"
+            ],
+            "properties": {
+                "QualifiedName": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Overloads": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.FunctionOverload"
+                    }
+                },
+                "FunctionImports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.FunctionImport"
+                    },
+                    "relationship": {
+                        "partner": "Function"
+                    }
+                },
+                "Schema": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Schema"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Functions"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.FunctionOverload": {
+            "type": "object",
+            "properties": {
+                "IsBound": {
+                    "type": "boolean"
+                },
+                "IsComposable": {
+                    "type": "string"
+                },
+                "ReturnType": {
+                    "$ref": "#/definitions/Edm.Metadata.ReturnType"
+                },
+                "EntitySetPath": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Parameter"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Parameter": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "IsBinding": {
+                    "type": "boolean"
+                },
+                "Nullable": {
+                    "type": "boolean"
+                },
+                "Facets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Facet"
+                    }
+                },
+                "IsCollection": {
+                    "type": "boolean"
+                },
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Type"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.ReturnType": {
+            "type": "object",
+            "properties": {
+                "Nullable": {
+                    "type": "boolean"
+                },
+                "Facets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Facet"
+                    }
+                },
+                "IsCollection": {
+                    "type": "boolean"
+                },
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Type"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.EntityContainer": {
+            "type": "object",
+            "keys": [
+                "QualifiedName"
+            ],
+            "properties": {
+                "QualifiedName": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "EntitySets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.EntitySet"
+                    },
+                    "relationship": {
+                        "partner": "EntityContainer"
+                    }
+                },
+                "FunctionImports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.FunctionImport"
+                    },
+                    "relationship": {
+                        "partner": "EntityContainer"
+                    }
+                },
+                "Singletons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Singleton"
+                    },
+                    "relationship": {
+                        "partner": "EntityContainer"
+                    }
+                },
+                "ActionImports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.ActionImport"
+                    },
+                    "relationship": {
+                        "partner": "EntityContainer"
+                    }
+                },
+                "Schema": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Schema"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "EntityContainer"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.EntitySet": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "IncludeInServiceDocument": {
+                    "type": "boolean"
+                },
+                "EntityType": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityType"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "EntitySets"
+                    }
+                },
+                "NavigationPropertyBindings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.NavigationPropertyBinding"
+                    },
+                    "relationship": {
+                        "partner": "Source"
+                    }
+                },
+                "EntityContainer": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityContainer"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "EntitySets"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.NavigationPropertyBinding": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Path": {
+                    "type": "string"
+                },
+                "Target": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "Source": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "NavigationProperty": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.NavigationProperty"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "NavigationPropertyBindings"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Singleton": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityType"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "NavigationPropertyBindings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.NavigationPropertyBinding"
+                    },
+                    "relationship": {
+                        "partner": "Source"
+                    }
+                },
+                "EntityContainer": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityContainer"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Singletons"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.ActionImport": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Action": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Action"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "ActionImports"
+                    }
+                },
+                "EntitySet": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntitySet"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "EntityContainer": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityContainer"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "ActionImports"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.FunctionImport": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "IncludeInServiceDocument": {
+                    "type": "boolean"
+                },
+                "Function": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Function"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "FunctionImports"
+                    }
+                },
+                "EntitySet": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntitySet"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "EntityContainer": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.EntityContainer"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "FunctionImports"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Term": {
+            "type": "object",
+            "keys": [
+                "QualifiedName"
+            ],
+            "properties": {
+                "QualifiedName": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "DefaultValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "IsCollection": {
+                    "type": "boolean"
+                },
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Type"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "BaseTerm": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Term"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                },
+                "Applications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Term"
+                    }
+                },
+                "Schema": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Schema"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Terms"
+                    }
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Annotation"
+                    },
+                    "relationship": {
+                        "partner": "Target"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Annotation": {
+            "type": "object",
+            "keys": [
+                "Fullname"
+            ],
+            "properties": {
+                "Fullname": {
+                    "type": "string"
+                },
+                "Qualifier": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Value": {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                },
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                },
+                "Term": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Term"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Applications"
+                    }
+                },
+                "Target": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Annotations"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.AnnotationExpression": {
+            "type": "object",
+            "abstract": true
+        },
+        "Edm.Metadata.Constant": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "properties": {
+                "Value": {
+                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
+                }
+            }
+        },
+        "Edm.Metadata.LabeledElementReference": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "properties": {
+                "Element": {
+                    "$ref": "#/definitions/Edm.Metadata.QualifiedName"
+                }
+            }
+        },
+        "Edm.Metadata.AnnotationPath": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "properties": {
+                "Value": {
+                    "type": "string"
+                }
+            }
+        },
+        "Edm.Metadata.NavigationPropertyPath": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "properties": {
+                "Value": {
+                    "type": "string"
+                }
+            }
+        },
+        "Edm.Metadata.Path": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "properties": {
+                "Value": {
+                    "type": "string"
+                }
+            }
+        },
+        "Edm.Metadata.PropertyPath": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "properties": {
+                "Value": {
+                    "type": "string"
+                }
+            }
+        },
+        "Edm.Metadata.AnnotatableExpression": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "abstract": true,
+            "properties": {
+                "Annotations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.InlineAnnotation"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.UnaryExpression": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotatableExpression"
+                }
+            ],
+            "abstract": true,
+            "properties": {
+                "Value": {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            }
+        },
+        "Edm.Metadata.InlineAnnotation": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.UnaryExpression"
+                }
+            ],
+            "properties": {
+                "Qualifier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.SimpleIdentifier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "Term": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Term"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.SimpleIdentifier": {
+            "type": "string"
+        },
+        "Edm.Metadata.QualifiedName": {
+            "type": "string"
+        },
+        "Edm.Metadata.Apply": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotatableExpression"
+                }
+            ],
+            "properties": {
+                "Function": {
+                    "$ref": "#/definitions/Edm.Metadata.QualifiedName"
+                },
+                "Values": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Collection": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            ],
+            "properties": {
+                "Items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.Record": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotatableExpression"
+                }
+            ],
+            "properties": {
+                "PropertyValues": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.PropertyValue"
+                    }
+                },
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Type"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.PropertyValue": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.UnaryExpression"
+                }
+            ],
+            "properties": {
+                "Property": {
+                    "$ref": "#/definitions/Edm.Metadata.SimpleIdentifier"
+                }
+            }
+        },
+        "Edm.Metadata.If": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotatableExpression"
+                }
+            ],
+            "properties": {
+                "Test": {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                },
+                "Then": {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                },
+                "Else": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            }
+        },
+        "Edm.Metadata.Cast": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.UnaryExpression"
+                }
+            ],
+            "properties": {
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Type"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.IsOf": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.UnaryExpression"
+                }
+            ],
+            "properties": {
+                "Type": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Edm.Metadata.Type"
+                        }
+                    ],
+                    "relationship": {
+
+                    }
+                }
+            }
+        },
+        "Edm.Metadata.LabeledElement": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.UnaryExpression"
+                }
+            ],
+            "properties": {
+                "Name": {
+                    "$ref": "#/definitions/Edm.Metadata.SimpleIdentifier"
+                }
+            }
+        },
+        "Edm.Metadata.Null": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotatableExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.BinaryExpression": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotatableExpression"
+                }
+            ],
+            "abstract": true,
+            "properties": {
+                "Left": {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                },
+                "Right": {
+                    "$ref": "#/definitions/Edm.Metadata.AnnotationExpression"
+                }
+            }
+        },
+        "Edm.Metadata.Eq": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Ne": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Ge": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Gt": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Le": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Lt": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.And": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Or": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.BinaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Not": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.UnaryExpression"
+                }
+            ]
+        },
+        "Edm.Metadata.Url": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Edm.Metadata.UnaryExpression"
+                }
+            ]
+        }
+    },
+    "schemas": {
+        "Meta": {
+            "$ref": "#/schemas/Edm.Metadata"
+        },
+        "Edm.Metadata": {
+
+        }
+    },
+    "functions": {
+        "Edm.Metadata.AllProperties": [
+            {
+                "parameters": [
+                    {
+                        "name": "Type",
+                        "parameterType": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/Edm.Metadata.StructuredType"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.Property"
+                    }
+                },
+                "isBound": true
+            }
+        ],
+        "Edm.Metadata.AllNavigationProperties": [
+            {
+                "parameters": [
+                    {
+                        "name": "Type",
+                        "parameterType": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/Edm.Metadata.StructuredType"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.NavigationProperty"
+                    }
+                },
+                "isBound": true
+            }
+        ],
+        "Edm.Metadata.AllEntitySets": [
+            {
+                "parameters": [
+                    {
+                        "name": "Type",
+                        "parameterType": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/Edm.Metadata.EntityType"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Edm.Metadata.EntitySet"
+                    }
+                },
+                "isBound": true
+            }
+        ]
+    },
+    "entityContainer": {
+        "name": "MetadataContainer",
+        "entitySets": {
+            "Schemata": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Schema"
+                },
+                "navigationPropertyBindings": {
+                    "EntityContainer": {
+                        "target": "EntityContainer"
+                    },
+                    "Terms": {
+                        "target": "Terms"
+                    },
+                    "Actions": {
+                        "target": "Actions"
+                    },
+                    "Functions": {
+                        "target": "Functions"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    },
+                    "Reference": {
+                        "target": "References"
+                    },
+                    "Types": {
+                        "target": "Types"
+                    }
+                }
+            },
+            "Properties": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Property"
+                },
+                "navigationPropertyBindings": {
+                    "Annotations": {
+                        "target": "Annotations"
+                    },
+                    "Type": {
+                        "target": "Types"
+                    },
+                    "DeclaringType": {
+                        "target": "Types"
+                    }
+                }
+            },
+            "EntitySets": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.EntitySet"
+                },
+                "navigationPropertyBindings": {
+                    "EntityContainer": {
+                        "target": "EntityContainer"
+                    },
+                    "EntityType": {
+                        "target": "Types"
+                    },
+                    "NavigationPropertyBindings": {
+                        "target": "NavigationPropertyBindings"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    }
+                }
+            },
+            "NavigationProperties": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.NavigationProperty"
+                },
+                "navigationPropertyBindings": {
+                    "Partner": {
+                        "target": "NavigationProperties"
+                    },
+                    "Type": {
+                        "target": "Types"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    },
+                    "NavigationPropertyBindings": {
+                        "target": "NavigationPropertyBindings"
+                    },
+                    "DeclaringType": {
+                        "target": "Types"
+                    }
+                }
+            },
+            "FunctionImports": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.FunctionImport"
+                },
+                "navigationPropertyBindings": {
+                    "EntityContainer": {
+                        "target": "EntityContainer"
+                    },
+                    "EntitySet": {
+                        "target": "EntitySets"
+                    },
+                    "Function": {
+                        "target": "Functions"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    }
+                }
+            },
+            "NavigationPropertyBindings": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.NavigationPropertyBinding"
+                },
+                "navigationPropertyBindings": {
+                    "NavigationProperty": {
+                        "target": "NavigationProperties"
+                    }
+                }
+            },
+            "Types": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Type"
+                },
+                "navigationPropertyBindings": {
+                    "Meta.EntityType/DerivedTypes": {
+                        "target": "Types"
+                    },
+                    "Meta.EntityType/BaseType": {
+                        "target": "Types"
+                    },
+                    "Meta.ComplexType/DerivedTypes": {
+                        "target": "Types"
+                    },
+                    "Meta.ComplexType/BaseType": {
+                        "target": "Types"
+                    },
+                    "Meta.EntityType/EntitySets": {
+                        "target": "EntitySets"
+                    },
+                    "Meta.EnumType/UnderlyingType": {
+                        "target": "Types"
+                    },
+                    "Meta.PrimitiveType/EnumTypes": {
+                        "target": "Types"
+                    },
+                    "Meta.EnumType/Members": {
+                        "target": "EnumTypeMembers"
+                    },
+                    "Meta.TypeDefinition/UnderlyingType": {
+                        "target": "Types"
+                    },
+                    "Meta.PrimitiveType/TypeDefinitions": {
+                        "target": "Types"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    },
+                    "Schema": {
+                        "target": "Schemata"
+                    },
+                    "Meta.StructuredType/NavigationProperties": {
+                        "target": "NavigationProperties"
+                    },
+                    "Meta.StructuredType/Properties": {
+                        "target": "Properties"
+                    }
+                }
+            },
+            "Terms": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Term"
+                },
+                "navigationPropertyBindings": {
+                    "Schema": {
+                        "target": "Schemata"
+                    },
+                    "Type": {
+                        "target": "Types"
+                    },
+                    "Applications": {
+                        "target": "Annotations"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    }
+                }
+            },
+            "EnumTypeMembers": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.EnumTypeMember"
+                },
+                "navigationPropertyBindings": {
+                    "EnumType": {
+                        "target": "Types"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    }
+                }
+            },
+            "Annotations": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Annotation"
+                },
+                "navigationPropertyBindings": {
+                    "Term": {
+                        "target": "Terms"
+                    }
+                }
+            },
+            "Functions": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Function"
+                },
+                "navigationPropertyBindings": {
+                    "FunctionImports": {
+                        "target": "FunctionImports"
+                    },
+                    "Schema": {
+                        "target": "Schemata"
+                    }
+                }
+            },
+            "Singletons": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Singleton"
+                },
+                "navigationPropertyBindings": {
+                    "EntityContainer": {
+                        "target": "EntityContainer"
+                    },
+                    "Type": {
+                        "target": "Types"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    },
+                    "NavigationPropertyBindings": {
+                        "target": "NavigationPropertyBindings"
+                    }
+                }
+            },
+            "Actions": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Action"
+                },
+                "navigationPropertyBindings": {
+                    "ActionImports": {
+                        "target": "ActionImports"
+                    },
+                    "Schema": {
+                        "target": "Schemata"
+                    }
+                }
+            },
+            "ActionImports": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.ActionImport"
+                },
+                "navigationPropertyBindings": {
+                    "Action": {
+                        "target": "Actions"
+                    },
+                    "EntitySet": {
+                        "target": "EntitySets"
+                    },
+                    "EntityContainer": {
+                        "target": "EntityContainer"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    }
+                }
+            },
+            "References": {
+                "entityType": {
+                    "$ref": "#/definitions/Edm.Metadata.Reference"
+                },
+                "navigationPropertyBindings": {
+                    "Include/Schema": {
+                        "target": "Schemata"
+                    }
+                }
+            }
+        },
+        "singletons": {
+            "EntityContainer": {
+                "type": {
+                    "$ref": "#/definitions/Edm.Metadata.EntityContainer"
+                },
+                "navigationPropertyBindings": {
+                    "Schema": {
+                        "target": "Schemata"
+                    },
+                    "EntitySets": {
+                        "target": "EntitySets"
+                    },
+                    "FunctionImports": {
+                        "target": "FunctionImports"
+                    },
+                    "Singletons": {
+                        "target": "Singletons"
+                    },
+                    "ActionImports": {
+                        "target": "ActionImports"
+                    },
+                    "Annotations": {
+                        "target": "Annotations"
+                    }
+                }
+            }
+        }
+    }
+}
