@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+Technical Committee:
+  OASIS Open Data Protocol (OData) TC
+  https://www.oasis-open.org/committees/odata
+
+Chairs:
+  - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+  - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+
+Editors:
+  - Ralf Handl (ralf.handl@sap.com), SAP AG
+  - Stefan Drees (stefan@drees.name), Individual
+  - John Willson (jwillson@dssltd.com), Individual
+
+Additional artifacts:
+  This test case document is one component of a Work Product which consists of:
+  - Securing Data Version 4.0
+  - OData Security Vocabulary (this document)
+
+Related work:
+  This specification is related to:
+  - OData Version 4.0 Part 1: Protocol
+  - OData Version 4.0 Part 2: URL Conventions
+  - OData Version 4.0 Part 3: CSDL
+  - OData Core Vocabulary
+  - OData JSON Format Version 4.0
+  This specification replaces or supersedes:
+  - None
+
+Declared XML namespaces:
+  - None
+
+Abstract:
+  Securing OData Version 4.0 serves as best effort information for implementers
+  and users of Open Data (OData) alike on where authentication issues,
+  integrity problems and potential attack vectors typically occur. 
+  In the case of CSRF (Cross-Site-Request-Forgery) detailed descriptions of
+  general practice dealing with these risks are offered.
+
+Overview:
+  This document contains terms describing security precautions.
+
+-->
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs02/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Security.V1" Alias="Security">
+      <Annotation Term="Core.Description">
+        <String>Terms describing security precautions</String>
+      </Annotation>
+
+      <Term Name="UseBatch" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Wrap all requests to this service in batch requests to avoid exposing sensitive data in URLs" />
+      </Term>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,2073 @@
+{
+    "x-odata-version": "4.0",
+    "swagger": "2.0",
+    "info": {
+        "title": "TripPin service is a sample service for OData V4.",
+        "description": "This OData service is located at http://services.odata.org/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW/\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Photo],[Person],[Person]-*>[Person],[Person]-*>[Trip],[Person]-0..1>[Photo],[Airline],[Airport],[PlanItem],[PlanItem]^[PublicTransportation],[PublicTransportation]^[Flight],[Flight]-0..1>[Airport],[Flight]-0..1>[Airport],[Flight]-0..1>[Airline],[PlanItem]^[Event],[Trip],[Trip]-*>[Photo],[Trip]-*>[PlanItem])\n\n## References\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Core.V1.openapi.json)\n- [Org.OData.Measures.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Measures.V1.openapi.json)\n- [Org.OData.Capabilities.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Capabilities.V1.openapi.json)",
+        "version": "0.1.0"
+    },
+    "host": "services.odata.org",
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/V4/(S(cnbm44wtbc1v5bgrlek5lpcc))/TripPinServiceRW",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Photos",
+            "description": ""
+        },
+        {
+            "name": "People",
+            "description": ""
+        },
+        {
+            "name": "Airlines",
+            "description": ""
+        },
+        {
+            "name": "Airports",
+            "description": ""
+        },
+        {
+            "name": "Me",
+            "description": "My person data"
+        }
+    ],
+    "definitions": {
+        "Microsoft.OData.SampleService.Models.TripPin.PersonGender": {
+            "type": "string",
+            "enum": [
+                "Male",
+                "Female",
+                "Unknown"
+            ],
+            "x-annotations": {
+                "Male@value": 0,
+                "Female@value": 1,
+                "Unknown@value": 2
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.City": {
+            "title": "City",
+            "type": "object",
+            "properties": {
+                "CountryRegion": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Region": {
+                    "type": "string"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Location": {
+            "title": "Location",
+            "type": "object",
+            "x-openType": true,
+            "properties": {
+                "Address": {
+                    "type": "string"
+                },
+                "City": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.City"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.EventLocation": {
+            "title": "EventLocation",
+            "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.Location",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                },
+                {
+                    "type": "object",
+                    "x-openType": true,
+                    "properties": {
+                        "BuildingInfo": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true
+                        }
+                    }
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.AirportLocation": {
+            "title": "AirportLocation",
+            "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.Location",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                },
+                {
+                    "type": "object",
+                    "x-openType": true,
+                    "properties": {
+                        "Loc": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
+                            "x-srid": "4326"
+                        }
+                    }
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Photo": {
+            "title": "Photo",
+            "type": "object",
+            "x-mediaEntity": true,
+            "x-keys": [
+                "Id"
+            ],
+            "properties": {
+                "Id": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Permissions": "Read"
+                    }
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                }
+            },
+            "x-annotations": {
+                "@Org.OData.Core.V1.AcceptableMediaTypes": [
+                    "image/jpeg"
+                ]
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Person": {
+            "title": "Person",
+            "type": "object",
+            "x-openType": true,
+            "x-keys": [
+                "UserName"
+            ],
+            "properties": {
+                "UserName": {
+                    "type": "string",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Permissions": "Read"
+                    }
+                },
+                "FirstName": {
+                    "type": "string"
+                },
+                "LastName": {
+                    "type": "string"
+                },
+                "Emails": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "AddressInfo": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Location"
+                    }
+                },
+                "Gender": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PersonGender",
+                    "x-nullable": true
+                },
+                "Concurrency": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Computed": true
+                    }
+                },
+                "Friends": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    },
+                    "x-relationship": {
+
+                    }
+                },
+                "Trips": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                    },
+                    "x-relationship": {
+                        "containsTarget": true
+                    }
+                },
+                "Photo": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo",
+                    "x-nullable": true,
+                    "x-relationship": {
+
+                    }
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Airline": {
+            "title": "Airline",
+            "type": "object",
+            "x-keys": [
+                "AirlineCode"
+            ],
+            "properties": {
+                "AirlineCode": {
+                    "type": "string",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Permissions": "Read"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Airport": {
+            "title": "Airport",
+            "type": "object",
+            "x-keys": [
+                "IcaoCode"
+            ],
+            "properties": {
+                "IcaoCode": {
+                    "type": "string",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Permissions": "Read"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "IataCode": {
+                    "type": "string",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Immutable": true
+                    }
+                },
+                "Location": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.AirportLocation"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.PlanItem": {
+            "title": "PlanItem",
+            "type": "object",
+            "x-keys": [
+                "PlanItemId"
+            ],
+            "properties": {
+                "PlanItemId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Permissions": "Read"
+                    }
+                },
+                "ConfirmationCode": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                },
+                "StartsAt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "date-time"
+                },
+                "EndsAt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "date-time"
+                },
+                "Duration": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "duration"
+                }
+            }
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation": {
+            "title": "PublicTransportation",
+            "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.PlanItem",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "SeatNumber": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true
+                        }
+                    }
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Flight": {
+            "title": "Flight",
+            "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.PublicTransportation",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PublicTransportation"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "FlightNumber": {
+                            "type": "string"
+                        },
+                        "From": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
+                            "x-relationship": {
+
+                            }
+                        },
+                        "To": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport",
+                            "x-relationship": {
+
+                            }
+                        },
+                        "Airline": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline",
+                            "x-relationship": {
+
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Event": {
+            "title": "Event",
+            "x-baseType": "Microsoft.OData.SampleService.Models.TripPin.PlanItem",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                },
+                {
+                    "type": "object",
+                    "x-openType": true,
+                    "properties": {
+                        "Description": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true
+                        },
+                        "OccursAt": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.EventLocation"
+                        }
+                    }
+                }
+            ]
+        },
+        "Microsoft.OData.SampleService.Models.TripPin.Trip": {
+            "title": "Trip",
+            "type": "object",
+            "x-keys": [
+                "TripId"
+            ],
+            "properties": {
+                "TripId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "x-annotations": {
+                        "@Org.OData.Core.V1.Permissions": "Read"
+                    }
+                },
+                "ShareId": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true,
+                    "format": "uuid"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-nullable": true
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Budget": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "float",
+                    "x-annotations": {
+                        "@Org.OData.Measures.V1.ISOCurrency": "USD",
+                        "@Org.OData.Measures.V1.Scale": 2
+                    }
+                },
+                "StartsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "EndsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "Tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Photos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                    },
+                    "x-relationship": {
+
+                    }
+                },
+                "PlanItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.PlanItem"
+                    },
+                    "x-relationship": {
+                        "containsTarget": true
+                    }
+                }
+            }
+        }
+    },
+    "x-schemas": {
+        "Org.OData.Core.V1": {
+            "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json"
+        },
+        "Org.OData.Measures.V1": {
+            "uri": "http://localhost/examples/Org.OData.Measures.V1.openapi.json"
+        },
+        "Org.OData.Capabilities.V1": {
+            "uri": "http://localhost/examples/Org.OData.Capabilities.V1.openapi.json"
+        },
+        "TripPin": {
+            "aliasFor": "Microsoft.OData.SampleService.Models.TripPin"
+        },
+        "Microsoft.OData.SampleService.Models.TripPin": {
+            "annotations": {
+                "Microsoft.OData.SampleService.Models.TripPin.DefaultContainer": {
+                    "@Org.OData.Core.V1.DereferenceableIDs": true,
+                    "@Org.OData.Core.V1.ConventionalIDs": true,
+                    "@Org.OData.Capabilities.V1.ConformanceLevel": "Advanced",
+                    "@Org.OData.Capabilities.V1.SupportedFormats": [
+                        "application/json;odata.metadata=full;IEEE754Compatible=false;odata.streaming=true",
+                        "application/json;odata.metadata=minimal;IEEE754Compatible=false;odata.streaming=true",
+                        "application/json;odata.metadata=none;IEEE754Compatible=false;odata.streaming=true"
+                    ],
+                    "@Org.OData.Capabilities.V1.AsynchronousRequestsSupported": true,
+                    "@Org.OData.Capabilities.V1.BatchContinueOnErrorSupported": false,
+                    "@Org.OData.Capabilities.V1.FilterFunctions": [
+                        "contains",
+                        "endswith",
+                        "startswith",
+                        "length",
+                        "indexof",
+                        "substring",
+                        "tolower",
+                        "toupper",
+                        "trim",
+                        "concat",
+                        "year",
+                        "month",
+                        "day",
+                        "hour",
+                        "minute",
+                        "second",
+                        "round",
+                        "floor",
+                        "ceiling",
+                        "cast",
+                        "isof"
+                    ]
+                }
+            }
+        }
+    },
+    "x-actions": {
+        "Microsoft.OData.SampleService.Models.TripPin.ResetDataSource": [
+            {
+                "parameters": [
+
+                ]
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.ShareTrip": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    {
+                        "name": "userName",
+                        "parameterType": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tripId",
+                        "parameterType": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "isBound": true
+            }
+        ]
+    },
+    "x-functions": {
+        "Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                },
+                "isBound": true,
+                "entitySetPath": "person/Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline",
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetInvolvedPeople": [
+            {
+                "parameters": [
+                    {
+                        "name": "trip",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                    }
+                },
+                "isBound": true,
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips": [
+            {
+                "parameters": [
+                    {
+                        "name": "person",
+                        "parameterType": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    {
+                        "name": "userName",
+                        "parameterType": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                    }
+                },
+                "isBound": true,
+                "entitySetPath": "person/Friends/Trips",
+                "isComposable": true
+            }
+        ],
+        "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport": [
+            {
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "double"
+                        }
+                    },
+                    {
+                        "name": "lon",
+                        "parameterType": {
+                            "type": [
+                                "number",
+                                "string"
+                            ],
+                            "format": "double"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                },
+                "isComposable": true
+            }
+        ]
+    },
+    "x-entityContainer": {
+        "name": "DefaultContainer",
+        "resources": {
+            "Photos": {
+                "kind": "EntitySet",
+                "entityType": "Microsoft.OData.SampleService.Models.TripPin.Photo",
+                "@Org.OData.Core.V1.ResourcePath": "Photos",
+                "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                    "Searchable": true,
+                    "UnsupportedExpressions": "none"
+                },
+                "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                    "Insertable": true,
+                    "NonInsertableNavigationProperties": [
+
+                    ]
+                }
+            },
+            "People": {
+                "kind": "EntitySet",
+                "entityType": "Microsoft.OData.SampleService.Models.TripPin.Person",
+                "navigationPropertyBindings": {
+                    "Friends": "People",
+                    "Microsoft.OData.SampleService.Models.TripPin.Flight/Airline": "Airlines",
+                    "Microsoft.OData.SampleService.Models.TripPin.Flight/From": "Airports",
+                    "Microsoft.OData.SampleService.Models.TripPin.Flight/To": "Airports",
+                    "Photo": "Photos",
+                    "Microsoft.OData.SampleService.Models.TripPin.Trip/Photos": "Photos"
+                },
+                "@Org.OData.Core.V1.OptimisticConcurrency": [
+                    {
+                        "@odata.propertyPath": "Concurrency"
+                    }
+                ],
+                "@Org.OData.Core.V1.ResourcePath": "People",
+                "@Org.OData.Capabilities.V1.NavigationRestrictions": {
+                    "Navigability": "None",
+                    "RestrictedProperties": [
+                        {
+                            "NavigationProperty": {
+                                "@odata.navigationPropertyPath": "Friends"
+                            },
+                            "Navigability": "Recursive"
+                        }
+                    ]
+                },
+                "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                    "Searchable": true,
+                    "UnsupportedExpressions": "none"
+                },
+                "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                    "Insertable": true,
+                    "NonInsertableNavigationProperties": [
+                        {
+                            "@odata.navigationPropertyPath": "Trips"
+                        },
+                        {
+                            "@odata.navigationPropertyPath": "Friends"
+                        }
+                    ]
+                }
+            },
+            "Airlines": {
+                "kind": "EntitySet",
+                "entityType": "Microsoft.OData.SampleService.Models.TripPin.Airline",
+                "@Org.OData.Core.V1.ResourcePath": "Airlines",
+                "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                    "Searchable": true,
+                    "UnsupportedExpressions": "none"
+                },
+                "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                    "Insertable": true,
+                    "NonInsertableNavigationProperties": [
+
+                    ]
+                }
+            },
+            "Airports": {
+                "kind": "EntitySet",
+                "entityType": "Microsoft.OData.SampleService.Models.TripPin.Airport",
+                "@Org.OData.Core.V1.ResourcePath": "Airports",
+                "@Org.OData.Capabilities.V1.SearchRestrictions": {
+                    "Searchable": true,
+                    "UnsupportedExpressions": "none"
+                },
+                "@Org.OData.Capabilities.V1.InsertRestrictions": {
+                    "Insertable": false,
+                    "NonInsertableNavigationProperties": [
+
+                    ]
+                },
+                "@Org.OData.Capabilities.V1.DeleteRestrictions": {
+                    "Deletable": false,
+                    "NonDeletableNavigationProperties": [
+
+                    ]
+                }
+            },
+            "Me": {
+                "kind": "Singleton",
+                "type": "Microsoft.OData.SampleService.Models.TripPin.Person",
+                "navigationPropertyBindings": {
+                    "Friends": "People",
+                    "Microsoft.OData.SampleService.Models.TripPin.Flight/Airline": "Airlines",
+                    "Microsoft.OData.SampleService.Models.TripPin.Flight/From": "Airports",
+                    "Microsoft.OData.SampleService.Models.TripPin.Flight/To": "Airports",
+                    "Photo": "Photos",
+                    "Microsoft.OData.SampleService.Models.TripPin.Trip/Photos": "Photos"
+                },
+                "description": "My person data",
+                "@Org.OData.Core.V1.ResourcePath": "Me"
+            },
+            "GetNearestAirport": {
+                "kind": "FunctionImport",
+                "function": "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport",
+                "entitySet": "Airports",
+                "includeInServiceDocument": true,
+                "@Org.OData.Core.V1.ResourcePath": "Microsoft.OData.SampleService.Models.TripPin.GetNearestAirport"
+            },
+            "ResetDataSource": {
+                "kind": "ActionImport",
+                "action": "Microsoft.OData.SampleService.Models.TripPin.ResetDataSource"
+            }
+        },
+        "description": "TripPin service is a sample service for OData V4."
+    },
+    "paths": {
+        "/Photos": {
+            "get": {
+                "summary": "Get entities from Photos",
+                "tags": [
+                    "Photos"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "Id",
+                            "Id desc",
+                            "Name",
+                            "Name desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "Id",
+                            "Name"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of Photo",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to Photos",
+                "tags": [
+                    "Photos"
+                ],
+                "parameters": [
+                    {
+                        "name": "Photo",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Photos({Id})": {
+            "get": {
+                "summary": "Get entity from Photos by key",
+                "tags": [
+                    "Photos"
+                ],
+                "parameters": [
+                    {
+                        "name": "Id",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Id",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "Id",
+                            "Name"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Photos",
+                "tags": [
+                    "Photos"
+                ],
+                "parameters": [
+                    {
+                        "name": "Id",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Id",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "Photo",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Photo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Photos",
+                "tags": [
+                    "Photos"
+                ],
+                "parameters": [
+                    {
+                        "name": "Id",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: Id",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/People": {
+            "get": {
+                "summary": "Get entities from People",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "UserName",
+                            "UserName desc",
+                            "FirstName",
+                            "FirstName desc",
+                            "LastName",
+                            "LastName desc",
+                            "Emails",
+                            "Emails desc",
+                            "AddressInfo",
+                            "AddressInfo desc",
+                            "Gender",
+                            "Gender desc",
+                            "Concurrency",
+                            "Concurrency desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "UserName",
+                            "FirstName",
+                            "LastName",
+                            "Emails",
+                            "AddressInfo",
+                            "Gender",
+                            "Concurrency"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Friends",
+                            "Trips",
+                            "Photo"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of Person",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to People",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "Person",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/People('{UserName}')": {
+            "get": {
+                "summary": "Get entity from People by key",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserName",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: UserName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "UserName",
+                            "FirstName",
+                            "LastName",
+                            "Emails",
+                            "AddressInfo",
+                            "Gender",
+                            "Concurrency"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Friends",
+                            "Trips",
+                            "Photo"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in People",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserName",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: UserName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Person",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from People",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserName",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: UserName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline()": {
+            "get": {
+                "summary": "Invoke function GetFavoriteAirline",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserName",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: UserName",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips(userName='{userName}')": {
+            "get": {
+                "summary": "Invoke function GetFriendsTrips",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserName",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: UserName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "userName",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "title": "Result",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/People('{UserName}')/Microsoft.OData.SampleService.Models.TripPin.ShareTrip": {
+            "post": {
+                "summary": "Invoke action ShareTrip",
+                "tags": [
+                    "People"
+                ],
+                "parameters": [
+                    {
+                        "name": "UserName",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: UserName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Action parameters",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "userName": {
+                                    "type": "string"
+                                },
+                                "tripId": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Airlines": {
+            "get": {
+                "summary": "Get entities from Airlines",
+                "tags": [
+                    "Airlines"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "AirlineCode",
+                            "AirlineCode desc",
+                            "Name",
+                            "Name desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "AirlineCode",
+                            "Name"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of Airline",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add new entity to Airlines",
+                "tags": [
+                    "Airlines"
+                ],
+                "parameters": [
+                    {
+                        "name": "Airline",
+                        "in": "body",
+                        "description": "New entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Airlines('{AirlineCode}')": {
+            "get": {
+                "summary": "Get entity from Airlines by key",
+                "tags": [
+                    "Airlines"
+                ],
+                "parameters": [
+                    {
+                        "name": "AirlineCode",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: AirlineCode",
+                        "type": "string"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "AirlineCode",
+                            "Name"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Airlines",
+                "tags": [
+                    "Airlines"
+                ],
+                "parameters": [
+                    {
+                        "name": "AirlineCode",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: AirlineCode",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Airline",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete entity from Airlines",
+                "tags": [
+                    "Airlines"
+                ],
+                "parameters": [
+                    {
+                        "name": "AirlineCode",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: AirlineCode",
+                        "type": "string"
+                    },
+                    {
+                        "name": "If-Match",
+                        "in": "header",
+                        "description": "ETag",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Airports": {
+            "get": {
+                "summary": "Get entities from Airports",
+                "tags": [
+                    "Airports"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/top"
+                    },
+                    {
+                        "$ref": "#/parameters/skip"
+                    },
+                    {
+                        "$ref": "#/parameters/search"
+                    },
+                    {
+                        "$ref": "#/parameters/filter"
+                    },
+                    {
+                        "$ref": "#/parameters/count"
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "IcaoCode",
+                            "IcaoCode desc",
+                            "Name",
+                            "Name desc",
+                            "IataCode",
+                            "IataCode desc",
+                            "Location",
+                            "Location desc"
+                        ]
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "IcaoCode",
+                            "Name",
+                            "IataCode",
+                            "Location"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entities",
+                        "schema": {
+                            "type": "object",
+                            "title": "Collection of Airport",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Airports('{IcaoCode}')": {
+            "get": {
+                "summary": "Get entity from Airports by key",
+                "tags": [
+                    "Airports"
+                ],
+                "parameters": [
+                    {
+                        "name": "IcaoCode",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: IcaoCode",
+                        "type": "string"
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "IcaoCode",
+                            "Name",
+                            "IataCode",
+                            "Location"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update entity in Airports",
+                "tags": [
+                    "Airports"
+                ],
+                "parameters": [
+                    {
+                        "name": "IcaoCode",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: IcaoCode",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Airport",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Me": {
+            "get": {
+                "summary": "Get Me",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "UserName",
+                            "FirstName",
+                            "LastName",
+                            "Emails",
+                            "AddressInfo",
+                            "Gender",
+                            "Concurrency"
+                        ]
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        },
+                        "enum": [
+                            "*",
+                            "Friends",
+                            "Trips",
+                            "Photo"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieved entity",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update Me",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "name": "Person",
+                        "in": "body",
+                        "description": "New property values",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Person"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Me/Microsoft.OData.SampleService.Models.TripPin.GetFavoriteAirline()": {
+            "get": {
+                "summary": "Invoke function GetFavoriteAirline",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airline"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Me/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips(userName='{userName}')": {
+            "get": {
+                "summary": "Invoke function GetFriendsTrips",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "name": "userName",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "title": "Result",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Trip"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/Me/Microsoft.OData.SampleService.Models.TripPin.ShareTrip": {
+            "post": {
+                "summary": "Invoke action ShareTrip",
+                "tags": [
+                    "Me"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Action parameters",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "userName": {
+                                    "type": "string"
+                                },
+                                "tripId": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetNearestAirport(lat={lat},lon={lon})": {
+            "get": {
+                "summary": "Invoke function GetNearestAirport",
+                "tags": [
+                    "Airports"
+                ],
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    },
+                    {
+                        "name": "lon",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "format": "double"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Microsoft.OData.SampleService.Models.TripPin.Airport"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ResetDataSource": {
+            "post": {
+                "summary": "Invoke action ResetDataSource",
+                "tags": [
+                    "Service Operations"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "top": {
+            "name": "$top",
+            "in": "query",
+            "description": "Show only the first n items, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "type": "integer"
+        },
+        "skip": {
+            "name": "$skip",
+            "in": "query",
+            "description": "Skip the first n items, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "type": "integer"
+        },
+        "count": {
+            "name": "$count",
+            "in": "query",
+            "description": "Include count of items, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "type": "boolean"
+        },
+        "filter": {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "type": "string"
+        },
+        "search": {
+            "name": "$search",
+            "in": "query",
+            "description": "Search items by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "type": "string"
+        }
+    }
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+  Version="4.0"
+>
+  <edmx:Reference Uri="miscellaneous.xml">
+    <edmx:Include Namespace="org.example" />
+  </edmx:Reference>
+
+  <edmx:DataServices>
+    <Schema Namespace="org.example2" Alias="Model">
+      <!--
+        Example 33: the entity container Extending will contain all child elements that it defines itself, plus all child
+        elements of the Base entity container located in SomeOtherSchema
+      -->
+      <EntityContainer Name="Extending" Extends="org.example.DemoService">
+        <!-- Example 34: for an entity set in the same container as the enclosing entity set Categories -->
+        <EntitySet Name="Categories34" EntityType="org.example.Category">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+        </EntitySet>
+
+        <!-- Example 35: for an entity set in any container in scope -->
+        <EntitySet Name="Categories35" EntityType="org.example.Category">
+          <NavigationPropertyBinding Path="Products" Target="org.example.DemoService/Products" />
+        </EntitySet>
+
+        <FunctionImport Name="Bar" Function="One.Foo" IncludeInServiceDocument="true"
+          EntitySet="Model.Extending/Freds" />
+        <FunctionImport Name="CreatedEntities" Function="Model1.CreatedEntities" EntitySet="Waldos" />
+        <EntitySet Name="Waldos" EntityType="Two.Waldo" />
+        <EntitySet Name="Freds" EntityType="Two.Fred">
+          <NavigationPropertyBinding Target="Waldos" Path="Waldos" />
+          <NavigationPropertyBinding Target="Namespace.Container/Freds" Path="MoreWaldos" />
+          <NavigationPropertyBinding Target="Namespace.Container/Orders/Items/M.E/Nav" Path="EvenMoreWaldos" />
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+
+    <Schema Namespace="Schema.One" Alias="One">
+      <Function Name="Foo">
+        <ReturnType Type="Edm.String" MaxLength="42" />
+      </Function>
+      <Function Name="OddWaldos" IsBound="true" EntitySetPath="waldos">
+        <Parameter Name="waldos" Type="Collection(One.Waldo)" />
+        <ReturnType Type="Collection(One.Waldo)" />
+      </Function>
+      <Action Name="Rejection" />
+      <Action Name="Rejection" IsBound="true">
+        <Parameter Name="foo" Type="One.Waldo" Nullable="false" />
+      </Action>
+      <Action Name="Rejection" IsBound="true">
+        <Parameter Name="bar" Type="One.Waldo" Nullable="false" />
+        <Parameter Name="Reason" Type="Edm.String" MaxLength="max" Nullable="false" />
+      </Action>
+      <EntityType Name="Waldo">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+      </EntityType>
+    </Schema>
+
+    <Schema Namespace="Schema.Two" Alias="Two">
+      <EntityType Name="Waldo" Abstract="true">
+        <Property Name="Fred" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Fred">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Waldos" Type="Collection(Two.Waldo)" />
+      </EntityType>
+    </Schema>
+
+  </edmx:DataServices>
+</edmx:Edmx>

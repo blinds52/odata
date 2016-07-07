@@ -1,0 +1,47 @@
+{
+    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+    "odata-version": "4.0",
+    "schemas": {
+        "ODataDemo": {
+            "$ref": "http://host/service/$metadata#/schemas/ODataDemo"
+        },
+        "Some.Vocabulary.V1": {
+            "$ref": "http://somewhere/Vocabulary/V1#/schemas/Some.Vocabulary.V1"
+        },
+        "Vocabulary1": {
+            "$ref": "http://somewhere/Vocabulary/V1#/schemas/Some.Vocabulary.V1"
+        },
+        "External.Annotations": {
+            "annotations": {
+                "ODataDemo.Supplier": {
+                    "@Vocabulary1.EMail": {
+                        "@odata.null": {
+
+                        }
+                    },
+                    "@Vocabulary1.AccountID": {
+                        "@odata.path": "ID"
+                    },
+                    "@Vocabulary1.Title": "Supplier Info",
+                    "@Vocabulary1.DisplayName": {
+                        "@odata.apply": "odata.concat",
+                        "parameterValues": [
+                            {
+                                "@odata.path": "Name"
+                            },
+                            " in ",
+                            {
+                                "@odata.path": "Address/CountryName"
+                            }
+                        ]
+                    }
+                },
+                "ODataDemo.Product": {
+                    "@Self.Tags": [
+                        "MasterData"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,328 @@
+{
+    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+    "odata-version": "4.0",
+    "definitions": {
+        "ODataDemo.Product": {
+            "type": "object",
+            "mediaEntity": true,
+            "keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "@Core.IsLanguageDependent": true
+                },
+                "ReleaseDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date"
+                },
+                "DiscontinuedDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date"
+                },
+                "Rating": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "format": "int32"
+                },
+                "Price": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1,
+                    "@Org.OData.Measures.V1.ISOCurrency": {
+                        "@odata.path": "Currency"
+                    }
+                },
+                "Currency": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "maxLength": 3
+                },
+                "Category": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/ODataDemo.Category"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Products"
+                    }
+                },
+                "Supplier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/ODataDemo.Supplier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+                        "partner": "Products"
+                    }
+                }
+            }
+        },
+        "ODataDemo.Category": {
+            "type": "object",
+            "keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Name": {
+                    "type": "string",
+                    "@Core.IsLanguageDependent": true
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    },
+                    "relationship": {
+                        "partner": "Category",
+                        "onDelete": {
+                            "action": "Cascade"
+                        }
+                    }
+                }
+            }
+        },
+        "ODataDemo.Supplier": {
+            "type": "object",
+            "keys": [
+                "ID"
+            ],
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Address": {
+                    "$ref": "#/definitions/ODataDemo.Address"
+                },
+                "Concurrency": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    },
+                    "relationship": {
+                        "partner": "Supplier"
+                    }
+                }
+            }
+        },
+        "ODataDemo.Country": {
+            "type": "object",
+            "keys": [
+                "Code"
+            ],
+            "properties": {
+                "Code": {
+                    "type": "string",
+                    "maxLength": 2
+                },
+                "Name": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            }
+        },
+        "ODataDemo.Address": {
+            "type": "object",
+            "properties": {
+                "Street": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "City": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "State": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "ZipCode": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "CountryName": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Country": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/ODataDemo.Country"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "relationship": {
+                        "referentialConstraints": {
+                            "CountryName": {
+                                "referencedProperty": "Name"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "schemas": {
+        "Org.OData.Core.V1": {
+            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+        },
+        "Core": {
+            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
+        },
+        "Org.OData.Measures.V1": {
+            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json#/schemas/Org.OData.Measures.V1"
+        },
+        "UoM": {
+            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Measures.V1.json#/schemas/Org.OData.Measures.V1"
+        },
+        "ODataDemo": {
+
+        }
+    },
+    "functions": {
+        "ODataDemo.ProductsByRating": [
+            {
+                "parameters": [
+                    {
+                        "name": "Rating",
+                        "parameterType": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ODataDemo.Product"
+                    }
+                }
+            }
+        ]
+    },
+    "entityContainer": {
+        "name": "DemoService",
+        "entitySets": {
+            "Products": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Product"
+                },
+                "navigationPropertyBindings": {
+                    "Category": {
+                        "target": "Categories"
+                    }
+                }
+            },
+            "Categories": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Category"
+                },
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            },
+            "Suppliers": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Supplier"
+                },
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    },
+                    "Address/Country": {
+                        "target": "Countries"
+                    }
+                },
+                "@Core.OptimisticConcurrency": [
+                    {
+                        "@odata.propertyPath": "Concurrency"
+                    }
+                ]
+            },
+            "Countries": {
+                "entityType": {
+                    "$ref": "#/definitions/ODataDemo.Country"
+                }
+            }
+        },
+        "singletons": {
+            "Contoso": {
+                "type": {
+                    "$ref": "#/definitions/ODataDemo.Supplier"
+                },
+                "navigationPropertyBindings": {
+                    "Products": {
+                        "target": "Products"
+                    }
+                }
+            }
+        },
+        "functionImports": {
+            "ProductsByRating": {
+                "entitySet": "Products",
+                "function": {
+                    "$ref": "#/functions/ODataDemo.ProductsByRating"
+                }
+            }
+        }
+    }
+}

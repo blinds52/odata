@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+  Technical Committee:
+  OASIS Open Data Protocol (OData) TC
+  https://www.oasis-open.org/committees/odata
+
+  Chairs:
+  - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+  - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+
+  Editors:
+  - Ralf Handl (ralf.handl@sap.com), SAP AG
+  - Hubert Heijkers (hubert.heijkers@nl.ibm.com), IBM
+  - Michael Pizzo (mikep@microsoft.com), Microsoft
+  - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
+
+  Additional artifacts:
+  This CSDL document is one component of a Work Product that consists of:
+  - OData Extension for Temporal Data Version 4.0
+  - OData Temporal ABNF Construction Rules Version 4.0
+  - OData Temporal ABNF Test Cases
+  - OData Temporal Vocabulary (this document)
+
+  Related work:
+  This work product is related to:
+  - OData Version 4.0, a multi-part Work Product which includes:
+  - OData Version 4.0 Part 1: Protocol
+  - OData Version 4.0 Part 2: URL Conventions
+  - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
+  - OData ABNF Construction Rules Version 4.0
+  - OData ABNF Test Cases
+  - OData Core Vocabulary
+  - OData Measures Vocabulary
+  - OData Capabilities Vocabulary
+  - OData JSON Format Version 4.0
+  This specification replaces or supersedes:
+  - None
+
+  Declared XML namespaces:
+  - none
+
+  Abstract:
+  This specification defines how to represent and interact with temporal data
+  using the Open Data Protocol (OData).
+
+  Overview:
+  This document defines terms to describe which data in a given entity model
+  is time-dependent, and in which dimensions.
+
+-->
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs02/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Temporal.V1" Alias="Temporal">
+      <Annotation Term="Core.Description">
+        <String>Terms to describe which data in a given entity model is time-dependent, and in which dimensions.</String>
+      </Annotation>
+
+
+      <!-- Metadata annotations -->
+
+      <Term Name="TemporalSupported" Type="Aggregation.TemporalSupportedType" AppliesTo="EntityContainer EntitySet NavigationProperty">
+        <Annotation Term="Core.Description">
+          <String>This entity container, entity set, or navigation property supports the temporal system query option</String>
+        </Annotation>
+      </Term>
+
+      <ComplexType Name="TemporalSupportedType">
+        <Property Name="ApplicationTime" Type="Temporal.TimeDimensionType" />
+        <Property Name="SystemTime" Type="Temporal.TimeDimensionGranularityDateTimeOffset" />
+        <Property Name="NonTemporalProperties" Type="Collection(Edm.PropertyPath)" Nullable="False" >
+          <Annotation Term="Core.Documentation" String="Properties whose value changes over time are not tracked" />
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="TimeDimensionType" Abstract="true">
+        <Property Name="SupportedQueries" Type="Temporal.QueryType" />
+      </ComplexType>
+
+      <ComplexType Name="TimeDimensionGranularityDateTimeOffset" BaseType="Temporal.TimeDimensionType">
+        <Annotation Term="Core.Documentation" String="Granularity of this time dimension is DateTimeOffset" />
+        <Property Name="Precision" Type="Edm.Byte" Nullable="false">
+          <Annotation Term="Core.Documentation" String="Precision of Edm.DateTimeOffset values for granularity DateTimeOffset" />
+        </Property>
+      </ComplexType>
+
+      <ComplexType Name="TimeDimensionGranularityDate" BaseType="Temporal.TimeDimensionType">
+        <Annotation Term="Core.Documentation" String="Granularity of this time dimension is Date" />
+      </ComplexType>
+
+      <EnumType Name="QueryType" IsFlags="true">
+        <Member Name="TimeTravel" Value="1" />
+        <Member Name="TimeSeries" Value="2" />
+      </EnumType>
+
+
+      <!-- Metadata annotations that can also appear as instance annotations -->
+
+      <Term Name="From" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation"
+          String="Lower boundary (inclusive) of application time. Date or DateTimeOffset value, or String with values min or now" />
+      </Term>
+
+      <Term Name="To" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation"
+          String="Upper boundary (exclusive) of application time. Date or DateTimeOffset value, or String with values now or max" />
+      </Term>
+
+      <Term Name="SystemFrom" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation"
+          String="Read-only lower boundary (inclusive) of system time. DateTimeOffset value or String with value min" />
+      </Term>
+
+      <Term Name="SystemTo" Type="Edm.PrimitiveType" AppliesTo="EntityType">
+        <Annotation Term="Core.Documentation"
+          String="Read-only upper boundary (exclusive) of system time. DateTimeOffset value or String with value max" />
+      </Term>
+
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
