@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #136 Thursday Jul 07, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #136 Thursday Jul 07, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-07-07 0600-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        HUbert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41470">normative attendance sheet for this meeting (event_id=41470)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Mike: New Issues:<br>
+2.ODATA-957 Do we impose a format for SchemaVersion?<br>
+ODATA-956 Do we need to add SchemaVersion to ContextURL?<br>
+ODATA-953 Consider deprecating structural casting<br>
+1.ODATA-954 Key-As-Segment for multi-part keys</p>
+<p>Ralf: Tackle new issues between sections 5.1 and 5.2</p>
+
+<p>Agenda is approved with above modification.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from June 23, 2016 TC meeting #135</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58414/odata-meeting-135_on-20160623-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58414/odata-meeting-135_on-20160623-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Action #0036 remains open</p>
+
+<h2>5. V4.01 Issues for V4.01_WD01 in New or Open state</h2>
+<h3>5.1 Ripe for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-545" rel="noopener noreferrer" target="_blank">ODATA-545</a> - Allow applying Capability terms CountRestrictions, TopSupported, SkipSupported etc. to all resources returning collections</h4>
+<p>Mike: </p>
+<pre>
+  &lt;Term Name="TopSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
+    &lt;Annotation Term="Core.Description" String="Supports $top" />
+  &lt;/Term>
+</pre>
+<p>Mike: </p>
+<pre>
+  &lt;Annotations Target="myEntitySet/myNavProp">
+    &lt;Annotation Term="Core.TopSupported"/>
+    &lt;Annotation Term="Core.SkipSupported"/>
+  &lt;Annotations>
+</pre>
+<p>Mike: Revised proposal:  
+As we don't think we'll break clients, use "EntitySet Collection" in AppliesTo for these terms.
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-545 as per the amended proposal. <b>Mike</b> seconds.</p> 
+<p>Ralf: ODATA-545 is resolved as proposed</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-674" rel="noopener noreferrer" target="_blank">ODATA-674</a> - Specify navigation property binding combined with containment *</h4>
+<p>Mike: Discussion summary:-Hubert wants to be able to annotate that, wherever a particular type is used, the contents of one nav prop are found in another (containment) nav prop. <br>
+-For containment navigation properties, since the type definition defines the storage it might be reasonable to have the navpropbinding be on the type, rather than the entity set. This would not be desireable for navpropbindings for non-containment properties.<br>
+-Question on what the target is relative to. Is it relative to the terminus of the path (probably intended and desireable for navpropbindings on an entity set) or is it relative to "wherever the navpropbinding is applied" (which would work well for Hubert's case).  Could perhaps address Huberts case by allowing the path within the target element to include things like ".." for "up one level" and "." for "start at the root".<br>
+-IN ANY CASE, we need to clarify the existing text around use with containment nav props in particular, and provide examples.</p>
+<p>Mike: Added to issue: Mike and Hubert will sync offline to go through some examples and create a proposal.</p>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-948" rel="noopener noreferrer" target="_blank">ODATA-948</a> - Versions of vocabularies and their relation with a version of the specification</h4>
+<p>Mike: Current proposal: <br>
+1) We should not add 4.01 to the edmx Version element, as we are not defining a new version of the edmx (i.e., no new elements or attributes). <br>
+2) If we think "Collection" will break clients, clarify that the new "Collection" value added in ODATA-631 can only be returned for 4.01 and greater payloads <br>
+3) For 4.0 clients, the service can include a subset of valid values (i.e., just entityset) or can specify more generically (i.e., property, navigationproperty). <br>
+4) Tell 4.01 clients that they should be prepared for this set to expand in the future.</p>
+<p>Mike: Revised proposal:<br>
+1) We should not add 4.01 to the edmx Version element, as we are not defining a new version of the edmx (i.e., no new elements or attributes).<br>
+2) Tell 4.01 clients that they should be prepared for this set to expand in the future.</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-984 as proposed. <b>Hubert</b> seconds.</p> 
+<p>Ralf: ODATA-948 is resolved as proposed</p>
+
+<p>Ralf: xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"</p>
+<p>Ralf: http://docs.oasis-open.org/odata/ns/edmx</p>
+<p>Ralf: Ralf to check with TC Admin how/whether we can update the edmx/edm XSDs with V4.01</p>
+<p>Ralf: Create action item</p>
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-816" rel="noopener noreferrer" target="_blank">ODATA-816</a> - Add Capability term for filter expression restrictions</h4>
+<p>Ralf: Extend the term FilterRestriction with an additional property FilterExpressionRestrictions:  </p>
+<pre>
+  &lt;Term Name="FilterRestrictions" Type="Capabilities.FilterRestrictionsType" AppliesTo="EntitySet"> 
+    &lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions" /> 
+  &lt;/Term> 
+  &lt;ComplexType Name="FilterRestrictionsType"> 
+    &lt;!-- ... -->
+    &lt;Property Name="FilterExpressionRestrictions" Type="Collection(Capabilities.FilterExpressionRestrictionType)"> 
+      &lt;Annotation Term="Core.Description" String="These properties only allow a subset of expressions" /> 
+    &lt;/Property> 
+  &lt;/ComplexType> 
+  &lt;ComplexType Name="FilterExpressionRestrictionType"> 
+    &lt;Property Name="Property" Type="Edm.PropertyPath" /> 
+    &lt;Property Name="AllowedExpressions" Type="Capabilities.FilterExpressionType" /> 
+  &lt;/ComplexType> 
+  &lt;EnumType Name="FilterExpressionType"> 
+    &lt;Member Name="SingleValue"> 
+      &lt;Annotation Term="Core.Description" String="a single eq clause" /> 
+    &lt;/Member> 
+    &lt;Member Name="MultiValue"> 
+      &lt;Annotation Term="Core.Description" String="several eq clauses, separated by or, are possible" /> 
+    &lt;/Member> 
+    &lt;Member Name="SingleInterval"> 
+      &lt;Annotation Term="Core.Description" 
+        String="at most one ge and one le clause, separated by and, alternatively a single eq clause" /> 
+    &lt;/Member> 
+  &lt;/EnumType>
+</pre>
+<p>Ralf: Mike: require use of "in" operator for MultiValue</p>
+<p>Ralf: https://issues.oasis-open.org/browse/ODATA-556</p>
+<p>Ralf: Mike: rename SingleInterval to SingleRange </p>
+<pre>
+low &lt;= x &lt;= high
+low &lt;= x
+x &lt;= high
+low = x = high
+a &lt;= x &lt;= a
+x in (a)
+</pre>
+<p>Ralf: Mark, Ralf: use AllowedValues instead of Enum</p>
+<p>Ralf: ODATA-816 is OPEN</p>
+<p>Mike: Slightly revised proposal:<br>
+Extend the term FilterRestriction with an additional property FilterExpressionRestrictions:</p>
+<pre>
+  &lt;Term Name="FilterRestrictions" Type="Capabilities.FilterRestrictionsType" AppliesTo="EntitySet">
+    &lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions" />
+  &lt;/Term>
+  &lt;ComplexType Name="FilterRestrictionsType">
+    &lt;!-- ... -->
+    &lt;Property Name="FilterExpressionRestrictions" Type="Collection(Capabilities.FilterExpressionRestrictionType)">
+      &lt;Annotation Term="Core.Description" String="These properties only allow a subset of expressions" />
+    &lt;/Property>
+  &lt;/ComplexType>
+  &lt;ComplexType Name="FilterExpressionRestrictionType">
+    &lt;Property Name="Property" Type="Edm.PropertyPath" />
+    &lt;Property Name="AllowedExpressions" Type="Capabilities.FilterExpressionType" />
+  &lt;/ComplexType>
+  &lt;EnumType Name="FilterExpressionType"> <!-- rewrite as allowable values for future extensibility-->
+    &lt;Member Name="SingleValue">
+      &lt;Annotation Term="Core.Description" String="Property can be used in a single eq clause" />
+    &lt;/Member>
+    &lt;Member Name="MultiValue">
+      &lt;Annotation Term="Core.Description" String="Property can be used in a single in clause" />
+    &lt;/Member>
+    &lt;Member Name="SingleRange">
+      &lt;Annotation Term="Core.Description"
+        String="Property can be used in at most one ge and/or one le clause, separated by and" />
+    &lt;/Member>
+  &lt;/EnumType>
+</pre>
+<p>NOTE: the enum should be rewritten as allowable values for future extensibility.</p>
+<p><b>Mark</b>: I <b>move</b> that OData-816 be resolved per the revised proposal. <b>Mike</b> seconds.</p> 
+<p>Ralf: ODATA-816 is resolved as proposed</p>
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-809" rel="noopener noreferrer" target="_blank">ODATA-809</a> - Define non-message format for final response of async request</h4>
+<p>Mike: Revised Proposal:<br>
+ -For 4.01 clients, or 4.0 clients that do not specify application/http, the final results are not wrapped. <br>
+ -Add a new response header, "AysncResult", whose value is the result code of the asynchronous operation and whose presence signals that the response has completed and the payload and headers represent the outcome of the asynchronous request. Services should always return this header value on the final result (whether wrapped or not).</p>
+<p>Mike: Now with improved spelling:<br>
+Revised Proposal:<br>
+ -For 4.01 clients, or 4.0 clients that do not specify application/http, the final results are not wrapped. <br>
+ -Add a new response header, "AsyncResult", whose value is the result code of the asynchronous operation and whose presence signals that the response has completed and the payload and headers represent the outcome of the asynchronous request. Services should always return this header value on the final result (whether wrapped or not).</p>
+<p>Mike: ==>Hubert will check with James to see if there was ever a Response header field defined for returning additional information about the outcome of the request (i.e., a status code of an asynchronously executed operation).</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-809 as proposed, to be applied based on any feedback from James Snell. <b>Hubert</b> seconds.</p> 
+<p>Ralf: ODATA-809 is resolved as proposed</p>
+
+<h4>5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-798" rel="noopener noreferrer" target="_blank">ODATA-798</a> - Semantic Key or Alternate Key for entity types</h4>
+<p>Mike: Community proposals for alternate keys:</p>
+<p>Mike: <br>
+<a href="https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.md" rel="noopener noreferrer" target="_blank">https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.md</a> <br>
+<a href="https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.xml" rel="noopener noreferrer" target="_blank">https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.xml</a></p>
+<p>Ralf: <br>
+https://host/service/customers(customermasterid=987)<br>
+https://host/service/customers(DUNSNumber=665544332211)<br>
+https://host/service/customers(Branch=ABC,CustomerId=123)</p>
+<p>Ralf: ODATA-798 is OPEN</p>
+<p>Mike: Revised proposal:<br>
+Adopt the following community proposal by adding the term to the OData Core vocabulary and describing the behavior in [URL Conventions]:<br>
+<a href="https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.md" rel="noopener noreferrer" target="_blank">https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.md</a> <br>
+<a href="https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.xml" rel="noopener noreferrer" target="_blank">https://github.com/OData/vocabularies/blob/master/OData.Community.Keys.V1.xml</a></p>
+<p>Mike: Should term only be applied to entity sets, or should we allow it on entity types?</p>
+<p>Mike: Ralf; prefers to support entity type (for consistency with key)</p>
+<p>Mike: Consensus: term should be applied to entity type, entity set, or nav prop (as per current definition)</p>
+<p>Mike: Revised: AppliesTo should be EntityType and EntiySet. NavigationProperty would be an exception, is somewhat implied by entity set, and AppliesTo does not prohibit other uses.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-798 as per the revised proposal. <b>Mark</b> seconds.</p> 
+<p>Ralf: ODATA-798 is resolved as proposed</p>
+
+<h4>5.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-938" rel="noopener noreferrer" target="_blank">ODATA-938</a> - In 4.01 decide if we can support invoking actions with no params with no body</h4>
+<p>Ralf: ODATA-938 is OPEN</p>
+<p>Mike: Slightly modified proposal, based on discussion:<br>
+OData 4.01 services MUST support no content (as well as empty object), but as this was not called out until 4.01 clarify that interoperable clients should pass an empty json object in the body of the request.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-938 as proposed. <b>Mike</b> seconds.</p> 
+<p>Ralf: ODATA-938 is resolved as proposed</p>
+
+<h4>5.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-935" rel="noopener noreferrer" target="_blank">ODATA-935</a> - Allow singletons to be members of an entity set</h4>
+<p>Ralf: ODATA-935 is open</p>
+<p>Mike: The NavigationPropertyBinding should not be returned for 4.0 clients.</p>
+<p>Mike: Discussion: <br>
+Allow singletons to be members of entity sets.<br>
+<br>
+Consistent with how we define NavigtaionPropertyBindings on EntitySets, and Singletons today, we could extend the NavigationPropertyBinding within a singleton to support Path="." (or Path=empty string) to say that the binding is being applied to the singleton itself.<br>
+<br>
+Any incompatible NavigationPropertyBinding should not be returned for 4.0 clients.</p>
+<p>Ralf: Park until ODATA-674 is resolved</p>
+
+<h4>5.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-952" rel="noopener noreferrer" target="_blank">ODATA-952</a> - Replace multiple batch capability term with single "BatchSupport" term</h4>
+<p>Ralf: ODATA-952 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-952 as proposed. <b>Martin</b> seconds.</p> 
+<p>Ralf: ODATA-952 is resolved as proposed</p>
+
+<h4>5.1.10 <a href="https://issues.oasis-open.org/browse/ODATA-541" rel="noopener noreferrer" target="_blank">ODATA-541</a> - Allow the If-Match header to reference the ETag that resulted from an earlier operation in a batch request</h4>
+<p><b>Matt</b>: I <b>move</b> to resolve ODATA-541 as proposed. <b>Hubert</b> seconds.</p> 
+<p>Ralf: ODATA-541 is resolved as proposed</p>
+
+<h3>7. Next meetings</h3>
+
+<p>Mike: Please look at ODATA-923, especially questions in comments, and add your thoughts.</p>
+<p>Ralf: Both meetings (cf. sections 7.1 and 7.2)</p>
+<p>Ralf: Next week (cf. section 7.1): OpenAPI</p>
+
+<h4>7.1 Next Meeting Thursday July 14, 2016 08-10 PDT</h4>
+<p>Agreed</p>
+
+<h4>7.2 Next Meeting Thursday July 21, 2016 06-10 PDT</h4>
+<p>Agreed</p>
+<p>Ralf: Please all take note of the (again) earlier meeting start time and longer duration from 6am-10am PDT.</p>
+
+<h3>8. AOB and wrap up</h3>
+
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+
+</div>
+</body>
+</html>
