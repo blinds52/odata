@@ -3,17 +3,13 @@
   Version="4.0"
 >
   <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml">
-    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
-      <Annotation Term="Core.DefaultNamespace" />
-    </edmx:Include>
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
   </edmx:Reference>
   <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml">
     <edmx:Include Alias="UoM" Namespace="Org.OData.Measures.V1" />
   </edmx:Reference>
   <edmx:DataServices>
     <Schema Namespace="ODataDemo">
-      <Annotation Term="Core.DefaultNamespace" />
-
       <EntityType Name="Product" HasStream="true">
         <Key>
           <PropertyRef Name="ID" />
@@ -80,6 +76,7 @@
           <NavigationPropertyBinding Path="Category" Target="Categories" />
         </EntitySet>
         <EntitySet Name="Categories" EntityType="ODataDemo.Category">
+          <Annotation Term="Core.Description" String="Product Categories" />
           <NavigationPropertyBinding Path="Products" Target="Products" />
         </EntitySet>
         <EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier">
@@ -92,6 +89,7 @@
           </Annotation>
         </EntitySet>
         <Singleton Name="MainSupplier" Type="ODataDemo.Supplier">
+          <Annotation Term="Core.Description" String="Primary Supplier" />
           <NavigationPropertyBinding Path="Products" Target="Products" />
         </Singleton>
         <EntitySet Name="Countries" EntityType="ODataDemo.Country" />

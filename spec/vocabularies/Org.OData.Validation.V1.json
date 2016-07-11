@@ -1,0 +1,127 @@
+{
+    "x-odata-version": "4.0",
+    "swagger": "2.0",
+    "info": {
+        "title": "Terms describing validation rules",
+        "version": "",
+        "description": "\n\n## Term Definitions\nTerm|Description\n----|----\nPattern|The pattern that a string property, parameter, or term must match. This SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect.\nMinimum|Minimum value that a property, parameter, or term can have.\nMaximum|Maximum value that a property, parameter, or term can have.\nExclusive|Tags a Minimum or Maximum as exclusive, i.e. an open interval boundary.\nAllowedValues|A collection of valid values for the annotated property, parameter, or type definition\nMultipleOf|The value of the annotated property, parameter, or term must be an integer multiple of this positive value. For temporal types, the value is measured in seconds.\n\n## References\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Core.V1.openapi.json)"
+    },
+    "schemes": [
+        "http"
+    ],
+    "host": "localhost",
+    "basePath": "/examples",
+    "definitions": {
+        "Org.OData.Validation.V1.AllowedValue": {
+            "title": "AllowedValue",
+            "type": "object",
+            "properties": {
+                "Value": {
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PrimitiveType",
+                    "x-nullable": true,
+                    "description": "An allowed value for the property, parameter, or type definition"
+                }
+            }
+        }
+    },
+    "x-schemas": {
+        "Org.OData.Core.V1": {
+            "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json"
+        },
+        "Core": {
+            "aliasFor": "Org.OData.Core.V1"
+        },
+        "Validation": {
+            "aliasFor": "Org.OData.Validation.V1"
+        },
+        "Org.OData.Validation.V1": {
+            "description": "Terms describing validation rules"
+        }
+    },
+    "x-terms": {
+        "Org.OData.Validation.V1.Pattern": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "x-nullable": true,
+            "appliesTo": [
+                "Property",
+                "Parameter",
+                "Term"
+            ],
+            "description": "The pattern that a string property, parameter, or term must match. This SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect.",
+            "@Core.RequiresType": "Edm.String"
+        },
+        "Org.OData.Validation.V1.Minimum": {
+            "type": [
+                "number",
+                "string",
+                "null"
+            ],
+            "x-nullable": true,
+            "format": "decimal",
+            "multipleOf": 1,
+            "appliesTo": [
+                "Property",
+                "Parameter",
+                "Term"
+            ],
+            "description": "Minimum value that a property, parameter, or term can have."
+        },
+        "Org.OData.Validation.V1.Maximum": {
+            "type": [
+                "number",
+                "string",
+                "null"
+            ],
+            "x-nullable": true,
+            "format": "decimal",
+            "multipleOf": 1,
+            "appliesTo": [
+                "Property",
+                "Parameter",
+                "Term"
+            ],
+            "description": "Maximum value that a property, parameter, or term can have."
+        },
+        "Org.OData.Validation.V1.Exclusive": {
+            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
+            "x-nullable": true,
+            "default": true,
+            "appliesTo": "Annotation",
+            "description": "Tags a Minimum or Maximum as exclusive, i.e. an open interval boundary."
+        },
+        "Org.OData.Validation.V1.AllowedValues": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Org.OData.Validation.V1.AllowedValue"
+            },
+            "appliesTo": [
+                "Property",
+                "Parameter",
+                "TypeDefinition"
+            ],
+            "description": "A collection of valid values for the annotated property, parameter, or type definition"
+        },
+        "Org.OData.Validation.V1.MultipleOf": {
+            "type": [
+                "number",
+                "string",
+                "null"
+            ],
+            "x-nullable": true,
+            "format": "decimal",
+            "multipleOf": 1,
+            "appliesTo": [
+                "Property",
+                "Parameter",
+                "Term"
+            ],
+            "description": "The value of the annotated property, parameter, or term must be an integer multiple of this positive value. For temporal types, the value is measured in seconds."
+        }
+    },
+    "paths": {
+
+    }
+}
