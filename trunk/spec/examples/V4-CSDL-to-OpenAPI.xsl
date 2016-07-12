@@ -73,11 +73,8 @@
   <xsl:variable name="commonLabel" select="concat($commonNamespace,'.Label')" />
   <xsl:variable name="commonLabelAliased" select="concat($commonAlias,'.Label')" />
 
-  <!-- TODO: use Responses Definitions Object -->
   <xsl:variable name="defaultResponse">
-    <xsl:text>"default":{"description":"Error","schema":{"$ref":"</xsl:text>
-    <xsl:value-of select="$odata-schema" />
-    <xsl:text>#/definitions/odata.error"}}</xsl:text>
+    <xsl:text>"default":{"$ref":"#/responses/error"}</xsl:text>
   </xsl:variable>
 
   <xsl:key name="methods" match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function"
@@ -89,7 +86,7 @@
   <xsl:template name="Core.Description">
     <xsl:param name="node" />
     <xsl:variable name="description"
-  select="$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/edm:String" />
+      select="$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$coreDescription or @Term=$coreDescriptionAliased) and not(@Qualifier)]/edm:String" />
     <xsl:call-template name="escape">
       <xsl:with-param name="string" select="normalize-space($description)" />
     </xsl:call-template>
@@ -106,10 +103,32 @@
 
   <xsl:template name="Common.Label">
     <xsl:param name="node" />
-    <xsl:call-template name="escape">
-      <xsl:with-param name="string"
-        select="normalize-space($node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/edm:String)" />
-    </xsl:call-template>
+    <!-- TODO: consider explace annotations for properties -->
+    <xsl:variable name="label"
+      select="normalize-space($node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String|$node/edm:Annotation[(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/edm:String)" />
+
+    <xsl:variable name="explaceLabel">
+      <xsl:choose>
+        <xsl:when test="local-name($node)='Property'">
+          <xsl:variable name="target" select="concat(../../@Alias,'.',../@Name,'/',@Name)" />
+          <xsl:value-of
+            select="//edm:Annotations[@Target=$target and not(@Qualifier)]/edm:Annotation[@Term=(@Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier)]/@String" />
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="$label">
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$label" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="$explaceLabel" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -257,6 +276,10 @@
       <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)","type":"string"},</xsl:text>
       <xsl:text>"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
       <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)","type":"string"}}</xsl:text>
+
+      <xsl:text>,"responses":{"error":{"description":"Error","schema":{"$ref":"</xsl:text>
+      <xsl:value-of select="$odata-schema" />
+      <xsl:text>#/definitions/odata.error"}}}</xsl:text>
     </xsl:if>
     <xsl:text>}</xsl:text>
   </xsl:template>
