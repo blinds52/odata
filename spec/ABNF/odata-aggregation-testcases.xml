@@ -92,6 +92,7 @@
     <Match>SalesCount</Match>
     <Match>Tax</Match>
     <Match>Total</Match>
+    <Match>TotalPlannedRevenue</Match>
     <Match>TotalPopulation</Match>
     <Match>WeekDay</Match>
   </Constraint>
@@ -124,6 +125,7 @@
     <Match>Orders</Match>
     <Match>Products</Match>
     <Match>Sales</Match>
+    <Match>SalesPlan</Match>
     <Match>Suppliers</Match>
   </Constraint>
   <Constraint Rule="entityColFunction">
@@ -198,6 +200,7 @@
     <Match>CountryCode</Match>
     <Match>Month</Match>
     <Match>Name</Match>
+    <Match>PlannedRevenue</Match>
     <Match>Population</Match>
     <Match>Price</Match>
     <Match>ProductID</Match>
@@ -272,6 +275,9 @@
   </TestCase>
   <TestCase Name="aggregate - custom aggregate and from" Rule="queryOptions">
     <Input>$apply=aggregate(Forecast as DailyAverage from Time with average)</Input>
+  </TestCase>
+  <TestCase Name="aggregate - path with key segment" Rule="queryOptions">
+    <Input>$apply=aggregate(Product/SalesPlan('2015')/PlannedRevenue with sum as TotalPlannedRevenue)</Input>
   </TestCase>
   <TestCase Name="Aggregation - collection of complex type" Rule="queryOptions">
     <Input>$apply=groupby((Product),aggregate(Details(Amount with sum as Total)))</Input>
