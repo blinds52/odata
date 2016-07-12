@@ -15,7 +15,6 @@
 
     TODO: sap-annotations:creatable updatable deletable pageable addressable sortable filterable unit/semantics=currency-code/semantics=unit-of-measure
     semantics=email semantics=tel
-    TODO: TimeOfDay as target for Time
     TODO: IsComposable for functions generated from function imports
 
   -->
@@ -24,9 +23,7 @@
 
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
-      <edmx:Reference
-        Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Core.V1.xml"
-      >
+      <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Core.V1.xml">
         <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
       </edmx:Reference>
       <edmx:Reference
@@ -69,8 +66,17 @@
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <xsl:copy-of select="@Namespace|@Alias" />
       <xsl:apply-templates />
-      <xsl:apply-templates select="edm2:EntityContainer/edm2:FunctionImport" mode="Schema" />
+      <xsl:apply-templates select="edm2:EntityContainer[@m:IsDefaultEntityContainer='true']/edm2:FunctionImport"
+        mode="Schema" />
     </Schema>
+  </xsl:template>
+
+  <xsl:template match="edm2:EntityContainer">
+    <xsl:if test="@m:IsDefaultEntityContainer='true'">
+      <EntityContainer>
+        <xsl:apply-templates select="@*|node()" />
+      </EntityContainer>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm2:Property">
@@ -122,8 +128,7 @@
           <xsl:value-of select="$partner" />
         </xsl:attribute>
       </xsl:if>
-      <xsl:apply-templates mode="NavProp"
-        select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$fromrole]/edm2:OnDelete" />
+      <xsl:apply-templates mode="NavProp" select="../../edm2:Association[@Name=$assoc]/edm2:End[@Role=$fromrole]/edm2:OnDelete" />
       <xsl:apply-templates mode="NavProp"
         select="../../edm2:Association[@Name=$assoc]/edm2:ReferentialConstraint/edm2:Principal[@Role=$torole]" />
       <xsl:apply-templates />
@@ -169,8 +174,7 @@
       select="../../../edm2:EntityType/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/@Name" />
     <xsl:if test="$navprop">
       <xsl:variable name="namespace" select="../../../@Namespace" />
-      <xsl:variable name="typename"
-        select="../../../*/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
+      <xsl:variable name="typename" select="../../../*/edm2:NavigationProperty[@Relationship=$assoc and @FromRole=$role]/../@Name" />
       <xsl:variable name="type" select="concat($namespace,'.',$typename)" />
       <NavigationPropertyBinding>
         <xsl:attribute name="Target"><xsl:value-of select="$set" /></xsl:attribute>
