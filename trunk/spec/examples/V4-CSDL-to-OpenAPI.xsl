@@ -8,7 +8,6 @@
     Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - title for all types from Common.Label, fallback unqualified type name
     - represent term type as termType nvp with a Schema Object for the type, similar to action/function parameter types?
     - reconsider representing terms similar to types, instead represent them OData-style
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
@@ -32,12 +31,10 @@
     - ETag / If-Match for PATCH
     - property description for key parameters in single-entity requests
     - better description for operations from @Core.Description of entity set, singleton, action/function imports
-    - allow external targeting for @Core.Description and @Common.Label
+    - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
     - call template schema-ref to produce $refs in /paths section
 
-    - Swagger-UI issue: placement of enum for csv parameters is strange, would have expected it within items schema object,
-    not parameter object
     - Swagger-UI issue: can't use same parameter name as freestyle string and as multiselect box
   -->
 
@@ -588,9 +585,6 @@
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
-    <xsl:text>"title":"</xsl:text>
-    <xsl:value-of select="@Name" />
-    <xsl:text>",</xsl:text>
 
     <xsl:if test="@BaseType">
       <xsl:text>"x-baseType":"</xsl:text>
@@ -625,6 +619,7 @@
 
     <xsl:call-template name="x-annotations">
       <xsl:with-param name="annotations" select="edm:Annotation" />
+      <xsl:with-param name="fallback-title" select="@Name" />
     </xsl:call-template>
 
     <xsl:if test="@BaseType">
@@ -2263,17 +2258,25 @@
   <xsl:template name="x-annotations">
     <xsl:param name="annotations" />
     <xsl:param name="members" select="null" />
+    <xsl:param name="fallback-title" select="null" />
 
     <xsl:variable name="title">
       <xsl:call-template name="Common.Label">
         <xsl:with-param name="node" select="." />
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="$title!=''">
-      <xsl:text>,"title":"</xsl:text>
-      <xsl:value-of select="$title" />
-      <xsl:text>"</xsl:text>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$title!=''">
+        <xsl:text>,"title":"</xsl:text>
+        <xsl:value-of select="$title" />
+        <xsl:text>"</xsl:text>
+      </xsl:when>
+      <xsl:when test="$fallback-title">
+        <xsl:text>,"title":"</xsl:text>
+        <xsl:value-of select="$fallback-title" />
+        <xsl:text>"</xsl:text>
+      </xsl:when>
+    </xsl:choose>
 
     <xsl:variable name="description">
       <xsl:call-template name="Core.Description">
