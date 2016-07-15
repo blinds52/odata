@@ -13,15 +13,12 @@
     - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
-    - Core annotation for service/schema/model version - https://issues.oasis-open.org/browse/ODATA-925
-
     - annotations within edm:UrlRef, with string value and expression value of edm:UrlRef
     - primitive types in function/action return types
     - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
     option of type string
     - @Extends for entity container: ideally should include /paths from referenced container
     - annotations without explicit value: default from term definition (if inline)
-
     - links to referenced files relative to current Swagger UI?
     - $expand, $select, $orderby: property lists with inheritance
     - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue
@@ -34,8 +31,6 @@
     - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
     - call template schema-ref to produce $refs in /paths section
-
-    - Swagger-UI issue: can't use same parameter name as freestyle string and as multiselect box
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -2394,7 +2389,7 @@
   <xsl:template
     match="@AnnotationPath|edm:AnnotationPath|@NavigationPropertyPath|edm:NavigationPropertyPath|@Path|edm:Path|@PropertyPath|edm:PropertyPath|@UrlRef"
   >
-    <xsl:text>{"@odata.</xsl:text>
+    <xsl:text>{"@</xsl:text>
     <xsl:call-template name="lowerCamelCase">
       <xsl:with-param name="name" select="local-name()" />
     </xsl:call-template>
@@ -2484,7 +2479,7 @@
   <xsl:template match="edm:Record">
     <xsl:text>{</xsl:text>
     <xsl:if test="@Type">
-      <xsl:text>"@odata.type":"#</xsl:text>
+      <xsl:text>"@type":"#</xsl:text>
       <xsl:value-of select="@Type" />
       <xsl:text>"</xsl:text>
     </xsl:if>
@@ -2511,7 +2506,7 @@
   </xsl:template>
 
   <xsl:template match="edm:If|edm:Eq|edm:Ne|edm:Ge|edm:Gt|edm:Le|edm:Lt|edm:And|edm:Or">
-    <xsl:text>{"@odata.</xsl:text>
+    <xsl:text>{"@</xsl:text>
     <xsl:call-template name="lowerCamelCase">
       <xsl:with-param name="name" select="local-name()" />
     </xsl:call-template>
@@ -2523,7 +2518,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Apply">
-    <xsl:text>{"@odata.apply":"</xsl:text>
+    <xsl:text>{"@apply":"</xsl:text>
     <xsl:value-of select="@Function" />
     <xsl:text>","parameterValues":[</xsl:text>
     <xsl:apply-templates select="*[local-name()!='Annotation']" mode="list" />
@@ -2533,7 +2528,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Cast|edm:IsOf">
-    <xsl:text>{"@odata.</xsl:text>
+    <xsl:text>{"@</xsl:text>
     <xsl:call-template name="lowerCamelCase">
       <xsl:with-param name="name" select="local-name()" />
     </xsl:call-template>
@@ -2548,7 +2543,7 @@
   </xsl:template>
 
   <xsl:template match="edm:LabeledElement">
-    <xsl:text>{"@odata.labeledElement":"</xsl:text>
+    <xsl:text>{"@labeledElement":"</xsl:text>
     <xsl:value-of select="ancestor::edm:Schema/@Namespace" />
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
@@ -2558,7 +2553,7 @@
   </xsl:template>
 
   <xsl:template match="edm:LabeledElementReference">
-    <xsl:text>{"@odata.labeledElementReference":"</xsl:text>
+    <xsl:text>{"@labeledElementReference":"</xsl:text>
     <xsl:value-of select="." />
     <xsl:text>"}</xsl:text>
   </xsl:template>
@@ -2566,7 +2561,7 @@
   <xsl:template match="edm:Null">
     <xsl:choose>
       <xsl:when test="@*|node()">
-        <xsl:text>{"@odata.null":{</xsl:text>
+        <xsl:text>{"@null":{</xsl:text>
         <xsl:apply-templates select="@*|node()" mode="list" />
         <xsl:text>}}</xsl:text>
       </xsl:when>
@@ -2577,7 +2572,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Not|edm:UrlRef">
-    <xsl:text>{"@odata.</xsl:text>
+    <xsl:text>{"@</xsl:text>
     <xsl:call-template name="lowerCamelCase">
       <xsl:with-param name="name" select="local-name()" />
     </xsl:call-template>
