@@ -785,6 +785,46 @@
 
         }
     },
+    "x-actions": {
+        "OData.Demo.Approval": [
+            {
+                "parameters": [
+                    {
+                        "name": "LeaveRequest",
+                        "parameterType": {
+                            "$ref": "#/definitions/OData.Demo.LeaveRequest",
+                            "x-nullable": true
+                        }
+                    }
+                ],
+                "isBound": true
+            }
+        ],
+        "OData.Demo.Rejection": [
+            {
+                "parameters": [
+                    {
+                        "name": "LeaveRequest",
+                        "parameterType": {
+                            "$ref": "#/definitions/OData.Demo.LeaveRequest",
+                            "x-nullable": true
+                        }
+                    },
+                    {
+                        "name": "Reason",
+                        "parameterType": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "x-nullable": true
+                        }
+                    }
+                ],
+                "isBound": true
+            }
+        ]
+    },
     "x-entityContainer": {
         "name": "Container",
         "resources": {
@@ -3146,6 +3186,83 @@
                         "in": "header",
                         "description": "ETag",
                         "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/LeaveRequests({ID})/OData.Demo.Approval": {
+            "post": {
+                "summary": "Invoke action Approval",
+                "tags": [
+                    "LeaveRequests"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Action parameters",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/LeaveRequests({ID})/OData.Demo.Rejection": {
+            "post": {
+                "summary": "Invoke action Rejection",
+                "tags": [
+                    "LeaveRequests"
+                ],
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "required": true,
+                        "description": "key: ID",
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Action parameters",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "Reason": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "x-nullable": true
+                                }
+                            }
+                        }
                     }
                 ],
                 "responses": {
