@@ -8,16 +8,13 @@
     Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/examples/V4-CSDL-to-OpenAPI.xsl
 
     TODO:
-    - represent term type as termType nvp with a Schema Object for the type, similar to action/function parameter types?
-    - reconsider representing terms similar to types, instead represent them OData-style
-    - reconsider representing action/function parameter and return types JSON Schema style, instead use OData style
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
     - annotations within edm:UrlRef, with string value and expression value of edm:UrlRef
     - primitive types in function/action return types
     - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
     option of type string
-    - @Extends for entity container: ideally should include /paths from referenced container
+    - @Extends for entity container: include /paths from referenced container
     - annotations without explicit value: default from term definition (if inline)
     - links to referenced files relative to current Swagger UI?
     - $expand, $select, $orderby: property lists with inheritance
@@ -26,8 +23,9 @@
     - security/authentication
     - 200 response for PATCH
     - ETag / If-Match for PATCH
-    - property description for key parameters in single-entity requests
-    - better description for operations from @Core.Description of entity set, singleton, action/function imports
+    - property description for key parameters in single-entity requests - include @Common.Label or @Core.Description
+    - operation descriptions via predefined qualifiers: @Core.Description#GET, #POST, #PATCH (and/or #PUT), #DELETE on entity set,
+    singleton
     - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
     - call template schema-ref to produce $refs in /paths section
@@ -36,6 +34,7 @@
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
   <xsl:strip-space elements="*" />
 
+
   <xsl:param name="scheme" select="'http'" />
   <xsl:param name="host" select="'localhost'" />
   <xsl:param name="basePath" select="'/service-root'" />
@@ -43,11 +42,13 @@
   <xsl:param name="odata-version" select="'4.0'" />
   <xsl:param name="vocabulary-home" select="'http://localhost/examples'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
+  <xsl:param name="diagram" select="null" />
   <xsl:param name="openapi-formatoption" select="''" />
   <!-- TODO: consider splitting /paths file == OpenAPI description from /definitions == JSON $metadata
     <xsl:param name="metadata" select="'$metadata'" />
   -->
   <xsl:variable name="metadata" select="''" />
+
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
   <xsl:variable name="coreAlias"
@@ -198,8 +199,10 @@
         <xsl:text>/</xsl:text>
       </xsl:when>
     </xsl:choose>
+    <xsl:if test="$diagram">
+      <xsl:apply-templates select="//edm:EntityType" mode="description" />
+    </xsl:if>
     <xsl:apply-templates select="//edm:Term" mode="description" />
-    <xsl:apply-templates select="//edm:EntityType" mode="description" />
     <xsl:apply-templates select="//edmx:Include" mode="description" />
     <xsl:text>"}</xsl:text>
 
@@ -1274,7 +1277,20 @@
     <xsl:apply-templates select="@*[local-name()!='Name']|node()" mode="list2" />
   </xsl:template>
 
-  <xsl:template match="edm:EntitySet/@EntityType|edm:Singleton/@Type|edm:ActionImport/@Action|edm:FunctionImport/@Function">
+  <xsl:template match="edm:EntitySet/@EntityType|edm:Singleton/@Type">
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="lowerCamelCase">
+      <xsl:with-param name="name" select="local-name()" />
+    </xsl:call-template>
+    <xsl:text>":{</xsl:text>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="." />
+      <xsl:with-param name="nullableFacet" select="'false'" />
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:ActionImport/@Action|edm:FunctionImport/@Function">
     <xsl:text>"</xsl:text>
     <xsl:call-template name="lowerCamelCase">
       <xsl:with-param name="name" select="local-name()" />
@@ -2101,7 +2117,14 @@
       </xsl:when>
     </xsl:choose>
     <xsl:text>/</xsl:text>
-    <xsl:value-of select="../@Namespace" />
+    <xsl:choose>
+      <xsl:when test="../@Alias">
+        <xsl:value-of select="../@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="../@Namespace" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"post":{"summary":"Invoke action </xsl:text>
@@ -2156,7 +2179,14 @@
       </xsl:when>
     </xsl:choose>
     <xsl:text>/</xsl:text>
-    <xsl:value-of select="../@Namespace" />
+    <xsl:choose>
+      <xsl:when test="../@Alias">
+        <xsl:value-of select="../@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="../@Namespace" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>(</xsl:text>
