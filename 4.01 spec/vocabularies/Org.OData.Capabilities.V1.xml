@@ -136,7 +136,7 @@ supported:
       </Term>
 
       <Term Name="BatchContinueOnErrorSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Service supports the continue on error preference" />
+        <Annotation Term="Core.Description" String="Service supports the continue on error preference. Supports $batch requests. Services that apply the BatchContinueOnErrorSupported term should also specify the ContinueOnErrorSupported property from the BatchSupport term." />
       </Term>
 
       <Term Name="IsolationSupported" Type="Capabilities.IsolationLevel" AppliesTo="EntityContainer">
@@ -244,12 +244,29 @@ supported:
       </Term>
 
       <Term Name="BatchSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Supports $batch requests" />
+        <Annotation Term="Core.Description" String="Supports $batch requests. Services that apply the BatchSupported term should also apply the more comprehensive BatchSupport term." />
       </Term>
 
-      <Term Name="BatchContentIdReferencingInRequestBodiesSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Service supports Content-ID referencing in request bodies" />
+      <Term Name="BatchSupport" Type="Capabilities.BatchSupportType" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Batch Support for the service"/> 
       </Term>
+      <ComplexType Name="BatchSupportType">
+        <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
+          <Annotation Term="Core.Description" String="Service supports requests to $batch" />
+        </Property>  
+        <Property Name="ContinueOnErrorSupported" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="Service supports the continue on error preference" />
+        </Property>
+        <Property Name="ReferencesInRequestBodiesSupported" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="Service supports Content-ID referencing in request bodies" />
+        </Property>
+        <Property Name="ReferencesAcrossChangeSetsSupported" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="Service supports Content-ID referencing across change sets" />
+        </Property>
+        <Property Name="EtagReferencesSupported" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="Service supports referencing Etags from previous requests" />
+        </Property>
+      </ComplexType>
 
       <Term Name="FilterFunctions" Type="Collection(Edm.String)" Nullable="false" AppliesTo="EntityContainer EntitySet">
         <Annotation Term="Core.Description" String="List of functions supported in $filter" />
