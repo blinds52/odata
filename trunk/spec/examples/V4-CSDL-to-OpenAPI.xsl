@@ -1414,7 +1414,16 @@
 
     <xsl:text>],"responses":{"200":{"description":"Retrieved entities","schema":{"type":"object","title":"Collection of </xsl:text>
     <xsl:value-of select="$type" />
-    <xsl:text>","properties":{"value":{"type":"array","items":{"$ref":"</xsl:text>
+    <xsl:text>","properties":{"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$odata-version='2.0'">
+        <xsl:text>d</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>value</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>":{"type":"array","items":{"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
@@ -1444,16 +1453,36 @@
         <xsl:with-param name="type" select="$type" />
         <xsl:with-param name="default" select="'New entity'" />
       </xsl:call-template>
-      <xsl:text>,"schema":{"$ref":"</xsl:text>
+      <xsl:text>,"schema":{</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>"title":"New </xsl:text>
+        <xsl:value-of select="$type" />
+        <xsl:text>","type":"object","properties":{"d":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"$ref":"</xsl:text>
       <xsl:value-of select="$metadata" />
       <xsl:text>#/definitions/</xsl:text>
       <xsl:value-of select="$qualifiedType" />
-      <xsl:text>"}}]</xsl:text>
-      <xsl:text>,"responses":{"201":{"description":"Created entity","schema":{"$ref":"</xsl:text>
+      <xsl:text>"</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:text>}}]</xsl:text>
+      <xsl:text>,"responses":{"201":{"description":"Created entity","schema":{</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>"title":"Created </xsl:text>
+        <xsl:value-of select="$type" />
+        <xsl:text>","type":"object","properties":{"d":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"$ref":"</xsl:text>
       <xsl:value-of select="$metadata" />
       <xsl:text>#/definitions/</xsl:text>
       <xsl:value-of select="$qualifiedType" />
-      <xsl:text>"}},</xsl:text>
+      <xsl:text>"</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:text>}},</xsl:text>
       <xsl:value-of select="$defaultResponse" />
       <xsl:text>}}</xsl:text>
     </xsl:if>
@@ -1612,11 +1641,21 @@
       mode="select" />
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
       mode="expand" />
-    <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{"$ref":"</xsl:text>
+    <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
+    <xsl:if test="$odata-version='2.0'">
+      <xsl:text>"title":"</xsl:text>
+      <xsl:value-of select="$type" />
+      <xsl:text>","type":"object","properties":{"d":{</xsl:text>
+    </xsl:if>
+    <xsl:text>"$ref":"</xsl:text>
     <xsl:value-of select="$metadata" />
     <xsl:text>#/definitions/</xsl:text>
     <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}},</xsl:text>
+    <xsl:text>"</xsl:text>
+    <xsl:if test="$odata-version='2.0'">
+      <xsl:text>}}</xsl:text>
+    </xsl:if>
+    <xsl:text>}},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 
@@ -1646,11 +1685,21 @@
         <xsl:with-param name="type" select="$type" />
         <xsl:with-param name="default" select="'New property values'" />
       </xsl:call-template>
-      <xsl:text>,"schema":{"$ref":"</xsl:text>
+      <xsl:text>,"schema":{</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>"title":"Modified </xsl:text>
+        <xsl:value-of select="$type" />
+        <xsl:text>","type":"object","properties":{"d":{</xsl:text>
+      </xsl:if>
+      <xsl:text>"$ref":"</xsl:text>
       <xsl:value-of select="$metadata" />
       <xsl:text>#/definitions/</xsl:text>
       <xsl:value-of select="$qualifiedType" />
-      <xsl:text>"}}],"responses":{"204":{"description":"Success"},</xsl:text>
+      <xsl:text>"</xsl:text>
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
+      <xsl:text>}}],"responses":{"204":{"description":"Success"},</xsl:text>
       <xsl:value-of select="$defaultResponse" />
       <xsl:text>}}</xsl:text>
     </xsl:if>
