@@ -11,13 +11,11 @@
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see https://issues.oasis-open.org/browse/ODATA-856,
     inline and explace style
     - annotations within edm:UrlRef, with string value and expression value of edm:UrlRef
-    - primitive types in function/action return types
     - complex or collection-valued function parameters need special treatment in /paths - use parameter aliases with alias
     option of type string
     - @Extends for entity container: include /paths from referenced container
     - annotations without explicit value: default from term definition (if inline)
     - links to referenced files relative to current Swagger UI?
-    - $expand, $select, $orderby: property lists with inheritance
     - both "clickable" and freestyle $expand, $select, $orderby - does not work yet, open issue
     - system query options for actions/functions/imports depending on "Collection("
     - security/authentication
@@ -28,7 +26,6 @@
     singleton
     - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
-    - call template schema-ref to produce $refs in /paths section
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -44,10 +41,6 @@
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
   <xsl:param name="diagram" select="null" />
   <xsl:param name="openapi-formatoption" select="''" />
-  <!-- TODO: consider splitting /paths file == OpenAPI description from /definitions == JSON $metadata
-    <xsl:param name="metadata" select="'$metadata'" />
-  -->
-  <xsl:variable name="metadata" select="''" />
 
 
   <xsl:variable name="coreNamespace" select="'Org.OData.Core.V1'" />
@@ -1423,11 +1416,11 @@
         <xsl:text>value</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>":{"type":"array","items":{"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}}}},</xsl:text>
+    <xsl:text>":{"type":"array","items":{</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+    </xsl:call-template>
+    <xsl:text>}}}}},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 
@@ -1459,11 +1452,9 @@
         <xsl:value-of select="$type" />
         <xsl:text>","type":"object","properties":{"d":{</xsl:text>
       </xsl:if>
-      <xsl:text>"$ref":"</xsl:text>
-      <xsl:value-of select="$metadata" />
-      <xsl:text>#/definitions/</xsl:text>
-      <xsl:value-of select="$qualifiedType" />
-      <xsl:text>"</xsl:text>
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      </xsl:call-template>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
@@ -1474,11 +1465,9 @@
         <xsl:value-of select="$type" />
         <xsl:text>","type":"object","properties":{"d":{</xsl:text>
       </xsl:if>
-      <xsl:text>"$ref":"</xsl:text>
-      <xsl:value-of select="$metadata" />
-      <xsl:text>#/definitions/</xsl:text>
-      <xsl:value-of select="$qualifiedType" />
-      <xsl:text>"</xsl:text>
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      </xsl:call-template>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
@@ -1647,11 +1636,9 @@
       <xsl:value-of select="$type" />
       <xsl:text>","type":"object","properties":{"d":{</xsl:text>
     </xsl:if>
-    <xsl:text>"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+    </xsl:call-template>
     <xsl:if test="$odata-version='2.0'">
       <xsl:text>}}</xsl:text>
     </xsl:if>
@@ -1691,11 +1678,9 @@
         <xsl:value-of select="$type" />
         <xsl:text>","type":"object","properties":{"d":{</xsl:text>
       </xsl:if>
-      <xsl:text>"$ref":"</xsl:text>
-      <xsl:value-of select="$metadata" />
-      <xsl:text>#/definitions/</xsl:text>
-      <xsl:value-of select="$qualifiedType" />
-      <xsl:text>"</xsl:text>
+      <xsl:call-template name="schema-ref">
+        <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+      </xsl:call-template>
       <xsl:if test="$odata-version='2.0'">
         <xsl:text>}}</xsl:text>
       </xsl:if>
@@ -1804,11 +1789,11 @@
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
       mode="expand" />
 
-    <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}},</xsl:text>
+    <xsl:text>],"responses":{"200":{"description":"Retrieved entity","schema":{</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+    </xsl:call-template>
+    <xsl:text>}},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 
@@ -1828,11 +1813,11 @@
       <xsl:with-param name="type" select="$type" />
       <xsl:with-param name="default" select="'New property values'" />
     </xsl:call-template>
-    <xsl:text>,"schema":{"$ref":"</xsl:text>
-    <xsl:value-of select="$metadata" />
-    <xsl:text>#/definitions/</xsl:text>
-    <xsl:value-of select="$qualifiedType" />
-    <xsl:text>"}}],"responses":{"204":{"description":"Success"},</xsl:text>
+    <xsl:text>,"schema":{</xsl:text>
+    <xsl:call-template name="schema-ref">
+      <xsl:with-param name="qualifiedName" select="$qualifiedType" />
+    </xsl:call-template>
+    <xsl:text>}}],"responses":{"204":{"description":"Success"},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 
