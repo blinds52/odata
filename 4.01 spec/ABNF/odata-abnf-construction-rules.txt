@@ -148,12 +148,14 @@ propertyPath = entityColNavigationProperty [ collectionNavigation ]
              / primitiveProperty           [ primitivePath ]
              / streamProperty              [ boundOperation ]
 
-primitiveColPath = count / boundOperation
+primitiveColPath = count / boundOperation 
+                   / ordinalIndex    ; for ordered collections
 
 primitivePath  = value / boundOperation
 
-complexColPath = [ "/" qualifiedComplexTypeName ] 
-                 [ count / boundOperation ]
+complexColPath = ([ "/" qualifiedComplexTypeName ] 
+                 [ count / boundOperation ]) /
+                 [ordinalIndex]      ; for ordered collections
 
 complexPath    = [ "/" qualifiedComplexTypeName ] 
                  [ "/" propertyPath 
@@ -163,6 +165,7 @@ complexPath    = [ "/" qualifiedComplexTypeName ]
 count = '/$count'
 ref   = '/$ref'
 value = '/$value'
+ordinalIndex = "/" 1*DIGIT
 
 ; boundOperation segments can only be composed if the type of the previous segment 
 ; matches the type of the first parameter of the action or function being called.
@@ -241,6 +244,7 @@ systemQueryOption = deltatoken
                   / skip 
                   / skiptoken
                   / top 
+                  / index
 
 expand            = '$expand' EQ expandItem *( COMMA expandItem )
 expandItem        = STAR [ ref / OPEN levels CLOSE ]
@@ -273,6 +277,8 @@ orderbyItem = commonExpr [ RWS ( 'asc' / 'desc' ) ]
 
 skip = '$skip' EQ 1*DIGIT
 top  = '$top'  EQ 1*DIGIT
+
+index  = '$index'  EQ 1*DIGIT
 
 format = '$format' EQ
          ( "atom"
