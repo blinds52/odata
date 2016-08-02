@@ -7,20 +7,20 @@
 ;   https://www.oasis-open.org/committees/odata
 ;
 ; Chairs:
-;   - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+;   - Ralf Handl (ralf.handl@sap.com), SAP SE
 ;   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
 ;
 ; Editors:
-;   - Ralf Handl (ralf.handl@sap.com), SAP AG
+;   - Ralf Handl (ralf.handl@sap.com), SAP SE
 ;   - Michael Pizzo (mikep@microsoft.com), Microsoft
-;   - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
+;   - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP SE
 ;
 ; Additional artifacts: 
 ;   This grammar is one component of a Work Product which consists of:
-;   - OData Version 4.0 Part 1: Protocol
-;   - OData Version 4.0 Part 2: URL Conventions
-;   - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
-;   - OData ABNF Construction Rules Version 4.0 (this document)
+;   - OData Version 4.01 Part 1: Protocol
+;   - OData Version 4.01 Part 2: URL Conventions
+;   - OData Version 4.01 Part 3: Common Schema Definition Language (CSDL)
+;   - OData ABNF Construction Rules Version 4.01 (this document)
 ;   - OData ABNF Test Cases
 ;   - OData Core Vocabulary
 ;   - OData Capabilities Vocabulary
@@ -30,12 +30,11 @@
 ;   - OData EDM XML Schema
 ;
 ; Related work:
-;   This work product is related to the following two Work Products, each of 
-;   which define alternate formats for OData payloads
-;   - OData Atom Format Version 4.0
-;   - OData JSON Format Version 4.0
+;   This work product is related to the following Work Product,
+;   which defines the preferred format for OData payloads
+;   - OData JSON Format Version 4.01
 ;   This specification replaces or supersedes:
-;   - None
+;   - OData ABNF Construction Rules Version 4.0
 ;
 ; Declared XML namespaces:
 ;   - http://docs.oasis-open.org/odata/ns/edmx
@@ -148,14 +147,12 @@ propertyPath = entityColNavigationProperty [ collectionNavigation ]
              / primitiveProperty           [ primitivePath ]
              / streamProperty              [ boundOperation ]
 
-primitiveColPath = count / boundOperation 
-                   / ordinalIndex    ; for ordered collections
+primitiveColPath = count / boundOperation / ordinalIndex
 
 primitivePath  = value / boundOperation
 
-complexColPath = ([ "/" qualifiedComplexTypeName ] 
-                 [ count / boundOperation ]) /
-                 [ordinalIndex]      ; for ordered collections
+complexColPath = [ "/" qualifiedComplexTypeName ] 
+                 [ count / boundOperation / ordinalIndex ]
 
 complexPath    = [ "/" qualifiedComplexTypeName ] 
                  [ "/" propertyPath 
@@ -569,13 +566,14 @@ gtExpr = RWS 'gt' RWS commonExpr
 geExpr = RWS 'ge' RWS commonExpr
 
 hasExpr = RWS 'has' RWS enum
-inExpr = RWS 'in' RWS ( commonExpr | OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE )
-addExpr = RWS 'add' RWS commonExpr
-subExpr = RWS 'sub' RWS commonExpr
-mulExpr = RWS 'mul' RWS commonExpr
-divExpr = RWS 'div' RWS commonExpr
+inExpr  = RWS 'in' RWS ( commonExpr / OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE )
+
+addExpr   = RWS 'add' RWS commonExpr
+subExpr   = RWS 'sub' RWS commonExpr
+mulExpr   = RWS 'mul' RWS commonExpr
+divExpr   = RWS 'div' RWS commonExpr
 divbyExpr = RWS 'divby' RWS commonExpr
-modExpr = RWS 'mod' RWS commonExpr
+modExpr   = RWS 'mod' RWS commonExpr
 
 negateExpr = "-" BWS commonExpr
 
@@ -822,7 +820,7 @@ primitiveLiteral = nullValue                  ; plain values up to int64Value
                  / string                     ; single-quoted
                  / duration
                  / enum
-                 / binary                   ; all others are quoted and prefixed 
+                 / binary                     ; all others are quoted and prefixed 
                  / geographyCollection 
                  / geographyLineString 
                  / geographyMultiLineString 
@@ -994,10 +992,10 @@ header = content-id
 
 content-id = "Content-ID" ":" OWS 1*unreserved
        
-entityid   = ("EntityID" / "OData-EntityID" ) ":" OWS IRI-in-header
-isolation  = ("Isolation" / "OData-Isolation")  ":" OWS "snapshot"
+entityid   = [ "OData-" ] "EntityID" ":" OWS IRI-in-header
+isolation  = [ "OData-" ] "Isolation" ":" OWS "snapshot"
 odata-maxversion = "OData-MaxVersion" ":" OWS 1*DIGIT "." 1*DIGIT     
-odata-version    = "OData-Version"    ":" OWS ( "4.0" / "4.01" )
+odata-version    = "OData-Version"    ":" OWS "4.0" [ "1" ]
       
 prefer     = "Prefer" ":" OWS preference *( COMMA preference )       
 preference = allowEntityReferencesPreference
@@ -1012,15 +1010,13 @@ preference = allowEntityReferencesPreference
            ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
            ; / token [ EQ-h word ] *( OWS ";" [ OWS parameter ] )
            
-allowEntityReferencesPreference = "allow-entityreferences" 
-           / "odata.allow-entityreferences"
+allowEntityReferencesPreference = [ "odata." ] "allow-entityreferences"
 
-callbackPreference = ("callback" / "odata.callback") OWS ";" OWS "url" EQ-h DQUOTE URI DQUOTE
+callbackPreference = [ "odata." ] "callback" OWS ";" OWS "url" EQ-h DQUOTE URI DQUOTE
 
-continueOnErrorPreference = "continue-on-error"
-           / "odata.continue-on-error"           
+continueOnErrorPreference = [ "odata." ] "continue-on-error"           
            
-includeAnnotationsPreference = ("include-annotations" / "odata.include-annotations") EQ-h DQUOTE annotationsList DQUOTE
+includeAnnotationsPreference = [ "odata." ] "include-annotations" EQ-h DQUOTE annotationsList DQUOTE
 annotationsList      = annotationIdentifier *(COMMA annotationIdentifier)
 annotationIdentifier = [ excludeOperator ]
                        ( STAR 
@@ -1029,13 +1025,13 @@ annotationIdentifier = [ excludeOperator ]
                        [ "#" odataIdentifier ]
 excludeOperator      = "-"
            
-maxpagesizePreference = ("maxpageszie" / "odata.maxpagesize") EQ-h oneToNine *DIGIT         
+maxpagesizePreference = [ "odata." ] "maxpagesize" EQ-h oneToNine *DIGIT         
 
 respondAsyncPreference = "respond-async"
 
 returnPreference = "return" EQ-h ( 'representation' / 'minimal' )
 
-trackChangesPreference = "track-changes" / "odata.track-changes"
+trackChangesPreference = [ "odata." ] "track-changes"
 
 waitPreference = "wait" EQ-h 1*DIGIT
 
@@ -1054,7 +1050,9 @@ OWS   = *( SP / HTAB )  ; "optional" whitespace
 BWS-h = *( SP / HTAB )  ; "bad" whitespace in header values 
 EQ-h  = BWS-h EQ BWS-h 
 
-schemaversion = "SchemaVersion" ":" OWS ( ( DQUOTE 1*pchar DQUOTE ) / "*" )
+schemaversion   = "SchemaVersion" ":" OWS ( DQUOTE 1*VCHAR-no-DQUOTE DQUOTE / "*" )
+VCHAR-no-DQUOTE = %x21 / %x23-7E
+
 
 ;------------------------------------------------------------------------------
 ; 9. Punctuation

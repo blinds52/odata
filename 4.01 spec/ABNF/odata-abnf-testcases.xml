@@ -6,21 +6,21 @@
   https://www.oasis-open.org/committees/odata
 
   Chairs:
-  - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
 
   Editors:
-  - Ralf Handl (ralf.handl@sap.com), SAP AG
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
   - Michael Pizzo (mikep@microsoft.com), Microsoft
-  - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
+  - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP SE
 
   Additional artifacts:
   This test case document is one component of a Work Product which consists of:
-  - OData Version 4.0 Part 1: Protocol
-  - OData Version 4.0 Part 2: URL Conventions
-  - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
-  - OData ABNF Construction Rules Version 4.0
-  - OData ABNF Test Cases (this document)
+  - OData Version 4.01 Part 1: Protocol
+  - OData Version 4.01 Part 2: URL Conventions
+  - OData Version 4.01 Part 3: Common Schema Definition Language (CSDL)
+  - OData ABNF Construction Rules Version 4.01
+  - OData ABNF Test Cases Version 4.01 (this document)
   - OData Core Vocabulary
   - OData Capabilities Vocabulary
   - OData Measures Vocabulary
@@ -29,12 +29,11 @@
   - OData EDM XML Schema
 
   Related work:
-  This work product is related to the following two Work Products, each of
-  which define alternate formats for OData payloads
-  - OData Atom Format Version 4.0
-  - OData JSON Format Version 4.0
+  This work product is related to the following Work Product,
+  which defines the preferred format for OData payloads
+  - OData JSON Format Version 4.01
   This specification replaces or supersedes:
-  - None
+  - OData ABNF Test Cases Version 4.0
 
   Declared XML namespaces:
   - http://docs.oasis-open.org/odata/ns/edmx
@@ -50,10 +49,10 @@
 
   Overview:
   This document contains positive and negative test cases for the
-  OData ABNF Construction Rules Version 4.0.
+  OData ABNF Construction Rules Version 4.01.
   Positive test cases consist of the rule to test, the input string to parse,
   and a description of the test case, often starting with a section number
-  referring to OData Version 4.0 Part 2: URL Conventions.
+  referring to OData Version 4.01 Part 2: URL Conventions.
   Negative test cases in addition state the character position at which the
   invalid portion of input text starts, 0 meaning the whole input string.
 
@@ -67,10 +66,10 @@
   <!--
 
     This document contains positive and negative test cases for the
-    OData ABNF Construction Rules Version 4.0.
+    OData ABNF Construction Rules Version 4.01.
     Positive test cases consist of the rule to test, the input string to parse,
     and a description of the test case, often starting with a section number
-    referring to OData Version 4.0 Part 2: URL Conventions.
+    referring to OData Version 4.01 Part 2: URL Conventions.
     Negative test cases in addition state the character position at which the
     invalid portion of input text starts, 0 meaning the whole input string.
 
@@ -200,11 +199,11 @@
     <Match>NameKind</Match>
     <Match>Pattern</Match>
   </Constraint>
-  <!-- 
-  <Constraint Rule="keyPathLiteral">
+  <!--
+    <Constraint Rule="keyPathLiteral">
     <Match>1</Match>
     <Match>Tablet</Match>
-  </Constraint>
+    </Constraint>
   -->
   <Constraint Rule="keyPropertyAlias">
     <Match>KeyAlias</Match>
@@ -413,6 +412,9 @@
   <TestCase Name="Duration in URL" Rule="duration">
     <Input>duration'P6DT23H59M59.9999S'</Input>
   </TestCase>
+  <TestCase Name="Duration in URL without prefix" Rule="duration">
+    <Input>'P6DT23H59M59.9999S'</Input>
+  </TestCase>
   <TestCase Name="Decimal: integer" Rule="decimalValue">
     <Input>-2</Input>
   </TestCase>
@@ -497,9 +499,7 @@
   <TestCase Name="primitive value in request body - binary" Rule="primitiveValue">
     <Input>a123456789abcdefABA=</Input>
   </TestCase>
-  <TestCase Name="primitive value in request body - binary with line breaks and spaces" Rule="primitiveValue"
-    FailAt="8"
-  >
+  <TestCase Name="primitive value in request body - binary with line breaks and spaces" Rule="primitiveValue" FailAt="8">
     <Input>a1234567 89&#x000D;ab
               cdefABA</Input>
   </TestCase>
@@ -880,6 +880,9 @@
   <TestCase Name="4.8 Addressing the Count - in $filter with primitive collection" Rule="filter">
     <Input>$filter=Sizes/$count gt 0</Input>
   </TestCase>
+  <TestCase Name="4.8 Addressing the Count - in $filter with filtered collection" Rule="filter">
+    <Input>$filter=Products/$count($filter=Price gt 5.00) gt 2</Input>
+  </TestCase>
   <TestCase Name="4.8 Addressing the Count - collection navigation property with $count in $orderby" Rule="orderby">
     <Input>$orderby=Products/$count</Input>
   </TestCase>
@@ -889,60 +892,64 @@
   <TestCase Name="4.8 Addressing the Count - collection property with $count in $orderby" Rule="orderby">
     <Input>$orderby=Sizes/$count</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - set of subtypes" Rule="odataRelativeUri">
+  <TestCase Name="4.9 Addressing a Member of an Ordered Primitive Collection" Rule="odataRelativeUri">
+    <Input>Suppliers(1)/EmailAddresses/1</Input>
+  </TestCase>
+  <TestCase Name="4.9 Addressing a Member of an Ordered Complex Collection" Rule="odataRelativeUri">
+    <Input>Suppliers(1)/Addresses/1</Input>
+  </TestCase>
+  <TestCase Name="4.10 Inheritance - set of subtypes" Rule="odataRelativeUri">
     <Input>Products/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - set of subtypes, then key access" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - set of subtypes, then key access" Rule="odataRelativeUri">
     <Input>Products/Model.BestSellingProduct(1)</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - key access, then cast to subtype" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - key access, then cast to subtype" Rule="odataRelativeUri">
     <Input>Products(1)/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - key access, then cast to subtype - only once" Rule="odataRelativeUri"
-    FailAt="61"
-  >
+  <TestCase Name="4.10 Inheritance - key access, then cast to subtype - only once" Rule="odataRelativeUri" FailAt="61">
     <Input>Products(1)/Model.BestSellingProduct/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - complex type" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - complex type" Rule="odataRelativeUri">
     <Input>Products(1)/Address/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - complex type with property" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - complex type with property" Rule="odataRelativeUri">
     <Input>Products(1)/Address/Model.AddressWithLocation/Street</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - collection of complex type" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - collection of complex type" Rule="odataRelativeUri">
     <Input>Products(1)/Addresses/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - expressions: complex type" Rule="propertyPathExpr">
+  <TestCase Name="4.10 Inheritance - expressions: complex type" Rule="propertyPathExpr">
     <Input>Address/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - expressions: complex type with path" Rule="propertyPathExpr">
+  <TestCase Name="4.10 Inheritance - expressions: complex type with path" Rule="propertyPathExpr">
     <Input>Address/Model.AddressWithLocation/Street</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - expressions: collection of complex type" Rule="propertyPathExpr">
+  <TestCase Name="4.10 Inheritance - expressions: collection of complex type" Rule="propertyPathExpr">
     <Input>Addresses/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Products?$expand=Model.BestSellingProduct/Sales</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products/Model.BestSellingProduct($select=Name)</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products($filter=startswith(Name,'P'))</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand on complex resource" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Inheritance - $expand on complex resource" Rule="odataRelativeUri">
     <Input>TheMostPopularAddresses()?$expand=Model.AddressWithLocation/Country</Input>
   </TestCase>
-  <TestCase Name="4.10 Addressing a Media Resource" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Addressing a Media Resource" Rule="odataRelativeUri">
     <Input>Categories(1)/$value</Input>
   </TestCase>
-  <TestCase Name="4.12 Addressing All Entities in a Service" Rule="odataRelativeUri">
+  <TestCase Name="4.13 Addressing All Entities in a Service" Rule="odataRelativeUri">
     <Input>$all?$search=red</Input>
   </TestCase>
-  <TestCase Name="4.12 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
+  <TestCase Name="4.13 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
     <Input>$all/Model.Customer?$filter=contains(Name,'red')</Input>
   </TestCase>
   <TestCase Name="5 $ is reserved" Rule="filter">
@@ -1071,20 +1078,26 @@
   <TestCase Name="5.1.1.1.9 Logical Negation" Rule="notExpr">
     <Input>not false</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>Name eq 'Milk'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>Supplier/Name eq 'Milk'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>Name eq 'Milk' and Price lt 2.55</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>Name eq 'Milk' or Price lt 2.55</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>not endswith(Name,'ilk')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>style has Sales.Pattern'Yellow'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>Name in ('Milk', 'Cheese')</Input>
   </TestCase>
   <TestCase Name="5.1.1.2.1 Addition" Rule="commonExpr">
     <Input>Price add 2.45</Input>
@@ -1095,31 +1108,37 @@
   <TestCase Name="5.1.1.2.2 Subtraction" Rule="commonExpr">
     <Input>Price sub 0.55</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.3 Multiplication" Rule="commonExpr">
-    <Input>Price mul 2</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.2.4 Division" Rule="commonExpr">
-    <Input>Price div 2</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.2.5 Modulo" Rule="commonExpr">
-    <Input>Price mod 5</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.2.5 Negate" Rule="commonExpr">
+  <TestCase Name="5.1.1.2.3 Negate" Rule="commonExpr">
     <Input>-Price</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.4 Multiplication" Rule="commonExpr">
+    <Input>Price mul 2</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.5 Division" Rule="commonExpr">
+    <Input>Price div 2</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.5 Division" Rule="commonExpr">
+    <Input>Price divby 2</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.6 Modulo" Rule="commonExpr">
+    <Input>Price mod 5</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price add 2.45 eq 5.00</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price sub 0.55 eq 2.00</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price mul 2.0 eq 5.10</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price div 2.55 eq 1</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
+    <Input>Rating divby 2 eq 2.5</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Rating mod 5 eq 0</Input>
   </TestCase>
   <TestCase Name="5.1.1.3 Parenthesis" Rule="commonExpr">
@@ -1548,6 +1567,12 @@
   <TestCase Name="5.1.8 Format - media type" Rule="queryOptions">
     <Input>$format=text/html</Input>
   </TestCase>
+  <TestCase Name="5.1.9 Index" Rule="queryOptions">
+    <Input>$index=42</Input>
+  </TestCase>
+  <TestCase Name="5.1.9 Index" Rule="queryOptions" FailAt="7">
+    <Input>$index=fortytwo</Input>
+  </TestCase>
   <TestCase Name="Delta Link" Rule="deltatoken">
     <Input>$deltatoken=A@Lot_Has:Changed?=Here!</Input>
   </TestCase>
@@ -1618,11 +1643,20 @@
   <TestCase Name="Enumeration value in URI" Rule="enum">
     <Input>Sales.Pattern'Yellow'</Input>
   </TestCase>
+  <TestCase Name="Enumeration value in URI - without prefix" Rule="enum">
+    <Input>'Yellow'</Input>
+  </TestCase>
   <TestCase Name="Enumeration value in URI - multiple flag values" Rule="enum">
     <Input>Sales.Pattern'Solid,Yellow'</Input>
   </TestCase>
+  <TestCase Name="Enumeration value in URI - multiple flag values without prefix" Rule="enum">
+    <Input>'Solid,Yellow'</Input>
+  </TestCase>
   <TestCase Name="Enumeration value - in filter" Rule="filter">
     <Input>$filter=style eq Sales.Pattern'Yellow'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value - in filter without prefix" Rule="filter">
+    <Input>$filter=style eq 'Yellow'</Input>
   </TestCase>
   <TestCase Name="Enumeration value - in filter with has" Rule="filter">
     <Input>$filter=style has Sales.Pattern'Yellow'</Input>
@@ -1934,6 +1968,9 @@
   <TestCase Name="Header - odata-entitid" Rule="header">
     <Input>odata-entityid: ralf:handl</Input>
   </TestCase>
+  <TestCase Name="Header - entitid" Rule="header">
+    <Input>entityid: ralf:handl</Input>
+  </TestCase>
   <TestCase Name="Header - odata-entitid" Rule="header">
     <Input>odata-entityID: empty-path:/</Input>
   </TestCase>
@@ -1942,6 +1979,9 @@
   </TestCase>
   <TestCase Name="Header - odata-isolation" Rule="header">
     <Input>odata-isolation:sNapShoT</Input>
+  </TestCase>
+  <TestCase Name="Header - isolation" Rule="header">
+    <Input>isolation:sNapShoT</Input>
   </TestCase>
   <TestCase Name="Header - odata-maxversion" Rule="header">
     <Input>odata-maxversion: 4.0</Input>
@@ -1955,8 +1995,14 @@
   <TestCase Name="Header - odata-version" Rule="header">
     <Input>odata-version: 4.0</Input>
   </TestCase>
-  <TestCase Name="Preferences - allow  entity references" Rule="prefer">
+  <TestCase Name="Header - odata-version" Rule="header">
+    <Input>odata-version: 4.01</Input>
+  </TestCase>
+  <TestCase Name="Preferences - allow entity references and maximum page size" Rule="prefer">
     <Input>Prefer: odata.allow-entityreferences,odata.maxpagesize=20</Input>
+  </TestCase>
+  <TestCase Name="Preferences - allow entity references and maximum page size - no prefix" Rule="prefer">
+    <Input>Prefer: allow-entityreferences,maxpagesize=20</Input>
   </TestCase>
   <TestCase Name="Preferences - callback" Rule="preference">
     <Input>odata.callback;url="please://call/me?back#here"</Input>
@@ -1970,8 +2016,14 @@
   <TestCase Name="Preferences - callback" Rule="preference">
     <Input>odata.callback;url="some:/where"</Input>
   </TestCase>
+  <TestCase Name="Preferences - without prefix" Rule="preference">
+    <Input>callback;url="some:/where"</Input>
+  </TestCase>
   <TestCase Name="Preferences - continue on error" Rule="preference">
     <Input>odata.continue-on-error</Input>
+  </TestCase>
+  <TestCase Name="Preferences - continue on error - no prefix" Rule="preference">
+    <Input>continue-on-error</Input>
   </TestCase>
   <TestCase Name="Preferences - include annotations - all" Rule="preference">
     <Input>odata.include-annotations="*"</Input>
@@ -2022,8 +2074,14 @@
   <TestCase Name="Preferences - include annotations - several" Rule="preference">
     <Input>odata.include-annotations="Namespace.SomeTerm,Model.AnotherTerm,Namespace.*"</Input>
   </TestCase>
+  <TestCase Name="Preferences - include annotations - no prefix" Rule="preference">
+    <Input>include-annotations="*"</Input>
+  </TestCase>
   <TestCase Name="Preferences - maxpagesize - ok" Rule="preference">
     <Input>odata.maxpagesize=50</Input>
+  </TestCase>
+  <TestCase Name="Preferences - maxpagesize - no prefix" Rule="preference">
+    <Input>maxpagesize=50</Input>
   </TestCase>
   <TestCase Name="Preferences - maxpagesize - not zero" Rule="maxpagesizePreference" FailAt="18">
     <Input>odata.maxpagesize=0</Input>
@@ -2043,30 +2101,42 @@
   <TestCase Name="Preferences - track changes" Rule="preference">
     <Input>odata.track-changes</Input>
   </TestCase>
+  <TestCase Name="Preferences - track changes - no prefix" Rule="preference">
+    <Input>track-changes</Input>
+  </TestCase>
   <TestCase Name="Preferences - wait" Rule="preference">
     <Input>wait=0</Input>
   </TestCase>
   <TestCase Name="Preferences - wait with bad whitespace" Rule="preference">
     <Input>wait = 0</Input>
   </TestCase>
+  <TestCase Name="Header - schema-version" Rule="header">
+    <Input>schemaversion: "0001"</Input>
+  </TestCase>
+  <TestCase Name="Header - schema-version" Rule="header">
+    <Input>schemaversion: "second"</Input>
+  </TestCase>
+  <TestCase Name="Header - schema-version" Rule="header">
+    <Input>schemaversion: "1.42.2"</Input>
+  </TestCase>
   <TestCase Name="ODATA-633 hex pair bug" Rule="stringInJSON">
     <Input>"b%75g"</Input>
   </TestCase>
   <!-- experimental: key as path segments
-  <TestCase Name="4.3 Addressing entities - single entity (segment)" Rule="odataRelativeUri">
+    <TestCase Name="4.3 Addressing entities - single entity (segment)" Rule="odataRelativeUri">
     <Input>Customers/1</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - single entity (segment)" Rule="resourcePath">
+    </TestCase>
+    <TestCase Name="4.3 Addressing entities - single entity (segment)" Rule="resourcePath">
     <Input>Categories/Tablet</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - single entity (multi-part key" Rule="resourcePath">
+    </TestCase>
+    <TestCase Name="4.3 Addressing entities - single entity (multi-part key" Rule="resourcePath">
     <Input>OrderItems/1/1</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - navigation (segment)" Rule="resourcePath">
+    </TestCase>
+    <TestCase Name="4.3 Addressing entities - navigation (segment)" Rule="resourcePath">
     <Input>Orders/1/Items</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - navigation (segment)" Rule="resourcePath">
+    </TestCase>
+    <TestCase Name="4.3 Addressing entities - navigation (segment)" Rule="resourcePath">
     <Input>Orders/1/Items/1</Input>
-  </TestCase>
+    </TestCase>
   -->
 </TestSuite>
