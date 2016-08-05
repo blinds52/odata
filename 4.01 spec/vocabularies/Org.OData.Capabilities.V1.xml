@@ -136,7 +136,8 @@ supported:
       </Term>
 
       <Term Name="BatchContinueOnErrorSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Service supports the continue on error preference. Supports $batch requests. Services that apply the BatchContinueOnErrorSupported term should also specify the ContinueOnErrorSupported property from the BatchSupport term." />
+        <Annotation Term="Core.Description"
+          String="Service supports the continue on error preference. Supports $batch requests. Services that apply the BatchContinueOnErrorSupported term should also specify the ContinueOnErrorSupported property from the BatchSupport term." />
       </Term>
 
       <Term Name="IsolationSupported" Type="Capabilities.IsolationLevel" AppliesTo="EntityContainer">
@@ -178,10 +179,10 @@ supported:
         <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preference" />
         </Property>
-        <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="Change tracking supports filters on these properties" />
         </Property>
-        <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false" >
+        <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="Change tracking supports these properties expanded" />
         </Property>
       </ComplexType>
@@ -195,10 +196,10 @@ supported:
         <Property Name="Countable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be counted" />
         </Property>
-        <Property Name="NonCountableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="NonCountableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These collection properties do not allow /$count segments" />
         </Property>
-        <Property Name="NonCountableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false" >
+        <Property Name="NonCountableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These navigation properties do not allow /$count segments" />
         </Property>
       </ComplexType>
@@ -244,16 +245,17 @@ supported:
       </Term>
 
       <Term Name="BatchSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Supports $batch requests. Services that apply the BatchSupported term should also apply the more comprehensive BatchSupport term." />
+        <Annotation Term="Core.Description"
+          String="Supports $batch requests. Services that apply the BatchSupported term should also apply the more comprehensive BatchSupport term." />
       </Term>
 
       <Term Name="BatchSupport" Type="Capabilities.BatchSupportType" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="Batch Support for the service"/> 
+        <Annotation Term="Core.Description" String="Batch Support for the service" />
       </Term>
       <ComplexType Name="BatchSupportType">
         <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Service supports requests to $batch" />
-        </Property>  
+        </Property>
         <Property Name="ContinueOnErrorSupported" Type="Edm.Boolean">
           <Annotation Term="Core.Description" String="Service supports the continue on error preference" />
         </Property>
@@ -282,14 +284,16 @@ supported:
         <Property Name="RequiresFilter" Type="Edm.Boolean" DefaultValue="false">
           <Annotation Term="Core.Description" String="$filter is required" />
         </Property>
-        <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description"
             String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
         </Property>
-        <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These properties cannot be used in $filter expressions" />
         </Property>
-        <Property Name="FilterExpressionRestrictions" Type="Collection(Capabilities.FilterExpressionRestrictionType)" Nullable="false" >
+        <Property Name="FilterExpressionRestrictions" Type="Collection(Capabilities.FilterExpressionRestrictionType)"
+          Nullable="false"
+        >
           <Annotation Term="Core.Description" String="These properties only allow a subset of expressions" />
         </Property>
       </ComplexType>
@@ -300,21 +304,22 @@ supported:
       </ComplexType>
       <TypeDefinition Name="FilterExpressionType" UnderlyingType="Edm.String">
         <Annotation Term="Validation.AllowedValues">
-	<Collection>
-          <Record>
-            <PropertyValue Property="Value" String="SingleValue"/>
-            <Annotation Term="Core.Description" String="Property can be used in a single eq clause" />
-          </Record>
-          <Record>
-            <PropertyValue Property="Value" String="MultiValue"/>
-            <Annotation Term="Core.Description" String="Property can be used in a single in clause" />
-          </Record>
-          <Record>
-            <PropertyValue Property="Value" String="SingleRange"/>
-            <Annotation Term="Core.Description"
-              String="Property can be used in at most one ge and/or one le clause, separated by and" />
-          </Record>
-      </EnumType>
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="SingleValue" />
+              <Annotation Term="Core.Description" String="Property can be used in a single eq clause" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="MultiValue" />
+              <Annotation Term="Core.Description" String="Property can be used in a single in clause" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="SingleRange" />
+              <Annotation Term="Core.Description" String="Property can be used in at most one ge and/or one le clause, separated by and" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </TypeDefinition>
       <Term Name="SortRestrictions" Type="Capabilities.SortRestrictionsType" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Restrictions on $orderby expressions" />
       </Term>
@@ -322,13 +327,13 @@ supported:
         <Property Name="Sortable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="$orderby is supported" />
         </Property>
-        <Property Name="AscendingOnlyProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="AscendingOnlyProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These properties can only be used for sorting in Ascending order" />
         </Property>
-        <Property Name="DescendingOnlyProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="DescendingOnlyProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These properties can only be used for sorting in Descending order" />
         </Property>
-        <Property Name="NonSortableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false" >
+        <Property Name="NonSortableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These properties cannot be used in $orderby expressions" />
         </Property>
       </ComplexType>
@@ -340,7 +345,7 @@ supported:
         <Property Name="Expandable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="$expand is supported" />
         </Property>
-        <Property Name="NonExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false" >
+        <Property Name="NonExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These properties cannot be used in $expand expressions" />
         </Property>
       </ComplexType>
@@ -374,7 +379,7 @@ supported:
         <Property Name="Insertable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be inserted" />
         </Property>
-        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false" >
+        <Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These navigation properties do not allow deep inserts" />
         </Property>
       </ComplexType>
@@ -386,7 +391,7 @@ supported:
         <Property Name="Updatable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be updated" />
         </Property>
-        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false" >
+        <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These navigation properties do not allow rebinding" />
         </Property>
       </ComplexType>
@@ -398,7 +403,7 @@ supported:
         <Property Name="Deletable" Type="Edm.Boolean" DefaultValue="true">
           <Annotation Term="Core.Description" String="Entities can be deleted" />
         </Property>
-        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false" >
+        <Property Name="NonDeletableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These navigation properties do not allow DeleteLink requests" />
         </Property>
       </ComplexType>
