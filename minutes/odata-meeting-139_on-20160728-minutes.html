@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #139 Thursday Jul 28, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #139 Thursday Jul 28, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-07-28 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41473">normative attendance sheet for this meeting (event_id=41473)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Hubert: General questions, e.g. wrt HTTP/2</p>
+<p>Ralf: New agenda item 6</p>
+<p>Mike: Add agenda item for kickoff OpenAPI discussion</p>
+<p>Ralf: New agenada item 5</p>
+<p>Agenda is approved with the two ammendments.</p>
+
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from July 21, 2016 TC meeting #138</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58581/odata-meeting-138_on-20160721-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58581/odata-meeting-138_on-20160721-minutes.html</a></p>
+<p>Ralf: 6.1.7: Remark on DMTF came from Mike, not Ralf</p>
+<p>Minutes approved with the above correction.</p>
+<p><b>Updated minutes</b>:<a href="https://www.oasis-open.org/committees/download.php/58619/odata-meeting-138_on-20160721-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58619/odata-meeting-138_on-20160721-minutes.html</a></p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Action #0036 remains open</p>
+
+
+<h2>5. Mike reports on kickoff OpenAPI discussion</h2>
+
+<p>Mike: Background for discussion on a JSON representation of CSDL:</p>
+
+<p>Mike: JSON Schema is a popular format for validating JSON payloads. Swagger/OpenAPI leverages and extends a compatible subset of JSON Schema to describe and document the paths exposed by a service. Neither fully describes a model-oriented hypermedia-driven REST service.<br>
+<br>
+OData defines such a model-oriented service description using a "Common Schema Definition Language (CSDL)". Currently this definition language is in XML, and the OData TC is investigating a JSON version of this model description language.<br>
+<br>
+We have been looking at several different approaches for this JSON representation of a model description language.<br>
+1)Base the representation on JSON Schema<br>
+2)Base the representation on Swagger/OpenAPI<br>
+3)Base the representation on some other format<br>
+4)Define a custom JSON representation<br>
+<br>
+Each of these have a set of pros and cons.<br>
+<br>
+1) Base the representation on JSON Schema. Since JSON Schema was defined as a validation language, it lacks many of the modeling concepts such as inheritance fundamental to a modeling language. Swagger/OpenAPI faces many of these same restrictions. Additionally, describing an entity model in JSON Schema is much more verbose and less intuitive, from a modeling perspective, than a more direct mapping of the existing XML format to JSON. In addition, the extensions necessary to represent modeling concepts make the validation schema more verbose.<br>
+2) Swagger/OpenAPI goes beyond JSON Schema in describing the paths supported by a service, but it imposes even more restrictions (all extensions must start with x-). Also, Swagger/OpenAPI is prescriptive in the supported paths and doesn't (currently) have a good way of describing patterns/conventions. OData clients understand the operations they can perform against a service by understanding the model and a set of conventions for traversing the model; spelling these out in Swagger/OpenAPI is difficult (although work is going on to try and add support for this to OpenAPI). Because of the popularity of Swagger, we have done the work to define what an OData entity model would look like in Swagger/OpenAPI, and again the use of JSON Schema and the restrictions of Swagger/OpenAPI makes it more verbose and less intuitive than a custom JSON representation, and at the same time the additional extensions required to represent an OData model make the Swagger definition more verbose and less intuitive.<br>
+3) We are not aware of any existing formats that don't have the same types of issues as JSON Schema and Swagger/OpenAPI.<br>
+4) Several efforts have demonstrated that a direct representation of an OData model in JSON can be both concise and intuitive.  Existing JSON client would still be able to parse a custom format, but existing tooling written around validation and API documentation wouldn't know what to do with this new format.<br>
+<br>
+After doing some research into each option, we are considering defining a custom JSON format for OData models with tools/transforms that can generate a Swagger/OpenAPI representation (and perhaps other representations, such as RAML)<br>
+
+<p>Susan: It would be great if u include the links to the proposal docs along with the text</p>
+<p>Susan: It will also be great if you summarize the improvements since our last review</p>
+<p>Susan: will you have a call with Open API before we have the internal call in IBM?</p>
+
+
+<h2>6. Hubert's questions</h2>
+<p>Ralf: Interesting discussion around HTTP/2, GRPC, protoBuf, CBOR, ...</p>
+
+
+<h2>7. V4.01 Issues for V4.01_WD01 in New or Open state</h2>
+<h3>7.1 Ripe for resolution</h3>
+
+<h4>7.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-923" rel="noopener noreferrer" target="_blank">ODATA-923</a> - $expand (or $include) for $metadata to include referenced schemas</h4>
+
+<p>Ralf: Validate proposal with implementation teams, e.g. Olingo team</p>
+
+<h4>7.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-873" rel="noopener noreferrer" target="_blank">ODATA-873</a> - Define a default order for deep inserted entities in responses</h4>
+<p>Mike: use annotation in request that is echoed in the response, similar to Content-ID header in $batch requests</p>
+<p>Ralf: Instance annotation that is not (necessarily) persisted</p>
+<p>Ralf: Only needed for server-generated keys</p>
+<p>Ralf: ODATA-873 is OPEN</p>
+<p>Ralf: @odata.contentID</p>
+<p>Matt: Updated proposal: The client can specify an instance annotation on the nested entities that the server MUST return as instance annotation in the corresponding entity in the response.</p>
+<p>Matt: Updated proposal2: The client can specify @odata.contentID the instance annotation on the nested entities that the server MUST return the @odata.contentID instance annotation in the corresponding entity in the response.</p>
+<p>Matt: The client can specify @odata.contentID instance annotation in the nested entities in the request and the server MUST return the @odata.contentID instance annotation in the corresponding entity in the response.</p>
+<p>Hubert: make this a conformance clause?</p>
+<p>Mike: is a Protocol issue that then has representations in JSON and Atom formats</p>
+<p>Mike: should have a capability for deep-insert</p>
+<p>Mike: make contentId support part of this capability term</p>
+<p>Ralf: Matt to answer these questions in an updated proposal</p>
+
+
+<h4>7.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-942" rel="noopener noreferrer" target="_blank">ODATA-942</a> - How should headers applied to a batch affect statements within a batch</h4>
+<p>Ralf: Mark will provide proposal for next week</p>
+
+
+<h4>7.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-949" rel="noopener noreferrer" target="_blank">ODATA-949</a> - Clarify the affect Accept-Language header has on a delta response</h4>
+<p>Ralf: ODATA-949 is OPEN</p>
+<p>Matt: Revised Proposal: Clients should use the same Accept-Language header when using a delta link as was used with the defining query.  Servers MAY reject a delta link used with a different Accept-Language header as Not-Acceptable.</p>
+<p>Mike: Clarify: Clients SHOULD specify the same Accept-Language header when querying the delta link as was specified in the defining query. Services MAY return Not Acceptable if a different Accept-Language is specified.<br>
+<br>
+If a service does support an Accept-Language header it MAY return changes only visible in that language, or MAY return records that have changes not visible in the requested language.<br>
+</p>
+
+<p><b>Matt</b>: I <b>move</b> we resolve ODATA-949 with the revised proposal. <b>Mike</b> seconds.</p>
+<p>ODATA-949 is resolved with the adapted proposal</p>
+
+
+<h3>8. Next meetings</h3>
+
+<h4>8.1 Next Meeting Thursday August 04, 2016 08-10 PDT</h4>
+<p>Agreed</p>
+
+
+<h3>9. AOB and wrap up</h3>
+
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
