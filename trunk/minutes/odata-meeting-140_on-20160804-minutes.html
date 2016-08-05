@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #140 Thursday Aug 04, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #140 Thursday Aug 04, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-08-04 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41474">normative attendance sheet for this meeting (event_id=41474)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Agenda is approved unchanged as published.</p>
+
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from July 28, 2016 TC meeting #139</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58620/odata-meeting-139_on-20160728-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58620/odata-meeting-139_on-20160728-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Action #0036 remains open</p>
+
+
+
+<h2>5. V4.01 Issues for V4.01_WD01 in New or Open state</h2>
+<h3>5.1 Ripe for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-923" rel="noopener noreferrer" target="_blank">ODATA-923</a> - $expand (or $include) for $metadata to include referenced schemas</h4>
+<p>Ralf: Postpone (again)</p>
+
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-873" rel="noopener noreferrer" target="_blank">ODATA-873</a> - Define a default order for deep inserted entities in responses</h4>
+<p>Ralf: Proposal:<br>
+Introduce a new contentID annotation that the client can specify in the nested entities in the request. A server advertises support for the contentID instance annotation through the Capabilities.DeepInsertSupport annotation. Clients can specify the contentID instance annotation in the nested entities in the request. Services that support the contentID instance annotation MUST annotate the corresponding nested entities in the response when the return=representation preference is applied. <br>
+<br>
+Instance annotation definition: <br></p>
+
+<pre>
+&lt;Term Name=contentID Type=Edm.String> 
+  &lt;Annotation Term="Core.Description" String=A unique identifier for nested entities within a request."/> 
+&lt;/Term> 
+</pre>
+<p>
+Introduce a new capabilities annotation for deep inserts: </p>
+<pre>  
+&lt;Term Name="DeepInsertSupport" Type="Capabilities.DeepInsertSupportType" AppliesTo="EntityContainer"> 
+  &lt;Annotation Term="Core.Description" String=Deep Insert Support for the service"/> 
+&lt;/Term> 
+
+&lt;ComplexType Name="DeepInsertSupportType"> 
+  &lt;Property Name="Supported" Type="Edm.Boolean" DefaultValue="true"> 
+  &lt;Annotation Term="Core.Description" String="Service supports deep inserts" /> 
+  &lt;/Property> 
+  &lt;Property Name="ContentIDSupported" Type="Edm.Boolean" DefaultValue=true> 
+  &lt;Annotation Term="Core.Description" String="Service supports accepting and returning nested entities annotated with the contentID instance annotation." /> 
+  &lt;/Property> 
+&lt;/ComplexType>
+</pre>
+
+<p>Matt:</p>
+<pre>
+&lt;Term Name="BatchSupport" Type="Capabilities.BatchSupportType" AppliesTo="EntityContainer"> 
+  &lt;Annotation Term="Core.Description" String="Batch Support for the service"/> 
+&lt;/Term> 
+
+&lt;ComplexType Name="BatchSupportType"> 
+  &lt;Property Name="Supported" Type="Edm.Boolean" DefaultValue="true"> 
+  &lt;Annotation Term="Core.Description" String="Service supports requests to $batch" /> 
+  &lt;/Property> 
+  &lt;Property Name="ContinueOnErrorSupported" Type="Edm.Boolean"> 
+  &lt;Annotation Term="Core.Description" String="Service supports the continue on error preference" /> 
+  &lt;/Property> 
+  &lt;Property Name="ReferencesInRequestBodiesSupported" Type="Edm.Boolean"> 
+  &lt;Annotation Term="Core.Description" String="Service supports Content-ID referencing in request bodies" /> 
+  &lt;/Property> 
+  &lt;Property Name="ReferencesAcrossChangeSetsSupported" Type="Edm.Boolean"> 
+  &lt;Annotation Term="Core.Description" String="Service supports Content-ID referencing across change sets" /> 
+  &lt;/Property> 
+  &lt;Property Name="EtagReferencesSupported" Type="Edm.Boolean"> 
+  &lt;Annotation Term="Core.Description" String="Service supports referencing Etags from previous requests" /> 
+  &lt;/Property> 
+&lt;/ComplexType>
+</pre>
+
+<p><b>Matt</b>: I <b>move</b> we resolve ODATA-873 with the revised proposal. <b>Hubert</b> seconds.</p>
+<p>ODATA-873 is resolved as proposed</p>
+
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-942" rel="noopener noreferrer" target="_blank">ODATA-942</a> - How should headers applied to a batch affect statements within a batch</h4>
+<p>Ralf: Mark prepared proposal, will update issue, all to check until next week</p>
+<p>Ralf: Postponed until next meeting</p>
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-950" rel="noopener noreferrer" target="_blank">ODATA-950</a> - Clarify what requests can be delta enabled</h4>
+<p>Ralf: Link header specification: <a href="https://tools.ietf.org/html/rfc5988" rel="noopener noreferrer" target="_blank">https://tools.ietf.org/html/rfc5988</a></p>
+<p>Ralf: Request types we want to delta-enable</p>
+<p>Ralf: Collections of entities</p>
+<p>Ralf: Singletons</p>
+<p>Ralf: Collections of complex type instances - use index as "weak identity" - careful consideration of index shifts due to insertions and deletions</p>
+<p>Matt: GET Customers(101)?$expand=Orders</p>
+<p>Ralf: "Raw" content - media resources, raw property values - using the Link header</p>
+<p>Ralf: Single entity</p>
+<p>Ralf: In theory any GET request</p>
+<p>Ralf: Hubert and Matt will prepare proposal, postpone issue until then</p>
+<p>Ralf: No objections to open ODATA-950, is OPEN</p>
+<p>Ralf: Revisit issue end of September</p>
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-760" rel="noopener noreferrer" target="_blank">ODATA-760</a> - Add to depth restrictions to Capabilities Vocabulary</h4>
+<p>Ralf: ODATA-760 Add to depth restrictions to Capabilities Vocabulary</p>
+<p>Ralf: Services will likely have different limits in the number of levels of depth they support in queries. For example: <br>
+<br>
+Filter on far navigation (e.g. Manager/Manager/Title eq Director ) <br>
+Nested Any (e.g. Reports/any(Reports: Reports/any  ) <br>
+Deep expansion 1:M (e.g. $expand=Reports, Reports/Reports)<br> 
+<br>
+All those filters are syntactically correct, but create undue server-side load, so services are likely to impose limits on the number of levels of depth for such expressions. <br>
+<br>
+Is this something services should be able to report in Capabilities?</p>
+<p>Ralf: SAP Gateway implementation has limit on insertion - one level, e.g. Orders(42)/Items but not more than two segments</p>
+<p>Mark: limit on $expand, only one level</p>
+<p>Ralf: ODATA-760 is OPEN</p>
+<p>Hubert: service-wide restriction or specific to parts, e.g. entity sets</p>
+<p>Ralf: Postpone until we have a proposal</p>
+<p>Ralf: Mark will sketch a proposal</p>
+
+<h4>5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a> - Capabilities: FilterRestrictions and SortRestrictions for navigation properties</h4>
+
+<p>Ralf:</p> 
+<pre>
+&lt;Term Name="FilterRestrictions" Type="Capabilities.FilterRestrictionsType" AppliesTo="EntitySet">
+&lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions" />
+&lt;/Term>
+&lt;ComplexType Name="FilterRestrictionsType">
+&lt;Property Name="Filterable" Type="Edm.Boolean" DefaultValue="true">
+  &lt;Annotation Term="Core.Description" String="$filter is supported" />
+&lt;/Property>
+&lt;Property Name="RequiresFilter" Type="Edm.Boolean" DefaultValue="false">
+  &lt;Annotation Term="Core.Description" String="$filter is required" />
+&lt;/Property>
+&lt;Property Name="RequiredProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
+  &lt;Annotation Term="Core.Description"
+  String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)" />
+&lt;/Property>
+&lt;Property Name="NonFilterableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
+  &lt;Annotation Term="Core.Description" String="These properties cannot be used in $filter expressions" />
+&lt;/Property>
+&lt;Property Name="FilterExpressionRestrictions" Type="Collection(Capabilities.FilterExpressionRestrictionType)"
+  Nullable="false">
+  &lt;Annotation Term="Core.Description" String="These properties only allow a subset of expressions" />
+&lt;/Property>
+&lt;/ComplexType>
+</pre>
+
+<p>Ralf: Change type of NonFilterableProperties and NonSortableProperties to Collection(Edm.AnyPropertyPath) - new abstract type introduced in ODATA-516.</p>
+<p>Gerald: make it explicit in term documentation that the NonFilterableProperties are actually path prefixes, not only complete paths, e.g. if a complex property is named it also excludes filtering on components</p>
+<p>Ralf: No objections to opening this issue, ODATA-958 is OPEN</p>
+
+<p><b>Hubert</b>: I <b>move</b> we resolve ODATA-958 with the revised proposal. <b>Stefan</b> seconds.</p>
+<p>ODATA-958 is resolved as proposed</p>
+
+
+<h4>5.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-960" rel="noopener noreferrer" target="_blank">ODATA-960</a> - Absolute paths in annotations, e.g. capabilities depending on properties of a singleton</h4>
+<p>Ralf: Extend Path syntax to allow absolute paths that start with a top-level model element (schema child). <br>
+<br>
+Natural syntax would be a path starting with a forward slash. <br>
+<br>
+Note: current "relative" paths can already start with a type-cast segment which is a qualified type name, so the / prefix or something similar is needed to distinguish "absolute" paths.</p>
+
+<p>Ralf: Example</p>
+<pre>
+&lt;Annotations Target="My.Container/SalesOrders"> 
+  &lt;Annotation Term="Capabilities.InsertRestrictions"> 
+  &lt;Record> 
+    &lt;PropertyValue Property="Insertable" Path="/My.Container/Me/Permissions/CanCreateOrders" /> 
+  &lt;/Record> 
+  &lt;/Annotation> 
+&lt;/Annotations>
+</pre>
+[18:33] Ralf Handl (SAP): ODATA-960 is OPEN
+<p><b>Mark</b>: I <b>move</b> we resolve ODATA-960 with the revised proposal. <b>Hubert</b> seconds.</p>
+<p>ODATA-960 is resolved as proposed</p>
+
+
+<h4>5.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-614" rel="noopener noreferrer" target="_blank">ODATA-614</a> - Allow $expand, $select, ... with POST/PATCH/PUT in combination with return=representation to specify the response shape</h4>
+<p>Ralf: Last comment by Mike:<br>
+What happens if the service can't honor the $expand/$select -- does it still do the update? Does it still return results even if it can't honor the expand/select? <br>
+<br>
+=>Operation should never fail based on these query options, but if the service returns data it MUST have the query options appropriately applied. <br>
+=>Need to define capability term for this..</p>
+<p>Ralf: Agreement on general direction</p>
+<p>Ralf: Doubts about usefulness of an additional capabilities annotation</p>
+<p>Ralf: Postpone until next meeting</p>
+
+
+<h3>6. Next meetings</h3>
+
+<h4>6.1 Next Meeting Thursday August 11, 2016 06-10 PDT</h4>
+<p>Agreed</p>
+<p><b>Note</b>: Again starting earlier and 4 hours long meeting!</p>
+
+<h4>6.2 Further planned meetings</h4> 
+<p>Thursday August 18, 2016 during 8-10am PDT</p>
+<p>Thursday September 08, 2016 during 8-10am PDT</p>
+
+
+<h3>7. AOB and wrap up</h3>
+
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
