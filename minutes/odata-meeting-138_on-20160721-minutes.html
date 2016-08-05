@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #138 Thursday Jul 21, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #138 Thursday Jul 21, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-07-21 0600-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41472">normative attendance sheet for this meeting (event_id=41472)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Ralf: Add discussion on OpenAPI before going into V4.01 issues</p>
+
+<p>Agenda is approved with above modification.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from July 14, 2016 TC meeting #137</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58508/odata-meeting-137_on-20160714-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58508/odata-meeting-137_on-20160714-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Action #0036 remains open</p>
+
+<h2>5. Discuss way forward OpenAPI</h2>
+
+<p>Ralf: Recap: Ram asked about RAML and whether we should consider that</p>
+<p>Hubert: Current OpenAPI-based format doesn't feel like OData</p>
+<p>Ralf: Different interests<br>
+- OpenAPI representation, potentially lossy, x- stuff might distract or even impede<br>
+- RAML representation, potentially lossy, extensions might distract or even impede<br>
+- full-fidelity JSON format, no interest in OpenAPI, JSON Schema, RAML, ... - just lossless JSON $metadata</p>
+<p>Hubert: Pure OpenAPI part of our current spec is lossy anyway</p>
+<p>Mark: Considering to omit x- extensions and not risk to confuse OpenAPI tools that can't ignore x- extensions</p>
+<p>Susan: Have an open discussion on which way to go</p>
+<p>Mike: Write summary/intro to kickstart that discussion</p>
+<p>Ralf: Decide in future meeting on how to set up this discussion</p>
+
+<h2>6. V4.01 Issues for V4.01_WD01 in New or Open state</h2>
+<h3>6.1 Ripe for resolution</h3>
+
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-923" rel="noopener noreferrer" target="_blank">ODATA-923</a> - $expand for $metadata to include referenced schemas</h4>
+<p>Ralf: ODATA-923 is OPEN</p>
+<p>Mike: Note: in generic client scenario, the client has the namespace-or-alias qualified type name, or entity set name from @odata.context.</p>
+<p>Mike: Scenario-wise, what the client really wants is the ability to get the metadata necessary to understand a particular response.  So, given a context, it wants to (minimally) get back the recursive set of types referenced by that context (and probably wouldn't really care about any additional types defined in the namespaces used by the referenced types).</p>
+<p>Mike: Also note, service can't just include referenced files; it has to make sure there are no conflicts in the defined aliases.</p>
+<p>Ralf: Mike to get feedback from implementation team(s) and flesh out proposal</p>
+
+<h4>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-919" rel="noopener noreferrer" target="_blank">ODATA-919</a> - Specify the result type for each operation based on operator types</h4>
+<p>Ralf: Ralf to contact Evan whether he can round off the proposal</p>
+
+
+<h4>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-942" rel="noopener noreferrer" target="_blank">ODATA-942</a> - How should headers applied to a batch affect statements within a batch</h4>
+<p>Mike: Michael Pizzo added a comment - a few seconds ago<br>
+For each header, possibilities on a batch could be: <br>
+ 1) Not defined at the batch level <br>
+ 2) Defined and applies to the batch itself, not individual requests <br>
+ 3) Applies to each request within the batch (perhaps as a default, overridden (or combined?) if the statement contains the same header)<br>
+</p>
+<p>Ralf: Mark takes over this issue</p>
+
+
+<h4>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-571" rel="noopener noreferrer" target="_blank">ODATA-571</a> - Add annotation for properties that are (not) part of the default selection if no $select is specified</h4>
+<p>Mike: Mark will go through the existing headers defined in [Protocol] and propose which of these behaviors is most appropriate (and which require further discussion)</p>
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-571 without action. <b>Hubert</b> seconds.</p> 
+<p>Ralf: ODATA-571 is closed without action</p>
+
+
+<h4>6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-735" rel="noopener noreferrer" target="_blank">ODATA-735</a> - Enhance the CSDL for instance annotations</h4>
+<p>Ralf: ODATA-735 is OPEN</p>
+<p>Ralf: Need more information on use cases and benefits for clients</p>
+<p>Ralf: Inclination to close it without action</p>
+<p>Ralf: Postponed</p>
+
+
+<h4>6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-811" rel="noopener noreferrer" target="_blank">ODATA-811</a> - Define propagation and (partial) overriding of annotations</h4>
+<p>Ralf: ODATA-811 is OPEN</p>
+<p>Mike: agree that annotations are propagated along usage (type definition to property, ...)</p>
+<p>Mike: agree that annotations are propagated along inheritance (base type to derived type)</p>
+<p>Mike:<br>
+-Annotations are applied wherever the type is used.<br>
+-Annotations are propagated along inheritance<br>
+-Annotations defined in a derived type take precedence over the same type defined in the base type.<br>
+Question: For structured annotations, should we apply merge (PATCH) semantics or replace (PUT) semantics?<br>
+Question: For collection-values annotations, should it replace or append?<br>
+</p>
+<p>Ralf: Ralf to get concrete scenarios for PATCH semantics for structured terms</p>
+<p>Ralf: Postponed</p>
+
+
+<h4>6.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-859" rel="noopener noreferrer" target="_blank">ODATA-859</a> - Define term, semantics for inserting error information into a (mostly) successful response</h4>
+<p>Ralf: This instance annotation can appear everywhere in a response, even on a property</p>
+<p>Ralf: Could be used for in-stream errors when streaming responses, see ODATA-868</p>
+<p>Ralf: ODATA-859 is OPEN</p>
+<p>Ralf: Potential changes to the term definition<br>
+- make term array-valued<br>
+- just one complex type with details - recursively</p>
+<p>Hubert:</p>
+<pre>
+      &lt;Term Name="Notification" Type="Core.NotificationType"> 
+        &lt;Annotation Term="Core.Description" String="Instance annotation for warning and info notifications" /> 
+      &lt;/Term> 
+      &lt;ComplexType Name="NotificationType"> 
+        &lt;Property Name="code" Type="Edm.String" Nullable="false" /> 
+        &lt;Property Name="message" Type="Edm.String" Nullable="false"> 
+          &lt;Annotation Term="Core.IsLanguageDependent" /> 
+        &lt;/Property> 
+        &lt;Property Name="severity" Type="Core.NotificationSeverity" Nullable="false" /> 
+        &lt;Property Name="target" Type="Edm.String" Nullable="true"> 
+          &lt;Annotation Term="Core.Description" 
+            String="A path to the target of the notification detail, relative to the annotated instance" /> 
+        &lt;/Property> 
+        &lt;Property Name="details" Type="Collection(Common.NotificationType)" Nullable="false" /> 
+      &lt;/ComplexType> 
+      &lt;TypeDefinition Name="NotificationSeverity" UnderlyingType="Edm.String"> 
+        &lt;Annotation Term="Validation.AllowedValues"> 
+          &lt;Record> 
+            &lt;PropertyValue Property="Values"> 
+              &lt;Collection> 
+                &lt;Record> 
+                  &lt;PropertyValue Property="Value" String="success" /> 
+                &lt;/Record> 
+                &lt;Record> 
+                  &lt;PropertyValue Property="Value" String="info" /> 
+                &lt;/Record> 
+                &lt;Record> 
+                  &lt;PropertyValue Property="Value" String="warning" /> 
+                &lt;/Record> 
+                &lt;Record> 
+                  &lt;PropertyValue Property="Value" String="error" /> 
+                &lt;/Record> 
+              &lt;/Collection> 
+            &lt;/PropertyValue> 
+          &lt;/Record> 
+        &lt;/Annotation> 
+      &lt;/TypeDefinition>
+</pre>
+<p>Hubert:</p>
+<pre> 
+     &lt;Term Name="Notifications" Type="Collection(Core.NotificationType)"> 
+        &lt;Annotation Term="Core.Description" String="Instance annotation for warning and info notifications" /> 
+      &lt;/Term>
+</pre>
+<p>Ralf: Mike and Ralf prefer "Messages" instead of "Notifications"</p>
+<p>Mike: DMTF has "ExtendedInformation" which is a collection of "Messages"</p>
+<p>Mark: "notification" more common in sense of push notifications</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-859 as proposed. <b>Mike</b> seconds.</p> 
+<p>Ralf: ODATA-859 is resolved as proposed</p>
+
+
+<h4>6.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-883" rel="noopener noreferrer" target="_blank">ODATA-883</a> - Validation Vocabulary: add MultipleOf term</h4>
+<p>Ralf: ODATA-883 is OPEN</p>
+<p>Mike: doesn't add burden as it is a term, not a CSDL construct</p>
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-883 as proposed. <b>Hubert</b> seconds.</p> 
+<p>Ralf: ODATA-883 is resolved as proposed</p>
+
+
+<h4>6.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+<p>Ralf: Align with term defined in ODATA-859, e.g. "code" instead of "ErrorCode"</p>
+<p>Ralf: Could be applied to entity sets, singletons, action/function imports, actions/functions</p>
+<p>Ralf:</p>
+<pre>
+&lt;Annotation Term=Core.ErrorCodes Qualifier=Update>&lt;/Annotation> 
+&lt;Annotation Term=Core.ErrorCodes Qualifier=Delete>&lt;/Annotation>
+&lt;Annotation Term=Core.ErrorCodes Qualifier=Create>&lt;/Annotation>
+</pre>
+<p>Mike: From discussion:<br>
+-Swagger returns HTTP status codes; should we align? Perhaps nest OData error codes under HTTP status codes? <br>
+-Could be applied to entityset, singleton, function, or action. <br>
+-Consider aligning with new inline messages defined in ODATA-859 <br>
+-Clarify that this was non-limiting. Intended use is for generating API documentation <br>
+-Can specify via qualifier what http methods each set of possible error codes apply to, i.e.: </p>
+<pre>
+     &lt;Annotation Term="Core.ErrorCodes" Qualifier="Delete">&lt;/Annotation> 
+     &lt;Annotation Term="Core.ErrorCodes" Qualifier="Create">&lt;/Annotation>
+</pre>
+
+
+<h3>7. Next meetings</h3>
+
+<h4>7.1 Next Meeting Thursday July 28, 2016 08-10 PDT</h4>
+<p>Agreed</p>
+
+<h4>7.2 Meetings following the next</h4>
+<p>Ralf: Decide next week whether to meet on August 4th for two hours</p>
+<p>Ralf: August 11th for four hours</p>
+<p>Ralf: August 18th two hours</p>
+<p>Ralf: September 8th two hours</p>
+
+
+<h3>8. AOB and wrap up</h3>
+
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
