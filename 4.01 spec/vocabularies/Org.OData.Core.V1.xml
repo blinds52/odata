@@ -53,6 +53,9 @@
 
 -->
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1" />
+  </edmx:Reference>
   <edmx:DataServices>
     <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Core.V1" Alias="Core">
       <Annotation Term="Core.Description">
@@ -60,11 +63,11 @@
       </Annotation>
 
       <!-- Metadata Versioning -->
-      
+
       <Term Name="SchemaVersion" Type="Edm.String" AppliesTo="Schema">
         <Annotation Term="Core.Description" String="Version of the schema." />
       </Term>
-      
+
       <!--Documentation -->
 
       <Term Name="Description" Type="Edm.String">
@@ -80,20 +83,62 @@
       <!-- Numeric Exceptions -->
 
       <Term Name="NumericValueException" Type="Core.ValueException">
-        <Annotation Term="Core.Description" String="Used in place of a property value to annotate a property whose value is not representable according to its numeric type." />
+        <Annotation Term="Core.Description"
+          String="Used in place of a property value to annotate a property whose value is not representable according to its numeric type." />
       </Term>
+      <TypeDefinition Name="ValueException" UnderlyingType="Edm.String">
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="INF" />
+              <Annotation Term="Core.Description" String="The value is greater than the largest number for the prescribed numeric type" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="-INF" />
+              <Annotation Term="Core.Description" String="The value is less than smallest number for the prescribed numeric type" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="NaN" />
+              <Annotation Term="Core.Description" String="The value is not representable in the prescribed numeric type" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </TypeDefinition>
 
-      <EnumType Name="ValueException">
-        <Member Name="INF">
-            <Annotation Term="Core.Description" String="The value is greater than the largest number for the prescribed numeric type" />
-        </Member>
-        <Member Name="-INF">
-            <Annotation Term="Core.Description" String="The value is less than smallest number for the prescribed numeric type" />
-        </Member>
-        <Member Name="NaN">
-            <Annotation Term="Core.Description" String="The value is not representable in the prescribed numeric type" />
-        </Member>
-      </EnumType>
+      <!-- Error, warning, and info messages in a (mostly) successful response -->
+
+      <Term Name="Messages" Type="Collection(Core.MessageType)">
+        <Annotation Term="Core.Description" String="Instance annotation for warning and info messages" />
+      </Term>
+      <ComplexType Name="MessageType">
+        <Property Name="code" Type="Edm.String" Nullable="false" />
+        <Property Name="message" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.IsLanguageDependent" />
+        </Property>
+        <Property Name="severity" Type="Core.MessageSeverity" Nullable="false" />
+        <Property Name="target" Type="Edm.String" Nullable="true">
+          <Annotation Term="Core.Description" String="A path to the target of the message detail, relative to the annotated instance" />
+        </Property>
+        <Property Name="details" Type="Collection(Core.MessageType)" Nullable="false" />
+      </ComplexType>
+      <TypeDefinition Name="MessageSeverity" UnderlyingType="Edm.String">
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="success" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="info" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="warning" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="error" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </TypeDefinition>
 
       <!-- Localization -->
 
@@ -116,8 +161,7 @@
       <!--Resource Paths -->
 
       <Term Name="ResourcePath" Type="Edm.String" AppliesTo="EntitySet Singleton ActionImport FunctionImport">
-        <Annotation Term="Core.Description"
-          String="Resource path for entity container child, can be relative to xml:base and the request URL" />
+        <Annotation Term="Core.Description" String="Resource path for entity container child, can be relative to xml:base and the request URL" />
         <Annotation Term="Core.IsURL" />
       </Term>
 
@@ -147,8 +191,7 @@
       <!-- Metadata Extensions -->
 
       <Term Name="Immutable" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
-        <Annotation Term="Core.Description"
-          String="A value for this non-key property can be provided on insert and remains unchanged on update" />
+        <Annotation Term="Core.Description" String="A value for this non-key property can be provided on insert and remains unchanged on update" />
       </Term>
 
       <Term Name="Computed" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
@@ -183,8 +226,7 @@
       </Term>
 
       <Term Name="AdditionalProperties" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityType ComplexType">
-        <Annotation Term="Core.Description"
-          String="Instances of this type may contain properties in addition to those declared in $metadata" />
+        <Annotation Term="Core.Description" String="Instances of this type may contain properties in addition to those declared in $metadata" />
         <Annotation Term="Core.LongDescription"
           String="If specified as false clients can assume that instances will not contain dynamic properties, irrespective of the value of the OpenType attribute." />
       </Term>
@@ -199,18 +241,19 @@
           String="The service will automatically expand this navigation property as entity references even if not requested with $expand=.../$ref" />
       </Term>
 
-      <Term Name="MayImplement" Type="Collection(Edm.String)"> 
-         <Annotation Term="Core.Description" 
-           String="A collection of qualified type names outside of the type hierarchy that instances of this type might be addressable as by using a type segment."/> 
-      </Term> 
+      <Term Name="MayImplement" Type="Collection(Edm.String)">
+        <Annotation Term="Core.Description"
+          String="A collection of qualified type names outside of the type hierarchy that instances of this type might be addressable as by using a type segment." />
+      </Term>
 
-      <Term Name="Ordered" Type="Core.Tag" DefaultValue="true" AppliesTo="Property NavigationProperty EntitySet ReturnType"> 
-         <Annotation Term="Core.Description" String="Collection has a stable order. Ordered collections of primitive or complex types can be indexed by ordinal."/> 
-      </Term> 
+      <Term Name="Ordered" Type="Core.Tag" DefaultValue="true" AppliesTo="Property NavigationProperty EntitySet ReturnType">
+        <Annotation Term="Core.Description"
+          String="Collection has a stable order. Ordered collections of primitive or complex types can be indexed by ordinal." />
+      </Term>
 
-      <Term Name="PositionalInsert" Type="Core.Tag" Default="true" AppliesTo="Property NavigationProperty EntitySet"> 
-         <Annotation Term="Core.Description" String="Items can be inserted at a given ordinal index."/> 
-      </Term> 
+      <Term Name="PositionalInsert" Type="Core.Tag" DefaultValue="true" AppliesTo="Property NavigationProperty EntitySet">
+        <Annotation Term="Core.Description" String="Items can be inserted at a given ordinal index." />
+      </Term>
 
     </Schema>
   </edmx:DataServices>
