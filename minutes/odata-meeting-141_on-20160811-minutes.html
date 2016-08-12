@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #141 Thursday Aug 11, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #141 Thursday Aug 11, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-08-11 0600-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susam Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41475">normative attendance sheet for this meeting (event_id=41475)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Agenda is approved unchanged as published.</p>
+
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from July 28, 2016 TC meeting #140</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58662/odata-meeting-140_on-20160804-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58662/odata-meeting-140_on-20160804-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Action #0036 remains open</p>
+
+
+<h2>5. V4.01 Issues for V4.01_WD01 in New or Open state</h2>
+<h3>5.1 Ripe for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-923" rel="noopener noreferrer" target="_blank">ODATA-923</a> - $expand (or $include) for $metadata to include referenced schemas</h4>
+<p>Mike: Mark brought up use case of getting data and metadata in single request.</p>
+<p>Mike: If we have an easy way to get the metadata for a particular response, the client could batch that request with the request for the data using standard batch mechanisms.</p>
+<p>Mike: Ramesh asked about the format of the response. It would be a single response containing multiple &lt;schema> elements, each representing an included namespace necessary to understand the response. The service would be allowed to return, in each namespace, only those types necessary to understand the response.</p>
+<p>Mike: An alternative would be to return the full namespaces in line and require the service to factor the metadata into separate namespaces. This would not work for V2/V3, but would work for V4.  Still relies on a factoring of the metadata that may be grouped in different sizes for other reasons.</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-757" rel="noopener noreferrer" target="_blank">ODATA-757</a> - Add an OData specific header If-Metadata-Match</h4>
+
+<p><b>Matt</b>: I <b>move</b> to close ODATA-757 without action. <b>Mark</b> seconds.</p>
+<p>ODATA-757 is CLOSED without action</p>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-942" rel="noopener noreferrer" target="_blank">ODATA-942</a> - How should headers applied to a batch affect statements within a batch</h4>
+<p>Mark: The only header fields that have defined meaning for body parts are those the names of which begin with "Content-". All other header fields may be ignored in body parts. Although they should generally be retained if at all possible, they may be discarded by gateways if necessary. Such other fields are permitted to appear in body parts but must not be depended on. "X-" fields may be created for experimental or private purposes, with the recognition that the information they contain may be lost at some gateways.</p>
+<p>Mark: The following is a proposal for the use of headers in batch requests and responses.</p>
+<pre>
+Common Headers
+===============
+Content-Type - Each request in the batch must have a content type header as per section 11.7
+Content-Encoding - Value on requests in batch overrides the batch value
+Content-Language - Value on requests in batch overrides the batch value
+Content-Length - Value on requests in batch specify the length of that request
+OData-Version - Applies to the overall batch only. Ignored on requests in batch
+
+Request Headers
+===============
+Accept - In theory we could have Accept headers on requests in the batch override the Accept header of the batch. 
+         In practice, is that a reasonable use case?
+         It seems unusual that one request in the batch would request Atom format and another request in the batch would request JSON format.
+Accept-Charset - Similar to Accept header is it a resonable use case for the charset and language to differ from request to request?
+                 I could see that this might be more probable than wanting to mix Atom and JSON formats.
+Accept-Language - Same comment as Accept-Charset
+If-Match- Value on requests in batch overrides apply to that request. If-Match on the overall batch does not make sense. 
+          If the If-Match header is specified on the overall batch is that an error or is it ignored?
+If-None-Match - Value on requests in batch overrides apply to that request. If-None-Match on the overall batch does not make sense. 
+                If the If-Match header is specified on the overall batch is that an error or is it ignored?
+OData-Isolation - Applies to the overal batch only. Ignored on requests in the batch (per section 8.2.6)
+OData-MaxVersion - Applies to the overal batch only. Ignored on requests in the batch
+Prefer:odata.allow-entityreferences - Value on requests in batch overrides the batch value
+Prefer:odata.callback - In theory we could allow a callback per request in the batch, but I think it makes more sense if it applies to the batch as a whole.
+Prefer:odata.continue-on-error - Applies to the overall batch only. Ignored on requests in the batch
+Prefer:odata.include-annotations - Value on requests in batch overrides the batch value
+Prefer:odata.maxpagesize- Assuming responses in a batch can return Next Links, the value on requests in batch overrides the batch value
+Prefer:odata.track-changes - Assuming responses in a batch can return Delta Links, the value on requests in batch overrides the batch value
+Prefer:return - Value on requests in batch overrides the batch value
+Prefer:respond-async - Applies to the overall batch only. Ignored on requests in the batch (per section 8.2.8.
+Prefer:wait - In general I think this would apply to the overall batch. 
+              However I could see where you might what to specify a timeout on an individual request in the batch. 
+              If a request timed out the odata.continue-on-error preference would dictate whether the batch fails or processing continues. 
+              The batch to either fail or return an async-repsonse depending on whether the responde-async preference 
+              is specified after the wait time specified for the overall batch as expired.
+
+Schema-Version (OData 4.01) - Applies to the overall batch only. Ignored on requests in the batch.
+
+Response Headers
+=================
+ETag - Can be applied to responses in a batch response. I don't think it makes sense to apply this to the overall batch response.
+Location - Can be applied to responses in a batch response. I don't think it makes sense to apply this to the overall batch response
+OData-EntityId - Can be applied to responses in a batch response. I don't think it makes sense to apply this to the overall batch response
+Preference-Applied - Can be applied to responses in a batch response and also the overal batch
+Retry-After - Applies to the overal batch response only.
+</pre>
+
+<p>Mike: Question: is it really possible to change the content-encoding within a batch? Would processors of the overall payload need to know how subsections are encoded?</p>
+<p>Mike: Mark will investigate further, but the text for multi-part mime it seems to imply that the content- headers can vary on individual sections.</p>
+<p>Mike: Propose to move ahead with allowing as proposed, and revisit if Mark's research suggests an issue.</p>
+<p>Mike: Long discussion on include-annotations.  We could define merge semantics, but it could be confusing. Much simpler just to override. Doesn't seem particularly burdensome for client to (re)specify entire set.</p>
+
+<p>Mike: Revised proposal after walking through:</p>
+<pre>
+Common Headers
+===============
+Content-Type     - Each request in the batch must have a content type header as per section 11.7
+Content-Encoding - Value on requests in batch overrides the batch value
+Content-Language - Value on requests in batch overrides the batch value
+Content-Length   - Value on requests in batch specify the length of that request
+OData-Version    - Value on requests in batch overrides the batch value. Typically wouldn't vary from request to request.
+
+Request Headers
+===============
+Accept           - Value on requests in batch overrides the batch value
+Accept-Charset   - Value on requests in batch overrides the batch value
+Accept-Language  - Value on requests in batch overrides the batch value
+If-Match - Value on requests in batch overrides apply to that request.  If-Match on the overall batch does not make sense.  MUST NOT specify on the overall batch
+If-None-Match    - Value on requests in batch overrides apply to that request.  If-None-Match on the overall batch does not make sense.  MUST NOT specify on the overall batch.
+OData-Isolation  - Applies to the overal batch only.  Ignored on requests in the batch (per section 8.2.6)
+OData-MaxVersion - Value on requests in batch overrides the batch value.
+Prefer:odata.allow-entityreferences  - Value on requests in batch overrides the batch value
+Prefer:odata.callback                - Async on batch level; track-changes at request level.
+Prefer:odata.continue-on-error       - Applies to the overall batch only.  MUST NOT be specified on requests in the batch
+Prefer:odata.include-annotations     - Value on requests in batch overrides the batch value
+Prefer:odata.maxpagesize - SHOULD NOT be specified on batch
+Prefer:odata.track-changes           - SHOULD NOT be specified on batch
+Prefer:return                        - SHOULD NOT be specified on batch
+Prefer:respond-async                 - Applies to the overall batch only.  SHOULD NOT be specified (and is ignored) on requests in the batch (per section 8.2.8.
+Prefer:wait                          - On batch, applies to overall batch. On statement applies to individual
+</pre>
+
+<p>Mike: Updated:<br> 
+The following is a proposal for the use of headers in batch requests and responses.  </p>
+<pre>
+Common Headers
+===============
+Content-Type     - Each request in the batch must have a content type header as per section 11.7
+Content-Encoding - Value on requests in batch overrides the batch value
+Content-Language - Value on requests in batch overrides the batch value
+Content-Length   - Value on requests in batch specify the length of that request
+OData-Version    - Value on requests in batch overrides the batch value. Typically wouldn't vary from request to request.
+
+Request Headers
+===============
+Accept           - Value on requests in batch overrides the batch value
+Accept-Charset   - Value on requests in batch overrides the batch value
+Accept-Language  - Value on requests in batch overrides the batch value
+If-Match - MUST NOT specify on the overall batch
+If-None-Match    - MUST NOT specify on the overall batch.
+OData-Isolation  - Applies to the overal batch only.  Ignored on requests in the batch (per section 8.2.6)
+OData-MaxVersion - Value on requests in batch overrides the batch value.
+Prefer:odata.allow-entityreferences  - Value on requests in batch overrides the batch value
+Prefer:odata.callback                - Async on batch level; track-changes at request level.
+Prefer:odata.continue-on-error       - MUST NOT be specified on requests in the batch
+Prefer:odata.include-annotations     - Value on requests in batch overrides the batch value
+Prefer:odata.maxpagesize - SHOULD NOT be specified on batch
+Prefer:odata.track-changes           - SHOULD NOT be specified on batch
+Prefer:return                        - SHOULD NOT be specified on batch
+Prefer:respond-async                 - SHOULD NOT be specified (and is ignored) on requests in the batch (per section 8.2.8.
+Prefer:wait                          - On batch, applies to overall batch. On statement applies to individual statement. This is the only header that should be used on a changeset.
+Schema-Version (OData 4.01)          - Value on requests in batch overrides the batch value<br>
+
+Response Headers
+=================
+ETag                 - Can be applied to responses in a batch response.  SHOULD NOT be returned for batch.
+Location             - Can be applied to responses in a batch response. SHOLD NOT be returned for batch.
+OData-EntityId       - Can be applied to responses in a batch response.  SHOULD NOT be returned for batch.
+Preference-Applied   - Can be applied to responses in a batch response and also the overal batch
+Retry-After- Applies to the overal batch response only.
+</pre>
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-942 as per the amended proposal above. <b>Mark</b> seconds.</p>
+<p>ODATA-942 is RESOLVED</p>
+
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-950" rel="noopener noreferrer" target="_blank">ODATA-950</a> - Clarify what requests can be delta enabled</h4>
+<p>Ralf: Postponed</p>
+
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-956" rel="noopener noreferrer" target="_blank">ODATA-956</a> - Do we need to add SchemaVersion to ContextURL?</h4>
+<p>Ralf: A service MAY return the schemaVersion annotation as an instance annotation to specify the version of the schema the response was generated from. For streamed JSON this annotation, if present, MUST immediately follow the context property. <br>
+<br>
+If a service returns a payload whose schema is not compatible with the "unversioned" schema, it MUST include the schemaVersion instance annotation in the payload.</p>
+
+<p>Mike: How does schemaversion work, in general, with federated systems? Do we need to specify different schemaversions for different context urls within a payload? Do we need to be able to annotate include statements in metadata with schemaversion? Do we need a way to specify a schema version as part of an expand?</p>
+<p>Mike: If we specify as part of the include, then we shouldn't need to specify as part of expand and only need one per response.</p>
+<p>Mike: Added to proposal: ALSO, support the schemaVersion annotation as a child of the &lt;References> element.</p>
+<p>Mike: Added to proposal: schemaVersion MAY be included in embedded contextURLs or in odata.type annotations with full URLs.</p>
+<p>Mike: Updated proposal: <br>
+A service MAY return the schemaVersion annotation as an instance annotation to specify the version of the schema the response was generated from. For streamed JSON this annotation, if present, MUST immediately follow the context property.<br>
+<br>
+schemaVersion MAY be included in embedded contextURLs or in odata.type annotations with full URLs.<br>
+<br>
+If a service returns a payload whose schema is not compatible with the "unversioned" schema, it MUST include the schemaVersion instance annotations, as appropriate, in the payload.<br>
+<br>
+ALSO, support the schemaVersion annotation as a child of the &lt;References> element</p>
+
+<p>Ralf: ODATA-956 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-956 as proposed. <b>Hubert</b> seconds.</p>
+<p>ODATA-956 is resolved as proposed</p>
+
+
+<h4>5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-957" rel="noopener noreferrer" target="_blank">ODATA-957</a> - Do we impose a format for SchemaVersion?</h4>
+<p>Ralf: ODATA-957 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-957 as proposed, clarifying that it is up to the service to define the format for the schemaversion. <b>Hubert</b> seconds.</p>
+<p>ODATA-957 is resolved as proposed</p>
+
+
+<h4>5.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-961" rel="noopener noreferrer" target="_blank">ODATA-961</a> - 10.10 Projected Expanded Entity - be more explicit in combined $select/$expand cases</h4>
+<p>Ralf: 10.9 Collection of Projected Expanded Entities</p>
+
+<p>Context URL template:</p>
+<pre>{context-url}#{entity-set}{/type-name}{select-list}</pre>
+<pre>{context-url}#Collection({type-name}){select-list}</pre>
+<p>
+If a navigation property is explicitly selected, the parenthesized comma-separated list of properties includes the name of the selected navigation property with no parenthesis. If a $expand contains a nested $select, the navigation property appears suffixed with the parenthesized comma-separated list of properties selected (or expanded, containing a $select) from the related entities. Additionally, if the expansion is recursive for nested children, a plus sign (+) is infixed between the navigation property name and the list of properties.<br>
+Example 20: resource URL and corresponding context URL</p>
+<pre>
+http://host/service/Customers$select=Name&amp;$expand=Address/Country
+http://host/service/$metadata#Customers(Name,Address/Country)
+</pre>
+<p>Example 21: resource URL and corresponding context URL</p>
+<pre>
+http://host/service/Employees/Sales.Manager?$select=DirectReports
+        &amp;$expand=DirectReports($select=FirstName,LastName;$levels=4)
+http://host/service/$metadata
+        #Employees/Sales.Manager(DirectReports,
+                     DirectReports+(FirstName,LastName))
+</pre>
+
+<p>10.10 Projected Expanded Entity<br>
+Context URL template:</p>
+<pre>
+{context-url}#{entity-set}{/type-name}{select-list}/$entity
+{context-url}#{singleton}{select-list}
+{context-url}#{type-name}{select-list}
+</pre>
+<p>
+If a single entity is expanded and projected (or contains a $expand with a $select expand option), the parenthesized comma-separated list of selected properties includes the name of the expanded navigation properties containing a nested $select, each suffixed with the parenthesized comma-separated list of properties selected (or expanded with a nested $select) from the related entities.<br>
+Example 22: resource URL and corresponding context URL</p>
+<pre>
+http://host/service/Employees(1)/Sales.Manager?
+           $expand=DirectReports($select=FirstName,LastName;$levels=4)
+http://host/service/$metadata
+     #Employees/Sales.Manager(DirectReports+(FirstName,LastName))/$entity
+</pre>
+<p>Mike: Current rules:<br>
+if nav prop is in select, appears without parens. <br>
+if nav prop is in expand with no select, expand, or recursion, doesn't appear in the context url.<br>
+If nav prop is in expand with recursion, it's followed by a +<br>
+If nav prop is in expand with select list (or expand with select) then it's followed by parens (following the +, if present)<br>
+If both, both appear<br>
+<br>
+Make sure 10.10 is consistent with clarified wording from 10.9.</p>
+
+<p>Ralf: navprop - in $select</p>
+<p>Ralf: navprop() - in $expand</p>
+<p>Ralf: navprop+() - in $expand with $levels</p>
+<p>Ralf: navprop(prop,prop2,...) - in $expand with nested $select</p>
+<p>Ralf: navprop+(prop,prop2,...) - in $expand with nested $select and $levels</p>
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-961 as per the updated proposal. <b>Stefan</b> seconds.</p>
+<p>ODATA-961 is resolved as proposed</p>
+
+
+<h4>5.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-760" rel="noopener noreferrer" target="_blank">ODATA-760</a> - Add to depth restrictions to Capabilities Vocabulary</h4>
+<p>Ralf: Postponed</p>
+
+<h4>5.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-811" rel="noopener noreferrer" target="_blank">ODATA-811</a> - Define propagation and (partial) overriding of annotations</h4>
+<p>Ralf: <br>
+- Annotations are applied wherever the annotated model element (e.g. type) is used. <br>
+- Annotations are propagated along inheritance hierarchies. <br>
+- Annotations defined at a derived type take precedence over the same annotation defined at the base type. <br>
+- Annotations defined directly at a model element that uses/references another model element take precedence over the same annotation defined at the used/referenced model element. <br>
+- "Take precedence" means replace (PUT) semantics, not merge (PATCH) semantics as this is easier for the client. This applies to all types of annotations: primitive, structured, collection-valued. <br>
+<br>
+Terms that apply to a model construct implicitly apply to model constructs using the "applicable" construct, e.g. AppliesTo="EntityType" implies AppliesTo="Singleton EntitySet NavigationProperty Parameter". <br>
+<br>
+Annotations on model constructs propagate to all places where the model construct can be used, and can be overridden at the using construct, with replace (PUT) semantics for all types annotations. <br>
+<br>
+Annotations on structured types and their properties also propagate down from the base type to the derived types, and can be overridden at the derived type or its properties with replace (PUT) semantics for all types of annotations. <br>
+<br>
+Consumers (client libraries) interested in annotations for a model element have to inspect referenced model constructs, and for structured types the base type(s) to determine the effective annotation value for this model element. <br>
+<br>
+If annotations reference other annotations via the AnnotationPath construct, the search for the effective annotation value restarts at the model element the consumer is interested in. Example: base type has annotation that references other annotation. This other annotation is overridden on a derived type. The annotation consumer interested in the derived type has to use the referenced annotation value on the derived type.</p>
+<p>Ralf: Mike is concerned about blanketly propagating annotations along "uses"</p>
+<p>Mike: For applying annotations to different model elements; leave it up to the definition of the annotation to specify how the annotation on one element (i.e., a property) relates to the same annotation on a related element (i.e., the type containing the property)</p>
+
+
+<h3>6. Next meetings</h3>
+
+<h4>6.1 Next Meeting Thursday August 18, 2016 08-10 PDT</h4>
+<p>Agreed</p>
+
+<h4>6.2 Further planned meetings</h4> 
+<p>Thursday September 08, 2016 during 8-10am PDT</p>
+
+
+<h3>8. AOB and wrap up</h3>
+<p>Mike: As a preparation to process <a href="https://issues.oasis-open.org/browse/ODATA-964" rel="noopener noreferrer" target="_blank">ODATA-964</a> (Need to clarify nested delta representation) in one of the next meetings here a sample:</p>
+<pre>
+{
+  "@odata.type": "#Northwind.Manager",
+  "FirstName": "Patricia",
+  "DirectReports@odata.contextUrl": "#Employees(1)/DirectReports/$delta",
+  "DirectReports": [
+    {
+      "@odata.context": "#Employees/$deletedEntity",
+      "id": "Employees(3)",
+      "reason": "deleted"
+    },
+    {
+      "@odata.context": "#Employees/$deletedLink",
+      "source": "Employees(1)",
+      "relationship": "DirectReports",
+      "target": "Employees(4)"
+    },
+    {
+      "@odata.context": "#Employees(1)/$link",
+      "source": "Employees(1)",
+      "relationship": "DirectReports",
+      "target": "Employees(5)"
+    },
+    {
+      "@odata.context": "#Employees/DirectReports/$entity",
+      "FirstName": "Suzanne",
+      "LastName": "Brown"
+    }
+  ]
+}
+</pre>
+<p>Stefan: Note the tombstone (focus given by Mike):</p>
+<pre>
+    {
+      "@odata.context": "#Employees/$deletedEntity",
+      "id": "Employees(3)",
+      "reason": "deleted"
+    },
+</pre>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
