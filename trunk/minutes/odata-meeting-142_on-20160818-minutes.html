@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #142 Thursday Aug 18, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #142 Thursday Aug 18, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-08-18 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Stefan Hagen (Individual)
+        Susam Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41476">normative attendance sheet for this meeting (event_id=41476)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Agenda is approved unchanged as published.</p>
+
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from August 11, 2016 TC meeting #141</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58706/odata-meeting-141_on-20160811-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58706/odata-meeting-141_on-20160811-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Action #0036 remains open. Postponed.</p>
+
+
+<h2>5. V4.01 Issues for V4.01_WD01 in New or Open state</h2>
+<h3>5.1 Ripe for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-614" rel="noopener noreferrer" target="_blank">ODATA-614</a> - Allow $expand, $select, ... with POST/PATCH/PUT in combination with return=representation to specify the response shape</h4>
+<p>Ralf: Notes from Meeting on 2016-08-04:</p>
+<blockquote>
+Ralf: Agreement on general direction<br>
+Ralf: Doubts about usefulness of an additional capabilities annotation
+</blockquote>
+
+<p>Ralf: 8.2.8.7 Preference return=representation and return=minimal<br>
+<br>
+The return=representation and return=minimal preferences are defined in [<a href="https://tools.ietf.org/html/rfc7240.html" rel="noopener noreferrer" target="_blank">RFC7240</a>].<br>
+In OData, return=representation or return=minimal is defined for use with a POST, PUT, or PATCH Data Modification Request other than to a stream property, or to an Action Request. Specifying a preference of return=representation or return=minimal in a GET or DELETE request, or any request to a stream property, SHOULD return a 4xx Client Error.<br>
+A preference of return=representation or return=minimal is allowed on an individual Data Modification Request or Action Request within a batch, subject to the same restrictions, but SHOULD return a 4xx Client Error if specified on the batch request itself.<br>
+A preference of return=minimal requests that the service invoke the request but does not return content in the response. The service MAY apply this preference by returning 204 No Content in which case it MAY include a Preference-Applied response header containing the return=minimal preference.<br>
+A preference of return=representation requests that the service invokes the request and returns the modified resource. The service MAY apply this preference by returning the representation of the successfully modified resource in the body of the response, formatted according to the rules specified for the requested format. In this case the service MAY include a Preference-Applied response header containing the return=representation preference.</p>
+
+<p>Ralf: $select can always be applied</p>
+<p>Ralf: $expand may be difficult</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-615" rel="noopener noreferrer" target="_blank">ODATA-615</a> - Allow PATCH and DELETE with $filter on collections to modify or delete all (and only) the matching entities</h4>
+
+<p>Mike: Clarifications re: return=representation<br>
+1) if $expand/$select are present, implies return=representation<br>
+2) if $expand/$select are present and return=minimal, service MUST include preference-applied if they DON'T return a result</p>
+
+<p>Ralf: $filter in combination with bundle insert via POST: $filter is interpreted against the after-image of the collection, no other correlation with the request body</p>
+
+<p>Mike: $filter against the after-image of a bulk insert would imply return=representation without $filter would return the entire result, which seems inconsistent with return=representation of a POST to a single entity which returns only that entity.</p>
+
+<p>Ralf: Actually we don't define bundle-insert with POST, but with PATCH and the delta format, and we disallow $filter etc., see ODATA-613 - Allow PATCH to entity sets using the delta-response format</p>
+<p>Ralf: PATCH to a collection of entities can take a delta payload (interpreted as deltas if body represents a collection of entities) ODATA-613 
+a.MUST NOT have $filter, $select, $orderby, etc. <br>
+<br>
+For PATCH, you don't specify a $expand so the extent of that graph is undefined. Therefore, it is valid to have added/deleted links to anything (at least anything reachable from the target; service probably wouldn't bother validating). So Clients SHOULD make sure added/deleted links are reachable from target, but services need not validate. <br>
+<br>
+Response, if requested, should be a delta representation, in the same structure and order as the request payload, representing changes.</p>
+
+<p>Ralf: PATCH with delta payload: no query options allowed</p>
+<p>Ralf: PATCH with single (partial) instance: $filter identifies instances to be updated, $expand, $select etc. allowed to shape the response</p>
+<p>Ralf: What about $top and $skip?</p>
+<p>Ralf: <a href="https://lists.oasis-open.org/archives/odata/201603/msg00018.html" rel="noopener noreferrer" target="_blank">https://lists.oasis-open.org/archives/odata/201603/msg00018.html</a></p>
+
+<p>Mike: 3) can't be applied to PATCH with a delta payload (i.e., PATCH to a collection)</p>
+
+<p>Ralf: Rescope ODATA-614 to requests that return a single instance, then only $select and $expand make sense</p>
+
+<p><b>Ralf</b>: I <b>move</b> to rescope ODATA-614 to requests that return a single instance and only allow $select, $expand, $format. <b>Hubert</b> seconds.</p>
+
+<p>Ralf: Allow $expand, $select, $format with modifying requests that return a single instance in combination with return=representation to specify the response shape</p>
+<p>Ralf: Revised title: Allow $expand and $select with modifying requests that return a single instance in combination with return=representation to specify the response shape</p>
+<p>Ralf: Proposal: Applies only to requests that return a single resource, and only to $select and $expand (and $format) <br>
+1) if $expand/$select are present, implies return=representation <br>
+2) if $expand/$select are present and return=minimal, service MUST include preference-applied if they DON'T return a result<br></p>
+
+<p>Mike: 3) if it returns a result, $expand MUST be applied if specified and MUST include at least the $selected columns</p>
+<p>Mike: 4) the service MUST NOT fail the request due to the $expand/$select; if the service cannot return a result with the appropriate $expand it MUST return No Content</p>
+<p>Mike: Really, $expand and $select are being treated as preferences; they are just in the URL for convenience.  Should we perhaps put it in the preference?</p>
+<p>Mike: i.e., return=representation+$expand=...&amp;$select=...</p>
+<p>Mike: After discussion, we decided to continue to use the query options and not expand the preference header.</p>
+<p>Mike: </p>
+<blockquote>
+Applies only to requests that return a single resource, and only to $select and $expand (and $format)<br>
+1) if $expand/$select are present, implies return=representation<br>
+2) if $expand/$select are present and return=minimal, service MUST include preference-applied if they DON'T return a result<br>
+3) if it returns a result, $expand MUST be applied if specified and MUST include at least the $selected columns<br>
+4) the service MUST NOT fail the request due to the $expand/$select; if the service cannot return a result with the appropriate $expand and $select it MUST return No Content<br></blockquote>
+
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-614 as per the amended proposal. <b>Stefan</b> seconds.</p>
+<p>ODATA-614 is RESOLVED as proposed</p>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-827" rel="noopener noreferrer" target="_blank">ODATA-827</a> - introduce $compute query option</h4>
+
+<p>Ralf: </p>
+<blockquote>
+<pre>
+computeTrafo = 'compute' OPEN BWS computeExpr *( BWS COMMA BWS computeExpr ) BWS CLOSE 
+computeExpr  = commonExpr asAlias
+asAlias         = RWS 'as' RWS expressionAlias
+expressionAlias = odataIdentifier
+</pre></blockquote>
+<p>Mike: Note: once defined, the alias MAY be used in the $filter expression.</p>
+<p>Ralf: </p>
+<blockquote><p>OData defines a number of system query options that allow refining the request. The result of the request MUST be as if the system query options were evaluated in the following order.<br>
+Prior to applying any server-driven paging:</p>
+
+$search<br>
+$filter<br>
+$count<br>
+$orderby<br>
+$skip<br>
+$top<br>
+<p>
+After applying any server-driven paging:</p>
+$expand<br>
+$select<br>
+$format</blockquote>
+
+<p>Mike:</p>
+<blockquote>
+$compute would be first in the list.<br>
+Could also be used in $orderby.<br>
+$compute columns SHOULD be added to the default selection (in absence of $select) and can be explicitly $selected<br>
+Does $select=* include computed columns?  -- yes, for non-entity (or collections of entity) types<br>
+$expand=* should then include computed entities/collections of entities<br>
+(current expression restricts to simple results)<br>
+How does $compute affect contextUrl (if at all)?<br>
+Doesn't affect the contextUrl. If included in $select, then the alias appears.<br>
+Like any other dynamic property, it would have it's type annotation in the payload.<br>
+Remove restriction that expression restricts to a simple value<br>
+Can be nested within $expand...<br>
+~Customers?$expand=Orders($compute=price*qty as totalprice;$select=name,price,qty,totalprice)</blockquote>
+<p>Ralf: Postponed to September 15</p>
+
+<h3>6. Next meetings</h3>
+
+<h4>6.1 Next Meeting Thursday September 08, 2016 during 8-10am PDT</h4>
+<p>Agreed</p>
+
+
+<h3>8. AOB and wrap up</h3>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
