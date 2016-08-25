@@ -395,6 +395,8 @@ commonExpr = ( primitiveLiteral
              / methodCallExpr 
              / parenExpr 
              / castExpr 
+             / isofExpr
+             / notExpr
              ) 
              [ addExpr 
              / subExpr 
@@ -403,22 +405,20 @@ commonExpr = ( primitiveLiteral
              / divbyExpr 
              / modExpr
              ]  
+             [ eqExpr 
+             / neExpr 
+             / ltExpr  
+             / leExpr  
+             / gtExpr 
+             / geExpr 
+             / hasExpr 
+             / inExpr 
+             ]
+             [ andExpr 
+             / orExpr 
+             ] 
 
-boolCommonExpr = ( isofExpr 
-                 / boolMethodCallExpr 
-                 / notExpr  
-                 / commonExpr
-                   [ eqExpr 
-                   / neExpr 
-                   / ltExpr  
-                   / leExpr  
-                   / gtExpr 
-                   / geExpr 
-                   / hasExpr 
-                   / inExpr 
-                   ]
-                 / boolParenExpr
-                 ) [ andExpr / orExpr ] 
+boolCommonExpr = commonExpr ; with the added restriction that the result is a Boolean
 
 rootExpr = '$root/' ( entitySetName keyPredicate / singletonEntity ) [ singleNavigationExpr ]
 
@@ -511,6 +511,7 @@ methodCallExpr = indexOfMethodCallExpr
                / minDateTimeMethodCallExpr
                / maxDateTimeMethodCallExpr
                / nowMethodCallExpr
+               / boolMethodCallExpr
 
 boolMethodCallExpr = endsWithMethodCallExpr 
                    / startsWithMethodCallExpr 
@@ -552,7 +553,6 @@ distanceMethodCallExpr   = 'geo.distance'   OPEN BWS commonExpr BWS COMMA BWS co
 geoLengthMethodCallExpr  = 'geo.length'     OPEN BWS commonExpr BWS CLOSE
 intersectsMethodCallExpr = 'geo.intersects' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
-boolParenExpr = OPEN BWS boolCommonExpr BWS CLOSE
 parenExpr     = OPEN BWS commonExpr     BWS CLOSE
 
 andExpr = RWS 'and' RWS boolCommonExpr
