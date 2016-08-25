@@ -418,7 +418,7 @@ commonExpr = ( primitiveLiteral
              / orExpr 
              ] 
 
-boolCommonExpr = commonExpr ; with the added restriction that the result is a Boolean
+boolCommonExpr = commonExpr ; resulting in a Boolean
 
 rootExpr = '$root/' ( entitySetName keyPredicate / singletonEntity ) [ singleNavigationExpr ]
 
@@ -518,16 +518,16 @@ boolMethodCallExpr = endsWithMethodCallExpr
                    / containsMethodCallExpr                                          
                    / intersectsMethodCallExpr 
 
+concatMethodCallExpr     = 'concat'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 containsMethodCallExpr   = 'contains'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-startsWithMethodCallExpr = 'startswith' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 endsWithMethodCallExpr   = 'endswith'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-lengthMethodCallExpr     = 'length'     OPEN BWS commonExpr BWS CLOSE
 indexOfMethodCallExpr    = 'indexof'    OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+lengthMethodCallExpr     = 'length'     OPEN BWS commonExpr BWS CLOSE
+startsWithMethodCallExpr = 'startswith' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 substringMethodCallExpr  = 'substring'  OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
 toLowerMethodCallExpr    = 'tolower'    OPEN BWS commonExpr BWS CLOSE
 toUpperMethodCallExpr    = 'toupper'    OPEN BWS commonExpr BWS CLOSE
 trimMethodCallExpr       = 'trim'       OPEN BWS commonExpr BWS CLOSE
-concatMethodCallExpr     = 'concat'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 yearMethodCallExpr               = 'year'               OPEN BWS commonExpr BWS CLOSE
 monthMethodCallExpr              = 'month'              OPEN BWS commonExpr BWS CLOSE
@@ -543,7 +543,7 @@ totalOffsetMinutesMethodCallExpr = 'totaloffsetminutes' OPEN BWS commonExpr BWS 
 
 minDateTimeMethodCallExpr = 'mindatetime' OPEN BWS CLOSE
 maxDateTimeMethodCallExpr = 'maxdatetime' OPEN BWS CLOSE
-nowMethodCallExpr         = 'now' OPEN BWS CLOSE
+nowMethodCallExpr         = 'now'         OPEN BWS CLOSE
 
 roundMethodCallExpr   = 'round'   OPEN BWS commonExpr BWS CLOSE
 floorMethodCallExpr   = 'floor'   OPEN BWS commonExpr BWS CLOSE
@@ -553,7 +553,7 @@ distanceMethodCallExpr   = 'geo.distance'   OPEN BWS commonExpr BWS COMMA BWS co
 geoLengthMethodCallExpr  = 'geo.length'     OPEN BWS commonExpr BWS CLOSE
 intersectsMethodCallExpr = 'geo.intersects' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
-parenExpr     = OPEN BWS commonExpr     BWS CLOSE
+parenExpr = OPEN BWS commonExpr BWS CLOSE
 
 andExpr = RWS 'and' RWS boolCommonExpr
 orExpr  = RWS 'or'  RWS boolCommonExpr
@@ -566,14 +566,14 @@ gtExpr = RWS 'gt' RWS commonExpr
 geExpr = RWS 'ge' RWS commonExpr
 
 hasExpr = RWS 'has' RWS enum
-inExpr  = RWS 'in' RWS ( commonExpr / OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE )
+inExpr  = RWS 'in'  RWS ( commonExpr / OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE )
 
-addExpr   = RWS 'add' RWS commonExpr
-subExpr   = RWS 'sub' RWS commonExpr
-mulExpr   = RWS 'mul' RWS commonExpr
-divExpr   = RWS 'div' RWS commonExpr
+addExpr   = RWS 'add'   RWS commonExpr
+subExpr   = RWS 'sub'   RWS commonExpr
+mulExpr   = RWS 'mul'   RWS commonExpr
+divExpr   = RWS 'div'   RWS commonExpr
 divbyExpr = RWS 'divby' RWS commonExpr
-modExpr   = RWS 'mod' RWS commonExpr
+modExpr   = RWS 'mod'   RWS commonExpr
 
 negateExpr = "-" BWS commonExpr
 
