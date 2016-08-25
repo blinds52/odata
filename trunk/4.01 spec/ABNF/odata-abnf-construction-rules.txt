@@ -229,7 +229,8 @@ entityCastOption  = entityIdOption
 
 id = '$id' EQ IRI-in-query       
 
-systemQueryOption = deltatoken
+systemQueryOption = compute
+                  / deltatoken
                   / expand 
                   / filter 
                   / format 
@@ -242,6 +243,10 @@ systemQueryOption = deltatoken
                   / skiptoken
                   / top 
                   / index
+
+compute          = '$compute' EQ computeItem *( COMMA computeItem )
+computeItem      = commonExpr RWS 'as' RWS computedProperty
+computedProperty = odataIdentifier         
 
 expand            = '$expand' EQ expandItem *( COMMA expandItem )
 expandItem        = STAR [ ref / OPEN levels CLOSE ]
