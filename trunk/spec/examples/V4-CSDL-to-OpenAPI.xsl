@@ -509,6 +509,7 @@
     </xsl:if>
     <xsl:call-template name="x-annotations">
       <xsl:with-param name="annotations" select="edm:Annotation" />
+      <xsl:with-param name="fallback-title" select="@Name" />
       <xsl:with-param name="members" select="edm:Member/@Value|edm:Member/edm:Annotation" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
@@ -566,6 +567,7 @@
     </xsl:call-template>
     <xsl:call-template name="x-annotations">
       <xsl:with-param name="annotations" select="edm:Annotation" />
+      <xsl:with-param name="fallback-title" select="@Name" />
     </xsl:call-template>
     <xsl:text>}</xsl:text>
   </xsl:template>
