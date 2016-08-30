@@ -13,7 +13,7 @@
 
     In addition the SAP annotations are translated into corresponding V4 annotations in the OASIS vocabularies or SAP vocabularies.
 
-    TODO: sap-annotations:creatable updatable deletable pageable addressable sortable filterable unit/semantics=currency-code/semantics=unit-of-measure
+    TODO: sap-annotations on property level:creatable updatable deletable pageable addressable sortable filterable unit/semantics=currency-code/semantics=unit-of-measure
     semantics=email semantics=tel
     TODO: IsComposable for functions generated from function imports
 

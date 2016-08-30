@@ -47,7 +47,17 @@
   <xsl:variable name="coreAlias"
     select="//edmx:Include[@Namespace=$coreNamespace]/@Alias|//edm:Schema[@Namespace=$coreNamespace]/@Alias" />
   <xsl:variable name="coreDescription" select="concat($coreNamespace,'.Description')" />
-  <xsl:variable name="coreDescriptionAliased" select="concat($coreAlias,'.Description')" />
+  <xsl:variable name="coreDescriptionAliased">
+    <xsl:choose>
+      <xsl:when test="$coreAlias">
+        <xsl:value-of select="concat($coreAlias,'.Description')" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="'Core.Description'" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
 
   <xsl:variable name="capabilitiesNamespace" select="'Org.OData.Capabilities.V1'" />
   <xsl:variable name="capabilitiesAlias"
