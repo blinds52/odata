@@ -26,6 +26,8 @@
     singleton
     - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
+    - xsl:param for "no extensions" that suppresses x- stuff
+    - Capabilities: SortRestrictions/NonSortableProperties, FilterRestrictions/NonFilterableProperties
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -1408,7 +1410,28 @@
     <xsl:text>","tags":["</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"]</xsl:text>
-    <xsl:text>,"parameters":[{"$ref":"#/parameters/top"},{"$ref":"#/parameters/skip"},{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"}</xsl:text>
+
+    <xsl:text>,"parameters":[</xsl:text>
+
+    <xsl:variable name="top-supported">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'TopSupported'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($top-supported='false')">
+      <xsl:text>{"$ref":"#/parameters/top"},</xsl:text>
+    </xsl:if>
+
+    <xsl:variable name="skip-supported">
+      <xsl:call-template name="capability">
+        <xsl:with-param name="term" select="'SkipSupported'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not($skip-supported='false')">
+      <xsl:text>{"$ref":"#/parameters/skip"},</xsl:text>
+    </xsl:if>
+
+    <xsl:text>{"$ref":"#/parameters/search"},{"$ref":"#/parameters/filter"},{"$ref":"#/parameters/count"}</xsl:text>
 
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:Property"
       mode="orderby" />
@@ -1493,9 +1516,17 @@
 
   <xsl:template name="capability">
     <xsl:param name="term" />
-    <xsl:param name="property" />
-    <xsl:value-of
-      select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
+    <xsl:param name="property" select="false()" />
+    <xsl:choose>
+      <xsl:when test="$property">
+        <xsl:value-of
+          select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Record/edm:PropertyValue[@Property=$property]/edm:Bool" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of
+          select="edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/@Bool|edm:Annotation[@Term=concat($capabilitiesNamespace,'.',$term) or @Term=concat($capabilitiesAlias,'.',$term)]/edm:Bool" />
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="edm:Property" mode="orderby">
