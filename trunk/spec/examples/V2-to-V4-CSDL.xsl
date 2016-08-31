@@ -32,6 +32,14 @@
           <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures" />
         </edmx:Reference>
       </xsl:if>
+      <xsl:if test="//@sap:super-ordinate">
+        <edmx:Reference
+          Uri="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/vocabularies/Org.OData.Aggregation.V1.xml"
+        >
+          <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation" />
+        </edmx:Reference>
+      </xsl:if>
+
       <edmx:Reference Uri="http://localhost/examples/Common.xml">
         <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common" />
       </edmx:Reference>
@@ -388,25 +396,26 @@
 
 
   <xsl:template match="@sap:unit">
+    <xsl:variable name="path" select="." />
     <xsl:choose>
-      <xsl:when test="../../edm2:Property/@sap:semantics='currency-code'">
+      <xsl:when test="../../edm2:Property[@Name=$path]/@sap:semantics='currency-code'">
         <Annotation Term="Measures.ISOCurrency">
           <xsl:attribute name="Path">
-            <xsl:value-of select="." />
+            <xsl:value-of select="$path" />
           </xsl:attribute>
         </Annotation>
       </xsl:when>
-      <xsl:when test="../../edm2:Property/@sap:semantics='unit-of-measure'">
+      <xsl:when test="../../edm2:Property[@Name=$path]/@sap:semantics='unit-of-measure'">
         <Annotation Term="Measures.Unit">
           <xsl:attribute name="Path">
-            <xsl:value-of select="." />
+            <xsl:value-of select="$path" />
           </xsl:attribute>
         </Annotation>
       </xsl:when>
       <xsl:otherwise>
         <Annotation Term="TODO.unit">
           <xsl:attribute name="String">
-            <xsl:value-of select="." />
+            <xsl:value-of select="$path" />
           </xsl:attribute>
         </Annotation>
       </xsl:otherwise>
@@ -452,6 +461,21 @@
   </xsl:template>
 
   <xsl:template match="edm2:Property/@sap:parameter[.='optional']" />
+
+  <xsl:template match="edm2:Property/@sap:super-ordinate">
+    <Annotation Term="Aggregation.ContextDefiningProperties">
+      <Collection>
+        <xsl:apply-templates select="." mode="propertypath" />
+      </Collection>
+    </Annotation>
+  </xsl:template>
+  <xsl:template match="edm2:Property/@sap:super-ordinate" mode="propertypath">
+    <xsl:variable name="path" select="." />
+    <PropertyPath>
+      <xsl:value-of select="$path" />
+    </PropertyPath>
+    <xsl:apply-templates select="../../edm2:Property[@Name=$path]/@sap:super-ordinate" mode="propertypath" />
+  </xsl:template>
 
   <xsl:template match="edm2:EntitySet/@sap:creatable">
     <xsl:if test=". = 'false'">
