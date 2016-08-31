@@ -749,6 +749,11 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:if test="$collection">
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>"title":"Related </xsl:text>
+        <xsl:value-of select="$type" />
+        <xsl:text>","type":"object","properties":{"results":{</xsl:text>
+      </xsl:if>
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
     <xsl:choose>
@@ -970,6 +975,9 @@
       <xsl:with-param name="type" select="$singleType" />
     </xsl:apply-templates>
     <xsl:if test="$collection">
+      <xsl:if test="$odata-version='2.0'">
+        <xsl:text>}}</xsl:text>
+      </xsl:if>
       <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -1440,22 +1448,31 @@
     <xsl:apply-templates select="//edm:Schema[@Namespace=$namespace]/edm:EntityType[@Name=$type]/edm:NavigationProperty"
       mode="expand" />
 
-    <xsl:text>],"responses":{"200":{"description":"Retrieved entities","schema":{"type":"object","title":"Collection of </xsl:text>
+    <xsl:text>],"responses":{"200":{"description":"Retrieved entities","schema":{"type":"object"</xsl:text>
+    <xsl:if test="$odata-version='2.0'">
+      <xsl:text>,"title":"Wrapper","properties":{"d":{"type":"object"</xsl:text>
+    </xsl:if>
+    <xsl:text>,"title":"Collection of </xsl:text>
     <xsl:value-of select="$type" />
-    <xsl:text>","properties":{"</xsl:text>
+    <xsl:text>"</xsl:text>
+    <xsl:text>,"properties":{</xsl:text>
     <xsl:choose>
       <xsl:when test="$odata-version='2.0'">
-        <xsl:text>d</xsl:text>
+        <xsl:text>"results"</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>value</xsl:text>
+        <xsl:text>"value"</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>":{"type":"array","items":{</xsl:text>
+    <xsl:text>:{"type":"array","items":{</xsl:text>
     <xsl:call-template name="schema-ref">
       <xsl:with-param name="qualifiedName" select="$qualifiedType" />
     </xsl:call-template>
-    <xsl:text>}}}}},</xsl:text>
+    <xsl:text>}}}</xsl:text>
+    <xsl:if test="$odata-version='2.0'">
+      <xsl:text>}}</xsl:text>
+    </xsl:if>
+    <xsl:text>}},</xsl:text>
     <xsl:value-of select="$defaultResponse" />
     <xsl:text>}}</xsl:text>
 
@@ -1482,17 +1499,9 @@
         <xsl:with-param name="default" select="'New entity'" />
       </xsl:call-template>
       <xsl:text>,"schema":{</xsl:text>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>"title":"New </xsl:text>
-        <xsl:value-of select="$type" />
-        <xsl:text>","type":"object","properties":{"d":{</xsl:text>
-      </xsl:if>
       <xsl:call-template name="schema-ref">
         <xsl:with-param name="qualifiedName" select="$qualifiedType" />
       </xsl:call-template>
-      <xsl:if test="$odata-version='2.0'">
-        <xsl:text>}}</xsl:text>
-      </xsl:if>
       <xsl:text>}}]</xsl:text>
       <xsl:text>,"responses":{"201":{"description":"Created entity","schema":{</xsl:text>
       <xsl:if test="$odata-version='2.0'">
