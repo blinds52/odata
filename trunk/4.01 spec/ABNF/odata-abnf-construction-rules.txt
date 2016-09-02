@@ -255,9 +255,18 @@ expandItem        = STAR [ ref / OPEN levels CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                     /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
                     ]
+                  / streamPropertyPath
+                  / '$value'
+
 expandPath        = [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
                     *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
                     ( STAR / navigationProperty [ "/" qualifiedEntityTypeName ] )
+streamPropertyPath= [ ( qualifiedEntityTypeName
+                      / qualifiedComplexTypeName 
+                      ) "/" ] 
+                    *( ( complexProperty / complexColProperty ) "/" 
+                       [ qualifiedComplexTypeName "/" ] )
+                    streamProperty
 expandCountOption = filter
                   / search
 expandRefOption   = expandCountOption
