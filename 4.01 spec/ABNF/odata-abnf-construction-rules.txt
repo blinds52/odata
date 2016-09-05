@@ -250,23 +250,15 @@ computedProperty = odataIdentifier
 
 expand            = '$expand' EQ expandItem *( COMMA expandItem )
 expandItem        = STAR [ ref / OPEN levels CLOSE ]
+                  / '$value'
                   / expandPath
                     [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                     /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
                     ]
-                  / streamPropertyPath
-                  / '$value'
-
 expandPath        = [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
                     *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
-                    ( STAR / navigationProperty [ "/" qualifiedEntityTypeName ] )
-streamPropertyPath= [ ( qualifiedEntityTypeName
-                      / qualifiedComplexTypeName 
-                      ) "/" ] 
-                    *( ( complexProperty / complexColProperty ) "/" 
-                       [ qualifiedComplexTypeName "/" ] )
-                    streamProperty
+                    ( STAR / streamProperty / navigationProperty [ "/" qualifiedEntityTypeName ] )
 expandCountOption = filter
                   / search
 expandRefOption   = expandCountOption
