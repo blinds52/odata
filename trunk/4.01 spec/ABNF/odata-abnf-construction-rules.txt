@@ -227,7 +227,7 @@ entityCastOption  = entityIdOption
                   / expand 
                   / select
 
-id = '$id' EQ IRI-in-query       
+id = "$id" EQ IRI-in-query       
 
 systemQueryOption = compute
                   / deltatoken
@@ -244,13 +244,13 @@ systemQueryOption = compute
                   / top 
                   / index
 
-compute          = '$compute' EQ computeItem *( COMMA computeItem )
-computeItem      = commonExpr RWS 'as' RWS computedProperty
+compute          = "$compute" EQ computeItem *( COMMA computeItem )
+computeItem      = commonExpr RWS "as" RWS computedProperty
 computedProperty = odataIdentifier         
 
-expand            = '$expand' EQ expandItem *( COMMA expandItem )
+expand            = "$expand" EQ expandItem *( COMMA expandItem )
 expandItem        = STAR [ ref / OPEN levels CLOSE ]
-                  / '$value'
+                  / "$value"
                   / expandPath
                     [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
@@ -271,19 +271,19 @@ expandOption      = expandRefOption
                   / expand
                   / levels
                 
-levels = '$levels' EQ ( oneToNine *DIGIT / 'max' )
+levels = "$levels" EQ ( oneToNine *DIGIT / "max" )
 
-filter = '$filter' EQ boolCommonExpr
+filter = "$filter" EQ boolCommonExpr
 
-orderby     = '$orderby' EQ orderbyItem *( COMMA orderbyItem )
-orderbyItem = commonExpr [ RWS ( 'asc' / 'desc' ) ]
+orderby     = "$orderby" EQ orderbyItem *( COMMA orderbyItem )
+orderbyItem = commonExpr [ RWS ( "asc" / "desc" ) ]
 
-skip = '$skip' EQ 1*DIGIT
-top  = '$top'  EQ 1*DIGIT
+skip = "$skip" EQ 1*DIGIT
+top  = "$top"  EQ 1*DIGIT
 
-index  = '$index'  EQ 1*DIGIT
+index  = "$index"  EQ 1*DIGIT
 
-format = '$format' EQ
+format = "$format" EQ
          ( "atom"
          / "json" 
          / "xml"
@@ -291,9 +291,9 @@ format = '$format' EQ
          )                     ; format specific to the specific data service> or
                                ; <An IANA-defined [IANA-MMT] content type>
                           
-inlinecount = '$count' EQ booleanValue
+inlinecount = "$count" EQ booleanValue
 
-search     = '$search' EQ BWS searchExpr
+search     = "$search" EQ BWS searchExpr
 searchExpr = ( OPEN BWS searchExpr BWS CLOSE
              / searchTerm 
              ) [ searchOrExpr
@@ -308,7 +308,7 @@ searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
 searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L or Nl, 
                        ; but not the words AND, OR, and NOT
 
-select         = '$select' EQ selectItem *( COMMA selectItem )
+select         = "$select" EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
                / allOperationsInSchema 
                / [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
@@ -333,9 +333,9 @@ qualifiedFunctionName = namespace "." function [ OPEN parameterNames CLOSE ]
 ; The names of all non-binding parameters, separated by commas 
 parameterNames = parameterName *( COMMA parameterName )
 
-deltatoken = '$deltatoken' EQ 1*( qchar-no-AMP )
+deltatoken = "$deltatoken" EQ 1*( qchar-no-AMP )
 
-skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
+skiptoken = "$skiptoken" EQ 1*( qchar-no-AMP )
 
 aliasAndValue = parameterAlias EQ parameterValue
 
@@ -377,7 +377,7 @@ selectListItem     = STAR ; all structural properties
                      )
 selectListProperty = primitiveProperty  
                    / primitiveColProperty 
-                   / navigationProperty [ '+' ] [ selectList ]
+                   / navigationProperty [ "+" ] [ selectList ]
                    / selectPath [ "/" selectListProperty ]
 
 contextPropertyPath = primitiveProperty
@@ -487,8 +487,8 @@ functionExpr = namespace "."
 functionExprParameters = OPEN [ functionExprParameter *( COMMA functionExprParameter ) ] CLOSE
 functionExprParameter  = parameterName EQ ( parameterAlias / parameterValue )
 
-anyExpr = 'any' OPEN BWS [ lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr ] BWS CLOSE
-allExpr = 'all' OPEN BWS   lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr   BWS CLOSE
+anyExpr = "any" OPEN BWS [ lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr ] BWS CLOSE
+allExpr = "all" OPEN BWS   lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr   BWS CLOSE
 lambdaPredicateExpr = boolCommonExpr ; containing at least one lambdaVariableExpr
 
 methodCallExpr = indexOfMethodCallExpr 
@@ -524,69 +524,69 @@ boolMethodCallExpr = endsWithMethodCallExpr
                    / containsMethodCallExpr                                          
                    / intersectsMethodCallExpr 
 
-concatMethodCallExpr     = 'concat'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-containsMethodCallExpr   = 'contains'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-endsWithMethodCallExpr   = 'endswith'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-indexOfMethodCallExpr    = 'indexof'    OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-lengthMethodCallExpr     = 'length'     OPEN BWS commonExpr BWS CLOSE
-startsWithMethodCallExpr = 'startswith' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-substringMethodCallExpr  = 'substring'  OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
-toLowerMethodCallExpr    = 'tolower'    OPEN BWS commonExpr BWS CLOSE
-toUpperMethodCallExpr    = 'toupper'    OPEN BWS commonExpr BWS CLOSE
-trimMethodCallExpr       = 'trim'       OPEN BWS commonExpr BWS CLOSE
+concatMethodCallExpr     = "concat"     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+containsMethodCallExpr   = "contains"   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+endsWithMethodCallExpr   = "endswith"   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+indexOfMethodCallExpr    = "indexof"    OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+lengthMethodCallExpr     = "length"     OPEN BWS commonExpr BWS CLOSE
+startsWithMethodCallExpr = "startswith" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+substringMethodCallExpr  = "substring"  OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
+toLowerMethodCallExpr    = "tolower"    OPEN BWS commonExpr BWS CLOSE
+toUpperMethodCallExpr    = "toupper"    OPEN BWS commonExpr BWS CLOSE
+trimMethodCallExpr       = "trim"       OPEN BWS commonExpr BWS CLOSE
 
-yearMethodCallExpr               = 'year'               OPEN BWS commonExpr BWS CLOSE
-monthMethodCallExpr              = 'month'              OPEN BWS commonExpr BWS CLOSE
-dayMethodCallExpr                = 'day'                OPEN BWS commonExpr BWS CLOSE
-hourMethodCallExpr               = 'hour'               OPEN BWS commonExpr BWS CLOSE
-minuteMethodCallExpr             = 'minute'             OPEN BWS commonExpr BWS CLOSE
-secondMethodCallExpr             = 'second'             OPEN BWS commonExpr BWS CLOSE
-fractionalsecondsMethodCallExpr  = 'fractionalseconds'  OPEN BWS commonExpr BWS CLOSE
-totalsecondsMethodCallExpr       = 'totalseconds'       OPEN BWS commonExpr BWS CLOSE
-dateMethodCallExpr               = 'date'               OPEN BWS commonExpr BWS CLOSE
-timeMethodCallExpr               = 'time'               OPEN BWS commonExpr BWS CLOSE
-totalOffsetMinutesMethodCallExpr = 'totaloffsetminutes' OPEN BWS commonExpr BWS CLOSE 
+yearMethodCallExpr               = "year"               OPEN BWS commonExpr BWS CLOSE
+monthMethodCallExpr              = "month"              OPEN BWS commonExpr BWS CLOSE
+dayMethodCallExpr                = "day"                OPEN BWS commonExpr BWS CLOSE
+hourMethodCallExpr               = "hour"               OPEN BWS commonExpr BWS CLOSE
+minuteMethodCallExpr             = "minute"             OPEN BWS commonExpr BWS CLOSE
+secondMethodCallExpr             = "second"             OPEN BWS commonExpr BWS CLOSE
+fractionalsecondsMethodCallExpr  = "fractionalseconds"  OPEN BWS commonExpr BWS CLOSE
+totalsecondsMethodCallExpr       = "totalseconds"       OPEN BWS commonExpr BWS CLOSE
+dateMethodCallExpr               = "date"               OPEN BWS commonExpr BWS CLOSE
+timeMethodCallExpr               = "time"               OPEN BWS commonExpr BWS CLOSE
+totalOffsetMinutesMethodCallExpr = "totaloffsetminutes" OPEN BWS commonExpr BWS CLOSE 
 
-minDateTimeMethodCallExpr = 'mindatetime' OPEN BWS CLOSE
-maxDateTimeMethodCallExpr = 'maxdatetime' OPEN BWS CLOSE
-nowMethodCallExpr         = 'now'         OPEN BWS CLOSE
+minDateTimeMethodCallExpr = "mindatetime" OPEN BWS CLOSE
+maxDateTimeMethodCallExpr = "maxdatetime" OPEN BWS CLOSE
+nowMethodCallExpr         = "now"         OPEN BWS CLOSE
 
-roundMethodCallExpr   = 'round'   OPEN BWS commonExpr BWS CLOSE
-floorMethodCallExpr   = 'floor'   OPEN BWS commonExpr BWS CLOSE
-ceilingMethodCallExpr = 'ceiling' OPEN BWS commonExpr BWS CLOSE
+roundMethodCallExpr   = "round"   OPEN BWS commonExpr BWS CLOSE
+floorMethodCallExpr   = "floor"   OPEN BWS commonExpr BWS CLOSE
+ceilingMethodCallExpr = "ceiling" OPEN BWS commonExpr BWS CLOSE
 
-distanceMethodCallExpr   = 'geo.distance'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-geoLengthMethodCallExpr  = 'geo.length'     OPEN BWS commonExpr BWS CLOSE
-intersectsMethodCallExpr = 'geo.intersects' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+distanceMethodCallExpr   = "geo.distance"   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+geoLengthMethodCallExpr  = "geo.length"     OPEN BWS commonExpr BWS CLOSE
+intersectsMethodCallExpr = "geo.intersects" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 parenExpr = OPEN BWS commonExpr BWS CLOSE
 
-andExpr = RWS 'and' RWS boolCommonExpr
-orExpr  = RWS 'or'  RWS boolCommonExpr
+andExpr = RWS "and" RWS boolCommonExpr
+orExpr  = RWS "or"  RWS boolCommonExpr
 
-eqExpr = RWS 'eq' RWS commonExpr     
-neExpr = RWS 'ne' RWS commonExpr
-ltExpr = RWS 'lt' RWS commonExpr
-leExpr = RWS 'le' RWS commonExpr
-gtExpr = RWS 'gt' RWS commonExpr
-geExpr = RWS 'ge' RWS commonExpr
+eqExpr = RWS "eq" RWS commonExpr     
+neExpr = RWS "ne" RWS commonExpr
+ltExpr = RWS "lt" RWS commonExpr
+leExpr = RWS "le" RWS commonExpr
+gtExpr = RWS "gt" RWS commonExpr
+geExpr = RWS "ge" RWS commonExpr
 
-hasExpr = RWS 'has' RWS enum
-inExpr  = RWS 'in'  RWS ( commonExpr / OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE )
+hasExpr = RWS "has" RWS enum
+inExpr  = RWS "in"  RWS ( commonExpr / OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE )
 
-addExpr   = RWS 'add'   RWS commonExpr
-subExpr   = RWS 'sub'   RWS commonExpr
-mulExpr   = RWS 'mul'   RWS commonExpr
-divExpr   = RWS 'div'   RWS commonExpr
-divbyExpr = RWS 'divby' RWS commonExpr
-modExpr   = RWS 'mod'   RWS commonExpr
+addExpr   = RWS "add"   RWS commonExpr
+subExpr   = RWS "sub"   RWS commonExpr
+mulExpr   = RWS "mul"   RWS commonExpr
+divExpr   = RWS "div"   RWS commonExpr
+divbyExpr = RWS "divby" RWS commonExpr
+modExpr   = RWS "mod"   RWS commonExpr
 
 negateExpr = "-" BWS commonExpr
 
-notExpr = 'not' RWS boolCommonExpr
+notExpr = "not" RWS boolCommonExpr
 
-isofExpr = 'isof' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
-castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
+isofExpr = "isof" OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
+castExpr = "cast" OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
 
 
 ;------------------------------------------------------------------------------
