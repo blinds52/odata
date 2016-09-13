@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #143 Thursday Sep 08, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #143 Thursday Sep 08, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-09-08 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susam Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41479">normative attendance sheet for this meeting (event_id=41479)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>New agenda item: V4.01 documents prepared by Mike Pizzo</p>
+<p>Agenda approved with above addition</p>
+
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from August 18, 2016 TC meeting #142</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58746/odata-meeting-142_on-20160818-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58746/odata-meeting-142_on-20160818-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Ralf: Mark volunteers to take over Action Item 0036 - Robin Cover from OASIS can help with the process</p>
+<p>Ralf: Email address of Robin Cover is robin at oasis-open dot org
+<p>Action #0036 remains open.</p>
+
+
+<h2>5. V4.01 documents prepared by Mike</h2>
+
+<p>Ralf: Mike uploaded documents with 60+ issues applied</p>
+<p>Ralf:Homework: review the new documents</p>
+<p>Ralf: Next meeting (4 hours): walk through the documents</p>
+<p>Ralf: Please pay special attention to the compliance sections</p>
+<p>Ralf: Goal: have public review soon, resolve remaining issues during the public review period</p>
+<p>Ralf: Additional issues coming up when applying the resolutions are documented in the Jira issues, please refer to them, and also comment there</p>
+
+<h2>6. V4.01 Issues for V4.01_WD01 in New or Open state</h2>
+<h3>6.1 Ripe for resolution</h3>
+
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-827" rel="noopener noreferrer" target="_blank">ODATA-827</a> - introduce $compute query option</h4>
+
+<p>Ralf: Add "$compute" query option allowing additional computed properties to be added to each instance. The syntax is similar to the compute() transformation in Data Aggregation, i.e. $compute=&lt;list of compute expressions>, but without the restriction to simple values: allowed compute expressions are any expressions valid in a $filter system query option on the input set. <br>
+<br>
+More formally: <br>
+  compute = '$compute' EQ computeItem *( COMMA computeItem ) <br>
+  computeItem = commonExpr RWS 'as' RWS computedProperty <br>
+  computedProperty = odataIdentifier <br>
+<br>
+$compute is also allowed as query option nested within $expand to add computed dynamic properties to expanded entities. <br>
+<br>
+$compute is logically evaluated first, so the computed dynamic properties can be used in $expand, $filter, $orderby, and $select. <br>
+<br>
+Computed structural properties SHOULD be added to the default selection (in absence of $select), and are treated as other dynamic properties: <br>
+- $select=* includes computed structural properties <br>
+- $expand=* includes computed navigation properties or computed entities/collections of entities <br>
+- appear in context URL same way as other (dynamic) properties <br>
+<br>
+GET ~Customers?$expand=Orders($compute=price*qty as totalprice;$select=name,price,qty,totalprice)<br></p>
+
+<p>Ralf: Addition to proposal: when nested in $expand, the computed property name must only be unique within the type(s) of the expanded properties</p>
+<p>Ralf: Computed properties in expanded entities can be addressed with path notation just as declared properties</p>
+<p>Mike: Note: in this example, totalprice is available outside of the expand as Orders/totalprice, as in:<br>
+GET ~Customers?$filter=Orders/totalprice gt 100&amp;$expand=Orders($compute=price*qty as totalprice;$select=name,price,qty,totalprice)<br>
+</p>
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-827 as proposed. <b>Ramesh</b> seconds.</p>
+<p>Ralf: ODATA-827 is resolved as proposed</p>
+
+
+<h4>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-933" rel="noopener noreferrer" target="_blank">ODATA-933</a> - Allow using instance annotations in $filter</h4>
+
+<p>Ralf: Clarification: use same rules as for dynamic properties if instance annotation is not defined for an entity</p>
+<p>Ralf: Services MAY support this, not a MUST</p>
+<p>Ralf: Example: numeric exception values</p>
+<p>Ralf: GET Something?$filter=Age@numericValueException eq 'NaN'</p>
+<p>Ralf: ODATA-933 is OPEN</p>
+<p>Mark: have Capability annotation "CanFilterOnInstanceAnnotations"</p>
+<p>Ralf: Consider this also for $select, would be more explicit than in an odata.include-annotations preference.</p>
+<p>Mike: Perhaps wait until we have some usage scenarios before trying to figure out meaningful capabilities.</p>
+<p>Mike: open separate issue for instance annotations in $select and $expand, limit this issue to $filter - Mike to create the new issue</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-933 with the amended proposal: limited to $filter, purely optional feature that services MAY support. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-933 is resolved with the amended proposal</p>
+
+<p>Mike has created <a href="https://issues.oasis-open.org/browse/ODATA-975" rel="noopener noreferrer" target="_blank">ODATA-975</a> to keep track of instance annotations in $select and $expand</p>
+
+<h4>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-953" rel="noopener noreferrer" target="_blank">ODATA-953</a> - Consider deprecating structural casting</h4>
+
+<p>Ralf: Structural casting is a MAY, so as long as we do not explicitly forbid structural casting we can remove it</p>
+<p>Mike: Current Proposal: Clarify that structural casting MUST NOT be applied anywhere other than the explicit cast operator; i.e., it MUST NOT be applied when using cast segments nor evaluating isof.</p>
+<p>Ralf: ODATA-953 is OPEN</p>
+<p>Mike: Since currently optional, revised proposal could be: Remove current language around structural casting.</p>
+<p>Mike: I propose we resolve ODATA-953 by removing the current language around structural casting.</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-953 by removing the current language around structural casting. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-953 is resolved as proposed</p>
+
+<h4>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-954" rel="noopener noreferrer" target="_blank">ODATA-954</a> - Key-As-Segment for multi-part keys</h4>
+
+<p>Ralf: Generalize the rules in ODATA-799 to allow key-as-segment notation also for multi-part keys. <br>
+<br>
+Example: an accounting document is identified by the company code, the year, and the (auto-incremented) document number: <br></p>
+<pre>
+    &lt;EntityType Name="AccountingDocument"> 
+    &lt;Key> 
+      &lt;PropertyRef Name="CompanyCode" /> 
+      &lt;PropertyRef Name="Year" /> 
+      &lt;PropertyRef Name="DocumentNumber" /> 
+    &lt;/Key> 
+    &lt;/EntityType> 
+</pre>
+<p>
+Taking into account the order of &lt;PropertyRef> elements within the &lt;Key> element a single accounting document can be identified as <br>
+<br>
+  GET AccountingDocuments/SAP/2016/4329043280 <br>
+<br>
+An optional extension would be to treat the multi-part key as a "folder structure", i.e. <br>
+<br>
+  AccountingDocuments/SAP/2016 <br>
+<br>
+would identify the subset of accounting documents for a company and year, and <br>
+<br>
+  AccountingDocuments/SAP <br>
+<br>
+would identify the subset of accounting documents for a company. <br>
+<br>
+Services could optionally support this as a shorthand for <br>
+<br>
+   GET AccountingDocuments?$filter=CompanyCode eq 'SAP' and Year eq '2016' <br>
+<br>
+and <br>
+<br>
+   GET AccountingDocuments?$filter=CompanyCode eq 'SAP'<br></p>
+<p>Mike: Could separate into two parts: first, support for multi-part key-as-segment and second as partial keys for both parens and key-as-segment</p>
+<p>Ralf: Mike has created ODATA-976 Support partial keys</p>
+<p>Ralf: ODATA-954 only for fully specified multi-part keys</p>
+<p>Ralf: ODATA-954 is OPEN</p>
+<p>Ralf: Generalize the rules in ODATA-799 to allow key-as-segment notation also for multi-part keys. <br>
+<br>
+Example: an accounting document is identified by the company code, the year, and the (auto-incremented) document number: <br></p>
+
+<pre>
+    &lt;EntityType Name="AccountingDocument"> 
+    &lt;Key> 
+      &lt;PropertyRef Name="CompanyCode" /> 
+      &lt;PropertyRef Name="Year" /> 
+      &lt;PropertyRef Name="DocumentNumber" /> 
+    &lt;/Key> 
+    &lt;/EntityType> 
+</pre>
+<p>
+Taking into account the order of &lt;PropertyRef> elements within the &lt;Key> element a single accounting document can be identified as <br>
+<br>
+  GET AccountingDocuments/SAP/2016/4329043280</p>
+
+<p>Ralf: Discussion on ambiguity: same rules apply as defined in <a href="https://issues.oasis-open.org/browse/ODATA-799" rel="noopener noreferrer" target="_blank">ODATA-799</a></p>
+<p>Mike: For ODATA-954, if one segment is resolved as a partial key value then the subsequent segments should be resolved as any remaining key values.
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-954 as proposed. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-954 is resolved with the amended proposal</p>
+<p>Ralf: Side note: introduce filter segment <br>
+GET Something/$filter(@f)/some.function()?@f=...<br></p>
+
+<h4>6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-963" rel="noopener noreferrer" target="_blank">ODATA-963</a> - Make query options case insensitivite</h4>
+
+<p>Ralf: $Filter=Something EQ 42 OR SubstringOf(...)</p>
+<p>Mike: Updated title: Make query options, built-in functions, and built-in operators case insensitive</p>
+<p>Mike: Updated proposal: 4.01 services must support case insensitive system query options. built-in functions, and built-in operators 
+Interoperable 4.01 clients must continue to use the 4.0 defined casing.</p>
+<p>Ralf: ODATA-963 is open</p>
+
+<p><b>Stefan</b>: I <b>move</b> to resolve ODATA-963 as proposed. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-963 is resolved as proposed</p>
+
+<h4>6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-836" rel="noopener noreferrer" target="_blank">ODATA-836</a> - Allow applying actions to a filtered collection of entities</h4>
+
+<p>Ralf: Either add a path segment that takes a boolean expression, optionally deferred to a parameter alias, or allow POST in combination with $apply <br>
+<br>
+POST Products/$filter(Age gt 3)/Special.Discount <br>
+POST Products/$filter(@f)/Special.Discount?@f=Age gt 3 <br>
+<br>
+POST Products?$apply=filter(Age gt 3)/Special.Discount <br>
+<br>
+Consider adding path equivalents of other query options: <br>
+<br>
+POST /Orders/$filter(@f)/$top(5)/Ship?@f=Details/ShippingDate lt now()<br></p>
+<p>Mark: I don't have a use case right now.</p>
+<p>Mike: The use of $apply from aggregation extension seems consistent and cleaner than trying to put something in the path.  As we have no urgent need, I would propose we postpone this to a future release as a proposal for how to address this if the need arises.</p>
+
+<p><b>Mike</b>: I <b>move</b> we defer ODATA-836 until such a time as we have use cases requiring support for actions/functions on filtered sets, and then consider in favor of using $apply. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-836 is deferred</p>
+<p>Ralf: I've created https://issues.oasis-open.org/browse/ODATA-977 for the $apply case</p>
+
+<h4>6.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-854" rel="noopener noreferrer" target="_blank">ODATA-854</a> - Consider use of OPTIONS for discovering formats, other capabilities and features</h4>
+
+<p>Ralf: Postpone until we have a proposal on the response format</p>
+
+<h4>6.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-900" rel="noopener noreferrer" target="_blank">ODATA-900</a> - Cross-service naviation and service versioning</h4>
+
+<p>Ralf: Assume Orders and Customers are in different services and have cross-service navigation properties to each other:<br>
+  GET Customers('ALFKI')/Orders<br>
+  GET Orders(4711)/Customer<br>
+<br>
+Now a new version v2 of the Customer service is published. <br>
+<br>
+Ideally the Order service now automatically navigates to the new (latest) Customer service without requiring a new version of the Order service, and in addition allows navigation to the old version:<br>
+  GET Orders(4711)/Customer -> navigates to Customer v2<br>
+  GET Orders(4711)/Customer;v1 -> navigates to Customer v1<br></p>
+<p>Ralf: Postponed to V4.02</p>
+
+<h3>7. Next meetings</h3>
+
+<h4>7.1 Next Meeting Thursday September 15, 2016 during 6-10am PDT</h4>
+<p>Mike and Stefan favor 6am PDT and a longer meeting</p> 
+<p>Agreed</p>
+
+<h3>8. AOB and wrap up</h3>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
