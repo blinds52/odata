@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #146 Thursday Sep 29, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_this_line __file__ |shasum -a 512 -->
+<!-- sha512_excluding_this_line='417962e7942033c6a1bcca4c3c5aeafe57068359b11935c83363174235f719a34e014fe2e198e78baca02d794dde7aa594e1f7d6476a2a7194a729518deca375' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #146 Thursday Sep 29, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-09-29 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41482">normative attendance sheet for this meeting (event_id=41482)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+
+<p>Mike: look at ABNF and Core, Capabilities vocabulary after document-walkthrough</p>
+<p>Agenda approved with above addition</p>
+<p>? Update: Skipped and shifted to next meeting, as document walkthrough of the other scheduled documents filled meeting slot.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from September 22, 2016 TC meeting #145</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/58990/odata-meeting-145_on-20160922-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/58990/odata-meeting-145_on-20160922-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Mark: I followed up on my email with Robin and did get a response this morning on the header registration.  He will be getting back in the next day or so with more information on how to proceed - Ongoing</p>
+<p>Stefan: Send a mail to Mark and Robin, that contains a sample filled in markdown template from the GeoJSON RFC (which will need some OData specific content replacing the GeoJSON related one)</p>
+<p>Action #0036 remains open.</p>
+
+
+<h2>5. V4.01 - Document Walk-Through</h2>
+
+<h3>5.1 OData JSON Format Version 4.01  resuming with Chapter 14 Delta Response</h3>
+<p>All go over the changes - document is live edited.</p>
+<h3>5.2 Motion</h3>
+<p><b>Hubert</b>: I <b>move</b> we accept the reviewed changes in OData 4.01 Part I: Protocol, OData 4.01 Part 2: Url Conventions and associated ABNF construction rules, OData Common Schema Definition Language XML Representation, OData 4.01 JSON format, and the OData Core and OData Capabilities vocabularies and close the following 60 corresponding issues as applied: <a href="https://issues.oasis-open.org/browse/ODATA-480" rel="noopener noreferrer" target="_blank">ODATA-480</a>, <a href="https://issues.oasis-open.org/browse/ODATA-482" rel="noopener noreferrer" target="_blank">ODATA-482</a>, <a href="https://issues.oasis-open.org/browse/ODATA-516" rel="noopener noreferrer" target="_blank">ODATA-516</a>, <a href="https://issues.oasis-open.org/browse/ODATA-541" rel="noopener noreferrer" target="_blank">ODATA-541</a>, <a href="https://issues.oasis-open.org/browse/ODATA-556" rel="noopener noreferrer" target="_blank">ODATA-556</a>, <a href="https://issues.oasis-open.org/browse/ODATA-560" rel="noopener noreferrer" target="_blank">ODATA-560</a>, <a href="https://issues.oasis-open.org/browse/ODATA-561" rel="noopener noreferrer" target="_blank">ODATA-561</a>, <a href="https://issues.oasis-open.org/browse/ODATA-563" rel="noopener noreferrer" target="_blank">ODATA-563</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-572" rel="noopener noreferrer" target="_blank">ODATA-572</a>, <a href="https://issues.oasis-open.org/browse/ODATA-615" rel="noopener noreferrer" target="_blank">ODATA-615</a>, <a href="https://issues.oasis-open.org/browse/ODATA-616" rel="noopener noreferrer" target="_blank">ODATA-616</a>, <a href="https://issues.oasis-open.org/browse/ODATA-617" rel="noopener noreferrer" target="_blank">ODATA-617</a>, <a href="https://issues.oasis-open.org/browse/ODATA-630" rel="noopener noreferrer" target="_blank">ODATA-630</a>, <a href="https://issues.oasis-open.org/browse/ODATA-631" rel="noopener noreferrer" target="_blank">ODATA-631</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-664" rel="noopener noreferrer" target="_blank">ODATA-664</a>, <a href="https://issues.oasis-open.org/browse/ODATA-666" rel="noopener noreferrer" target="_blank">ODATA-666</a>, <a href="https://issues.oasis-open.org/browse/ODATA-696" rel="noopener noreferrer" target="_blank">ODATA-696</a>, <a href="https://issues.oasis-open.org/browse/ODATA-799" rel="noopener noreferrer" target="_blank">ODATA-799</a>, <a href="https://issues.oasis-open.org/browse/ODATA-809" rel="noopener noreferrer" target="_blank">ODATA-809</a>, <a href="https://issues.oasis-open.org/browse/ODATA-812" rel="noopener noreferrer" target="_blank">ODATA-812</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-813" rel="noopener noreferrer" target="_blank">ODATA-813</a>, <a href="https://issues.oasis-open.org/browse/ODATA-814" rel="noopener noreferrer" target="_blank">ODATA-814</a>, <a href="https://issues.oasis-open.org/browse/ODATA-816" rel="noopener noreferrer" target="_blank">ODATA-816</a>, <a href="https://issues.oasis-open.org/browse/ODATA-818" rel="noopener noreferrer" target="_blank">ODATA-818</a>, <a href="https://issues.oasis-open.org/browse/ODATA-820" rel="noopener noreferrer" target="_blank">ODATA-820</a>, <a href="https://issues.oasis-open.org/browse/ODATA-824" rel="noopener noreferrer" target="_blank">ODATA-824</a>, <a href="https://issues.oasis-open.org/browse/ODATA-834" rel="noopener noreferrer" target="_blank">ODATA-834</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-846" rel="noopener noreferrer" target="_blank">ODATA-846</a>, <a href="https://issues.oasis-open.org/browse/ODATA-856" rel="noopener noreferrer" target="_blank">ODATA-856</a>, <a href="https://issues.oasis-open.org/browse/ODATA-859" rel="noopener noreferrer" target="_blank">ODATA-859</a>, <a href="https://issues.oasis-open.org/browse/ODATA-873" rel="noopener noreferrer" target="_blank">ODATA-873</a>, <a href="https://issues.oasis-open.org/browse/ODATA-881" rel="noopener noreferrer" target="_blank">ODATA-881</a>, <a href="https://issues.oasis-open.org/browse/ODATA-883" rel="noopener noreferrer" target="_blank">ODATA-883</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-888" rel="noopener noreferrer" target="_blank">ODATA-888</a>, <a href="https://issues.oasis-open.org/browse/ODATA-894" rel="noopener noreferrer" target="_blank">ODATA-894</a>, <a href="https://issues.oasis-open.org/browse/ODATA-895" rel="noopener noreferrer" target="_blank">ODATA-895</a>, <a href="https://issues.oasis-open.org/browse/ODATA-897" rel="noopener noreferrer" target="_blank">ODATA-897</a>, <a href="https://issues.oasis-open.org/browse/ODATA-901" rel="noopener noreferrer" target="_blank">ODATA-901</a>, <a href="https://issues.oasis-open.org/browse/ODATA-918" rel="noopener noreferrer" target="_blank">ODATA-918</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-920" rel="noopener noreferrer" target="_blank">ODATA-920</a>, <a href="https://issues.oasis-open.org/browse/ODATA-921" rel="noopener noreferrer" target="_blank">ODATA-921</a>, <a href="https://issues.oasis-open.org/browse/ODATA-922" rel="noopener noreferrer" target="_blank">ODATA-922</a>, <a href="https://issues.oasis-open.org/browse/ODATA-924" rel="noopener noreferrer" target="_blank">ODATA-924</a>, <a href="https://issues.oasis-open.org/browse/ODATA-925" rel="noopener noreferrer" target="_blank">ODATA-925</a>, <a href="https://issues.oasis-open.org/browse/ODATA-926" rel="noopener noreferrer" target="_blank">ODATA-926</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-927" rel="noopener noreferrer" target="_blank">ODATA-927</a>, <a href="https://issues.oasis-open.org/browse/ODATA-928" rel="noopener noreferrer" target="_blank">ODATA-928</a>, <a href="https://issues.oasis-open.org/browse/ODATA-937" rel="noopener noreferrer" target="_blank">ODATA-937</a>, <a href="https://issues.oasis-open.org/browse/ODATA-938" rel="noopener noreferrer" target="_blank">ODATA-938</a>, <a href="https://issues.oasis-open.org/browse/ODATA-940" rel="noopener noreferrer" target="_blank">ODATA-940</a>, <a href="https://issues.oasis-open.org/browse/ODATA-941" rel="noopener noreferrer" target="_blank">ODATA-941</a>,
+ <a href="https://issues.oasis-open.org/browse/ODATA-942" rel="noopener noreferrer" target="_blank">ODATA-942</a>, <a href="https://issues.oasis-open.org/browse/ODATA-948" rel="noopener noreferrer" target="_blank">ODATA-948</a>, <a href="https://issues.oasis-open.org/browse/ODATA-949" rel="noopener noreferrer" target="_blank">ODATA-949</a>, <a href="https://issues.oasis-open.org/browse/ODATA-952" rel="noopener noreferrer" target="_blank">ODATA-952</a>, <a href="https://issues.oasis-open.org/browse/ODATA-953" rel="noopener noreferrer" target="_blank">ODATA-953</a>, <a href="https://issues.oasis-open.org/browse/ODATA-956" rel="noopener noreferrer" target="_blank">ODATA-956</a>, <a href="https://issues.oasis-open.org/browse/ODATA-957" rel="noopener noreferrer" target="_blank">ODATA-957</a>, <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a>,
+ and <a href="https://issues.oasis-open.org/browse/ODATA-961" rel="noopener noreferrer" target="_blank">ODATA-961</a>.
+  <b>Stefan</b> seconds.</p>
+<p>No objections, motion passes</p>
+<p>Ralf: Mike to check in the walk-through documents into Kavi</p>
+
+<h2>6. Issues for V4.01_WD01 in New or Open state</h2>
+<h3>6.1 OData Protocol</h3>
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-965" rel="noopener noreferrer" target="_blank">ODATA-965</a> - UpdateGeoJSON Reference to RFC7946</h4>
+
+<p>Ralf: ODATA-965 is OPEN</p>
+<p>Ralf: We need to check whether the changes between the RFC and the preceding draft affect us</p>
+<p>Stefan: Will analyze and update the ticket accordingly.</p>
+
+
+<h4>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-970" rel="noopener noreferrer" target="_blank">ODATA-970</a> - 11.5.2: also mention advertising operations on collections</h4>
+
+<p>Ralf: ODATA-970 is OPEN</p>
+<p>Ralf: Example 33: full representation in a collection</p>
+<pre>
+{
+  "@odata.context": "http://host/service/$metadata#Employees",
+  "#Model.RemainingVacation": {
+  "title": "Remaining Vacation",
+  "target": "Managers(22)/Employees/RemainingVacation"
+  },
+  "value": [ ... ]
+}
+</pre>
+<p>Ralf: Part 1: Protocol<br>
+11.5.2 Advertising Available Operations within a Payload<br>
+Services MAY return the available actions and/or functions bound to a particular entity as part of the entity representation within the payload.</p>
+
+<p>Ralf: Extension for collection-valued nav props:</p>
+<pre>
+  "NavProp#Model.RemainingVacation": {
+  "title": "Remaining Vacation",
+  "target": "Managers(22)/Employees/RemainingVacation"
+  },
+  "NavProp": [ ... ]
+</pre>
+<p>Ralf: Hubert to create new issue for extending the advertisement syntax for collection-valued navigation properties</p>
+<p>Ralf: Ralf to create new issue for representing annotations on properties in single-property requests. Necessary now for the NumericValueException annotation</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-970 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-970 is resolved as proposed</p>
+
+
+<h3>6.2 Enumerations</h3>
+
+<h4>6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-494" rel="noopener noreferrer" target="_blank">ODATA-494</a> - Define inheritance for enumeration types</h4>
+
+<p><b>Mike</b>: I <b>move</b> we close ODATA-494 with no action. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-494 is CLOSED without action</p>
+
+
+<h4>6.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-849" rel="noopener noreferrer" target="_blank">ODATA-849</a> - Add possibility for enumeration types to "extend" another enumeration type</h4>
+
+<p>Ralf: ODATA-849 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-849 with no action. <b>Martin</b> seconds.</p>
+
+<p>Ralf: ODATA-849 is CLOSED without action</p>
+
+
+<h4>6.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-874" rel="noopener noreferrer" target="_blank">ODATA-874</a> - Allow Edm.String as underlying type for enumeration types</h4>
+
+<p>Ralf: ODATA-874 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-874 without action as this is covered by the AllowedValues annotation. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-874 is CLOSED without action</p>
+
+
+<h3>6.3 Annotations</h3>
+
+<h4>6.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-817" rel="noopener noreferrer" target="_blank">ODATA-817</a> - Add client-side function odata.matchesRegularExpression</h4>
+
+<p>Ralf: Add a client-side function odata.matchesRegularExpression that can be used within the Apply dynamic expression. <br>
+<br>
+It takes two arguments of type Edm.String and returns true if the first argument matches the regular expression in the second argument, using syntax and semantics of JavaScript regular expressions, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions</p>
+<p>Ralf: ODATA-817 is OPEN</p>
+<p>Ralf: Ralf to look into regular expression syntax of mainstream programming languages and cross-check with JavaScript</p>
+
+
+
+<h4>6.3.2 <a href="https://issues.oasis-open.org/browse/ODATA-978" rel="noopener noreferrer" target="_blank">ODATA-978</a> - New annotation for availability/advertisement of bound actions/functions</h4>
+
+<p>Ralf: New Core or Capabilities annotation on actions/functions: AvailableOnAllInstances: </p>
+<pre>
+    &lt;Term Name="AvailableOnAllInstances" Type="Core.Tag" DefaultValue="true" AppliesTo="Action Function"> 
+    &lt;Annotation Term="Core.Description" String="Bound action/function is available on all instances of the binding parameter type" /> 
+    &lt;Annotation Term="Core.LongDescription" String="If annotated with value of 'false', clients should check instance representations for action/function advertisements" /> 
+    &lt;/Term> 
+</pre>
+
+<p>Ralf: Alternative proposal: </p>
+<pre>
+    &lt;Term Name="AdvertisedOnInstances" Type="Core.Tag" DefaultValue="true" AppliesTo="Action Function"> 
+    &lt;Annotation Term="Core.Description" String="Instance representations of the binding parameter type will contain advertisement if action/function is available on that instance" /> 
+    &lt;/Term>
+</pre>
+
+<p>Ralf: ODATA-978 is OPEN</p>
+<p>Mike: alternatively advertise non-applicability in payload</p>
+<p>Ralf: "#Model.RemainingVacation": null</p>
+<p>Ralf: </p>
+<pre>
+"#Model.RemainingVacation": {
+  "title": "Remaining Vacation",
+  "target": "Managers(22)/Employees/RemainingVacation"
+  },
+</pre>
+<p>Ralf: Mike and Ralf to come up with proposal</p>
+
+
+<h3>6.4 OData CSDL</h3>
+
+<h4>6.4.1 <a href="https://issues.oasis-open.org/browse/ODATA-879" rel="noopener noreferrer" target="_blank">ODATA-879</a> - Support Arrays of Arrays</h4>
+<p>Ralf: Proposal:<br>
+Don't add a formal notion of arrays of arrays to the data model (it breaks too many rules). <br>
+<br>
+Instead, use "Edm.Untyped" (see <a href="https://issues.oasis-open.org/browse/ODATA-881" rel="noopener noreferrer" target="_blank">ODATA-881</a>) or "Collection(Edm.Untyped)" (see <a href="https://issues.oasis-open.org/browse/ODATA-973" rel="noopener noreferrer" target="_blank">ODATA-973</a>) as a way to allow payloads that contain such structure.</p>
+
+<p>Hubert: introduction of @Core.NumericValueException poses a problem in arrays of numeric values, some of which are the exceptional values</p>
+<p>Mike: split this issue into<br>
+- allow annotating an item in an ordered collection<br>
+- allow collections of collections</p>
+<p>Ralf: Consensus: reconsider NumericValueException, e.g. make it a preference</p>
+
+
+<h2>7. Next meetings</h2>
+
+<h3>7.1 Next Meeting Thursday October  06, 2016 during 8-10am PT</h3>
+<p>Date and time of meeting agreed</p>
+
+<h2>8. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
