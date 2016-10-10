@@ -121,7 +121,7 @@
   <Constraint Rule="customName">
     <Match>!deltatoken</Match>
     <Match>!special</Match>
-    <Match>search</Match>
+    <Match>find</Match>
   </Constraint>
   <Constraint Rule="entityColFunction">
     <Match>AllOrders</Match>
@@ -722,6 +722,9 @@
   <TestCase Name="4.3.4 $entity with URN" Rule="odataRelativeUri">
     <Input>$entity?$id=urn:some:id</Input>
   </TestCase>
+  <TestCase Name="4.3.4 $entity with URN, id without $ prefix" Rule="odataRelativeUri">
+    <Input>$entity?id=urn:some:id</Input>
+  </TestCase>
   <TestCase Name="4.3.4 $entity with OData URL, $select and $expand fails without type-cast" Rule="odataRelativeUri"
     FailAt="48"
   >
@@ -957,11 +960,11 @@
   <TestCase Name="4.13 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
     <Input>$all/Model.Customer?$filter=contains(Name,'red')</Input>
   </TestCase>
-  <TestCase Name="5 $ is reserved" Rule="filter">
-    <Input>$filter=true</Input>
-  </TestCase>
   <TestCase Name="5.1.1 Filter" Rule="filter">
     <Input>$filter=true</Input>
+  </TestCase>
+  <TestCase Name="5.1.1 $ is optional" Rule="filter">
+    <Input>filter=true</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter: no spaces" Rule="filter" FailAt="7">
     <Input>$filter =true</Input>
@@ -1374,6 +1377,9 @@
   <TestCase Name="5.1.2 Expand - single navigation property" Rule="expand">
     <Input>$expand=Items</Input>
   </TestCase>
+  <TestCase Name="5.1.2 Expand - $ is optional" Rule="expand">
+    <Input>expand=Items</Input>
+  </TestCase>
   <TestCase Name="5.1.2 Expand - single navigation property" Rule="expand">
     <Input>$expand=Items/$ref</Input>
   </TestCase>
@@ -1386,8 +1392,14 @@
   <TestCase Name="5.1.2 Expand - multiple navigation properties, nested" Rule="expand">
     <Input>$expand=Customer,Items($expand=Product)</Input>
   </TestCase>
-  <TestCase Name="5.1.2 Expand - multiple navigation properties, nested" Rule="expand">
+  <TestCase Name="5.1.2 Expand - multiple navigation properties, nested - no $ prefix" Rule="expand">
+    <Input>expand=Customer,Items(expand=Product)</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - recursive expansion" Rule="expand">
     <Input>$expand=Customer($levels=4)</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - recursive expansion - no $ prefix" Rule="expand">
+    <Input>expand=Customer(levels=4)</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - multiple navigation properties, nested" Rule="expand">
     <Input>$expand=Customer,Items($expand=Product/$ref)</Input>
@@ -1410,8 +1422,14 @@
   <TestCase Name="5.1.2 Expand - $count" Rule="expand">
     <Input>$expand=Items/$count($filter=Name eq 'Hugo')</Input>
   </TestCase>
+  <TestCase Name="5.1.2 Expand - $count - no $ prefix for query options, still required for path segment" Rule="expand">
+    <Input>expand=Items/$count(filter=Name eq 'Hugo')</Input>
+  </TestCase>
   <TestCase Name="5.1.2 Expand - $count" Rule="expand">
     <Input>$expand=Items/$count($search=Hugo)</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - $count" Rule="expand">
+    <Input>expand=Items/$count(search=Hugo)</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - no $count after $count" Rule="expand" FailAt="21">
     <Input>$expand=Items/$count($count=true)</Input>
@@ -1445,6 +1463,9 @@
   </TestCase>
   <TestCase Name="5.1.3 Select - simple" Rule="select">
     <Input>$select=Rating,ReleaseDate</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - $ is optional" Rule="select">
+    <Input>select=Rating,ReleaseDate</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - with star" Rule="select">
     <Input>$select=*</Input>
@@ -1482,6 +1503,12 @@
   <TestCase Name="5.1.4 OrderBy" Rule="orderby">
     <Input>$orderby=Name</Input>
   </TestCase>
+  <TestCase Name="5.1.4 OrderBy - case-insensitive" Rule="orderby">
+    <Input>$OrderBy=Name</Input>
+  </TestCase>
+  <TestCase Name="5.1.4 OrderBy - $ is optional" Rule="orderby">
+    <Input>OrderBy=Name</Input>
+  </TestCase>
   <TestCase Name="5.1.4 OrderBy asc" Rule="orderby">
     <Input>$orderby=Name&#09;asc</Input>
   </TestCase>
@@ -1494,8 +1521,14 @@
   <TestCase Name="5.1.5 Top and Skip" Rule="queryOptions">
     <Input>$top=5&amp;$skip=10</Input>
   </TestCase>
+  <TestCase Name="5.1.5 Top and Skip - $ is optional" Rule="queryOptions">
+    <Input>top=5&amp;skip=10</Input>
+  </TestCase>
   <TestCase Name="5.1.6 Inlinecount" Rule="queryOptions">
     <Input>$count=true</Input>
+  </TestCase>
+  <TestCase Name="5.1.6 Inlinecount - $ is optional" Rule="queryOptions">
+    <Input>count=true</Input>
   </TestCase>
   <TestCase Name="5.1.6 Inlinecount" Rule="queryOptions">
     <Input>$count=false</Input>
@@ -1505,6 +1538,9 @@
   </TestCase>
   <TestCase Name="5.1.7 Search - simple term" Rule="queryOptions">
     <Input>$search=blue</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - $ is optional" Rule="queryOptions">
+    <Input>search=blue</Input>
   </TestCase>
   <TestCase Name="5.1.7 Search - simple phrase" Rule="queryOptions">
     <Input>$search="blue%20green"</Input>
@@ -1570,9 +1606,12 @@
     <Input>http://serviceRoot/$all?$search=blue</Input>
   </TestCase>
   <TestCase Name="5.1.8 Format" Rule="queryOptions">
-    <Input>$format=json&amp;$format=atom&amp;$format=xml&amp;$format=text/html</Input>
+    <Input>$format=json&amp;$Format=atom&amp;$format=xml&amp;$format=text/html</Input>
   </TestCase>
-  <TestCase Name="5.1.8 Format - is case-insensitive" Rule="queryOptions">
+  <TestCase Name="5.1.8 Format - $ is optional" Rule="queryOptions">
+    <Input>format=json</Input>
+  </TestCase>
+  <TestCase Name="5.1.8 Format - value is case-insensitive" Rule="queryOptions">
     <Input>$format=JSON&amp;$format=Atom&amp;$format=XML&amp;$format=text/html</Input>
   </TestCase>
   <TestCase Name="5.1.8 Format - media type" Rule="queryOptions">
@@ -1581,11 +1620,17 @@
   <TestCase Name="5.1.9 Index" Rule="queryOptions">
     <Input>$index=42</Input>
   </TestCase>
+  <TestCase Name="5.1.9 Index - $ is optional" Rule="queryOptions">
+    <Input>index=42</Input>
+  </TestCase>
   <TestCase Name="5.1.9 Index" Rule="queryOptions" FailAt="7">
     <Input>$index=fortytwo</Input>
   </TestCase>
   <TestCase Name="5.1.10 Compute" Rule="queryOptions">
     <Input>$compute=Amount mul Product/TaxRate as Tax</Input>
+  </TestCase>
+  <TestCase Name="5.1.10 Compute - $ is optional" Rule="queryOptions">
+    <Input>compute=Amount mul Product/TaxRate as Tax</Input>
   </TestCase>
   <TestCase Name="5.1.10 Compute - many" Rule="queryOptions">
     <Input>$compute=Amount mul Product/TaxRate as Tax,day(Time/Date) as WeekDay</Input>
@@ -1600,7 +1645,7 @@
     <Input>$skiptoken=Not&amp;this</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="customQueryOption">
-    <Input>search=O%27Neil</Input>
+    <Input>find=O%27Neil</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="customQueryOption">
     <Input>!deltatoken='201208210403'</Input>
@@ -1609,7 +1654,7 @@
     <Input>!special</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="queryOptions">
-    <Input>search=O%27Neil&amp;!special</Input>
+    <Input>find=O%27Neil&amp;!special</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="queryOptions">
     <Input>$orderby=Name&amp;!deltatoken=0412312321</Input>
