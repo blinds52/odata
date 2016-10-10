@@ -211,15 +211,15 @@
     <xsl:apply-templates select="//edmx:Include" mode="description" />
     <xsl:text>"}</xsl:text>
 
-    <xsl:text>,"schemes":["</xsl:text>
-    <xsl:value-of select="$scheme" />
-    <xsl:text>"],"host":"</xsl:text>
-    <xsl:value-of select="$host" />
-    <xsl:text>","basePath":"</xsl:text>
-    <xsl:value-of select="$basePath" />
-    <xsl:text>"</xsl:text>
-
     <xsl:if test="//edm:EntityContainer">
+      <xsl:text>,"schemes":["</xsl:text>
+      <xsl:value-of select="$scheme" />
+      <xsl:text>"],"host":"</xsl:text>
+      <xsl:value-of select="$host" />
+      <xsl:text>","basePath":"</xsl:text>
+      <xsl:value-of select="$basePath" />
+      <xsl:text>"</xsl:text>
+
       <!-- TODO: Capabilities.SupportedFormats -->
       <xsl:text>,"consumes":["application/json"]</xsl:text>
       <xsl:text>,"produces":["application/json"]</xsl:text>
@@ -267,15 +267,15 @@
     <xsl:if test="//edm:EntityContainer">
       <xsl:text>,"parameters":{</xsl:text>
       <xsl:text>"top":{"name":"$top","in":"query","description":"Show only the first n items</xsl:text>
-      <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)","type":"integer"},</xsl:text>
+      <xsl:text>, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374630)","type":"integer"},</xsl:text>
       <xsl:text>"skip":{"name":"$skip","in":"query","description":"Skip the first n items</xsl:text>
-      <xsl:text>, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)","type":"integer"},</xsl:text>
+      <xsl:text>, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374631)","type":"integer"},</xsl:text>
       <xsl:text>"count":{"name":"$count","in":"query","description":"Include count of items</xsl:text>
-      <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)","type":"boolean"},</xsl:text>
+      <xsl:text>, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374632)","type":"boolean"},</xsl:text>
       <xsl:text>"filter":{"name":"$filter","in":"query","description":"Filter items by property values</xsl:text>
-      <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)","type":"string"},</xsl:text>
+      <xsl:text>, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)","type":"string"},</xsl:text>
       <xsl:text>"search":{"name":"$search","in":"query","description":"Search items by search phrases</xsl:text>
-      <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)","type":"string"}}</xsl:text>
+      <xsl:text>, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)","type":"string"}}</xsl:text>
 
       <xsl:text>,"responses":{"error":{"description":"Error","schema":{"$ref":"</xsl:text>
       <xsl:value-of select="$odata-schema" />
@@ -1545,7 +1545,7 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>{"name":"$orderby","in":"query","description":"Order items by property values</xsl:text>
-      <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)"</xsl:text>
+      <xsl:text>, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)"</xsl:text>
       <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
@@ -1568,7 +1568,7 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>{"name":"$select","in":"query","description":"Select properties to be returned</xsl:text>
-      <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)"</xsl:text>
+      <xsl:text>, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)"</xsl:text>
       <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":[</xsl:text>
     </xsl:if>
     <xsl:if test="position()>1">
@@ -1589,7 +1589,7 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:text>{"name":"$expand","in":"query","description":"Expand related entities</xsl:text>
-      <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)"</xsl:text>
+      <xsl:text>, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)"</xsl:text>
       <xsl:text>,"type":"array","uniqueItems":true,"items":{"type":"string"},"enum":["*"</xsl:text>
     </xsl:if>
     <xsl:text>,"</xsl:text>

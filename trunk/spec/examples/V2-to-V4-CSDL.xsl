@@ -14,8 +14,9 @@
     In addition the SAP annotations are translated into corresponding V4 annotations in the OASIS or SAP vocabularies.
 
   -->
-  <xsl:output method="xml" indent="yes" />
   <xsl:strip-space elements="*" />
+  <xsl:output method="xml" indent="yes" />
+
 
   <xsl:template match="edmx1:Edmx">
     <edmx:Edmx Version="4.0">
