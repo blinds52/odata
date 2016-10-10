@@ -227,7 +227,7 @@ entityCastOption  = entityIdOption
                   / expand 
                   / select
 
-id = "$id" EQ IRI-in-query       
+id = ( "$id" / "id" ) EQ IRI-in-query       
 
 systemQueryOption = compute
                   / deltatoken
@@ -244,11 +244,11 @@ systemQueryOption = compute
                   / top 
                   / index
 
-compute          = "$compute" EQ computeItem *( COMMA computeItem )
+compute          = ( "$compute" / "compute" ) EQ computeItem *( COMMA computeItem )
 computeItem      = commonExpr RWS "as" RWS computedProperty
 computedProperty = odataIdentifier         
 
-expand            = "$expand" EQ expandItem *( COMMA expandItem )
+expand            = ( "$expand" / "expand" ) EQ expandItem *( COMMA expandItem )
 expandItem        = STAR [ ref / OPEN levels CLOSE ]
                   / "$value"
                   / expandPath
@@ -271,19 +271,19 @@ expandOption      = expandRefOption
                   / expand
                   / levels
                 
-levels = "$levels" EQ ( oneToNine *DIGIT / "max" )
+levels = ( "$levels" / "levels" ) EQ ( oneToNine *DIGIT / "max" )
 
-filter = "$filter" EQ boolCommonExpr
+filter = ( "$filter" / "filter" ) EQ boolCommonExpr
 
-orderby     = "$orderby" EQ orderbyItem *( COMMA orderbyItem )
+orderby     = ( "$orderby" / "orderby" ) EQ orderbyItem *( COMMA orderbyItem )
 orderbyItem = commonExpr [ RWS ( "asc" / "desc" ) ]
 
-skip = "$skip" EQ 1*DIGIT
-top  = "$top"  EQ 1*DIGIT
+skip = ( "$skip" / "skip" ) EQ 1*DIGIT
+top  = ( "$top"  / "top"  ) EQ 1*DIGIT
 
-index  = "$index"  EQ 1*DIGIT
+index  = ( "$index" / "index" ) EQ 1*DIGIT
 
-format = "$format" EQ
+format = ( "$format" / "format" ) EQ
          ( "atom"
          / "json" 
          / "xml"
@@ -291,9 +291,9 @@ format = "$format" EQ
          )                     ; format specific to the specific data service> or
                                ; <An IANA-defined [IANA-MMT] content type>
                           
-inlinecount = "$count" EQ booleanValue
+inlinecount = ( "$count" / "count" ) EQ booleanValue
 
-search     = "$search" EQ BWS searchExpr
+search     = ( "$search" / "search" ) EQ BWS searchExpr
 searchExpr = ( OPEN BWS searchExpr BWS CLOSE
              / searchTerm 
              ) [ searchOrExpr
@@ -308,7 +308,7 @@ searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
 searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L or Nl, 
                        ; but not the words AND, OR, and NOT
 
-select         = "$select" EQ selectItem *( COMMA selectItem )
+select         = ( "$select" / "select" ) EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
                / allOperationsInSchema 
                / [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
