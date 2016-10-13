@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #148 Thursday Oct 13, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_this_line __file__ |shasum -a 512 -->
+<!-- sha512_excluding_this_line='e9cbbea7c356deb78e5f71f5a5c0ee9363860d3f08c81329ba2936c1d6c819e6b54f0e8fd2ad00c82773f6e1481ce6b4958d0064aacb6b94f8c68438eb073460' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #148 Thursday Oct 13, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-10-13 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41484">normative attendance sheet for this meeting (event_id=41484)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: Add new Jira issue  <a href="https://issues.oasis-open.org/browse/ODATA-986" rel="noopener noreferrer" target="_blank">ODATA-986</a> - "Support POST/PATCH/DELETE to cast segment following a collection" to section 5</p> 
+<p>Agenda approved as published including the update</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from October 06, 2016 TC meeting #147</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59098/odata-meeting-147_on-20161006-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59098/odata-meeting-147_on-20161006-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Action #0036 remains open.</p>
+
+
+<h2>5. Issues for V4.01_WD01 in New or Open state</h2>
+
+<h3>5.1 OData Protocol and OData URL Conventions</h3>
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-986" rel="noopener noreferrer" target="_blank">ODATA-986</a> - Support POST/PATCH/DELETE to cast segment following a collection</h4>
+
+<p>Ralf: ODATA-986 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-986 as proposed.</p>
+<p>Mark: Asks about DELETE; it should be the same semantics.</p>
+<p>Mike: Updated proposal:<br>
+Support posting/deleting to a type cast segment following a collection. <br>
+<br>
+For Post, the payload must be an instance of the type specified by the cast segment (or a type derived from the type specified by the cast segment) and does not require the @odata.type attribute unless it is of a derived type of the type specified in the type cast segment.<br>
+<br>
+For DELETE, only those instances matching or derived from the cast segment are deleted.</p>
+<p>Mike: For PATCH/DELETE, only those instances matching or derived from the cast segment are updated/deleted.</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-986 according to the updated proposal: <br>
+Support posting/deleting to a type cast segment following a collection. <br>
+<br>
+For Post, the payload must be an instance of the type specified by the cast segment (or a type derived from the type specified by the cast segment) and does not require the @odata.type attribute unless it is of a derived type of the type specified in the type cast segment. <br>
+<br>
+For PATCH/DELETE, only those instances matching or derived from the cast segment are updated/deleted.<br>
+<b>Hubert</b> seconds.</p>
+<p>ODATA-986 is RESOLVED with the revised proposal</p>
+<p>Note: The summary / title of the issue changed due to the discussion in the meeting, at start of discussion it was "Support POST to cast segment following a collection".</p>
+
+<h3>5.2 OData CSDL</h3>
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-743" rel="noopener noreferrer" target="_blank">ODATA-743</a> - Restructure Part 3: CSDL into CSDL Core, CSDL XML, and CSDL JSON</h4>
+<p>Ralf: ODATA-743 is OPEN</p>
+<p>Mike: If we only publish the CSDL XML document for now, we may have to fix references from Parts 1 (and Part 2?) that currently reference Part 3.</p>
+<p>Ralf: Mike to check how this affects Part 1 and Part 2</p>
+<p>Mike: Goals:<br>
+0) Make sure both formats define the same data model<br>
+1) Not have to mantain same text in multiple places<br>
+2) Not require someone who cares about JSON have to read XML (and vice-versa)<br>
+3) Reduce number of documents someone has to read to understand OData<br>
+4) Reduce amount of text someone has to read to understand OData</p>
+<p>Ralf: Ralf to prepare a preview of an XML-only format document without consistency rules</p>
+
+<h4>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-959" rel="noopener noreferrer" target="_blank">ODATA-959</a> - Allow path in an edm:key to also use a primitive property of a non null-able navigation property (recursively) of the entity type.</h4>
+
+<p>Ralf: ODATA-959 is OPEN</p>
+<p>Ralf: Allow the path expression to include references to primitive properties of non null-able navigation properties (recursively). <br>
+<br>
+8.3.1 Attribute Name could be simply amended as in: <br>
+The edmropertyRef element MUST specify a value for the Name attribute which MUST be a path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex or navigation property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes.</p>
+<p>Ralf: Hubert to refine the proposal and add rules on default responses in case no specific metadata level or $expand/$select is requested</p>
+
+<h3>5.3 OData JSON Format</h3>
+<h4>5.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-982" rel="noopener noreferrer" target="_blank">ODATA-982</a> - Chapter 11: Annotations on properties in single-property messages</h4>
+<p>Ralf: As the property name is not part of the single-property response and the property's value is represented as</p>
+<pre>
+  "value": &lt;property value> 
+</pre>
+<p>
+the annotations should be next to "value" and not prefixed with "value": </p>
+<pre>
+  "@Namespace.Term": &lt;annotation value> 
+  "value": &lt;property value>
+</pre>
+<p>Ralf: Same pattern that is already used for @odata.count</p>
+<p>Ralf: ODATA-982 is OPEN</p>
+<p>Mike: Note that structured properties may still be internally annotated, just as they would in an entity response.</p>
+<p>Ralf: Pattern only applies to primitive properties and collection-valued properties</p>
+<p>Mike: Added to proposal: "For primitive/collection-valued properties:"</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-982 as per the amended proposal. <b>Martin</b> seconds.</p>
+<p>ODATA-982 is RESOLVED with the amended proposal</p>
+
+<h4>5.3.2 <a href="https://issues.oasis-open.org/browse/ODATA-983" rel="noopener noreferrer" target="_blank">ODATA-983</a> - Chapter 15/16: advertise actions on collection-valued properties</h4>
+
+<p>Ralf: Prefix the advertisement with the navigation property name and place it next to the navigation property, similar to annotations on navigation properties: <br>
+<br>
+  "NavProp#Model.SomeAction": { <br>
+  "title": "Do Something", <br>
+  "target": "Managers(22)/Employees/DoSomething" <br>
+  }, <br>
+  "NavProp": [ ... ]</p>
+
+<p>Ralf: ODATA-983 is OPEN</p>
+<p>Mike: use cases<br>
+- non-canonical action URL<br>
+- instance-dependent applicability</p>
+<p>Ralf: Pack this with ODATA-978 in a change set</p>
+<p>Mike: Advertise non-availability by providing null as the advertisement value: <br>
+<br>
+"#Model.FirstAction": {} --> available <br>
+"#Model.SecondAction": null --> not available</p>
+<p>Ralf: Amended proposal: return only first form (available) for 4.0 responses</p>
+<p>Mike: Note that services must only return the null value in a 4.01 or greater response.
+<p>Mike: Question: when does this appear?<br>
+1) Only when expanded?<br>
+2) Only when expanded and selected?<br>
+3) If I expand and select only action, do I have the object or just the action advertisement?</p>
+<p>Mike: (related to advertising actions on collection/primitive values in ODATA-983)</p>
+
+<h4>5.3.3 <a href="https://issues.oasis-open.org/browse/ODATA-978" rel="noopener noreferrer" target="_blank">ODATA-978</a> - New annotation for availability/advertisement of bound actions/functions</h4>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-978 as proposed. <b>Martin</b> seconds.</p>
+<p>ODATA-978 is RESOLVED with the amended proposal</p>
+
+<h2>6. Next meetings</h2>
+
+<h3>6.1 Next Meeting Thursday October 20, 2016 during 8-10am PT</h3>
+<p>Date and time of meeting agreed</p>
+
+<h3>6.2 Meeting following Thursday October 27, 2016 during 8-12am PT</h3> 
+<p>Date and time of meeting agreed</p>
+
+
+<h2>7. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
