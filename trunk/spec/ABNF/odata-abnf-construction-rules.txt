@@ -296,8 +296,8 @@ searchAndExpr = RWS [ 'AND' RWS ] searchExpr
 
 searchTerm   = [ 'NOT' RWS ] ( searchPhrase / searchWord )
 searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
-searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L or Nl, 
-                       ; but not the words AND, OR, and NOT
+searchWord   = 1*( ALPHA / DIGIT ) ; Actually: any character from the Unicode categories L or N, 
+                                   ; but not the words AND, OR, and NOT
 
 select         = '$select' EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
