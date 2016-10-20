@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #149 Thursday Oct 20, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_this_line __file__ |shasum -a 512 -->
+<!-- sha512_excluding_this_line='013cefa2ddbd8dfda68bd576603ac863c44c582fa5722fb443bdebbcb79bbc0c6e8d27567930111fe54c061b95441b0e5ab426d97175c1f2ea327fadbeeb63d8"_OF_THIS_DOCUMENT' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #148 Thursday Oct 20, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-10-20 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Jeremy Crawford (Real Estate Standards Organization (RESO))
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Stefan Hagen (Individual)
+        Susan Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41485">normative attendance sheet for this meeting (event_id=41484)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Mike: new issue on JSON CSDL: <br>
+<a href="https://issues.oasis-open.org/browse/ODATA-988" rel="noopener noreferrer" target="_blank">ODATA-988</a> - Produce lightweight JSON CSDL and separately define Swagger/OAI generation<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-989" rel="noopener noreferrer" target="_blank">ODATA-989</a> - 5.1.2 $expand: state that $levels=1 is equivalent to omitting it</p>
+<p>Agenda approved as published including the update</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+
+<h3>3.1 Minutes from October 13, 2016 TC meeting #148</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59131/odata-meeting-148_on-20161013-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59131/odata-meeting-148_on-20161013-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items</h2>
+
+<h3>4.1 Action items due July 31, 2016</h3>
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Mark: no update</p>
+<p>Action #0036 remains open.</p>
+
+
+<h2>5. Issues for V4.01_WD01 in New or Open state</h2>
+
+<h3>5.1 Interfaces</h3>
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-619" rel="noopener noreferrer" target="_blank">ODATA-619</a> - Attach action and function signatures to terms, i.e. make a term definition an interface definition</h4>
+
+<p>Ralf:</p>
+<pre>
+  &lt;Term Name="MayImplement" Type="Collection(Edm.String)">
+    &lt;Annotation Term="Core.Description"
+      String="A collection of qualified type names outside of the type hierarchy that instances of this type might be addressable as by using a type segment." />
+  &lt;/Term>
+</pre>
+
+<p>Mike: close ODATA-619 without action and use term Core.MayImplement</p>
+<p>Ralf: ODATA-619 is OPEN</p>
+
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-619 without action. <b>Mike</b> seconds.</p>
+
+<p>ODATA-619 is CLOSED without action</p>
+
+<p>Mike: Add a typedefinition for QualifiedTypeName that is a string that represents a qualified type name.<br>
+Improve the definition of MayImplements to be of this type, rather than string.</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-991" rel="noopener noreferrer" target="_blank">ODATA-991</a> - Improve MayImplement by defining a TypeDefinition for qualified name</h4>
+
+<p>Ralf: ODATA-991 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-991 as proposed. <b>Martin</b> seconds.</p>
+
+<p>ODATA-991 is RESOLVED as proposed</p>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-989" rel="noopener noreferrer" target="_blank">ODATA-989</a> - $expand: state that $levels=1 is equivalent to omitting it</h4>
+
+<p>Ralf: ODATA-989 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b>  that OData-989 be resolved as proposed. <b>Mike</b> seconds.</p>
+
+<p>ODATA-989 is RESOLVED as proposed</p>
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-988" rel="noopener noreferrer" target="_blank">ODATA-988</a> - Produce lightweight JSON CSDL and separately define Swagger/OAI generation</h4>
+
+<p>Mark: agrees with Mike and likes the direction</p>
+<p>Ralf: I like the new direction</p>
+<p>Matt: likes that as well</p>
+<p>Martin: also supports it</p>
+<p>Ralf: ODATA-988 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> resolve ODATA-988 as proposed. <b>Mark</b> seconds.</p>
+
+<p>ODATA-988 is RESOLVED as proposed</p>
+
+<p>Ralf: Action for Ralf to request starter document for CSDL-to-OpenAPI mapping Committee Note</p>
+<p>Mike: bring forth proposals on how this could look</p>
+<p>Ralf: Proposal</p>
+<pre>
+{
+  "$Version": "4.0",
+  "$EntityContainer": "ODataDemo.DemoService",
+  "$Reference": {
+    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Core.V1.xml": {
+      "$Include": [
+        "Org.OData.Core.V1."
+      ]
+    },
+    "http://docs.oasis-open.org/odata/odata/v4.0/cs01/vocabularies/Org.OData.Measures.V1.xml": {
+      "$Include": [
+        "Org.OData.Measures.V1."
+      ]
+    }
+  },
+  "ODataDemo.": {
+    "$kind": "Schema"
+  },
+  "ODataDemo.Product": {
+    "$kind": "EntityType",
+    "$HasStream": true,
+    "$Key": [
+      "ID"
+    ],
+    "ID": {
+      "$kind": "Property",
+      "$Type": "Edm.String",
+      "$Nullable": false
+    },
+    "Description": {
+      "$kind": "Property",
+      "$Type": "Edm.String",
+      "@Core.IsLanguageDependent": true
+    },
+    "ReleaseDate": {
+      "$kind": "Property",
+      "$Type": "Edm.Date"
+    },
+    "DiscontinuedDate": {
+      "$kind": "Property",
+      "$Type": "Edm.Date"
+    },
+    "Rating": {
+      "$kind": "Property",
+      "$Type": "Edm.Int32"
+    },
+    "Price": {
+      "$kind": "Property",
+      "$Type": "Edm.Decimal",
+      "@Org.OData.Measures.V1.ISOCurrency": {
+        "$Path": "Currency"
+      }
+    },
+    "Currency": {
+      "$kind": "Property",
+      "$Type": "Edm.String",
+      "$MaxLength": "3"
+    },
+    "Category": {
+      "$kind": "NavigationProperty",
+      "$Type": "ODataDemo.Category",
+      "$Nullable": false,
+      "$Partner": "Products"
+    },
+    "Supplier": {
+      "$kind": "NavigationProperty",
+      "$Type": "ODataDemo.Supplier",
+      "$Partner": "Products"
+    }
+  },
+  "ODataDemo.Category": {
+    "$kind": "EntityType",
+    "$Key": [
+      "ID"
+    ],
+    "ID": {
+      "$kind": "Property",
+      "$Type": "Edm.Int32",
+      "$Nullable": false
+    },
+    "Name": {
+      "$kind": "Property",
+      "$Type": "Edm.String",
+      "$Nullable": false,
+      "@Core.IsLanguageDependent": true
+    },
+    "Products": {
+      "$kind": "NavigationProperty",
+      "$Partner": "Category",
+      "$Type": "ODataDemo.Product",
+      "$isCollection": true,
+      "$OnDelete": "Cascade"
+    }
+  },
+  "ODataDemo.Supplier": {
+    "$kind": "EntityType",
+    "$Key": [
+      "ID"
+    ],
+    "ID": {
+      "$kind": "Property",
+      "$Type": "Edm.String",
+      "$Nullable": false
+    },
+    "Name": {
+      "$kind": "Property",
+      "$Type": "Edm.String"
+    },
+    "Address": {
+      "$kind": "Property",
+      "$Type": "ODataDemo.Address",
+      "$Nullable": false
+    },
+    "Concurrency": {
+      "$kind": "Property",
+      "$Type": "Edm.Int32",
+      "$Nullable": false
+    },
+    "Products": {
+      "$kind": "NavigationProperty",
+      "$Partner": "Supplier",
+      "$Type": "ODataDemo.Product",
+      "$isCollection": true
+    }
+  },
+  "ODataDemo.Country": {
+    "$kind": "EntityType",
+    "$Key": [
+      "Code"
+    ],
+    "Code": {
+      "$kind": "Property",
+      "$Type": "Edm.String",
+      "$MaxLength": "2",
+      "$Nullable": false
+    },
+    "Name": {
+      "$kind": "Property",
+      "$Type": "Edm.String"
+    }
+  },
+  "ODataDemo.Address": {
+    "$kind": "ComplexType",
+    "Street": {
+      "$kind": "Property",
+      "$Type": "Edm.String"
+    },
+    "City": {
+      "$kind": "Property",
+      "$Type": "Edm.String"
+    },
+    "State": {
+      "$kind": "Property",
+      "$Type": "Edm.String"
+    },
+    "ZipCode": {
+      "$kind": "Property",
+      "$Type": "Edm.String"
+    },
+    "CountryName": {
+      "$kind": "Property",
+      "$Type": "Edm.String"
+    },
+    "Country": {
+      "$kind": "NavigationProperty",
+      "$Type": "ODataDemo.Country",
+      "$ReferentialConstraint": {
+        "CountryName": "Name"
+      }
+    }
+  },
+  "ODataDemo.ProductsByRating": {
+    "$kind": "Function",
+    "$overloads": [
+      {
+        "$Parameter": [
+          {
+            "$Name": "Rating",
+            "$Type": "Edm.Int32"
+          }
+        ],
+        "$ReturnType": {
+          "$Type": "ODataDemo.Product",
+          "$isCollection": true
+        }
+      }
+    ]
+  },
+  "ODataDemo.DemoService": {
+    "$kind": "EntityContainer",
+    "Products": {
+      "$kind": "EntitySet",
+      "$Type": "ODataDemo.Product",
+      "$NavigationPropertyBinding": {
+        "Category": {
+          "$Target": "Categories"
+        }
+      }
+    },
+    "Categories": {
+      "$kind": "EntitySet",
+      "$Type": "ODataDemo.Category",
+      "$NavigationPropertyBinding": {
+        "Products": {
+          "$Target": "Products"
+        }
+      },
+      "@Core.Description": "Product Categories"
+    },
+    "Suppliers": {
+      "$kind": "EntitySet",
+      "$Type": "ODataDemo.Supplier",
+      "$NavigationPropertyBinding": {
+        "Products": {
+          "$Target": "Products"
+        },
+        "Address/Country": {
+          "$Target": "Countries"
+        }
+      },
+      "@Core.OptimisticConcurrency": [
+        {
+          "$PropertyPath": "Concurrency"
+        }
+      ]
+    },
+    "Countries": {
+      "$kind": "EntitySet",
+      "$Type": "ODataDemo.Country"
+    },
+    "MainSupplier": {
+      "$kind": "Singleton",
+      "$Type": "ODataDemo.Supplier",
+      "$NavigationPropertyBinding": {
+        "Products": {
+          "$Target": "Products"
+        }
+      },
+      "@Core.Description": "Primary Supplier"
+    },
+    "ProductsByRating": {
+      "$kind": "FunctionImport",
+      "$EntitySet": "Products",
+      "$Function": "ODataDemo.ProductsByRating"
+    }
+  }
+}
+</pre>
+
+<p>Mike: reserve time in a future meeting to look at proposals</p>
+<p>Mike: reserve one hour</p>
+<p>Mike: everyone can bring in a proposal and present it in 10 minutes, possibly supplemented by material submitted before the meeting</p>
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-987" rel="noopener noreferrer" target="_blank">ODATA-987</a> - Allow digits in search phrases</h4>
+
+<p>Ralf: $search=1984</p>
+<p>Ralf: $search="1984"</p>
+<p>Ralf: $search=2x4</p>
+
+<p>Ralf: ODATA-987 is OPEN</p>
+
+<p>Mike: what about underscore?</p>
+<p>Mike: What other characters should we support?</p>
+<p>Ralf: $search=3.14</p>
+<p>Mike: what about dash?</p>
+<p>Mike: might be used for range?</p>
+<p>Ralf: Numbers</p>
+<p>Ralf: Letters</p>
+<p>Ralf: Underscores</p>
+<p>Ralf: Dots</p>
+<p>Ralf: Commas</p>
+<p><b>Mike</b>: I <b>move</b> we extend the ABNF and prose to support numbers, letters, underscore, and dot in $search terms except for underscores, which bing, google, and possible others ignore</p>
+<p>Ralf: q=9,81</p>
+<p>Ralf: q=9.81</p>
+<p>Mike: revised proposal: Extend ABNF to allow digits, dot, and comma in $search terms. add test cases</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-987 as proposed. <b>Ralf</b> seconds.</p>
+
+<p>ODATA-987 is RESOLVED with the modified proposal</p>
+
+<h3>5.2 Waiting for refined proposal</h3>
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-557" rel="noopener noreferrer" target="_blank">ODATA-557</a> - Allow exponential notation for Edm.Decimal</h4>
+
+<p>Not discussed.</p>
+
+<h4>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-618" rel="noopener noreferrer" target="_blank">ODATA-618</a> - Allow using term names in positions that allow type names</h4>
+
+<p>Ralf: I'll close this without action as it is still NEW and no one is interested in it</p>
+
+<h4>5.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-863" rel="noopener noreferrer" target="_blank">ODATA-863</a> - ODATA-618 Represent Terms similar to Types</h4>
+
+<p>Ralf: This is a sub-issue of ODATA-618</p>
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-863 without action. <b>Mike</b> seconds.</p>
+
+<p>ODATA-863 is CLOSED without action</p>
+
+<h4>5.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-735" rel="noopener noreferrer" target="_blank">ODATA-735</a> - Enhance the CSDL for instance annotations</h4>
+
+<p>Matt: is fine with closing this issue without action</p>
+<p><b>Matt</b>: I <b>move</b> to close ODATA-735 without action. <b>Mark</b> seconds.</p>
+
+<p>ODATA-735 is CLOSED without action</p>
+
+<h4>5.2.5 <a href="https://issues.oasis-open.org/browse/ODATA-976" rel="noopener noreferrer" target="_blank">ODATA-976</a> - Support partial keys</h4>
+
+<p>Ralf: I'll close this without action as it is still NEW and no one is interested in it</p>
+
+<h4>5.2.6 <a href="https://issues.oasis-open.org/browse/ODATA-817" rel="noopener noreferrer" target="_blank">ODATA-817</a> - Add client-side function odata.matchesRegularExpression</h4>
+
+<p>Defer to CSD02</p>
+
+<h4>5.2.7 <a href="https://issues.oasis-open.org/browse/ODATA-854" rel="noopener noreferrer" target="_blank">ODATA-854</a> - Consider use of OPTIONS for discovering formats, other capabilities and features</h4>
+
+<p>Defer to CSD02</p>
+
+<h4>5.2.8 <a href="https://issues.oasis-open.org/browse/ODATA-868" rel="noopener noreferrer" target="_blank">ODATA-868</a> - Describe HTTP encoding for streamed requests and responses</h4>
+
+<p>Defer to CSD02</p>
+
+<h4>5.2.9 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+
+<p>Defer to CSD02</p>
+
+<h4>5.2.10 <a href="https://issues.oasis-open.org/browse/ODATA-950" rel="noopener noreferrer" target="_blank">ODATA-950</a> - Clarify what requests can be delta enabled</h4>
+
+<p>Defer to CSD02</p>
+
+<h4>5.2.11 <a href="https://issues.oasis-open.org/browse/ODATA-811" rel="noopener noreferrer" target="_blank">ODATA-811</a> - Define propagation and (partial) overriding of annotations</h4>
+
+<p>Ralf: Propagation along inheritance hierarchies: <br>
+- Annotations on structured types and their properties also propagate down from the base type to the derived types <br>
+- Annotations can be overridden at the derived type or its properties with replace (PUT) semantics for all types of annotations: primitive, structured, collection-valued. <br>
+<br>
+Propagation along "uses" dependencies <br>
+- It is up to the definition of the term to specify whether and how annotations with this term propagate to places where the annotated model element is used, and whether they can be overridden. E.g. a "Label" annotation for a UI can propagate from a type definition to all properties using that type, and may be overridden it in some cases with a more specific label, whereas an annotation marking a property as containing a phone number will propagate but may not be overridden.</p>
+
+<p><b>Stefan</b>: I <b>move</b> to resolve ODATA-811 as proposed. <b>Mark</b> seconds.</p>
+
+<p>ODATA-811 is RESOLVED as proposed</p>
+
+<h4>5.2.12 <a href="https://issues.oasis-open.org/browse/ODATA-760" rel="noopener noreferrer" target="_blank">ODATA-760</a> - Add to depth restrictions to Capabilities Vocabulary</h4>
+
+<p>Defer to CSD02</p>
+
+<h4>5.2.13 <a href="https://issues.oasis-open.org/browse/ODATA-985" rel="noopener noreferrer" target="_blank">ODATA-985</a> - The HTTP Specification document referenced in the OData Protocol Spec has been obsoleted</h4>
+
+<p>Not discussed, as Martin had dial-in problems and dropped of call and chat.</p>
+
+<h4>5.2.14 <a href="https://issues.oasis-open.org/browse/ODATA-919" rel="noopener noreferrer" target="_blank">ODATA-919</a> - Specify the result type for each operation based on operator types</h4>
+
+<p>Ralf to contact Evan</p>
+
+<h4>5.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-974" rel="noopener noreferrer" target="_blank">ODATA-974</a> - Flesh out recommendations around OAuth support in OData</h4>
+
+<p>Ralf: <a href="https://wiki.scn.sap.com/wiki/display/Security/OAuth+2.0+-+Constrained+Authorization+and+Single+Sign-On+for+OData+Services" rel="noopener noreferrer" target="_blank">https://wiki.scn.sap.com/wiki/display/Security/OAuth+2.0+-+Constrained+Authorization+and+Single+Sign-On+for+OData+Services</a></p>
+<p>Ralf: <a href="https://help.sap.com/saphelp_nw74/helpdata/en/75/73ffc0ae444443a23b9e661d77d637/content.htm" rel="noopener noreferrer" target="_blank">https://help.sap.com/saphelp_nw74/helpdata/en/75/73ffc0ae444443a23b9e661d77d637/content.htm</a></p>
+
+<p>Ralf: ODATA-974 is OPEN</p>
+
+<h2>6. Next meetings</h2>
+
+<p>Mike: Review proposals for JSON CSDL on November 3</p>
+
+<h3>6.1 Next Meeting Thursday October 27, 2016 during 9-12 am PT (18:00-21:00 CEST)</h3>
+<p>Date and time of meeting agreed</p>
+
+<h3>6.2 Meeting following Thursday November  3, 2016 during 7-10:30 am PT</h3> 
+<p>Date and time of meeting agreed</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
