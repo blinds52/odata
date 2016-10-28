@@ -26,7 +26,6 @@
     singleton
     - allow external targeting for @Core.Description similar to @Common.Label
     - remove duplicated code in /paths production
-    - xsl:param for "no extensions" that suppresses x- stuff
     - Capabilities: SortRestrictions/NonSortableProperties, FilterRestrictions/NonFilterableProperties
   -->
 
@@ -42,6 +41,7 @@
   <xsl:param name="vocabulary-home" select="'http://localhost/examples'" />
   <xsl:param name="swagger-ui" select="'http://localhost/swagger-ui'" />
   <xsl:param name="diagram" select="null" />
+  <xsl:param name="extensions" select="null" />
   <xsl:param name="openapi-formatoption" select="''" />
 
 
@@ -136,8 +136,12 @@
       <xsl:message><xsl:value-of select="$commonNamespace"/></xsl:message>
     -->
     <xsl:text>{</xsl:text>
-    <xsl:apply-templates select="@*" mode="list" />
-    <xsl:text>,"swagger":"2.0"</xsl:text>
+    <xsl:if test="$extensions">
+      <xsl:text>"x-odata-version":"</xsl:text>
+      <xsl:value-of select="$odata-version" />
+      <xsl:text>",</xsl:text>
+    </xsl:if>
+    <xsl:text>"swagger":"2.0"</xsl:text>
 
     <xsl:text>,"info":{"title":"</xsl:text>
     <xsl:variable name="title">
@@ -231,33 +235,35 @@
       <xsl:with-param name="name" select="'definitions'" />
     </xsl:apply-templates>
 
-    <xsl:apply-templates select="//edm:Schema|edmx:Reference/edmx:Include" mode="hash">
-      <xsl:with-param name="key" select="'Namespace'" />
-      <xsl:with-param name="name" select="'x-schemas'" />
-    </xsl:apply-templates>
+    <xsl:if test="$extensions">
+      <xsl:apply-templates select="//edm:Schema|edmx:Reference/edmx:Include" mode="hash">
+        <xsl:with-param name="key" select="'Namespace'" />
+        <xsl:with-param name="name" select="'x-schemas'" />
+      </xsl:apply-templates>
 
-    <xsl:apply-templates select="//edm:Action[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
-      mode="hash"
-    >
-      <xsl:with-param name="name" select="'x-actions'" />
-    </xsl:apply-templates>
+      <xsl:apply-templates select="//edm:Action[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
+        mode="hash"
+      >
+        <xsl:with-param name="name" select="'x-actions'" />
+      </xsl:apply-templates>
 
-    <xsl:apply-templates select="//edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
-      mode="hash"
-    >
-      <xsl:with-param name="name" select="'x-functions'" />
-    </xsl:apply-templates>
+      <xsl:apply-templates select="//edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]"
+        mode="hash"
+      >
+        <xsl:with-param name="name" select="'x-functions'" />
+      </xsl:apply-templates>
 
-    <xsl:apply-templates select="//edm:Term" mode="hash">
-      <xsl:with-param name="name" select="'x-terms'" />
-    </xsl:apply-templates>
+      <xsl:apply-templates select="//edm:Term" mode="hash">
+        <xsl:with-param name="name" select="'x-terms'" />
+      </xsl:apply-templates>
 
-    <xsl:apply-templates select="//edm:EntityContainer" />
+      <xsl:apply-templates select="//edm:EntityContainer" />
 
-    <xsl:apply-templates select="edmx:Reference[edmx:IncludeAnnotations|edm:Annotation]" mode="hash">
-      <xsl:with-param name="name" select="'x-references'" />
-      <xsl:with-param name="key" select="'Uri'" />
-    </xsl:apply-templates>
+      <xsl:apply-templates select="edmx:Reference[edmx:IncludeAnnotations|edm:Annotation]" mode="hash">
+        <xsl:with-param name="name" select="'x-references'" />
+        <xsl:with-param name="key" select="'Uri'" />
+      </xsl:apply-templates>
+    </xsl:if>
 
     <!-- paths is required, so we need it also for documents that do not define an entity container -->
     <xsl:text>,"paths":{</xsl:text>
@@ -283,14 +289,6 @@
     </xsl:if>
     <xsl:text>}</xsl:text>
   </xsl:template>
-
-
-  <xsl:template match="edmx:Edmx/@Version">
-    <xsl:text>"x-odata-version":"</xsl:text>
-    <xsl:value-of select="$odata-version" />
-    <xsl:text>"</xsl:text>
-  </xsl:template>
-
 
   <xsl:template match="edm:EntityType" mode="description">
     <xsl:if test="position() = 1">
@@ -516,7 +514,7 @@
     <xsl:text>"enum":[</xsl:text>
     <xsl:apply-templates select="edm:Member" mode="enum" />
     <xsl:text>]</xsl:text>
-    <xsl:if test="@IsFlags='true'">
+    <xsl:if test="@IsFlags='true' and $extensions">
       <xsl:text>,"x-isFlags":true</xsl:text>
     </xsl:if>
     <xsl:call-template name="x-annotations">
@@ -592,11 +590,14 @@
     <xsl:text>":{</xsl:text>
 
     <xsl:if test="@BaseType">
-      <xsl:text>"x-baseType":"</xsl:text>
-      <xsl:call-template name="namespaceQualifiedName">
-        <xsl:with-param name="qualifiedName" select="@BaseType" />
-      </xsl:call-template>
-      <xsl:text>","allOf":[{</xsl:text>
+      <xsl:if test="$extensions">
+        <xsl:text>"x-baseType":"</xsl:text>
+        <xsl:call-template name="namespaceQualifiedName">
+          <xsl:with-param name="qualifiedName" select="@BaseType" />
+        </xsl:call-template>
+        <xsl:text>",</xsl:text>
+      </xsl:if>
+      <xsl:text>"allOf":[{</xsl:text>
       <xsl:call-template name="schema-ref">
         <xsl:with-param name="qualifiedName" select="@BaseType" />
       </xsl:call-template>
@@ -605,18 +606,20 @@
 
     <xsl:text>"type":"object"</xsl:text>
 
-    <xsl:if test="@Abstract='true'">
+    <xsl:if test="@Abstract='true' and $extensions">
       <xsl:text>,"x-abstract":true</xsl:text>
       <xsl:if test="local-name()='EntityType' and not(edm:Key)">
         <xsl:text>,"x-keys":[]</xsl:text>
       </xsl:if>
     </xsl:if>
 
-    <xsl:if test="@HasStream='true'">
+    <xsl:if test="@HasStream='true' and $extensions">
       <xsl:text>,"x-mediaEntity":true</xsl:text>
     </xsl:if>
 
-    <xsl:apply-templates select="@OpenType|edm:Key" mode="list2" />
+    <xsl:if test="$extensions">
+      <xsl:apply-templates select="@OpenType|edm:Key" mode="list2" />
+    </xsl:if>
 
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty" mode="hash">
       <xsl:with-param name="name" select="'properties'" />
@@ -640,19 +643,24 @@
     </xsl:call-template>
     <xsl:choose>
       <xsl:when test="local-name()='Property'">
-        <xsl:apply-templates select="@Unicode|*[local-name()!='Annotation']" mode="list2" />
+        <xsl:if test="$extensions">
+          <xsl:apply-templates select="@Unicode" mode="list2" />
+        </xsl:if>
+        <xsl:apply-templates select="*[local-name()!='Annotation']" mode="list2" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>,"x-relationship":{</xsl:text>
-        <xsl:apply-templates
-          select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable']|node()[local-name()!='ReferentialConstraint' and local-name()!='Annotation']"
-          mode="list" />
-        <xsl:apply-templates select="edm:ReferentialConstraint" mode="hash">
-          <xsl:with-param name="after"
-            select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable']|node()[local-name()!='ReferentialConstraint' and local-name()!='Annotation']" />
-          <xsl:with-param name="key" select="'Property'" />
-        </xsl:apply-templates>
-        <xsl:text>}</xsl:text>
+        <xsl:if test="$extensions">
+          <xsl:text>,"x-relationship":{</xsl:text>
+          <xsl:apply-templates
+            select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable']|node()[local-name()!='ReferentialConstraint' and local-name()!='Annotation']"
+            mode="list" />
+          <xsl:apply-templates select="edm:ReferentialConstraint" mode="hash">
+            <xsl:with-param name="after"
+              select="@*[local-name()!='Name' and local-name()!='Type' and local-name()!='Nullable']|node()[local-name()!='ReferentialConstraint' and local-name()!='Annotation']" />
+            <xsl:with-param name="key" select="'Property'" />
+          </xsl:apply-templates>
+          <xsl:text>}</xsl:text>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:call-template name="x-annotations">
@@ -800,7 +808,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"decimal"</xsl:text>
-        <xsl:apply-templates select="@Precision|@Scale[.!=0]" mode="list2" />
+        <xsl:if test="$extensions">
+          <xsl:apply-templates select="@Precision|@Scale[.!=0]" mode="list2" />
+        </xsl:if>
         <xsl:choose>
           <xsl:when test="not(@Scale) or @Scale='0'">
             <xsl:text>,"multipleOf":1</xsl:text>
@@ -924,7 +934,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"date-time"</xsl:text>
-        <xsl:apply-templates select="@Precision" mode="list2" />
+        <xsl:if test="$extensions">
+          <xsl:apply-templates select="@Precision" mode="list2" />
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.TimeOfDay'">
         <xsl:call-template name="nullableType">
@@ -933,7 +945,9 @@
           <xsl:with-param name="noArray" select="$noArray" />
         </xsl:call-template>
         <xsl:text>,"format":"time"</xsl:text>
-        <xsl:apply-templates select="@Precision" mode="list2" />
+        <xsl:if test="$extensions">
+          <xsl:apply-templates select="@Precision" mode="list2" />
+        </xsl:if>
       </xsl:when>
       <xsl:when test="$singleType='Edm.Duration'">
         <xsl:call-template name="nullableType">
@@ -949,10 +963,12 @@
         <xsl:text>#/definitions/</xsl:text>
         <xsl:value-of select="$singleType" />
         <xsl:text>"</xsl:text>
-        <xsl:if test="not($nullable='false')">
+        <xsl:if test="not($nullable='false') and $extensions">
           <xsl:text>,"x-nullable":true</xsl:text>
         </xsl:if>
-        <xsl:apply-templates select="@SRID" mode="list2" />
+        <xsl:if test="$extensions">
+          <xsl:apply-templates select="@SRID" mode="list2" />
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="ref">
@@ -964,11 +980,13 @@
             </xsl:call-template>
           </xsl:with-param>
         </xsl:call-template>
-        <xsl:if test="not($nullable='false')">
+        <xsl:if test="not($nullable='false') and $extensions">
           <xsl:text>,"x-nullable":true</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="@MaxLength" />
-        <xsl:apply-templates select="@Precision" mode="list2" />
+        <xsl:if test="$extensions">
+          <xsl:apply-templates select="@Precision" mode="list2" />
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="@DefaultValue">
@@ -1075,7 +1093,7 @@
     <xsl:if test="not($noArray) and (not($nullable='false') or contains($type,','))">
       <xsl:text>]</xsl:text>
     </xsl:if>
-    <xsl:if test="not($nullable='false')">
+    <xsl:if test="not($nullable='false') and $extensions">
       <xsl:text>,"x-nullable":true</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -1084,9 +1102,9 @@
     <xsl:param name="byteLength" />
     <xsl:if test=".!='max'">
       <xsl:text>,"maxLength":</xsl:text>
-      <xsl:if test="$byteLength">
+      <xsl:if test="$byteLength and $extensions">
         <xsl:value-of select="4*ceiling(. div 3)" />
-        <xsl:text>,"byteLength":</xsl:text>
+        <xsl:text>,"x-byteLength":</xsl:text>
       </xsl:if>
       <xsl:value-of select="." />
     </xsl:if>
@@ -1257,13 +1275,15 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityContainer">
-    <xsl:text>,"x-entityContainer":{</xsl:text>
-    <xsl:apply-templates select="@*" mode="list" />
-    <xsl:apply-templates select="edm:EntitySet|edm:Singleton|edm:ActionImport|edm:FunctionImport" mode="hash">
-      <xsl:with-param name="name" select="'resources'" />
-    </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    <xsl:text>}</xsl:text>
+    <xsl:if test="$extensions">
+      <xsl:text>,"x-entityContainer":{</xsl:text>
+      <xsl:apply-templates select="@*" mode="list" />
+      <xsl:apply-templates select="edm:EntitySet|edm:Singleton|edm:ActionImport|edm:FunctionImport" mode="hash">
+        <xsl:with-param name="name" select="'resources'" />
+      </xsl:apply-templates>
+      <xsl:apply-templates select="edm:Annotation" mode="list2" />
+      <xsl:text>}</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="edm:EntitySet|edm:Singleton" mode="hashvalue">
@@ -2402,7 +2422,7 @@
 
     <xsl:variable name="remaining"
       select="$annotations[not((@Term=$coreDescription or @Term=$coreDescriptionAliased or @Term=$commonLabel or @Term=$commonLabelAliased) and not(@Qualifier) and (@String or edm:String))]" />
-    <xsl:if test="$remaining or $members">
+    <xsl:if test="($remaining or $members) and $extensions">
       <xsl:text>,"x-annotations":{</xsl:text>
       <xsl:apply-templates select="$remaining" mode="list" />
       <xsl:if test="$members">
