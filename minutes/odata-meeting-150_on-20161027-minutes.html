@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #149 Thursday Oct 27, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_this_line __file__ |shasum -a 512 -->
+<!-- sha512_excluding_this_line='f3b91db65a59c9ee10751358c7f4755e8d2a57a61cc836658966082435dd59e9300844ee3927d6ac2655d4f720626c6970e2da20c546a55b35c74390aed672b3"_OF_THIS_DOCUMENT' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #148 Thursday Oct 27, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-10-27 0900-1200 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41486">normative attendance sheet for this meeting (event_id=41486)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: New Jira issue: <br>
+<a href="https://issues.oasis-open.org/browse/ODATA-992" rel="noopener noreferrer" target="_blank">ODATA-992</a> - Prefer numeric representation of enumeration values<br>
+</p>
+<p>Agenda approved as published including the update</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from October 20, 2016 TC meeting #149</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59196/odata-meeting-149_on-20161020-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59196/odata-meeting-149_on-20161020-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items</h2>
+<h3>4.1 Action items due July 31, 2016</h3>
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Mark: finished document for header registration, working on document for preferences registration, will add it to TC document repository for review next week</p>
+<p>Action #0036 remains open.</p>
+
+<h2>5. Issues for V4.01_WD01 in New or Open state</h2>
+
+<h3>5.1 Issues ready for Resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-557" rel="noopener noreferrer" target="_blank">ODATA-557</a> - Allow exponential notation for Edm.Decimal</h4>
+
+<p>Ralf: Allow exponential notation for Edm.Decimal literals. <br>
+<br>
+Add new symbolic value Scale="floating" for DECFLOAT values. The Precision attribute will specify the number of digits in the mantissa.</p>
+<p>Ralf: Just to confirm; <br>
+<br>
+1) Services would only allow scale="Floating" for 4.01 and versions of metadata, <br>
+2) As per OData-771, services should only return values in exponential notation if the ExponentialDecimals format parameter is specified <br>
+3) Also, as per OData-771, clients should only supply values in exponential notation if SupportedFormats returns ExponentialDecimals <br>
+<br>
+For 4.01, rather than burdening the media type with additional format parameters, should we just say that 4.01 clients and services have to be prepared to receive decimals in exponential format? Do we still need the ExponentialDecimals format parameter for 4.0 clients to say they will accept decimals in exponential format, or should we not apply OData-771?</p>
+<p>Mike: 4.01 payloads by default may use exponential notation</p>
+<p>Mike: no use for keeping this format parameter for disabling exponential notation</p>
+<p>Ralf: Keep format parameter for V4, and state that it has no meaning for V4.01</p>
+<p>Mike: Additions to proposal:<br>
+Services would only allow scale="Floating" for 4.01 and versions of metadata, <br>
+<br>
+For 4.01 JSON payload, exponential decimals is always assumed and format parameter is not needed.</p>
+<p>Mike: Fixed typos:<br>
+Services would only allow scale="Floating" for 4.01 and later versions of metadata, <br>
+<br>
+For 4.01 JSON payloads, exponential decimals is always assumed and format parameter is not needed or used.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-557 as per the amended proposal. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-557 is RESOLVED with the modified proposal</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-959" rel="noopener noreferrer" target="_blank">ODATA-959</a> - Allow path in an edm:key to also use a primitive property of a non null-able navigation property (recursively) of the entity type.</h4>
+
+<p>Hubert: goal is to simplify deep-insert, where the foreign-key properties would have to be redundantly specified with the nested/related key properties</p>
+<p>Mike: would @odata.id be mandatory in this case, or would it be mandatory to sender-side expand the "foreign key" entities and include the key properties?</p>
+<p>Ralf: including key fields would be beneficial for delta-tombstones. Check if tombstones allow annotations and open issue otherwise.</p>
+<p>Hubert: deep-insert combined with server-generated keys for the principal entities is impossible if the dependent entities contains foreign-key properties.</p>
+<p>Mike: "remote-key" property should be immutable</p>
+<p>Hubert: no problem in targeted use cases</p>
+<p>Mike: Additional Semantics:<br>
+In JSON payloads:<br>
+1)The id would always have to be written, even in minimal metadata, or<br>
+2)The nav properties were expanded to include at least the related ids (service *could* default expand to include the related id fields.)<br>
+You can only create the entity if:<br>
+a.You include a link to an existing related entity containing the key value, or <br>
+b.You do a deep insert that includes the related entity<br>
+You can't change the relationship to the related entity containing the key value (so it would have to be single, non-nullable, and immutable)<br>
+The referenced property(ies) on the related entity would have to be immutable (or, if changed, would delete the entity with the dependent key)<br>
+&gt;&gt;We could restrict this to say that the property of the related entity is a key of the related entity.<br>
+Deleting the related entity would delete the entity whose key referenced a property of that entity</p>
+<p>Hubert: restrict this new features to key properties of the related entities</p>
+<p>Mike: if we want to relax this in the future, we should explicitly point this out to clients</p>
+<p>Ralf: <a href="https://issues.oasis-open.org/browse/ODATA-798" rel="noopener noreferrer" target="_blank">ODATA-798</a> - Semantic Key or Alternate Key for entity types</p>
+<p>Mike: revised proposal:<br>
+Allow the path expression to include references to primitive properties of non null-able navigation properties (recursively).<br>
+<br>
+8.3.1 Attribute Name could be simply amended as in:<br>
+The edmropertyRef element MUST specify a value for the Name attribute which MUST be a path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex or a single-valued, non-nullable navigation property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes.<br>
+<br>
+Semantics:<br>
+In JSON payloads:<br>
+1)The id must be written, even in minimal metadata, or<br>
+2)The nav properties must be expanded to include at least the related ids (service *could* default expand to include the related id fields.)<br>
+You can only create the entity if:<br>
+a.You include a link to an existing related entity containing the key value, or <br>
+b.You do a deep insert that includes the related entity<br>
+You can't change the relationship to the related entity containing the key value (so it would have to be single, non-nullable, and immutable)<br>
+The referenced property(ies) on the related entity must be immutable and must be unique (i.e., are generally a key of the related entity)<br>
+Deleting the related entity deletes the entity whose key referenced a property of that entity</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-959 as per the amended proposal</p>
+<p>Mike: (clarified intro sentence: Allow the path expression to include references to unique, immutable, primitive (i.e., key) properties of non null-able, immutable navigation properties (recursively).</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-959 as per the NEW amended proposal</p>
+<p>Ralf: ODATA-959 is OPEN</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-959 as per the most current amended proposal. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-959 is RESOLVED as proposed</p>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-969" rel="noopener noreferrer" target="_blank">ODATA-969</a> - Chapter 15, Example 32: syntax of "target" URL</h4>
+
+<p>Ralf: </p>
+<pre>
+{
+  "@odata.context": "http://host/service/$metadata#Employees/$entity",
+  "#Model.RemainingVacation(Year)": {
+  "title": "Remaining vacation from year...",
+  "target": "Employees(2)/RemainingVacation(Year=@Year)"
+  },
+  ...
+}
+</pre>
+
+<p>Ralf: "target": "Employees(2)/RemainingVacation(Year=@abc)"</p>
+<p>Ralf: "target": "Employees(2)/RemainingVacation({Year})"</p>
+<p>Ralf: "target": "Employees(2)/RemainingVacation"</p>
+<p>Ralf: GET Employees(2)/RemainingVacation?@Year=2016</p>
+<p>Ralf: GET Employees(2)/RemainingVacation(Year=@Year)?@Year=2016</p>
+<p>Mike: Clarification: Clarify in text that functions are invoked by adding the named parameters as query options. The syntax of the url is up to the service.</p>
+<p>Ralf: ODATA-969 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-969 with the modified proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-969 is RESOLVED as proposed</p>
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-979" rel="noopener noreferrer" target="_blank">ODATA-979</a> - Recursive containment navigation properties and Partner attribute</h4>
+
+<p>Ralf: Containment navigation properties MAY specify a Partner attribute. If the containment is recursive, the partner navigation property MUST be nullable and specify a single entity type. If the containment is not recursive, the partner navigation property MUST NOT be nullable. <br>
+<br>
+An entity type hierarchy MUST NOT contain more than one navigation property with a Partner attribute referencing a containment relationship.</p>
+<p>Ralf: <br>
+- EntityType Name=FileSystemEntry <br>
+- NavigationProperty Name=Parent Type=this.FileSystemEntry Nullable=true <br>
+<br>
+- EntityType Name=Folder BaseType=this.FileSystemEntry <br>
+- NavigationProperty Name=Children Type=Collection(this.FileSystemEntry) Partner=Parent <br>
+<br>
+- EntityType Name=File BaseType=this.FileSystemEntry <br>
+- NavigationProperty Name=Parent Type=this.Folder Nullable=false</p>
+<p>Mike: Alternate example:<br>
+- EntityType Name=FileSystemEntry <br>
+- NavigationProperty Name=Parent Type=this.FileSystemContainer Nullable=true <br>
+<br>
+- EntityType Name=File BaseType=this.FileSystemEntry <br>
+- NavigationProperty Name=Parent Type=this.Folder Nullable=false <br>
+<br>
+- EntityType Name=FileSystemContainer BaseType=this.FileSystemEntry <br>
+- NavigationProperty Name=Children Type=Collection(this.Folder) Partner=Parent ContainsTarget=true<br>
+<br>
+- EntityType Name=Folder BaseType=this.FileSystemContainer<br>
+- NavigationProperty Name=Parent Type=this.FileSystemContainer Nullable=false <br>
+<br>
+- EntityType Name=Drive BaseType=this.FileSystemContainer</p>
+<p>Ralf: When a containment navigation property navigates between entity types in the same inheritance hierarchy, the containment is called recursive.</p>
+<p>Mike: Clarify prose text:<br>
+Containment navigation properties MAY specify a Partner attribute. If the containment is recursive, the relationship defines a tree; thus the navigation property on the type defined as the partner MUST specify a single entity type and MUST be nullable (for the root of the tree). If the containment is not recursive, the partner navigation property MUST NOT be nullable.<br>
+<br>
+An entity type inheritance chain MUST NOT contain more than one navigation property with a Partner attribute referencing a containment relationship.</p>
+<p>Ralf: If the containment is not recursive, the partner navigation property MUST NOT be nullable because it leads back to the containing entity.</p>
+<p>Mike: Revised proposal:<br>
+Clarify prose text: <br>
+<br>
+Containment navigation properties MAY specify a Partner attribute. If the containment is recursive, the relationship defines a tree; thus the navigation property on the type defined as the partner MUST specify a single entity type and MUST be nullable (for the root of the tree). If the containment is not recursive, the partner navigation property MUST NOT be nullable because it leads back to the containing entity. <br>
+<br>
+An entity type inheritance chain MUST NOT contain more than one navigation property with a Partner attribute referencing a containment relationship.</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-979 with the modified proposal</p>
+<p>Ralf: ODATA-979 is OPEN</p>
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-979 with the modified proposal. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-979 is RESOLVED as proposed</p>
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-980" rel="noopener noreferrer" target="_blank">ODATA-980</a> - SchemaVersion header, $SchemaVersion query option, or root URL versioning</h4>
+
+<p>Ralf: The SchemaVersion header and accompanying annotation are intended to allow breaking changes without having to change the service root URL. <br>
+<br>
+How does this combine with type referencing in the @odata.type annotation? <br>
+<br>
+We could annotate the @odata.type annotation with the @Core.SchemaVersion: </p>
+<pre>
+  "@odata.type":"https://some.whe.re/$metadata" 
+  "@odata.type@Core.SchemaVersion":"2.0.1", 
+</pre>
+<p>
+Or we could add a system query option and make the schema version part of the URL: </p>
+<pre>
+  "@odata.type":"https://some.whe.re/$metadata?$SchemaVersion=2.0.1", 
+</pre>
+<p>
+Or we could reconsider this and fall back to root URL versioning: </p>
+<pre>
+  "@odata.type":"https://some.whe.re;v=2.0.1/$metadata",
+</pre>
+<p>Ralf: JSON Format:<br>
+Request payloads MAY include a context URL as a base URL for relative URLs in the request payload.<br>
+Example 4: </p>
+<pre>
+{
+  "@context": "http://host/service/$metadata#Customers/$entity",
+  "@metadataEtag": "W/\"A1FF3E230954908F\"",
+  "@Core.SchemaVersion": "2.0.1",
+  ...
+}
+</pre>
+<p>Ralf: Homework: reconsider schema version mechanism, e.g. based on query option instead of request header</p>
+<p>Ralf: ODATA-980 is OPEN</p>
+<p>Ralf: New proposal that reflects the homework: Add a $schemaversion system query option instead of a SchemaVersion header and use this in @odata,type URLs if the type needs refering to a specific schema version.</p>
+<p>Ralf: Move issue into category "Needs refined proposal"</p>
+
+<h4>5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-983" rel="noopener noreferrer" target="_blank">ODATA-983</a> - Chapter 15/16: advertise actions on collection-valued properties</h4>
+
+<p>Ralf: Prefix the advertisement with the primitive- or collection-valued property name and place it next to the navigation property, similar to annotations on navigation properties:</p> 
+<pre>
+  "NavProp#Model.SomeAction": { 
+  "title": "Do Something", 
+  "target": "Managers(22)/Employees/DoSomething" 
+  }, 
+  "NavProp": [ ... ] 
+</pre>
+<p>
+Services must only returned this syntax in an OData 4.01 response.</p>
+<p>Mike: question is when this annotation is returned</p>
+<p>Ralf: Question from discussion in 2016-10-13 meeting: when does this appear? <br>
+1) Only when expanded? <br>
+2) Only when expanded and selected? <br>
+3) If I expand and select only action, do I have the object or just the action advertisement?</p>
+<p>Ralf: $expand=NavProp($select=Model.SomeAction)</p>
+<p>Ralf: would return just<br>
+NavProp#Model.SomeAction</p>
+<p>Ralf: $expand=NavProp/$count</p>
+<p>Ralf: NavProp@odata.count</p>
+<p>Ralf: Question from discussion in 2016-10-13 meeting: when does this appear? <br>
+1) Only when expanded? <br>
+2) Only when expanded and selected? <br>
+3) If I expand and select only action, do I have the object or just the action advertisement?</p>
+<p>Mike: proposed answers to questions from 2016-10-13:<br>
+Advertisement can appear any time.<br>
+If must appear if explicitly requested (i.e., through expand that explicitly selects the action/function).<br>
+If only the function/action is selected in the expand, then the nav property itself does not need to be included</p>
+<p>Mike: Revised proposal:<br>
+Prefix the advertisement with the primitive- or collection-valued property name and place it next to the property, similar to annotations on navigation properties:</p>
+<pre>
+  "NavProp#Model.SomeAction": {
+  "title": "Do Something",
+  "target": "Managers(22)/Employees/DoSomething"
+  },
+  "NavProp": [ ... ]
+</pre>
+<p>
+Services must only returned this syntax in an OData 4.01 response.<br>
+<br>
+These advertisement can appear any time.<br>
+They don't need to be included in an expand if not explicitly requested.<br>
+They must appear if explicitly requested (i.e., through expand that explicitly selects the action/function).<br>
+If only the function/action is selected in the expand, then the nav property itself does not need to be included</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-983 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-983 is RESOLVED as proposed</p>
+
+<h4>5.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-985" rel="noopener noreferrer" target="_blank">ODATA-985</a> - The HTTP Specification document referenced in the OData Protocol Spec has been obsoleted</h4>
+
+<p>Ralf: Proposal: <br>
+Substitute [RFC2617] by [RFC7617] Reschke, J., "The 'Basic' HTTP Authentication Scheme", RFC 7617, September 2015. http://www.ietf.org/rfc/rfc7617.txt</p>
+<p>Martin: But we still use the also obsolete RFC2617 (HTTP Authentication: Basic and Digest Access Authentication) in the protocol spec. <br>
+Documents updating RFC 2617 are <br>
+"Hypertext Transfer Protocol (HTTP/1.1): Authentication" ([RFC7235], defining the authentication framework), <br>
+"The 'Basic' HTTP Authentication Scheme" ([RFC7617] updating the definition of the "Basic" authentication scheme), <br>
+"HTTP Digest Access Authentication" ([RFC7616], updating the definition of the "Digest" authentication scheme), and <br>
+"HTTP Authentication-Info and Proxy-Authentication-Info Response Header Fields" ([RFC7615]). <br>
+Taken together, these four documents obsolete RFC2617. <br>
+<br>
+We have 3 references to RFC2617 in the document; all 3 are pointing to the "basic authentication". <br>
+--&gt; We should substitute RFC2617 by [RFC7617] Reschke, J., "The 'Basic' HTTP Authentication Scheme", RFC 7617, September 2015. http://www.ietf.org/rfc/rfc7617.txt <br>
+<br>
+There are no substantive changes from our perspective; the RFC7617 states: </p>
+<pre>
+"Changes from RFC 2617 
+
+   The scheme definition has been rewritten to be consistent with newer 
+   specifications such as [RFC7235]. 
+
+   The new authentication parameter 'charset' has been added. It is 
+   purely advisory, so existing implementations do not need to change, 
+   unless they want to take advantage of the additional information that 
+   previously wasn't available. 
+" 
+</pre>
+<p>
+I updated the proposal accordingly.</p>
+<p>Martin: Substitute [RFC2617] by [RFC7617] Reschke, J., "The 'Basic' HTTP Authentication Scheme", RFC 7617, September 2015. http://www.ietf.org/rfc/rfc7617.txt</p>
+<p><b>Mark</b>: I <b>move</b> that ODATA-985 be resolved as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-985 is RESOLVED as proposed</p>
+
+
+<h4>5.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-992" rel="noopener noreferrer" target="_blank">ODATA-992</a> - Prefer numeric representation of enumeration values</h4>
+
+<p>Ralf: Part 3: CSDL states that enumeration values are sorted and compared using their numeric value because it allows synonym symbolic names with the same numeric value. <br>
+<br>
+Part 3: CSDL also only allows symbolic values in annotations. <br>
+<br>
+JSON Format on the other hand states that the symbolic name, represented as a string, is preferred. <br>
+<br>
+This makes life unnecessarily complicated for clients to evaluate conditional annotation expressions based on enums as they can't compare enum values in annotations and payloads without internally translating them into numeric values, which they can only know after reading vocabulary files.</p>
+<p>Mike: leave enumeration types as they are. If no flags or synonyms/symbolic names are required/desired, use annotation Validation.AllowedValues instead.</p>
+<p>Mike: My Proposal would be:<br>
+Keep enumerations as-is; maps to programming enumerations and there has been a strong desire in the past to optimize for the string representation (the only reason we have underlying numeric values is for flags).<br>
+<br>
+Call out that services that want a discrete set of numeric should use AllowedValues.</p>
+<p>Ralf: ODATA-992 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-992 as proposed (leaving enums as they are and recommending allowedvalues for purely numeric representations). <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-992 is RESOLVED as proposed</p>
+
+<h3>5.2 Issues waiting for refined proposal</h3>
+
+<p>Ralf: Vocabularies: move forward on placing them into a separate work product and get "latest-version" links for them.</p>
+
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-743" rel="noopener noreferrer" target="_blank">ODATA-743</a> - Restructure Part 3: CSDL into CSDL Core, CSDL XML, and CSDL JSON</h4>
+
+<p>Mike: 16 changes from Part 1 &amp; 2 to Part 3 that would have to be changed to CSDL XML Format</p>
+<p>Ralf: Proposal: publish CSD01 without Part 3, reconsider this for CSD02</p>
+<p>Mike: For CSD01:<br>
+Update [OData-CSDL] normative reference to be to CSDL-XML.<br>
+<br>
+For CSD02:<br>
+Format-independent draft: https://www.oasis-open.org/committees/download.php/59121/odata-v4.01-wd01-part3-csdl-2016-10-12.docx<br>
+<br>
+Pure format spec draft (chapters 1 to 11): https://www.oasis-open.org/committees/download.php/59177/odata-csdl-xml-v4.01-wd01-min.docx</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-743 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-743 is RESOLVED as proposed</p>
+
+<h4>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-879" rel="noopener noreferrer" target="_blank">ODATA-879</a> - Support Arrays of Arrays</h4>
+
+<p>Ralf: Related to 5.ODATA-920 Specify overflow for int data types (-INF, INF, NaN)</p>
+
+
+<h2>6. Next meetings</h2>
+<p>Mike: Review proposals for JSON CSDL on November 3</p>
+
+<h3>6.1 Meeting following Thursday November  3, 2016 during 07:00-10:30 am PT</h3> 
+<p>Date and time of meeting agreed</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
