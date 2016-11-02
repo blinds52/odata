@@ -6,53 +6,38 @@
   https://www.oasis-open.org/committees/odata
 
   Chairs:
-  - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
 
   Editors:
-  - Ralf Handl (ralf.handl@sap.com), SAP AG
-  - Hubert Heijkers (hubert.heijkers@nl.ibm.com), IBM
-  - Gerald Krause (gerald.krause@sap.com), SAP AG
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
+  - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
   - Michael Pizzo (mikep@microsoft.com), Microsoft
-  - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
 
   Additional artifacts:
-  This CSDL document is one component of a Work Product that consists of:
-  - OData Extension for Data Aggregation Version 4.0
-  - OData Aggregation ABNF Construction Rules Version 4.0
-  - OData Aggregation ABNF Test Cases
-  - OData Aggregation Vocabulary (this document)
+  This vocabulary is one component of a Work Product that also includes the following vocabulary components:
+  - OData Core Vocabulary. Latest version: http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.xml.
+  - OData Measures Vocabulary. Latest version: http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Measures.V1.xml.
+  - OData Capabilities Vocabulary. Latest version: http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Capabilities.V1.xml.
+  - OData Validation Vocabulary. Latest version: http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Validation.V1.xml.
+  - OData Aggregation Vocabulary. Latest version: http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Aggretation.V1.xml.
 
   Related work:
-  This work product is related to:
-  - OData Version 4.0, a multi-part Work Product which includes:
-  - OData Version 4.0 Part 1: Protocol
-  - OData Version 4.0 Part 2: URL Conventions
-  - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
-  - OData ABNF Construction Rules Version 4.0
-  - OData ABNF Test Cases
-  - OData Core Vocabulary
-  - OData Measures Vocabulary
-  - OData Capabilities Vocabulary
-  - OData JSON Format Version 4.0
-  This specification replaces or supersedes:
-  - None
+  This vocabulary is related to:
+  - OData Version 4.01 Part 1: Protocol. Latest version: http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html.
+  - OData Version 4.01 Part 2: URL Conventions. Latest version: http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html.
+  - OData Version 4.01 Part 3: Common Schema Definition Language (CSDL). Latest version: http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part3-csdl.html.
+  - OData JSON Format Version 4.01. Latest version: http://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html.
 
-  Declared XML namespaces:
-  - none
+  This vocabulary replaces or supersedes:
+  - OData Extension for Data Aggregation Version 4.0 Aggregation Vocabulary.
 
   Abstract:
-  This specification adds basic grouping and aggregation functionality
-  (e.g. sum, min, and max) to the Open Data Protocol (OData) without
-  changing any of the base principles of OData.
-
-  Overview:
-  This document defines terms to describe which data in a given entity model
-  can be aggregated, and how.
+  This vocabulary defines terms to describe which data in a given entity model can be aggregated, and how.
 
 -->
 <edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
-  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/cs02/vocabularies/Org.OData.Core.V1.xml">
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.xml">
     <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -67,12 +52,11 @@
         </Annotation>
       </Term>
       <ComplexType Name="ApplySupportedType">
-        <Property Name="Transformations" Type="Collection(Edm.String)" Nullable="false" >
+        <Property Name="Transformations" Type="Collection(Edm.String)" Nullable="false">
           <Annotation Term="Core.Description" String="Transformations that can be used in $apply" />
         </Property>
-        <Property Name="CustomAggregationMethods" Type="Collection(Edm.String)" Nullable="false" >
-          <Annotation Term="Core.Description"
-            String="Qualified names of custom aggregation methods that can be used in aggregate(...with...)" />
+        <Property Name="CustomAggregationMethods" Type="Collection(Edm.String)" Nullable="false">
+          <Annotation Term="Core.Description" String="Qualified names of custom aggregation methods that can be used in aggregate(...with...)" />
         </Property>
         <Property Name="Rollup" DefaultValue="MultipleHierarchies" Type="Aggregation.RollupType">
           <Annotation Term="Core.Description" String="The service supports rollup hierarchies in a groupby transformation" />
@@ -113,8 +97,7 @@
       </Term>
 
       <Term Name="LeveledHierarchy" Type="Collection(Edm.PropertyPath)" Nullable="false" AppliesTo="EntityType ComplexType">
-        <Annotation Term="Core.Description"
-          String="Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy" />
+        <Annotation Term="Core.Description" String="Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy" />
       </Term>
 
       <Term Name="RecursiveHierarchy" Type="Aggregation.RecursiveHierarchyType" AppliesTo="EntityType ComplexType">
