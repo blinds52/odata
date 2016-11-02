@@ -123,14 +123,14 @@ collectionNavPath    = keyPredicate [ singleNavigation ]
                      / count
                      / ref
 
-keyPredicate     = simpleKey / compoundKey ;/ keyPathSegments
+keyPredicate     = simpleKey / compoundKey / keyPathSegments
 simpleKey        = OPEN ( parameterAlias / keyPropertyValue ) CLOSE
 compoundKey      = OPEN keyValuePair *( COMMA keyValuePair ) CLOSE
 keyValuePair     = ( primitiveKeyProperty / keyPropertyAlias  ) EQ ( parameterAlias / keyPropertyValue )
 keyPropertyValue = primitiveLiteral
 keyPropertyAlias = odataIdentifier
-;keyPathSegments  = 1*( "/" keyPathLiteral )
-;keyPathLiteral   = *pchar
+keyPathSegments  = 1*( "/" keyPathLiteral )
+keyPathLiteral   = *pchar
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
                    [ "/" propertyPath
