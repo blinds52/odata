@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #151 Thursday Nov 03, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_this_line __file__ |shasum -a 512 -->
+<!-- sha512_excluding_this_line='f46eaac5d20195c323e1d93fe98a02af4f6f273e99156a27c42ee28ed5c32698c512ec6ac4fc73abd9842938890b70c9efa0547fdedb3030cc23f9cf0e750d60"_OF_THIS_DOCUMENT' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #151 Thursday Nov 03, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-11-03 0700-1030 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susam Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41487">normative attendance sheet for this meeting (event_id=41487)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: New Jira issue: <br>
+<a href="https://issues.oasis-open.org/browse/ODATA-993" rel="noopener noreferrer" target="_blank">ODATA-993</a> - 14.2: Explicitly allow annotations on deleted entities<br>
+</p>
+<p>Agenda approved as published including the update</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from October 27, 2016 TC meeting #150</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59261/odata-meeting-150_on-20161027-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59261/odata-meeting-150_on-20161027-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items</h2>
+<h3>4.1 Action items due July 31, 2016</h3>
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Ralf: Shift until Mark Biamonte joins the call - skipped due to running out of time</p>
+<p>Action #0036 remains open.</p>
+
+<h2>5. Issues for V4.01_WD01 in New or Open state</h2>
+
+<h3>5.1 Issues ready for Resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-993" rel="noopener noreferrer" target="_blank">ODATA-993</a> - 14.2: Explicitly allow annotations on deleted entities</h4>
+
+<p>Ralf: The delta format identifies deleted entities via their entity id. <br>
+<br>
+For legacy systems that don't store the entity id and only know the underlying key values it would be helpful if the sender would annotate the deleted entity JSON objects with the original key values, e.g. </p>
+<pre>
+    { 
+      "@odata.context":"#Customers/$deletedEntity", 
+      "id":"Customers('ANTON')", 
+      "@Legacy.entityKey":{ 
+        "ID":"ANTON" 
+      }, 
+      "reason":"deleted" 
+    }
+</pre>
+<p>Mike: also allow for added links and deleted links.</p>
+<p>Mike: can see scenarios where entity references might need annotations</p>
+<p>Ralf: ODATA-993 is OPEN</p>
+<p>Ralf: Current text:<br>
+Annotations can be applied to any name/value pair in a JSON payload that represents a value of any type from the entity data model (see [OData-CSDL]).</p>
+<p>Ralf: New text:<br>
+Annotations can be applied to any name/value pair in a JSON payload.</p>
+<p>Mike: Updated proposal: <br>
+Support annotations in the following:<br>
+-AddedLinks<br>
+-DeletedLinks<br>
+-Deleted Entries<br>
+-References<br>
+<br>
+In JSON, clients should be prepared for annotations in any object and any name/value pair in a json payload. Clients should never error on an annotation.</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-993 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-993 is RESOLVED with the modified proposal</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-920" rel="noopener noreferrer" target="_blank">ODATA-920</a> - Specify overflow for int data types (-INF, INF, NaN)</h4>
+<p>Mike: Proposal 1:</p>
+<pre>
+"numbers" : [ 
+1, 
+2, 
+{"@odata.numericOverflow":"-INF"}, 
+4 
+]
+</pre>
+
+<pre>
+"numbers" : [ 
+     1, 
+     2, 
+     {
+        "@mycomment":"MyFavoriteNumber",
+        Value: 3
+      }, 
+     4 
+]
+</pre>
+
+<p>Mike: concern that annotating something now changes the structure of the JSON document</p>
+<p>Mike: also different from hand-crafted JSON</p>
+<pre>
+&gt;Term Name="annotations" Type="Collection(Edm.Untyped)"/> 
+
+{ 
+"myArray":[1,2,null,4,5], 
+"myArray@annotations":[null,null,{"@numericValueException":"NaN"},null,null} 
+}
+</pre>
+
+<p>Ralf: JSON Pointer style</p>
+<pre>
+{ 
+"myArray":[1,2,null,4,5], 
+"myArray/2@numericValueException":"NaN" 
+}
+</pre>
+
+<pre>
+{ 
+"myArray":[1,2,null,4,5], 
+"myArray@annotations":{2:{"@numericValueException":"NaN"}} 
+}
+</pre>
+<p>Ralf: JSON Schema:</p>
+<pre>
+"type":["number","null"]
+"type":["number","string","null"]
+"anyOf":[{"type":["number","null"]},{"type":"object"}]
+</pre>
+
+<p>Mike: 18.2:<br>
+When annotating a name/value pair for which the value is represented as a JSON array or primitive value, each annotation that applies to this name/value pair MUST be placed next to the annotated name/value pair and represented as a single name/value pair.</p>
+
+<p>Mark: differentiate between streaming and non-streaming, use in-line objects for streaming, separate array/map for non-streaming</p>
+
+<p>Mike: Annotating an array of arrays through expando-values:</p>
+<pre>
+"cells": [ 
+[ 
+{"foo":1,"bar":1}, 
+{"foo":2,"bar":2} 
+], 
+{ 
+"value": [ 
+{"foo":3,"bar":3}, 
+{"foo":4,"bar":4} 
+], 
+"@my.annotation":"myannotationvalue" 
+} 
+]
+</pre>
+
+<p>Ralf: Tentative consensus for placing annotations next to array values instead of injecting wrapper objects</p>
+<p>Mike: separately decide whether to keep @numericValueException or move back to -INF, INF, and NaN string values</p>
+<p>Ralf: <br>
+MyArray@odata.count: 3<br>
+MyArray/0@odata.count:2<br>
+MyArray/0/0@odata.count:42</p>
+<p>Hubert:<br>
+MyArray@odata.count:2<br>
+MyArray/0@odata.count:42<br>
+MyArray/1@odata.count:13</p>
+<p>Ralf:<br>
+MyArray[]@odata.count:[42,13]</p>
+<p>Mike: <br>
+"number":[1,2,3,null],<br>
+"number@annotated":[1,2,{"@myfavoritenumber":3},{"@numericValueException":"INF"}]<br>
+"number@":[1,2,{"@comment":"myfavoritenumber","Value":3},{"@numericValueException":"INF"}]</p>
+
+<p>Hubert: add odata preference for only serializing number@</p>
+<p>Mike: <br>
+$select=number@<br>
+$select=*@</p>
+<p>Ralf:<br>
+$select=number@Common.FieldControl</p>
+<p>Mike: <br>
+preference="annotated-values"<br>
+"number@":{"@myannotation":"myfavoritevalue","Value":3}?<br>
+if preference="annotationobjects", then always and only return annotated primitive values as objects (without the trailing "@")<br>
+(and arrays)</p>
+<p>Ralf: Current:<br>
+NavProp:[...]<br>
+NavProp@odata.count:41</p>
+<p>Ralf: Current: Future:<br>
+NavProp:{@odata.count:41,value:[...]}</p>
+<p>Hubert: "number@":{"odata.count":4, "Value":[1,2,{"@comment":"myfavoritenumber","Value":3},{"@numericValueException":"INF"}]}</p>
+<p>Mike: Working idea:</p>
+<pre>
+{
+    "number": 3
+    "number@ns.comment":"myfavoritenumber",
+    "numbers":[1,2,3,null],
+    "numbers@":[1,2,{"@ns.comment":"myfavoritenumber","Value":3},{"@numericValueException":"INF"}]
+}
+</pre>
+<p>With a new preference services could always and only return annotated primitive values as objects (without the trailing "@"):</p>
+<pre>
+{
+    "number": {"@ns.comment":"myfavoritenumber","Value":3],
+    "numbers":[1,2,{"@ns.comment":"myfavoritenumber","Value":3},{"@numericValueException":"INF"}]
+}
+</pre>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-964" rel="noopener noreferrer" target="_blank">ODATA-964</a> - Need to clarify nested delta representation</h4>
+
+<p>Mike: Partial Example: </p>
+<pre>
+{ 
+"@odata.type":"#Northwind.Manager", 
+"FirstName" : "Patricia", 
+"DirectReports@odata.contextUrl" : "#Employees(1)/DirectReports/$delta", 
+"DirectReports": [ 
+{ 
+"@odata.context":"#Employees/$deletedEntity", 
+"id":"Employees(3)", 
+"reason":"deleted" 
+},
+</pre>
+<p>Mike: Would context for deleted entity be: "#Employees/$deletedEntity" or "#Employees(1)/DirectReports/$deletedEntity"</p>
+<p>Mike: could shorten to "/$delta" and "/$deletedEntity"</p>
+<p>Hubert: simplify context urls to "$delta", "$deleteEntity" for nested context</p>
+<p>Mike: actually "#$delta" and "#$deletedEntity"</p>
+<p>Mike: might want to qualify with the set in order to be common with deleted entities outside of the nesting.</p>
+<p>Mike: Proposal:<br>
+Added/Deleted links only appear at the root.<br>
+<br>
+Nested content with "#delta" is applied as a delta. Entities are upserted, deleted entities are removed from the collection. If reason:deleted is specified, client knows the related entity is deleted, otherwise (in a non-containment case) all the client knows is that the entity is no longer a member of that collection.  The contextUrl for the nested deleted entity is the same as it would be in the flattened representation.</p>
+
+<p>Ralf: ODATA-964 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-964 as proposed. <b>Matt</b> seconds.</p>
+<p>Ralf: ODATA-964 is RESOLVED as proposed</p>
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-980" rel="noopener noreferrer" target="_blank">ODATA-980</a> - SchemaVersion header, $SchemaVersion query option, or root URL versioning</h4>
+
+<p>Mike: example:</p>
+<pre>
+{ 
+"@odata.type":"myns.myComplexType, 
+"@SchemaVersion":"1.0", 
+"prop1":1 
+}
+</pre>
+<p>Mike: to annotate a property:</p>
+<pre>
+{ 
+"prop1@odata.type":"myns.myComplexType, 
+"prop1@SchemaVersion":"1.0", 
+"prop1":1 
+}
+</pre>
+<p>Martin: schema version as a request header doesn't go well with caching</p>
+<p>Ralf: Purpose 1: server tells client which schema version was used to generate response</p>
+<p>Ralf: Best served by an annotation</p>
+<p>Ralf: Purpose 2: client tells server which schema version it wants to get</p>
+<p>Ralf: Maybe better served by a query option than a header</p>
+<p>Mike: Revised proposal:<br>
+<br>
+Proposal: for CSD01, clarify how the type is annotated, as below, leaving the rest of the semantics as in the current draft.  Annotations are a nice way for the client to know what schema version was used without having to parse a URL and get the query option. For CSD02, consider replacing the SchemaVersion request header with a query option.</p>
+
+<p><b>Martin</b>: I <b>move</b> to resolve ODATA-980 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-980 is RESOLVED with the revised proposal</p>
+
+<p>Ralf: New issue <a href="https://issues.oasis-open.org/browse/ODATA-994" rel="noopener noreferrer" target="_blank">ODATA-994</a> - consider replacing SchemaVersion headerwith $SchemaVersion query option, or root URL versioning</p>
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-974" rel="noopener noreferrer" target="_blank">ODATA-974</a> - Flesh out recommendations around OAuth support in OData</h4>
+<p>Nothing noted in this regard during meeting.</p>
+
+<h4>5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-965" rel="noopener noreferrer" target="_blank">ODATA-965</a> - UpdateGeoJSON Reference to RFC7946</h4>
+
+<p>Stefan: It should be a breeze to replace the reference, as we took care to only flesh out the prose, clean up examples during the RFC process, etc. - but I will need to go over the data types we use to e.g. to be sure we do not have problems with inner rings and other specialties that were set straight during the community discussions - sorry for being late, but will update the issue accordingly before Monday - so we can put it on next Thursdays agenda.</p>
+
+
+<h2>6. Next meetings</h2>
+<h3>6.1 Meeting following Thursday November 10, 2016 during 06:30-10:00 am PT</h3> 
+<p>Date and time of meeting agreed</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
