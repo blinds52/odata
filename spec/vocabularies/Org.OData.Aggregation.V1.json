@@ -1,5 +1,4 @@
 {
-    "x-odata-version": "4.0",
     "swagger": "2.0",
     "info": {
         "title": "Terms to describe which data in a given entity model can be aggregated, and how.",
@@ -26,7 +25,6 @@
                 },
                 "Rollup": {
                     "$ref": "#/definitions/Org.OData.Aggregation.V1.RollupType",
-                    "x-nullable": true,
                     "default": "MultipleHierarchies",
                     "description": "The service supports rollup hierarchies in a groupby transformation"
                 },
@@ -35,7 +33,6 @@
                         "boolean",
                         "null"
                     ],
-                    "x-nullable": true,
                     "default": false,
                     "description": "Only properties tagged as Groupable can be used in the groupby transformation, and only those tagged as Aggregatable can be used in the aggregate transformation"
                 }
@@ -65,16 +62,11 @@
                 },
                 "DistanceFromRootProperty": {
                     "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath",
-                    "x-nullable": true,
                     "description": "Property holding the number of edges between the node and the root node"
                 },
                 "IsLeafProperty": {
                     "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath",
-                    "x-nullable": true,
-                    "description": "Property indicating whether the node is a leaf of the hierarchy",
-                    "x-annotations": {
-                        "@Core.RequiresType": "Edm.Boolean"
-                    }
+                    "description": "Property indicating whether the node is a leaf of the hierarchy"
                 }
             },
             "title": "RecursiveHierarchyType"
@@ -90,284 +82,6 @@
                 }
             },
             "title": "AvailableOnAggregatesType"
-        }
-    },
-    "x-schemas": {
-        "Org.OData.Core.V1": {
-            "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json"
-        },
-        "Core": {
-            "aliasFor": "Org.OData.Core.V1"
-        },
-        "Aggregation": {
-            "aliasFor": "Org.OData.Aggregation.V1"
-        },
-        "Org.OData.Aggregation.V1": {
-            "description": "Terms to describe which data in a given entity model can be aggregated, and how."
-        }
-    },
-    "x-functions": {
-        "Org.OData.Aggregation.V1.isroot": [
-            {
-                "parameters": [
-                    {
-                        "name": "Entity",
-                        "parameterType": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.EntityType"
-                        }
-                    },
-                    {
-                        "name": "Hierarchy",
-                        "parameterType": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "x-nullable": true
-                },
-                "isBound": true,
-                "description": "Returns true, if and only if the value of the node property of the specified hierarchy is the root of the hierarchy"
-            }
-        ],
-        "Org.OData.Aggregation.V1.isdescendant": [
-            {
-                "parameters": [
-                    {
-                        "name": "Entity",
-                        "parameterType": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.EntityType"
-                        }
-                    },
-                    {
-                        "name": "Hierarchy",
-                        "parameterType": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Node",
-                        "parameterType": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PrimitiveType"
-                        }
-                    },
-                    {
-                        "name": "MaxDistance",
-                        "parameterType": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "x-nullable": true,
-                            "format": "int16"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "x-nullable": true
-                },
-                "isBound": true,
-                "description": "Returns true, if and only if the value of the node property of the specified hierarchy is a descendant of the given parent node with a distance of less than or equal to the optionally specified maximum distance"
-            }
-        ],
-        "Org.OData.Aggregation.V1.isancestor": [
-            {
-                "parameters": [
-                    {
-                        "name": "Entity",
-                        "parameterType": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.EntityType"
-                        }
-                    },
-                    {
-                        "name": "Hierarchy",
-                        "parameterType": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Node",
-                        "parameterType": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PrimitiveType"
-                        }
-                    },
-                    {
-                        "name": "MaxDistance",
-                        "parameterType": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "x-nullable": true,
-                            "format": "int16"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "x-nullable": true
-                },
-                "isBound": true,
-                "description": "Returns true, if and only if the value of the node property of the specified hierarchy is an ancestor of the given child node with a distance of less than or equal to the optionally specified maximum distance"
-            }
-        ],
-        "Org.OData.Aggregation.V1.issibling": [
-            {
-                "parameters": [
-                    {
-                        "name": "Entity",
-                        "parameterType": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.EntityType"
-                        }
-                    },
-                    {
-                        "name": "Hierarchy",
-                        "parameterType": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Node",
-                        "parameterType": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PrimitiveType"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "x-nullable": true
-                },
-                "isBound": true,
-                "description": "Returns true, if and only if the value of the node property of the specified hierarchy has the same parent node as the specified node"
-            }
-        ],
-        "Org.OData.Aggregation.V1.isleaf": [
-            {
-                "parameters": [
-                    {
-                        "name": "Entity",
-                        "parameterType": {
-                            "$ref": "#/definitions/ Edm.EntityType"
-                        }
-                    },
-                    {
-                        "name": "Hierarchy",
-                        "parameterType": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ],
-                    "x-nullable": true
-                },
-                "isBound": true,
-                "description": "Returns true, if and only if the value of the node property of the specified hierarchy has no descendants"
-            }
-        ]
-    },
-    "x-terms": {
-        "Org.OData.Aggregation.V1.ApplySupported": {
-            "$ref": "#/definitions/Org.OData.Aggregation.V1.ApplySupportedType",
-            "x-nullable": true,
-            "appliesTo": [
-                "EntityType",
-                "ComplexType",
-                "EntityContainer"
-            ],
-            "description": "This structured type or entity container supports the $apply system query option"
-        },
-        "Org.OData.Aggregation.V1.Groupable": {
-            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": [
-                "Property",
-                "NavigationProperty"
-            ],
-            "description": "This property can be used in the groupby transformation"
-        },
-        "Org.OData.Aggregation.V1.Aggregatable": {
-            "$ref": "http://localhost/examples/Org.OData.Core.V1.openapi.json#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": [
-                "Property",
-                "NavigationProperty"
-            ],
-            "description": "This property can be used in the aggregate transformation"
-        },
-        "Org.OData.Aggregation.V1.CustomAggregate": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "x-nullable": true,
-            "appliesTo": [
-                "EntityType",
-                "ComplexType",
-                "EntityContainer"
-            ],
-            "description": "Dynamic property that can be used in the aggregate transformation",
-            "@Core.LongDescription": "This term MUST be applied with a Qualifier, the Qualifier value is the name of the dynamic property. The value of the annotation MUST be the qualified name of a primitive type. The aggregated values will be of that type."
-        },
-        "Org.OData.Aggregation.V1.ContextDefiningProperties": {
-            "type": "array",
-            "items": {
-                "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
-            },
-            "appliesTo": [
-                "Property",
-                "Annotation"
-            ],
-            "description": "The annotated property or custom aggregate is only well-defined in the context of these properties",
-            "@Core.LongDescription": "The context-defining properties need either be part of the result entities, or be restricted to a single value by a pre-filter operation. Examples are postal codes within a country, or monetary amounts whose context is the unit of currency."
-        },
-        "Org.OData.Aggregation.V1.LeveledHierarchy": {
-            "type": "array",
-            "items": {
-                "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
-            },
-            "appliesTo": [
-                "EntityType",
-                "ComplexType"
-            ],
-            "description": "Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy"
-        },
-        "Org.OData.Aggregation.V1.RecursiveHierarchy": {
-            "$ref": "#/definitions/Org.OData.Aggregation.V1.RecursiveHierarchyType",
-            "x-nullable": true,
-            "appliesTo": [
-                "EntityType",
-                "ComplexType"
-            ],
-            "description": "Defines a recursive hierarchy."
-        },
-        "Org.OData.Aggregation.V1.AvailableOnAggregates": {
-            "$ref": "#/definitions/Org.OData.Aggregation.V1.AvailableOnAggregatesType",
-            "x-nullable": true,
-            "appliesTo": [
-                "Action",
-                "Function"
-            ],
-            "description": "This action or function is available on aggregated entities if the RequiredProperties are still defined"
         }
     },
     "paths": {

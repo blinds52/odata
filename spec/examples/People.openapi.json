@@ -1,5 +1,4 @@
 {
-    "x-odata-version": "4.0",
     "swagger": "2.0",
     "info": {
         "title": "OData Service for namespace PeopleService",
@@ -31,9 +30,6 @@
     "definitions": {
         "PeopleService.Supplier": {
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -43,17 +39,13 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Address": {
-                    "$ref": "#/definitions/PeopleService.Address",
-                    "x-nullable": true
+                    "$ref": "#/definitions/PeopleService.Address"
                 },
                 "Location": {
-                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
-                    "x-nullable": true,
-                    "x-srid": "variable"
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint"
                 },
                 "Concurrency": {
                     "type": "integer",
@@ -63,9 +55,6 @@
                     "type": "array",
                     "items": {
                         "$ref": "http://localhost/examples/Products.openapi.json#/definitions/ProductService.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Supplier"
                     }
                 }
             },
@@ -78,45 +67,37 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "City": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "State": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "ZipCode": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Country": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 }
             },
             "title": "Address"
         },
         "PeopleService.Person": {
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -126,21 +107,15 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "PersonDetail": {
-                    "$ref": "#/definitions/PeopleService.PersonDetail",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Person"
-                    }
+                    "$ref": "#/definitions/PeopleService.PersonDetail"
                 }
             },
             "title": "Person"
         },
         "PeopleService.Customer": {
-            "x-baseType": "PeopleService.Person",
             "allOf": [
                 {
                     "$ref": "#/definitions/PeopleService.Person"
@@ -162,7 +137,6 @@
             ]
         },
         "PeopleService.Employee": {
-            "x-baseType": "PeopleService.Person",
             "allOf": [
                 {
                     "$ref": "#/definitions/PeopleService.Person"
@@ -195,9 +169,6 @@
         },
         "PeopleService.PersonDetail": {
             "type": "object",
-            "x-keys": [
-                "PersonID"
-            ],
             "properties": {
                 "PersonID": {
                     "type": "integer",
@@ -214,87 +185,19 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Address": {
-                    "$ref": "#/definitions/PeopleService.Address",
-                    "x-nullable": true
+                    "$ref": "#/definitions/PeopleService.Address"
                 },
                 "Photo": {
                     "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.Stream"
                 },
                 "Person": {
-                    "$ref": "#/definitions/PeopleService.Person",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "PersonDetail"
-                    }
+                    "$ref": "#/definitions/PeopleService.Person"
                 }
             },
             "title": "PersonDetail"
-        }
-    },
-    "x-schemas": {
-        "ProductService": {
-            "uri": "http://localhost/examples/Products.openapi.json"
-        },
-        "PeopleService": {
-            "annotations": {
-                "PeopleService.Container": {
-                    "@Org.OData.Display.V1.Description": "This is a sample OData service with vocabularies"
-                },
-                "PeopleService.Product": {
-                    "@Org.OData.Display.V1.Description": "All Products available in the online store"
-                },
-                "PeopleService.Product/Name": {
-                    "@Org.OData.Display.V1.DisplayName": "Product Name"
-                },
-                "PeopleService.Container/Suppliers": {
-                    "@Org.OData.Publication.V1.PublisherName": "Microsoft Corp.",
-                    "@Org.OData.Publication.V1.PublisherId": "MSFT",
-                    "@Org.OData.Publication.V1.Keywords": "Inventory, Supplier, Advertisers, Sales, Finance",
-                    "@Org.OData.Publication.V1.AttributionUrl": "http://www.odata.org/",
-                    "@Org.OData.Publication.V1.AttributionDescription": "All rights reserved",
-                    "@Org.OData.Publication.V1.DocumentationUrl ": "http://www.odata.org/",
-                    "@Org.OData.Publication.V1.TermsOfUseUrl": "All rights reserved",
-                    "@Org.OData.Publication.V1.PrivacyPolicyUrl": "http://www.odata.org/",
-                    "@Org.OData.Publication.V1.LastModified": "4/2/2013",
-                    "@Org.OData.Publication.V1.ImageUrl ": "http://www.odata.org/"
-                }
-            }
-        }
-    },
-    "x-entityContainer": {
-        "name": "Container",
-        "resources": {
-            "Suppliers": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/PeopleService.Supplier"
-                },
-                "navigationPropertyBindings": {
-                    "Products": "ProductService.Container.Products"
-                }
-            },
-            "People": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/PeopleService.Person"
-                },
-                "navigationPropertyBindings": {
-                    "PersonDetail": "PersonDetails"
-                }
-            },
-            "PersonDetails": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/PeopleService.PersonDetail"
-                },
-                "navigationPropertyBindings": {
-                    "Person": "Persons"
-                }
-            }
         }
     },
     "paths": {
