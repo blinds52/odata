@@ -1,5 +1,4 @@
 {
-    "x-odata-version": "4.0",
     "swagger": "2.0",
     "info": {
         "title": "OData Service for namespace ODataDemo",
@@ -39,10 +38,6 @@
     "definitions": {
         "ODataDemo.Product": {
             "type": "object",
-            "x-mediaEntity": true,
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -51,18 +46,13 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true,
-                    "x-annotations": {
-                        "@Core.IsLanguageDependent": true
-                    }
+                    ]
                 },
                 "ReleaseDate": {
                     "type": [
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "date"
                 },
                 "DiscontinuedDate": {
@@ -70,7 +60,6 @@
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "date"
                 },
                 "Rating": {
@@ -78,7 +67,6 @@
                         "integer",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "int32"
                 },
                 "Price": {
@@ -87,65 +75,39 @@
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "decimal",
-                    "multipleOf": 1,
-                    "x-annotations": {
-                        "@Org.OData.Measures.V1.ISOCurrency": {
-                            "@path": "Currency"
-                        }
-                    }
+                    "multipleOf": 1
                 },
                 "Currency": {
                     "type": [
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "maxLength": 3
                 },
                 "Category": {
-                    "$ref": "#/definitions/ODataDemo.Category",
-                    "x-relationship": {
-                        "partner": "Products"
-                    }
+                    "$ref": "#/definitions/ODataDemo.Category"
                 },
                 "Supplier": {
-                    "$ref": "#/definitions/ODataDemo.Supplier",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Products"
-                    }
+                    "$ref": "#/definitions/ODataDemo.Supplier"
                 }
             },
             "title": "Product"
         },
         "ODataDemo.Category": {
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
                     "format": "int32"
                 },
                 "Name": {
-                    "type": "string",
-                    "x-annotations": {
-                        "@Core.IsLanguageDependent": true
-                    }
+                    "type": "string"
                 },
                 "Products": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Category",
-                        "onDelete": {
-                            "action": "Cascade"
-                        }
                     }
                 }
             },
@@ -153,9 +115,6 @@
         },
         "ODataDemo.Supplier": {
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -164,8 +123,7 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Address": {
                     "$ref": "#/definitions/ODataDemo.Address"
@@ -178,9 +136,6 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Supplier"
                     }
                 }
             },
@@ -188,9 +143,6 @@
         },
         "ODataDemo.Country": {
             "type": "object",
-            "x-keys": [
-                "Code"
-            ],
             "properties": {
                 "Code": {
                     "type": "string",
@@ -200,8 +152,7 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 }
             },
             "title": "Country"
@@ -213,152 +164,37 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "City": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "State": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "ZipCode": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "CountryName": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Country": {
-                    "$ref": "#/definitions/ODataDemo.Country",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "referentialConstraints": {
-                            "CountryName": {
-                                "referencedProperty": "Name"
-                            }
-                        }
-                    }
-                }
-            },
-            "title": "Address"
-        }
-    },
-    "x-schemas": {
-        "Org.OData.Core.V1": {
-            "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json"
-        },
-        "Core": {
-            "aliasFor": "Org.OData.Core.V1"
-        },
-        "Org.OData.Measures.V1": {
-            "uri": "http://localhost/examples/Org.OData.Measures.V1.openapi.json"
-        },
-        "UoM": {
-            "aliasFor": "Org.OData.Measures.V1"
-        },
-        "ODataDemo": {
-
-        }
-    },
-    "x-functions": {
-        "ODataDemo.ProductsByRating": [
-            {
-                "parameters": [
-                    {
-                        "name": "Rating",
-                        "parameterType": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "x-nullable": true,
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    }
-                }
-            }
-        ]
-    },
-    "x-entityContainer": {
-        "name": "DemoService",
-        "resources": {
-            "Products": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Product"
-                },
-                "navigationPropertyBindings": {
-                    "Category": "Categories"
-                }
-            },
-            "Categories": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Category"
-                },
-                "navigationPropertyBindings": {
-                    "Products": "Products"
-                },
-                "description": "Product Categories"
-            },
-            "Suppliers": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Supplier"
-                },
-                "navigationPropertyBindings": {
-                    "Products": "Products",
-                    "Address/Country": "Countries"
-                },
-                "@Core.OptimisticConcurrency": [
-                    {
-                        "@propertyPath": "Concurrency"
-                    }
-                ]
-            },
-            "MainSupplier": {
-                "kind": "Singleton",
-                "type": {
-                    "$ref": "#/definitions/ODataDemo.Supplier"
-                },
-                "navigationPropertyBindings": {
-                    "Products": "Products"
-                },
-                "description": "Primary Supplier"
-            },
-            "Countries": {
-                "kind": "EntitySet",
-                "entityType": {
                     "$ref": "#/definitions/ODataDemo.Country"
                 }
             },
-            "ProductsByRating": {
-                "kind": "FunctionImport",
-                "entitySet": "Products",
-                "function": "ODataDemo.ProductsByRating"
-            }
+            "title": "Address"
         }
     },
     "paths": {
@@ -1382,7 +1218,6 @@
                         "in": "path",
                         "required": true,
                         "type": "integer",
-                        "x-nullable": true,
                         "format": "int32"
                     }
                 ],

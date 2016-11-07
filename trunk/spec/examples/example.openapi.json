@@ -1,5 +1,4 @@
 {
-    "x-odata-version": "4.0",
     "swagger": "2.0",
     "info": {
         "title": "OData Service for namespace ODataDemo",
@@ -43,9 +42,6 @@
     "definitions": {
         "ODataDemo.Product": {
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -55,15 +51,13 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Description": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "ReleaseDate": {
                     "type": "string",
@@ -74,7 +68,6 @@
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "date-time"
                 },
                 "Rating": {
@@ -92,30 +85,18 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ODataDemo.Category"
-                    },
-                    "x-relationship": {
-                        "partner": "Products"
                     }
                 },
                 "Supplier": {
-                    "$ref": "#/definitions/ODataDemo.Supplier",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Products"
-                    }
+                    "$ref": "#/definitions/ODataDemo.Supplier"
                 },
                 "ProductDetail": {
-                    "$ref": "#/definitions/ODataDemo.ProductDetail",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Product"
-                    }
+                    "$ref": "#/definitions/ODataDemo.ProductDetail"
                 }
             },
             "title": "Product"
         },
         "ODataDemo.FeaturedProduct": {
-            "x-baseType": "ODataDemo.Product",
             "allOf": [
                 {
                     "$ref": "#/definitions/ODataDemo.Product"
@@ -124,11 +105,7 @@
                     "type": "object",
                     "properties": {
                         "Advertisement": {
-                            "$ref": "#/definitions/ODataDemo.Advertisement",
-                            "x-nullable": true,
-                            "x-relationship": {
-                                "partner": "FeaturedProduct"
-                            }
+                            "$ref": "#/definitions/ODataDemo.Advertisement"
                         }
                     },
                     "title": "FeaturedProduct"
@@ -137,9 +114,6 @@
         },
         "ODataDemo.ProductDetail": {
             "type": "object",
-            "x-keys": [
-                "ProductID"
-            ],
             "properties": {
                 "ProductID": {
                     "type": "integer",
@@ -149,25 +123,16 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Product": {
-                    "$ref": "#/definitions/ODataDemo.Product",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "ProductDetail"
-                    }
+                    "$ref": "#/definitions/ODataDemo.Product"
                 }
             },
             "title": "ProductDetail"
         },
         "ODataDemo.Category": {
             "type": "object",
-            "x-openType": true,
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -177,16 +142,12 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Products": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Categories"
                     }
                 }
             },
@@ -194,9 +155,6 @@
         },
         "ODataDemo.Supplier": {
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -206,17 +164,13 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Address": {
-                    "$ref": "#/definitions/ODataDemo.Address",
-                    "x-nullable": true
+                    "$ref": "#/definitions/ODataDemo.Address"
                 },
                 "Location": {
-                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint",
-                    "x-nullable": true,
-                    "x-srid": "variable"
+                    "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.GeographyPoint"
                 },
                 "Concurrency": {
                     "type": "integer",
@@ -226,9 +180,6 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Supplier"
                     }
                 }
             },
@@ -241,45 +192,37 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "City": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "State": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "ZipCode": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Country": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 }
             },
             "title": "Address"
         },
         "ODataDemo.Person": {
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -289,21 +232,15 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "PersonDetail": {
-                    "$ref": "#/definitions/ODataDemo.PersonDetail",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Person"
-                    }
+                    "$ref": "#/definitions/ODataDemo.PersonDetail"
                 }
             },
             "title": "Person"
         },
         "ODataDemo.Customer": {
-            "x-baseType": "ODataDemo.Person",
             "allOf": [
                 {
                     "$ref": "#/definitions/ODataDemo.Person"
@@ -325,7 +262,6 @@
             ]
         },
         "ODataDemo.Employee": {
-            "x-baseType": "ODataDemo.Person",
             "allOf": [
                 {
                     "$ref": "#/definitions/ODataDemo.Person"
@@ -358,9 +294,6 @@
         },
         "ODataDemo.PersonDetail": {
             "type": "object",
-            "x-keys": [
-                "PersonID"
-            ],
             "properties": {
                 "PersonID": {
                     "type": "integer",
@@ -377,32 +310,22 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Address": {
-                    "$ref": "#/definitions/ODataDemo.Address",
-                    "x-nullable": true
+                    "$ref": "#/definitions/ODataDemo.Address"
                 },
                 "Photo": {
                     "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.Stream"
                 },
                 "Person": {
-                    "$ref": "#/definitions/ODataDemo.Person",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "PersonDetail"
-                    }
+                    "$ref": "#/definitions/ODataDemo.Person"
                 }
             },
             "title": "PersonDetail"
         },
         "ODataDemo.Advertisement": {
             "type": "object",
-            "x-mediaEntity": true,
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string",
@@ -412,171 +335,17 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "AirDate": {
                     "type": "string",
                     "format": "date-time"
                 },
                 "FeaturedProduct": {
-                    "$ref": "#/definitions/ODataDemo.FeaturedProduct",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Advertisement"
-                    }
+                    "$ref": "#/definitions/ODataDemo.FeaturedProduct"
                 }
             },
             "title": "Advertisement"
-        }
-    },
-    "x-schemas": {
-        "ODataDemo": {
-            "annotations": {
-                "ODataDemo.DemoService": {
-                    "@Org.OData.Display.V1.Description": "This is a sample OData service with vocabularies"
-                },
-                "ODataDemo.Product": {
-                    "@Org.OData.Display.V1.Description": "All Products available in the online store"
-                },
-                "ODataDemo.Product/Name": {
-                    "@Org.OData.Display.V1.DisplayName": "Product Name"
-                },
-                "ODataDemo.DemoService/Suppliers": {
-                    "@Org.OData.Publication.V1.PublisherName": "Microsoft Corp.",
-                    "@Org.OData.Publication.V1.PublisherId": "MSFT",
-                    "@Org.OData.Publication.V1.Keywords": "Inventory, Supplier, Advertisers, Sales, Finance",
-                    "@Org.OData.Publication.V1.AttributionUrl": "http://www.odata.org/",
-                    "@Org.OData.Publication.V1.AttributionDescription": "All rights reserved",
-                    "@Org.OData.Publication.V1.DocumentationUrl ": "http://www.odata.org/",
-                    "@Org.OData.Publication.V1.TermsOfUseUrl": "All rights reserved",
-                    "@Org.OData.Publication.V1.PrivacyPolicyUrl": "http://www.odata.org/",
-                    "@Org.OData.Publication.V1.LastModified": "4/2/2013",
-                    "@Org.OData.Publication.V1.ImageUrl ": "http://www.odata.org/"
-                }
-            }
-        }
-    },
-    "x-actions": {
-        "ODataDemo.Discount": [
-            {
-                "parameters": [
-                    {
-                        "name": "product",
-                        "parameterType": {
-                            "$ref": "#/definitions/ODataDemo.Product",
-                            "x-nullable": true
-                        }
-                    },
-                    {
-                        "name": "discountPercentage",
-                        "parameterType": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "double"
-                },
-                "isBound": true
-            }
-        ],
-        "ODataDemo.IncreaseSalaries": [
-            {
-                "parameters": [
-                    {
-                        "name": "percentage",
-                        "parameterType": {
-                            "type": [
-                                "number",
-                                "string"
-                            ],
-                            "format": "decimal",
-                            "x-scale": "variable"
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    "x-entityContainer": {
-        "name": "DemoService",
-        "resources": {
-            "Products": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Product"
-                },
-                "navigationPropertyBindings": {
-                    "ODataDemo.FeaturedProduct/Advertisement": "Advertisements",
-                    "Categories": "Categories",
-                    "Supplier": "Suppliers",
-                    "ProductDetail": "ProductDetails"
-                }
-            },
-            "ProductDetails": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.ProductDetail"
-                },
-                "navigationPropertyBindings": {
-                    "Product": "Products"
-                }
-            },
-            "Categories": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Category"
-                },
-                "navigationPropertyBindings": {
-                    "Products": "Products"
-                }
-            },
-            "Suppliers": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Supplier"
-                },
-                "navigationPropertyBindings": {
-                    "Products": "Products"
-                }
-            },
-            "Persons": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Person"
-                },
-                "navigationPropertyBindings": {
-                    "PersonDetail": "PersonDetails"
-                }
-            },
-            "PersonDetails": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.PersonDetail"
-                },
-                "navigationPropertyBindings": {
-                    "Person": "Persons"
-                }
-            },
-            "Advertisements": {
-                "kind": "EntitySet",
-                "entityType": {
-                    "$ref": "#/definitions/ODataDemo.Advertisement"
-                },
-                "navigationPropertyBindings": {
-                    "FeaturedProduct": "Products"
-                }
-            },
-            "IncreaseSalaries": {
-                "kind": "ActionImport",
-                "action": "ODataDemo.IncreaseSalaries"
-            }
         }
     },
     "paths": {
@@ -2344,8 +2113,7 @@
                                         "number",
                                         "string"
                                     ],
-                                    "format": "decimal",
-                                    "x-scale": "variable"
+                                    "format": "decimal"
                                 }
                             }
                         }

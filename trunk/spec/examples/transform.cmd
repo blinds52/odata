@@ -26,8 +26,8 @@ exit /b
 
   echo %~n1
 
-  @rem -PARAM odata-schema http://localhost/schemas/edm.json
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM diagram YES -PARAM extensions YES -IN %1 -OUT %~n1.jsontmp
+  @rem -PARAM extensions YES -PARAM odata-schema http://localhost/schemas/edm.json
+  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-openapi.xsl -PARAM scheme %2 -PARAM host %3 -PARAM basePath %4 -PARAM diagram YES -IN %1 -OUT %~n1.jsontmp
 
   c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.jsontmp > %~n1.openapi.json
   if not errorlevel 1 (
