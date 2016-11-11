@@ -1,0 +1,130 @@
+{
+    "$Version": "4.0",
+    "$EntityContainer": "org.example.odata.salesservice.Default",
+    "$Reference": {
+        "http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/vocabularies/Org.OData.Aggregation.V1.xml": {
+            "$Include": [
+                {
+                    "Aggregation": "Org.OData.Aggregation.V1."
+                }
+            ]
+        }
+    },
+    "org.example.odata.salesservice.": {
+        "$kind": "Schema",
+        "$Annotations": {
+            "SalesModel.Product": {
+                "@Aggregation.LeveledHierarchy#ProductHierarchy": {
+                    "Levels": [
+                        "Category/Name",
+                        "Name"
+                    ]
+                }
+            },
+            "SalesModel.Time": {
+                "@Aggregation.LeveledHierarchy#TimeHierarchy": {
+                    "Levels": [
+                        "Year",
+                        "Quarter",
+                        "Month"
+                    ]
+                }
+            },
+            "SalesModel.SalesOrganization": {
+                "@Aggregation.RecursiveHierarchy#SalesOrgHierarchy": {
+                    "NodeProperty": "ID",
+                    "ParentNodeProperty": "Superordinate/ID"
+                }
+            }
+        }
+    },
+    "org.example.odata.salesservice.Currency": {
+        "$kind": "EntityType",
+        "$Key": [
+            "Code"
+        ],
+        "Code": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "@Aggregation.Groupable": true
+        },
+        "Name": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "@Core.IsLanguageDependent": true
+        }
+    },
+    "org.example.odata.salesservice.Sales": {
+        "$kind": "EntityType",
+        "$Key": [
+            "ID"
+        ],
+        "ID": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false
+        },
+        "Amount": {
+            "$kind": "Property",
+            "$Type": "Edm.Decimal",
+            "$Scale": "variable",
+            "@Aggregation.Aggregateable": true,
+            "@Aggregation.ContextDefiningProperties": [
+                {
+                    "$PropertyPath": "Currency/Code"
+                }
+            ]
+        },
+        "Customer": {
+            "$kind": "NavigationProperty",
+            "$Type": "org.example.odata.salesservice.Customer",
+            "$Nullable": false
+        },
+        "Currency": {
+            "$kind": "NavigationProperty",
+            "$Type": "org.example.odata.salesservice.Currency",
+            "$Nullable": false
+        },
+        "Product": {
+            "$kind": "NavigationProperty",
+            "$Type": "org.example.odata.salesservice.Product",
+            "$Nullable": false
+        },
+        "SalesOrganization": {
+            "$kind": "NavigationProperty",
+            "$Type": "org.example.odata.salesservice.SalesOrganization",
+            "$Nullable": false
+        },
+        "Time": {
+            "$kind": "NavigationProperty",
+            "$Type": "org.example.odata.salesservice.Time",
+            "$Nullable": false
+        },
+        "@Aggregation.CustomAggregate#Forecast": "Edm.Decimal",
+        "@Aggregation.CustomAggregate#Forecast@Aggregation.ContextDefiningProperties": [
+            {
+                "$PropertyPath": "Currency/Code"
+            }
+        ]
+    },
+    "org.example.odata.salesservice.Default": {
+        "$kind": "EntityContainer",
+        "@Aggregation.ApplySupported": {
+            "PropertyRestrictions": true
+        },
+        "@Aggregation.CustomAggregate#Budget": "Edm.Decimal",
+        "@Aggregation.CustomAggregate#Budget@Aggregation.ContextDefiningProperties": [
+            {
+                "$PropertyPath": "Currencies/Code"
+            }
+        ],
+        "Sales": {
+            "$kind": "EntitySet",
+            "$Type": "org.example.odata.salesservice.Sales"
+        },
+        "Currencies": {
+            "$kind": "EntitySet",
+            "$Type": "org.example.odata.salesservice.Currency"
+        }
+    }
+}
