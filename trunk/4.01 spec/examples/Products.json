@@ -1,0 +1,211 @@
+{
+    "$Version": "4.0",
+    "$EntityContainer": "ProductService.Container",
+    "$Reference": {
+        "http://localhost/examples/People.xml": {
+            "$Include": [
+                "PeopleService."
+            ]
+        }
+    },
+    "ProductService.": {
+        "$kind": "Schema",
+        "$Annotations": {
+            "ProductService.Container": {
+                "@Org.OData.Display.V1.Description": "This is a sample OData service with vocabularies"
+            },
+            "ProductService.Product": {
+                "@Org.OData.Display.V1.Description": "All Products available in the online store"
+            },
+            "ProductService.Product/Name": {
+                "@Org.OData.Display.V1.DisplayName": "Product Name"
+            }
+        }
+    },
+    "ProductService.Product": {
+        "$kind": "EntityType",
+        "$Key": [
+            "ID"
+        ],
+        "ID": {
+            "$kind": "Property",
+            "$Type": "Edm.Int32",
+            "$Nullable": false
+        },
+        "Name": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "Description": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "ReleaseDate": {
+            "$kind": "Property",
+            "$Type": "Edm.DateTimeOffset",
+            "$Nullable": false
+        },
+        "DiscontinuedDate": {
+            "$kind": "Property",
+            "$Type": "Edm.DateTimeOffset"
+        },
+        "Rating": {
+            "$kind": "Property",
+            "$Type": "Edm.Int16",
+            "$Nullable": false
+        },
+        "Price": {
+            "$kind": "Property",
+            "$Type": "Edm.Double",
+            "$Nullable": false
+        },
+        "Categories": {
+            "$kind": "NavigationProperty",
+            "$isCollection": true,
+            "$Type": "ProductService.Category",
+            "$Partner": "Products"
+        },
+        "Supplier": {
+            "$kind": "NavigationProperty",
+            "$Type": "PeopleService.Supplier",
+            "$Partner": "Products"
+        },
+        "ProductDetail": {
+            "$kind": "NavigationProperty",
+            "$Type": "ProductService.ProductDetail",
+            "$Partner": "Product"
+        }
+    },
+    "ProductService.FeaturedProduct": {
+        "$kind": "EntityType",
+        "$BaseType": "ProductService.Product",
+        "Advertisement": {
+            "$kind": "NavigationProperty",
+            "$Type": "ProductService.Advertisement",
+            "$Partner": "FeaturedProduct"
+        }
+    },
+    "ProductService.ProductDetail": {
+        "$kind": "EntityType",
+        "$Key": [
+            "ProductID"
+        ],
+        "ProductID": {
+            "$kind": "Property",
+            "$Type": "Edm.Int32",
+            "$Nullable": false
+        },
+        "Details": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "Product": {
+            "$kind": "NavigationProperty",
+            "$Type": "ProductService.Product",
+            "$Partner": "ProductDetail"
+        }
+    },
+    "ProductService.Category": {
+        "$kind": "EntityType",
+        "$OpenType": true,
+        "$Key": [
+            "ID"
+        ],
+        "ID": {
+            "$kind": "Property",
+            "$Type": "Edm.Int32",
+            "$Nullable": false
+        },
+        "Name": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "Products": {
+            "$kind": "NavigationProperty",
+            "$isCollection": true,
+            "$Type": "ProductService.Product",
+            "$Partner": "Categories"
+        }
+    },
+    "ProductService.Advertisement": {
+        "$kind": "EntityType",
+        "$HasStream": true,
+        "$Key": [
+            "ID"
+        ],
+        "ID": {
+            "$kind": "Property",
+            "$Type": "Edm.Guid",
+            "$Nullable": false
+        },
+        "Name": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "AirDate": {
+            "$kind": "Property",
+            "$Type": "Edm.DateTimeOffset",
+            "$Nullable": false
+        },
+        "FeaturedProduct": {
+            "$kind": "NavigationProperty",
+            "$Type": "ProductService.FeaturedProduct",
+            "$Partner": "Advertisement"
+        }
+    },
+    "ProductService.Discount": [
+        {
+            "$kind": "Action",
+            "$IsBound": true,
+            "$Parameter": [
+                {
+                    "$Name": "product",
+                    "$Type": "ProductService.Product"
+                },
+                {
+                    "$Name": "discountPercentage",
+                    "$Type": "Edm.Int32",
+                    "$Nullable": false
+                }
+            ],
+            "$ReturnType": {
+                "$Type": "Edm.Double",
+                "$Nullable": false
+            }
+        }
+    ],
+    "ProductService.Container": {
+        "$kind": "EntityContainer",
+        "Products": {
+            "$kind": "EntitySet",
+            "$Type": "ProductService.Product",
+            "$NavigationPropertyBinding": {
+                "ProductService.FeaturedProduct/Advertisement": "Advertisements",
+                "Categories": "Categories",
+                "Supplier": "PeopleService.Container.Suppliers",
+                "ProductDetail": "ProductDetails"
+            }
+        },
+        "ProductDetails": {
+            "$kind": "EntitySet",
+            "$Type": "ProductService.ProductDetail",
+            "$NavigationPropertyBinding": {
+                "Product": "Products"
+            }
+        },
+        "Categories": {
+            "$kind": "EntitySet",
+            "$Type": "ProductService.Category",
+            "$NavigationPropertyBinding": {
+                "Products": "Products"
+            }
+        },
+        "Advertisements": {
+            "$kind": "EntitySet",
+            "$Type": "ProductService.Advertisement",
+            "$NavigationPropertyBinding": {
+                "FeaturedProduct": "Products"
+            }
+        }
+    }
+}

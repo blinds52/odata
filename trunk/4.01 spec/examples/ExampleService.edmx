@@ -161,8 +161,7 @@
         <NavigationProperty Name="Time" Type="Model.Time" Nullable="false" Partner="Sales" />
         <NavigationProperty Name="Currency" Type="Model.Currency" Nullable="false" Partner="Sales" />
         <NavigationProperty Name="Customer" Type="Model.Customer" Nullable="false" Partner="Sales" />
-        <NavigationProperty Name="SalesOrganization" Type="Model.SalesOrganization" Nullable="false"
-          Partner="Sales" />
+        <NavigationProperty Name="SalesOrganization" Type="Model.SalesOrganization" Nullable="false" Partner="Sales" />
         <NavigationProperty Name="Product" Type="Model.Product" Nullable="false" Partner="Sales" />
       </EntityType>
       <EntityType Name="Employee" HasStream="true">
@@ -184,6 +183,13 @@
         <NavigationProperty Name="Manager" Type="Model.Manager" Nullable="false" Partner="Inbox" />
         <NavigationProperty Name="Employee" Type="Model.Employee" Nullable="false" Partner="LeaveRequests" />
       </EntityType>
+      <Action Name="Approval" IsBound="true">
+        <Parameter Name="LeaveRequest" Type="Model.LeaveRequest" />
+      </Action>
+      <Action Name="Rejection" IsBound="true">
+        <Parameter Name="LeaveRequest" Type="Model.LeaveRequest" />
+        <Parameter Name="Reason" Type="Edm.String" />
+      </Action>
       <ComplexType Name="Address">
         <Property Name="Street" Type="Edm.String" Nullable="false" />
         <NavigationProperty Name="Country" Type="Example.Country" Nullable="false" />
