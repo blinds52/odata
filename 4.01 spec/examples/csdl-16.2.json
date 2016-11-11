@@ -1,0 +1,46 @@
+{
+    "$Version": "4.0",
+    "$Reference": {
+        "http://host/service/$metadata": {
+            "$Include": [
+                "ODataDemo."
+            ]
+        },
+        "http://somewhere/Vocabulary/V1": {
+            "$Include": [
+                {
+                    "Vocabulary1": "Some.Vocabulary.V1."
+                }
+            ]
+        }
+    },
+    "External.Annotations.": {
+        "$kind": "Schema",
+        "$Annotations": {
+            "ODataDemo.Supplier": {
+                "@Vocabulary1.EMail": null,
+                "@Vocabulary1.AccountID": {
+                    "$Path": "ID"
+                },
+                "@Vocabulary1.Title": "Supplier Info",
+                "@Vocabulary1.DisplayName": {
+                    "$Apply": [
+                        {
+                            "$Path": "Name"
+                        },
+                        " in ",
+                        {
+                            "$Path": "Address/CountryName"
+                        }
+                    ],
+                    "$Function": "odata.concat"
+                }
+            },
+            "ODataDemo.Product": {
+                "@Vocabulary1.Tags": [
+                    "MasterData"
+                ]
+            }
+        }
+    }
+}

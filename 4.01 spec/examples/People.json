@@ -1,0 +1,206 @@
+{
+    "$Version": "4.0",
+    "$EntityContainer": "PeopleService.Container",
+    "$Reference": {
+        "http://localhost/examples/Products.xml": {
+            "$Include": [
+                "ProductService."
+            ]
+        }
+    },
+    "PeopleService.": {
+        "$kind": "Schema",
+        "$Annotations": {
+            "PeopleService.Container": {
+                "@Org.OData.Display.V1.Description": "This is a sample OData service with vocabularies"
+            },
+            "PeopleService.Product": {
+                "@Org.OData.Display.V1.Description": "All Products available in the online store"
+            },
+            "PeopleService.Product/Name": {
+                "@Org.OData.Display.V1.DisplayName": "Product Name"
+            },
+            "PeopleService.Container/Suppliers": {
+                "@Org.OData.Publication.V1.PublisherName": "Microsoft Corp.",
+                "@Org.OData.Publication.V1.PublisherId": "MSFT",
+                "@Org.OData.Publication.V1.Keywords": "Inventory, Supplier, Advertisers, Sales, Finance",
+                "@Org.OData.Publication.V1.AttributionUrl": "http://www.odata.org/",
+                "@Org.OData.Publication.V1.AttributionDescription": "All rights reserved",
+                "@Org.OData.Publication.V1.DocumentationUrl ": "http://www.odata.org/",
+                "@Org.OData.Publication.V1.TermsOfUseUrl": "All rights reserved",
+                "@Org.OData.Publication.V1.PrivacyPolicyUrl": "http://www.odata.org/",
+                "@Org.OData.Publication.V1.LastModified": "4/2/2013",
+                "@Org.OData.Publication.V1.ImageUrl ": "http://www.odata.org/"
+            }
+        }
+    },
+    "PeopleService.Supplier": {
+        "$kind": "EntityType",
+        "$Key": [
+            "ID"
+        ],
+        "ID": {
+            "$kind": "Property",
+            "$Type": "Edm.Int32",
+            "$Nullable": false
+        },
+        "Name": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "Address": {
+            "$kind": "Property",
+            "$Type": "PeopleService.Address"
+        },
+        "Location": {
+            "$kind": "Property",
+            "$Type": "Edm.GeographyPoint",
+            "$SRID": "variable"
+        },
+        "Concurrency": {
+            "$kind": "Property",
+            "$Type": "Edm.Int32",
+            "$Nullable": false
+        },
+        "Products": {
+            "$kind": "NavigationProperty",
+            "$isCollection": true,
+            "$Type": "ProductService.Product",
+            "$Partner": "Supplier"
+        }
+    },
+    "PeopleService.Address": {
+        "$kind": "ComplexType",
+        "Street": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "City": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "State": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "ZipCode": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "Country": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        }
+    },
+    "PeopleService.Person": {
+        "$kind": "EntityType",
+        "$Key": [
+            "ID"
+        ],
+        "ID": {
+            "$kind": "Property",
+            "$Type": "Edm.Int32",
+            "$Nullable": false
+        },
+        "Name": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "PersonDetail": {
+            "$kind": "NavigationProperty",
+            "$Type": "PeopleService.PersonDetail",
+            "$Partner": "Person"
+        }
+    },
+    "PeopleService.Customer": {
+        "$kind": "EntityType",
+        "$BaseType": "PeopleService.Person",
+        "TotalExpense": {
+            "$kind": "Property",
+            "$Type": "Edm.Decimal",
+            "$Nullable": false
+        }
+    },
+    "PeopleService.Employee": {
+        "$kind": "EntityType",
+        "$BaseType": "PeopleService.Person",
+        "EmployeeID": {
+            "$kind": "Property",
+            "$Type": "Edm.Int64",
+            "$Nullable": false
+        },
+        "HireDate": {
+            "$kind": "Property",
+            "$Type": "Edm.DateTimeOffset",
+            "$Nullable": false
+        },
+        "Salary": {
+            "$kind": "Property",
+            "$Type": "Edm.Single",
+            "$Nullable": false
+        }
+    },
+    "PeopleService.PersonDetail": {
+        "$kind": "EntityType",
+        "$Key": [
+            "PersonID"
+        ],
+        "PersonID": {
+            "$kind": "Property",
+            "$Type": "Edm.Int32",
+            "$Nullable": false
+        },
+        "Age": {
+            "$kind": "Property",
+            "$Type": "Edm.Byte",
+            "$Nullable": false
+        },
+        "Gender": {
+            "$kind": "Property",
+            "$Type": "Edm.Boolean",
+            "$Nullable": false
+        },
+        "Phone": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        },
+        "Address": {
+            "$kind": "Property",
+            "$Type": "PeopleService.Address"
+        },
+        "Photo": {
+            "$kind": "Property",
+            "$Type": "Edm.Stream",
+            "$Nullable": false
+        },
+        "Person": {
+            "$kind": "NavigationProperty",
+            "$Type": "PeopleService.Person",
+            "$Partner": "PersonDetail"
+        }
+    },
+    "PeopleService.Container": {
+        "$kind": "EntityContainer",
+        "Suppliers": {
+            "$kind": "EntitySet",
+            "$Type": "PeopleService.Supplier",
+            "$NavigationPropertyBinding": {
+                "Products": "ProductService.Container.Products"
+            }
+        },
+        "People": {
+            "$kind": "EntitySet",
+            "$Type": "PeopleService.Person",
+            "$NavigationPropertyBinding": {
+                "PersonDetail": "PersonDetails"
+            }
+        },
+        "PersonDetails": {
+            "$kind": "EntitySet",
+            "$Type": "PeopleService.PersonDetail",
+            "$NavigationPropertyBinding": {
+                "Person": "Persons"
+            }
+        }
+    }
+}

@@ -9,15 +9,12 @@
     <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1" />
     <Annotation Term="Some.Term" />
   </edmx:Reference>
-  <edmx:Reference
-    Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Validation.V1.xml"
-  >
+  <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Validation.V1.xml">
     <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1" />
   </edmx:Reference>
   <edmx:Reference Uri="http://somewhere/Vocabulary/V1">
     <edmx:IncludeAnnotations TermNamespace="Name.Space" TargetNamespace="Target.Space" />
-    <edmx:IncludeAnnotations TermNamespace="Name.Space" TargetNamespace="Target.Space"
-      Qualifier="SomeName" />
+    <edmx:IncludeAnnotations TermNamespace="Name.Space" TargetNamespace="Target.Space" Qualifier="SomeName" />
     <edmx:IncludeAnnotations TermNamespace="Name.Space" Qualifier="SomeName" />
     <edmx:IncludeAnnotations TermNamespace="Name.Space" />
   </edmx:Reference>
@@ -66,17 +63,20 @@
         </Key>
         <Property Type="Edm.String" Name="ID" Nullable="false" />
         <Property Name="CategoryID" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Category" Type="Self.Category" Nullable="false" Partner="Products">
+        <NavigationProperty Name="Category" Type="Self.Category" Nullable="false" ContainsTarget="false"
+          Partner="Products"
+        >
           <ReferentialConstraint Property="CategoryID" ReferencedProperty="ID" />
+          <ReferentialConstraint Property="CategoryKind" ReferencedProperty="Kind" />
         </NavigationProperty>
         <NavigationProperty Name="Supplier" Type="Self.Supplier" />
       </EntityType>
 
-      <EntityType Name="Supplier">
+      <EntityType Name="Supplier" OpenType="false">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
-        <Property Type="Edm.String" Name="ID" Nullable="false" />
+        <Property Type="Edm.String" Name="ID" Nullable="false" Unicode="true" />
       </EntityType>
 
       <EntityType Name="Customer">
@@ -246,7 +246,7 @@
       <!-- 12 Action and Function -->
       <!-- Example 28: a function returning the top-selling products for a given year. In this case the year must be specified
         as a parameter of the function with the edm:Parameter element. -->
-      <Function Name="TopSellingProducts">
+      <Function Name="TopSellingProducts" IsBound="false" IsComposable="false">
         <Parameter Name="Year" Type="Edm.Decimal" Precision="4" Scale="0" />
         <ReturnType Type="Collection(Self.Product)" />
       </Function>
@@ -255,7 +255,7 @@
       <EntityContainer Name="DemoService">
         <!-- Example 29: one entity set per entity type - covered by example 32 -->
         <!-- Example 30: three entity sets referring to the two entity types -->
-        <EntitySet Name="StandardCustomers" EntityType="Self.Customer">
+        <EntitySet Name="StandardCustomers" EntityType="Self.Customer" IncludeInServiceDocument="true">
           <NavigationPropertyBinding Path="Orders" Target="Orders" />
         </EntitySet>
         <EntitySet Name="PreferredCustomers" EntityType="Self.Customer">
@@ -264,7 +264,8 @@
         <EntitySet Name="Orders" EntityType="Self.Order" />
 
         <!-- Example 31: function import returning the top ten revenue-generating products for a given fiscal year -->
-        <FunctionImport Name="TopSellingProducts" Function="Model1.TopSellingProducts" EntitySet="Products" />
+        <FunctionImport Name="TopSellingProducts" Function="Model1.TopSellingProducts" EntitySet="Products"
+          IncludeInServiceDocument="false" />
 
         <!-- Example 32: An entity container aggregates entity sets, singletons, action imports, and function imports. -->
         <EntitySet Name="Products" EntityType="Self.Product">
@@ -392,8 +393,7 @@
         </Annotation>
 
         <!-- Example 49: combined value for IsFlags enumeration type -->
-        <Annotation Term="org.example.HasPattern" Qualifier="list"
-          EnumMember="org.example.Pattern/Red org.example.Pattern/Striped" />
+        <Annotation Term="org.example.HasPattern" Qualifier="list" EnumMember="org.example.Pattern/Red org.example.Pattern/Striped" />
         <Annotation Term="org.example.HasPattern" Qualifier="listelement">
           <EnumMember>org.example.Pattern/Red org.example.Pattern/Striped</EnumMember>
         </Annotation>
@@ -624,22 +624,18 @@
         <Property Name="BinaryValue" Type="Edm.Binary" MaxLength="31" DefaultValue="T0RhdGE" Nullable="false" />
         <Property Name="IntegerValue" Type="Edm.Int32" DefaultValue="-128" Nullable="false" />
         <Property Name="DoubleValue" Type="Edm.Double" DefaultValue="3.1415926535897931" Nullable="false" />
-        <Property Name="SingleValue" Type="Edm.Single" Nullable="false" />
+        <Property Name="SingleValue" Type="Edm.Single" DefaultValue="-INF" Nullable="false" />
         <Property Name="DecimalValue" Type="Edm.Decimal" Scale="variable" DefaultValue="34.95" Nullable="false" />
-        <Property Name="StringValue" Type="Edm.String" DefaultValue="Say &quot;Hello&quot;,&#x0A;then go"
-          Nullable="false" />
+        <Property Name="StringValue" Type="Edm.String" DefaultValue="Say &quot;Hello&quot;,&#x0A;then go" Nullable="false" />
         <Property Name="DateValue" Type="Edm.Date" DefaultValue="2012-12-03" Nullable="false" />
-        <Property Name="DateTimeOffsetValue" Type="Edm.DateTimeOffset" DefaultValue="2012-12-03T07:16:23Z"
-          Nullable="false" />
+        <Property Name="DateTimeOffsetValue" Type="Edm.DateTimeOffset" DefaultValue="2012-12-03T07:16:23Z" Nullable="false" />
         <Property Name="DurationValue" Type="Edm.Duration" Precision="12" DefaultValue="P12DT23H59M59.999999999999S"
           Nullable="false" />
-        <Property Name="TimeOfDayValue" Type="Edm.TimeOfDay" Precision="6" DefaultValue="07:59:59.999"
-          Nullable="false" />
+        <Property Name="TimeOfDayValue" Type="Edm.TimeOfDay" Precision="6" DefaultValue="07:59:59.999" Nullable="false" />
         <Property Name="GuidValue" Type="Edm.Guid" DefaultValue="1234567-89ab-cdef-0123-456789abcdef" Nullable="false" />
         <Property Name="Int64Value" Type="Edm.Int64" DefaultValue="0" Nullable="false" />
         <Property Name="ColorEnumValue" Type="M1.Color" DefaultValue="yellow" Nullable="false" />
-        <Property Name="GeographyPoint" Type="Edm.GeographyPoint" DefaultValue="SRID=0;Point(142.1 64.1)"
-          Nullable="false" />
+        <Property Name="GeographyPoint" Type="Edm.GeographyPoint" DefaultValue="SRID=0;Point(142.1 64.1)" Nullable="false" />
         <Property Name="StreamValue" Type="Edm.Stream" Nullable="false" />
         <Property Name="TypeDefValue" Type="M1.IntegerDecimal" Precision="20" DefaultValue="42" Nullable="false" />
         <Property Name="TextValue" Type="M1.Text" MaxLength="60" DefaultValue="42" Nullable="false" />
@@ -690,6 +686,7 @@
         <Float>1.23456789e4</Float>
       </Annotation>
       <Annotation Term="An.Int" Int="1234" />
+      <Annotation Term="A.Very.Long.Int" Int="9007199254740992" />
       <Annotation Term="A.String" String="1.23e4" />
       <Annotation Term="A.String" String="Fast&amp;Furious" Qualifier="withAmp" />
       <Annotation Term="A.String" Qualifier="ToBeEscaped">
@@ -1111,8 +1108,8 @@
         </Annotation>
       </Annotations>
 
-      <Term Name="AdvancedChangeTracking" BaseTerm="Capabilities.ChangeTracking" Type="Y.ChangeTrackingType"
-        AppliesTo="EntityContainer EntitySet" Nullable="false"
+      <Term Name="AdvancedChangeTracking" BaseTerm="Capabilities.ChangeTracking" Type="Y.ChangeTrackingType" AppliesTo="EntityContainer EntitySet"
+        Nullable="false"
       >
         <Annotation Term="Core.Description" String="Advanced change tracking capabilities of this service or entity set" />
       </Term>

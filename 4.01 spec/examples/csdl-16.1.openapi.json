@@ -1,15 +1,14 @@
 {
-    "x-odata-version": "4.0",
     "swagger": "2.0",
     "info": {
         "title": "OData Service for namespace ODataDemo",
-        "description": "This OData service is located at http://localhost/service-root/\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Product],[Product]-0..1>[Category],[Product]-0..1>[Supplier],[Category],[Category]-*>[Product],[Supplier],[Supplier]-*>[Product],[Country])\n\n## References\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Core.V1.openapi.json)\n- [Org.OData.Measures.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Measures.V1.openapi.json)",
-        "version": "0.1.0"
+        "version": "",
+        "description": "This OData service is located at http://localhost/service-root/\n\n## Entity Data Model\n![ER Diagram](http://yuml.me/diagram/class/[Product],[Product]-0..1>[Category],[Product]-0..1>[Supplier],[Category],[Category]-*>[Product],[Supplier],[Supplier]-*>[Product],[Country])\n\n## References\n- [Org.OData.Core.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Core.V1.openapi.json)\n- [Org.OData.Measures.V1](http://localhost/swagger-ui/?url=http://localhost/examples/Org.OData.Measures.V1.openapi.json)"
     },
-    "host": "localhost",
     "schemes": [
         "http"
     ],
+    "host": "localhost",
     "basePath": "/service-root",
     "consumes": [
         "application/json"
@@ -19,34 +18,26 @@
     ],
     "tags": [
         {
-            "name": "Products",
-            "description": ""
+            "name": "Products"
         },
         {
             "name": "Categories",
-            "description": ""
+            "description": "Product Categories"
         },
         {
-            "name": "Suppliers",
-            "description": ""
+            "name": "Suppliers"
         },
         {
             "name": "MainSupplier",
-            "description": ""
+            "description": "Primary Supplier"
         },
         {
-            "name": "Countries",
-            "description": ""
+            "name": "Countries"
         }
     ],
     "definitions": {
         "ODataDemo.Product": {
-            "title": "Product",
             "type": "object",
-            "x-mediaEntity": true,
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -55,18 +46,13 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true,
-                    "x-annotations": {
-                        "@Core.IsLanguageDependent": true
-                    }
+                    ]
                 },
                 "ReleaseDate": {
                     "type": [
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "date"
                 },
                 "DiscontinuedDate": {
@@ -74,7 +60,6 @@
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "date"
                 },
                 "Rating": {
@@ -82,7 +67,6 @@
                         "integer",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "int32"
                 },
                 "Price": {
@@ -91,75 +75,46 @@
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "format": "decimal",
-                    "multipleOf": 1,
-                    "x-annotations": {
-                        "@Org.OData.Measures.V1.ISOCurrency": {
-                            "@odata.path": "Currency"
-                        }
-                    }
+                    "multipleOf": 1
                 },
                 "Currency": {
                     "type": [
                         "string",
                         "null"
                     ],
-                    "x-nullable": true,
                     "maxLength": 3
                 },
                 "Category": {
-                    "$ref": "#/definitions/ODataDemo.Category",
-                    "x-relationship": {
-                        "partner": "Products"
-                    }
+                    "$ref": "#/definitions/ODataDemo.Category"
                 },
                 "Supplier": {
-                    "$ref": "#/definitions/ODataDemo.Supplier",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "partner": "Products"
-                    }
+                    "$ref": "#/definitions/ODataDemo.Supplier"
                 }
-            }
+            },
+            "title": "Product"
         },
         "ODataDemo.Category": {
-            "title": "Category",
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
                     "format": "int32"
                 },
                 "Name": {
-                    "type": "string",
-                    "x-annotations": {
-                        "@Core.IsLanguageDependent": true
-                    }
+                    "type": "string"
                 },
                 "Products": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Category",
-                        "onDelete": {
-                            "action": "Cascade"
-                        }
                     }
                 }
-            }
+            },
+            "title": "Category"
         },
         "ODataDemo.Supplier": {
-            "title": "Supplier",
             "type": "object",
-            "x-keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -168,8 +123,7 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Address": {
                     "$ref": "#/definitions/ODataDemo.Address"
@@ -182,19 +136,13 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ODataDemo.Product"
-                    },
-                    "x-relationship": {
-                        "partner": "Supplier"
                     }
                 }
-            }
+            },
+            "title": "Supplier"
         },
         "ODataDemo.Country": {
-            "title": "Country",
             "type": "object",
-            "x-keys": [
-                "Code"
-            ],
             "properties": {
                 "Code": {
                     "type": "string",
@@ -204,153 +152,49 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 }
-            }
+            },
+            "title": "Country"
         },
         "ODataDemo.Address": {
-            "title": "Address",
             "type": "object",
             "properties": {
                 "Street": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "City": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "State": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "ZipCode": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "CountryName": {
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "x-nullable": true
+                    ]
                 },
                 "Country": {
-                    "$ref": "#/definitions/ODataDemo.Country",
-                    "x-nullable": true,
-                    "x-relationship": {
-                        "referentialConstraints": {
-                            "CountryName": {
-                                "referencedProperty": "Name"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "x-schemas": {
-        "Org.OData.Core.V1": {
-            "uri": "http://localhost/examples/Org.OData.Core.V1.openapi.json",
-            "@Core.DefaultNamespace": true
-        },
-        "Core": {
-            "aliasFor": "Org.OData.Core.V1"
-        },
-        "Org.OData.Measures.V1": {
-            "uri": "http://localhost/examples/Org.OData.Measures.V1.openapi.json"
-        },
-        "UoM": {
-            "aliasFor": "Org.OData.Measures.V1"
-        },
-        "ODataDemo": {
-            "@Core.DefaultNamespace": true
-        }
-    },
-    "x-functions": {
-        "ODataDemo.ProductsByRating": [
-            {
-                "parameters": [
-                    {
-                        "name": "Rating",
-                        "parameterType": {
-                            "type": [
-                                "integer",
-                                "null"
-                            ],
-                            "x-nullable": true,
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ODataDemo.Product"
-                    }
-                }
-            }
-        ]
-    },
-    "x-entityContainer": {
-        "name": "DemoService",
-        "resources": {
-            "Products": {
-                "kind": "EntitySet",
-                "entityType": "ODataDemo.Product",
-                "navigationPropertyBindings": {
-                    "Category": "Categories"
+                    "$ref": "#/definitions/ODataDemo.Country"
                 }
             },
-            "Categories": {
-                "kind": "EntitySet",
-                "entityType": "ODataDemo.Category",
-                "navigationPropertyBindings": {
-                    "Products": "Products"
-                }
-            },
-            "Suppliers": {
-                "kind": "EntitySet",
-                "entityType": "ODataDemo.Supplier",
-                "navigationPropertyBindings": {
-                    "Products": "Products",
-                    "Address/Country": "Countries"
-                },
-                "@Core.OptimisticConcurrency": [
-                    {
-                        "@odata.propertyPath": "Concurrency"
-                    }
-                ]
-            },
-            "MainSupplier": {
-                "kind": "Singleton",
-                "type": "ODataDemo.Supplier",
-                "navigationPropertyBindings": {
-                    "Products": "Products"
-                }
-            },
-            "Countries": {
-                "kind": "EntitySet",
-                "entityType": "ODataDemo.Country"
-            },
-            "ProductsByRating": {
-                "kind": "FunctionImport",
-                "entitySet": "Products",
-                "function": "ODataDemo.ProductsByRating"
-            }
+            "title": "Address"
         }
     },
     "paths": {
@@ -379,7 +223,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -405,7 +249,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -424,7 +268,7 @@
                     {
                         "name": "$expand",
                         "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -454,10 +298,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -484,10 +325,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -509,7 +347,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -528,7 +366,7 @@
                     {
                         "name": "$expand",
                         "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -549,10 +387,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -583,10 +418,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -615,10 +447,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -648,7 +477,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -664,7 +493,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -678,7 +507,7 @@
                     {
                         "name": "$expand",
                         "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -707,10 +536,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -737,10 +563,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -763,7 +586,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -777,7 +600,7 @@
                     {
                         "name": "$expand",
                         "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -797,10 +620,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -832,10 +652,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -865,10 +682,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -898,7 +712,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -918,7 +732,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -934,7 +748,7 @@
                     {
                         "name": "$expand",
                         "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -963,10 +777,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -993,10 +804,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -1018,7 +826,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1034,7 +842,7 @@
                     {
                         "name": "$expand",
                         "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1054,10 +862,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -1088,10 +893,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -1120,10 +922,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -1138,7 +937,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1154,7 +953,7 @@
                     {
                         "name": "$expand",
                         "in": "query",
-                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398298)",
+                        "description": "Expand related entities, see [OData Expand](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374621)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1174,10 +973,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -1201,10 +997,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -1234,7 +1027,7 @@
                     {
                         "name": "$orderby",
                         "in": "query",
-                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398305)",
+                        "description": "Order items by property values, see [OData Sorting](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374629)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1250,7 +1043,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1279,10 +1072,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -1309,10 +1099,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -1334,7 +1121,7 @@
                     {
                         "name": "$select",
                         "in": "query",
-                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398297)",
+                        "description": "Select properties to be returned, see [OData Select](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374620)",
                         "type": "array",
                         "uniqueItems": true,
                         "items": {
@@ -1354,10 +1141,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -1388,10 +1172,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             },
@@ -1420,10 +1201,7 @@
                         "description": "Success"
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -1440,7 +1218,6 @@
                         "in": "path",
                         "required": true,
                         "type": "integer",
-                        "x-nullable": true,
                         "format": "int32"
                     }
                 ],
@@ -1461,10 +1238,7 @@
                         }
                     },
                     "default": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
-                        }
+                        "$ref": "#/responses/error"
                     }
                 }
             }
@@ -1474,32 +1248,40 @@
         "top": {
             "name": "$top",
             "in": "query",
-            "description": "Show only the first n items, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398306)",
+            "description": "Show only the first n items, see [OData Paging - Top](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374630)",
             "type": "integer"
         },
         "skip": {
             "name": "$skip",
             "in": "query",
-            "description": "Skip the first n items, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398307)",
+            "description": "Skip the first n items, see [OData Paging - Skip](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374631)",
             "type": "integer"
         },
         "count": {
             "name": "$count",
             "in": "query",
-            "description": "Include count of items, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398308)",
+            "description": "Include count of items, see [OData Count](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374632)",
             "type": "boolean"
         },
         "filter": {
             "name": "$filter",
             "in": "query",
-            "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398301)",
+            "description": "Filter items by property values, see [OData Filtering](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374625)",
             "type": "string"
         },
         "search": {
             "name": "$search",
             "in": "query",
-            "description": "Search items by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398309)",
+            "description": "Search items by search phrases, see [OData Searching](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html#_Toc445374633)",
             "type": "string"
+        }
+    },
+    "responses": {
+        "error": {
+            "description": "Error",
+            "schema": {
+                "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/odata.error"
+            }
         }
     }
 }

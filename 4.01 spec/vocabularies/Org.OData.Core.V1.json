@@ -1,220 +1,316 @@
 {
-    "x-odata-version": "4.0",
-    "swagger": "2.0",
-    "info": {
-        "title": "Core terms needed to write vocabularies",
-        "description": "\n\n## Term Definitions\nTerm|Description\n----|----\nDescription|A brief description of a model element\nLongDescription|A lengthy description of a model element\nIsLanguageDependent|Properties and terms annotated with this term are language-dependent\nRequiresType|Terms annotated with this term can only be applied to elements that have a type that is identical to or derived from the given type name\nResourcePath|Resource path for entity container child, can be relative to xml:base and the request URL\nDereferenceableIDs|Entity-ids are URLs that locate the identified entity\nConventionalIDs|Entity-ids follow OData URL conventions\nPermissions|Permissions for accessing a resource\nImmutable|A value for this non-key property can be provided on insert and remains unchanged on update\nComputed|A value for this property is generated on both insert and update\nIsURL|Properties and terms annotated with this term MUST contain a valid URL\nAcceptableMediaTypes|Lists the MIME types acceptable for the annotated entity type marked with HasStream=\"true\" or the annotated stream property\nMediaType|The media type of a binary resource\nIsMediaType|Properties and terms annotated with this term MUST contain a valid MIME type\nOptimisticConcurrency|Data modification requires the use of ETags. A non-empty collection contains the set of properties that are used to compute the ETag.\nAdditionalProperties|Instances of this type may contain properties in addition to those declared in $metadata\nAutoExpand|The service will automatically expand this navigation property even if not requested with $expand\nAutoExpandReferences|The service will automatically expand this navigation property as entity references even if not requested with $expand=.../$ref",
-        "version": "0.1.0"
+    "$Version": "4.0",
+    "$Reference": {
+        "http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Validation.V1.xml": {
+            "$Include": [
+                {
+                    "Validation": "Org.OData.Validation.V1."
+                }
+            ]
+        }
     },
-    "definitions": {
-        "Org.OData.Core.V1.Tag": {
-            "type": "boolean",
-            "description": "This is the type to use for all tagging terms"
-        },
-        "Org.OData.Core.V1.Permission": {
-            "type": "string",
-            "enum": [
-                "None",
-                "Read",
-                "Write",
-                "ReadWrite",
-                "Invoke"
-            ],
-            "x-isFlags": true,
-            "x-annotations": {
-                "None@value": 0,
-                "Read@value": 1,
-                "Write@value": 2,
-                "ReadWrite@value": 3,
-                "Invoke@value": 4
+    "Org.OData.Core.V1.": {
+        "$kind": "Schema",
+        "@Core.Description": "Core terms needed to write vocabularies"
+    },
+    "Org.OData.Core.V1.ODataVersions": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "$AppliesTo": "EntityContainer",
+        "@Core.Description": "A space-separated list of supported versions of the OData Protocol. Note that 4.0 is implied by 4.01 and does not need to be separately listed."
+    },
+    "Org.OData.Core.V1.SchemaVersion": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "$AppliesTo": "Schema Reference",
+        "@Core.Description": "Service-defined value representing the version of the schema. Services MAY use semantic versioning, but clients MUST NOT assume this is the case."
+    },
+    "Org.OData.Core.V1.Description": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "@Core.Description": "A brief description of a model element",
+        "@Core.IsLanguageDependent": true
+    },
+    "Org.OData.Core.V1.LongDescription": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "@Core.Description": "A lengthy description of a model element",
+        "@Core.IsLanguageDependent": true
+    },
+    "Org.OData.Core.V1.NumericValueException": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.ValueException",
+        "@Core.Description": "Used in place of a property value to annotate a property whose value is not representable according to its numeric type."
+    },
+    "Org.OData.Core.V1.ValueException": {
+        "$kind": "TypeDefinition",
+        "$UnderlyingType": "Edm.String",
+        "@Validation.AllowedValues": [
+            {
+                "Value": "INF",
+                "@Core.Description": "The value is greater than the largest number for the prescribed numeric type"
+            },
+            {
+                "Value": "-INF",
+                "@Core.Description": "The value is less than smallest number for the prescribed numeric type"
+            },
+            {
+                "Value": "NaN",
+                "@Core.Description": "The value is not representable in the prescribed numeric type"
             }
-        }
+        ]
     },
-    "x-schemas": {
-        "Core": {
-            "aliasFor": "Org.OData.Core.V1"
+    "Org.OData.Core.V1.Messages": {
+        "$kind": "Term",
+        "$isCollection": true,
+        "$Type": "Org.OData.Core.V1.MessageType",
+        "@Core.Description": "Instance annotation for warning and info messages"
+    },
+    "Org.OData.Core.V1.MessageType": {
+        "$kind": "ComplexType",
+        "code": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false
         },
-        "Org.OData.Core.V1": {
-            "description": "Core terms needed to write vocabularies"
-        }
-    },
-    "x-terms": {
-        "Org.OData.Core.V1.Description": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "x-nullable": true,
-            "description": "A brief description of a model element",
+        "message": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
             "@Core.IsLanguageDependent": true
         },
-        "Org.OData.Core.V1.LongDescription": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "x-nullable": true,
-            "description": "A lengthy description of a model element",
-            "@Core.IsLanguageDependent": true
+        "severity": {
+            "$kind": "Property",
+            "$Type": "Org.OData.Core.V1.MessageSeverity",
+            "$Nullable": false
         },
-        "Org.OData.Core.V1.IsLanguageDependent": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": [
-                "Term",
-                "Property"
-            ],
-            "description": "Properties and terms annotated with this term are language-dependent",
-            "@Core.RequiresType": "Edm.String"
+        "target": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "@Core.Description": "A path to the target of the message detail, relative to the annotated instance"
         },
-        "Org.OData.Core.V1.RequiresType": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "x-nullable": true,
-            "appliesTo": "Term",
-            "description": "Terms annotated with this term can only be applied to elements that have a type that is identical to or derived from the given type name"
-        },
-        "Org.OData.Core.V1.ResourcePath": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "x-nullable": true,
-            "appliesTo": [
-                "EntitySet",
-                "Singleton",
-                "ActionImport",
-                "FunctionImport"
-            ],
-            "description": "Resource path for entity container child, can be relative to xml:base and the request URL",
-            "@Core.IsURL": true
-        },
-        "Org.OData.Core.V1.DereferenceableIDs": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": "EntityContainer",
-            "description": "Entity-ids are URLs that locate the identified entity"
-        },
-        "Org.OData.Core.V1.ConventionalIDs": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": "EntityContainer",
-            "description": "Entity-ids follow OData URL conventions"
-        },
-        "Org.OData.Core.V1.Permissions": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Permission",
-            "x-nullable": true,
-            "appliesTo": [
-                "Property",
-                "ComplexType",
-                "TypeDefinition",
-                "EntityType",
-                "EntitySet",
-                "NavigationProperty",
-                "Action",
-                "Function"
-            ],
-            "description": "Permissions for accessing a resource"
-        },
-        "Org.OData.Core.V1.Immutable": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": "Property",
-            "description": "A value for this non-key property can be provided on insert and remains unchanged on update"
-        },
-        "Org.OData.Core.V1.Computed": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": "Property",
-            "description": "A value for this property is generated on both insert and update"
-        },
-        "Org.OData.Core.V1.IsURL": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": [
-                "Property",
-                "Term"
-            ],
-            "description": "Properties and terms annotated with this term MUST contain a valid URL",
-            "@Core.RequiresType": "Edm.String"
-        },
-        "Org.OData.Core.V1.AcceptableMediaTypes": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            },
-            "appliesTo": [
-                "EntityType",
-                "Property"
-            ],
-            "description": "Lists the MIME types acceptable for the annotated entity type marked with HasStream=\"true\" or the annotated stream property",
-            "@Core.IsMediaType": true
-        },
-        "Org.OData.Core.V1.MediaType": {
-            "type": [
-                "string",
-                "null"
-            ],
-            "x-nullable": true,
-            "appliesTo": "Property",
-            "description": "The media type of a binary resource",
-            "@Core.IsMediaType": true,
-            "@Core.RequiresType": "Edm.Binary"
-        },
-        "Org.OData.Core.V1.IsMediaType": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": [
-                "Property",
-                "Term"
-            ],
-            "description": "Properties and terms annotated with this term MUST contain a valid MIME type",
-            "@Core.RequiresType": "Edm.String"
-        },
-        "Org.OData.Core.V1.OptimisticConcurrency": {
-            "type": "array",
-            "items": {
-                "$ref": "https://raw.githubusercontent.com/ralfhandl/odata/master/edm.json#/definitions/Edm.PropertyPath"
-            },
-            "appliesTo": "EntitySet",
-            "description": "Data modification requires the use of ETags. A non-empty collection contains the set of properties that are used to compute the ETag."
-        },
-        "Org.OData.Core.V1.AdditionalProperties": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": [
-                "EntityType",
-                "ComplexType"
-            ],
-            "description": "Instances of this type may contain properties in addition to those declared in $metadata",
-            "@Core.LongDescription": "If specified as false clients can assume that instances will not contain dynamic properties, irrespective of the value of the OpenType attribute."
-        },
-        "Org.OData.Core.V1.AutoExpand": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": "NavigationProperty",
-            "description": "The service will automatically expand this navigation property even if not requested with $expand"
-        },
-        "Org.OData.Core.V1.AutoExpandReferences": {
-            "$ref": "#/definitions/Org.OData.Core.V1.Tag",
-            "x-nullable": true,
-            "default": true,
-            "appliesTo": "NavigationProperty",
-            "description": "The service will automatically expand this navigation property as entity references even if not requested with $expand=.../$ref"
+        "details": {
+            "$kind": "Property",
+            "$isCollection": true,
+            "$Type": "Org.OData.Core.V1.MessageType",
+            "$Nullable": false
         }
     },
-    "paths": {
-
+    "Org.OData.Core.V1.MessageSeverity": {
+        "$kind": "TypeDefinition",
+        "$UnderlyingType": "Edm.String",
+        "@Validation.AllowedValues": [
+            {
+                "Value": "success"
+            },
+            {
+                "Value": "info"
+            },
+            {
+                "Value": "warning"
+            },
+            {
+                "Value": "error"
+            }
+        ]
+    },
+    "Org.OData.Core.V1.IsLanguageDependent": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Term Property",
+        "@Core.Description": "Properties and terms annotated with this term are language-dependent",
+        "@Core.RequiresType": "Edm.String"
+    },
+    "Org.OData.Core.V1.Tag": {
+        "$kind": "TypeDefinition",
+        "$UnderlyingType": "Edm.Boolean",
+        "@Core.Description": "This is the type to use for all tagging terms"
+    },
+    "Org.OData.Core.V1.RequiresType": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "$AppliesTo": "Term",
+        "@Core.Description": "Terms annotated with this term can only be applied to elements that have a type that is identical to or derived from the given type name"
+    },
+    "Org.OData.Core.V1.ResourcePath": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "$AppliesTo": "EntitySet Singleton ActionImport FunctionImport",
+        "@Core.Description": "Resource path for entity container child, can be relative to xml:base and the request URL",
+        "@Core.IsURL": true
+    },
+    "Org.OData.Core.V1.DereferenceableIDs": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "EntityContainer",
+        "@Core.Description": "Entity-ids are URLs that locate the identified entity"
+    },
+    "Org.OData.Core.V1.ConventionalIDs": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "EntityContainer",
+        "@Core.Description": "Entity-ids follow OData URL conventions"
+    },
+    "Org.OData.Core.V1.Permissions": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Permission",
+        "$AppliesTo": "Property ComplexType TypeDefinition EntityType EntitySet NavigationProperty Action Function",
+        "@Core.Description": "Permissions for accessing a resource"
+    },
+    "Org.OData.Core.V1.Permission": {
+        "$kind": "EnumType",
+        "$IsFlags": true,
+        "None": 0,
+        "Read": 1,
+        "Write": 2,
+        "ReadWrite": 3,
+        "Invoke": 4
+    },
+    "Org.OData.Core.V1.ContentID": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "@Core.Description": "A unique identifier for nested entities within a request."
+    },
+    "Org.OData.Core.V1.DefaultNamespace": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Schema Include",
+        "@Core.Description": "Functions, actions and types in this namespace can be referenced in URLs with or without namespace- or alias- qualification.",
+        "@Core.LongDescription": "Data Modelers should ensure uniqueness of schema children across all default namespaces, and should avoid naming bound functions, actions, or derived types with the same name as a structural or navigational property of the type."
+    },
+    "Org.OData.Core.V1.Immutable": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Property",
+        "@Core.Description": "A value for this non-key property can be provided on insert and remains unchanged on update"
+    },
+    "Org.OData.Core.V1.Computed": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Property",
+        "@Core.Description": "A value for this property is generated on both insert and update"
+    },
+    "Org.OData.Core.V1.IsURL": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Property Term",
+        "@Core.Description": "Properties and terms annotated with this term MUST contain a valid URL",
+        "@Core.RequiresType": "Edm.String"
+    },
+    "Org.OData.Core.V1.AcceptableMediaTypes": {
+        "$kind": "Term",
+        "$isCollection": true,
+        "$Type": "Edm.String",
+        "$Nullable": false,
+        "$AppliesTo": "EntityType Property",
+        "@Core.Description": "Lists the MIME types acceptable for the annotated entity type marked with HasStream=\"true\" or the annotated stream property",
+        "@Core.IsMediaType": true
+    },
+    "Org.OData.Core.V1.MediaType": {
+        "$kind": "Term",
+        "$Type": "Edm.String",
+        "$AppliesTo": "Property",
+        "@Core.Description": "The media type of a binary resource",
+        "@Core.IsMediaType": true,
+        "@Core.RequiresType": "Edm.Binary"
+    },
+    "Org.OData.Core.V1.IsMediaType": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Property Term",
+        "@Core.Description": "Properties and terms annotated with this term MUST contain a valid MIME type",
+        "@Core.RequiresType": "Edm.String"
+    },
+    "Org.OData.Core.V1.OptimisticConcurrency": {
+        "$kind": "Term",
+        "$isCollection": true,
+        "$Type": "Edm.PropertyPath",
+        "$Nullable": false,
+        "$AppliesTo": "EntitySet",
+        "@Core.Description": "Data modification requires the use of ETags. A non-empty collection contains the set of properties that are used to compute the ETag."
+    },
+    "Org.OData.Core.V1.AdditionalProperties": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "EntityType ComplexType",
+        "@Core.Description": "Instances of this type may contain properties in addition to those declared in $metadata",
+        "@Core.LongDescription": "If specified as false clients can assume that instances will not contain dynamic properties, irrespective of the value of the OpenType attribute."
+    },
+    "Org.OData.Core.V1.AutoExpand": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "NavigationProperty",
+        "@Core.Description": "The service will automatically expand this navigation property even if not requested with $expand"
+    },
+    "Org.OData.Core.V1.AutoExpandReferences": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "NavigationProperty",
+        "@Core.Description": "The service will automatically expand this navigation property as entity references even if not requested with $expand=.../$ref"
+    },
+    "Org.OData.Core.V1.MayImplement": {
+        "$kind": "Term",
+        "$isCollection": true,
+        "$Type": "Org.OData.Core.V1.QualifiedTypeName",
+        "@Core.Description": "A collection of qualified type names outside of the type hierarchy that instances of this type might be addressable as by using a type segment."
+    },
+    "Org.OData.Core.V1.QualifiedTypeName": {
+        "$kind": "TypeDefinition",
+        "$UnderlyingType": "Edm.String",
+        "@Core.Description": "The qualified name of a type in scope."
+    },
+    "Org.OData.Core.V1.Ordered": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Property NavigationProperty EntitySet ReturnType",
+        "@Core.Description": "Collection has a stable order. Ordered collections of primitive or complex types can be indexed by ordinal."
+    },
+    "Org.OData.Core.V1.PositionalInsert": {
+        "$kind": "Term",
+        "$Type": "Org.OData.Core.V1.Tag",
+        "$DefaultValue": true,
+        "$AppliesTo": "Property NavigationProperty EntitySet",
+        "@Core.Description": "Items can be inserted at a given ordinal index."
+    },
+    "Org.OData.Core.V1.AlternateKeys": {
+        "$kind": "Term",
+        "$AppliesTo": "EntityType EntitySet NavigationProperty",
+        "$isCollection": true,
+        "$Type": "Org.OData.Core.V1.AlternateKey",
+        "@Core.Description": "Communicates available alternate keys"
+    },
+    "Org.OData.Core.V1.AlternateKey": {
+        "$kind": "ComplexType",
+        "Key": {
+            "$kind": "Property",
+            "$isCollection": true,
+            "$Type": "Org.OData.Core.V1.PropertyRef",
+            "@Core.Description": "The set of properties that make up this key"
+        }
+    },
+    "Org.OData.Core.V1.PropertyRef": {
+        "$kind": "ComplexType",
+        "Name": {
+            "$kind": "Property",
+            "$Type": "Edm.PropertyPath",
+            "@Core.Description": "A path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex or navigation property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes."
+        },
+        "Alias": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "@Core.Description": "A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs"
+        }
     }
 }
