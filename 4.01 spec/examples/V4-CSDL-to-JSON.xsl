@@ -7,7 +7,6 @@
 
     TODO:
     - $EnumMember with number value (if safe), string with number (if too long), string with member name as fallback
-
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -31,9 +30,12 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edmx:Reference" mode="hashvalue">
-    <xsl:param name="key" select="'Name'" />
-    <xsl:param name="position" />
+  <xsl:template match="edmx:Reference" mode="hashpair">
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="json-url">
+      <xsl:with-param name="url" select="@Uri" />
+    </xsl:call-template>
+    <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list" />
     <xsl:apply-templates select="edmx:Include" mode="array">
       <xsl:with-param name="after" select="edm:Annotation" />
@@ -41,20 +43,38 @@
     <xsl:apply-templates select="edmx:IncludeAnnotations" mode="array">
       <xsl:with-param name="after" select="edm:Annotation|edmx:Include" />
     </xsl:apply-templates>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="item">
-    <xsl:if test="@Alias">
-      <xsl:text>{"</xsl:text>
-      <xsl:value-of select="@Alias" />
-      <xsl:text>":</xsl:text>
+    <xsl:if test="@Alias|edm:Annotation">
+      <xsl:text>{</xsl:text>
     </xsl:if>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Namespace" />
     <xsl:text>."</xsl:text>
-    <xsl:if test="@Alias">
+    <xsl:choose>
+      <xsl:when test="@Alias">
+        <xsl:text>:"</xsl:text>
+        <xsl:value-of select="@Alias" />
+        <xsl:text>"</xsl:text>
+      </xsl:when>
+      <xsl:when test="edm:Annotation">
+        <xsl:text>:null</xsl:text>
+      </xsl:when>
+    </xsl:choose>
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:if test="@Alias|edm:Annotation">
       <xsl:text>}</xsl:text>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="@TermNamespace|@TargetNamespace">
+    <xsl:text>"$</xsl:text>
+    <xsl:value-of select="name()" />
+    <xsl:text>":"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>."</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Schema">
@@ -853,22 +873,15 @@
   <xsl:template name="json-url">
     <xsl:param name="url" />
     <xsl:choose>
-      <xsl:when test="substring($url,string-length($url)-3) = '.xml'">
-        <xsl:choose>
-          <xsl:when test="substring($url,0,34) = 'http://docs.oasis-open.org/odata/'">
-            <xsl:text>https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/</xsl:text>
-            <xsl:variable name="filename">
-              <xsl:call-template name="substring-after-last">
-                <xsl:with-param name="input" select="$url" />
-                <xsl:with-param name="marker" select="'/'" />
-              </xsl:call-template>
-            </xsl:variable>
-            <xsl:value-of select="substring($filename,0,string-length($filename)-3)" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="substring($url,0,string-length($url)-3)" />
-          </xsl:otherwise>
-        </xsl:choose>
+      <xsl:when test="substring($url,1,33) = 'http://docs.oasis-open.org/odata/'">
+        <xsl:text>http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/</xsl:text>
+        <xsl:variable name="filename">
+          <xsl:call-template name="substring-after-last">
+            <xsl:with-param name="input" select="$url" />
+            <xsl:with-param name="marker" select="'/'" />
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:value-of select="substring($filename,1,string-length($filename)-4)" />
         <xsl:value-of select="'.json'" />
       </xsl:when>
       <xsl:otherwise>
