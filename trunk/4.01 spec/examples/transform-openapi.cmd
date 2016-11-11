@@ -32,10 +32,6 @@ exit /b
   c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.jsontmp > %~n1.openapi.json
   if not errorlevel 1 (
     del %~n1.jsontmp
-    if exist %~n1.openapi-goal.json (
-      c:\bin\diff.exe --ignore-space-change --strip-trailing-cr %~n1.openapi-goal.json %~n1.openapi.json
-    ) else (
-      c:\bin\diff.exe --ignore-space-change --strip-trailing-cr ..\vocabularies\%~n1.json %~n1.openapi.json
-    )
+    c:\bin\diff.exe --ignore-space-change --strip-trailing-cr %~n1.openapi-goal.json %~n1.openapi.json
   )
 exit /b
