@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #152 Thursday Nov 10, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}img,pre,blockquote,table,figure{page-break-inside:avoid}
+.footnotes{page-break-before:always}#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_this_line __file__ |shasum -a 512 -->
+<!-- sha512_excluding_this_line='3f5ae82458f750a591db8c67ea7d7fbe2169f66f97c95a1fa0254d77ddba741387c2b41a7398c3a0dee05b0aebfe3f85ddc38827d10223d218d3e979f62ca235' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #152 Thursday Nov 10, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-11-10 0700-1030 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Ken Baclawski (Northeastern University)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Stefan Hagen (Individual)
+        Susam Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41488">normative attendance sheet for this meeting (event_id=41488)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<!-- BELOW_MAYBE_STALE -->
+<h2>2. Approve agenda</h2>
+<p>Ralf: Add Jira issues: <br>
+<a href="https://issues.oasis-open.org/browse/ODATA-996" rel="noopener noreferrer" target="_blank">ODATA-996</a> - Added/deleted links: "relationship" should be navigation property path<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-997" rel="noopener noreferrer" target="_blank">ODATA-997</a> - Define modulo operator for non-integral numeric values<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-998" rel="noopener noreferrer" target="_blank">ODATA-998</a> - Specify comparable types for comparison operators<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-999" rel="noopener noreferrer" target="_blank">ODATA-999</a> - Consider adding support for 'aliases' on Entity sets, Singletons and Properties<br>
+</p>
+<p>Agenda approved as published including the update</p>
+<p>Ralf: Github repositories for Vocabularies and OpenAPI mapping under TC license, as a replacement/alternative to Subversion. Not to be confused with the "Open Repos" that we intended earlier, which would have used different licensing and required Individual Contributors License Agreements</p>
+<p><b>Mike</b>: I <b>move</b> we create two new GitHub repos; one for vocabularies and one for open api alignment, and that we use those repos instead of subversion for ongoing work in those two areas. <b>Hubert</b> seconds.</p>
+<p>Ralf: No objections, motion passes</p>
+
+<p>Ralf: Example repo: https://github.com/oasis-tcs/water-new-metrics</p>
+<p>Ralf: Repo name proposals<br>
+- odata-vocabularies<br>
+- odata-openapi</p>
+<p>Ralf: existing repos:<br>
+dita<br>
+OASIS DITA TC: Official repository for the source files for the written DITA specification<br>
+Updated 21 hours ago<br>
+<br>
+xliff-omos-jliff<br>
+OASIS XLIFF OMOS TC: JSON serialization of the XLIFF Abstract Object Model<br>
+ 2 Updated 2 days ago<br>
+<br>
+xliff-omos-om<br>
+OASIS XLIFF OMOS TC: Object Model for XLIFF Versions 2.0 and higher</p>
+
+<p>Ralf: Naming proposals are accepted:<br>
+- odata-vocabularies<br>
+- odata-openapi</p>
+<p>Ralf: No further additions to the agenda</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from November 03, 2016 TC meeting #151</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59288/odata-meeting-151_on-20161103-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59288/odata-meeting-151_on-20161103-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Ralf: Registration documents checked into Kavi</p>
+
+<pre>
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+Open Data (OData) Protocol IANA Header registration request
+------------------------------------------------------------
+
+This documentation contains the information needed for Perminanent 
+Registration of the OData specific request headers with IANA as called out in 
+RFC 3864 - Registration Procedures for Message Header Fields.  The OData 
+headers to be registered are
+
+OData-Version
+OData-Isolation
+OData-MaxVersion
+OData-EntityId
+
+The details as required by RFC 3864 for these headers are listed below
+
+
+####
+Header field name:
+OData-Version
+
+Applicable protocol:
+OASIS Open Data Protocol (OData)
+
+Status:
+Standard
+
+Author/Change controller:
+OASIS
+
+Specification document(s):
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752225
+
+Related information:
+&lt;none&gt;
+
+
+####
+Header field name:
+OData-Isolation
+
+Applicable protocol:
+OASIS Open Data Protocol (OData)
+
+Status:
+Standard
+
+Author/Change controller:
+OASIS
+
+Specification document(s):
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752232
+
+Related information:
+&lt;none&gt;
+
+
+####
+Header field name:
+OData-MaxVersion
+
+Applicable protocol:
+OASIS Open Data Protocol (OData)
+
+Status:
+Standard
+
+Author/Change controller:
+OASIS
+
+Specification document(s):
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752233
+
+Related information:
+&lt;none&gt;
+
+####
+Header field name:
+OData-EntityId
+
+Applicable protocol:
+OASIS Open Data Protocol (OData)
+
+Status:
+Standard
+
+Author/Change controller:
+OASIS
+
+Specification document(s):
+http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752238
+
+Related information:
+&lt;none&gt;
+[16:12] Ralf Handl (SAP SE): OData-Isolation and OData-EntityId: mention upcoming short form Isolation resp. EntityId in "Related information"
+[16:13] Ralf Handl (SAP SE): Open Data (OData) Protocol IANA Prefer Header Preference registration request
+------------------------------------------------------------------------------
+
+This documentation contains the information needed for Registration of the 
+OData specific Prefer Header Preferences headers with IANA as called out in 
+RFC 7240 - Prefer Header for HTTP.  The OData Prefer Header Preferences to be 
+registered are
+
+allow-entityreferences
+callback
+continue-on-error
+include-annotations
+maxpagesize
+track-changes
+
+The details as required by RFC 7240 for registering these preferences are listed below
+
+{ Open Questions}
+{ 1 - Should the odata. prefix to the preference as defined in the 4.0 spec be included in the registration?}
+
+
+####
+Preference: 
+allow-entityreferences
+  
+Value: 
+&lt;none&gt;
+
+Optional Parameters: 
+&lt;none&gt;
+
+Description:
+As defined in section 8.2.8.1 of the OData Version 4.0 Part 1: Protocol Plus Errata 03 document referenced below.
+
+Reference:
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752234
+
+Notes: [optional]
+&lt;none&gt;
+
+####
+Preference: 
+callback
+  
+Value: 
+&lt;none&gt;
+
+Optional Parameters: 
+url - The URL of a callback endpoint to be invoked by the OData service when data is available
+
+
+Description:
+As defined in section 8.2.8.2 of the OData Version 4.0 Part 1: Protocol Plus Errata 03 document referenced below.
+
+Reference:
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752234
+
+Notes: [optional]
+
+The url parameter specified under optional parameters is required when using the callback preference with OData
+
+
+####
+Preference: 
+continue-on-error
+  
+Value: 
+&lt;none&gt;
+
+Optional Parameters: 
+&lt;none&gt;
+
+
+Description:
+As defined in section 8.2.8.3 of the OData Version 4.0 Part 1: Protocol Plus Errata 03 document referenced below.
+
+Reference:
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752234
+
+Notes: [optional]
+
+&lt;none&gt;
+
+
+####
+Preference: 
+include-annotations
+  
+Value: 
+comma-separated list of namespaces or namespace qualified term names to include or exclude, with "*" representing all
+
+Optional Parameters: 
+&lt;none&gt;
+
+
+Description:
+As defined in section 8.2.8.4 of the OData Version 4.0 Part 1: Protocol Plus Errata 03 document referenced below.
+
+Reference:
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752234
+
+Notes: [optional]
+
+&lt;none&gt;
+
+####
+Preference: 
+maxpagesize
+  
+Value: 
+a positive integer that represents the maximum number of items each collection in a response may contain
+
+Optional Parameters: 
+&lt;none&gt;
+
+
+Description:
+As defined in section 8.2.8.5 of the OData Version 4.0 Part 1: Protocol Plus Errata 03 document referenced below.
+
+Reference:
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752234
+
+Notes: [optional]
+
+&lt;none&gt;
+
+####
+Preference: 
+track-changes
+  
+Value: 
+&lt;none&gt;
+
+Optional Parameters: 
+&lt;none&gt;
+
+
+Description:
+As defined in section 8.2.8.6 of the OData Version 4.0 Part 1: Protocol Plus Errata 03 document referenced below.
+
+Reference:
+OData Version 4.0 Part 1: Protocol Plus Errata 03 - 
+   http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752234
+
+Notes: [optional]
+
+&lt;none&gt;
+</pre>
+
+<p>Action #0036 closure not minuted during meeting.</p>
+
+<h2>5. JSON Format for CSDL</h2>
+<h3>5.1 Proposals for an OData-specific, lossless JSON format for Metadata</h3>
+<h4>5.1.1 OpenUI5 OData V4 Metadata JSON Format: <a href="https://openui5.hana.ondemand.com/#docs/guide/87aac894a40640f89920d7b2a414499b.html" rel="noopener noreferrer" target="_blank">https://openui5.hana.ondemand.com/#docs/guide/87aac894a40640f89920d7b2a414499b.html</a></h4>
+<p>Ralf: Walking through <a href="https://openui5.hana.ondemand.com/#docs/guide/87aac894a40640f89920d7b2a414499b.html" rel="noopener noreferrer" target="_blank">https://openui5.hana.ondemand.com/#docs/guide/87aac894a40640f89920d7b2a414499b.html</a></p>
+<p>Ralf: Points to consider:<br>
+- $kind or $Kind etc. to be consistently UpperCamelCase<br>
+- "MaxLength":"max"<br>
+- Collections of collections</p>
+<p>Ralf: Next steps:<br>
+- check in examples and XSLT<br>
+- start filling CSDL JSON V4.01 document<br>
+- open issues for things to discuss/change/extend</p>
+
+<h2>6. Issues for V4.01_WD01 in New or Open state</h2>
+
+<h3>6.1 Issues waiting for refined proposal</h3>
+
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-674" rel="noopener noreferrer" target="_blank">ODATA-674</a> - Specify navigation property binding combined with containment </h4>
+
+<p>Skipped</p>
+
+<h4>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-879" rel="noopener noreferrer" target="_blank">ODATA-879</a> - Support Arrays of Arrays</h4>
+
+<p>Skipped</p>
+
+<h4>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-919" rel="noopener noreferrer" target="_blank">ODATA-919</a> - Specify the result type for each operation based on operator types</h4>
+
+<p>Skipped</p>
+
+<h4>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-920" rel="noopener noreferrer" target="_blank">ODATA-920</a> - Specify overflow for int data types (-INF, INF, NaN)</h4>
+
+<p>Skipped</p>
+
+<h4>6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-965" rel="noopener noreferrer" target="_blank">ODATA-965</a> - UpdateGeoJSON Reference to RFC7946</h4>
+
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-965 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-965 is RESOLVED as proposed</p>
+
+<h4>6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-966" rel="noopener noreferrer" target="_blank">ODATA-966</a> - 13.4 Add example for navigation property bindings for containment navigation property</h4>
+
+<p>Ralf: Example: Orders contained OrderDetails: </p>
+<pre>
+&lt;EntitySet Name="Orders" Type="Sales.Order"&gt;
+   &lt;NavigationPropertyBinding Path="OrderDetails/Product" Target="Products"/&gt; 
+&lt;/EntitySet&gt;
+</pre>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-966 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-966 is RESOLVED as proposed</p>
+
+<h4>6.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-974" rel="noopener noreferrer" target="_blank">ODATA-974</a> - Flesh out recommendations around OAuth support in OData</h4>
+
+<p>Ralf: Example of usage: </p>
+<pre>
+&lt;Annotation Term="Auth.AuthorizationOptions"&gt; 
+  &lt;Collection&gt; 
+  &lt;Record Type="Auth.Http"/&gt; 
+  &lt;Record Type="Auth.OpenIDConnect"&gt; 
+    &lt;PropertyValue Name="IssuerUrl" String="https://example.com/issuer1"/&gt; 
+  &lt;/Record&gt; 
+  &lt;Record Type="Auth.OAuth2AuthCode"&gt; 
+    &lt;PropertyValue Name="AuthorizationUrl" String="http://myauth/authorize"/&gt; 
+    &lt;PropertyValue Name="TokenUrl" String="http://myauth/token"/&gt; 
+    &lt;PropertyValue Name="Scopes"&gt; 
+    &lt;Record&gt; 
+      &lt;PropertyValue Name="writeets" String="modify pets"/&gt; 
+    &lt;/Record&gt; 
+    &lt;/PropertyValue&gt; 
+  &lt;/Record&gt; 
+  &lt;/Collection&gt; 
+&lt;/Annotation&gt;
+</pre>
+
+<p>Mike: Definition of OpenIDConnect:</p>
+<pre>
+&lt;ComplexType Name="OpenIDConnect" BaseType="Auth.Authorization"&gt; 
+&lt;Property Name="IssuerUrl" Type="Edm.String" Nullable="false"&gt; 
+&lt;Annotation Term="Core.Description" String="Issuer location for the OpenID Provider. Configuration information can be obtained by appending /.well-known/openid-configuration to this Url."/&gt; 
+&lt;/Property&gt; 
+&lt;/ComplexType&gt;
+</pre>
+
+<h4>6.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-995" rel="noopener noreferrer" target="_blank">ODATA-995</a> - Resolve inconsistencies in JSON streaming property ordering</h4>
+
+<p>Ralf: Proposal:<br>
+Update 18.2 to state that annotations must come before the property <br>
+After making sure existing streaming clients don't rely on this ordering, update 4.4 to remove constraint that navigation annotations must come after structural properties.</p>
+
+<p>Mike: revised proposal:<br>
+Update 18.2 to state that annotations must come before the property<br>
+Update 4.4 to say that 4.0 services MUST return nav annotations after structural properties, 4.01 clients MUST NOT assume this ordering.</p>
+
+<p>Ralf: ODATA-995 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-995 as per the revised proposal. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-995 is RESOLVED as proposed</p>
+
+<h4>6.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-996" rel="noopener noreferrer" target="_blank">ODATA-996</a> - Added/deleted links: "relationship" should be navigation property path</h4>
+
+<p>Ralf: ODATA-996 Added/deleted links: "relationship" should be navigation property path</p>
+<pre>
+  {
+    "@odata.context":"#Customers/$link",
+    "source":"Customers('BOTTM')",
+    "relationship":"Orders",
+    "target":"Orders(10645)"
+  },
+</pre>
+<pre>
+  {
+    "@odata.context":"#Customers/$link",
+    "source":"Customers('BOTTM')",
+    "relationship":"Some/Thing/Complex/Orders",
+    "target":"Orders(10645)"
+  },
+</pre>
+
+<p>Ralf: Alternative: use nested content representation with an entity reference value for the navigation property</p>
+<p>Ralf: Nested content with entity references is safe way to go for collection-valued complex properties</p>
+
+<p>Ralf: ODATA-996 is OPEN</p>
+
+<p>Mike: I like the syntax for nav properties on individual complex types. we could default to nested collections syntax for collections of complex types.</p>
+<p>Ralf: Amended proposal: path for single-valued complex properties, nested content with entity references for collection-valued complex properties</p>
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-996 as per the amended proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-996 is resolved with the amended proposal</p>
+
+<h4>6.1.10 <a href="https://issues.oasis-open.org/browse/ODATA-997" rel="noopener noreferrer" target="_blank">ODATA-997</a> - Define modulo operator for non-integral numeric values</h4>
+
+<p>Ralf: 10 mod 4.8 -&gt; 0.4</p>
+<p>Ralf: Programming language 10 div 4.8 -&gt; 2</p>
+<p>Ralf: Programming language 10 / 4.8 -&gt; 2.something</p>
+<p>Ralf: Martin's extension:<br>
+10 div 4 -&gt; 2<br>
+10 divby 4 -&gt; 2.5</p>
+
+<p>Ralf: ODATA-997 is OPEN</p>
+<p>Ralf: a mod b eq a sub b mul floor(a div b)</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-997 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-997 is resolved as proposed, pending check of definition formula for negative operands</p>
+
+
+<h4>6.1.11 <a href="https://issues.oasis-open.org/browse/ODATA-998" rel="noopener noreferrer" target="_blank">ODATA-998</a> - Specify comparable types for comparison operatorsODATA-999 introduce aliases for e.g. property names</h4>
+
+<p>Ralf: Specify which types can be compared with eq, ne, le, lt, ge, gt <br>
+<br>
+a) values of same primitive type can be compared (except Edm.Binary, Edm.Stream, and the Edm.Geo types. Edm.Binary, Edm.Stream, and the Edm.Geo) <br>
+b) Int* can be compared to Int* <br>
+c) Single to Double<br>
+d) Int* can be compared to Decimal by casting Int* to the same Decimal flavor</p>
+
+<p>Matt: 5.1.1.8.1</p>
+<p>Matt: In URL conventions</p>
+<p>Matt: 5.1.1.15 in URL conventions</p>
+
+<p>Ralf: ODATA-998 is OPEN</p>
+
+<p>Ralf: Specify which types can be compared with eq, ne, le, lt, ge, gt <br>
+<br>
+a) values of same primitive type can be compared (except Edm.Binary, Edm.Stream, and the Edm.Geo types) <br>
+b) Int* can be compared to Int* <br>
+c) Single to Double <br>
+d) Int* can be compared to Decimal by casting Int* to the same Decimal flavor</p>
+
+<p>Ralf: Amended proposal:<br>
+a) values of same primitive type can be compared (except Edm.Binary, Edm.Stream, and the Edm.Geo types) <br>
+b) numbers compared with each other using casting rules</p>
+
+<p><b>MEMBER</b>: I <b>move</b> to resolve ODATA-998 as per the new amended proposal. <b>Matt</b> seconds.</p>
+<p>Ralf: ODATA-998 is resolved with the amended proposal</p>
+
+
+<h4>6.1.12 <a href="https://issues.oasis-open.org/browse/ODATA-999" rel="noopener noreferrer" target="_blank">ODATA-999</a> - Consider adding support for 'aliases' on Entity sets, Singletons and Properties</h4>
+
+<p>Ralf: Description<br>
+The idea behind allowing aliases is primarily driven by having shorter names for various entity sets, singletons and properties of complex and entity types. Ideally these aliases could be used in request as well as be returned by the server in response payloads.</p>
+
+
+<h2>6. Next meetings</h2>
+<p>No meeting on November 24, 2016</p>
+<p>Decide next week whether to make December 1 a long meeting</p>
+<h3>6.1 Meeting following Thursday November 17, 2016 during 08:00-10:00 am PT</h3> 
+<p>Date and time of meeting agreed</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
