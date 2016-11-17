@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #153 Thursday Nov 17, 2016</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_this_line __file__ |shasum -a 512 -->
+<!-- sha512_excluding_this_line='d12e85fc041722ea2ac366f03e940d8389ec6c0f1a4ec64f83c53a2433c9e687e00005d5bec3d46763358a1322da10239aa6f50c0b5040b54551f1324bb729af' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #153 Thursday Nov 17, 2016</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2016-11-17 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susam Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=41489">normative attendance sheet for this meeting (event_id=41489)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: Proposal: process issues first, then walk through the CSDL JSON document</p>
+<p>Agenda is approved with above switch of sections.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from November 10, 2016 TC meeting #152</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59358/odata-meeting-152_on-20161110-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59358/odata-meeting-152_on-20161110-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>No news - Action #0036 ongoing.</p>
+
+<h2>5. Issues for V4.01_WD01 in New or Open state</h2>
+
+<h3>5.1 Issues Intended for CSD01</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-674" rel="noopener noreferrer" target="_blank">ODATA-674</a> - Specify navigation property binding combined with containment</h4>
+
+<p>Ralf: Move to CSD02</p>
+<p>Ralf: Basic idea: provide relative binding, similar to EntitySetPath for bound actions and functions</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-879" rel="noopener noreferrer" target="_blank">ODATA-879</a> - Support Arrays of Arrays</h4>
+<p>Ralf: Move to CSD02</p>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-919" rel="noopener noreferrer" target="_blank">ODATA-919</a> - Specify the result type for each operation based on operator types</h4>
+<p>Ralf: Move to CSD02</p>
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-920" rel="noopener noreferrer" target="_blank">ODATA-920</a> - Specify overflow for int data types (-INF, INF, NaN)</h4>
+<p>Ralf: Roll back this change, or leave it in and hope for comments?</p>
+<p>Ralf: Leave it in and wait what happens</p>
+<p>Ralf: Move issue to CSD02</p>
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-974" rel="noopener noreferrer" target="_blank">ODATA-974</a> - Flesh out recommendations around OAuth support in OData</h4>
+<p><b>Mike</b> I <b>move</b> we resolve ODATA-974 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-974 is RESOLVED as proposed</p>
+<p>Ralf: Mike to create new vocabulary in SVN</p>
+
+<h4>5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1001" rel="noopener noreferrer" target="_blank">ODATA-1001</a> - Clarify that lambda expression, 'any' and 'all', can be applied to collections of all types.</h4>
+<p>Ralf: ODATA-1001 is OPEN</p>
+<p><b>Hubert</b> I <b>move</b> to resolve ODATA-1001 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1001 is RESOLVED as proposed</p>
+
+<h4>5.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-1004" rel="noopener noreferrer" target="_blank">ODATA-1004</a> - Sign of Modulo for positive right operand</h4>
+<p>Ralf: ODATA-1004 is OPEN</p>
+<p><b>Hubert</b> I <b>move</b> to resolve ODATA-1004 as per the first proposal. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1004 is RESOLVED as proposed</p>
+
+<h4>5.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-1005" rel="noopener noreferrer" target="_blank">ODATA-1005</a> - Make sure we have capabilities for all new 4.01 functionality</h4>
+<p>Ralf: ODATA-1005 is OPEN</p>
+
+<h4>5.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-1006" rel="noopener noreferrer" target="_blank">ODATA-1006</a> - Unicode facet for terms, parameters, and return types</h4>
+<p>Ralf: ODATA-1006 is OPEN</p>
+<p>Mike: Modified proposal to apply to 4.01 responses only: <br>
+Clarify that the Unicode facet can also be used for terms, parameters, and return types of type Edm.String **for 4.01 responses.**</p>
+<p><b>Mike</b> I <b>move</b> we resolve ODATA-1006 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1006 is RESOLVED as proposed</p>
+
+
+<h2>6. CSDL JSON Format</h2>
+<h3>6.1 Document Walkthrough</h3>
+<h4>6.1.1 OData Common Schema Definition Language (CSDL) JSON Representation Version 4.01</h4>
+<p>Ralf: Walking through current editor revision making changes while we walk through</p>
+<p>Mike: aliasing allowed to include two different "versions" of the same namespace and disambiguate these by different aliases</p>
+<p>Ralf: Open issue to document this gap and how to resolve it</p>
+<p>Ralf: Open issue to deprecate use of MaxLength="max" in CSDL XML</p>
+<p>Ralf: Discussion on forcing annotations to explace style</p>
+<p>Ralf: Not considered that helpful as we already mix "fixed" members equivalent to XML attributes with "variable" members derived from model element names</p>
+<p>Mike: $Parameter is surprising because it has an array as value</p>
+<p>Stefan: reads good when indexing into the array: $Parameter[0] is the binding parameter for bound actions/functions</p>
+<p>Ralf: Entity sets use $Type instead of $EntityType to be consistent with singletons</p>
+<p>Stefan: Acknowledgement w.r.t. openui5 team members: We might add the Apache 2 licensed <a href="https://openui5.hana.ondemand.com/#docs/guide/Documentation.html" rel="noopener noreferrer" target="_blank">Developer guide</a> from openui5.org, as that might be a good contribution (in case we need some "document" and not only specify "implementer feedback")</p>
+<p>Ralf: Cross-check with OASIS TC Admin on how to make this IP-safe</p>
+
+<h2>7. Next meetings</h2>
+<p>No meeting on November 24, 2016</p>
+<h3>7.1 Next Meeting Thursday December 1, 2016 during 08:00-11:00 am PT</h3> 
+<p>Date and time of meeting agreed</p>
+
+<h2>8. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
