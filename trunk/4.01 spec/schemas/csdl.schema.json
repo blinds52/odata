@@ -141,12 +141,56 @@
     },
     "EntityType": {
       "type": "object",
-      "TODO": "flesh out",
+      "additionalProperties": false,
+      "patternProperties": {
+        "@": {
+          "description": "Annotations"
+        },
+        "^[^$@]*$": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Property"
+            },
+            {
+              "$ref": "#/definitions/NavigationProperty"
+            }
+          ]
+        }
+      },
       "properties": {
         "$kind": {
           "enum": [
             "EntityType"
           ]
+        },
+        "$HasStream": {
+          "type": "boolean",
+          "default": true
+        },
+        "$Key": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "patternProperties": {
+              "": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "$Abstract": {
+          "type": "boolean",
+          "default": true
+        },
+        "$OpenType": {
+          "type": "boolean",
+          "default": true
+        },
+        "$BaseType": {
+          "type": "string"
         }
       },
       "required": [
@@ -155,16 +199,143 @@
     },
     "ComplexType": {
       "type": "object",
-      "TODO": "flesh out",
+      "additionalProperties": false,
+      "patternProperties": {
+        "@": {
+          "description": "Annotations"
+        },
+        "^[^$@]*$": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Property"
+            },
+            {
+              "$ref": "#/definitions/NavigationProperty"
+            }
+          ]
+        }
+      },
       "properties": {
         "$kind": {
           "enum": [
             "ComplexType"
           ]
+        },
+        "$Abstract": {
+          "type": "boolean",
+          "default": true
+        },
+        "$OpenType": {
+          "type": "boolean",
+          "default": true
+        },
+        "$BaseType": {
+          "type": "string"
         }
       },
       "required": [
         "$kind"
+      ]
+    },
+    "Property": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "Property"
+          ]
+        },
+        "$Type": {
+          "type": "string"
+        },
+        "$isCollection": {
+          "type": "boolean",
+          "default": true
+        },
+        "$Nullable": {
+          "type": "boolean",
+          "default": false
+        },
+        "$MaxLength": {
+          "$ref": "#/definitions/MaxLength"
+        },
+        "$Unicode": {
+          "type": "boolean",
+          "default": false
+        },
+        "$Precision": {
+          "$ref": "#/definitions/Precision"
+        },
+        "$Scale": {
+          "$ref": "#/definitions/Scale"
+        },
+        "$SRID": {
+          "$ref": "#/definitions/SRID"
+        },
+        "$DefaultValue": {
+        }
+      },
+      "required": [
+        "$kind",
+        "$Type"
+      ]
+    },
+    "NavigationProperty": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "@": {
+          "description": "Annotations"
+        },
+        "^\\$OnDelete@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "NavigationProperty"
+          ]
+        },
+        "$Type": {
+          "type": "string"
+        },
+        "$isCollection": {
+          "type": "boolean",
+          "default": true
+        },
+        "$Nullable": {
+          "type": "boolean",
+          "default": false
+        },
+        "$Partner": {
+          "type": "string"
+        },
+        "$ContainsTarget": {
+          "type": "boolean",
+          "default": true
+        },
+        "$ReferentialConstraint": {
+          "type": "object"
+        },
+        "$OnDelete": {
+          "enum": [
+            "Cascade",
+            "None",
+            "SetNull",
+            "SetDefault"
+          ]
+        }
+      },
+      "required": [
+        "$kind",
+        "$Type"
       ]
     },
     "EnumType": {
@@ -407,17 +578,161 @@
     },
     "EntityContainer": {
       "type": "object",
-      "TODO": "flesh out",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        },
+        "^[^$@]*$": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EntitySet"
+            },
+            {
+              "$ref": "#/definitions/Singleton"
+            },
+            {
+              "$ref": "#/definitions/ActionImport"
+            },
+            {
+              "$ref": "#/definitions/FunctionImport"
+            }
+          ]
+        }
+      },
       "properties": {
         "$kind": {
           "enum": [
             "EntityContainer"
           ]
+        },
+        "$Extends": {
+          "type": "string"
         }
       },
       "required": [
         "$kind"
       ]
+    },
+    "EntitySet": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "EntitySet"
+          ]
+        },
+        "$Type": {
+          "type": "string"
+        },
+        "$NavigationPropertyBinding": {
+          "$ref": "#/definitions/NavigationPropertyBinding"
+        },
+        "$IncludeInServiceDocument": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "$kind",
+        "$Type"
+      ]
+    },
+    "Singleton": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "Singleton"
+          ]
+        },
+        "$Type": {
+          "type": "string"
+        },
+        "$NavigationPropertyBinding": {
+          "$ref": "#/definitions/NavigationPropertyBinding"
+        }
+      },
+      "required": [
+        "$kind",
+        "$Type"
+      ]
+    },
+    "ActionImport": {
+      "type": "object",
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "ActionImport"
+          ]
+        },
+        "$Action": {
+          "type": "string"
+        },
+        "$EntitySet": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "$kind",
+        "$Action"
+      ]
+    },
+    "FunctionImport": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "FunctionImport"
+          ]
+        },
+        "$Function": {
+          "type": "string"
+        },
+        "$EntitySet": {
+          "type": "string"
+        },
+        "$IncludeInServiceDocument": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "$kind",
+        "$Function"
+      ]
+    },
+    "NavigationPropertyBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "": {
+          "type": "string"
+        }
+      }
     },
     "Parameter": {
       "type": "array",
@@ -514,7 +829,7 @@
     },
     "Precision": {
       "type": "integer",
-      "minimum": 1
+      "minimum": 0
     },
     "Scale": {
       "oneOf": [
@@ -530,16 +845,7 @@
       ]
     },
     "SRID": {
-      "oneOf": [
-        {
-          "type": "integer"
-        },
-        {
-          "enum": [
-            "variable"
-          ]
-        }
-      ]
+      "type": "string"
     }
   }
 }

@@ -2,7 +2,7 @@
 setlocal
 
 rem echo csdl.schema.json
-rem java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax ../schemas/csdl.schema.json %FILES%
+rem java -jar c:\Java\json-schema-validator-2.2.6-lib.jar --syntax ../schemas/csdl.schema.json %FILES%
 
 
 for /F "eol=# tokens=1" %%F in (transform.txt) do (
@@ -24,7 +24,7 @@ exit /b
 :process
   echo %~n1
 
-  rem java -jar c:\Java\json-schema-validator-2.2.5-lib.jar ../schemas/csdl.schema.json %~n1.json
+  rem java -jar c:\Java\json-schema-validator-2.2.6-lib.jar ../schemas/csdl.schema.json %~n1.json
 
   call z-schema --ignoreUnknownFormats --pedanticCheck ../schemas/csdl.schema.json %~n1.json > c:\temp\z-schema.log
   if %ERRORLEVEL% == 1 (
