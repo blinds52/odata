@@ -1,6 +1,10 @@
 @echo off 
 setlocal
 
+rem JSON Schema Validators used
+rem - https://github.com/zaggino/z-schema -> npm install z-schema
+rem - https://github.com/daveclayton/json-schema-validator -> download jar from https://bintray.com/fge/maven/json-schema-validator/view
+
 rem echo csdl.schema.json
 rem java -jar c:\Java\json-schema-validator-2.2.6-lib.jar --syntax ../schemas/csdl.schema.json %FILES%
 
