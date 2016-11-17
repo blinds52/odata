@@ -7,7 +7,7 @@ set CLASSPATH=%CLASSPATH%;C:\eclipse-Neon\plugins\org.apache.xml.serializer_2.7.
 set done=false
 
 for /F "eol=# tokens=1" %%F in (%~n0.txt) do (
-	if /I [%1] == [%%~nF] (
+	if /I [%~n1] == [%%~nF] (
 	  set done=true
 		call :process %%F
 	) else if [%1]==[] (

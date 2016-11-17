@@ -70,25 +70,22 @@
                 },
                 {
                     "$TermNamespace": "org.example.hcm.",
-                    "$TargetNamespace": "com.contoso.Sales."
+                    "$TargetNamespace": "com.example.Sales."
                 },
                 {
                     "$TermNamespace": "org.example.hcm.",
                     "$Qualifier": "Tablet",
-                    "$TargetNamespace": "com.contoso.Person."
+                    "$TargetNamespace": "com.example.Person."
                 }
             ]
         }
     },
     "org.example.": {
         "$kind": "Schema",
-        "@Core.Description": "Examples from Part 3: CSDL"
-    },
-    "org.example2.": {
-        "$kind": "Schema",
-        "@Core.Description": "Examples from Part 3: CSDL - second schema",
+        "$Alias": "Self",
+        "@Org.OData.Core.V1.Description": "Examples from Part 3: CSDL",
         "$Annotations": {
-            "Self.Person": {
+            "org.example.Person": {
                 "@org.example.display.DisplayName#Tablet": {
                     "$Path": "FirstName"
                 },
@@ -154,10 +151,85 @@
                 "@org.example.display.EndTime#element": {
                     "$TimeOfDay": "21:45:00"
                 },
-                "@UI.ReferenceFacet": {
-                    "$AnnotationPath": "Product/Supplier/@UI.LineItem"
+                "@Comparison.And.Logical.Operators": [
+                    {
+                        "$And": [
+                            {
+                                "$Path": "IsMale"
+                            },
+                            {
+                                "$Path": "IsMarried"
+                            }
+                        ]
+                    },
+                    {
+                        "$Or": [
+                            {
+                                "$Path": "IsMale"
+                            },
+                            {
+                                "$Path": "IsMarried"
+                            }
+                        ]
+                    },
+                    {
+                        "$Not": {
+                            "$Path": "IsMale"
+                        }
+                    },
+                    {
+                        "$Eq": [
+                            null,
+                            {
+                                "$Path": "IsMale"
+                            }
+                        ]
+                    },
+                    {
+                        "$Ne": [
+                            null,
+                            {
+                                "$Path": "IsMale"
+                            }
+                        ]
+                    },
+                    {
+                        "$Gt": [
+                            {
+                                "$Path": "Price"
+                            },
+                            20
+                        ]
+                    },
+                    {
+                        "$Ge": [
+                            {
+                                "$Path": "Price"
+                            },
+                            10
+                        ]
+                    },
+                    {
+                        "$Lt": [
+                            {
+                                "$Path": "Price"
+                            },
+                            20
+                        ]
+                    },
+                    {
+                        "$Le": [
+                            {
+                                "$Path": "Price"
+                            },
+                            100
+                        ]
+                    }
+                ],
+                "@org.example.Display.ReferenceFacet": {
+                    "$AnnotationPath": "Product/Supplier/@org.example.Display.LineItem"
                 },
-                "@UI.CollectionFacet#Contacts": [
+                "@org.example.Display.CollectionFacet#Contacts": [
                     {
                         "$AnnotationPath": "Supplier/@Communication.Contact"
                     },
@@ -175,7 +247,7 @@
                         {
                             "$Path": "Available/Quantity"
                         },
-                        "",
+                        " ",
                         {
                             "$Path": "Available/Unit"
                         },
@@ -185,19 +257,19 @@
                 },
                 "@Some.Term#Example57": {
                     "$Apply": [
-                        "http://host/service/Genres('{genreName}')",
+                        "http://host/someAPI/Actors/{actorName}/CV",
                         {
                             "$LabeledElement": {
-                                "$Path": "NameOfMovieGenre"
+                                "$Path": "Actor/Name"
                             },
-                            "$Name": "org.example2.genreName"
+                            "$Name": "org.example.actorName"
                         }
                     ],
                     "$Function": "odata.fillUriTemplate"
                 },
                 "@Some.Term#Example58": {
                     "$Apply": [
-                        "http://host/service/Genres({genreName2})",
+                        "http://host/service/Genres({genreName})",
                         {
                             "$LabeledElement": {
                                 "$Apply": [
@@ -207,7 +279,7 @@
                                 ],
                                 "$Function": "odata.uriEncode"
                             },
-                            "$Name": "org.example2.genreName2"
+                            "$Name": "org.example.genreName"
                         }
                     ],
                     "$Function": "odata.fillUriTemplate"
@@ -232,7 +304,7 @@
                         "Male"
                     ]
                 },
-                "@Self.IsPreferredCustomer": {
+                "@org.example.IsPreferredCustomer": {
                     "$IsOf": {
                         "$Path": "Customer"
                     },
@@ -242,22 +314,26 @@
                     "$LabeledElement": {
                         "$Path": "FirstName"
                     },
-                    "$Name": "org.example2.CustomerFirstName"
+                    "$Name": "org.example.CustomerFirstName"
                 },
                 "@org.example.display.DisplayName#lelement": {
                     "$LabeledElement": {
                         "$Path": "FirstName"
                     },
-                    "$Name": "org.example2.CustomerFirstName"
+                    "$Name": "org.example.CustomerFirstName"
                 },
                 "@org.example.display.DisplayName#ref": {
-                    "$LabeledElementReference": "org.example2.CustomerFirstName"
+                    "$LabeledElementReference": "Model.CustomerFirstName"
                 },
                 "@org.example.display.DisplayName#null": null,
-                "@UI.HyperLink": {
+                "@org.example.display.DisplayName#nullWithAnnotation": {
+                    "$Null": null,
+                    "@org.example.Reason": "Private"
+                },
+                "@org.example.Display.HyperLink": {
                     "$NavigationPropertyPath": "Supplier"
                 },
-                "@Capabilities.UpdateRestrictions#element": {
+                "@Org.OData.Capabilities.V1.UpdateRestrictions#element": {
                     "NonUpdatableNavigationProperties": [
                         {
                             "$NavigationPropertyPath": "Supplier"
@@ -273,10 +349,10 @@
                 "@org.example.display.DisplayName#pathelement": {
                     "$Path": "@vCard.Address#work/FullName"
                 },
-                "@UI.RefreshOnChangeOf": {
+                "@org.example.Display.RefreshOnChangeOf": {
                     "$PropertyPath": "ChangedAt"
                 },
-                "@Capabilities.UpdateRestrictions#element2": {
+                "@Org.OData.Capabilities.V1.UpdateRestrictions#element2": {
                     "NonUpdatableProperties": [
                         {
                             "$PropertyPath": "CreatedAt"
@@ -304,7 +380,7 @@
                                     "$LabeledElement": {
                                         "$Path": "CostCenterID"
                                     },
-                                    "$Name": "org.example2.ccid"
+                                    "$Name": "org.example.ccid"
                                 }
                             ],
                             "$Function": "odata.fillUriTemplate"
@@ -324,16 +400,16 @@
                                     ],
                                     "$Function": "odata.uriEncode"
                                 },
-                                "$Name": "org.example2.suppID"
+                                "$Name": "org.example.suppID"
                             }
                         ],
                         "$Function": "odata.fillUriTemplate"
                     }
                 },
-                "@Core.LongDescription#element": {
+                "@Org.OData.Core.V1.LongDescription#element": {
                     "$UrlRef": "http://host/wiki/HowToUse"
                 },
-                "@Core.LongDescription": {
+                "@Org.OData.Core.V1.LongDescription": {
                     "$UrlRef": "http://host/wiki/HowToUse"
                 }
             }
@@ -341,25 +417,26 @@
     },
     "Model1.": {
         "$kind": "Schema",
-        "@UI.ReferenceFacet": {
-            "$AnnotationPath": "@UI.LineItem"
+        "$Alias": "M1",
+        "@org.example.Display.ReferenceFacet": {
+            "$AnnotationPath": "@org.example.Display.LineItem"
         },
-        "@UI.ReferenceFacet#OnNavPropTarget": {
-            "$AnnotationPath": "Product/Supplier/@UI.LineItem"
+        "@org.example.Display.ReferenceFacet#OnNavPropTarget": {
+            "$AnnotationPath": "Product/Supplier/@org.example.Display.LineItem"
         },
-        "@UI.ReferenceFacet#OnNavProp": {
-            "$AnnotationPath": "Product/Supplier@UI.LineItem"
+        "@org.example.Display.ReferenceFacet#OnNavProp": {
+            "$AnnotationPath": "Product/Supplier/@org.example.Display.LineItem"
         },
-        "@UI.ReferenceFacet#OnNavPropQualified": {
-            "$AnnotationPath": "Product/Supplier@UI.LineItem#Tablet"
+        "@org.example.Display.ReferenceFacet#OnNavPropQualified": {
+            "$AnnotationPath": "Product/Supplier/@org.example.Display.LineItem#Tablet"
         },
-        "@UI.ReferenceFacet#ViaUrl": {
+        "@org.example.Display.ReferenceFacet#ViaUrl": {
             "$UrlRef": "http://LineItem"
         },
-        "@UI.ReferenceFacet#complicated": {
-            "$AnnotationPath": "@x.Supplier#X/Contacts@y.ViewVariants"
+        "@org.example.Display.ReferenceFacet#complicated": {
+            "$AnnotationPath": "@X.Supplier#X/Contacts/@Y.ViewVariants"
         },
-        "@UI.HyperLink": {
+        "@org.example.Display.HyperLink": {
             "$NavigationPropertyPath": "Supplier"
         },
         "@Is.Null": {
@@ -401,7 +478,7 @@
         "@A.Date": {
             "$Date": "2013-10-09"
         },
-        "@Capabilities.UpdateRestrictions": {
+        "@Org.OData.Capabilities.V1.UpdateRestrictions": {
             "Updatable": true,
             "NonUpdatableNavigationProperties": [
                 {
@@ -441,7 +518,7 @@
             ],
             "@In.If": true
         },
-        "@UI.CollectionFacet#Contacts": [
+        "@org.example.Display.CollectionFacet#Contacts": [
             {
                 "$AnnotationPath": "Supplier/@Communication.Contact"
             },
@@ -530,7 +607,7 @@
                 },
                 "@Org.OData.Core.V1.Description": "External description",
                 "@Org.OData.Core.V1.Description#alt": "Alternative description",
-                "@Core.Description": {
+                "@Org.OData.Core.V1.Description#WithPath": {
                     "$Path": "SomeProperty"
                 },
                 "@Y.DevelopmentTeam": {
@@ -698,7 +775,7 @@
             "$Type": "org.example.Product",
             "$Partner": "Category",
             "$OnDelete": "Cascade",
-            "$OnDelete@Core.Description": "Delete all related entities"
+            "$OnDelete@Org.OData.Core.V1.Description": "Delete all related entities"
         }
     },
     "org.example.Employee": {
@@ -753,7 +830,7 @@
         "Name": {
             "$kind": "Property",
             "$Type": "Edm.String",
-            "@Core.IsLanguageDependent": true
+            "@Org.OData.Core.V1.IsLanguageDependent": true
         }
     },
     "org.example.Category18": {
@@ -859,7 +936,7 @@
         "$UnderlyingType": "Edm.Int32",
         "$IsFlags": true,
         "Read": 1,
-        "Read@Core.Description": "Read access permitted",
+        "Read@Org.OData.Core.V1.Description": "Read access permitted",
         "Write": 2,
         "Create": 4,
         "Delete": 8
@@ -867,12 +944,12 @@
     "org.example.ShippingMethod": {
         "$kind": "EnumType",
         "FirstClass": 0,
-        "FirstClass@Core.Description": "Shipped with highest priority",
+        "FirstClass@Org.OData.Core.V1.Description": "Shipped with highest priority",
         "TwoDay": 1,
-        "TwoDay@Core.Description": "Shipped within two days",
+        "TwoDay@Org.OData.Core.V1.Description": "Shipped within two days",
         "Overnight": 2,
-        "Overnight@Core.Description": "Shipped overnight",
-        "@Core.Description": "Method of shipping"
+        "Overnight@Org.OData.Core.V1.Description": "Shipped overnight",
+        "@Org.OData.Core.V1.Description": "Method of shipping"
     },
     "org.example.Pattern": {
         "$kind": "EnumType",
@@ -929,7 +1006,29 @@
             }
         }
     ],
-    "org.example2.Product": {
+    "org.example.Approval": [
+        {
+            "$kind": "Action"
+        }
+    ],
+    "org.example.ProductsByRating": [
+        {
+            "$kind": "Function",
+            "$Parameter": [
+                {
+                    "$Name": "Rating",
+                    "$Type": "Edm.Decimal",
+                    "$Precision": 4,
+                    "$Scale": 0
+                }
+            ],
+            "$ReturnType": {
+                "$isCollection": true,
+                "$Type": "org.example.Product"
+            }
+        }
+    ],
+    "org.example.Product2": {
         "$kind": "EntityType",
         "$Key": [
             "ID"
@@ -947,7 +1046,7 @@
             "$kind": "Property",
             "$Type": "Edm.String"
         },
-        "@UI.DisplayName": {
+        "@org.example.Display.DisplayName": {
             "$Path": "Name"
         },
         "@SearchVocabulary.SearchResult": {
@@ -969,13 +1068,15 @@
             }
         }
     },
-    "org.example2.IsURI": {
+    "org.example.IsURL": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "Property",
-        "@Core.Description": "Properties and terms annotated with this term MUST contain a valid URI",
-        "@Core.RequiresType": "Edm.String"
+        "$AppliesTo": [
+            "Property"
+        ],
+        "@Org.OData.Core.V1.Description": "Properties and terms annotated with this term MUST contain a valid URL",
+        "@Org.OData.Core.V1.RequiresType": "Edm.String"
     },
     "Model1.NullablePrimitiveTypes": {
         "$kind": "ComplexType",
@@ -1255,14 +1356,14 @@
     "Model1.Size": {
         "$kind": "EnumType",
         "S": 0,
-        "S@Core.Description": "Small",
+        "S@Org.OData.Core.V1.Description": "Small",
         "M": 1,
-        "M@Core.Description": "Medium",
+        "M@Org.OData.Core.V1.Description": "Medium",
         "L": 2,
-        "L@Core.Description": "Large",
-        "@Core.Description": "T-Shirt Size",
-        "@Core.Description#alt": "Size (S, M, L)",
-        "@Core.LongDescription": "Size, expressed with letters familiar from e.g. T-Shirt sizes"
+        "L@Org.OData.Core.V1.Description": "Large",
+        "@Org.OData.Core.V1.Description": "T-Shirt Size",
+        "@Org.OData.Core.V1.Description#alt": "Size (S, M, L)",
+        "@Org.OData.Core.V1.LongDescription": "Size, expressed with letters familiar from e.g. T-Shirt sizes"
     },
     "Model1.Color": {
         "$kind": "EnumType",
@@ -1277,7 +1378,7 @@
             "$Type": "Edm.Binary"
         },
         "Striped": 2,
-        "Striped@Core.Description": "nicely striped"
+        "Striped@Org.OData.Core.V1.Description": "nicely striped"
     },
     "Model1.Weird": {
         "$kind": "EntityType",
@@ -1343,7 +1444,7 @@
                 "$LabeledElementReference": "Model1.Element"
             }
         ],
-        "@Collection.Of.Strings@Core.Description": "String-valued expressions",
+        "@Collection.Of.Strings@Org.OData.Core.V1.Description": "String-valued expressions",
         "@Collection.Of.Records": [
             {
                 "Egon": "1",
@@ -1361,7 +1462,7 @@
                 "$LabeledElementReference": "Model1.Record"
             }
         ],
-        "@Collection.Of.Records@Core.Description": "Record-valued expressions",
+        "@Collection.Of.Records@Org.OData.Core.V1.Description": "Record-valued expressions",
         "@Vocab.GIQSupplier": {
             "$UrlRef": "http://www.odata.org"
         },
@@ -1376,7 +1477,7 @@
                         "$LabeledElement": {
                             "$Apply": [
                                 {
-                                    "$Path": "@SupplierId"
+                                    "$Path": "SupplierId"
                                 },
                                 {
                                     "$DateTimeOffset": "2013-04-08T23:00:00.0Z"
@@ -1401,7 +1502,7 @@
             "$Scale": "variable",
             "$Type": "Edm.Decimal"
         },
-        "@Self.IsFloatingDecimal": {
+        "@org.example.IsFloatingDecimal": {
             "$IsOf": {
                 "$Path": "Customer/$count"
             },
@@ -1483,14 +1584,14 @@
         "Quantity": {
             "$kind": "Property",
             "$Type": "Edm.Decimal",
-            "@Measures.Unit": {
+            "@Org.OData.Measures.V1.Unit": {
                 "$Path": "ShippingUnit"
             }
         },
         "ShippingUnit": {
             "$kind": "Property",
             "$Type": "Edm.String",
-            "@Core.Description": "Contains the unit for property Quantity"
+            "@Org.OData.Core.V1.Description": "Contains the unit for property Quantity"
         }
     },
     "Model1.SpecialByte": {
@@ -1509,26 +1610,26 @@
     "Model1.LanguageDependentText": {
         "$kind": "TypeDefinition",
         "$UnderlyingType": "Edm.String",
-        "@Core.IsLanguageDependent": true,
-        "@Core.IsLanguageDependent@Core.DefaultLanguage": "en-US"
+        "@Org.OData.Core.V1.IsLanguageDependent": true,
+        "@Org.OData.Core.V1.IsLanguageDependent@Org.OData.Core.V1.DefaultLanguage": "en-US"
     },
     "Model1.IntegerDecimal": {
         "$kind": "TypeDefinition",
         "$UnderlyingType": "Edm.Decimal",
         "$Scale": 0,
-        "@Core.Description": "A decimal without fractional part"
+        "@Org.OData.Core.V1.Description": "A decimal without fractional part"
     },
     "Model1.IntegerDecimal10": {
         "$kind": "TypeDefinition",
         "$UnderlyingType": "Edm.Decimal",
         "$Precision": 10,
-        "@Core.Description": "A ten-digit integer"
+        "@Org.OData.Core.V1.Description": "A ten-digit integer"
     },
     "Model1.VariableDecimal": {
         "$kind": "TypeDefinition",
         "$UnderlyingType": "Edm.Decimal",
         "$Scale": "variable",
-        "@Core.Description": "A floating decimal"
+        "@Org.OData.Core.V1.Description": "A floating decimal"
     },
     "Model1.ExactTimestamp": {
         "$kind": "TypeDefinition",
@@ -1640,9 +1741,12 @@
         "$kind": "Term",
         "$BaseTerm": "Capabilities.ChangeTracking",
         "$Type": "Y.ChangeTrackingType",
-        "$AppliesTo": "EntityContainer EntitySet",
+        "$AppliesTo": [
+            "EntityContainer",
+            "EntitySet"
+        ],
         "$Nullable": false,
-        "@Core.Description": "Advanced change tracking capabilities of this service or entity set"
+        "@Org.OData.Core.V1.Description": "Advanced change tracking capabilities of this service or entity set"
     },
     "Y.ChangeTrackingType": {
         "$kind": "ComplexType",
@@ -1650,7 +1754,7 @@
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.PropertyPath",
-            "@Core.Description": "Change tracking supports inlining these stream properties"
+            "@Org.OData.Core.V1.Description": "Change tracking supports inlining these stream properties"
         }
     },
     "org.example.DemoService": {
@@ -1677,8 +1781,8 @@
             "$kind": "EntitySet",
             "$Type": "org.example.Product",
             "$NavigationPropertyBinding": {
-                "Category": "Self.DemoService.Categories",
-                "Supplier": "Self.DemoService.Suppliers"
+                "Category": "Categories",
+                "Supplier": "Suppliers"
             },
             "@org.example.display.DisplayName": "Product Catalog"
         },
@@ -1686,14 +1790,14 @@
             "$kind": "EntitySet",
             "$Type": "org.example.Category",
             "$NavigationPropertyBinding": {
-                "Products": "Self.DemoService.Products"
+                "Products": "Products"
             }
         },
         "Suppliers": {
             "$kind": "EntitySet",
             "$Type": "org.example.Supplier",
             "$NavigationPropertyBinding": {
-                "Products": "Self.DemoService.Products"
+                "Products": "Products"
             },
             "@org.example.display.DisplayName": "Supplier Directory"
         },
@@ -1701,23 +1805,32 @@
             "$kind": "EntitySet",
             "$Type": "org.example.Category",
             "$NavigationPropertyBinding": {
-                "Products": "Products"
+                "Products": "SomeSet"
             }
         },
         "Categories35": {
             "$kind": "EntitySet",
             "$Type": "org.example.Category",
             "$NavigationPropertyBinding": {
-                "Products": "org.example.DemoService/Products"
+                "Products": "SomeModel.SomeContainer/SomeSet"
             }
         },
-        "Contoso": {
+        "MainSupplier": {
             "$kind": "Singleton",
             "$Type": "org.example.Supplier"
+        },
+        "LeaveRequestApproval": {
+            "$kind": "ActionImport",
+            "$Action": "org.example.Approval"
         },
         "TopSellingProducts": {
             "$kind": "FunctionImport",
             "$Function": "Model1.TopSellingProducts",
+            "$EntitySet": "Products"
+        },
+        "ProductsByRating": {
+            "$kind": "FunctionImport",
+            "$Function": "org.example.ProductsByRating",
             "$EntitySet": "Products"
         }
     }

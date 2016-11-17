@@ -12,17 +12,18 @@
     },
     "org.example.odata.salesservice.": {
         "$kind": "Schema",
+        "$Alias": "SalesModel",
         "$Annotations": {
-            "SalesModel.Product": {
-                "@Aggregation.LeveledHierarchy#ProductHierarchy": {
+            "org.example.odata.salesservice.Product": {
+                "@Org.OData.Aggregation.V1.LeveledHierarchy#ProductHierarchy": {
                     "Levels": [
                         "Category/Name",
                         "Name"
                     ]
                 }
             },
-            "SalesModel.Time": {
-                "@Aggregation.LeveledHierarchy#TimeHierarchy": {
+            "org.example.odata.salesservice.Time": {
+                "@Org.OData.Aggregation.V1.LeveledHierarchy#TimeHierarchy": {
                     "Levels": [
                         "Year",
                         "Quarter",
@@ -30,8 +31,8 @@
                     ]
                 }
             },
-            "SalesModel.SalesOrganization": {
-                "@Aggregation.RecursiveHierarchy#SalesOrgHierarchy": {
+            "org.example.odata.salesservice.SalesOrganization": {
+                "@Org.OData.Aggregation.V1.RecursiveHierarchy#SalesOrgHierarchy": {
                     "NodeProperty": "ID",
                     "ParentNodeProperty": "Superordinate/ID"
                 }
@@ -46,7 +47,7 @@
         "Code": {
             "$kind": "Property",
             "$Type": "Edm.String",
-            "@Aggregation.Groupable": true
+            "@Org.OData.Aggregation.V1.Groupable": true
         },
         "Name": {
             "$kind": "Property",
@@ -68,8 +69,8 @@
             "$kind": "Property",
             "$Type": "Edm.Decimal",
             "$Scale": "variable",
-            "@Aggregation.Aggregateable": true,
-            "@Aggregation.ContextDefiningProperties": [
+            "@Org.OData.Aggregation.V1.Aggregateable": true,
+            "@Org.OData.Aggregation.V1.ContextDefiningProperties": [
                 {
                     "$PropertyPath": "Currency/Code"
                 }
@@ -100,8 +101,8 @@
             "$Type": "org.example.odata.salesservice.Time",
             "$Nullable": false
         },
-        "@Aggregation.CustomAggregate#Forecast": "Edm.Decimal",
-        "@Aggregation.CustomAggregate#Forecast@Aggregation.ContextDefiningProperties": [
+        "@Org.OData.Aggregation.V1.CustomAggregate#Forecast": "Edm.Decimal",
+        "@Org.OData.Aggregation.V1.CustomAggregate#Forecast@Org.OData.Aggregation.V1.ContextDefiningProperties": [
             {
                 "$PropertyPath": "Currency/Code"
             }
@@ -109,11 +110,11 @@
     },
     "org.example.odata.salesservice.Default": {
         "$kind": "EntityContainer",
-        "@Aggregation.ApplySupported": {
+        "@Org.OData.Aggregation.V1.ApplySupported": {
             "PropertyRestrictions": true
         },
-        "@Aggregation.CustomAggregate#Budget": "Edm.Decimal",
-        "@Aggregation.CustomAggregate#Budget@Aggregation.ContextDefiningProperties": [
+        "@Org.OData.Aggregation.V1.CustomAggregate#Budget": "Edm.Decimal",
+        "@Org.OData.Aggregation.V1.CustomAggregate#Budget@Org.OData.Aggregation.V1.ContextDefiningProperties": [
             {
                 "$PropertyPath": "Currencies/Code"
             }
