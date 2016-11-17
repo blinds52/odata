@@ -1,20 +1,35 @@
 @echo off 
-
 setlocal
 
-set FILES=csdl-16.1.openapi.json csdl-16.2.openapi.json Northwind.openapi.json ExampleService.openapi.json People.openapi.json Products.openapi.json Example.openapi.json TM1.openapi.json TripPin.openapi.json
-set VOCABS=Org.OData.Core.V1.openapi.json Org.OData.Measures.V1.openapi.json Org.OData.Capabilities.V1.openapi.json Org.OData.Aggregation.V1.openapi.json
-
-echo.
-echo = OpenAPI validation =
-call z-schema --pedanticCheck openapi.schema.json %FILES% %VOCABS%
-java -jar c:\Java\json-schema-validator-2.2.6-lib.jar openapi.schema.json %FILES% %VOCABS%
+rem echo csdl.schema.json
+rem java -jar c:\Java\json-schema-validator-2.2.5-lib.jar --syntax ../schemas/csdl.schema.json %FILES%
 
 
-echo.
-echo = EDM validation =
-rem java -jar c:\Java\json-schema-validator-2.2.5-lib.jar ../schemas/edm.json %FILES%
-call z-schema --ignoreUnknownFormats --pedanticCheck ../schemas/edm.json %FILES% %VOCABS%
-java -jar c:\Java\json-schema-validator-2.2.6-lib.jar ../schemas/edm.json %FILES% %VOCABS%
+for /F "eol=# tokens=1" %%F in (transform.txt) do (
+	if /I [%~n1] == [%%~nF] (
+	  set done=true
+		call :process %%F
+	) else if [%1]==[] (
+	  set done=true
+		call :process %%F
+	)
+)
+
+if %done%==false echo Don't know how to %~n0 %1
 
 endlocal
+exit /b
+
+
+:process
+  echo %~n1
+
+  rem java -jar c:\Java\json-schema-validator-2.2.5-lib.jar ../schemas/csdl.schema.json %~n1.json
+
+  call z-schema --ignoreUnknownFormats --pedanticCheck ../schemas/csdl.schema.json %~n1.json > c:\temp\z-schema.log
+  if %ERRORLEVEL% == 1 (
+    type c:\temp\z-schema.log
+  )
+  del c:\temp\z-schema.log
+
+exit /b

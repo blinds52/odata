@@ -11,13 +11,18 @@
     },
     "Org.OData.Aggregation.V1.": {
         "$kind": "Schema",
-        "@Core.Description": "Terms to describe which data in a given entity model can be aggregated, and how."
+        "$Alias": "Aggregation",
+        "@Org.OData.Core.V1.Description": "Terms to describe which data in a given entity model can be aggregated, and how."
     },
     "Org.OData.Aggregation.V1.ApplySupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Aggregation.V1.ApplySupportedType",
-        "$AppliesTo": "EntityType ComplexType EntityContainer",
-        "@Core.Description": "This structured type or entity container supports the $apply system query option"
+        "$AppliesTo": [
+            "EntityType",
+            "ComplexType",
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "This structured type or entity container supports the $apply system query option"
     },
     "Org.OData.Aggregation.V1.ApplySupportedType": {
         "$kind": "ComplexType",
@@ -26,26 +31,26 @@
             "$isCollection": true,
             "$Type": "Edm.String",
             "$Nullable": false,
-            "@Core.Description": "Transformations that can be used in $apply"
+            "@Org.OData.Core.V1.Description": "Transformations that can be used in $apply"
         },
         "CustomAggregationMethods": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.String",
             "$Nullable": false,
-            "@Core.Description": "Qualified names of custom aggregation methods that can be used in aggregate(...with...)"
+            "@Org.OData.Core.V1.Description": "Qualified names of custom aggregation methods that can be used in aggregate(...with...)"
         },
         "Rollup": {
             "$kind": "Property",
             "$DefaultValue": "MultipleHierarchies",
             "$Type": "Org.OData.Aggregation.V1.RollupType",
-            "@Core.Description": "The service supports rollup hierarchies in a groupby transformation"
+            "@Org.OData.Core.V1.Description": "The service supports rollup hierarchies in a groupby transformation"
         },
         "PropertyRestrictions": {
             "$kind": "Property",
             "$DefaultValue": false,
             "$Type": "Edm.Boolean",
-            "@Core.Description": "Only properties tagged as Groupable can be used in the groupby transformation, and only those tagged as Aggregatable can be used in the aggregate transformation"
+            "@Org.OData.Core.V1.Description": "Only properties tagged as Groupable can be used in the groupby transformation, and only those tagged as Aggregatable can be used in the aggregate transformation"
         }
     },
     "Org.OData.Aggregation.V1.RollupType": {
@@ -53,51 +58,70 @@
         "None": 0,
         "SingleHierarchy": 1,
         "MultipleHierarchies": 2,
-        "@Core.Description": "The number of rollup operators allowed in a groupby transformation"
+        "@Org.OData.Core.V1.Description": "The number of rollup operators allowed in a groupby transformation"
     },
     "Org.OData.Aggregation.V1.Groupable": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
-        "$AppliesTo": "Property NavigationProperty",
+        "$AppliesTo": [
+            "Property",
+            "NavigationProperty"
+        ],
         "$DefaultValue": true,
-        "@Core.Description": "This property can be used in the groupby transformation"
+        "@Org.OData.Core.V1.Description": "This property can be used in the groupby transformation"
     },
     "Org.OData.Aggregation.V1.Aggregatable": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
-        "$AppliesTo": "Property NavigationProperty",
+        "$AppliesTo": [
+            "Property",
+            "NavigationProperty"
+        ],
         "$DefaultValue": true,
-        "@Core.Description": "This property can be used in the aggregate transformation"
+        "@Org.OData.Core.V1.Description": "This property can be used in the aggregate transformation"
     },
     "Org.OData.Aggregation.V1.CustomAggregate": {
         "$kind": "Term",
         "$Type": "Edm.String",
-        "$AppliesTo": "EntityType ComplexType EntityContainer",
-        "@Core.Description": "Dynamic property that can be used in the aggregate transformation",
-        "@Core.LongDescription": "This term MUST be applied with a Qualifier, the Qualifier value is the name of the dynamic property. The value of the annotation MUST be the qualified name of a primitive type. The aggregated values will be of that type."
+        "$AppliesTo": [
+            "EntityType",
+            "ComplexType",
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Dynamic property that can be used in the aggregate transformation",
+        "@Org.OData.Core.V1.LongDescription": "This term MUST be applied with a Qualifier, the Qualifier value is the name of the dynamic property. The value of the annotation MUST be the qualified name of a primitive type. The aggregated values will be of that type."
     },
     "Org.OData.Aggregation.V1.ContextDefiningProperties": {
         "$kind": "Term",
         "$isCollection": true,
         "$Type": "Edm.PropertyPath",
         "$Nullable": false,
-        "$AppliesTo": "Property Annotation",
-        "@Core.Description": "The annotated property or custom aggregate is only well-defined in the context of these properties",
-        "@Core.LongDescription": "The context-defining properties need either be part of the result entities, or be restricted to a single value by a pre-filter operation. Examples are postal codes within a country, or monetary amounts whose context is the unit of currency."
+        "$AppliesTo": [
+            "Property",
+            "Annotation"
+        ],
+        "@Org.OData.Core.V1.Description": "The annotated property or custom aggregate is only well-defined in the context of these properties",
+        "@Org.OData.Core.V1.LongDescription": "The context-defining properties need either be part of the result entities, or be restricted to a single value by a pre-filter operation. Examples are postal codes within a country, or monetary amounts whose context is the unit of currency."
     },
     "Org.OData.Aggregation.V1.LeveledHierarchy": {
         "$kind": "Term",
         "$isCollection": true,
         "$Type": "Edm.PropertyPath",
         "$Nullable": false,
-        "$AppliesTo": "EntityType ComplexType",
-        "@Core.Description": "Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy"
+        "$AppliesTo": [
+            "EntityType",
+            "ComplexType"
+        ],
+        "@Org.OData.Core.V1.Description": "Defines a leveled hierarchy by defining an ordered list of properties in the hierarchy"
     },
     "Org.OData.Aggregation.V1.RecursiveHierarchy": {
         "$kind": "Term",
         "$Type": "Org.OData.Aggregation.V1.RecursiveHierarchyType",
-        "$AppliesTo": "EntityType ComplexType",
-        "@Core.Description": "Defines a recursive hierarchy."
+        "$AppliesTo": [
+            "EntityType",
+            "ComplexType"
+        ],
+        "@Org.OData.Core.V1.Description": "Defines a recursive hierarchy."
     },
     "Org.OData.Aggregation.V1.RecursiveHierarchyType": {
         "$kind": "ComplexType",
@@ -105,31 +129,31 @@
             "$kind": "Property",
             "$Type": "Edm.PropertyPath",
             "$Nullable": false,
-            "@Core.Description": "Property holding the hierarchy node value"
+            "@Org.OData.Core.V1.Description": "Property holding the hierarchy node value"
         },
         "ParentNavigationProperty": {
             "$kind": "Property",
             "$Type": "Edm.NavigationPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "Property for navigating to the parent node"
+            "@Org.OData.Core.V1.Description": "Property for navigating to the parent node"
         },
         "DistanceFromRootProperty": {
             "$kind": "Property",
             "$Type": "Edm.PropertyPath",
-            "@Core.Description": "Property holding the number of edges between the node and the root node"
+            "@Org.OData.Core.V1.Description": "Property holding the number of edges between the node and the root node"
         },
         "IsLeafProperty": {
             "$kind": "Property",
             "$Type": "Edm.PropertyPath",
-            "@Core.RequiresType": "Edm.Boolean",
-            "@Core.Description": "Property indicating whether the node is a leaf of the hierarchy"
+            "@Org.OData.Core.V1.RequiresType": "Edm.Boolean",
+            "@Org.OData.Core.V1.Description": "Property indicating whether the node is a leaf of the hierarchy"
         }
     },
     "Org.OData.Aggregation.V1.isroot": [
         {
             "$kind": "Function",
             "$IsBound": true,
-            "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is the root of the hierarchy",
+            "@Org.OData.Core.V1.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is the root of the hierarchy",
             "$Parameter": [
                 {
                     "$Name": "Entity",
@@ -151,7 +175,7 @@
         {
             "$kind": "Function",
             "$IsBound": true,
-            "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is a descendant of the given parent node with a distance of less than or equal to the optionally specified maximum distance",
+            "@Org.OData.Core.V1.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is a descendant of the given parent node with a distance of less than or equal to the optionally specified maximum distance",
             "$Parameter": [
                 {
                     "$Name": "Entity",
@@ -182,7 +206,7 @@
         {
             "$kind": "Function",
             "$IsBound": true,
-            "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is an ancestor of the given child node with a distance of less than or equal to the optionally specified maximum distance",
+            "@Org.OData.Core.V1.Description": "Returns true, if and only if the value of the node property of the specified hierarchy is an ancestor of the given child node with a distance of less than or equal to the optionally specified maximum distance",
             "$Parameter": [
                 {
                     "$Name": "Entity",
@@ -213,7 +237,7 @@
         {
             "$kind": "Function",
             "$IsBound": true,
-            "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy has the same parent node as the specified node",
+            "@Org.OData.Core.V1.Description": "Returns true, if and only if the value of the node property of the specified hierarchy has the same parent node as the specified node",
             "$Parameter": [
                 {
                     "$Name": "Entity",
@@ -240,7 +264,7 @@
         {
             "$kind": "Function",
             "$IsBound": true,
-            "@Core.Description": "Returns true, if and only if the value of the node property of the specified hierarchy has no descendants",
+            "@Org.OData.Core.V1.Description": "Returns true, if and only if the value of the node property of the specified hierarchy has no descendants",
             "$Parameter": [
                 {
                     "$Name": "Entity",
@@ -261,8 +285,11 @@
     "Org.OData.Aggregation.V1.AvailableOnAggregates": {
         "$kind": "Term",
         "$Type": "Org.OData.Aggregation.V1.AvailableOnAggregatesType",
-        "$AppliesTo": "Action Function",
-        "@Core.Description": "This action or function is available on aggregated entities if the RequiredProperties are still defined"
+        "$AppliesTo": [
+            "Action",
+            "Function"
+        ],
+        "@Org.OData.Core.V1.Description": "This action or function is available on aggregated entities if the RequiredProperties are still defined"
     },
     "Org.OData.Aggregation.V1.AvailableOnAggregatesType": {
         "$kind": "ComplexType",

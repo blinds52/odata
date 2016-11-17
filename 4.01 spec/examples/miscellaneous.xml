@@ -31,8 +31,8 @@
   <edmx:Reference Uri="http://odata.org/ann/b">
     <edmx:IncludeAnnotations TermNamespace="org.example.validation" />
     <edmx:IncludeAnnotations TermNamespace="org.example.display" Qualifier="Tablet" />
-    <edmx:IncludeAnnotations TermNamespace="org.example.hcm" TargetNamespace="com.contoso.Sales" />
-    <edmx:IncludeAnnotations TermNamespace="org.example.hcm" Qualifier="Tablet" TargetNamespace="com.contoso.Person" />
+    <edmx:IncludeAnnotations TermNamespace="org.example.hcm" TargetNamespace="com.example.Sales" />
+    <edmx:IncludeAnnotations TermNamespace="org.example.hcm" Qualifier="Tablet" TargetNamespace="com.example.Person" />
   </edmx:Reference>
   <edmx:DataServices>
     <!-- Example 5 -->
@@ -251,6 +251,13 @@
         <ReturnType Type="Collection(Self.Product)" />
       </Function>
 
+      <Action Name="Approval" IsBound="false" />
+
+      <Function Name="ProductsByRating" IsBound="false" IsComposable="false">
+        <Parameter Name="Rating" Type="Edm.Decimal" Precision="4" Scale="0" />
+        <ReturnType Type="Collection(Self.Product)" />
+      </Function>
+
       <!-- 13 Entity Container -->
       <EntityContainer Name="DemoService">
         <!-- Example 29: one entity set per entity type - covered by example 32 -->
@@ -270,36 +277,35 @@
         <!-- Example 32: An entity container aggregates entity sets, singletons, action imports, and function imports. -->
         <EntitySet Name="Products" EntityType="Self.Product">
           <Annotation Term="org.example.display.DisplayName" String="Product Catalog" />
-          <NavigationPropertyBinding Path="Category" Target="Self.DemoService.Categories" />
-          <NavigationPropertyBinding Path="Supplier" Target="Self.DemoService.Suppliers" />
+          <NavigationPropertyBinding Path="Category" Target="Self.DemoService/Categories" />
+          <NavigationPropertyBinding Path="Supplier" Target="Self.DemoService/Suppliers" />
         </EntitySet>
         <EntitySet Name="Categories" EntityType="Self.Category">
-          <NavigationPropertyBinding Path="Products" Target="Self.DemoService.Products" />
+          <NavigationPropertyBinding Path="Products" Target="org.example.DemoService/Products" />
         </EntitySet>
         <EntitySet Name="Suppliers" EntityType="Self.Supplier">
           <Annotation Term="org.example.display.DisplayName">
             <String>Supplier Directory</String>
           </Annotation>
-          <NavigationPropertyBinding Path="Products" Target="Self.DemoService.Products" />
+          <NavigationPropertyBinding Path="Products" Target="Self.DemoService/Products" />
         </EntitySet>
-        <Singleton Name="Contoso" Type="Self.Supplier" />
+        <Singleton Name="MainSupplier" Type="Self.Supplier" />
+        <ActionImport Name="LeaveRequestApproval" Action="Self.Approval" />
+        <FunctionImport Name="ProductsByRating" Function="Self.ProductsByRating" EntitySet="Products" />
 
         <!-- Example 33: see miscellaneous2.xml -->
 
         <!-- Example 34: for an entity set in the same container as the enclosing entity set -->
         <EntitySet Name="Categories34" EntityType="org.example.Category">
-          <NavigationPropertyBinding Path="Products" Target="Products" />
+          <NavigationPropertyBinding Path="Products" Target="SomeSet" />
         </EntitySet>
 
         <!-- Example 35: for an entity set in any container in scope -->
         <EntitySet Name="Categories35" EntityType="org.example.Category">
-          <NavigationPropertyBinding Path="Products" Target="org.example.DemoService/Products" />
+          <NavigationPropertyBinding Path="Products" Target="SomeModel.SomeContainer/SomeSet" />
         </EntitySet>
       </EntityContainer>
-    </Schema>
 
-    <Schema Namespace="org.example2" Alias="Model">
-      <Annotation Term="Core.Description" String="Examples from Part 3: CSDL - second schema" />
 
       <!-- 14 Vocabulary and Annotation -->
       <!--
@@ -308,7 +314,7 @@
         instances
         to be viewed as instances of the type specified by the term SearchResult
       -->
-      <EntityType Name="Product">
+      <EntityType Name="Product2">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
@@ -332,12 +338,12 @@
       </EntityType>
 
       <!--
-        Example 37: the IsURI term can be applied to properties and terms that are of type Edm.String (the Core.Tag type
+        Example 37: the IsURL term can be applied to properties and terms that are of type Edm.String (the Core.Tag type
         and the two Core terms are defined in [OData-VocCore])
       -->
-      <Term Name="IsURI" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
+      <Term Name="IsURL" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
         <Annotation Term="Core.Description">
-          <String>Properties and terms annotated with this term MUST contain a valid URI</String>
+          <String>Properties and terms annotated with this term MUST contain a valid URL</String>
         </Annotation>
         <Annotation Term="Core.RequiresType" String="Edm.String" />
       </Term>
@@ -428,6 +434,47 @@
           <TimeOfDay>21:45:00</TimeOfDay>
         </Annotation>
 
+        <!-- Comparison and Logical Operators -->
+        <Annotation Term="Comparison.And.Logical.Operators">
+          <Collection>
+            <And>
+              <Path>IsMale</Path>
+              <Path>IsMarried</Path>
+            </And>
+            <Or>
+              <Path>IsMale</Path>
+              <Path>IsMarried</Path>
+            </Or>
+            <Not>
+              <Path>IsMale</Path>
+            </Not>
+            <Eq>
+              <Null />
+              <Path>IsMale</Path>
+            </Eq>
+            <Ne>
+              <Null />
+              <Path>IsMale</Path>
+            </Ne>
+            <Gt>
+              <Path>Price</Path>
+              <Int>20</Int>
+            </Gt>
+            <Ge>
+              <Path>Price</Path>
+              <Int>10</Int>
+            </Ge>
+            <Lt>
+              <Path>Price</Path>
+              <Int>20</Int>
+            </Lt>
+            <Le>
+              <Path>Price</Path>
+              <Int>100</Int>
+            </Le>
+          </Collection>
+        </Annotation>
+
         <!-- Example 55 -->
         <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" />
         <Annotation Term="UI.CollectionFacet" Qualifier="Contacts">
@@ -453,16 +500,16 @@
         <!-- Example 57: assuming there are no special characters in values of the NameOfMovieGenre property -->
         <Annotation Term="Some.Term" Qualifier="Example57">
           <Apply Function="odata.fillUriTemplate">
-            <String>http://host/service/Genres('{genreName}')</String>
-            <LabeledElement Name="genreName" Path="NameOfMovieGenre" />
+            <String>http://host/someAPI/Actors/{actorName}/CV</String>
+            <LabeledElement Name="actorName" Path="Actor/Name" />
           </Apply>
         </Annotation>
 
         <!-- Example 58 -->
         <Annotation Term="Some.Term" Qualifier="Example58">
           <Apply Function="odata.fillUriTemplate">
-            <String>http://host/service/Genres({genreName2})</String>
-            <LabeledElement Name="genreName2">
+            <String>http://host/service/Genres({genreName})</String>
+            <LabeledElement Name="genreName">
               <Apply Function="odata.uriEncode">
                 <Path>NameOfMovieGenre</Path>
               </Apply>
@@ -520,6 +567,12 @@
         <!-- Example 65 -->
         <Annotation Term="org.example.display.DisplayName" Qualifier="null">
           <Null />
+        </Annotation>
+        <Annotation Term="org.example.display.DisplayName" Qualifier="nullWithAnnotation">
+          <Null>
+            <Annotation Term="org.example.Reason" String="Private">
+            </Annotation>
+          </Null>
         </Annotation>
 
         <!-- Example 66 -->
@@ -655,10 +708,10 @@
       </Function>
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="@UI.LineItem" />
       <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" Qualifier="OnNavPropTarget" />
-      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem" Qualifier="OnNavProp" />
-      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier@UI.LineItem#Tablet" Qualifier="OnNavPropQualified" />
+      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem" Qualifier="OnNavProp" />
+      <Annotation Term="UI.ReferenceFacet" AnnotationPath="Product/Supplier/@UI.LineItem#Tablet" Qualifier="OnNavPropQualified" />
       <Annotation Term="UI.ReferenceFacet" UrlRef="http://LineItem" Qualifier="ViaUrl" />
-      <Annotation Term="UI.ReferenceFacet" AnnotationPath="@x.Supplier#X/Contacts@y.ViewVariants" Qualifier="complicated" />
+      <Annotation Term="UI.ReferenceFacet" AnnotationPath="@X.Supplier#X/Contacts/@Y.ViewVariants" Qualifier="complicated" />
 
       <Annotation Term="UI.HyperLink" NavigationPropertyPath="Supplier" />
 
@@ -870,7 +923,7 @@
               <String>http://host/service/Suppliers({suppID})</String>
               <LabeledElement Name="suppID">
                 <Apply Function="odata.UriEncode">
-                  <Path>@SupplierId</Path>
+                  <Path>SupplierId</Path>
                   <DateTimeOffset>2013-04-08T23:00:00.0Z</DateTimeOffset>
                 </Apply>
               </LabeledElement>
@@ -1004,7 +1057,7 @@
         </Annotation>
         <Annotation Term="Org.OData.Core.V1.Description" String="External description" />
         <Annotation Term="Org.OData.Core.V1.Description" String="Alternative description" Qualifier="alt" />
-        <Annotation Term="Core.Description" Path="SomeProperty" />
+        <Annotation Term="Core.Description" Qualifier="WithPath" Path="SomeProperty" />
       </Annotations>
 
       <Term Name="DevelopmentTeam" Type="Collection(Y.DeveloperType)">

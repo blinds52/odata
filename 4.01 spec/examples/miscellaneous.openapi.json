@@ -36,7 +36,7 @@
             "name": "Suppliers"
         },
         {
-            "name": "Contoso"
+            "name": "MainSupplier"
         },
         {
             "name": "Categories34"
@@ -2281,11 +2281,11 @@
                 }
             }
         },
-        "/Contoso": {
+        "/MainSupplier": {
             "get": {
-                "summary": "Get Contoso",
+                "summary": "Get MainSupplier",
                 "tags": [
-                    "Contoso"
+                    "MainSupplier"
                 ],
                 "parameters": [
                     {
@@ -2315,9 +2315,9 @@
                 }
             },
             "patch": {
-                "summary": "Update Contoso",
+                "summary": "Update MainSupplier",
                 "tags": [
-                    "Contoso"
+                    "MainSupplier"
                 ],
                 "parameters": [
                     {
@@ -2332,6 +2332,65 @@
                 "responses": {
                     "204": {
                         "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/LeaveRequestApproval": {
+            "post": {
+                "summary": "Invoke action LeaveRequestApproval",
+                "tags": [
+                    "Service Operations"
+                ],
+                "parameters": [
+
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    },
+                    "default": {
+                        "$ref": "#/responses/error"
+                    }
+                }
+            }
+        },
+        "/ProductsByRating(Rating='{Rating}')": {
+            "get": {
+                "summary": "Invoke function ProductsByRating",
+                "tags": [
+                    "Products"
+                ],
+                "parameters": [
+                    {
+                        "name": "Rating",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "format": "decimal",
+                        "multipleOf": 1,
+                        "minimum": -9999,
+                        "maximum": 9999
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "title": "Result",
+                            "type": "object",
+                            "properties": {
+                                "value": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/org.example.Product"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "default": {
                         "$ref": "#/responses/error"

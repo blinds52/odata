@@ -11,14 +11,17 @@
     },
     "Org.OData.Capabilities.V1.": {
         "$kind": "Schema",
-        "@Core.Description": "Terms describing capabilities of a service",
-        "@Core.LongDescription": "\nThere are some capabilities which are strongly recommended for services to support even\nthough they are optional. Support for $top and $skip is a good example as\nsupporting these query options helps with performance of a service and are essential. Such\ncapabilities are assumed to be default capabilities of an OData service even in\nthe case that a capabilities annotation doesn’t exist. Capabilities annotations are\nmainly expected to be used to explicitly specify that a service doesn’t support such\ncapabilities. Capabilities annotations can as well be used to declaratively\nspecify the support of such capabilities.\n\nOn the other hand, there are some capabilities that a service may choose to support or\nnot support and in varying degrees. $filter and $orderby are such good examples.\nThis vocabulary aims to define terms to specify support or no support for such\ncapabilities.\n\nA service is assumed to support by default the following capabilities even though an\nannotation doesn’t exist:\n- Countability ($count)\n- Client pageability ($top, $skip)\n- Expandability ($expand)\n- Indexability by key\n- Batch support ($batch)\n- Navigability of navigation properties\n\nA service is expected to support the following capabilities. If not supported, the\nservice is expected to call out the restrictions using annotations:\n- Filterability ($filter)\n- Sortability ($orderby)\n- Queryability of top level entity sets\n- Query functions\n\nA client cannot assume that a service supports certain capabilities. A client can try, but\nit needs to be prepared to handle an error in case the following capabilities are not\nsupported:\n- Insertability\n- Updatability\n- Deletability\n        "
+        "$Alias": "Capabilities",
+        "@Org.OData.Core.V1.Description": "Terms describing capabilities of a service",
+        "@Org.OData.Core.V1.LongDescription": "\nThere are some capabilities which are strongly recommended for services to support even\nthough they are optional. Support for $top and $skip is a good example as\nsupporting these query options helps with performance of a service and are essential. Such\ncapabilities are assumed to be default capabilities of an OData service even in\nthe case that a capabilities annotation doesn’t exist. Capabilities annotations are\nmainly expected to be used to explicitly specify that a service doesn’t support such\ncapabilities. Capabilities annotations can as well be used to declaratively\nspecify the support of such capabilities.\n\nOn the other hand, there are some capabilities that a service may choose to support or\nnot support and in varying degrees. $filter and $orderby are such good examples.\nThis vocabulary aims to define terms to specify support or no support for such\ncapabilities.\n\nA service is assumed to support by default the following capabilities even though an\nannotation doesn’t exist:\n- Countability ($count)\n- Client pageability ($top, $skip)\n- Expandability ($expand)\n- Indexability by key\n- Batch support ($batch)\n- Navigability of navigation properties\n\nA service is expected to support the following capabilities. If not supported, the\nservice is expected to call out the restrictions using annotations:\n- Filterability ($filter)\n- Sortability ($orderby)\n- Queryability of top level entity sets\n- Query functions\n\nA client cannot assume that a service supports certain capabilities. A client can try, but\nit needs to be prepared to handle an error in case the following capabilities are not\nsupported:\n- Insertability\n- Updatability\n- Deletability\n        "
     },
     "Org.OData.Capabilities.V1.ConformanceLevel": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.ConformanceLevelType",
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "The conformance level achieved by this service"
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "The conformance level achieved by this service"
     },
     "Org.OData.Capabilities.V1.ConformanceLevelType": {
         "$kind": "EnumType",
@@ -31,46 +34,58 @@
         "$isCollection": true,
         "$Type": "Edm.String",
         "$Nullable": false,
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Media types of supported formats, including format parameters",
-        "@Core.IsMediaType": true
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Media types of supported formats, including format parameters",
+        "@Org.OData.Core.V1.IsMediaType": true
     },
     "Org.OData.Capabilities.V1.SupportedMetadataFormats": {
         "$kind": "Term",
         "$isCollection": true,
         "$Type": "Edm.String",
         "$Nullable": false,
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Media types of supported formats for $metadata, including format parameters",
-        "@Core.IsMediaType": true
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Media types of supported formats for $metadata, including format parameters",
+        "@Org.OData.Core.V1.IsMediaType": true
     },
     "Org.OData.Capabilities.V1.AcceptableEncodings": {
         "$kind": "Term",
         "$isCollection": true,
         "$Type": "Edm.String",
         "$Nullable": false,
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "List of acceptable compression methods for ($batch) requests, e.g. gzip"
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "List of acceptable compression methods for ($batch) requests, e.g. gzip"
     },
     "Org.OData.Capabilities.V1.AsynchronousRequestsSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Service supports the asynchronous request preference"
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Service supports the asynchronous request preference"
     },
     "Org.OData.Capabilities.V1.BatchContinueOnErrorSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Service supports the continue on error preference. Supports $batch requests. Services that apply the BatchContinueOnErrorSupported term should also specify the ContinueOnErrorSupported property from the BatchSupport term."
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Service supports the continue on error preference. Supports $batch requests. Services that apply the BatchContinueOnErrorSupported term should also specify the ContinueOnErrorSupported property from the BatchSupport term."
     },
     "Org.OData.Capabilities.V1.IsolationSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.IsolationLevel",
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Supported odata.isolation levels"
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Supported odata.isolation levels"
     },
     "Org.OData.Capabilities.V1.IsolationLevel": {
         "$kind": "EnumType",
@@ -80,15 +95,20 @@
     "Org.OData.Capabilities.V1.CallbackSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.CallbackType",
-        "$AppliesTo": "EntityContainer EntitySet",
-        "@Core.Description": "Supports callbacks for the specified protocols"
+        "$AppliesTo": [
+            "EntityContainer",
+            "EntitySet"
+        ],
+        "@Org.OData.Core.V1.Description": "Supports callbacks for the specified protocols"
     },
     "Org.OData.Capabilities.V1.CrossJoinSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Supports cross joins for the entity sets in this container"
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Supports cross joins for the entity sets in this container"
     },
     "Org.OData.Capabilities.V1.CallbackType": {
         "$kind": "ComplexType",
@@ -98,32 +118,35 @@
             "$Type": "Org.OData.Capabilities.V1.CallbackProtocol",
             "$Nullable": false
         },
-        "@Core.Description": "A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'"
+        "@Org.OData.Core.V1.Description": "A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'"
     },
     "Org.OData.Capabilities.V1.CallbackProtocol": {
         "$kind": "ComplexType",
         "Id": {
             "$kind": "Property",
             "$Type": "Edm.String",
-            "@Core.Description": "Protocol Identifier"
+            "@Org.OData.Core.V1.Description": "Protocol Identifier"
         },
         "UrlTemplate": {
             "$kind": "Property",
             "$Type": "Edm.String",
-            "@Core.Description": "URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570"
+            "@Org.OData.Core.V1.Description": "URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570"
         },
         "DocumentationUrl": {
             "$kind": "Property",
             "$Type": "Edm.String",
-            "@Core.Description": "Human readable description of the meaning of the URL Template parameters",
-            "@Core.IsURL": true
+            "@Org.OData.Core.V1.Description": "Human readable description of the meaning of the URL Template parameters",
+            "@Org.OData.Core.V1.IsURL": true
         }
     },
     "Org.OData.Capabilities.V1.ChangeTracking": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.ChangeTrackingType",
-        "$AppliesTo": "EntityContainer EntitySet",
-        "@Core.Description": "Change tracking capabilities of this service or entity set"
+        "$AppliesTo": [
+            "EntityContainer",
+            "EntitySet"
+        ],
+        "@Org.OData.Core.V1.Description": "Change tracking capabilities of this service or entity set"
     },
     "Org.OData.Capabilities.V1.ChangeTrackingType": {
         "$kind": "ComplexType",
@@ -131,28 +154,31 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "This entity set supports the odata.track-changes preference"
+            "@Org.OData.Core.V1.Description": "This entity set supports the odata.track-changes preference"
         },
         "FilterableProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.PropertyPath",
             "$Nullable": false,
-            "@Core.Description": "Change tracking supports filters on these properties"
+            "@Org.OData.Core.V1.Description": "Change tracking supports filters on these properties"
         },
         "ExpandableProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.NavigationPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "Change tracking supports these properties expanded"
+            "@Org.OData.Core.V1.Description": "Change tracking supports these properties expanded"
         }
     },
     "Org.OData.Capabilities.V1.CountRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.CountRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on /$count path suffix and $count=true system query option"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on /$count path suffix and $count=true system query option"
     },
     "Org.OData.Capabilities.V1.CountRestrictionsType": {
         "$kind": "ComplexType",
@@ -160,35 +186,38 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "Entities can be counted"
+            "@Org.OData.Core.V1.Description": "Entities can be counted"
         },
         "NonCountableProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.PropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These collection properties do not allow /$count segments"
+            "@Org.OData.Core.V1.Description": "These collection properties do not allow /$count segments"
         },
         "NonCountableNavigationProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.NavigationPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These navigation properties do not allow /$count segments"
+            "@Org.OData.Core.V1.Description": "These navigation properties do not allow /$count segments"
         }
     },
     "Org.OData.Capabilities.V1.NavigationRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.NavigationRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on navigating properties according to OData URL conventions"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on navigating properties according to OData URL conventions"
     },
     "Org.OData.Capabilities.V1.NavigationRestrictionsType": {
         "$kind": "ComplexType",
         "Navigability": {
             "$kind": "Property",
             "$Type": "Org.OData.Capabilities.V1.NavigationType",
-            "@Core.Description": "Supported Navigability"
+            "@Org.OData.Core.V1.Description": "Supported Navigability"
         },
         "RestrictedProperties": {
             "$kind": "Property",
@@ -202,56 +231,69 @@
         "NavigationProperty": {
             "$kind": "Property",
             "$Type": "Edm.NavigationPropertyPath",
-            "@Core.Description": "Navigation properties can be navigated"
+            "@Org.OData.Core.V1.Description": "Navigation properties can be navigated"
         },
         "Navigability": {
             "$kind": "Property",
             "$Type": "Org.OData.Capabilities.V1.NavigationType",
-            "@Core.Description": "Navigation properties can be navigated to this level"
+            "@Org.OData.Core.V1.Description": "Navigation properties can be navigated to this level"
         }
     },
     "Org.OData.Capabilities.V1.NavigationType": {
         "$kind": "EnumType",
         "Recursive": 0,
-        "Recursive@Core.Description": "Navigation properties can be recursively navigated",
+        "Recursive@Org.OData.Core.V1.Description": "Navigation properties can be recursively navigated",
         "Single": 1,
-        "Single@Core.Description": "Navigation properties can be navigated to a single level",
+        "Single@Org.OData.Core.V1.Description": "Navigation properties can be navigated to a single level",
         "None": 2,
-        "None@Core.Description": "Navigation properties are not navigable"
+        "None@Org.OData.Core.V1.Description": "Navigation properties are not navigable"
     },
     "Org.OData.Capabilities.V1.IndexableByKey": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Supports key values according to OData URL conventions"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Supports key values according to OData URL conventions"
     },
     "Org.OData.Capabilities.V1.TopSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Supports $top"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Supports $top"
     },
     "Org.OData.Capabilities.V1.SkipSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Supports $skip"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Supports $skip"
     },
     "Org.OData.Capabilities.V1.BatchSupported": {
         "$kind": "Term",
         "$Type": "Org.OData.Core.V1.Tag",
         "$DefaultValue": true,
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Supports $batch requests. Services that apply the BatchSupported term should also apply the more comprehensive BatchSupport term."
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Supports $batch requests. Services that apply the BatchSupported term should also apply the more comprehensive BatchSupport term."
     },
     "Org.OData.Capabilities.V1.BatchSupport": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.BatchSupportType",
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Batch Support for the service"
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Batch Support for the service"
     },
     "Org.OData.Capabilities.V1.BatchSupportType": {
         "$kind": "ComplexType",
@@ -259,27 +301,27 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "Service supports requests to $batch"
+            "@Org.OData.Core.V1.Description": "Service supports requests to $batch"
         },
         "ContinueOnErrorSupported": {
             "$kind": "Property",
             "$Type": "Edm.Boolean",
-            "@Core.Description": "Service supports the continue on error preference"
+            "@Org.OData.Core.V1.Description": "Service supports the continue on error preference"
         },
         "ReferencesInRequestBodiesSupported": {
             "$kind": "Property",
             "$Type": "Edm.Boolean",
-            "@Core.Description": "Service supports Content-ID referencing in request bodies"
+            "@Org.OData.Core.V1.Description": "Service supports Content-ID referencing in request bodies"
         },
         "ReferencesAcrossChangeSetsSupported": {
             "$kind": "Property",
             "$Type": "Edm.Boolean",
-            "@Core.Description": "Service supports Content-ID referencing across change sets"
+            "@Org.OData.Core.V1.Description": "Service supports Content-ID referencing across change sets"
         },
         "EtagReferencesSupported": {
             "$kind": "Property",
             "$Type": "Edm.Boolean",
-            "@Core.Description": "Service supports referencing Etags from previous requests"
+            "@Org.OData.Core.V1.Description": "Service supports referencing Etags from previous requests"
         }
     },
     "Org.OData.Capabilities.V1.FilterFunctions": {
@@ -287,14 +329,20 @@
         "$isCollection": true,
         "$Type": "Edm.String",
         "$Nullable": false,
-        "$AppliesTo": "EntityContainer EntitySet",
-        "@Core.Description": "List of functions and operators supported in $filter"
+        "$AppliesTo": [
+            "EntityContainer",
+            "EntitySet"
+        ],
+        "@Org.OData.Core.V1.Description": "List of functions and operators supported in $filter"
     },
     "Org.OData.Capabilities.V1.FilterRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.FilterRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on $filter expressions"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on $filter expressions"
     },
     "Org.OData.Capabilities.V1.FilterRestrictionsType": {
         "$kind": "ComplexType",
@@ -302,34 +350,34 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "$filter is supported"
+            "@Org.OData.Core.V1.Description": "$filter is supported"
         },
         "RequiresFilter": {
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": false,
-            "@Core.Description": "$filter is required"
+            "@Org.OData.Core.V1.Description": "$filter is required"
         },
         "RequiredProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.PropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These properties must be specified in the $filter clause (properties of derived types are not allowed here)"
+            "@Org.OData.Core.V1.Description": "These properties must be specified in the $filter clause (properties of derived types are not allowed here)"
         },
         "NonFilterableProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.AnyPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These structural or navigation properties cannot be used in $filter expressions"
+            "@Org.OData.Core.V1.Description": "These structural or navigation properties cannot be used in $filter expressions"
         },
         "FilterExpressionRestrictions": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Org.OData.Capabilities.V1.FilterExpressionRestrictionType",
             "$Nullable": false,
-            "@Core.Description": "These properties only allow a subset of expressions"
+            "@Org.OData.Core.V1.Description": "These properties only allow a subset of expressions"
         }
     },
     "Org.OData.Capabilities.V1.FilterExpressionRestrictionType": {
@@ -349,23 +397,26 @@
         "@Validation.AllowedValues": [
             {
                 "Value": "SingleValue",
-                "@Core.Description": "Property can be used in a single eq clause"
+                "@Org.OData.Core.V1.Description": "Property can be used in a single eq clause"
             },
             {
                 "Value": "MultiValue",
-                "@Core.Description": "Property can be used in a single in clause"
+                "@Org.OData.Core.V1.Description": "Property can be used in a single in clause"
             },
             {
                 "Value": "SingleRange",
-                "@Core.Description": "Property can be used in at most one ge and/or one le clause, separated by and"
+                "@Org.OData.Core.V1.Description": "Property can be used in at most one ge and/or one le clause, separated by and"
             }
         ]
     },
     "Org.OData.Capabilities.V1.SortRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.SortRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on $orderby expressions"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on $orderby expressions"
     },
     "Org.OData.Capabilities.V1.SortRestrictionsType": {
         "$kind": "ComplexType",
@@ -373,35 +424,38 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "$orderby is supported"
+            "@Org.OData.Core.V1.Description": "$orderby is supported"
         },
         "AscendingOnlyProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.PropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These properties can only be used for sorting in Ascending order"
+            "@Org.OData.Core.V1.Description": "These properties can only be used for sorting in Ascending order"
         },
         "DescendingOnlyProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.PropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These properties can only be used for sorting in Descending order"
+            "@Org.OData.Core.V1.Description": "These properties can only be used for sorting in Descending order"
         },
         "NonSortableProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.AnyPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These structural or navigation properties cannot be used in $orderby expressions"
+            "@Org.OData.Core.V1.Description": "These structural or navigation properties cannot be used in $orderby expressions"
         }
     },
     "Org.OData.Capabilities.V1.ExpandRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.ExpandRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on $expand expressions"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on $expand expressions"
     },
     "Org.OData.Capabilities.V1.ExpandRestrictionsType": {
         "$kind": "ComplexType",
@@ -409,21 +463,24 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "$expand is supported"
+            "@Org.OData.Core.V1.Description": "$expand is supported"
         },
         "NonExpandableProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.NavigationPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These properties cannot be used in $expand expressions"
+            "@Org.OData.Core.V1.Description": "These properties cannot be used in $expand expressions"
         }
     },
     "Org.OData.Capabilities.V1.SearchRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.SearchRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on $search expressions"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on $search expressions"
     },
     "Org.OData.Capabilities.V1.SearchRestrictionsType": {
         "$kind": "ComplexType",
@@ -431,13 +488,13 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "$search is supported"
+            "@Org.OData.Core.V1.Description": "$search is supported"
         },
         "UnsupportedExpressions": {
             "$kind": "Property",
             "$Type": "Org.OData.Capabilities.V1.SearchExpressions",
             "$DefaultValue": "none",
-            "@Core.Description": "Expressions not supported in $search"
+            "@Org.OData.Core.V1.Description": "Expressions not supported in $search"
         }
     },
     "Org.OData.Capabilities.V1.SearchExpressions": {
@@ -453,8 +510,11 @@
     "Org.OData.Capabilities.V1.InsertRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.InsertRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on insert operations"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on insert operations"
     },
     "Org.OData.Capabilities.V1.InsertRestrictionsType": {
         "$kind": "ComplexType",
@@ -462,21 +522,23 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "Entities can be inserted"
+            "@Org.OData.Core.V1.Description": "Entities can be inserted"
         },
         "NonInsertableNavigationProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.NavigationPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These navigation properties do not allow deep inserts"
+            "@Org.OData.Core.V1.Description": "These navigation properties do not allow deep inserts"
         }
     },
     "Org.OData.Capabilities.V1.DeepInsertSupport": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.DeepInsertSupportType",
-        "$AppliesTo": "EntityContainer",
-        "@Core.Description": "Deep Insert Support for the service"
+        "$AppliesTo": [
+            "EntityContainer"
+        ],
+        "@Org.OData.Core.V1.Description": "Deep Insert Support for the service"
     },
     "Org.OData.Capabilities.V1.DeepInsertSupportType": {
         "$kind": "ComplexType",
@@ -484,20 +546,23 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "Service supports deep inserts"
+            "@Org.OData.Core.V1.Description": "Service supports deep inserts"
         },
         "ContentIDSupported": {
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "Service supports accepting and returning nested entities annotated with the contentID instance annotation."
+            "@Org.OData.Core.V1.Description": "Service supports accepting and returning nested entities annotated with the contentID instance annotation."
         }
     },
     "Org.OData.Capabilities.V1.UpdateRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.UpdateRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on update operations"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on update operations"
     },
     "Org.OData.Capabilities.V1.UpdateRestrictionsType": {
         "$kind": "ComplexType",
@@ -505,21 +570,24 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "Entities can be updated"
+            "@Org.OData.Core.V1.Description": "Entities can be updated"
         },
         "NonUpdatableNavigationProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.NavigationPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These navigation properties do not allow rebinding"
+            "@Org.OData.Core.V1.Description": "These navigation properties do not allow rebinding"
         }
     },
     "Org.OData.Capabilities.V1.DeleteRestrictions": {
         "$kind": "Term",
         "$Type": "Org.OData.Capabilities.V1.DeleteRestrictionsType",
-        "$AppliesTo": "EntitySet Collection",
-        "@Core.Description": "Restrictions on delete operations"
+        "$AppliesTo": [
+            "EntitySet",
+            "Collection"
+        ],
+        "@Org.OData.Core.V1.Description": "Restrictions on delete operations"
     },
     "Org.OData.Capabilities.V1.DeleteRestrictionsType": {
         "$kind": "ComplexType",
@@ -527,14 +595,14 @@
             "$kind": "Property",
             "$Type": "Edm.Boolean",
             "$DefaultValue": true,
-            "@Core.Description": "Entities can be deleted"
+            "@Org.OData.Core.V1.Description": "Entities can be deleted"
         },
         "NonDeletableNavigationProperties": {
             "$kind": "Property",
             "$isCollection": true,
             "$Type": "Edm.NavigationPropertyPath",
             "$Nullable": false,
-            "@Core.Description": "These navigation properties do not allow DeleteLink requests"
+            "@Org.OData.Core.V1.Description": "These navigation properties do not allow DeleteLink requests"
         }
     }
 }

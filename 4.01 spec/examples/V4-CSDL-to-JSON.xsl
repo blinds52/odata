@@ -7,13 +7,14 @@
 
     TODO:
     - $EnumMember with number value (if safe), string with number (if too long), string with member name as fallback
+    - normalize annotations, i.e. explace whatever can be targeted?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
-  <xsl:strip-space elements="*" />
 
   <xsl:key name="methods" match="//edm:Action|//edm:Function" use="concat(../@Namespace,'.',@Name)" />
 
+  <!-- TODO: combine @Target using alias-qualified names and @Target using namespace-qualified names -->
   <xsl:key name="targets" match="//edm:Annotations" use="concat(../@Namespace,'/',@Target)" />
 
   <xsl:template match="edmx:Edmx">
@@ -81,7 +82,7 @@
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="@Namespace" />
     <xsl:text>.":{"$kind":"Schema"</xsl:text>
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
+    <xsl:apply-templates select="@Alias|edm:Annotation" mode="list2" />
     <xsl:apply-templates select="edm:Annotations[generate-id() = generate-id(key('targets', concat(../@Namespace,'/',@Target))[1])]" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -124,23 +125,27 @@
 
   <xsl:template match="edm:NavigationPropertyBinding" mode="hashpair">
     <xsl:text>"</xsl:text>
-    <xsl:variable name="prefixed-path">
-      <xsl:choose>
-        <xsl:when test="starts-with(@Path,concat(../../../@Alias,'.'))">
-          <xsl:value-of select="concat(../../../@Namespace,substring-after(@Path,../../../@Alias))" />
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@Path" />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:call-template name="replace-all">
-      <xsl:with-param name="string" select="$prefixed-path" />
-      <xsl:with-param name="old" select="concat('/',../../../@Alias,'.')" />
-      <xsl:with-param name="new" select="concat('/',../../../@Namespace,'.')" />
+    <xsl:call-template name="normalizedPath">
+      <xsl:with-param name="path" select="@Path" />
     </xsl:call-template>
     <xsl:text>":"</xsl:text>
-    <xsl:value-of select="@Target" />
+    <xsl:choose>
+      <xsl:when test="contains(@Target,'/') and substring-before(@Target,'/') = concat(../../../@Namespace,'.',../../@Name)">
+        <xsl:call-template name="normalizedPath">
+          <xsl:with-param name="path" select="substring-after(@Target,'/')" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="contains(@Target,'/') and substring-before(@Target,'/') = concat(../../../@Alias,'.',../../@Name)">
+        <xsl:call-template name="normalizedPath">
+          <xsl:with-param name="path" select="substring-after(@Target,'/')" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="normalizedPath">
+          <xsl:with-param name="path" select="@Target" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>"</xsl:text>
   </xsl:template>
 
@@ -256,6 +261,16 @@
         <xsl:text>"</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="@AppliesTo">
+    <xsl:text>"$AppliesTo":["</xsl:text>
+    <xsl:call-template name="replace-all">
+      <xsl:with-param name="string" select="normalize-space(.)" />
+      <xsl:with-param name="old" select="' '" />
+      <xsl:with-param name="new" select="'&quot;,&quot;'" />
+    </xsl:call-template>
+    <xsl:text>"]</xsl:text>
   </xsl:template>
 
   <!-- default value is suppressed -->
@@ -395,7 +410,9 @@
       <xsl:text>,"$Annotations":{</xsl:text>
     </xsl:if>
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="@Target" />
+    <xsl:call-template name="normalizedPath">
+      <xsl:with-param name="path" select="@Target" />
+    </xsl:call-template>
     <xsl:text>":{</xsl:text>
     <xsl:for-each select="key('targets', concat(../@Namespace,'/',@Target))">
       <xsl:if test="position()>1">
@@ -420,7 +437,9 @@
     <xsl:variable name="name">
       <xsl:value-of select="$target" />
       <xsl:text>@</xsl:text>
-      <xsl:value-of select="@Term" />
+      <xsl:call-template name="namespaceQualifiedName">
+        <xsl:with-param name="qualifiedName" select="@Term" />
+      </xsl:call-template>
       <xsl:if test="@Qualifier or $qualifier">
         <xsl:text>#</xsl:text>
         <xsl:value-of select="@Qualifier" />
@@ -485,8 +504,18 @@
   </xsl:template>
 
   <xsl:template
-    match="@AnnotationPath|edm:AnnotationPath|@NavigationPropertyPath|edm:NavigationPropertyPath|@Path|edm:Path|@PropertyPath|edm:PropertyPath|@UrlRef"
+    match="@AnnotationPath|edm:AnnotationPath|@NavigationPropertyPath|edm:NavigationPropertyPath|@Path|edm:Path|@PropertyPath|edm:PropertyPath"
   >
+    <xsl:text>{"$</xsl:text>
+    <xsl:value-of select="local-name()" />
+    <xsl:text>":"</xsl:text>
+    <xsl:call-template name="normalizedPath">
+      <xsl:with-param name="path" select="." />
+    </xsl:call-template>
+    <xsl:text>"}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="@UrlRef">
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":"</xsl:text>
@@ -914,6 +943,39 @@
       <xsl:with-param name="input" select="$qualifiedName" />
       <xsl:with-param name="marker" select="'.'" />
     </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="normalizedPath">
+    <xsl:param name="path" />
+    <xsl:choose>
+      <xsl:when test="contains($path,'/')">
+        <!-- multiple path segments: normalize first segment and remaining path -->
+        <xsl:call-template name="normalizedPath">
+          <xsl:with-param name="path" select="substring-before($path,'/')" />
+        </xsl:call-template>
+        <xsl:text>/</xsl:text>
+        <xsl:call-template name="normalizedPath">
+          <xsl:with-param name="path" select="substring-after($path,'/')" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="substring($path,1,1)='@'">
+        <!-- term-cast segment: normalize term name -->
+        <xsl:text>@</xsl:text>
+        <xsl:call-template name="namespaceQualifiedName">
+          <xsl:with-param name="qualifiedName" select="substring($path,2)" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="contains($path,'.')">
+        <!-- qualified segment: normalize -->
+        <xsl:call-template name="namespaceQualifiedName">
+          <xsl:with-param name="qualifiedName" select="$path" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- unqualified segment, e.g. property: copy -->
+        <xsl:value-of select="$path" />
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>

@@ -1,0 +1,545 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "OData Common Schema Definition Language (CSDL) JSON Representation Version 4.01",
+  "additionalProperties": false,
+  "properties": {
+    "$Version": {
+      "enum": [
+        "4.0",
+        "4.01"
+      ]
+    },
+    "$EntityContainer": {
+      "type": "string"
+    },
+    "$Reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "": {
+          "description": "Reference Object",
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^@": {
+              "description": "Annotations"
+            }
+          },
+          "properties": {
+            "$Include": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "string",
+                  "object"
+                ]
+              }
+            },
+            "$IncludeAnnotations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "$TermNamespace": {
+                    "type": "string"
+                  },
+                  "$TargetNamespace": {
+                    "type": "string"
+                  },
+                  "$Qualifier": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "$TermNamespace"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "patternProperties": {
+    "\\.$": {
+      "$ref": "#/definitions/Schema"
+    },
+    "^[^$].*[^.]$": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/EntityType"
+        },
+        {
+          "$ref": "#/definitions/ComplexType"
+        },
+        {
+          "$ref": "#/definitions/EnumType"
+        },
+        {
+          "$ref": "#/definitions/TypeDefinition"
+        },
+        {
+          "$ref": "#/definitions/Term"
+        },
+        {
+          "$ref": "#/definitions/EntityContainer"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Function"
+          }
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "Schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "Schema"
+          ]
+        },
+        "$Alias": {
+          "type": "string"
+        },
+        "$Annotations": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^[^$]": {
+              "description": "Annotation Targets",
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^@": {
+                  "description": "Annotations"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "$kind"
+      ]
+    },
+    "EntityType": {
+      "type": "object",
+      "TODO": "flesh out",
+      "properties": {
+        "$kind": {
+          "enum": [
+            "EntityType"
+          ]
+        }
+      },
+      "required": [
+        "$kind"
+      ]
+    },
+    "ComplexType": {
+      "type": "object",
+      "TODO": "flesh out",
+      "properties": {
+        "$kind": {
+          "enum": [
+            "ComplexType"
+          ]
+        }
+      },
+      "required": [
+        "$kind"
+      ]
+    },
+    "EnumType": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "@": {
+          "description": "Annotations"
+        },
+        "^[^$@]*$": {
+          "description": "Enumeration Member",
+          "type": "integer"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "EnumType"
+          ]
+        },
+        "$IsFlags": {
+          "type": "boolean",
+          "default": true
+        },
+        "$UnderlyingType": {
+          "enum": [
+            "Edm.Byte",
+            "Edm.SByte",
+            "Edm.Int16",
+            "Edm.Int32",
+            "Edm.Int64"
+          ],
+          "default": "Edm.Int32"
+        }
+      },
+      "required": [
+        "$kind"
+      ]
+    },
+    "TypeDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "TypeDefinition"
+          ]
+        },
+        "$UnderlyingType": {
+          "type": "string"
+        },
+        "$MaxLength": {
+          "$ref": "#/definitions/MaxLength"
+        },
+        "$Unicode": {
+          "type": "boolean",
+          "default": false
+        },
+        "$Precision": {
+          "$ref": "#/definitions/Precision"
+        },
+        "$Scale": {
+          "$ref": "#/definitions/Scale"
+        },
+        "$SRID": {
+          "$ref": "#/definitions/SRID"
+        }
+      },
+      "required": [
+        "$kind",
+        "$UnderlyingType"
+      ]
+    },
+    "Term": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "Term"
+          ]
+        },
+        "$Type": {
+          "type": "string"
+        },
+        "$isCollection": {
+          "type": "boolean",
+          "default": true
+        },
+        "$Nullable": {
+          "type": "boolean",
+          "default": false
+        },
+        "$MaxLength": {
+          "$ref": "#/definitions/MaxLength"
+        },
+        "$Unicode": {
+          "type": "boolean",
+          "default": false
+        },
+        "$Precision": {
+          "$ref": "#/definitions/Precision"
+        },
+        "$Scale": {
+          "$ref": "#/definitions/Scale"
+        },
+        "$SRID": {
+          "$ref": "#/definitions/SRID"
+        },
+        "$BaseTerm": {
+          "type": "string"
+        },
+        "$AppliesTo": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Action",
+              "ActionImport",
+              "Annotation",
+              "Apply",
+              "Cast",
+              "Collection",
+              "ComplexType",
+              "EntityContainer",
+              "EntitySet",
+              "EntityType",
+              "EnumType",
+              "Function",
+              "FunctionImport",
+              "If",
+              "Include",
+              "IsOf",
+              "LabeledElement",
+              "Member",
+              "NavigationProperty",
+              "Null",
+              "OnDelete",
+              "Parameter",
+              "Property",
+              "PropertyValue",
+              "Record",
+              "Reference",
+              "ReferentialConstraint",
+              "ReturnType",
+              "Schema",
+              "Singleton",
+              "Term",
+              "TypeDefinition",
+              "UrlRef"
+            ]
+          }
+        },
+        "$DefaultValue": {
+        }
+      },
+      "required": [
+        "$kind",
+        "$Type"
+      ]
+    },
+    "Action": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "Action"
+          ]
+        },
+        "$IsBound": {
+          "type": "boolean",
+          "default": true
+        },
+        "$EntitySetPath": {
+          "type": "string"
+        },
+        "$Parameter": {
+          "$ref": "#/definitions/Parameter"
+        },
+        "$ReturnType": {
+          "$ref": "#/definitions/ReturnType"
+        }
+      },
+      "required": [
+        "$kind"
+      ]
+    },
+    "Function": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$kind": {
+          "enum": [
+            "Function"
+          ]
+        },
+        "$IsBound": {
+          "type": "boolean",
+          "default": true
+        },
+        "$IsComposable": {
+          "type": "boolean",
+          "default": true
+        },
+        "$EntitySetPath": {
+          "type": "string"
+        },
+        "$Parameter": {
+          "$ref": "#/definitions/Parameter"
+        },
+        "$ReturnType": {
+          "$ref": "#/definitions/ReturnType"
+        }
+      },
+      "required": [
+        "$kind",
+        "$ReturnType"
+      ]
+    },
+    "EntityContainer": {
+      "type": "object",
+      "TODO": "flesh out",
+      "properties": {
+        "$kind": {
+          "enum": [
+            "EntityContainer"
+          ]
+        }
+      },
+      "required": [
+        "$kind"
+      ]
+    },
+    "Parameter": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "patternProperties": {
+          "^@": {
+            "description": "Annotations"
+          }
+        },
+        "properties": {
+          "$Name": {
+            "type": "string"
+          },
+          "$Type": {
+            "type": "string"
+          },
+          "$isCollection": {
+            "type": "boolean",
+            "default": true
+          },
+          "$Nullable": {
+            "type": "boolean",
+            "default": false
+          },
+          "$MaxLength": {
+            "$ref": "#/definitions/MaxLength"
+          },
+          "$Unicode": {
+            "type": "boolean",
+            "default": false
+          },
+          "$Precision": {
+            "$ref": "#/definitions/Precision"
+          },
+          "$Scale": {
+            "$ref": "#/definitions/Scale"
+          },
+          "$SRID": {
+            "$ref": "#/definitions/SRID"
+          }
+        },
+        "required": [
+          "$Name",
+          "$Type"
+        ]
+      }
+    },
+    "ReturnType": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^@": {
+          "description": "Annotations"
+        }
+      },
+      "properties": {
+        "$Type": {
+          "type": "string"
+        },
+        "$isCollection": {
+          "type": "boolean",
+          "default": true
+        },
+        "$Nullable": {
+          "type": "boolean",
+          "default": false
+        },
+        "$MaxLength": {
+          "$ref": "#/definitions/MaxLength"
+        },
+        "$Unicode": {
+          "type": "boolean",
+          "default": false
+        },
+        "$Precision": {
+          "$ref": "#/definitions/Precision"
+        },
+        "$Scale": {
+          "$ref": "#/definitions/Scale"
+        },
+        "$SRID": {
+          "$ref": "#/definitions/SRID"
+        }
+      },
+      "required": [
+        "$Type"
+      ]
+    },
+    "MaxLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "Precision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "Scale": {
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "enum": [
+            "floating",
+            "variable"
+          ]
+        }
+      ]
+    },
+    "SRID": {
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "enum": [
+            "variable"
+          ]
+        }
+      ]
+    }
+  }
+}
