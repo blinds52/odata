@@ -105,6 +105,7 @@
       <xsl:attribute name="Type">
         <xsl:choose>
           <xsl:when test="@Type='Time' or @Type='Edm.Time'">Edm.TimeOfDay</xsl:when>
+          <xsl:when test="@Type='Float' or @Type='Edm.Float'">Edm.Single</xsl:when>
           <xsl:when test="(@Type='DateTime' or @Type='Edm.DateTime') and @sap:display-format='Date'">Edm.Date</xsl:when>
           <xsl:when test="@Type='DateTime' or @Type='Edm.DateTime'">Edm.DateTimeOffset</xsl:when>
           <xsl:when test="contains(@Type,'.')"><xsl:value-of select="@Type" /></xsl:when>
