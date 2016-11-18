@@ -1,0 +1,165 @@
+{
+    "$Version": "4.0",
+    "$Reference": {
+        "http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.json": {
+            "$Include": [
+                {
+                    "Org.OData.Core.V1.": "Core"
+                }
+            ]
+        }
+    },
+    "Org.OData.Authorization.": {
+        "$kind": "Schema",
+        "$Alias": "Auth",
+        "@Org.OData.Core.V1.Description": "The Authorization Vocabulary provides terms for describing a web authorization flow"
+    },
+    "Org.OData.Authorization.Authorizations": {
+        "$kind": "Term",
+        "$isCollection": true,
+        "$Type": "Org.OData.Authorization.Authorization",
+        "$AppliesTo": [
+            "EntityContainer",
+            "EntitySet",
+            "NavigationProperty"
+        ],
+        "@Org.OData.Core.V1.Description": "Lists the methods available to authorize access to the annotated resource."
+    },
+    "Org.OData.Authorization.Authorization": {
+        "$kind": "ComplexType",
+        "$Abstract": true,
+        "@Org.OData.Core.V1.Description": "Base type for all Authorization types.",
+        "Description": {
+            "$kind": "Property",
+            "$Type": "Edm.String"
+        }
+    },
+    "Org.OData.Authorization.OpenIDConnect": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.Authorization",
+        "IssuerUrl": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Issuer location for the OpenID Provider. Configuration information can be obtained by appending /.well-known/openid-configuration to this Url."
+        }
+    },
+    "Org.OData.Authorization.Http": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.Authorization",
+        "Scheme": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "HTTP Authorization scheme to be used in the Authorization header, as per RFC7235."
+        },
+        "BearerFormat": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "@Org.OData.Core.V1.Description": "Format of the bearer token."
+        }
+    },
+    "Org.OData.Authorization.OAuthAuthorization": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.Authorization",
+        "$Abstract": true,
+        "Scopes": {
+            "$kind": "Property",
+            "$isCollection": true,
+            "$Type": "Org.OData.Authorization.AuthorizationScope",
+            "@Org.OData.Core.V1.Description": "Available scopes."
+        },
+        "RefreshUrl": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "@Org.OData.Core.V1.Description": "Refresh Url.",
+            "@Org.OData.Core.V1.IsURL": true
+        }
+    },
+    "Org.OData.Authorization.OAuth2ClientCredentials": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.OAuthAuthorization",
+        "TokenUrl": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Token Url.",
+            "@Org.OData.Core.V1.IsURL": true
+        }
+    },
+    "Org.OData.Authorization.OAuth2Implicit": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.OAuthAuthorization",
+        "AuthorizationUrl": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Authorization URL.",
+            "@Org.OData.Core.V1.IsURL": true
+        }
+    },
+    "Org.OData.Authorization.OAuth2Password": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.OAuthAuthorization",
+        "TokenUrl": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Token Url.",
+            "@Org.OData.Core.V1.IsURL": true
+        }
+    },
+    "Org.OData.Authorization.OAuth2AuthCode": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.OAuthAuthorization",
+        "AuthorizationUrl": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Authorization URL.",
+            "@.IsURL": true
+        },
+        "TokenUrl": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Token Url.",
+            "@.IsURL": true
+        }
+    },
+    "Org.OData.Authorization.AuthorizationScope": {
+        "$kind": "ComplexType",
+        "Scope": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Scope name."
+        },
+        "Description": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "@Org.OData.Core.V1.Description": "Description of the scope."
+        }
+    },
+    "Org.OData.Authorization.ApiKey": {
+        "$kind": "ComplexType",
+        "$BaseType": "Org.OData.Authorization.Authorization",
+        "KeyName": {
+            "$kind": "Property",
+            "$Type": "Edm.String",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "The name of the header or query parameter"
+        },
+        "Location": {
+            "$kind": "Property",
+            "$Type": "Org.OData.Authorization.KeyLocation",
+            "$Nullable": false,
+            "@Org.OData.Core.V1.Description": "Whether the API Key is passed in the header or as a query option"
+        }
+    },
+    "Org.OData.Authorization.KeyLocation": {
+        "$kind": "EnumType",
+        "Header": 0,
+        "QueryOption": 1
+    }
+}
