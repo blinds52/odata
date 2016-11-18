@@ -4,22 +4,24 @@
   "additionalProperties": false,
   "properties": {
     "$schema": {
-      "description": "URL to schema file",
+      "description": "URL of JSON Schema for this document",
       "type": "string",
       "default": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/schemas/csdl.schema.json"
     },
     "$Version": {
+      "description": "OData version used in this document",
       "enum": [
         "4.0",
         "4.01"
       ]
     },
     "$EntityContainer": {
+      "description": "Qualified name of the entity container",
       "type": "string"
     },
     "$Reference": {
+      "description": "References to other CSDL documents",
       "type": "object",
-      "additionalProperties": false,
       "patternProperties": {
         "": {
           "description": "Reference Object",
@@ -27,11 +29,12 @@
           "additionalProperties": false,
           "patternProperties": {
             "^@": {
-              "description": "Annotations"
+              "description": "Annotation"
             }
           },
           "properties": {
             "$Include": {
+              "description": "Included schemas",
               "type": "array",
               "items": {
                 "type": [
@@ -41,18 +44,22 @@
               }
             },
             "$IncludeAnnotations": {
+              "description": "Included annotations",
               "type": "array",
               "items": {
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
                   "$TermNamespace": {
+                    "description": "Term namespace of annotations to include",
                     "type": "string"
                   },
                   "$TargetNamespace": {
+                    "description": "Target namespace of annotations to include",
                     "type": "string"
                   },
                   "$Qualifier": {
+                    "description": "Qualifier namespace of annotations to include",
                     "type": "string"
                   }
                 },
@@ -91,12 +98,14 @@
           "$ref": "#/definitions/EntityContainer"
         },
         {
+          "description": "Action",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Action"
           }
         },
         {
+          "description": "Function",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Function"
@@ -107,11 +116,12 @@
   },
   "definitions": {
     "Schema": {
+      "description": "CSDL Schema",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -133,7 +143,7 @@
               "additionalProperties": false,
               "patternProperties": {
                 "^@": {
-                  "description": "Annotations"
+                  "description": "Annotation"
                 }
               }
             }
@@ -145,11 +155,12 @@
       ]
     },
     "EntityType": {
+      "description": "Entity Type",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotations"
+          "description": "Annotation"
         },
         "^[^$@]*$": {
           "oneOf": [
@@ -203,11 +214,12 @@
       ]
     },
     "ComplexType": {
+      "description": "Complex Type",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotations"
+          "description": "Annotation"
         },
         "^[^$@]*$": {
           "oneOf": [
@@ -243,11 +255,12 @@
       ]
     },
     "Property": {
+      "description": "Structural Property",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -292,14 +305,15 @@
       ]
     },
     "NavigationProperty": {
+      "description": "Navigation Property",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotations"
+          "description": "Annotation"
         },
         "^\\$OnDelete@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -344,11 +358,12 @@
       ]
     },
     "EnumType": {
+      "description": "Enumeration Type",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotations"
+          "description": "Annotation"
         },
         "^[^$@]*$": {
           "description": "Enumeration Member",
@@ -381,11 +396,12 @@
       ]
     },
     "TypeDefinition": {
+      "description": "Type Definition",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -420,11 +436,12 @@
       ]
     },
     "Term": {
+      "description": "Term",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -513,11 +530,12 @@
       ]
     },
     "Action": {
+      "description": "Action",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -545,11 +563,12 @@
       ]
     },
     "Function": {
+      "description": "Function",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -582,11 +601,12 @@
       ]
     },
     "EntityContainer": {
+      "description": "Entity Container",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         },
         "^[^$@]*$": {
           "oneOf": [
@@ -620,11 +640,12 @@
       ]
     },
     "EntitySet": {
+      "description": "Entity Set",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -650,11 +671,12 @@
       ]
     },
     "Singleton": {
+      "description": "Singleton",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -676,10 +698,11 @@
       ]
     },
     "ActionImport": {
+      "description": "Action Import",
       "type": "object",
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -701,11 +724,12 @@
       ]
     },
     "FunctionImport": {
+      "description": "Function Import",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -731,8 +755,8 @@
       ]
     },
     "NavigationPropertyBinding": {
+      "description": "Navigation Property Binding",
       "type": "object",
-      "additionalProperties": false,
       "patternProperties": {
         "": {
           "type": "string"
@@ -740,13 +764,14 @@
       }
     },
     "Parameter": {
+      "description": "Parameter",
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
         "patternProperties": {
           "^@": {
-            "description": "Annotations"
+            "description": "Annotation"
           }
         },
         "properties": {
@@ -788,11 +813,12 @@
       }
     },
     "ReturnType": {
+      "description": "Return Type",
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotations"
+          "description": "Annotation"
         }
       },
       "properties": {
@@ -829,6 +855,7 @@
       ]
     },
     "MaxLength": {
+      "description": "Maximum length of a string or binary",
       "type": "integer",
       "minimum": 1
     },
