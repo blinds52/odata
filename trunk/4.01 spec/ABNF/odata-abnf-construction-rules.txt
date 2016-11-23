@@ -434,6 +434,7 @@ firstMemberExpr = memberExpr
 memberExpr = [ qualifiedEntityTypeName "/" ]
              ( propertyPathExpr
              / boundFunctionExpr 
+             / annotationExpr
              )
              
 propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ] 
@@ -444,6 +445,16 @@ propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ]
                    / primitiveProperty           [ primitivePathExpr ]
                    / streamProperty              [ primitivePathExpr ]
                    )
+                   
+annotationExpr = annotation
+                 [ collectionPathExpr
+                 / singleNavigationExpr
+                 / complexPathExpr
+                 / primitivePathExpr
+                 ]
+                 
+annotation          = AT [ namespace "." ] termName [ '#' annotationQualifier ]
+annotationQualifier = odataIdentifier                
                    
 inscopeVariableExpr  = implicitVariableExpr 
                      / lambdaVariableExpr ; only allowed inside a lambdaPredicateExpr
@@ -462,15 +473,17 @@ complexColPathExpr = [ "/" qualifiedComplexTypeName ]
  
 collectionPathExpr = count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                    / "/" boundFunctionExpr
+                   / "/" annotationExpr
                    / "/" anyExpr
                    / "/" allExpr
  
 complexPathExpr = [ "/" qualifiedComplexTypeName ]
                   [ "/" propertyPathExpr 
                   / "/" boundFunctionExpr 
+                  / "/" annotationExpr
                   ]
 
-primitivePathExpr = "/" boundFunctionExpr
+primitivePathExpr = "/" [ annotationExpr / boundFunctionExpr ]
 
 boundFunctionExpr = functionExpr ; boundFunction segments can only be composed if the type of the    
                                  ; previous segment matches the type of the first function parameter
