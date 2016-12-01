@@ -114,6 +114,7 @@ resourcePath = entitySetName                  [ collectionNavigation ]
              / complexFunctionImportCall      [ complexPath ] 
              / primitiveColFunctionImportCall [ primitiveColPath ] 
              / primitiveFunctionImportCall    [ primitivePath ] 
+             / functionImportCallNoParens
              / crossjoin
              / '$all'                         [ "/" qualifiedEntityTypeName ]
 
@@ -174,6 +175,7 @@ boundOperation = "/" ( boundActionCall
                      / boundComplexFunctionCall      [ complexPath ]
                      / boundPrimitiveColFunctionCall [ primitiveColPath ] 
                      / boundPrimitiveFunctionCall    [ primitivePath ] 
+                     / boundFunctionCallNoParens
                      )
 
 actionImportCall = actionImport
@@ -193,12 +195,26 @@ boundComplexColFunctionCall   = namespace "." complexColFunction   functionParam
 boundPrimitiveFunctionCall    = namespace "." primitiveFunction    functionParameters
 boundPrimitiveColFunctionCall = namespace "." primitiveColFunction functionParameters
 
+boundFunctionCallNoParens     = namespace "." entityFunction
+                              / namespace "." entityColFunction
+                              / namespace "." complexFunction
+                              / namespace "." complexColFunction
+                              / namespace "." primitiveFunction
+                              / namespace "." primitiveColFunction
+
 entityFunctionImportCall       = entityFunctionImport       functionParameters
 entityColFunctionImportCall    = entityColFunctionImport    functionParameters
 complexFunctionImportCall      = complexFunctionImport      functionParameters
 complexColFunctionImportCall   = complexColFunctionImport   functionParameters
 primitiveFunctionImportCall    = primitiveFunctionImport    functionParameters
 primitiveColFunctionImportCall = primitiveColFunctionImport functionParameters
+
+functionImportCallNoParens     = entityFunctionImport
+                               / entityColFunctionImport
+                               / complexFunctionImport
+                               / complexColFunctionImport
+                               / primitiveFunctionImport
+                               / primitiveColFunctionImport
 
 functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
 functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
