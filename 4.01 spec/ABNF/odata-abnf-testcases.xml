@@ -230,6 +230,7 @@
     <Match>@color</Match>
     <Match>@expression</Match>
     <Match>@key</Match>
+    <Match>@categoryId</Match>
     <Match>@ref</Match>
     <Match>@title</Match>
     <Match>@word</Match>
@@ -658,6 +659,9 @@
   <TestCase Name="4.3 Addressing entities - function call with query parameter" Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=2)</Input>
   </TestCase>
+  <TestCase Name="4.3 Addressing entities - function call with query parameter" Rule="odataRelativeUri">
+    <Input>ProductsByCategoryId?@categoryId=2</Input>
+  </TestCase>
   <TestCase Name="4.3 Addressing entities - function parameter" Rule="functionParameter">
     <Input>color='red'</Input>
   </TestCase>
@@ -666,6 +670,9 @@
   </TestCase>
   <TestCase Name="4.3 Addressing entities - bound function call" Rule="odataRelativeUri">
     <Input>Categories(1)/Model.ProductsByColor(color='red')</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - bound function call with implicit parameter aliases" Rule="odataRelativeUri">
+    <Input>Categories(1)/Model.ProductsByColor?@color='red'</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (short)" Rule="resourcePath">
     <Input>Categories(1)</Input>
@@ -807,7 +814,7 @@
   <TestCase Name="4.5.2 Call function import" Rule="odataRelativeUri">
     <Input>TheBestProduct()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call function import - no parentheses" Rule="odataRelativeUri" FailAt="14">
+  <TestCase Name="4.5.2 Call function import - no parentheses" Rule="odataRelativeUri">
     <Input>TheBestProduct</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call function import - inline parameter" Rule="odataRelativeUri">
