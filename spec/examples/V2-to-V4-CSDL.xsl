@@ -7,6 +7,9 @@
   <!--
 
     This style sheet transforms OData 2.0 $metadata documents into OData 4.0 CSDL documents.
+
+    Latest version: https://github.com/oasis-tcs/odata-openapi/tree/master/tools
+
     Existing constructs that have an equivalent in V4 are automatically translated.
     The retired primitive type Edm.DateTime is translated into Edm.DateTimeOffset or Edm.Date.
     The retired primitive type Edm.Time is translated into Edm.TimeOfDay.
