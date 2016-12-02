@@ -30,14 +30,24 @@
           <xsl:text>Vocabulary Namespace: </xsl:text>
         </w:t>
       </w:r>
-      <w:r>
-        <w:rPr>
-          <w:rFonts w:ascii="Courier New" w:h-ansi="Courier New" />
-        </w:rPr>
-        <w:t>
+      <w:hlink>
+        <xsl:attribute name="w:dest">
+          <xsl:text>https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/</xsl:text>
           <xsl:value-of select="@Namespace" />
-        </w:t>
-      </w:r>
+          <xsl:text>.md</xsl:text>
+        </xsl:attribute>
+        <w:r>
+          <w:rPr>
+            <w:rFonts w:ascii="Courier New" w:h-ansi="Courier New" />
+            <w:rStyle w:val="Hyperlink" />
+            <w:color w:val="0000FF" />
+            <w:b />
+          </w:rPr>
+          <w:t>
+            <xsl:value-of select="@Namespace" />
+          </w:t>
+        </w:r>
+      </w:hlink>
     </w:p>
     <!--
       <xsl:apply-templates select="edm:Annotation" />
@@ -109,14 +119,22 @@
             <w:spacing w:before="40" w:after="40" />
             <w:ind w:left="40" w:right="40" />
           </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rFonts w:ascii="Courier New" w:h-ansi="Courier New" />
-            </w:rPr>
-            <w:t>
-              <xsl:value-of select="@Name" />
-            </w:t>
-          </w:r>
+          <w:hlink>
+            <xsl:attribute name="w:dest">
+              <xsl:value-of
+              select="concat('https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/',../@Namespace,'.md#',@Name)" />
+            </xsl:attribute>
+            <w:r>
+              <w:rPr>
+                <w:rFonts w:ascii="Courier New" w:h-ansi="Courier New" />
+                <w:rStyle w:val="Hyperlink" />
+                <w:color w:val="0000FF" />
+              </w:rPr>
+              <w:t>
+                <xsl:value-of select="@Name" />
+              </w:t>
+            </w:r>
+          </w:hlink>
         </w:p>
       </w:tc>
       <xsl:if test="edm:Annotation[@Term='Core.Description' or @Term='Core.LongDescription']">
