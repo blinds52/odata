@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #158 Thursday Jan 19, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_these_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_these_lines='7698c572506ef1697c489a461d524e4cfa82b020680ba562e6ae61c23b4a5bb09ef68b69cf594cacfdd960df31d27597e1ef73c9eae89d4cbb1ab9da0d276296' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #158 Thursday Jan 19, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-01-19 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Susam Malaika (IBM)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43961">normative attendance sheet for this meeting (event_id=43961)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: Mike opened a new issue <a href="https://issues.oasis-open.org/browse/ODATA-1027" rel="noopener noreferrer" target="_blank">ODATA-1027</a> - Support instance annotations in $orderby<br>Add it as section 7.2.5</p>
+<p>Ralf: Do this after action items, no further changes</p>
+<p>Agenda approved as published with additional item "ODATA-1027".</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from January 12, 2017 TC meeting #157</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59782/odata-meeting-157_on-20170112-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59782/odata-meeting-157_on-20170112-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None.</p>
+
+<h2>5. TC Timeline - Topics for this year</h2>
+<p>Ralf: Timeline:<br>
+- URL = <a href="https://www.oasis-open.org/committees/download.php/59831/TC%20Timeline-2017-01-19.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59831/TC&nbsp;Timeline-2017-01-19.docx</a></p>
+
+<h3>5.1 OData Core and JSON Version 4.01 CSD01 and CS01</h3>
+<h3>5.2 Whats New in OData Version 4.01 (CND01 and) CN01</h3>
+<p>Stefan: directly publish CN01</p>
+<p>Mike: may be useful for reviewers of V4.01, so publish it together with CSD02</p>
+<h4>5.2.1 Do we want to publish a Note Draft or directly a Note?</h4>
+<h3>5.3 CSDL JSON Version 4.01 CSD01</h3>
+<h3>5.4 OData to OpenAPI Mapping Version 4.0 CND01 and CN01</h3>
+<h3>5.5 Extension for Temporal Data Version 4.0 CSD01, </h3>
+<h3>5.6 REST Profile for OData Version 4.01 CND01 and CN01</h3>
+<h3>5.7 Further topics?</h3>
+<p>Gerald: Extension for Data Aggregation<br>
+Close open issues<br>
+Add enhanced hierarchy handling</p>
+<p>Ralf: Do Data Aggregation in parallel to CSDL JSON</p>
+
+<h2>6. V4.0 ERRATA04</h2>
+<h3>6.1 How to deal with errors/clarifications in V4.0 ERRATA03: plan for ERRATA04 or fix them in V4.01 only?</h3>
+
+<h3>6.2 Issues for V4.0_ERRATA04 in New or Open state</h3>
+<h4>6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-955" rel="noopener noreferrer" target="_blank">ODATA-955</a> - Specifying odata.type on a collection of entities</h4>
+<h4>6.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1024" rel="noopener noreferrer" target="_blank">ODATA-1024</a> - 5.1.1.5.7 substring: explicitly state that the index N (second parameter value) is zero-based</h4>
+<h4>6.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1026" rel="noopener noreferrer" target="_blank">ODATA-1026</a> - Clarify when $it is required</h4>
+<h3>6.3 Discussion</h3>
+<p>Mike: not "backporting" issue resolutions to ERRATA04 will save a lot of work, make instead V4.01 the "current" document set</p>
+<p>Mike: can the "latest" link for V4 point to V4.01? Ralf to clarify with TC Admin.</p>
+<p>All agree to apply issues to V4.01 only from now on.</p>
+
+<h2>7. V4.01
+<h3>7.1 Issues for V4.01_CSD02 without assignee</h3>
+<h4>7.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-955" rel="noopener noreferrer" target="_blank">ODATA-955</a> - Specifying odata.type on a collection of entities</h4>
+<p>Ralf: ODATA-955 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-955 as proposed. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-955 is RESOLVED as proposed</p>
+
+<h4>7.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1018" rel="noopener noreferrer" target="_blank">ODATA-1018</a> - Allow $expand and $select with modifying requests that return a collection in combination with return=representation to specify the response shape</h4>
+<p>Mike: will need more discussion</p>
+<p>Ralf: Assign to Mike</p>
+
+<h4>7.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1019" rel="noopener noreferrer" target="_blank">ODATA-1019</a> - Add term Core.OptionallyComputed or Core.ComputedDefault</h4>
+<p>Ralf: Assign to Ralf</p>
+
+<h4>7.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1020" rel="noopener noreferrer" target="_blank">ODATA-1020</a> - Remove / in reference in instance annotation in filter and orderby expression</h4>
+<p>Ralf: Assign to Hubert</p>
+
+<h4>7.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-1021" rel="noopener noreferrer" target="_blank">ODATA-1021</a> - Are additional values needed for the reason property of a removed Annotation</h4>
+<p>Ralf: Matt will take this</p>
+
+<h4>7.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1022" rel="noopener noreferrer" target="_blank">ODATA-1022</a> - Add an example of a delta payload used in a PATCH request to the Delta Payload section</h4>
+<p>Ralf: ODATA-1022 is OPEN</p>
+<p><b>Stefan</b>: I <b>move</b> to resolve ODATA-1022 as proposed and regard as pure editorial addition. <b>Matt</b> seconds.</p>
+<p>Ralf: ODATA-1022 is RESOLVED</p>
+
+<h4>7.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-1023" rel="noopener noreferrer" target="_blank">ODATA-1023</a> - Provide stable anchors to all sections</h4>
+<p>Ralf: ODATA-1023 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1023 as proposed. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-1023 is RESOLVED</p>
+
+<h4>7.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-1024" rel="noopener noreferrer" target="_blank">ODATA-1024</a> - 5.1.1.5.7 substring: explicitly state that the index N (second parameter value) is zero-based</h4>
+<p>Ralf: ODATA-1024 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1024 as proposed. <b>Gerald</b> seconds.</p>
+<p>Ralf: ODATA-1024 is RESOLVED</p>
+
+<h4>7.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-1025" rel="noopener noreferrer" target="_blank">ODATA-1025</a> - Treatment of same query option in multiple "spellings"</h4>
+<p>Ralf: ODATA-1025 is OPEN</p>
+<p>Ralf: In Section 5.1, System Query Options], of URL Conventions, change: <br>
+<br>
+ "The same system query option MUST NOT be specified more than once for any resource." <br>
+<br>
+to: <br>
+<br>
+"The same system query option, irrespective of casing or whether or not it is prefixed with "$", MUST NOT be specified more than once for any resource."</p>
+<p><b>Stefan</b>: I <b>move</b> to resolve ODATA-1025 AS PROPOSED. <b>Ramesh</b> seconds.</p>
+<p>Ralf: ODATA-1025 is RESOLVED as proposed</p>
+
+<h4>7.1.10 <a href="https://issues.oasis-open.org/browse/ODATA-1026" rel="noopener noreferrer" target="_blank">ODATA-1026</a> - Clarify when $it is required</h4>
+<p>Ralf: Description:<br>
+The description of $it says it CAN be used in a number of cases (see section 5.1.11.4 in the URL conventions document) but it isn't specific about when $it MUST be used. We should clarify when $it is required. For example, my understanding is that both of these queries are equivalent (in which case the $it is not required): <br>
+<br>
+http://host/service/Customers?$filter=Orders/any(d:d/Quantity ge Age) <br>
+vs. <br>
+http://host/service/Customers?$filter=Orders/any(d:d/Quantity ge $it/Age) <br>
+<br>
+However, my understanding is that in the case below the $it is required: <br>
+<br>
+http://host/service/Customers?$expand=Orders($filter=$it/Address/City eq ShipTo/City)</p>
+<p>Ralf: ODATA-1026 is OPEN</p>
+<p>Ralf: Michael Pizzo added a comment - Yesterday 11:57 PM<br>
+$it allows referencing the resource identified by the resource path. unqualified property references reference the current "scope". These may be the same thing in a simple request, but are not the same within a $expand (where an unqualified property reference references a property on the expanded nav prop). So in: <br>
+http://host/service/Customers?$expand=Orders($filter=$it/Address/City eq ShipTo/City) <br>
+Address would refer to a property on a Customer and ShipTo would refer to a property on an Order. <br>
+<br>
+$it is also used: <br>
+-when referencing the resource itself (not a property of the resource), and <br>
+-when invoking a function or action bound to the resource (to distinguish from an unbound action or function)</p>
+<p><b>Matt</b>: I <b>move</b> we resolve ODATA-1026 as proposed in Mike's comment. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1026 is RESOLVED according to Mike's comment</p>
+
+
+<h3>7.2 Issues for V4.01_CSD02 ready for resolution</h3>
+
+<h4>7.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-817" rel="noopener noreferrer" target="_blank">ODATA-817</a> - Add client-side function odata.matchesRegularExpression</h4>
+<p><b>Stefan</b>: I <b>move</b> to resolve ODATA-817 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-817 is RESOLVED as proposed</p>
+
+<h4>7.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1008" rel="noopener noreferrer" target="_blank">ODATA-1008</a> - Consider deprecating symbolic "max" length</h4>
+<p>Ralf: Proposal:<br>
+Instead of an integer value the constant max MAY be specified as a shorthand for the maximum length supported for the type by the service. Responses for OData version 4.01 or later MUST/SHOULD NOT use the symbolic value max and instead specify the concrete maximum length supported for the type by the service.
+<p>Ralf: The OData 4.0 use of the symbolic value max in place of an integer value is deprecated in OData 4.01. While OData 4.0 clients MUST be prepared for this value, OData 4.01 and greater services MUST NOT return a value of max for the MaxLength attribute and MAY instead specify the concrete maximum length supported for the type by the service, or omit the attribute entirely.</p>
+<p><b>Matt</b>: I <b>move</b> we resolve ODATA-1008 as proposed in Mike's comment. <b>Ramesh</b> seconds.</p>
+<p>Ralf: ODATA-1008 is RESOLVED as proposed</p>
+
+<h4>7.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1013" rel="noopener noreferrer" target="_blank">ODATA-1013</a> - Selected nav props in a defining query should specify interest in added/deleted links</h4>
+<p>Ralf: Proposal:<br>
+<br>
+Nav properties specified in the select list of a defining query define the links for which the client is interested in receiving notifications. <br>
+<br>
+Delta responses contain AddedLinks and DeletedLinks entries for navigation properties specified in the select list of the defining request.</p>
+<p>Ralf: ODATA-1013 is OPEN</p>
+<p>Mike: Alternatively use $expand=NavProp/$ref</p>
+<p>Matt: Agrees</p>
+<p>Mike: Updated proposal: Nav properties specified in the select list of a defining query are not used to define the scope or contents of the items being tracked. Clients can specify /$ref in order to specify interest in the set of related entities without interest in changes to the content of those related entities.<br>
+<br>
+Delta responses contain AddedLinks and DeletedLinks entries (or, for nested collections, (at least) entity references representing the current membership) for navigation properties expanded with $ref in the defining request.</p>
+<p>Ralf: Mike to craft a revised proposal</p>
+
+<h4>7.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-1017" rel="noopener noreferrer" target="_blank">ODATA-1017</a> - Extend FilterExpressionRestrictions with "Pattern"</h4>
+<p>Ralf: FilterExpressionRestrictionType<br>
+<br>
+PropertyTypeDescription<br>
+PropertyPropertyPathPath to the restricted property<br>
+AllowedExpressionsFilterExpressionTypeAllowed subset of expressions<br>
+<br>
+<br>
+FilterExpressionType<br>
+<br>
+Type: String<br>
+<br>
+Allowed ValueDescription<br>
+SingleValueProperty can be used in a single eq clause<br>
+MultiValueProperty can be used in a single in clause<br>
+SingleRangeProperty can be used in at most one ge and/or one le clause, separated by and</p>
+<p>Ralf: Proposal:<br>
+Add new allowed value </p>
+<pre>
+  &lt;Record> 
+    &lt;PropertyValue Property="Value" String="Pattern" /> 
+    &lt;Annotation Term="Core.Description" String="String property can be used as first operand in startswith, endswith, and contains clauses" /> 
+  &lt;/Record> 
+</pre>
+<p>for properties representing character large objects.</p>
+<p>Mike: "Pattern" might lead to confusion with Validation.Pattern and odata.matchesPattern which allow regular expressions</p>
+<p>Ralf: So we need a term for something weaker than regular expressions</p>
+<p>Stefan: Text (but not really happy with that ...)</p>
+<p>Mike: SearchExpression</p>
+<p>Stefan: agrees</p>
+<p><b>Stefan</b>: I <b>move</b> to resolve ODATA-1017 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1017 is RESOLVED with the amended proposal</p>
+
+<h4>7.2.5 <a href="https://issues.oasis-open.org/browse/ODATA-1027" rel="noopener noreferrer" target="_blank">ODATA-1027</a> - Support instance annotations in $orderby</h4>
+<p>Mike: what about other places, e.g. $select?</p>
+<p>Ralf: ODATA-1027 is OPEN</p>
+<p>Ralf: Mike to investigate if there are use cases for instance annotations in $select</p>
+
+
+<h3>7.3 Issues for V4.01_CSD02 in New or Open state without concrete proposal</h3>
+<h4>7.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-674" rel="noopener noreferrer" target="_blank">ODATA-674</a> - Specify navigation property binding combined with containment</h4>
+<p>Ralf: ODATA-674 is OPEN</p>
+
+<h4>7.3.2 <a href="https://issues.oasis-open.org/browse/ODATA-854" rel="noopener noreferrer" target="_blank">ODATA-854</a> - Consider use of OPTIONS for discovering formats, other capabilities and features</h4>
+<p>Ralf: ODATA-854 is OPEN</p>
+
+<h4>7.3.3 <a href="https://issues.oasis-open.org/browse/ODATA-868" rel="noopener noreferrer" target="_blank">ODATA-868</a> - Describe HTTP encoding for streamed requests and responses</h4>
+<p>Ralf: ODATA-868 is OPEN</p>
+
+<h4>7.3.4 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+<p>Ralf: ODATA-884 is OPEN</p>
+
+<h4>7.3.5 <a href="https://issues.oasis-open.org/browse/ODATA-919" rel="noopener noreferrer" target="_blank">ODATA-919</a> - Specify the result type for each operation based on operator types</h4>
+<p>Ralf: ODATA-919 is OPEN</p>
+
+<h4>7.3.6 <a href="https://issues.oasis-open.org/browse/ODATA-962" rel="noopener noreferrer" target="_blank">ODATA-962</a> - CORS Support</h4>
+<p>Ralf: ODATA-962 is OPEN</p>
+
+<h4>7.3.7 <a href="https://issues.oasis-open.org/browse/ODATA-994" rel="noopener noreferrer" target="_blank">ODATA-994</a> - consider replacing SchemaVersion header with $SchemaVersion query option, or root URL versioning</h4>
+<p>Ralf: ODATA-994 is OPEN</p>
+
+<h4>7.3.8 <a href="https://issues.oasis-open.org/browse/ODATA-1011" rel="noopener noreferrer" target="_blank">ODATA-1011</a> - Security experts at RSA suggest adding guidance on the use of OAuth and openID</h4>
+<p>Ralf: ODATA-1011 is OPEN</p>
+
+<h2>7. Next meetings</h2>
+<h3>7.1 Next Meeting Thursday January 26, 2017 during 08:00-10:00 am PST</h3> 
+<p>No objections, we meet next week usual time</p>
+
+<h2>8. AOB and wrap up</h2>
+<h3>8.1 Public reviews for V4.01 have started</h3>
+<p>Mike: Public reviews for V4.01 have started, please circulate the news and invite people to give feedback</p>
+<h3>8.2 Open Data Institute and mapping to DCAT</h3>
+<p>Mike: Has been contacted by Open Data Institute <a href="http://theodi.org/" rel="noopener noreferrer" target="_blank">http://theodi.org/</a></p>
+<p>Mike: They want to list Wales open data OData services in their data catalog</p>
+<p>Mike: They would benefit from having a mapping to DCAT <a href="https://www.w3.org/TR/vocab-dcat/" rel="noopener noreferrer" target="_blank">https://www.w3.org/TR/vocab-dcat/</a></p>
+<p>Ralf: A self-contained catalog vocabulary that correlates to DCAT would be sufficient</p>
+<p>Mike: Link for OData.org community vocabularies: <a href="https://github.com/oasis-tcs/odata-vocabularies" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies</a></p>
+<h3>8.3 Committee Note "Securing OData Version 4.0" Working Draft 01 - Revival</h3>
+<p>Stefan: Has started to change Committee Note "Securing OData Version 4.0" Working Draft 01 - as this work product never progressed for months; he plans to radically simplify the document and shorten it's score (presumably also integrate changes helping resolve ODATA-1011). <br>
+Question: Do the members of the TC object to this, or can I go ahead and provide a new revised draft?</p>
+<p>All support this and will provide feedback</p>
+<p>Ralf: Notes draft never made it into kavi, please store current online version from onedrive in kavi, as archive</p>
+<p>Stefan: Will check the current draft from onedrive into kavi, then he will start structural changes to simplify</p>
+<p>Ralf: Suggests to keep/handle at least CORS, CSRF, and XSS. Everything else optional.</p>
+<p>Stefan: Plans to do so and possibly add OAuth / openID topics to offer resolution for <a href="https://issues.oasis-open.org/browse/ODATA-1011" rel="noopener noreferrer" target="_blank">ODATA-1011</a> - Security experts at RSA suggest adding guidance on the use of OAuth and openID</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
