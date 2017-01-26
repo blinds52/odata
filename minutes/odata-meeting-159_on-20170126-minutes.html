@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #159 Thursday Jan 26, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_these_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_these_lines='SHA512_SHA512_SHA512' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #159 Thursday Jan 26, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-01-26 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+        Gerald Krause (SAP SE)
+        Hubert Heijkers (IBM)
+        Mark Biamonte (Progress Software)
+        Martin Zurmuehl (SAP SE)
+        Matthew Borges (SAP SE) a.k.a. Matt
+        Michael Pizzo (Microsoft) a.k.a. Mike
+        Ralf Handl (SAP SE)
+        Ramesh Reddy (Red Hat)
+        Stefan Hagen (Individual)
+        Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43962">normative attendance sheet for this meeting (event_id=43962)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Stefan: Suggest to add a short presentation / discussion of the contribution after "approval of timeline" and before "issue processing".<br>
+New Contribution fromSAP SE (submitted by Ralf) with title: "Streamlined Metadata JSON" (<a href="https://www.oasis-open.org/committees/download.php/59875/Streamlined%20Metadata%20JSON.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59875/Streamlined&nbsp;Metadata&nbsp;JSON.docx</a>). Abstract: "This document describes a streamlined JSON format for OData V4 metadata intended to simplify client-side processing. It is different from the $metadata service's JSON format (see OData JSON Format Version 4.0) and the OData JSON Format for Common Schema Definition Language (CSDL) Version 4.0 (see corresponding specification)."</p>
+<p>Ralf: New issues:<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-1030" rel="noopener noreferrer" target="_blank">ODATA-1030</a> - Consider support of NavigationPropertyBindings to non-contained nav props; Discuss this right after ODATA-674 as 6.1.9; Move ODATA-674 to "ready for resolution" as new agenda item  6.1.8 (both skipped due to missing time)<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-1031" rel="noopener noreferrer" target="_blank">ODATA-1031</a> - Define term for links to related information; Discuss this right before ODATA-674 as 6.1.7</p>
+<p>Agenda is approved with above modifications.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from January 19, 2017 TC meeting #158</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59840/odata-meeting-158_on-20170119-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59840/odata-meeting-158_on-20170119-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<h4>4.1.1 AI#0036 - "Register the OData- headers and preferences with IANA"</h4>
+<p>Ralf: Documents for walk through: <a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/59874/latest/IANA_Preference_Registration.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/59874/latest/IANA_Preference_Registration.docx</a>, and <a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/59873/latest/IANA_Header_Registration.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/59873/latest/IANA_Header_Registration.docx</a>.</p>
+<p>Ralf: Mark will walk us through the documents</p>
+<p>Ralf: Example 2: using a HTTP callback endpoint to receive notification<br>
+<br>
+Prefer: callback; url="http://myserver/notfication/token/12345"</p>
+<p>Ralf: Thanks to Mark!</p>
+<p>Ralf: Documents will be submitted to IANA once V4.01 CS01 is published</p>
+
+<h2>5. TC Timeline - Topics for this year</h2>
+<p>Ralf: Timeline:<br>
+- URL = <a href="https://www.oasis-open.org/committees/download.php/59862/TC%20Timeline-2017-01-25.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59862/TC&nbsp;Timeline-2017-01-25.docx</a></p>
+<h3>5.1 CSDL JSON Representation V4.01</h3>
+<p><b>Mike</b>: I <b>move</b> we accept the contribution "Streamlined Metadata in JSON" from SAP made by Ralf Handl. <b>Mark</b> seconds.</p>
+<p>Ralf: No objections, motion passes.</p>
+<p>Mike: push for earlier public review of CSDL JSON Representation?</p>
+<p>Mike: take next week's meeting to walk through the document and see when we want to publish CSD01</p>
+
+<h2>6. V4.01</h2>
+<h3>6.1 Issues for V4.01_CSD02 ready for resolution</h3>
+
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-xxx" rel="noopener noreferrer" target="_blank">ODATA-xxx</a> - ttt</h4>
+i.ODATA-884 Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)
+<p>Ralf:</p> 
+<pre>
+&lt;Annotation Term="Core.ErrorCodes"> 
+  &lt;Collection> 
+  &lt;Record> 
+    &lt;PropertyValue Property="HttpMethod" String="GET" /> 
+    &lt;PropertyValue Property="HttpStatusCode" String="400" /> 
+    &lt;PropertyValue Property="ODataErrorCode" String="QueryFilterFunctionNotSupported" /> 
+    &lt;PropertyValue Property="Description" 
+    String="This error indicates that a request was made with a filter function that isnt supported on this entity set. Please refer to the Capabilities.FilterFunctions annotation on this entity set for a list of supported functions, and the exact error message for which function usage triggered this error." /> 
+  &lt;/Record> 
+  &lt;/Collection> 
+&lt;/Annotation>
+</pre>
+<p>Ralf: Definition </p>
+<pre>
+&lt;Term Name="ErrorCodes" Type="Collection(Core.ErrorCodeType)" AppliesTo="EntitySet Singleton ActionImport FunctionImport Action Function"> 
+  &lt;Annotation Term="Core.Description" String="Describes possible error codes in OData responses" /> 
+  &lt;Annotation Term="Core.LongDescription" String="The list need not be complete. It may be used to generate API documentation, so restricting it to the most common and most important errors may increase readability." />
+&lt;/Term> 
+&lt;ComplexType Name="ErrorCodeType"> 
+  &lt;Property Name="HttpMethod" Type="Edm.String"> 
+  &lt;Annotation Term="Core.Description" String="Request verb of the HTTP request, e.g. GET, POST, PATCH, DELETE" /> 
+  &lt;/Property> 
+  &lt;Property Name="HttpStatusCode" Type="Edm.String"> 
+  &lt;Annotation Term="Core.Description" String="HTTP status code of the response, e.g. 400, 403, 501" /> 
+  &lt;/Property> 
+  &lt;Property Name="ODataErrorCode" Type="Edm.String"> 
+  &lt;Annotation Term="Core.Description" String="Language-independent, machine-readable OData error code" /> 
+  &lt;/Property> 
+  &lt;Property Name="Description" Type="Edm.String"> 
+  &lt;Annotation Term="Core.Description" String="Human-readable description of the error situation" /> 
+  &lt;/Property> 
+&lt;/ComplexType>
+</pre>
+<p>Mike: would it make sense to pre-group the error codes by HTTP method and then HTTP status code</p>
+<p>Ralf to prepare examples for XML and JSON showing more than one error code</p>
+
+<h4>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1013" rel="noopener noreferrer" target="_blank">ODATA-1013</a> - Selected nav props in a defining query should specify interest in added/deleted links</h4>
+<p>Ralf: Proposal:<br>
+Nav properties specified in the select list of a defining query are not used to define the scope or contents of the items being tracked. Clients can specify /$ref in $expand in order to specify interest in the set of related entities without interest in changes to the content of those related entities. <br>
+<br>
+Delta responses contain AddedLinks and DeletedLinks entries (or, for nested collections, (at least) entity references representing the current membership) for navigation properties expanded with $ref in the defining request.</p>
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-1013 as proposed to define semantics around /$ref in the expand of a defining query. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1013 is resolved as proposed</p>
+
+<h4>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1019" rel="noopener noreferrer" target="_blank">ODATA-1019</a> - Add term Core.DynamicDefaultValue</h4> 
+<p>Ralf: Term definition</p>
+<pre>
+&lt;Term Name="DynamicDefaultValue" Type="Core.Tag" DefaultValue="true" AppliesTo="Property"> 
+  &lt;Annotation Term="Core.Description" String="A value for this property is can be provided on insert and update. If no value is provided on insert, a non-static default value is generated" /> 
+&lt;/Term>
+</pre>
+<p>Mike: ComputedDefaultValue would be more in line with Core.Computed for read-only properties with computed values</p>
+<p>Mike: Clarify how this combines with preference omit-defaults</p>
+<p>Ralf: Computed default values cannot be omitted because the client can't know it</p>
+<p>Mark: ComputedDefaultValue works</p>
+<p>Hubert: +1</p>
+<p>Matt: +1</p>
+<p>Mike: -1</p>
+<p>Ralf: ComputedDefaultValue is accepted</p>
+<p>Ralf: ODATA-1019 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1019 with the updated proposal. <b>Matt</b> seconds.</p>
+<p>Ralf: ODATA-1019 is RESOLVED</p>
+
+<h4>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1027" rel="noopener noreferrer" target="_blank">ODATA-1027</a> - Support instance annotations in $orderby</h4>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1027 as proposed. <b>Ramesh</b> seconds.</p>
+<p>Ralf: ODATA-1027 is RESOLVED as proposed</p>
+
+<h4>6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-1028" rel="noopener noreferrer" target="_blank">ODATA-1028</a> - 4.3.4: clarify relative URLs when a type-cast segment is present</h4>
+<p>Ralf: Description:<br>
+4.3.4 Resolving an Entity-Id states that <br>
+<br>
+The entity-id may be expressed as an absolute IRI or relative to the service root URL. <br>
+<br>
+Example 23: request the entity representation for an entity-id <br>
+http://host/service/$entity?$id=Products(0) <br>
+<br>
+<br>
+This was correct until we introduced type-cast segments after $entity with ODATA-528. <br>
+<br>
+Now relative URLs should rather be relative to the request URL, as in all other places.</p>
+<p>Ralf: Relative URLs passed with query option $id are relative to the request, as explicitly stated for other uses of $id.<br>
+<br>
+Add example for a relative URL with and without type-cast segments, showing the need for ../ to dive down beyond the type-cast segment.</p>
+<p>Mike: we also have $root as a symbolic segment</p>
+<p>Ralf: So URLs relative to the service root can be expressed by prepending $root/</p>
+<p>Ralf: According to JSON Format the entity id is relative to the context URL, which is (typically) the metadata URL, i.e. relative to the service root</p>
+<p>Mike: $id should also be relative to the service root, so clients can just take the id provided in the JSON response</p>
+<p>Ralf: GET $entity/self.Car?$id=People(42)</p>
+<p>Ralf: Alternative proposal: stick to the current text: $id is always relative to service root, even if there's a type-cast segment appended to $entity</p>
+<p>Ralf: ODATA-1028 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1028 as per the alternate proposal; that the $id is always relative to the service root. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1028 is RESOLVED with the alternative proposal</p>
+
+<h4>6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1029" rel="noopener noreferrer" target="_blank">ODATA-1029</a> - 5.1.1.10.2: clarify that all() is always true if applied to an empty collection</h4>
+<p>Ralf: ODATA-1029 is OPEN</p>
+<p>Mike: clarify that for all() and any()</p>
+<p>Ralf: any(expr) is false on the empty set</p>
+<p>Mike: Proposal: all() applied to an empty collection always returns true.<br>
+any() applied to an empty collection always returns false.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1029 as per the amended proposal. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-1029 is RESOLVED with the extended proposal</p>
+
+<h4>6.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-1031" rel="noopener noreferrer" target="_blank">ODATA-1031</a> - Consider support of NavigationPropertyBindings to non-contained nav props</h4>
+
+<p>Ralf: Define term for links to related information</p>
+<p>Ralf: Example:</p>
+<pre>
+    &lt;Annotation Term="Core.Link"> 
+    &lt;Record> 
+      &lt;PropertyValue Property="rel" String="latest-version" /> 
+      &lt;PropertyValue Property="href" 
+      String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" /> 
+    &lt;/Record> 
+    &lt;/Annotation>
+</pre>
+<p>Ralf: Define new Core term: </p>
+<pre>
+    &lt;Term Name="Link" Type="Core.LinkType"> 
+    &lt;Annotation Term="Core.Description" String="Link to related information" /> 
+    &lt;Annotation Term="Core.LongDescription" 
+      String="The Link term is inspired by the 'atom:Link' element, see [RFC4287](https://tools.ietf.org/html/rfc4287#section-4.2.7) and the 'Link' HTTP header, see [RFC5988](https://tools.ietf.org/html/rfc5988)" /> 
+    &lt;/Term> 
+    &lt;ComplexType Name="LinkType"> 
+    &lt;Property Name="rel" Type="Edm.String" Nullable="false"> 
+      &lt;Annotation Term="Core.Description" 
+      String="Link relation type, see [IANA Link Relations](http://www.iana.org/assignments/link-relations/link-relations.xhtml)" /> 
+    &lt;/Property> 
+    &lt;Property Name="href" Type="Edm.String" Nullable="false"> 
+      &lt;Annotation Term="Core.IsURL" /> 
+      &lt;Annotation Term="Core.Description" String="URL of related information" /> 
+    &lt;/Property> 
+    &lt;/ComplexType>
+</pre>
+<p>Mike: only for metadata annotations or also for instance annotations?</p>
+<p>Mike: In the Atom format we could have used this out-of-the-box</p>
+<p>Mike: Atom format used atom:link for @odata.editLink, @odata.id, ...</p>
+<p>Mike: would need to define what happens if both the @odata link and the @Core.Link are present</p>
+<p>Mike: would also need to consider this when reviving the Atom format</p>
+<p>Mike: explicitly state that this annotation is (a) useful as an instance annotation (b) @odata annotations take precedence</p>
+<p>Mike: make this a collection?</p>
+<p>Mike: or use the qualifier for the rel and make it just a string?</p>
+<p>Mike: want to have multiple links, dummy qualifiers seem awkward</p>
+<p>Ralf: ODATA-1031 is OPEN</p>
+<p><b>Stefan</b>: I <b>move</b> to resolve ODATA-1031 as proposed making this a collection. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1031 is RESOLVED with the amendment</p>
+
+<h2>7. Next meetings</h2>
+<h3>7.1 Next Meeting Thursday February 02, 2017 during 08:00-10:00 am PST</h3> 
+<p>Ralf: Topic next week: <a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/59388/odata-csdl-json-v4.01-wd01-2016-11-16.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/59388/odata-csdl-json-v4.01-wd01-2016-11-16.docx</a>
+<p>Mike and Stefan: All with spare cycles please take a look at that URL/document</p>
+<p>No objections, we meet next week usual time</p>
+
+<h2>8. AOB and wrap up</h2>
+<p>Mark: example quotes for ISO publication?</p>
+<p>Mike: Will put together sample quotes</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
