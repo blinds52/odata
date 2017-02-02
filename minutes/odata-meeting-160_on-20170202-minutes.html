@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #160 Thursday Feb 02, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='a9f7f177a9c619c1949f11b2d84c9e258b1dd3833fa1c26ab216249706e730f03f4f7ef3ef6762548596e4bd418a16b25a05fcd4ca32a692b34770ec04fc2fc3' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #160 Thursday Feb 02, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-02-02 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    Gerald Krause (SAP SE)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Susn Malaika (IBM)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43963">normative attendance sheet for this meeting (event_id=43963)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<!-- <a href="https://issues.oasis-open.org/browse/ODATA-xxx" rel="noopener noreferrer" target="_blank">ODATA-xxx</a> - ttt -->
+
+<h2>2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from January 26, 2017 TC meeting #159</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59888/odata-meeting-159_on-20170126-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59888/odata-meeting-159_on-20170126-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. CSDL JSON</h2>
+<h3>5.1 CSDL JSON Document Walkthrough</h3>
+<p>OData CSDL JSON Representation Version 4.01 as of 2017-01-27<br>
+URL = <a href="https://www.oasis-open.org/committees/download.php/59886/odata-csdl-json-v4.01-wd01-2017-01-27.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59886/odata-csdl-json-v4.01-wd01-2017-01-27.docx</a></p>
+<p>Ralf: Always represent included namespaces as objects with required $Namespace and optional $Alias and annotations</p>
+<p>Ralf: 13.4.10 Null Expressions: first form would lead to ambiguity whether the null value was annotated or the annotation whose value is null</p>
+<p>Ralf: Example 53:</p>
+<pre>
+"@org.example.display.Address": null,
+"@org.example.display.Address@org.example.Reason": "Private",
+
+"@org.example.display.Address": {
+  "$Null": null,
+  "@org.example.Reason": "Private"
+}
+
+&lt;Annotation Term="org.example.Address>
+  &lt;Annotation Term="org.example.Reason" String="Private/>
+  &lt;Null>
+    &lt;Annotation Term="org.example.Reason" String="Public/>
+  &lt;/Null
+&lt;/Annotation>
+</pre>
+
+<h3>5.2 Issues for CSDL JSON Representation in New or Open state</h3>
+
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-906" rel="noopener noreferrer" target="_blank">ODATA-906</a> - Consider how to specify an included namespace as a default in JSON CSDL</h4>
+
+<p>Ralf: Embed the corresponding annotation within the JSON object representing a schema or reference to an included schema: </p>
+<pre>
+{ 
+    "$Version": "4.01", 
+    "$EntityContainer": "ODataDemo.DemoService", 
+    "$Reference": { 
+        "http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.json": { 
+            "$Include": [ 
+                { 
+                    "Org.OData.Core.V1.": "Core", 
+                    "@Org.OData.Core.V1.DefaultNamespace": true 
+                } 
+            ] 
+        } 
+    }, 
+    "ODataDemo.": { 
+        "$kind": "Schema", 
+        "@Org.OData.Core.V1.DefaultNamespace": true 
+    },
+</pre>
+<p>Ralf: Updated proposal<br>
+Embed the corresponding annotation within the JSON object representing a schema or reference to an included schema: </p>
+<pre>
+{ 
+    "$Version": "4.01", 
+    "$EntityContainer": "ODataDemo.DemoService", 
+    "$Reference": { 
+        "http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.json": { 
+            "$Include": [ 
+                { 
+                    "$Namespace":"Org.OData.Core.V1.", 
+                    "$Alias": "Core", 
+                    "@Org.OData.Core.V1.DefaultNamespace": true 
+                } 
+            ] 
+        } 
+    }, 
+    "ODataDemo.": { 
+        "$kind": "Schema", 
+        "@Org.OData.Core.V1.DefaultNamespace": true 
+    },
+</pre>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-906 as proposed. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-906 is resolved as proposed.</p>
+
+
+<h4>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1007" rel="noopener noreferrer" target="_blank">ODATA-1007</a> - Consider how to handle namespace conflicts in JSON CSDL format</h4>
+
+<p>Ralf: Clarify in Part 3: CDSL that a namespace-qualified name must be unique within a scope (document plus directly referenced documents) and that a schema cannot be included twice via different URIs. <br>
+<br>
+This follows from existing normative text that aliases are only shortcuts, alias-qualified names are interchangeable with namespace-qualified names, and that a schema cannot span more than one document.</p>
+<p>Ralf: ODATA-1007 is OPEN</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1007 as proposed. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1007 is RESOLVED as proposed.</p>
+
+
+<h2>6. Next meetings</h2>
+<h3>6.1 Next Meeting Thursday February 09, 2017 during 08:00-10:00 am PST</h3> 
+<p>No objections, we meet next week usual time</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>Ralf: XSLT for producing CSDL JSON from CSDL XML:<br>
+<a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/examples/V4-CSDL-to-JSON.xsl" rel="noopener noreferrer" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01&nbsp;spec/examples/V4-CSDL-to-JSON.xsl</a></p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
