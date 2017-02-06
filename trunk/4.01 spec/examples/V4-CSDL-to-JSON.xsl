@@ -48,26 +48,12 @@
   </xsl:template>
 
   <xsl:template match="edmx:Include" mode="item">
-    <xsl:if test="@Alias|edm:Annotation">
-      <xsl:text>{</xsl:text>
-    </xsl:if>
-    <xsl:text>"</xsl:text>
+    <xsl:text>{"$Namespace":"</xsl:text>
     <xsl:value-of select="@Namespace" />
     <xsl:text>."</xsl:text>
-    <xsl:choose>
-      <xsl:when test="@Alias">
-        <xsl:text>:"</xsl:text>
-        <xsl:value-of select="@Alias" />
-        <xsl:text>"</xsl:text>
-      </xsl:when>
-      <xsl:when test="edm:Annotation">
-        <xsl:text>:null</xsl:text>
-      </xsl:when>
-    </xsl:choose>
+    <xsl:apply-templates select="@Alias" mode="list2" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    <xsl:if test="@Alias|edm:Annotation">
-      <xsl:text>}</xsl:text>
-    </xsl:if>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="@TermNamespace|@TargetNamespace">
@@ -196,7 +182,7 @@
     <xsl:text>"$kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
-    <xsl:apply-templates select="@*[name() != 'Name']|*" mode="list2" />
+    <xsl:apply-templates select="@*[name()!='Name']|*" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -223,13 +209,25 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm:Property|edm:NavigationProperty">
+  <xsl:template match="edm:Property">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>":{</xsl:text>
+    <xsl:text>"$kind":"Property"</xsl:text>
+    <!-- and not(name()='Type' and .='Edm.String')  -->
+    <xsl:apply-templates
+      select="@*[name()!='Name' and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|*"
+      mode="list2" />
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="edm:NavigationProperty">
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"$kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
-    <xsl:apply-templates select="@*[name() != 'Name']|*[name()!='ReferentialConstraint']" mode="list2" />
+    <xsl:apply-templates select="@*[name()!='Name']|*[name()!='ReferentialConstraint']" mode="list2" />
     <xsl:apply-templates select="edm:ReferentialConstraint" mode="hash" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -344,7 +342,7 @@
     <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"$kind":"EnumType"</xsl:text>
-    <xsl:apply-templates select="@*[name() != 'Name']" mode="list2" />
+    <xsl:apply-templates select="@*[name()!='Name']" mode="list2" />
     <xsl:apply-templates select="edm:Member" mode="list2" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
