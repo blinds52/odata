@@ -29,7 +29,7 @@
           "additionalProperties": false,
           "patternProperties": {
             "^@": {
-              "description": "Annotation"
+              "$ref": "#/definitions/Annotation"
             }
           },
           "properties": {
@@ -38,8 +38,26 @@
               "type": "array",
               "items": {
                 "type": [
-                  "string",
                   "object"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "$Namespace": {
+                    "description": "Namespace to include",
+                    "type": "string"
+                  },
+                  "$Alias": {
+                    "description": "Alias of included namespace",
+                    "type": "string"
+                  }
+                },
+                "patternProperties": {
+                  "^@": {
+                    "$ref": "#/definitions/Annotation"
+                  }
+                },
+                "required": [
+                  "$Namespace"
                 ]
               }
             },
@@ -121,7 +139,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -138,12 +156,12 @@
           "additionalProperties": false,
           "patternProperties": {
             "^[^$]": {
-              "description": "Annotation Targets",
+              "description": "Annotation Target",
               "type": "object",
               "additionalProperties": false,
               "patternProperties": {
                 "^@": {
-                  "description": "Annotation"
+                  "$ref": "#/definitions/Annotation"
                 }
               }
             }
@@ -160,7 +178,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         },
         "^[^$@]*$": {
           "oneOf": [
@@ -219,7 +237,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         },
         "^[^$@]*$": {
           "oneOf": [
@@ -260,7 +278,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -310,10 +328,10 @@
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         },
         "^\\$OnDelete@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -363,7 +381,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         },
         "^[^$@]*$": {
           "description": "Enumeration Member",
@@ -401,7 +419,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -441,7 +459,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -535,7 +553,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -568,7 +586,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -606,7 +624,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         },
         "^[^$@]*$": {
           "oneOf": [
@@ -645,7 +663,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -676,7 +694,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -702,7 +720,7 @@
       "type": "object",
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -729,7 +747,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -771,7 +789,7 @@
         "additionalProperties": false,
         "patternProperties": {
           "^@": {
-            "description": "Annotation"
+            "$ref": "#/definitions/Annotation"
           }
         },
         "properties": {
@@ -818,7 +836,7 @@
       "additionalProperties": false,
       "patternProperties": {
         "^@": {
-          "description": "Annotation"
+          "$ref": "#/definitions/Annotation"
         }
       },
       "properties": {
@@ -878,6 +896,9 @@
     },
     "SRID": {
       "type": "string"
+    },
+    "Annotation": {
+      "description": "Annotation"
     }
   }
 }
