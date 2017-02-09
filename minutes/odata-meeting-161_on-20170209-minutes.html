@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #161 Thursday Feb 09, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='43b8f9c01fd5f73b16adb8f82158d9c66d0977ea545d617b88d4ada1abc82377ca9ebb47dca6ae2a16ed016673c9a491a34047a3d4a6ae5d3b3a91d58f587be2' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #161 Thursday Feb 09, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-02-09 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43964">normative attendance sheet for this meeting (event_id=43964)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: Additions:;<br>
+ISO update<br>
+New issues:<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-1032" rel="noopener noreferrer" target="_blank">ODATA-1032</a> - Define comparison for numeric value exceptions<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-1033" rel="noopener noreferrer" target="_blank">ODATA-1033</a> - Interoperability issue when using escaped slash/backslash in URLs<br>
+<a href="https://issues.oasis-open.org/browse/ODATA-1034" rel="noopener noreferrer" target="_blank">ODATA-1034</a> - Support the notion of a collection of name/value pairs where the type of the value is known<br>
+</p>
+<p>Agenda approved as published with these additions.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from February 02, 2017 TC meeting #160</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/59951/odata-meeting-160_on-20170202-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/59951/odata-meeting-160_on-20170202-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. OASIS press release regarding ISO/IEC</h2>
+<p>Ralf: ISO/IECs approval of OData sends a message to the world that data consumers can and must interoperate with data producers in more powerful ways, said Ralf Handl of SAP, co-chair of the OASIS OData Technical Committee. A true, scalable API economy needs interoperability standards, otherwise there is a risk  of or else it runs into a point-to-point integration nightmare challenges. By providing a semantically rich API modeling language, OData can enable more applications to make use of a broader set of data.</p>
+<p>Ramesh: may be "OData can enable" = "OData enables"</p>
+<p>Ralf: ISO/IECs approval of OData sends a message to the world that data consumers can and must interoperate with data producers in more powerful ways, said Ralf Handl of SAP, co-chair of the OASIS OData Technical Committee. A true, scalable API economy needs interoperability standards, otherwise there is a risk of point-to-point integration challenges. By providing a semantically rich API modeling language, OData can enable more applications to make use of a broader set of data.</p>
+<p>Ramesh: a true = a?</p>
+
+<h2>6. V4.01</h2>
+<h3>6.1 Issues for V4.01_CSD02 ready for resolution</h3>
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-674" rel="noopener noreferrer" target="_blank">ODATA-674</a> - Specify navigation property binding combined with containment</h4>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-674 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-674 is RESOLVED as proposed</p>
+
+<h4>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+<p>Skipped</p>
+
+<h4>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1030" rel="noopener noreferrer" target="_blank">ODATA-1030</a> - Consider support of NavigationPropertyBindings to non-contained nav props</h4>
+<p>Ralf: ODATA-1030 is OPEN</p>
+<p>Ralf: Instead of adding a NavigationPropertyConstraint XML element add a term in the Validation vocabulary</p>
+<p>Mike: do the same for ODATA-674?</p>
+<p>Hubert: is in favor of using the existing XML element for ODATA-674 and allow it in a new position</p>
+<p>Hubert: there might be other constraints on navigation properties in the future, so resolving ODATA-674 via an annotation would be more consistent in the long term</p>
+<p>Stefan: Is the constraint on the Navigation or on navigation properties?</p>
+<p>Mike: It's actually defined on the type containing the nav prop and is a constraint of the membership of the nav prop.</p>
+<p>Mike: Not sure if that helps...</p>
+<p>Mike: Proposal: Apply ODATA-674 as an annotation term in the Validation vocabulary "MemberOf" that can be applied multiple times to the same path and can target any collection-valued navigation property.</p>
+<p>Mike: How would we differentiate multiple applications to the same target?</p>
+<p>Mike: Or even multiple targets?</p>
+<pre>
+@MemberOf:[
+  {path,target},
+  {path,target}
+]
+</pre>
+<p>Ralf: use @ItemOf</p>
+<p>Stefan: Names in JSON for the "members" of "objects"; from <a href="https://tools.ietf.org/html/rfc7159#page-6" rel="noopener noreferrer" target="_blank">RFC 7159</a></p>
+<pre>
+object = begin-object [ member *( value-separator member ) ]
+               end-object
+member = string name-separator value
+</pre>
+<p>Mike: Revised proposal:<br>
+Apply ODATA-674 as an annotation term in the Validation vocabulary "ItemsOf". The value of the ItemsOf annotation is a collection of complex types containing two path properties; "path" and "target". The same path can occur multiple times and the target can be any collection-valued navigation property.  If the target is a containment navigation property then the constraint defines where the entity lives.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1030 as per the revised proposal. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-1030 is resolved with the revised proposal</p>
+
+<h2>7. Next meetings</h2>
+<h3>7.1 Next Meeting Thursday February 16, 2017 during 08:00-10:00 am PST</h3> 
+<p>No objections, we meet next week usual time</p>
+
+<h2>8. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
