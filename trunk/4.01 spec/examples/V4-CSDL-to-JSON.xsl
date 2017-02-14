@@ -213,11 +213,16 @@
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
-    <xsl:text>"$kind":"Property"</xsl:text>
-    <!-- and not(name()='Type' and .='Edm.String')  -->
-    <xsl:apply-templates
-      select="@*[name()!='Name' and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|*"
+    <!--
+      <xsl:text>"$kind":"Property"</xsl:text>
+      <xsl:apply-templates
+      select="@*[name()!='Name' and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode'
+      and .='true')]|*"
       mode="list2" />
+    -->
+    <xsl:apply-templates
+      select="@*[name()!='Name' and not(name()='Type' and .='Edm.String') and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|*"
+      mode="list" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -251,13 +256,13 @@
         </xsl:call-template>
         <xsl:text>"</xsl:text>
       </xsl:when>
-      <xsl:otherwise>
+      <xsl:when test=".!='Edm.String'">
         <xsl:text>"$Type":"</xsl:text>
         <xsl:call-template name="namespaceQualifiedName">
           <xsl:with-param name="qualifiedName" select="." />
         </xsl:call-template>
         <xsl:text>"</xsl:text>
-      </xsl:otherwise>
+      </xsl:when>
     </xsl:choose>
   </xsl:template>
 
@@ -398,8 +403,9 @@
     <xsl:text>"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":{</xsl:text>
-    <xsl:apply-templates select="@Type" />
-    <xsl:apply-templates select="@*[name()!='Type']|*" mode="list2" />
+    <xsl:apply-templates
+      select="@*[not(name()='Type' and .='Edm.String') and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|*"
+      mode="list" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
