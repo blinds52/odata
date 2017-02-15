@@ -26,11 +26,11 @@ exit /b
   echo %~n1
 
   @rem -PARAM ... ...
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-JSON.xsl -IN %1 -OUT %~n1.jsontmp
+  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-JSON.xsl -IN %1 -OUT %~n1.tmp.json
 
-  c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.jsontmp > %~n1.json
+  c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.tmp.json > %~n1.json
   if not errorlevel 1 (
-    del %~n1.jsontmp
+    del %~n1.tmp.json
     c:\bin\diff.exe --ignore-space-change --strip-trailing-cr %~n1-goal.json %~n1.json
   )
 exit /b
