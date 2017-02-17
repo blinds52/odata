@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #162 Thursday Feb 16, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='9d7bd4d11a56d54d78b26d8cf8177a53e0c1aa16c739be185a59753cb855f1c985025325a112cf82035758fde4b8b73573396ef0e83fb87ad38763e80b6dfaf2' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #162 Thursday Feb 16, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-02-16 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+    Susan Malaika (IBM)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43965">normative attendance sheet for this meeting (event_id=43965)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from February 09, 2017 TC meeting #161</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60006/odata-meeting-161_on-20170209-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60006/odata-meeting-161_on-20170209-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. CSDL JSON</h2>
+<h3>5.1 Document Walkthrough</h3>
+<h4>5.1.1 OData CSDL JSON Representation Version 4.01 as of 2017-02-15</h4>
+<p>Public URL: <a href="https://www.oasis-open.org/committees/download.php/60048/odata-csdl-json-v4.01-wd01-2017-02-15.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60048/odata-csdl-json-v4.01-wd01-2017-02-15.docx</a></p>
+<p>Ralf: Considered changes:<br>
+- Nest types under schema, identify them by unqualified name<br>
+- allow aliases for annotations and within $Type values</p>
+<p>Ralf: Decided changes:<br>
+$kind --&gt; $Kind<br>
+$isCollection --&gt; $IsCollection</p>
+
+<h2>6. V4.01</h2>
+<h3>6.1 Issues for V4.01_CSD02 ready for resolution</h3>
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1028" rel="noopener noreferrer" target="_blank">ODATA-1028</a> - 4.3.4 and 4.4: clarify resolution of relative URLs in system query option $id</h4>
+
+<p>Ralf: Just realized that 4.3.4 contradicts 4.4, <a href="http://docs.oasis-open.org/odata/odata/v4.01/csprd01/part2-url-conventions/odata-v4.01-csprd01-part2-url-conventions.html#_Toc470093604" rel="noopener noreferrer" target="_blank">http://docs.oasis-open.org/odata/odata/v4.01/csprd01/part2-url-conventions/odata-v4.01-csprd01-part2-url-conventions.html#_Toc470093604</a>: <br>
+<br>
+The entity-id specified by $id may be expressed absolute or relative to the request URL. <br>
+<br>
+So we have two different resolution mechanisms for the $id system query option: <br>
+- relative to the service root for paths containing /$entity <br>
+- relative to the request URL for paths ending in /$ref <br>
+<br>
+This is less than consistent.</p>
+
+<p>Ralf: Source of problem:<br>
+http://host/service/$entity?$id=Products(0)<br>
+http://host/service/$entity/this.VipProducts?$id=Products(0)<br>
+http://host/service/$entity/this.VipProducts?$id=../Products(0)<br>
+DELETE http://host/service/Categories(1)/Products/$ref?$id=../../Products(0)<br>
+DELETE http://host/service/Categories(1)/Products/$ref?$id=/service/Products(0)</p>
+
+<p>Mike: could also do http://host/service/$entity/this.VipProducts?$id=/service/Products(0)</p>
+
+<p>Hubert: I move to resolve ODATA-1028 as proposed.</p>
+<p>Ralf: ... in this discussion, contrary to the proposal in the issue</p>
+<p>Mike: updated proposal in issue: Clarify that relative URLs passed with query option $id are relative to the path to be consistent with $ref.</p>
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1028, once again, as per the updated proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1028 is resolved again</p>
+
+<h3>6.2 Issues for V4.01_CSD02 in New or Open state without concrete proposal</h3>
+<h4>6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-920" rel="noopener noreferrer" target="_blank">ODATA-920</a> - Specify overflow for int data types (-INF, INF, NaN)</h4>
+<p>Mike: Proposal:<br>
+1) Because annotating numeric values of arrays is problematic, and we are no longer trying to use JSON Schema as our schema language, revert application of the numericValueException annotation and continue the 4.0 literal "INF", "-INF", and "NaN" values.<br>
+2) Support these values all numeric types.<br>
+3) Support -INF and INF for Edm.Date and Edm.DateTimeOffset --&gt; OData Temporal Extension</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-920 as proposed. <b>Mark</b></p>
+<p>Ralf: ODATA-920 is resolved with the revised proposal</p>
+
+<h2>7. Next meetings</h2>
+
+<h3>7.1 Next Meeting Thursday February 23, 2017 during 08:00-10:00 am PST</h3> 
+<p>Ralf: Mike and Hubert can't make next week</p>
+<p>Ralf: Let's try next week</p>
+<p>No objections, we meet next week usual time</p>
+
+<h3>7.2 Meeting after that on March 02, 2017, during 08:00-10:00 am PST</h3> 
+<p>No objections</p>
+
+<h2>8. AOB and wrap up</h2>
+<p>Mike: JSON format for batch requests and responses</p>
+<p>Ralf: Mike to send around a proposal and open an issue to track it</p>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
