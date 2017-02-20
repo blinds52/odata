@@ -5,152 +5,153 @@
         "miscellaneous.xml": {
             "$Include": [
                 {
-                    "$Namespace": "org.example."
+                    "$Namespace": "org.example",
+                    "$Alias": "org_example"
                 }
             ]
         }
     },
-    "org.example2.": {
-        "$kind": "Schema",
-        "$Alias": "Model"
-    },
-    "Schema.One.": {
-        "$kind": "Schema",
-        "$Alias": "One"
-    },
-    "Schema.Two.": {
-        "$kind": "Schema",
-        "$Alias": "Two"
-    },
-    "Schema.One.Foo": [
-        {
-            "$kind": "Function",
-            "$ReturnType": {
-                "$MaxLength": 42
+    "org.example2": {
+        "$Kind": "Schema",
+        "$Alias": "Model",
+        "Extending": {
+            "$Kind": "EntityContainer",
+            "$Extends": "org.example.DemoService",
+            "Categories34": {
+                "$Kind": "EntitySet",
+                "$Type": "org_example.Category",
+                "$NavigationPropertyBinding": {
+                    "Products": "Products"
+                }
+            },
+            "Categories35": {
+                "$Kind": "EntitySet",
+                "$Type": "org_example.Category",
+                "$IncludeInServiceDocument": false,
+                "$NavigationPropertyBinding": {
+                    "Products": "org_example.DemoService/Products"
+                }
+            },
+            "Waldos": {
+                "$Kind": "EntitySet",
+                "$Type": "Two.Waldo"
+            },
+            "Freds": {
+                "$Kind": "EntitySet",
+                "$Type": "Two.Fred",
+                "$NavigationPropertyBinding": {
+                    "Waldos": "Waldos",
+                    "MoreWaldos": "Namespace_.Container/Freds",
+                    "EvenMoreWaldos": "Namespace_.Container/Orders/Items/M_.E/Nav"
+                }
+            },
+            "Bar": {
+                "$Kind": "FunctionImport",
+                "$Function": "One.Foo",
+                "$IncludeInServiceDocument": true,
+                "$EntitySet": "Freds"
+            },
+            "CreatedEntities": {
+                "$Kind": "FunctionImport",
+                "$Function": "Model1_.CreatedEntities",
+                "$EntitySet": "Waldos",
+                "$IncludeInServiceDocument": true
             }
         }
-    ],
-    "Schema.One.OddWaldos": [
-        {
-            "$kind": "Function",
-            "$IsBound": true,
-            "$EntitySetPath": "waldos",
-            "$Parameter": [
-                {
-                    "$Name": "waldos",
-                    "$isCollection": true,
-                    "$Type": "Schema.One.Waldo"
+    },
+    "Schema.One": {
+        "$Kind": "Schema",
+        "$Alias": "One",
+        "Foo": [
+            {
+                "$Kind": "Function",
+                "$ReturnType": {
+                    "$MaxLength": 42
                 }
+            }
+        ],
+        "OddWaldos": [
+            {
+                "$Kind": "Function",
+                "$IsBound": true,
+                "$EntitySetPath": "waldos",
+                "$Parameter": [
+                    {
+                        "$Name": "waldos",
+                        "$IsCollection": true,
+                        "$Type": "One.Waldo"
+                    }
+                ],
+                "$ReturnType": {
+                    "$IsCollection": true,
+                    "$Type": "One.Waldo"
+                }
+            }
+        ],
+        "Rejection": [
+            {
+                "$Kind": "Action"
+            },
+            {
+                "$Kind": "Action",
+                "$IsBound": true,
+                "$Parameter": [
+                    {
+                        "$Name": "foo",
+                        "$Type": "One.Waldo",
+                        "$Nullable": false
+                    }
+                ]
+            },
+            {
+                "$Kind": "Action",
+                "$IsBound": true,
+                "$Parameter": [
+                    {
+                        "$Name": "bar",
+                        "$Type": "One.Waldo",
+                        "$Nullable": false
+                    },
+                    {
+                        "$Name": "Reason",
+                        "$Nullable": false
+                    }
+                ]
+            }
+        ],
+        "Waldo": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
             ],
-            "$ReturnType": {
-                "$isCollection": true,
-                "$Type": "Schema.One.Waldo"
+            "ID": {
+                "$Nullable": false
             }
         }
-    ],
-    "Schema.One.Rejection": [
-        {
-            "$kind": "Action"
-        },
-        {
-            "$kind": "Action",
-            "$IsBound": true,
-            "$Parameter": [
-                {
-                    "$Name": "foo",
-                    "$Type": "Schema.One.Waldo",
-                    "$Nullable": false
-                }
-            ]
-        },
-        {
-            "$kind": "Action",
-            "$IsBound": true,
-            "$Parameter": [
-                {
-                    "$Name": "bar",
-                    "$Type": "Schema.One.Waldo",
-                    "$Nullable": false
-                },
-                {
-                    "$Name": "Reason",
-                    "$Nullable": false
-                }
-            ]
-        }
-    ],
-    "Schema.One.Waldo": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Nullable": false
-        }
     },
-    "Schema.Two.Waldo": {
-        "$kind": "EntityType",
-        "$Abstract": true,
-        "Fred": {
+    "Schema.Two": {
+        "$Kind": "Schema",
+        "$Alias": "Two",
+        "Waldo": {
+            "$Kind": "EntityType",
+            "$Abstract": true,
+            "Fred": {
 
-        }
-    },
-    "Schema.Two.Fred": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Nullable": false
-        },
-        "Waldos": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "Schema.Two.Waldo"
-        }
-    },
-    "org.example2.Extending": {
-        "$kind": "EntityContainer",
-        "$Extends": "org.example.DemoService",
-        "Categories34": {
-            "$kind": "EntitySet",
-            "$Type": "org.example.Category",
-            "$NavigationPropertyBinding": {
-                "Products": "Products"
             }
         },
-        "Categories35": {
-            "$kind": "EntitySet",
-            "$Type": "org.example.Category",
-            "$IncludeInServiceDocument": false,
-            "$NavigationPropertyBinding": {
-                "Products": "org.example.DemoService/Products"
+        "Fred": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            },
+            "Waldos": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Two.Waldo"
             }
-        },
-        "Waldos": {
-            "$kind": "EntitySet",
-            "$Type": "Schema.Two.Waldo"
-        },
-        "Freds": {
-            "$kind": "EntitySet",
-            "$Type": "Schema.Two.Fred",
-            "$NavigationPropertyBinding": {
-                "Waldos": "Waldos",
-                "MoreWaldos": "Namespace.Container/Freds",
-                "EvenMoreWaldos": "Namespace.Container/Orders/Items/M.E/Nav"
-            }
-        },
-        "Bar": {
-            "$kind": "FunctionImport",
-            "$Function": "Schema.One.Foo",
-            "$IncludeInServiceDocument": true,
-            "$EntitySet": "Freds"
-        },
-        "CreatedEntities": {
-            "$kind": "FunctionImport",
-            "$Function": "Model1.CreatedEntities",
-            "$EntitySet": "Waldos",
-            "$IncludeInServiceDocument": true
         }
     }
 }

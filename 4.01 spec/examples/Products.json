@@ -5,194 +5,196 @@
         "http://localhost/examples/People.xml": {
             "$Include": [
                 {
-                    "$Namespace": "PeopleService."
+                    "$Namespace": "PeopleService",
+                    "$Alias": "PeopleService_"
                 }
             ]
         }
     },
-    "ProductService.": {
-        "$kind": "Schema",
+    "ProductService": {
+        "$Kind": "Schema",
+        "$Alias": "self",
         "$Annotations": {
-            "ProductService.Container": {
-                "@Org.OData.Display.V1.Description": "This is a sample OData service with vocabularies"
+            "self.Container": {
+                "@Display.Description": "This is a sample OData service with vocabularies"
             },
-            "ProductService.Product": {
-                "@Org.OData.Display.V1.Description": "All Products available in the online store"
+            "self.Product": {
+                "@Display.Description": "All Products available in the online store"
             },
-            "ProductService.Product/Name": {
-                "@Org.OData.Display.V1.DisplayName": "Product Name"
+            "self.Product/Name": {
+                "@Display.DisplayName": "Product Name"
             }
-        }
-    },
-    "ProductService.Product": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Name": {
-
-        },
-        "Description": {
-
-        },
-        "ReleaseDate": {
-            "$Type": "Edm.DateTimeOffset",
-            "$Nullable": false
-        },
-        "DiscontinuedDate": {
-            "$Type": "Edm.DateTimeOffset"
-        },
-        "Rating": {
-            "$Type": "Edm.Int16",
-            "$Nullable": false
-        },
-        "Price": {
-            "$Type": "Edm.Double",
-            "$Nullable": false
-        },
-        "Categories": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "ProductService.Category",
-            "$Partner": "Products"
-        },
-        "Supplier": {
-            "$kind": "NavigationProperty",
-            "$Type": "PeopleService.Supplier",
-            "$Partner": "Products"
-        },
-        "ProductDetail": {
-            "$kind": "NavigationProperty",
-            "$Type": "ProductService.ProductDetail",
-            "$Partner": "Product"
-        }
-    },
-    "ProductService.FeaturedProduct": {
-        "$kind": "EntityType",
-        "$BaseType": "ProductService.Product",
-        "Advertisement": {
-            "$kind": "NavigationProperty",
-            "$Type": "ProductService.Advertisement",
-            "$Partner": "FeaturedProduct"
-        }
-    },
-    "ProductService.ProductDetail": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ProductID"
-        ],
-        "ProductID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Details": {
-
         },
         "Product": {
-            "$kind": "NavigationProperty",
-            "$Type": "ProductService.Product",
-            "$Partner": "ProductDetail"
-        }
-    },
-    "ProductService.Category": {
-        "$kind": "EntityType",
-        "$OpenType": true,
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Name": {
-
-        },
-        "Products": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "ProductService.Product",
-            "$Partner": "Categories"
-        }
-    },
-    "ProductService.Advertisement": {
-        "$kind": "EntityType",
-        "$HasStream": true,
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Guid",
-            "$Nullable": false
-        },
-        "Name": {
-
-        },
-        "AirDate": {
-            "$Type": "Edm.DateTimeOffset",
-            "$Nullable": false
-        },
-        "FeaturedProduct": {
-            "$kind": "NavigationProperty",
-            "$Type": "ProductService.FeaturedProduct",
-            "$Partner": "Advertisement"
-        }
-    },
-    "ProductService.Discount": [
-        {
-            "$kind": "Action",
-            "$IsBound": true,
-            "$Parameter": [
-                {
-                    "$Name": "product",
-                    "$Type": "ProductService.Product"
-                },
-                {
-                    "$Name": "discountPercentage",
-                    "$Type": "Edm.Int32",
-                    "$Nullable": false
-                }
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
             ],
-            "$ReturnType": {
+            "ID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Name": {
+
+            },
+            "Description": {
+
+            },
+            "ReleaseDate": {
+                "$Type": "Edm.DateTimeOffset",
+                "$Nullable": false
+            },
+            "DiscontinuedDate": {
+                "$Type": "Edm.DateTimeOffset"
+            },
+            "Rating": {
+                "$Type": "Edm.Int16",
+                "$Nullable": false
+            },
+            "Price": {
                 "$Type": "Edm.Double",
                 "$Nullable": false
-            }
-        }
-    ],
-    "ProductService.Container": {
-        "$kind": "EntityContainer",
-        "Products": {
-            "$kind": "EntitySet",
-            "$Type": "ProductService.Product",
-            "$NavigationPropertyBinding": {
-                "ProductService.FeaturedProduct/Advertisement": "Advertisements",
-                "Categories": "Categories",
-                "Supplier": "PeopleService.Container.Suppliers",
-                "ProductDetail": "ProductDetails"
-            }
-        },
-        "ProductDetails": {
-            "$kind": "EntitySet",
-            "$Type": "ProductService.ProductDetail",
-            "$NavigationPropertyBinding": {
-                "Product": "Products"
+            },
+            "Categories": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "self.Category",
+                "$Partner": "Products"
+            },
+            "Supplier": {
+                "$Kind": "NavigationProperty",
+                "$Type": "PeopleService_.Supplier",
+                "$Partner": "Products"
+            },
+            "ProductDetail": {
+                "$Kind": "NavigationProperty",
+                "$Type": "self.ProductDetail",
+                "$Partner": "Product"
             }
         },
-        "Categories": {
-            "$kind": "EntitySet",
-            "$Type": "ProductService.Category",
-            "$NavigationPropertyBinding": {
-                "Products": "Products"
+        "FeaturedProduct": {
+            "$Kind": "EntityType",
+            "$BaseType": "self.Product",
+            "Advertisement": {
+                "$Kind": "NavigationProperty",
+                "$Type": "self.Advertisement",
+                "$Partner": "FeaturedProduct"
             }
         },
-        "Advertisements": {
-            "$kind": "EntitySet",
-            "$Type": "ProductService.Advertisement",
-            "$NavigationPropertyBinding": {
-                "FeaturedProduct": "Products"
+        "ProductDetail": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ProductID"
+            ],
+            "ProductID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Details": {
+
+            },
+            "Product": {
+                "$Kind": "NavigationProperty",
+                "$Type": "self.Product",
+                "$Partner": "ProductDetail"
+            }
+        },
+        "Category": {
+            "$Kind": "EntityType",
+            "$OpenType": true,
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Name": {
+
+            },
+            "Products": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "self.Product",
+                "$Partner": "Categories"
+            }
+        },
+        "Advertisement": {
+            "$Kind": "EntityType",
+            "$HasStream": true,
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Guid",
+                "$Nullable": false
+            },
+            "Name": {
+
+            },
+            "AirDate": {
+                "$Type": "Edm.DateTimeOffset",
+                "$Nullable": false
+            },
+            "FeaturedProduct": {
+                "$Kind": "NavigationProperty",
+                "$Type": "self.FeaturedProduct",
+                "$Partner": "Advertisement"
+            }
+        },
+        "Discount": [
+            {
+                "$Kind": "Action",
+                "$IsBound": true,
+                "$Parameter": [
+                    {
+                        "$Name": "product",
+                        "$Type": "self.Product"
+                    },
+                    {
+                        "$Name": "discountPercentage",
+                        "$Type": "Edm.Int32",
+                        "$Nullable": false
+                    }
+                ],
+                "$ReturnType": {
+                    "$Type": "Edm.Double",
+                    "$Nullable": false
+                }
+            }
+        ],
+        "Container": {
+            "$Kind": "EntityContainer",
+            "Products": {
+                "$Kind": "EntitySet",
+                "$Type": "self.Product",
+                "$NavigationPropertyBinding": {
+                    "self.FeaturedProduct/Advertisement": "Advertisements",
+                    "Categories": "Categories",
+                    "Supplier": "PeopleService_.Container/Suppliers",
+                    "ProductDetail": "ProductDetails"
+                }
+            },
+            "ProductDetails": {
+                "$Kind": "EntitySet",
+                "$Type": "self.ProductDetail",
+                "$NavigationPropertyBinding": {
+                    "Product": "Products"
+                }
+            },
+            "Categories": {
+                "$Kind": "EntitySet",
+                "$Type": "self.Category",
+                "$NavigationPropertyBinding": {
+                    "Products": "Products"
+                }
+            },
+            "Advertisements": {
+                "$Kind": "EntitySet",
+                "$Type": "self.Advertisement",
+                "$NavigationPropertyBinding": {
+                    "FeaturedProduct": "Products"
+                }
             }
         }
     }
