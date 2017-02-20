@@ -92,44 +92,8 @@
     }
   },
   "patternProperties": {
-    "\\.$": {
+    "^[^$]": {
       "$ref": "#/definitions/Schema"
-    },
-    "^[^$].*[^.]$": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/EntityType"
-        },
-        {
-          "$ref": "#/definitions/ComplexType"
-        },
-        {
-          "$ref": "#/definitions/EnumType"
-        },
-        {
-          "$ref": "#/definitions/TypeDefinition"
-        },
-        {
-          "$ref": "#/definitions/Term"
-        },
-        {
-          "$ref": "#/definitions/EntityContainer"
-        },
-        {
-          "description": "Action",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Action"
-          }
-        },
-        {
-          "description": "Function",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Function"
-          }
-        }
-      ]
     }
   },
   "definitions": {
@@ -140,10 +104,46 @@
       "patternProperties": {
         "^@": {
           "$ref": "#/definitions/Annotation"
+        },
+        "^[^$@]*$": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EntityType"
+            },
+            {
+              "$ref": "#/definitions/ComplexType"
+            },
+            {
+              "$ref": "#/definitions/EnumType"
+            },
+            {
+              "$ref": "#/definitions/TypeDefinition"
+            },
+            {
+              "$ref": "#/definitions/Term"
+            },
+            {
+              "$ref": "#/definitions/EntityContainer"
+            },
+            {
+              "description": "Action",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Action"
+              }
+            },
+            {
+              "description": "Function",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Function"
+              }
+            }
+          ]
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "Schema"
           ]
@@ -169,7 +169,7 @@
         }
       },
       "required": [
-        "$kind"
+        "$Kind"
       ]
     },
     "EntityType": {
@@ -192,7 +192,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "EntityType"
           ]
@@ -228,7 +228,7 @@
         }
       },
       "required": [
-        "$kind"
+        "$Kind"
       ]
     },
     "ComplexType": {
@@ -251,7 +251,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "ComplexType"
           ]
@@ -269,7 +269,7 @@
         }
       },
       "required": [
-        "$kind"
+        "$Kind"
       ]
     },
     "Property": {
@@ -282,7 +282,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "Property"
           ]
@@ -291,7 +291,7 @@
           "type": "string",
           "default": "Edm.String"
         },
-        "$isCollection": {
+        "$IsCollection": {
           "type": "boolean",
           "default": true
         },
@@ -332,7 +332,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "NavigationProperty"
           ]
@@ -340,7 +340,7 @@
         "$Type": {
           "type": "string"
         },
-        "$isCollection": {
+        "$IsCollection": {
           "type": "boolean",
           "default": true
         },
@@ -368,7 +368,7 @@
         }
       },
       "required": [
-        "$kind",
+        "$Kind",
         "$Type"
       ]
     },
@@ -386,7 +386,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "EnumType"
           ]
@@ -407,7 +407,7 @@
         }
       },
       "required": [
-        "$kind"
+        "$Kind"
       ]
     },
     "TypeDefinition": {
@@ -420,7 +420,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "TypeDefinition"
           ]
@@ -446,7 +446,7 @@
         }
       },
       "required": [
-        "$kind",
+        "$Kind",
         "$UnderlyingType"
       ]
     },
@@ -460,7 +460,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "Term"
           ]
@@ -469,7 +469,7 @@
           "type": "string",
           "default": "Edm.String"
         },
-        "$isCollection": {
+        "$IsCollection": {
           "type": "boolean",
           "default": true
         },
@@ -541,7 +541,7 @@
         }
       },
       "required": [
-        "$kind"
+        "$Kind"
       ]
     },
     "Action": {
@@ -554,7 +554,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "Action"
           ]
@@ -574,7 +574,7 @@
         }
       },
       "required": [
-        "$kind"
+        "$Kind"
       ]
     },
     "Function": {
@@ -587,7 +587,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "Function"
           ]
@@ -611,7 +611,7 @@
         }
       },
       "required": [
-        "$kind",
+        "$Kind",
         "$ReturnType"
       ]
     },
@@ -641,7 +641,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "EntityContainer"
           ]
@@ -651,7 +651,7 @@
         }
       },
       "required": [
-        "$kind"
+        "$Kind"
       ]
     },
     "EntitySet": {
@@ -664,7 +664,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "EntitySet"
           ]
@@ -681,7 +681,7 @@
         }
       },
       "required": [
-        "$kind",
+        "$Kind",
         "$Type"
       ]
     },
@@ -695,7 +695,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "Singleton"
           ]
@@ -708,7 +708,7 @@
         }
       },
       "required": [
-        "$kind",
+        "$Kind",
         "$Type"
       ]
     },
@@ -721,7 +721,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "ActionImport"
           ]
@@ -734,7 +734,7 @@
         }
       },
       "required": [
-        "$kind",
+        "$Kind",
         "$Action"
       ]
     },
@@ -748,7 +748,7 @@
         }
       },
       "properties": {
-        "$kind": {
+        "$Kind": {
           "enum": [
             "FunctionImport"
           ]
@@ -765,7 +765,7 @@
         }
       },
       "required": [
-        "$kind",
+        "$Kind",
         "$Function"
       ]
     },
@@ -797,7 +797,7 @@
             "type": "string",
             "default": "Edm.String"
           },
-          "$isCollection": {
+          "$IsCollection": {
             "type": "boolean",
             "default": true
           },
@@ -841,7 +841,7 @@
           "type": "string",
           "default": "Edm.String"
         },
-        "$isCollection": {
+        "$IsCollection": {
           "type": "boolean",
           "default": true
         },

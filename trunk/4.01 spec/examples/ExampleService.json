@@ -5,686 +5,686 @@
         "http://tinyurl.com/Org-OData-Core": {
             "$Include": [
                 {
-                    "$Namespace": "Org.OData.Core.V1.",
+                    "$Namespace": "Org.OData.Core.V1",
                     "$Alias": "Core"
                 }
             ]
         }
     },
-    "OData.Demo.": {
-        "$kind": "Schema",
-        "$Alias": "Model"
-    },
-    "OData.Demo.Customer": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Nullable": false
-        },
-        "Orders": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Order",
-            "$Partner": "Customer"
-        },
-        "Name": {
-            "$Nullable": false
-        },
-        "CompanyName": {
+    "OData.Demo": {
+        "$Kind": "Schema",
+        "$Alias": "Model",
+        "Customer": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            },
+            "Orders": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Order",
+                "$Partner": "Customer"
+            },
+            "Name": {
+                "$Nullable": false
+            },
+            "CompanyName": {
 
-        },
-        "BirthDate": {
-            "$Nullable": false
-        },
-        "CountryName": {
-            "$Nullable": false,
-            "@Org.OData.Core.V1.Description": "This is weird, given that we have a Country entity type"
-        },
-        "Sales": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Sales",
-            "$Partner": "Customer"
-        },
-        "ContactName": {
-            "$Nullable": false
-        },
-        "ContactTitle": {
-            "$Nullable": false
-        },
-        "Fax": {
-            "$Nullable": false
-        },
-        "Address": {
-            "$Type": "OData.Demo.Address",
-            "$Nullable": false
-        },
-        "EmailAddresses": {
-            "$isCollection": true,
-            "$Type": "Edm.String"
-        },
-        "Phone": {
-            "$Type": "OData.Demo.PhoneNumber",
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.Supplier": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Nullable": false
-        },
-        "Products": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Product",
-            "$Partner": "Supplier"
-        },
-        "Name": {
-            "$Nullable": false
-        },
-        "EmailAddresses": {
-            "$isCollection": true,
-            "$Type": "Edm.String"
-        },
-        "Addresses": {
-            "$isCollection": true,
-            "$Type": "OData.Demo.Address"
-        }
-    },
-    "OData.Demo.Product": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Category": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Category",
-            "$Nullable": false,
-            "$Partner": "Products"
-        },
-        "Name": {
-            "$Nullable": false
+            },
+            "BirthDate": {
+                "$Nullable": false
+            },
+            "CountryName": {
+                "$Nullable": false,
+                "@Core.Description": "This is weird, given that we have a Country entity type"
+            },
+            "Sales": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Sales",
+                "$Partner": "Customer"
+            },
+            "ContactName": {
+                "$Nullable": false
+            },
+            "ContactTitle": {
+                "$Nullable": false
+            },
+            "Fax": {
+                "$Nullable": false
+            },
+            "Address": {
+                "$Type": "Model.Address",
+                "$Nullable": false
+            },
+            "EmailAddresses": {
+                "$IsCollection": true,
+                "$Type": "Edm.String"
+            },
+            "Phone": {
+                "$Type": "Model.PhoneNumber",
+                "$Nullable": false
+            }
         },
         "Supplier": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Supplier",
-            "$Nullable": false,
-            "$Partner": "Products"
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            },
+            "Products": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Product",
+                "$Partner": "Supplier"
+            },
+            "Name": {
+                "$Nullable": false
+            },
+            "EmailAddresses": {
+                "$IsCollection": true,
+                "$Type": "Edm.String"
+            },
+            "Addresses": {
+                "$IsCollection": true,
+                "$Type": "Model.Address"
+            }
         },
-        "Description": {
-            "$Nullable": false
-        },
-        "Thumbnail": {
-            "$Nullable": false
-        },
-        "Sizes": {
-            "$isCollection": true,
-            "$Type": "Edm.String"
-        },
-        "Rating": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "OrderItems": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.OrderItem",
-            "$Partner": "Product"
-        },
-        "ReleaseDate": {
-            "$Type": "Edm.Date",
-            "$Nullable": false
-        },
-        "DiscontinuedDate": {
-            "$Type": "Edm.Date"
-        },
-        "LifeTime": {
-            "$Nullable": false
-        },
-        "Color": {
-            "$Nullable": false
-        },
-        "TaxRate": {
-            "$Type": "Edm.Decimal",
-            "$Precision": 10,
-            "$Scale": 6
-        },
-        "Sales": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Sales",
-            "$Partner": "Product"
-        }
-    },
-    "OData.Demo.Order": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Items": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.OrderItem",
-            "$Partner": "Order"
-        },
-        "Completed": {
-            "$Type": "Edm.Boolean",
-            "$Nullable": false
-        },
-        "Customer": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Customer",
-            "$Nullable": false,
-            "$Partner": "Orders"
-        },
-        "ShippingAddress": {
-            "$Type": "OData.Demo.Address",
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.VipCustomer": {
-        "$kind": "EntityType",
-        "$BaseType": "OData.Demo.Customer"
-    },
-    "OData.Demo.Category": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Amount": {
-            "$Type": "Edm.Decimal",
-            "$Nullable": false
-        },
-        "Products": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Product",
-            "$Partner": "Category"
-        },
-        "Name": {
-            "$Nullable": false
-        },
-        "Thumbnail": {
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.OrderItem": {
-        "$kind": "EntityType",
-        "$Key": [
-            "OrderID",
-            "ItemID"
-        ],
-        "OrderID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "ItemID": {
-            "$Nullable": false
+        "Product": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Category": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Category",
+                "$Nullable": false,
+                "$Partner": "Products"
+            },
+            "Name": {
+                "$Nullable": false
+            },
+            "Supplier": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Supplier",
+                "$Nullable": false,
+                "$Partner": "Products"
+            },
+            "Description": {
+                "$Nullable": false
+            },
+            "Thumbnail": {
+                "$Nullable": false
+            },
+            "Sizes": {
+                "$IsCollection": true,
+                "$Type": "Edm.String"
+            },
+            "Rating": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "OrderItems": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.OrderItem",
+                "$Partner": "Product"
+            },
+            "ReleaseDate": {
+                "$Type": "Edm.Date",
+                "$Nullable": false
+            },
+            "DiscontinuedDate": {
+                "$Type": "Edm.Date"
+            },
+            "LifeTime": {
+                "$Nullable": false
+            },
+            "Color": {
+                "$Nullable": false
+            },
+            "TaxRate": {
+                "$Type": "Edm.Decimal",
+                "$Precision": 10,
+                "$Scale": 6
+            },
+            "Sales": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Sales",
+                "$Partner": "Product"
+            }
         },
         "Order": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Order",
-            "$Nullable": false,
-            "$Partner": "Items",
-            "$OnDelete": "Cascade",
-            "$ReferentialConstraint": {
-                "OrderID": "ID"
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Items": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.OrderItem",
+                "$Partner": "Order"
+            },
+            "Completed": {
+                "$Type": "Edm.Boolean",
+                "$Nullable": false
+            },
+            "Customer": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Customer",
+                "$Nullable": false,
+                "$Partner": "Orders"
+            },
+            "ShippingAddress": {
+                "$Type": "Model.Address",
+                "$Nullable": false
             }
         },
-        "Size": {
-            "$Nullable": false
+        "VipCustomer": {
+            "$Kind": "EntityType",
+            "$BaseType": "Model.Customer"
         },
-        "Price": {
-            "$Type": "Edm.Decimal",
-            "$Nullable": false
+        "Category": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Amount": {
+                "$Type": "Edm.Decimal",
+                "$Nullable": false
+            },
+            "Products": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Product",
+                "$Partner": "Category"
+            },
+            "Name": {
+                "$Nullable": false
+            },
+            "Thumbnail": {
+                "$Nullable": false
+            }
         },
-        "Product": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Product",
-            "$Nullable": false,
-            "$Partner": "OrderItems"
+        "OrderItem": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "OrderID",
+                "ItemID"
+            ],
+            "OrderID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "ItemID": {
+                "$Nullable": false
+            },
+            "Order": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Order",
+                "$Nullable": false,
+                "$Partner": "Items",
+                "$OnDelete": "Cascade",
+                "$ReferentialConstraint": {
+                    "OrderID": "ID"
+                }
+            },
+            "Size": {
+                "$Nullable": false
+            },
+            "Price": {
+                "$Type": "Edm.Decimal",
+                "$Nullable": false
+            },
+            "Product": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Product",
+                "$Nullable": false,
+                "$Partner": "OrderItems"
+            },
+            "Currency": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Currency",
+                "$Nullable": false
+            }
         },
-        "Currency": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Currency",
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.Sales": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Amount": {
-            "$Type": "Edm.Decimal",
-            "$Nullable": false
-        },
-        "Time": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Time",
-            "$Nullable": false,
-            "$Partner": "Sales"
-        },
-        "Currency": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Currency",
-            "$Nullable": false,
-            "$Partner": "Sales"
-        },
-        "Customer": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Customer",
-            "$Nullable": false,
-            "$Partner": "Sales"
-        },
-        "SalesOrganization": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.SalesOrganization",
-            "$Nullable": false,
-            "$Partner": "Sales"
-        },
-        "Product": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Product",
-            "$Nullable": false,
-            "$Partner": "Sales"
-        }
-    },
-    "OData.Demo.Employee": {
-        "$kind": "EntityType",
-        "$HasStream": true,
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Nullable": false
-        },
-        "FirstName": {
-            "$Nullable": false
-        },
-        "LastName": {
-            "$Nullable": false
-        },
-        "Title": {
-            "$Nullable": false
-        },
-        "Manager": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Manager",
-            "$Partner": "Employees"
-        },
-        "LeaveRequests": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.LeaveRequest",
-            "$Partner": "Employee"
-        }
-    },
-    "OData.Demo.LeaveRequest": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Int32",
-            "$Nullable": false
-        },
-        "Manager": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Manager",
-            "$Nullable": false,
-            "$Partner": "Inbox"
+        "Sales": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Amount": {
+                "$Type": "Edm.Decimal",
+                "$Nullable": false
+            },
+            "Time": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Time",
+                "$Nullable": false,
+                "$Partner": "Sales"
+            },
+            "Currency": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Currency",
+                "$Nullable": false,
+                "$Partner": "Sales"
+            },
+            "Customer": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Customer",
+                "$Nullable": false,
+                "$Partner": "Sales"
+            },
+            "SalesOrganization": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.SalesOrganization",
+                "$Nullable": false,
+                "$Partner": "Sales"
+            },
+            "Product": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Product",
+                "$Nullable": false,
+                "$Partner": "Sales"
+            }
         },
         "Employee": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Employee",
-            "$Nullable": false,
-            "$Partner": "LeaveRequests"
-        }
-    },
-    "OData.Demo.Approval": [
-        {
-            "$kind": "Action",
-            "$IsBound": true,
-            "$Parameter": [
-                {
-                    "$Name": "LeaveRequest",
-                    "$Type": "OData.Demo.LeaveRequest"
-                }
-            ]
-        }
-    ],
-    "OData.Demo.Rejection": [
-        {
-            "$kind": "Action",
-            "$IsBound": true,
-            "$Parameter": [
-                {
-                    "$Name": "LeaveRequest",
-                    "$Type": "OData.Demo.LeaveRequest"
-                },
-                {
-                    "$Name": "Reason"
-                }
-            ]
-        }
-    ],
-    "OData.Demo.Address": {
-        "$kind": "ComplexType",
-        "Street": {
-            "$Nullable": false
+            "$Kind": "EntityType",
+            "$HasStream": true,
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            },
+            "FirstName": {
+                "$Nullable": false
+            },
+            "LastName": {
+                "$Nullable": false
+            },
+            "Title": {
+                "$Nullable": false
+            },
+            "Manager": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Manager",
+                "$Partner": "Employees"
+            },
+            "LeaveRequests": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.LeaveRequest",
+                "$Partner": "Employee"
+            }
+        },
+        "LeaveRequest": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Int32",
+                "$Nullable": false
+            },
+            "Manager": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Manager",
+                "$Nullable": false,
+                "$Partner": "Inbox"
+            },
+            "Employee": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Employee",
+                "$Nullable": false,
+                "$Partner": "LeaveRequests"
+            }
+        },
+        "Approval": [
+            {
+                "$Kind": "Action",
+                "$IsBound": true,
+                "$Parameter": [
+                    {
+                        "$Name": "LeaveRequest",
+                        "$Type": "Model.LeaveRequest"
+                    }
+                ]
+            }
+        ],
+        "Rejection": [
+            {
+                "$Kind": "Action",
+                "$IsBound": true,
+                "$Parameter": [
+                    {
+                        "$Name": "LeaveRequest",
+                        "$Type": "Model.LeaveRequest"
+                    },
+                    {
+                        "$Name": "Reason"
+                    }
+                ]
+            }
+        ],
+        "Address": {
+            "$Kind": "ComplexType",
+            "Street": {
+                "$Nullable": false
+            },
+            "Country": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Country",
+                "$Nullable": false
+            },
+            "City": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.City",
+                "$Nullable": false
+            },
+            "Region": {
+                "$Nullable": false
+            },
+            "PostalCode": {
+                "$Nullable": false
+            }
+        },
+        "AddressWithLocation": {
+            "$Kind": "ComplexType",
+            "Location": {
+                "$Type": "Edm.GeographyPoint",
+                "$Nullable": false
+            }
         },
         "Country": {
-            "$kind": "NavigationProperty",
-            "$Type": "Example.Country",
-            "$Nullable": false
-        },
-        "City": {
-            "$kind": "NavigationProperty",
-            "$Type": "Example.City",
-            "$Nullable": false
-        },
-        "Region": {
-            "$Nullable": false
-        },
-        "PostalCode": {
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.AddressWithLocation": {
-        "$kind": "ComplexType",
-        "Location": {
-            "$Type": "Edm.GeographyPoint",
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.Country": {
-        "$kind": "EntityType",
-        "$Key": [
-            "Code"
-        ],
-        "Code": {
-            "$Nullable": false,
-            "$MaxLength": 2
-        },
-        "Name": {
-            "$Nullable": false
-        },
-        "Continent": {
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.PreferredSupplier": {
-        "$kind": "EntityType",
-        "$BaseType": "OData.Demo.Supplier",
-        "AccountRepresentative": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.Employee",
-            "$ReferentialConstraint": {
-                "EmployeeID": "ID",
-                "EmployeeID@Org.OData.Core.V1.Description": "The key account manager"
+            "$Kind": "EntityType",
+            "$Key": [
+                "Code"
+            ],
+            "Code": {
+                "$Nullable": false,
+                "$MaxLength": 2
+            },
+            "Name": {
+                "$Nullable": false
+            },
+            "Continent": {
+                "$Nullable": false
             }
         },
-        "EmployeeID": {
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.Pattern": {
-        "$kind": "EnumType",
-        "$IsFlags": true,
-        "Yellow": 1,
-        "Solid": 2
-    },
-    "OData.Demo.Manager": {
-        "$kind": "EntityType",
-        "$BaseType": "OData.Demo.Employee",
-        "Employees": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Employee",
-            "$Partner": "Manager"
-        },
-        "Inbox": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.LeaveRequest",
-            "$Partner": "Manager"
-        }
-    },
-    "OData.Demo.Time": {
-        "$kind": "EntityType",
-        "$Key": [
-            "Date"
-        ],
-        "Date": {
-            "$Type": "Edm.Date",
-            "$Nullable": false
-        },
-        "Year": {
-            "$Nullable": false,
-            "$MaxLength": 4
-        },
-        "Quarter": {
-            "$Nullable": false
-        },
-        "Month": {
-            "$Nullable": false
-        },
-        "Sales": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Sales",
-            "$Partner": "Time"
-        }
-    },
-    "OData.Demo.SalesOrganization": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Nullable": false
-        },
-        "Name": {
-            "$Nullable": false
-        },
-        "Sales": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Sales",
-            "$Partner": "SalesOrganization"
-        },
-        "Superordinate": {
-            "$kind": "NavigationProperty",
-            "$Type": "OData.Demo.SalesOrganization"
-        }
-    },
-    "OData.Demo.Currency": {
-        "$kind": "EntityType",
-        "$Key": [
-            "Code"
-        ],
-        "Code": {
-            "$Nullable": false,
-            "$MaxLength": 3
-        },
-        "Name": {
-            "$Nullable": false
-        },
-        "Sales": {
-            "$kind": "NavigationProperty",
-            "$isCollection": true,
-            "$Type": "OData.Demo.Sales",
-            "$Partner": "Currency"
-        },
-        "Symbol": {
-            "$Nullable": false
-        },
-        "FractionalDigits": {
-            "$Type": "Edm.Byte",
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.City": {
-        "$kind": "EntityType",
-        "$Key": [
-            "ID"
-        ],
-        "ID": {
-            "$Type": "Edm.Guid",
-            "$Nullable": false
-        },
-        "Name": {
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.PhoneNumber": {
-        "$kind": "ComplexType",
-        "Number": {
-            "$Nullable": false
-        },
-        "Type": {
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.CellPhoneNumber": {
-        "$kind": "ComplexType",
-        "Carrier": {
-            "$Nullable": false
-        }
-    },
-    "OData.Demo.Container": {
-        "$kind": "EntityContainer",
-        "Customers": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Customer",
-            "$NavigationPropertyBinding": {
-                "Orders": "Orders",
-                "Sales": "Sales",
-                "Address/Country": "Countries"
+        "PreferredSupplier": {
+            "$Kind": "EntityType",
+            "$BaseType": "Model.Supplier",
+            "AccountRepresentative": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.Employee",
+                "$ReferentialConstraint": {
+                    "EmployeeID": "ID",
+                    "EmployeeID@Core.Description": "The key account manager"
+                }
+            },
+            "EmployeeID": {
+                "$Nullable": false
             }
         },
-        "Suppliers": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Supplier",
-            "$NavigationPropertyBinding": {
-                "Products": "Products",
-                "OData.Demo.PreferredSupplier/AccountRepresentative": "Employees"
-            }
+        "Pattern": {
+            "$Kind": "EnumType",
+            "$IsFlags": true,
+            "Yellow": 1,
+            "Solid": 2
         },
-        "Products": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Product",
-            "$NavigationPropertyBinding": {
-                "Category": "Categories",
-                "Supplier": "Suppliers",
-                "OrderItems": "OrderItems",
-                "Sales": "Sales"
+        "Manager": {
+            "$Kind": "EntityType",
+            "$BaseType": "Model.Employee",
+            "Employees": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Employee",
+                "$Partner": "Manager"
+            },
+            "Inbox": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.LeaveRequest",
+                "$Partner": "Manager"
             }
-        },
-        "Orders": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Order",
-            "$NavigationPropertyBinding": {
-                "Items": "OrderItems",
-                "Customer": "Customers"
-            }
-        },
-        "Categories": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Category",
-            "$NavigationPropertyBinding": {
-                "Products": "Products"
-            }
-        },
-        "OrderItems": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.OrderItem",
-            "$NavigationPropertyBinding": {
-                "Order": "Orders",
-                "Product": "Products",
-                "Currency": "Currencies"
-            }
-        },
-        "Sales": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Sales",
-            "$NavigationPropertyBinding": {
-                "Time": "Time",
-                "Currency": "Currencies",
-                "Customer": "Customers",
-                "SalesOrganization": "SalesOrganizations",
-                "Product": "Products"
-            }
-        },
-        "Employees": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Employee",
-            "$NavigationPropertyBinding": {
-                "OData.Demo.Manager/Employees": "Employees",
-                "Manager": "Employees",
-                "OData.Demo.Manager/Inbox": "LeaveRequests",
-                "LeaveRequests": "LeaveRequests"
-            }
-        },
-        "LeaveRequests": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.LeaveRequest",
-            "$NavigationPropertyBinding": {
-                "Manager": "Employees",
-                "Employee": "Employees"
-            }
-        },
-        "Countries": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Country"
         },
         "Time": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Time",
-            "$NavigationPropertyBinding": {
-                "Sales": "Sales"
+            "$Kind": "EntityType",
+            "$Key": [
+                "Date"
+            ],
+            "Date": {
+                "$Type": "Edm.Date",
+                "$Nullable": false
+            },
+            "Year": {
+                "$Nullable": false,
+                "$MaxLength": 4
+            },
+            "Quarter": {
+                "$Nullable": false
+            },
+            "Month": {
+                "$Nullable": false
+            },
+            "Sales": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Sales",
+                "$Partner": "Time"
             }
         },
-        "SalesOrganizations": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.SalesOrganization",
-            "$NavigationPropertyBinding": {
-                "Sales": "Sales",
-                "Superordinate": "SalesOrganizations"
+        "SalesOrganization": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            },
+            "Name": {
+                "$Nullable": false
+            },
+            "Sales": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Sales",
+                "$Partner": "SalesOrganization"
+            },
+            "Superordinate": {
+                "$Kind": "NavigationProperty",
+                "$Type": "Model.SalesOrganization"
             }
         },
-        "Currencies": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.Currency",
-            "$NavigationPropertyBinding": {
-                "Sales": "Sales"
+        "Currency": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "Code"
+            ],
+            "Code": {
+                "$Nullable": false,
+                "$MaxLength": 3
+            },
+            "Name": {
+                "$Nullable": false
+            },
+            "Sales": {
+                "$Kind": "NavigationProperty",
+                "$IsCollection": true,
+                "$Type": "Model.Sales",
+                "$Partner": "Currency"
+            },
+            "Symbol": {
+                "$Nullable": false
+            },
+            "FractionalDigits": {
+                "$Type": "Edm.Byte",
+                "$Nullable": false
             }
         },
-        "Cities": {
-            "$kind": "EntitySet",
-            "$Type": "OData.Demo.City"
+        "City": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Guid",
+                "$Nullable": false
+            },
+            "Name": {
+                "$Nullable": false
+            }
+        },
+        "PhoneNumber": {
+            "$Kind": "ComplexType",
+            "Number": {
+                "$Nullable": false
+            },
+            "Type": {
+                "$Nullable": false
+            }
+        },
+        "CellPhoneNumber": {
+            "$Kind": "ComplexType",
+            "Carrier": {
+                "$Nullable": false
+            }
+        },
+        "Container": {
+            "$Kind": "EntityContainer",
+            "Customers": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Customer",
+                "$NavigationPropertyBinding": {
+                    "Orders": "Orders",
+                    "Sales": "Sales",
+                    "Address/Country": "Countries"
+                }
+            },
+            "Suppliers": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Supplier",
+                "$NavigationPropertyBinding": {
+                    "Products": "Products",
+                    "Model.PreferredSupplier/AccountRepresentative": "Employees"
+                }
+            },
+            "Products": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Product",
+                "$NavigationPropertyBinding": {
+                    "Category": "Categories",
+                    "Supplier": "Suppliers",
+                    "OrderItems": "OrderItems",
+                    "Sales": "Sales"
+                }
+            },
+            "Orders": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Order",
+                "$NavigationPropertyBinding": {
+                    "Items": "OrderItems",
+                    "Customer": "Customers"
+                }
+            },
+            "Categories": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Category",
+                "$NavigationPropertyBinding": {
+                    "Products": "Products"
+                }
+            },
+            "OrderItems": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.OrderItem",
+                "$NavigationPropertyBinding": {
+                    "Order": "Orders",
+                    "Product": "Products",
+                    "Currency": "Currencies"
+                }
+            },
+            "Sales": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Sales",
+                "$NavigationPropertyBinding": {
+                    "Time": "Time",
+                    "Currency": "Currencies",
+                    "Customer": "Customers",
+                    "SalesOrganization": "SalesOrganizations",
+                    "Product": "Products"
+                }
+            },
+            "Employees": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Employee",
+                "$NavigationPropertyBinding": {
+                    "Model.Manager/Employees": "Employees",
+                    "Manager": "Employees",
+                    "Model.Manager/Inbox": "LeaveRequests",
+                    "LeaveRequests": "LeaveRequests"
+                }
+            },
+            "LeaveRequests": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.LeaveRequest",
+                "$NavigationPropertyBinding": {
+                    "Manager": "Employees",
+                    "Employee": "Employees"
+                }
+            },
+            "Countries": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Country"
+            },
+            "Time": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Time",
+                "$NavigationPropertyBinding": {
+                    "Sales": "Sales"
+                }
+            },
+            "SalesOrganizations": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.SalesOrganization",
+                "$NavigationPropertyBinding": {
+                    "Sales": "Sales",
+                    "Superordinate": "SalesOrganizations"
+                }
+            },
+            "Currencies": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Currency",
+                "$NavigationPropertyBinding": {
+                    "Sales": "Sales"
+                }
+            },
+            "Cities": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.City"
+            }
         }
     }
 }

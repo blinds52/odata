@@ -7,7 +7,6 @@
 
     TODO:
     - $EnumMember with number value (if safe), string with number (if too long), string with member name as fallback
-    - normalize annotations, i.e. explace whatever can be targeted?
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
@@ -25,9 +24,6 @@
       <xsl:with-param name="key" select="'Uri'" />
     </xsl:apply-templates>
     <xsl:apply-templates select="//edm:Schema" />
-    <xsl:apply-templates
-      select="//edm:EntityType|//edm:ComplexType|//edm:TypeDefinition|//edm:EnumType|//edm:Term|//edm:Action[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]|//edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]" />
-    <xsl:apply-templates select="//edm:EntityContainer" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -50,8 +46,18 @@
   <xsl:template match="edmx:Include" mode="item">
     <xsl:text>{"$Namespace":"</xsl:text>
     <xsl:value-of select="@Namespace" />
-    <xsl:text>."</xsl:text>
-    <xsl:apply-templates select="@Alias" mode="list2" />
+    <xsl:text>","$Alias":"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="@Alias">
+        <xsl:value-of select="@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="include-alias">
+          <xsl:with-param name="namespace" select="@Namespace" />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -67,9 +73,21 @@
   <xsl:template match="edm:Schema">
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="@Namespace" />
-    <xsl:text>.":{"$kind":"Schema"</xsl:text>
-    <xsl:apply-templates select="@Alias|edm:Annotation" mode="list2" />
+    <xsl:text>":{"$Kind":"Schema","$Alias":"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="@Alias">
+        <xsl:value-of select="@Alias" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="." mode="alias" />
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>"</xsl:text>
+    <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:apply-templates select="edm:Annotations[generate-id() = generate-id(key('targets', concat(../@Namespace,'/',@Target))[1])]" />
+    <xsl:apply-templates
+      select="edm:EntityType|edm:ComplexType|edm:TypeDefinition|edm:EnumType|edm:Term|edm:Action[generate-id()=generate-id(key('methods',concat(../@Namespace,'.',@Name))[1])]|edm:Function[generate-id()=generate-id(key('methods',concat(../@Namespace,'.',@Name))[1])]" />
+    <xsl:apply-templates select="edm:EntityContainer" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -83,10 +101,8 @@
 
   <xsl:template match="edm:EntityContainer">
     <xsl:text>,"</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"$kind":"EntityContainer"</xsl:text>
+    <xsl:text>":{"$Kind":"EntityContainer"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']|edm:Annotation" mode="list2" />
     <xsl:apply-templates select="edm:EntitySet" />
     <xsl:apply-templates select="edm:Singleton" />
@@ -98,7 +114,7 @@
   <xsl:template match="edm:EntitySet|edm:Singleton">
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"$kind":"</xsl:text>
+    <xsl:text>":{"$Kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']" mode="list2" />
@@ -137,7 +153,7 @@
 
   <xsl:template match="edm:EntitySet/@EntityType">
     <xsl:text>"$Type":"</xsl:text>
-    <xsl:call-template name="namespaceQualifiedName">
+    <xsl:call-template name="normalizedQualifiedName">
       <xsl:with-param name="qualifiedName" select="." />
     </xsl:call-template>
     <xsl:text>"</xsl:text>
@@ -146,7 +162,7 @@
   <xsl:template match="edm:ActionImport|edm:FunctionImport">
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"$kind":"</xsl:text>
+    <xsl:text>":{"$Kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']" mode="list2" />
@@ -167,7 +183,9 @@
         <xsl:value-of select="substring-after(.,'/')" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="." />
+        <xsl:call-template name="normalizedPath">
+          <xsl:with-param name="path" select="." />
+        </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"</xsl:text>
@@ -175,11 +193,9 @@
 
   <xsl:template match="edm:EntityType|edm:ComplexType|edm:Term|edm:TypeDefinition">
     <xsl:text>,"</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
-    <xsl:text>"$kind":"</xsl:text>
+    <xsl:text>"$Kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']|*" mode="list2" />
@@ -214,7 +230,7 @@
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
     <!--
-      <xsl:text>"$kind":"Property"</xsl:text>
+      <xsl:text>"$Kind":"Property"</xsl:text>
       <xsl:apply-templates
       select="@*[name()!='Name' and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode'
       and .='true')]|*"
@@ -229,7 +245,7 @@
   <xsl:template match="edm:NavigationProperty">
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"$kind":"</xsl:text>
+    <xsl:text>":{"$Kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']|*[name()!='ReferentialConstraint']" mode="list2" />
@@ -241,7 +257,7 @@
     <xsl:text>"$</xsl:text>
     <xsl:value-of select="name()" />
     <xsl:text>":"</xsl:text>
-    <xsl:call-template name="namespaceQualifiedName">
+    <xsl:call-template name="normalizedQualifiedName">
       <xsl:with-param name="qualifiedName" select="." />
     </xsl:call-template>
     <xsl:text>"</xsl:text>
@@ -250,15 +266,15 @@
   <xsl:template match="@Type">
     <xsl:choose>
       <xsl:when test="starts-with(.,'Collection(')">
-        <xsl:text>"$isCollection":true,"$Type":"</xsl:text>
-        <xsl:call-template name="namespaceQualifiedName">
+        <xsl:text>"$IsCollection":true,"$Type":"</xsl:text>
+        <xsl:call-template name="normalizedQualifiedName">
           <xsl:with-param name="qualifiedName" select="substring-before(substring-after(.,'('),')')" />
         </xsl:call-template>
         <xsl:text>"</xsl:text>
       </xsl:when>
       <xsl:when test=".!='Edm.String'">
         <xsl:text>"$Type":"</xsl:text>
-        <xsl:call-template name="namespaceQualifiedName">
+        <xsl:call-template name="normalizedQualifiedName">
           <xsl:with-param name="qualifiedName" select="." />
         </xsl:call-template>
         <xsl:text>"</xsl:text>
@@ -343,10 +359,8 @@
 
   <xsl:template match="edm:EnumType">
     <xsl:text>,"</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
-    <xsl:text>":{"$kind":"EnumType"</xsl:text>
+    <xsl:text>":{"$Kind":"EnumType"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']" mode="list2" />
     <xsl:apply-templates select="edm:Member" mode="list2" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
@@ -373,15 +387,13 @@
 
   <xsl:template match="edm:Action|edm:Function">
     <xsl:text>,"</xsl:text>
-    <xsl:value-of select="../@Namespace" />
-    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":[</xsl:text>
     <xsl:for-each select="key('methods', concat(../@Namespace,'.',@Name))">
       <xsl:if test="position()>1">
         <xsl:text>,</xsl:text>
       </xsl:if>
-      <xsl:text>{"$kind":"</xsl:text>
+      <xsl:text>{"$Kind":"</xsl:text>
       <xsl:value-of select="local-name()" />
       <xsl:text>"</xsl:text>
       <xsl:apply-templates select="@*[name()!='Name']|edm:Annotation" mode="list2" />
@@ -441,7 +453,7 @@
     <xsl:variable name="name">
       <xsl:value-of select="$target" />
       <xsl:text>@</xsl:text>
-      <xsl:call-template name="namespaceQualifiedName">
+      <xsl:call-template name="normalizedQualifiedName">
         <xsl:with-param name="qualifiedName" select="@Term" />
       </xsl:call-template>
       <xsl:if test="@Qualifier or $qualifier">
@@ -649,7 +661,7 @@
 
   <xsl:template match="edm:LabeledElementReference">
     <xsl:text>{"$LabeledElementReference":"</xsl:text>
-    <xsl:call-template name="namespaceQualifiedName">
+    <xsl:call-template name="normalizedQualifiedName">
       <xsl:with-param name="qualifiedName" select="." />
     </xsl:call-template>
     <xsl:text>"}</xsl:text>
@@ -923,7 +935,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="namespaceQualifiedName">
+  <xsl:template name="normalizedQualifiedName">
     <xsl:param name="qualifiedName" />
     <xsl:variable name="qualifier">
       <xsl:call-template name="substring-before-last">
@@ -932,14 +944,28 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
+      <xsl:when test="$qualifier='Edm' or $qualifier='odata'">
+        <xsl:value-of select="$qualifier" />
+      </xsl:when>
       <xsl:when test="//edm:Schema[@Alias=$qualifier]">
-        <xsl:value-of select="//edm:Schema[@Alias=$qualifier]/@Namespace" />
+        <xsl:value-of select="$qualifier" />
       </xsl:when>
       <xsl:when test="//edmx:Include[@Alias=$qualifier]">
-        <xsl:value-of select="//edmx:Include[@Alias=$qualifier]/@Namespace" />
+        <xsl:value-of select="$qualifier" />
+      </xsl:when>
+      <xsl:when test="//edm:Schema[@Namespace=$qualifier and @Alias]">
+        <xsl:value-of select="//edm:Schema[@Namespace=$qualifier]/@Alias" />
+      </xsl:when>
+      <xsl:when test="//edmx:Include[@Namespace=$qualifier and @Alias]">
+        <xsl:value-of select="//edmx:Include[@Namespace=$qualifier]/@Alias" />
+      </xsl:when>
+      <xsl:when test="//edm:Schema[@Namespace=$qualifier]">
+        <xsl:apply-templates select="//edm:Schema[@Namespace=$qualifier]" mode="alias" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$qualifier" />
+        <xsl:call-template name="include-alias">
+          <xsl:with-param name="namespace" select="$qualifier" />
+        </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>.</xsl:text>
@@ -947,6 +973,38 @@
       <xsl:with-param name="input" select="$qualifiedName" />
       <xsl:with-param name="marker" select="'.'" />
     </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="edm:Schema" mode="alias">
+    <xsl:text>self</xsl:text>
+    <xsl:variable name="position" select="count(preceding-sibling::edm:Schema)" />
+    <xsl:if test="$position>0">
+      <xsl:value-of select="$position" />
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="include-alias">
+    <xsl:param name="namespace" />
+    <xsl:choose>
+      <xsl:when test="starts-with($namespace,'Org.OData.')">
+        <xsl:call-template name="substring-before-last">
+          <xsl:with-param name="input" select="substring($namespace,11)" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="contains($namespace,'.')">
+        <xsl:call-template name="replace-all">
+          <xsl:with-param name="string" select="$namespace" />
+          <xsl:with-param name="old" select="'.'" />
+          <xsl:with-param name="new" select="'_'" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- an alias must not be identical to a namespace, unfortunately -->
+        <xsl:value-of select="$namespace" />
+        <xsl:text>_</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="normalizedPath">
@@ -965,13 +1023,13 @@
       <xsl:when test="substring($path,1,1)='@'">
         <!-- term-cast segment: normalize term name -->
         <xsl:text>@</xsl:text>
-        <xsl:call-template name="namespaceQualifiedName">
+        <xsl:call-template name="normalizedQualifiedName">
           <xsl:with-param name="qualifiedName" select="substring($path,2)" />
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="contains($path,'.')">
         <!-- qualified segment: normalize -->
-        <xsl:call-template name="namespaceQualifiedName">
+        <xsl:call-template name="normalizedQualifiedName">
           <xsl:with-param name="qualifiedName" select="$path" />
         </xsl:call-template>
       </xsl:when>

@@ -4,29 +4,31 @@
         "http://host/service/$metadata": {
             "$Include": [
                 {
-                    "$Namespace": "ODataDemo."
+                    "$Namespace": "ODataDemo",
+                    "$Alias": "target"
                 }
             ]
         },
         "http://somewhere/Vocabulary/V1": {
             "$Include": [
                 {
-                    "$Namespace": "Some.Vocabulary.V1.",
+                    "$Namespace": "Some.Vocabulary.V1",
                     "$Alias": "Vocabulary1"
                 }
             ]
         }
     },
-    "External.Annotations.": {
-        "$kind": "Schema",
+    "External.Annotations": {
+        "$Kind": "Schema",
+        "$Alias": "self",
         "$Annotations": {
-            "ODataDemo.Supplier": {
-                "@Some.Vocabulary.V1.EMail": null,
-                "@Some.Vocabulary.V1.AccountID": {
+            "target.Supplier": {
+                "@Vocabulary1.EMail": null,
+                "@Vocabulary1.AccountID": {
                     "$Path": "ID"
                 },
-                "@Some.Vocabulary.V1.Title": "Supplier Info",
-                "@Some.Vocabulary.V1.DisplayName": {
+                "@Vocabulary1.Title": "Supplier Info",
+                "@Vocabulary1.DisplayName": {
                     "$Apply": [
                         {
                             "$Path": "Name"
@@ -39,8 +41,8 @@
                     "$Function": "odata.concat"
                 }
             },
-            "ODataDemo.Product": {
-                "@Some.Vocabulary.V1.Tags": [
+            "target.Product": {
+                "@Vocabulary1.Tags": [
                     "MasterData"
                 ]
             }
