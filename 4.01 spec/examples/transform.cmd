@@ -26,7 +26,7 @@ exit /b
   echo %~n1
 
   @rem -PARAM ... ...
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-JSON.xsl -IN %1 -OUT %~n1.tmp.json
+  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-JSON.xsl -L -IN %1 -OUT %~n1.tmp.json
 
   c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.tmp.json > %~n1.json
   if not errorlevel 1 (

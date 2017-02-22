@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
-  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/"
+  xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/" xmlns:nodeinfo="xalan://org.apache.xalan.lib.NodeInfo"
 >
   <!--
     This style sheet transforms OData 4.0 XML CSDL documents into Streamlined CSDL JSON, see https://wiki.wdf.sap.corp/wiki/display/UI/Streamlined+Meta+Data+JSON
@@ -52,9 +52,12 @@
         <xsl:value-of select="@Alias" />
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="include-alias">
+        <xsl:apply-templates select="." mode="alias" />
+        <!--
+          <xsl:call-template name="include-alias">
           <xsl:with-param name="namespace" select="@Namespace" />
-        </xsl:call-template>
+          </xsl:call-template>
+        -->
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>"</xsl:text>
@@ -962,10 +965,17 @@
       <xsl:when test="//edm:Schema[@Namespace=$qualifier]">
         <xsl:apply-templates select="//edm:Schema[@Namespace=$qualifier]" mode="alias" />
       </xsl:when>
+      <xsl:when test="//edmx:Include[@Namespace=$qualifier]">
+        <xsl:apply-templates select="//edmx:Include[@Namespace=$qualifier]" mode="alias" />
+      </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="include-alias">
-          <xsl:with-param name="namespace" select="$qualifier" />
-        </xsl:call-template>
+        <xsl:message>
+          <xsl:text>Unknown name qualifier </xsl:text>
+          <xsl:value-of select="$qualifier" />
+          <xsl:text> in line </xsl:text>
+          <xsl:value-of select="nodeinfo:lineNumber()" />
+        </xsl:message>
+        <xsl:value-of select="$qualifier" />
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>.</xsl:text>
@@ -983,26 +993,19 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template name="include-alias">
-    <xsl:param name="namespace" />
+  <xsl:template match="edmx:Include" mode="alias">
     <xsl:choose>
-      <xsl:when test="starts-with($namespace,'Org.OData.')">
+      <xsl:when test="starts-with(@Namespace,'Org.OData.')">
         <xsl:call-template name="substring-before-last">
-          <xsl:with-param name="input" select="substring($namespace,11)" />
+          <xsl:with-param name="input" select="substring(@Namespace,11)" />
           <xsl:with-param name="marker" select="'.'" />
         </xsl:call-template>
       </xsl:when>
-      <xsl:when test="contains($namespace,'.')">
-        <xsl:call-template name="replace-all">
-          <xsl:with-param name="string" select="$namespace" />
-          <xsl:with-param name="old" select="'.'" />
-          <xsl:with-param name="new" select="'_'" />
-        </xsl:call-template>
-      </xsl:when>
       <xsl:otherwise>
-        <!-- an alias must not be identical to a namespace, unfortunately -->
-        <xsl:value-of select="$namespace" />
-        <xsl:text>_</xsl:text>
+        <xsl:text>R</xsl:text>
+        <xsl:value-of select="count(../preceding-sibling::edmx:Reference)" />
+        <xsl:text>I</xsl:text>
+        <xsl:value-of select="count(preceding-sibling::edmx:Include)" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
