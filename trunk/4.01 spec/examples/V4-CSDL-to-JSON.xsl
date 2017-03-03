@@ -18,7 +18,7 @@
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>{</xsl:text>
-    <xsl:apply-templates select="@*" mode="list" />
+    <xsl:apply-templates select="@*[local-name()=name()]" mode="list" />
     <xsl:apply-templates select="//edm:EntityContainer" mode="top" />
     <xsl:apply-templates select="//edmx:Reference" mode="hash">
       <xsl:with-param name="key" select="'Uri'" />
@@ -201,7 +201,7 @@
     <xsl:text>"$Kind":"</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>"</xsl:text>
-    <xsl:apply-templates select="@*[name()!='Name']|*" mode="list2" />
+    <xsl:apply-templates select="@*[name()!='Name']|edm:*" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -232,15 +232,8 @@
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
-    <!--
-      <xsl:text>"$Kind":"Property"</xsl:text>
-      <xsl:apply-templates
-      select="@*[name()!='Name' and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode'
-      and .='true')]|*"
-      mode="list2" />
-    -->
     <xsl:apply-templates
-      select="@*[name()!='Name' and not(name()='Type' and .='Edm.String') and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|*"
+      select="@*[local-name()=name() and name()!='Name' and not(name()='Type' and .='Edm.String') and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|edm:*"
       mode="list" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -410,7 +403,7 @@
   <xsl:template match="edm:Parameter" mode="item">
     <xsl:text>{</xsl:text>
     <xsl:apply-templates select="@Name" />
-    <xsl:apply-templates select="@*[name()!='Name']|*" mode="list2" />
+    <xsl:apply-templates select="@*[name()!='Name']|edm:*" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -419,7 +412,7 @@
     <xsl:value-of select="local-name()" />
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates
-      select="@*[not(name()='Type' and .='Edm.String') and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|*"
+      select="@*[local-name()=name() and not(name()='Type' and .='Edm.String') and not(name()='Nullable' and .='true') and not(name()='MaxLength' and .='max') and not(name()='Unicode' and .='true')]|edm:*"
       mode="list" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -468,13 +461,13 @@
     <xsl:text>"</xsl:text>
     <xsl:value-of select="$name" />
     <xsl:text>":</xsl:text>
-    <xsl:apply-templates select="@*[name()!='Term' and name()!='Qualifier']|*[local-name()!='Annotation']"
+    <xsl:apply-templates select="@*[local-name()=name() and name()!='Term' and name()!='Qualifier']|edm:*[local-name()!='Annotation']"
       mode="list"
     >
       <xsl:with-param name="target" select="$name" />
     </xsl:apply-templates>
     <!-- tagging terms without explicit value are assumed to have DefaultValue="true" -->
-    <xsl:if test="count(@*[name()!='Term' and name()!='Qualifier']|*[local-name()!='Annotation'])=0">
+    <xsl:if test="count(@*[name()!='Term' and name()!='Qualifier']|edm:*[local-name()!='Annotation'])=0">
       <xsl:text>true</xsl:text>
     </xsl:if>
     <xsl:apply-templates select="edm:Annotation" mode="list2">
@@ -612,7 +605,7 @@
 
   <xsl:template match="edm:Record">
     <xsl:text>{</xsl:text>
-    <xsl:apply-templates select="@*|*" mode="list" />
+    <xsl:apply-templates select="@*[local-name()=name()]|edm:*" mode="list" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -620,7 +613,7 @@
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Property" />
     <xsl:text>":</xsl:text>
-    <xsl:apply-templates select="@*[name()!='Property']|*[local-name()!='Annotation']" />
+    <xsl:apply-templates select="@*[local-name()=name() and name()!='Property']|edm:*[local-name()!='Annotation']" />
     <xsl:apply-templates select="edm:Annotation" mode="list2">
       <xsl:with-param name="target" select="@Property" />
     </xsl:apply-templates>
@@ -628,7 +621,7 @@
 
   <xsl:template match="edm:Collection">
     <xsl:text>[</xsl:text>
-    <xsl:apply-templates select="*" mode="list" />
+    <xsl:apply-templates select="edm:*" mode="list" />
     <xsl:text>]</xsl:text>
   </xsl:template>
 
@@ -636,7 +629,7 @@
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":[</xsl:text>
-    <xsl:apply-templates select="*[local-name()!='Annotation']" mode="list" />
+    <xsl:apply-templates select="edm:*[local-name()!='Annotation']" mode="list" />
     <xsl:text>]</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
@@ -644,7 +637,7 @@
 
   <xsl:template match="edm:Apply">
     <xsl:text>{"$Apply":[</xsl:text>
-    <xsl:apply-templates select="*[local-name()!='Annotation']" mode="list" />
+    <xsl:apply-templates select="edm:*[local-name()!='Annotation']" mode="list" />
     <xsl:text>]</xsl:text>
     <xsl:apply-templates select="@*" mode="list2" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
@@ -653,7 +646,7 @@
 
   <xsl:template match="edm:LabeledElement">
     <xsl:text>{"$LabeledElement":</xsl:text>
-    <xsl:apply-templates select="@*[local-name()!='Name']|*[local-name()!='Annotation']" />
+    <xsl:apply-templates select="@*[local-name()=name() and local-name()!='Name']|edm:*[local-name()!='Annotation']" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>,"$Name":"</xsl:text>
     <xsl:value-of select="ancestor::edm:Schema/@Namespace" />
@@ -674,7 +667,7 @@
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":</xsl:text>
-    <xsl:apply-templates select="*[local-name()!='Annotation']" />
+    <xsl:apply-templates select="edm:*[local-name()!='Annotation']" />
     <xsl:apply-templates select="@*" mode="list2" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
@@ -682,9 +675,9 @@
 
   <xsl:template match="edm:Null">
     <xsl:choose>
-      <xsl:when test="*">
+      <xsl:when test="edm:*">
         <xsl:text>{"$Null":null</xsl:text>
-        <xsl:apply-templates select="@*|*" mode="list2" />
+        <xsl:apply-templates select="edm:*" mode="list2" />
         <xsl:text>}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
@@ -697,7 +690,7 @@
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":</xsl:text>
-    <xsl:apply-templates select="@*|*[local-name()!='Annotation']" />
+    <xsl:apply-templates select="@*[local-name()=name()]|edm:*[local-name()!='Annotation']" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -841,29 +834,24 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- name : quoted value -->
-  <xsl:template match="@*">
-    <xsl:text>"$</xsl:text>
-    <xsl:value-of select="name()" />
-    <xsl:text>":"</xsl:text>
-    <xsl:value-of select="." />
-    <xsl:text>"</xsl:text>
-  </xsl:template>
-
   <!-- name : object -->
-  <xsl:template match="*">
+  <xsl:template match="edmx:*|edm:*">
     <xsl:text>"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":{</xsl:text>
-    <xsl:apply-templates select="@*|node()" mode="list" />
+    <xsl:apply-templates select="@*[local-name()=name()]|node()" mode="list" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <!-- leftover text -->
-  <xsl:template match="text()">
-    <xsl:text>"TODO:text()":"</xsl:text>
-    <xsl:value-of select="." />
-    <xsl:text>"</xsl:text>
+  <!-- name : quoted value -->
+  <xsl:template match="@*">
+    <xsl:if test="local-name()=name()">
+      <xsl:text>"$</xsl:text>
+      <xsl:value-of select="name()" />
+      <xsl:text>":"</xsl:text>
+      <xsl:value-of select="." />
+      <xsl:text>"</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <!-- helper functions -->

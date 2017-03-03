@@ -6,11 +6,14 @@
         <Key>
           <PropertyRef Name="CategoryID" />
         </Key>
-        <Property Name="CategoryID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CategoryID" Type="Edm.Int32" Nullable="false" p5:StoreGeneratedPattern="Identity"
+          xmlns:p5="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         <Property Name="CategoryName" Type="Edm.String" Nullable="false" MaxLength="15" />
         <Property Name="Description" Type="Edm.String" MaxLength="max" />
-        <Property Name="Picture" Type="Edm.Binary" MaxLength="max" />
-        <NavigationProperty Name="Products" Type="Collection(NorthwindModel.Product)" Partner="Category" />
+        <Property Name="Picture" Type="Edm.Binary" MaxLength="max" >        <garbage xmlns="http://some/stuff" />
+        </Property>
+        <NavigationProperty Name="Products" Type="Collection(NorthwindModel.Product)" Partner="Category" >        <garbage xmlns="http://some/stuff" />
+        </NavigationProperty>
       </EntityType>
       <EntityType Name="CustomerDemographic">
         <Key>
@@ -43,7 +46,8 @@
         <Key>
           <PropertyRef Name="EmployeeID" />
         </Key>
-        <Property Name="EmployeeID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="EmployeeID" Type="Edm.Int32" Nullable="false" p5:StoreGeneratedPattern="Identity"
+          xmlns:p5="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         <Property Name="LastName" Type="Edm.String" Nullable="false" MaxLength="20" />
         <Property Name="FirstName" Type="Edm.String" Nullable="false" MaxLength="10" />
         <Property Name="Title" Type="Edm.String" MaxLength="30" />
@@ -89,7 +93,8 @@
         <Key>
           <PropertyRef Name="OrderID" />
         </Key>
-        <Property Name="OrderID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="OrderID" Type="Edm.Int32" Nullable="false" p5:StoreGeneratedPattern="Identity"
+          xmlns:p5="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         <Property Name="CustomerID" Type="Edm.String" MaxLength="5" />
         <Property Name="EmployeeID" Type="Edm.Int32" />
         <Property Name="OrderDate" Type="Edm.DateTimeOffset" />
@@ -118,7 +123,8 @@
         <Key>
           <PropertyRef Name="ProductID" />
         </Key>
-        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" p5:StoreGeneratedPattern="Identity"
+          xmlns:p5="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         <Property Name="ProductName" Type="Edm.String" Nullable="false" MaxLength="40" />
         <Property Name="SupplierID" Type="Edm.Int32" />
         <Property Name="CategoryID" Type="Edm.Int32" />
@@ -148,7 +154,8 @@
         <Key>
           <PropertyRef Name="ShipperID" />
         </Key>
-        <Property Name="ShipperID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ShipperID" Type="Edm.Int32" Nullable="false" p5:StoreGeneratedPattern="Identity"
+          xmlns:p5="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         <Property Name="CompanyName" Type="Edm.String" Nullable="false" MaxLength="40" />
         <Property Name="Phone" Type="Edm.String" MaxLength="24" />
         <NavigationProperty Name="Orders" Type="Collection(NorthwindModel.Order)" Partner="Shipper" />
@@ -157,7 +164,8 @@
         <Key>
           <PropertyRef Name="SupplierID" />
         </Key>
-        <Property Name="SupplierID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="SupplierID" Type="Edm.Int32" Nullable="false" p5:StoreGeneratedPattern="Identity"
+          xmlns:p5="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         <Property Name="CompanyName" Type="Edm.String" Nullable="false" MaxLength="40" />
         <Property Name="ContactName" Type="Edm.String" MaxLength="30" />
         <Property Name="ContactTitle" Type="Edm.String" MaxLength="30" />
@@ -214,7 +222,8 @@
           <PropertyRef Name="ProductID" />
           <PropertyRef Name="ProductName" />
         </Key>
-        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" p5:StoreGeneratedPattern="Identity"
+          xmlns:p5="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         <Property Name="ProductName" Type="Edm.String" Nullable="false" MaxLength="40" />
       </EntityType>
       <EntityType Name="Customer_and_Suppliers_by_City">
@@ -383,7 +392,9 @@
       </EntityType>
     </Schema>
     <Schema Namespace="ODataWebExperimental.Northwind.Model" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <EntityContainer Name="NorthwindEntities">
+      <EntityContainer Name="NorthwindEntities" p4:LazyLoadingEnabled="true"
+        xmlns:p4="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+      >
         <EntitySet Name="Categories" EntityType="NorthwindModel.Category">
           <NavigationPropertyBinding Path="Products" Target="Products" />
         </EntitySet>
