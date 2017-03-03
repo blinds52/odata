@@ -3,7 +3,9 @@
   xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns:json="http://json.org/" xmlns:nodeinfo="xalan://org.apache.xalan.lib.NodeInfo"
 >
   <!--
-    This style sheet transforms OData 4.0 XML CSDL documents into Streamlined CSDL JSON, see https://wiki.wdf.sap.corp/wiki/display/UI/Streamlined+Meta+Data+JSON
+    This style sheet transforms OData 4.0 CSDL XML documents into CSDL JSON
+
+    Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/examples/V4-CSDL-to-JSON.xsl
 
     TODO:
     - $EnumMember with number value (if safe), string with number (if too long), string with member name as fallback
