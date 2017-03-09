@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #165 Thursday Mar 09, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='7f52652d22135d6e28860b66b54ce67fda18b2847d3f2cc6c287f9d597dae16c791332d690bd47f07f2d63181e6939a090f7c2cee1e599ab5a97c51b07be5cad' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #165 Thursday Mar 09, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-03-09 0800-1000 PT
+</pre>
+<h2>1. Roll call</h2>
+
+
+<h3>1.1 Members present</h3>
+<pre>
+    Gerald Krause (SAP SE)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43968">normative attendance sheet for this meeting (event_id=43968)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: Mike can walk us through his thoughts on a JSON Batch format</p>
+<p>Ralf: ODATA-674 Specify navigation property binding combined with containment</p>
+<p>Ralf: ODATA-1030 Consider support of NavigationPropertyBindings to non-contained nav props</p>
+<p>Ralf: Issues in 6.a</p>
+<p>Ralf: JSON Batch after 6.</p>
+<p>Agenda approved with the modifications above.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from March 02, 2017 TC meeting #164</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60178/odata-meeting-164_on-20170302-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60178/odata-meeting-164_on-20170302-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. CSDL</h2>
+<h3>5.1 Superceding/replacing OData V4.0(1) Part 3: CDSL with OData CSDL XML Representation V4.01</h3>
+<h4>5.1.1 Possible, we just submit OData V4.01 with Part 1: Protocol, Part 2: URL, and ABNF components, no Part 3 any more</h4>
+<h4>5.1.2 Stable link to OData V4.01 Part 3: CSDL</h4>
+<p>Link will continue to exist (was created for CSPRD01), but will lead to a README document explaining that OData Part 3 ended with CSPRD01, that the content has moved to a new, independent work product, and then link to CSDL XML Representation V4.01</p>
+
+<h3>5.2 Issues for CSDL JSON Representation in New or Open state</h3>
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1044" rel="noopener noreferrer" target="_blank">ODATA-1044</a> - Require aliases for schemas and require alias-qualified names</h4>
+
+<p>Ralf: ODATA-1044 is OPEN</p>
+<p>Mike: don't require aliases, just recommend them. Require their use if they are present</p>
+<p>Ralf: Revised proposal:<br>
+Documents SHOULD define aliases for schemas.<br>
+If an alias is defined for a schema, it MUST be used in qualified names.</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1044 according to the amended proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1044 is RESOLVED as proposed</p>
+
+<h2>6. V4.01</h2>
+<h3>6.1 Issues for V4.01_CSD02 ready for resolution</h3>
+
+<h4>6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-674" rel="noopener noreferrer" target="_blank">ODATA-674</a> - Specify navigation property binding combined with containment</h4>
+
+<p>Ralf: Problem:<br>
+9) The new usage is only allowed in a 4.01 schema: <br>
+b. Services should only use cast segments in Target attribute in 4.01 responses</p>
+<p>Mike: In proposal, 9b) should have been referring to Path. The proposal (I believe) was that, for a 4.01 response, the last segment of Path can be either a navigation property or a cast segment; if cast segment, then only members of the (source) nav prop that are of that particular type are bound to the target entity set. <br>
+<br>
+The same path can't occur multiple times, but the same nav prop can be in multiple paths, followed by different cast segments. <br>
+<br>
+Where multiple such bindings occur for the same nav prop, the most specific path applies.</p>
+<p><b>Mike</b>: I <b>move</b> we correct ODATA-674, clarifying that 9b) should reference Path, not Target, and that multiple bindings may occur for the same nav prop, appended with different cast segments, in which case the bindings are applied to the most specific path. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-674 is RESOLVED with the amended proposal</p>
+
+<h4>6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1030" rel="noopener noreferrer" target="_blank">ODATA-1030</a> - Consider support of NavigationPropertyBindings to non-contained nav props</h4>
+
+<p>Ralf: Proposal states:<br>
+"The same path can occur multiple times" - does this mean an OR condition, meaning that the entities related via the "path" navigation property MUST be members of at least one of the "target" navigation properties? <br>
+<br>
+Mike doesn't think that this is a useful feature, so restrict that "path" values must be unique so one can specify at most one target per "path". <br>
+<br>
+For derived types the type-cast is part of the path, so paths for different derived types differ and can have different targets.</p>
+<p><b>Mike</b>: I <b>move</b> we clarify, in ODATA-1030, as we did in ODATA-674, that multiple paths to the same navigation property, with different cast segments, may exist, in which case the binding with the most specific path is applied. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1030 is RESOLVED with the clarification</p>
+
+<h4>6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1039" rel="noopener noreferrer" target="_blank">ODATA-1039</a> - Relax constraints on namespace names</h4>
+
+<p>Matt: C++ does not allow a '-' in namespace names. namespace names (including nested namespaces) cannot start with a number which also implies that a number alone cannot be used as a namespace name.</p>
+<p>Matt: Swift allows naming a project with a - in the name but it doesn't allow module names to contain a - (it automatically converts the '-' to a '_' in the module name). <br>
+Swift also allows a project name to be just a number. However, the module name has the first number replaced with a _ implying that a module name cannot be just a number.</p>
+<p>Mike: C# also doesn't allow dashes and no numbers as first "letter"</p>
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-1039 without action. <b>Matt</b> seconds.</p>
+<p>Ralf: ODATA-1039 is CLOSED without action</p>
+
+<h4>6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1043" rel="noopener noreferrer" target="_blank">ODATA-1043</a> - Clean up context URL syntax</h4>
+
+<p>Ralf: SAP libraries don't rely on context URL for body parsing</p>
+<p>Ramesh: Olingo does not rely on key values for parsing message bodies</p>
+<p>Mike: look into C# libraries</p>
+<p>Ralf: ODATA-1043 is postponed to next meeting</p>
+
+<h4>6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+
+<p><b>Ralf</b>: I <b>move</b> to postpone ODATA-884 and reassign it to OData-to-OpenAPI mapping. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-884 is reassigned</p>
+
+<h4>6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-923" rel="noopener noreferrer" target="_blank">ODATA-923</a> - Support subsetting returned metadata</h4>
+
+<p>Mike: services could specify a larger scope in Preference-Applied response header</p>
+<p>Mike: service could also choose not to include a referenced schema</p>
+<p>Ralf: Mike will add this to the proposal until next week</p>
+
+<h4>6.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-1045" rel="noopener noreferrer" target="_blank">ODATA-1045</a> - Disallow propagation of Accept header on batch requests to individual requests within the batch</h4>
+
+<p>Ralf: 6.5: JSON BATCH format</p>
+<p>Mike: creating multipart/mime request bodies is a challenge for clients</p>
+<p>Mike: define JSON format that is at least as expressive as the multipart/mime format</p>
+<p>Ralf: Basic idea: allow multiple groups of requests<br>
+Specify for each group whether it requires strict or relaxed ordering, e.g. execute requests in parallel if "relaxed"<br>
+Specify for each group what to do on error: stop or continue<br>
+Specify for each group whether it is atomic or not<br>
+Each group is sort of a change set, exactly as a current change set if atomic, relaxed ordering, stop on error<br>
+Allow dependencies between groups - this gives more flexibility than the current strict order of change sets within a batch<br>
+Request bodies in application/json are directly embedded, bodies for other content-types are base64url encoded strings<br>
+Response also has groups with same name as in request and an array of responses<br>
+If ordering of requests in a group is strict, responses are in same order<br>
+Otherwise responses can appear in any order, cross-reference to request via "id" (replacement for Content-ID header)<br>
+JSON response bodies inline, other content-types base64url encoded<br>
+<br>
+Disallow propagation of Accept header on batch requests to individual requests within the batch<br>
+Description Section 8.2.1 Header Accept states (new text in 4.01, not present in 4.0): <br>
+<br>
+If the Accept header is specified on an individual request within a batch, then it specifies the acceptable formats for that individual request. Requests within a batch that dont include the Accept header inherit the acceptable formats of the overall batch request. <br>
+<br>
+This would cause problems for batch requests specifying Accept:application/json with the intention of a "default" for the individual responses once we add a JSON Batch format. Services would not be able to respond with the JSON Batch format if they formerly treated this as a default for the individual requests<br>
+<p>Ralf: ODATA-1045 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> that OData-1045 be resolved as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1045 is RESOLVED as proposed</p>
+
+<h4>6.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-1046" rel="noopener noreferrer" target="_blank">ODATA-1046</a> - Add JSON format for Batch</h4>
+
+<p>Ralf: JSON Batch<br>
+Describe the new format (request and response) in JSON Format<br>
+Move Multipart-Mime format to an Appendix of Part 1: Protocol<br>
+Refer to both formats in the main text in section 11.7</p>
+<p>Stefan: Conformance is before Appendix, which sort of suggests that Appendixes aren't in the normative part</p>
+<p>Ralf: Alternative: move multipart/mime-specific text to the last subsection of 11.7, and refer to JSON Format for an alternative JSON Batch format</p>
+
+<p>Ralf: ODATA-1046 is OPEN</p>
+<p>Mike: proposal in issue: Add a new section to the JSON format document describing a JSON batch request and response format as presented 2017-3-9. <br>
+Move multipart/mime-specific text to the last subsection of 11.7, and refer to JSON Format for an alternative JSON Batch format.</p>
+<p>Mike: Added to the issue:<br>
+example json batch request: <br>
+<pre>
+POST /v1.0/$batch HTTP/1.1 
+
+{ 
+  batch1: { 
+    batchOptions: { 
+      ordering: "strict", 
+      onError: "terminate" 
+    }, 
+    requests: [ 
+      { 
+        id: "1", 
+        method: "post", 
+        url: "/users", 
+        headers: { 
+          "Content-Type": "application/json" 
+        }, 
+        body: { 
+          displayName: "John Smith", 
+          userPrincipalName: "jsmith@contoso.com" 
+        } 
+      }, 
+      { 
+        id: "2", 
+        method: "get", 
+        url: "$1/photo/$value", 
+        headers: { 
+          Accept: "image/jpeg" 
+        } 
+      } 
+    ] 
+  }, 
+  batch2: { 
+    batchOptions: { 
+      ordering: "relaxed", 
+      onError: "continue", 
+      dependsOn: "batch1" 
+    }, 
+    requests: [ 
+      { 
+        id: "1", 
+        method: "get", 
+        url: "/groups?top=10", 
+        headers: { 
+          Accept: "application/json", 
+        } 
+      }, 
+      { 
+        id: "2", 
+        method: "get", 
+        url: "/invalidEntity", 
+        headers: { 
+          Accept: "application/json" 
+        } 
+      } 
+    ] 
+  }, 
+  batch3: { 
+    batchOptions: { 
+      ordering: "relaxed", 
+      onError: "terminate" 
+    }, 
+    requests: [ 
+      { 
+        id: "1", 
+        method: "get", 
+        url: "/groups?top=10", 
+        headers: { 
+          Accept: "application/atom+xml", 
+        } 
+      } 
+    ] 
+  } 
+} 
+</pre>
+<p>
+example batch response: 
+</p>
+<pre>
+{ 
+  batch1: { 
+    responses: [ 
+      { 
+        id: "1", 
+        status: 201, 
+        headers: { 
+          Location: "/users/jsmith" 
+        } 
+      }, 
+      { 
+        id: "2", 
+        status: 200, 
+        headers: { 
+          "Content-Type": "image/jpeg" 
+        }, 
+        body: "FRwvAAIAAAANAA4AFAAhAPNTUAAAAAAAAAAAAAAQUAAAAAAADHrQX+" 
+      } 
+    ] 
+  }, 
+  batch2: { 
+    responses: [ 
+      { 
+        id: "1", 
+        status: 200, 
+        headers: { 
+          "Content-Type": "application/json" 
+        }, 
+        body: { 
+          values: [ 
+            { 
+              displayName: "user1" 
+            } 
+          ] 
+        } 
+      }, 
+      { 
+        id: "2", 
+        status: 404, 
+        headers: { 
+          "Content-Type": "application/json" 
+        }, 
+        body: { 
+          error: { 
+            message: "Resource Not Found." 
+          } 
+        } 
+      } 
+    ] 
+  }, 
+  batch3: { 
+    responses: [ 
+      { 
+        id: "3", 
+        status: 400 
+      } 
+    ] 
+  } 
+}
+</pre>
+<p><b>Martin</b>: I <b>move</b> that OData-1046 be resolved as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1046 is RESOLVED as proposed</p>
+
+<h2>7. Next meetings</h2>
+
+<h3>7.1 Next Meeting on March 16, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Ralf: This means 16:00-18:00 CET<br>
+Daylight Saving Time in USA and Canada, not yet in Europe</p>
+<p>Ralf: Attention: issues without concrete proposal by next week will be deferred to V4.02</p>
+
+<h3>7.2 Meeting after that on March 23, 2017, during 08:00-10:00 am PDT</h3> 
+
+<h2>8. AOB and wrap up</h2>
+<p>No other business.</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
