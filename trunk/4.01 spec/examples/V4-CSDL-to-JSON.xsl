@@ -264,7 +264,7 @@
   <xsl:template match="@Type">
     <xsl:choose>
       <xsl:when test="starts-with(.,'Collection(')">
-        <xsl:text>"$IsCollection":true,"$Type":"</xsl:text>
+        <xsl:text>"$Collection":true,"$Type":"</xsl:text>
         <xsl:call-template name="normalizedQualifiedName">
           <xsl:with-param name="qualifiedName" select="substring-before(substring-after(.,'('),')')" />
         </xsl:call-template>
