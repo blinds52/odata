@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #166 Thursday Mar 16, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='bec3c0ef3f6732da27b1acef536946a099b4236c47618bcc7242a94d7c93aa1e9875968934d3c222c782f9610e05c3fbde20f0c44a5717d081e80c15c0107cbe' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #166 Thursday Mar 16, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-03-16 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Susan Malaika (IBM)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43969">normative attendance sheet for this meeting (event_id=43969)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from March 09, 2017 TC meeting #165</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60230/odata-meeting-165_on-20170309-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60230/odata-meeting-165_on-20170309-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. V4.01</h2>
+<h3>Issues for V4.01_CSD02 ready for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-760" rel="noopener noreferrer" target="_blank">ODATA-760</a> - Add to depth restrictions to Capabilities Vocabulary</h4>
+<p>Ralf: ODATA-760 is OPEN</p>
+<p>Ralf: Add MaxLevels property to FilterRestrictionsType, ExpandRestrictionsType, InsertRestrictionsType, UpdateRestrictionsType and DeleteRestrictionsType</p>
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-760 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-760 is RESOLVED as proposed</p>
+
+<h4>5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-950" rel="noopener noreferrer" target="_blank">ODATA-950</a> - Clarify what requests can be delta enabled</h4>
+<p>Ralf: ODATA-950 is OPEN</p>
+<p>Ralf: Proposal:<br>
+Any GET request to retrieve one or more entities can be delta enabled by the service. <br>
+<br>
+Reasoning: <br>
+<br>
+- The entity set scenario is already well documented so nothing new there. <br>
+<br>
+- The reason for the single entity case is mainly for singletons. If a service has a singleton, a natural defining query would be for the singleton entity possibly with expands. You could make the same argument for just single entities that are not singletons. The main reason I see for allowing a single entity (singleton or otherwise) without any nested entities to be delta enabled is in the case where the entity is very large (i.e. lots of large properties). In that case, the delta protocol could be used to return only the properties that have changed. <br>
+<br>
+- A function can return a collection of entities so it should be able to return a delta link.</p>
+<p>Hubert: make clear that this is not the exclusive, complete list of requests that can be delta-enabled</p>
+<p>Ralf: Adapt "AppliesTo" to include Singleton</p>
+<p>Ralf: for term Capabilities.ChangeTracking</p>
+<p>Ralf: Also add NavigationProperty</p>
+<p>Matt: Clarify that any GET request to retrieve one or more entities MAY be delta enabled by the service.  A service MAY support delta enabling additional GET requests.<br>
+Add Singleton and navigation property to the AppliesTo of the ChangingTracking term.</p>
+<p>Matt: Clarify that any GET request to retrieve one or more entities MAY be delta enabled by the service.  A service MAY support delta enabling additional GET requests.<br>
+Add Singleton, Navigation Property, and Funtion to the AppliesTo of the ChangingTracking term.</p>
+<p><b>Matt</b>: I <b>move</b> to resolve ODATA-950 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-950 is RESOLVED as proposed</p>
+
+<h4>5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1005" rel="noopener noreferrer" target="_blank">ODATA-1005</a> - Make sure we have capabilities for all new 4.01 functionality</h4>
+<p>Ralf: Do this in conjunction with conformance, so clients have a way to determine which optional parts of 4.01 are supported by a service. <br>
+<br>
+things to consider: <br>
+- PATCH/DELETE with filter <br>
+- POST/PATCH/DELETE with type cast segment <br>
+- PATCH using delta response format <br>
+- nested collections in delta payload (as delta or replacement) <br>
+- Deep insert/update operations <br>
+- eq/ne null comparisons for nav properties w/max cardinality of 1 (should this be must?) <br>
+- implicit aliasing of parameters <br>
+- in operator, divby, <br>
+- negative indexes for substring <br>
+- key-as-segment (Core vocab, applies to EntityContainer, similar to ConventionalIDs and DereferenceableIDs) <br>
+- use of count of filtered/searchced collection in a common expression <br>
+- equal/non-equal structural comparison <br>
+- PUT/DELETE to $ref of a collection-valued nav prop <br>
+- POST to collections of complex/primitive types <br>
+- $search for all collections <br>
+- headers and query options without prefix, case-insensitive query options <br>
+- $compute <br>
+- indexing into ordered collections and positional insert with $index <br>
+- batch referencing features, JSON batch format <br>
+- use of instance annotations in query options <br>
+- $expand for stream properties and media resources</p>
+
+<p>Mike: Will group by topics and prepare term proposals</p>
+
+<h4>5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1018" rel="noopener noreferrer" target="_blank">ODATA-1018</a> - Allow $expand and $select with modifying requests that return a collection in combination with return=representation to specify the response shape</h4>
+<ol>
+<li>Revisit: <a href="https://issues.oasis-open.org/browse/ODATA-615" rel="noopener noreferrer" target="_blank">ODATA-615</a> - Allow PATCH and DELETE with $filter on collections to modify or delete all (and only) the matching entities</li>
+<li>Consider: <a href="https://issues.oasis-open.org/browse/ODATA-836" rel="noopener noreferrer" target="_blank">ODATA-836</a> - Allow applying actions to a filtered collection of entities</li>
+</ol>
+<p>Ralf: Skip for now</p>
+
+<h4>5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-1021" rel="noopener noreferrer" target="_blank">ODATA-1021</a> - Are additional values needed for the reason property of a removed Annotation</h4>
+<p>Ralf: ODATA-1021 is OPEN</p>
+<p>Ralf: Proposal:<br>
+Close without fixing. <br>
+<br>
+Reasoning: <br>
+<br>
+- Additional values are unnecessary from the point of view of a client applying a delta response because the net result in both cases is the same. <br>
+<br>
+- Having a different value for the reason for a delta response and a delta upload request is an unnecessary complication that doesnt add value and prevents easily passing the a delta response as a delta upload request. <br>
+<br>
+- "change" is a very generic term that we did discuss changing to something more meaningful. However, we were unable to come up with something better. Further, changing this value could break backwards compatibility between 4.0 and 4.01 so it's best to leave it as is.</p>
+<p><b>Matt</b>: I <b>move</b> to close ODATA-1021 without fixing it. <b>Mike</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1021 is is resolved as WON'T FIX</p>
+
+<h4>5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1033" rel="noopener noreferrer" target="_blank">ODATA-1033</a> - Interoperability issue when using escaped slash/backslash in URLs</h4>
+<p>Ralf: ODATA-1033 is OPEN</p>
+<p>Ralf: Add an implicit cast rule that allows binary values in place of string values, where the base64url-encoded binary is the UTF-8 representation of the string value: <br>
+<br>
+GET Categories(binary'Q29tZWR5L011c2ljYWw=')</p>
+<p>Mike: do we require 4.01 services to implement this?</p>
+<p>Mike: do we recommend for generic 4.01 clients to use this?</p>
+<p>Ralf: %00, %2F<br>
+%5C</p>
+<p>Mike: Services are required to support an implicit cast from binary to string (anywhere). Clients are advised to use this form when passing a string value containing a forwardslash, backslash, and a null character (%00, %2F, %5C)</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1033 with the amended proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1033 is RESOLVED as proposed</p>
+
+<h4>5.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-1043" rel="noopener noreferrer" target="_blank">ODATA-1043</a> - Clean up context URL syntax</h4>
+<p>Ralf: ODATA-1043 is OPEN</p>
+<p>Ralf: Proposal: <br>
+State in chapter 10 that one purpose of the context URL is to make responses "self-contained" and allow the client to e.g. construct navigation links for selected navigation properties. <br>
+<br>
+Otherwise no action, and no relaxation of the context URL patterns.</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1043 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1043 is RESOLUTION</p>
+<p>Ralf: Note: Renamed issue to "Clarify purpose of Context URL"</p>
+
+<h4>5.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-1047" rel="noopener noreferrer" target="_blank">ODATA-1047</a> - Rename $IsCollection to $Collection</h4>
+<p>Ralf: ODATA-1047 is OPEN</p>
+<p>Mike: doesn't hurt if we don't resolve ODATA-879</p>
+<p>Mike: make changing the type of $Collection to a number part of ODATA-879</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1047 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1047 is RESOLVED as proposed</p>
+
+<h4>5.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-1048" rel="noopener noreferrer" target="_blank">ODATA-1048</a> - Move server-driven paging to advanced conformance level</h4>
+<p>Ralf: ODATA-1048 is OPEN</p>
+<p>Mike: clarify that services don't have to implement it, but MUST NOT use any other means for indicating partial results</p>
+<p>Mike: updated proposal: Clarify: if a service returns a partial result it MUST include a nextlink.</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1048 with the modified proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: No objections to the motion, ODATA-1048 is RESOLUTION</p>
+
+<h4>5.1.10 <a href="https://issues.oasis-open.org/browse/ODATA-1049" rel="noopener noreferrer" target="_blank">ODATA-1049</a> - Content referencing in batch requests</h4>
+<p>Ralf: ODATA-1049 is OPEN</p>
+<p>Ralf: Proposal:<br>
+<br>
+Allow referencing values from response bodies in subsequent requests <br>
+- in $filter <br>
+- in request bodies of subsequent modification requests <br>
+<br>
+Value references use JSON Pointer syntax to address parts of the response body, e,g. <br>
+<br>
+$filter=City eq $42/Addresses/3/City</p>
+<p>Mike likes it</p>
+<p>Hubert likes it</p>
+<p>Ralf: Point out that content-id value must not collide with $root or any other $ literal valid in expressions</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1049 as proposed with the clarification on $root etc.. <b>Mike</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1049 is RESOLVED as proposed</p>
+
+<h4>5.1.11 <a href="https://issues.oasis-open.org/browse/ODATA-1050" rel="noopener noreferrer" target="_blank">ODATA-1050</a> - Change sets: do not require the same content type for all request in a change set</h4>
+<p>Ralf: ODATA-1050 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1050 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1050 is RESOLVED as proposed</p>
+
+<h4>5.1.12 <a href="https://issues.oasis-open.org/browse/ODATA-1049" rel="noopener noreferrer" target="_blank">ODATA-1049</a> - Content referencing in batch requests</h4>
+<p>Nothing noted</p>
+
+<h4>5.1.13 <a href="https://issues.oasis-open.org/browse/ODATA-1051" rel="noopener noreferrer" target="_blank">ODATA-1051</a> - Further simplify JSON Batch Format</h4>
+<p>Ralf: ODATA-1051 is OPEN</p>
+<p>Ralf: Example batch request: </p>
+<pre>
+POST /v1.0/$batch HTTP/1.1 
+{ 
+  requests: [ 
+    { 
+      id: "1", 
+      atomicityGroup: "atom1", 
+      method: "post", 
+      url: "/users", 
+      headers: { 
+        "Content-Type": "application/json" 
+      }, 
+      body: { 
+        displayName: "John Smith", 
+        userPrincipalName: "jsmith@contoso.com" 
+      } 
+    }, 
+    { 
+      id: "2", 
+      atomicityGroup: "atom1", 
+      dependsOn: ["1"], 
+      method: "put", 
+      url: "$1/photo", 
+      headers: { 
+        Content-Type: "image/jpeg" 
+      }, 
+      body: "FRwvAAIAAAANAA4AFAAhAPNTUAAAAAAAAAAAAAAQUAAAAAAADHrQX+" 
+    }, 
+    { 
+      id: "3", 
+      method: "get", 
+      url: "/groups?top=10", 
+      headers: { 
+        Accept: "application/atom+xml", 
+      } 
+    }, 
+    { 
+      id: "4", 
+      dependsOn: ["atom1"], 
+      method: "get", 
+      url: "$1/thumbnail", 
+      headers: { 
+        Accept: "image/jpeg" 
+      } 
+    } 
+  ] 
+}
+</pre>
+
+<p>Ralf: Response example:</p>
+<pre>
+{ 
+  responses: [ 
+    { 
+      id: "1", 
+      status: 201, 
+      headers: { 
+        Location: "/users/jsmith" 
+      } 
+    }, 
+    { 
+      id: "2", 
+      status: 204 
+    }, 
+    { 
+      id: "3", 
+      status: 406, 
+      error: { 
+        message: "Atom Format not supported" 
+    }, 
+    { 
+      id: "4", 
+      status: 200, 
+      headers: { 
+        Content-Type: "image/jpeg" 
+      }, 
+      body: "FRwvAAIAAAANAA4AFAAhAPNTUAAAAAAAAAAAAAAQUAAAAAAADHrQX+" 
+    }, 
+  } 
+}
+</pre>
+<p>Ralf: Async processing: don't use a last array item with a 202 status, instead use a next-link</p>
+<p>Ralf: Next-link can also be used for synchronous batch requests to chunk it up</p>
+<p>Ralf: For async case a GET request to the next-link MAY result in 202 and the location of a monitor resource</p>
+<p>Ralf: Can now have also respond-async in individual requests, the 202 response is just another item in the "responses" array</p>
+<p>Mike: could add a @retryAfter annotation to avoid 202 responses: just respond with empty "responses" array, next-link, and retryAfter annotation</p>
+<p>Mike: Proposal: Remove the outer object wrapper in the proposed JSON batch format.  Add an "atomicityGroup" property; all requests that have the same value for atomicityGroup are processed as an atomic unit.  Members with the same atomicityGroup must be adjacent in a request payload. dependsOn can reference an individual request that is not within an atomicityGroup, or the identifier for the atomicityGroup if the request is within an atomicityGroup.<br>
+<br>
+Support server-driven paging in this format.<br>
+<br>
+For an async batch response, the nextLink can return 202 with a location header and retry after.</p>
+<p>Ralf: Rationale for "atomicity group" versus "change set": atomicity groups have different semantics<br>
+- not restricted to changes<br>
+- no "unordering" but may use dependsOn for ordering constraints</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1051 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1051 is RESOLVED as proposed</p>
+
+<h4>5.1.14 <a href="https://issues.oasis-open.org/browse/ODATA-994" rel="noopener noreferrer" target="_blank">ODATA-994</a> - consider replacing SchemaVersion header with $SchemaVersion query option, or root URL versioning</h4>
+<p>Ralf: ODATA-994 is OPEN</p>
+<p>Ralf: Proposal:<br>
+If the only difference between two request is the SchemaVersion Header value, the response is not cachable in all today-browser-implementations (the 'vary' header is not treated correct). <br>
+--&gt; To enable caching of responses we need differentiating URL's. We should use a $SchemaVersion query option. It is superior to adding a segment to the root url, because clients are anyhow familiar with adding query options. <br>
+The usage of a $SchemaVersion query option in the relative contextURLs is save; according to rfc3986 query options on the base URI are not kept during reference resolution for all relevant cases. <br>
+Depending on the value of the SchemaVersion it may be necessary to percent-encode it before the URI is formed.</p>
+
+<p>Mike: query options are tricky when composing URLs</p>
+<p>Mike: in favor of replacing SchemaVersion header with $schemaversion query option (any casing, optional $ prefix)</p>
+<p>Hubert: might need to restrict the character set for schema versions</p>
+<p>Mike: Remove SchemaVersion header in place of a $SchemaVersion query option.<br>
+Limit characters in SchemaVersion to things that don't have to be percent encoded.</p>
+<p>Ralf: Character set: unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"</p>
+<p><b>Martin</b>: I <b>move</b> we resolve ODATA-994 as proposed in the chat. <b>Ramesh</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-994 is RESOLVED with the amended proposal</p> 
+
+<h2>6. Next meetings</h2>
+
+<h3>6.1 Next Meeting on March 16, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Ralf: This means 16:00-18:00 CET<br>
+Daylight Saving Time in USA and Canada, not yet in Europe</p>
+<p>Ralf: Note: already approved</p>
+<p>Ralf: Attention: Last chance to make proposals for the last seven issues in the "leftover" category</p>
+<p>Hubert: Can at most make the first half of the next meeting</p>
+
+<h3>6.2 Meeting after that on March 23, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Seems to work for most</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>Stefan: Working now as editor of CSAF TC, which might lead to delays for minutes etc.</p>
+<p>Stefan: Also involved with CTI TC - still trying to find time to sketch an OData service for STIX++</p>
+<p>Mike: Kindly reminds his offering in case advice on modeling etc. is needed</p>
+<p>Stefan: Thanks and is sure, this gentle offer will be taken</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
