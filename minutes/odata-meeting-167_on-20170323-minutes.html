@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #167 Thursday Mar 23, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='3a56c4c9be1678fad3012266c0d7ad6db69fca796e169dcd90bd3f8e9904016d5e794fc6e2c7029acc6fc1c1cec932e8e31c082f8f4a86fd3efec5517d60365b' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #167 Thursday Mar 23, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-03-23 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Susan Malaika (IBM)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43970">normative attendance sheet for this meeting (event_id=43970)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from March 16, 2017 TC meeting #166</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60301/odata-meeting-166_on-20170316-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60301/odata-meeting-166_on-20170316-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. V4.01</h2>
+<h3>Issues for V4.01_CSD02 ready for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1018" rel="noopener noreferrer" target="_blank">ODATA-1018</a> - Allow $expand and $select with modifying requests that return a collection in combination with return=representation to specify the response shape</h4>
+<p>Ralf: ODATA-1018 is OPEN</p>
+
+<p>Ralf: <br>
+DELETE Products/$filter(Age gt 3) <br>
+PATCH Products/$filter(@f)?@f=Age gt 2<br>
+PATCH Products/$filter(@f)?@f=Age gt 2&amp;$filter=Price lt 1.000</p>
+
+<p>Mike: add $filter to the proposal</p>
+<p>Mike: Revised proposal:<br>
+Extend allowing use of $select, $filter and $expand to requests that return a collection<br>
+1) if $expand/$select/$filter are present, implies return=representation<br>
+2) if $expand/$select/$filter are present and return=minimal, service MUST include preference-applied if they DON'T return a result<br>
+3) if it returns a result, $expand and $filter MUST be applied if specified and MUST include at least the $selected columns<br>
+4) the service MUST NOT fail the request due to the $expand/$select/$filter; if the service cannot return a result with the appropriate $expand, $filter and $select it MUST return No Content</p>
+
+<p>Mike: Slightly revised to give direction to service in case both query options and return=minimal is specified:<br>
+Extend allowing use of $select, $filter and $expand to data modification requests that return a collection<br>
+1) if $expand/$select/$filter are present, implies return=representation<br>
+2) if $expand/$select/$filter are present and return=minimal is specified, then service SHOULD NOT return a result and MUST include preference-applied if they DON'T return a result<br>
+3) if it returns a result, $expand and $filter MUST be applied if specified and MUST include at least the $selected columns<br>
+4) the service MUST NOT fail the request due to the $expand/$select/$filter; if the service cannot return a result with the appropriate $expand, $filter and $select it MUST return No Content</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1018 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1018 is RESOLVED with the modified proposal</p>
+
+<h5>5.1.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-836" rel="noopener noreferrer" target="_blank">ODATA-836</a> - Allow applying actions to a filtered collection of entities</h5>
+<p>Ralf: ODATA-836 is OPEN</p>
+<p>Ralf: Add a path segment that takes a Boolean expression, optionally deferred to a parameter alias: <br>
+<br>
+POST Products/$filter(Age gt 3)/Special.Discount <br>
+POST Products/$filter(@f)/Special.Discount?@f=Age gt 3 <br>
+<br>
+Consider adding path equivalents of other query options: <br>
+<br>
+POST /Orders/$filter(@f)/$top(5)/Ship?@f=Details/ShippingDate lt now()</p>
+
+<p>Hubert: extend scope to cover PATCH and DELETE on the filtered collection</p>
+<p>Mike: $top could be useful when combined with $orderby as an additional path segment</p>
+<p>Mike: no compelling use cases for /$top and /$orderby</p>
+<p>Mike: /$filter use case is compelling</p>
+<p>Mike: modify syntax so that only the parameter alias is part of the path and the filter expression is always deferred to the query part</p>
+
+<p>Ralf: Syntax variants:<br>
+POST Products/$filter=@f/Special.Discount?@f=Age gt 3<br>
+.. /abc;v=1/booh</p>
+<p>Hubert: Products/$filter=Age gt 3/Special.Discount</p>
+<p>Ralf: POST Products/$filter=Age gt 3/Special.Discount</p>
+<p>Ralf: POST Products/$filter=Age%20gt%203/Special.Discount</p>
+<p>Ralf: POST Products/$filter=@f/Special.Discount?@f=Age gt 3</p>
+<p>Ralf: POST Products/$filter=@f/Special.Discount?@f=Supplier/Name eq 'ACME'</p>
+
+<p>Mike: Revised proposal:<br>
+Add a $filter path segment that takes a Boolean expression, where the expression is specified through a query parameter:<br>
+<br>
+POST Products/$filter=@filter/Special.Discount?@filter=Age gt 3 <br>
+<br>
+This can be used in conjunction with an action, a data modification statement, or any other statement.</p>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-836 as proposed. <b>Ramesh</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-836 is RESOLVED with the modified proposal</p>
+
+
+<h5>5.1.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-615" rel="noopener noreferrer" target="_blank">ODATA-615</a> - Allow PATCH and DELETE with $filter on collections to modify or delete all (and only) the matching entities</h5>
+<p>Ralf: Reopen ODATA-615</p>
+
+<p>Ralf:<br>
+1)DELETE to any collection with a $filter clause removes any element matching that filter. [ODATA-616], [ODATA-615] <br>
+a. $expand can be used to delete related entities (deep delete)<br>
+b. $select, $orderby, $top, $skip are NOT expected to be supported <br>
+2)PUT against a collection of primitive/complex types takes a collection (format is same as for a GET on the collection) in the payload and replaces the entire collection. [ODATA-615] (all or nothing) <br>
+a.PUT does not support $filter. <br>
+b.This is the existing 4.0 behavior <br>
+3)PUT is not supported against an entity collection [ODATA-615] <br>
+4)PATCH to any collection with a payload containing a single instance updates each element in the collection [ODATA-615] <br>
+a.If $filter is present, applies patch to those items matching the $filter [ODATA-615] <br>
+5)PATCH to a collection of primitive or complex types with a collection payload is not supported [ODATA-615]</p>
+
+<p>Mike: revised proposal for ODATA-615:<br>
+1)DELETE to any collection with a $filter path segment removes any element matching that filter. [ODATA-616], [ODATA-615]<br>
+a. $select, $orderby, $top, $skip are NOT expected to be supported<br>
+2)PUT against a collection of primitive/complex types takes a collection (format is same as for a GET on the collection) in the payload and replaces the entire collection. [ODATA-615] (all or nothing)<br>
+a.PUT does not support $filter.<br>
+b.This is the existing 4.0 behavior<br>
+3)PUT is not supported against an entity collection  [ODATA-615]<br>
+4)PATCH to any collection with a payload containing a single instance updates each element in the collection [ODATA-615]<br>
+a.If $filter is present, applies patch to those items matching the $filter [ODATA-615]<br>
+5)PATCH to a collection of primitive or complex types with a collection payload is not supported  [ODATA-615]<br>
+<br>
+NOTE: if we supported a $expand path segment if the future we could support the ability to delete related entities (deep delete)</p>
+
+<p>Mike: slightly clarified:<br>
+1)DELETE to any collection with a $filter path segment removes any element matching that filter. [ODATA-616], [ODATA-615]<br>
+a. $select, $orderby, $top, $skip path segments, if introduced, are NOT expected to be supported<br>
+b. if we supported a $expand path segment if the future we could support the ability to delete related entities (deep delete)<br>
+2)PUT against a collection of primitive/complex types takes a collection (format is same as for a GET on the collection) in the payload and replaces the entire collection. [ODATA-615] (all or nothing)<br>
+a.PUT does not support set operations (so $filter segment doesn't apply).<br>
+b.This is the existing 4.0 behavior<br>
+3)PUT is not supported against an entity collection  [ODATA-615]<br>
+4)PATCH to any collection with a payload containing a single instance updates each element in the collection [ODATA-615]<br>
+a.If $filter is present, applies patch to those items matching the $filter [ODATA-615]<br>
+5)PATCH to a collection of primitive or complex types with a collection payload is not supported  [ODATA-615]<br>
+<br>
+NOTE: if we supported a $expand path segment if the future we could support the ability to delete related entities (deep delete)</p>
+
+<p>Mike: revised/simplified: <br>
+1)DELETE to any collection deletes all elements of the collection; a $filter path segment can be used to delete only elements matching that filter. [ODATA-616], [ODATA-615]<br>
+2)PUT against a collection of primitive/complex types takes a collection (format is same as for a GET on the collection) in the payload and replaces the entire collection. [ODATA-615] (all or nothing)<br>
+a.PUT does not support set operations (so $filter segment doesn't apply).<br>
+b.This is the existing 4.0 behavior<br>
+3)PUT is not supported against an entity collection  [ODATA-615]<br>
+4)PATCH to any collection with a payload containing a single instance updates each element in the collection [ODATA-615]<br>
+a.If $filter is present, applies patch to those items matching the $filter [ODATA-615]<br>
+5)PATCH to a collection of primitive or complex types with a collection payload is not supported  [ODATA-615]<br>
+<br>
+NOTE: if we supported a $expand path segment if the future we could support the ability to delete related entities (deep delete)</p>
+
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-615 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-xxx is RESOLVED with the modified proposal</p>
+
+
+<h3>5.2 Issues for V4.01_CSD02 in New or Open state without concrete proposal</h3>
+
+
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1034" rel="noopener noreferrer" target="_blank">ODATA-1034</a> - Support the notion of a collection of name/value pairs where the type of the value is known</h4>
+<p>Ralf: ODATA-1034 is OPEN</p>
+
+<p>Ralf: Proposal:<br>
+<br>
+1) Define a complex type "Dictionary" in OData.Core as an open complex type with no properties. <br>
+2) Define a Validation term "OpenPropertyTypeConstraint" whose value is a collection of qualified type names. It can be applied to an open entity or complex type, or a property whose value is an open entity or complex type, and constrains open properties of that type to the specified values.</p>
+
+<p>Ralf: Example use of Core.Dictionary in metadata:</p>
+
+<pre>
+&lt;Property Name="MyDictionary" Type="Core.Dictionary> 
+  &lt;Annotation Term="OpenPropertyTypeConstraint"> 
+  &lt;Collection> 
+    &lt;String>self.someType&lt;/String> 
+  &lt;/Collection> 
+  &lt;/Annotation> 
+&lt;/Property>
+</pre>
+
+<p>Ralf: In JSON payloads this would then be </p>
+<pre>
+"MyDictionary": { 
+  "foo": &lt;instance of self.someType>, 
+  "bar": &lt;another instance of self.someType>, 
+  ... 
+}
+</pre>
+
+<p>Mike: Working proposal:<br>
+1) Define a complex type "Dictionary" in OData.Core as an open complex type with no properties.<br>
+2) Define a Validation term "OpenPropertyTypeConstraint" whose value is a collection of qualified type names. It can be applied to an open entity or complex type and constrains open properties of that type to the specified values.<br>
+3) Define a Validation term "DerivedTypeConstraint" whose value is a collection of qualified type names. It can be added to a property or type definition to constrain the derived types of that property. If a specified type is not a derived type of the property to which it is applied then it is ignored.</p>
+<p>Mike: Revised:<br>
+1) Define a complex type "Dictionary" in OData.Core as an open complex type with no properties.<br>
+2) Define a Validation term "OpenPropertyTypeConstraint" whose value is a collection of qualified type names. It can be applied to an open entity or complex type definition and constrains open properties of that type to the specified values.<br>
+3) Define a Validation term "DerivedTypeConstraint" whose value is a collection of qualified type names. It can be added to a property (or TypeDefinition) to constrain the derived types of that property. If a specified type is not a derived type of the property to which it is applied then it is ignored.</p>
+
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1034 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-xxx is RESOLVED</p>
+
+
+<h4>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1020" rel="noopener noreferrer" target="_blank">ODATA-1020</a> - Remove / in reference in instance annotation in filter and orderby expression</h4>
+<p>Ralf: ODATA-1020 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-1020 as Won't Fix. <b>Mark</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1020 is CLOSED</p>
+
+<h4>5.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1002" rel="noopener noreferrer" target="_blank">ODATA-1002</a> - Add build in functions operating on collections of primitive (and complex?) types</h4>
+<p>Ralf: ODATA-1002 is OPEN</p>
+
+<p>Ralf: Proposal:<br>
+<br>
+Specify equality for collections of primitive types and extend the syntax, using the comma-separated list of literal primitive values enclosed by parens notation, to allow for comparison of arrays. <br>
+Equality for ordered collections would be defined as: <br>
+ - same number of items <br>
+ - all items in the array, at the same index, compare as equal <br>
+Equality for unordered collections would be defined as: <br>
+ - same number of items <br>
+ - all items in the array, after the server enforcing the same ordering on both collections, compare as equal, at the same index <br>
+<br>
+Also extend the use of the "in" operator by allowing the left side to be a comma-separated list of literal primitive values enclosed by parens or an expression that resolves to a collection of the appropriate type. The operations would return true if the collections on the right hand side contains all the values contained in the list specified as the left hand side of the operator.</p>
+
+<p>Ralf: Allowed syntax variants:</p>
+<pre>
+  ('Red','Green') in ('Red','Green','Blue') --> true 
+  ["Red","Green"] in ["Red","Green","Blue"] --> true
+</pre>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1002 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: The motion carries, ODATA-1002 is RESOLVED as proposed</p>
+
+<h2>6. Next meetings</h2>
+
+<h3>6.1 Next Meeting on March 30, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Ralf: (17:00-19:00 CEST)  already confirmed</p>
+
+<h3>6.2 Meeting after that on April 06, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Works for most</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
