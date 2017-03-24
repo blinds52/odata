@@ -110,6 +110,7 @@ resourcePath = entitySetName                  [ collectionNavigation ]
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ] [ collectionNavPath ]
 collectionNavPath    = keyPredicate [ singleNavigation ]
+                     / filterInPath [ collectionNavPath ]
                      / boundOperation
                      / count
                      / ref
@@ -149,6 +150,8 @@ complexPath    = [ "/" qualifiedComplexTypeName ]
                  [ "/" propertyPath 
                  / boundOperation
                  ]
+                 
+filterInPath = '/$filter' EQ parameterAlias
 
 count = '/$count'
 ref   = '/$ref'
