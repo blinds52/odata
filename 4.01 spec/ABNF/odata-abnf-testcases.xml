@@ -81,6 +81,7 @@
   <!-- end of constraints for data aggregation -->
   <Constraint Rule="action">
     <Match>ActionName</Match>
+    <Match>Discount</Match>
     <Match>Rejection</Match>
   </Constraint>
   <Constraint Rule="actionImport">
@@ -213,14 +214,16 @@
     <Match>odata</Match>
     <Match>SaM</Match>
     <Match>Sales</Match>
+    <Match>Special</Match>
   </Constraint>
   <Constraint Rule="parameterAlias">
     <Match>@c</Match>
     <Match>@cat</Match>
+    <Match>@categoryId</Match>
     <Match>@color</Match>
     <Match>@expression</Match>
+    <Match>@foo</Match>
     <Match>@key</Match>
-    <Match>@categoryId</Match>
     <Match>@ref</Match>
     <Match>@title</Match>
     <Match>@word</Match>
@@ -256,6 +259,7 @@
   </Constraint>
   <Constraint Rule="primitiveNonKeyProperty">
     <Match>AccountRepresentative</Match>
+    <Match>Age</Match>
     <Match>Amount</Match>
     <Match>BirthDate</Match>
     <Match>City</Match>
@@ -995,16 +999,22 @@
   <TestCase Name="4.11 Inheritance - $expand on complex resource" Rule="odataRelativeUri">
     <Input>TheMostPopularAddresses()?$expand=Model.AddressWithLocation/Country</Input>
   </TestCase>
-  <TestCase Name="4.12 Addressing a Media Resource" Rule="odataRelativeUri">
+  <TestCase Name="4.12 Filter Path Segment" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo?@foo=Age gt 3</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with action" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/Special.Discount?@foo=Age gt 3</Input>
+  </TestCase>
+  <TestCase Name="4.13 Addressing a Media Resource" Rule="odataRelativeUri">
     <Input>Categories(1)/$value</Input>
   </TestCase>
-  <TestCase Name="4.13 - Cross Join" Rule="odataRelativeUri">
+  <TestCase Name="4.14 - Cross Join" Rule="odataRelativeUri">
     <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
   </TestCase>
-  <TestCase Name="4.14 Addressing All Entities in a Service" Rule="odataRelativeUri">
+  <TestCase Name="4.15 Addressing All Entities in a Service" Rule="odataRelativeUri">
     <Input>$all?$search=red</Input>
   </TestCase>
-  <TestCase Name="4.14 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
+  <TestCase Name="4.15 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
     <Input>$all/Model.Customer?$filter=contains(Name,'red')</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" Rule="filter">
