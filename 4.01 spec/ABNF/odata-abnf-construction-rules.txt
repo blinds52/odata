@@ -243,6 +243,7 @@ systemQueryOption = compute
                   / id
                   / inlinecount 
                   / orderby 
+                  / schemaversion
                   / search
                   / select 
                   / skip 
@@ -298,6 +299,8 @@ format = ( "$format" / "format" ) EQ
                                ; <An IANA-defined [IANA-MMT] content type>
                           
 inlinecount = ( "$count" / "count" ) EQ booleanValue
+
+schemaversion   = ( "$schemaversion" / "schemaversion" ) EQ ( STAR / 1*unreserved )
 
 search     = ( "$search" / "search" ) EQ BWS searchExpr
 searchExpr = ( OPEN BWS searchExpr BWS CLOSE
@@ -406,6 +409,7 @@ commonExpr = ( primitiveLiteral
              / negateExpr 
              / methodCallExpr 
              / parenExpr 
+             / listExpr
              / castExpr 
              / isofExpr
              / notExpr
@@ -579,6 +583,7 @@ geoLengthMethodCallExpr  = "geo.length"     OPEN BWS commonExpr BWS CLOSE
 intersectsMethodCallExpr = "geo.intersects" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 parenExpr = OPEN BWS commonExpr BWS CLOSE
+listExpr  = OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE
 
 andExpr = RWS "and" RWS boolCommonExpr
 orExpr  = RWS "or"  RWS boolCommonExpr
@@ -589,9 +594,9 @@ ltExpr = RWS "lt" RWS commonExpr
 leExpr = RWS "le" RWS commonExpr
 gtExpr = RWS "gt" RWS commonExpr
 geExpr = RWS "ge" RWS commonExpr
+inExpr = RWS "in" RWS commonExpr
 
 hasExpr = RWS "has" RWS enum
-inExpr  = RWS "in"  RWS ( commonExpr / OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE )
 
 addExpr   = RWS "add"   RWS commonExpr
 subExpr   = RWS "sub"   RWS commonExpr
@@ -682,10 +687,10 @@ rootExprCol = begin-array
                                         
 ; JSON syntax: adapted to URI restrictions from [RFC4627]                 
 begin-object = BWS ( "{" / "%7B" ) BWS
-end-object   = BWS ( "}" / "%7D" ) BWS
+end-object   = BWS ( "}" / "%7D" )
 
 begin-array = BWS ( "[" / "%5B" ) BWS 
-end-array   = BWS ( "]" / "%5D" ) BWS
+end-array   = BWS ( "]" / "%5D" )
 
 quotation-mark  = DQUOTE / "%22"
 name-separator  = BWS COLON BWS
@@ -1014,7 +1019,6 @@ header = content-id
        / odata-maxversion
        / odata-version
        / prefer
-       / schemaversion
 
 content-id = "Content-ID" ":" OWS request-id
 request-id = 1*unreserved
@@ -1076,9 +1080,6 @@ obs-text       = %x80-FF
 OWS   = *( SP / HTAB )  ; "optional" whitespace 
 BWS-h = *( SP / HTAB )  ; "bad" whitespace in header values 
 EQ-h  = BWS-h EQ BWS-h 
-
-schemaversion   = "SchemaVersion" ":" OWS ( DQUOTE 1*VCHAR-no-DQUOTE DQUOTE / "*" )
-VCHAR-no-DQUOTE = %x21 / %x23-7E
 
 
 ;------------------------------------------------------------------------------
