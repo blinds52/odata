@@ -1157,6 +1157,24 @@
   <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>Name in ["Milk", "Cheese"]</Input>
   </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>('Milk', 'Cheese') in Names</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>('Milk','Cheese') in ('Oranges' , 'Carrots' ,'Ginger')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>('Milk','Cheese') eq ('Oranges' , 'Carrots' ,'Ginger')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>["Milk","Cheese"] in Names</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>["Milk", "Cheese"] in ["Oranges" , "Carrots" ,"Ginger"]</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>["Milk", "Cheese"] eq ["Oranges", "Carrots", "Ginger"]</Input>
+  </TestCase>
   <TestCase Name="5.1.1.2.1 Addition" Rule="commonExpr">
     <Input>Price add 2.45</Input>
   </TestCase>
@@ -2252,16 +2270,18 @@
   <TestCase Name="Preferences - wait with bad whitespace" Rule="preference">
     <Input>wait = 0</Input>
   </TestCase>
-  <TestCase Name="Header - schema-version" Rule="header">
-    <Input>schemaversion: "0001"</Input>
+  <TestCase Name="Schema Version - numeric" Rule="systemQueryOption">
+    <Input>$schemaversion=0001</Input>
   </TestCase>
-  <TestCase Name="Header - schema-version" Rule="header">
-    <Input>schemaversion: "second"</Input>
+  <TestCase Name="Schema Version - alphanumeric" Rule="systemQueryOption">
+    <Input>schemaversion=second</Input>
   </TestCase>
-  <TestCase Name="Header - schema-version" Rule="header">
-    <Input>schemaversion: "1.42.2"</Input>
+  <TestCase Name="Schema Version - semantic" Rule="systemQueryOption">
+    <Input>schemaversion=1.42.2</Input>
   </TestCase>
-  <TestCase Name="ODATA-633 hex pair bug" Rule="stringInJSON">
+  <TestCase Name="Schema Version - latest" Rule="systemQueryOption">
+    <Input>$schemaversion=*</Input>
+  </TestCase>  <TestCase Name="ODATA-633 hex pair bug" Rule="stringInJSON">
     <Input>"b%75g"</Input>
   </TestCase>
 </TestSuite>
