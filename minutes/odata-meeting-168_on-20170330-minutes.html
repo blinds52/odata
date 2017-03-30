@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #168 Thursday Mar 30, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='59fc9625d6fc46af0585b3341005ab530a8a6da1d15f201489a7a45e02162189050ec056ff13d537b89a9c6e8939b1f2674c01e54b8507165e72e38c14692adf' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #168 Thursday Mar 30, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-03-30 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Susan Malaika (IBM)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43971">normative attendance sheet for this meeting (event_id=43971)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Ralf: <a href="https://issues.oasis-open.org/browse/ODATA-1033" rel="noopener noreferrer" target="_blank">ODATA-1033</a> - Interoperability issue when using escaped slash/backslash in URLs</p>
+<p>Ralf: <a href="https://issues.oasis-open.org/browse/ODATA-1055" rel="noopener noreferrer" target="_blank">ODATA-1055</a> - DeepInsertSupport: allow applying to entity sets</p>
+<p>Ralf: <a href="https://issues.oasis-open.org/browse/ODATA-1056" rel="noopener noreferrer" target="_blank">ODATA-1056</a> - Key-as-Segment with Referential Constraints</p>
+<p>Ralf: <a href="https://issues.oasis-open.org/browse/ODATA-1057" rel="noopener noreferrer" target="_blank">ODATA-1057</a> - Consider PATCH to /$delta for delta update rather than rely on context url</p>
+<p>Ralf: UML based representation of the CSDL metamodel<br>
+A new Term to describe a revision<br>
+Instance response requirements: interpretation of Nullable<br>
+- Process issues first<br>
+- Then George's proposals<br>
+- then Document walkthrough</p>
+<p>Modified Agenda is approved.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from March 23, 2017 TC meeting #167</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60355/odata-meeting-167_on-20170323-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60355/odata-meeting-167_on-20170323-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. V4.01</h2>
+<h3>Issues for V4.01_CSD02 ready for resolution</h3>
+<p><a href="https://issues.oasis-open.org/browse/ODATA-xxx" rel="noopener noreferrer" target="_blank">ODATA-xxx</a> - ttt</p>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-923" rel="noopener noreferrer" target="_blank">ODATA-923</a> - Support subsetting returned metadata</h4>
+<p>Ralf: Proposal:<br>
+<br>
+Add a new preference, metadata-scope, that can be specified on a metadata request. The value follows the syntax for the fragment portion of a context URL to describe the shape of results for which the client needs metadata. <br>
+<br>
+Clients can then extract the fragment portion of the context url to use in the preference to requests only the metadata required to describe that particular response. If the response spans multiple namespaces the service MAY include multiple schema elements in the response, one per namespace containing types used in the response. Since this is a preference, services can also ignore and just return the metadata with references to related metadata. <br>
+<br>
+Services that support the metadata-scope preference SHOULD include a preference-applied header specifying the contextUrl fragment identifying the results described by the returned metadata. <br>
+<br>
+Example: to include the metadata required to describe customers and their orders, the client could specify: <br>
+<br>
+http://sampleservice.com/$metadata <br>
+Prefer: metadata-scope=Customers(Orders) <br>
+<br>
+Services can return preference-applied to specify the extent of the metadata included. For any included namespaces, the service must return at least the requested data, but data in related namespaces can be referenced through Include.</p>
+<p>Mike: subsetted metadata can contain "dangling" references to types in the same namespace that are not included</p>
+<p>Ralf: Would contain edmx:References to other schemas as needed for types used in the subsetted metadata</p>
+<p>Hubert: would contain all type definitions and complex types needed to interpret that payloads shaped according to this context URL</p>
+<p>Mike: Response would include full descriptions of each type. If the type contains navigation properties or bound operations that were not included in the response, the definition of those navigation properties or bound operations may not be included in the response. Client may have to make an additional request (to the same or different metadata document) to get the description of that (those) type(s).</p>
+<p>Mike: Comment: would support describing existing results. You could also ask for individual types. You could even try to ask for types in an included namespace (worst case, you'd get the original (possibly empty) metadata document with (at least) the include to the referenced type).</p>
+<p>Mike: You could not ask for "this type and the type of all navigation properties of this type" (to a given level).  We could add syntax for that if it became a concern, but wouldn't recommend doing so until we had some scenarios asking for it.</p>
+<p>Ralf: could consider making this a query option as part of a url, and include it in payloads to request the subset of data.</p>
+<p>Mike: introduces a different call pattern. making it a preference the client code could always specify on a metadata request and either get the full metadata (if ignored) or the specified subset of metadata. If we made it a query option, would we want it to be something that the service could ignore (which we kinda do for $select)?</p>
+<p><b>Mike</b>: I <b>move</b> we defer OData-923 to version 4.02. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-923 is deferred to version 4.02</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-1053" rel="noopener noreferrer" target="_blank">ODATA-1053</a> - URL conventions document should have non-normative examples if primitive value syntax</h4>
+<p>Ralf: Closed by author without action</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-1054" rel="noopener noreferrer" target="_blank">ODATA-1054</a> - Part 1 Protocol: Add recommendations for Vary header</h4>
+[17:50] Ralf Handl (SAP SE): Add section on Vary response header, citing https://tools.ietf.org/html/rfc7231#section-7.1.4 and possibly https://tools.ietf.org/html/rfc7240 
+
+Add recommendation to send Varyrefer to all sections on preferences whose presence or absence influences the returned representation: return, omit-values, ...
+[17:51] Ralf Handl (SAP SE): ODATA-1054 is OPEN
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1054 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1054 is RESOLVED as proposed</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-868" rel="noopener noreferrer" target="_blank">ODATA-868</a> - Describe HTTP encoding for streamed requests and responses</h4>
+<p><b>Ralf</b>: I <b>move</b> to defer ODATA-868 to V4.02 <b>Mike</b> seconds.</p>
+<p>Ralf: No objections, ODATA-868 is defered</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-879" rel="noopener noreferrer" target="_blank">ODATA-879</a> - Support Arrays of Arrays</h4>
+<p><b>Mike</b>: I <b>propose</b> we defer ODATA-879 to version 4.02. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-879 is deferred to V4.02</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-919" rel="noopener noreferrer" target="_blank">ODATA-919</a> - Specify the result type for each operation based on operator types</h4>
+<p><b>Ralf</b>: I <b>move</b> to defer ODATA-919 to version 4.02, <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-919 is deferred to V4.02</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-1033" rel="noopener noreferrer" target="_blank">ODATA-1033</a> - Interoperability issue when using escaped slash/backslash in URLs</h4>
+<p>Ralf: Original proposal</p>
+<pre>
+GET Categories(binary'Q29tZWR5L011c2ljYWw=')
+GET Categories(ID=@c)?@c='Comedy/Musical'
+</pre>
+<p>Ralf: require support in minimal conformance for services?</p>
+<p>Mike: only require it for services with problematic key values</p>
+<p>Ralf: </p>
+<pre>
+Categories(@key)?@key=1
+Categories(ID=@key)?@key=1
+</pre>
+<p>Mark: I just joined the call.  Sorry I am late</p>
+<p><b>Ralf</b>: I <b>move</b>  to resolve ODATA-1033 with the amendment that services allowing forward slashes etc. in key values MUST support parameter aliases for key values. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1033 is RESOLVED as proposed</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-1055" rel="noopener noreferrer" target="_blank">ODATA-1055</a> - DeepInsertSupport: allow applying to entity sets</h4>
+<p>Ralf: ODATA-1055 is OPEN</p>
+<p>Mike: AppliesTo is not prescriptive, so one could do this without this change</p>
+<p>Mike: encourage application on the entity set</p>
+<p>Mike: would also have to list Singleton and NavigationProperty in AppliesTo</p>
+<p>Ralf:</p>
+<pre>
+&lt;Annotation Term="Capabilities.DeepInsertSupport" />
+</pre>
+
+<p>Ralf: nested in </p>
+<pre>
+&lt;Annotations Target="MySchema.MyContainer/SomeSingleton" />
+&lt;Term Name="DeepInsertSupport" Type="Capabilities.DeepInsertSupportType" AppliesTo="EntityContainer">
+  &lt;Annotation Term="Core.Description" String="Deep Insert Support for the service" />
+&lt;/Term>
+&lt;ComplexType Name="DeepInsertSupportType">
+  &lt;Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
+    &lt;Annotation Term="Core.Description" String="Service supports deep inserts" />
+  &lt;/Property>
+  &lt;Property Name="ContentIDSupported" Type="Edm.Boolean" DefaultValue="true">
+    &lt;Annotation Term="Core.Description"
+                String="Service supports accepting and returning nested entities annotated with the contentID instance annotation." />
+  &lt;/Property>
+&lt;/ComplexType>
+</pre>
+
+<p>Mike: </p>
+<pre>
+&lt;Term Name="InsertRestrictions" Type="Capabilities.InsertRestrictionsType" AppliesTo="EntitySet Collection">
+  &lt;Annotation Term="Core.Description" String="Restrictions on insert operations" />
+&lt;/Term>
+&lt;ComplexType Name="InsertRestrictionsType">
+  &lt;Property Name="Insertable" Type="Edm.Boolean" DefaultValue="true">
+    &lt;Annotation Term="Core.Description" String="Entities can be inserted" />
+  &lt;/Property>
+  &lt;Property Name="NonInsertableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
+    &lt;Annotation Term="Core.Description" String="These navigation properties do not allow deep inserts" />
+  &lt;/Property>
+&lt;/ComplexType>
+</pre>
+<p>Mike: we could add a property "DeepInsertable" to InsertRestrictionsType to avoid having to list all navigation properties in NonInsertableNavigationProperties</p>
+<p>Ralf: put this on hold for the moment</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-1056" rel="noopener noreferrer" target="_blank">ODATA-1056</a> - Key-as-Segment with Referential Constraints</h4>
+<p>Ralf: Part 2 section 4.3.3 allows omitting key values that are implicitly specified by referential constraints to key values provided in previous path segments:</p> 
+<pre>
+https://host/service/Orders(1)/Items(OrderID=1,ItemNo=2)
+https://host/service/Orders(1)/Items(2)
+</pre>
+<p>The shorter form is preferred for parentheses-key syntax, and both are allowed. <br>
+<br>
+We cannot give that choice for key-as-segment style because the number and order of path segments must be deterministic, so it is either </p>
+<pre>
+https://host/service/Orders/1/Items/1/2
+</pre>
+<p>or</p>
+<pre>
+https://host/service/Orders/1/Items/2
+</pre>
+<p>Shorter is better, so it must be the second.</p>
+<p>Ralf: ODATA-1056 is OPEN</p>
+<p>Ralf: Reason for avoiding containment: use of $apply</p>
+<p>Ralf: ODATA-1056 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1056 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1056 is RESOLVED as proposed</p>
+
+<h4>5.1.x <a href="https://issues.oasis-open.org/browse/ODATA-1057" rel="noopener noreferrer" target="_blank">ODATA-1057</a> - Consider PATCH to /$delta for delta update rather than rely on context url</h4>
+<p>Ralf: ODATA-1057 is OPEN</p>
+<p>Ralf: </p>
+<pre>
+DELETE Orders/42
+DELETE Orders
+DELETE Orders/$each
+POST Orders/$filter=Age gt 2/Some.Action
+POST Orders/$filter=Age gt 2/$each/Some.SingleAction
+PATCH Orders - with delta payload
+PATCH Orders/$each - with single payload
+</pre>
+<p>Ralf: Requests with /$each are atomic, all-or-nothing</p>
+<p>Mike: atomic, all-or-nothing</p>
+<p>Ralf: Consensus is forming, Hubert will move next week</p>
+
+<h2>6. Next meetings</h2>
+
+<h3>6.1 Next Meeting on April 06, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Ralf: (17:00-19:00 CEST) already confirmed</p>
+
+<h3>6.2 Meeting after that on April 13, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Ralf: Week before Easter</p>
+<p>Martin: On vacation</p>
+<p>Works for most</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
