@@ -84,10 +84,11 @@ serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive
               "://" host [ ":" port ]
               "/" *( segment-nz "/" )
 
-odataRelativeUri = '$batch'                           ; Note: case-sensitive!
+; Note: dollar-prefixed path segments are case-sensitive!
+odataRelativeUri = '$batch'  [ "?" batchOptions ]
                  / '$entity' "?" entityOptions  
                  / '$entity' "/" qualifiedEntityTypeName "?" entityCastOptions  
-                 / '$metadata' [ "?" format ] [ context ]
+                 / '$metadata' [ "?" metadataOptions ] [ context ]
                  / resourcePath [ "?" queryOptions ]
 
 
@@ -227,7 +228,15 @@ queryOptions = queryOption *( "&" queryOption )
 queryOption  = systemQueryOption  
              / aliasAndValue 
              / customQueryOption  
+
+batchOptions = batchOption *( "&" batchOption )   
+batchOption  = format
+             /customQueryOption   
              
+metadataOptions = metadataOption *( "&" metadataOption )   
+metadataOption  = format
+                /customQueryOption   
+
 entityOptions  = *( entityIdOption "&" ) id *( "&" entityIdOption )
 entityIdOption = format
                / customQueryOption
@@ -908,7 +917,7 @@ base64char  = ALPHA / DIGIT / "-" / "_"
 
 booleanValue = "true" / "false"
 
-decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ] / nanInfinity
+decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ] [ "e" [ SIGN ] 1*DIGIT ] / nanInfinity
 
 doubleValue = decimalValue [ "e" [ SIGN ] 1*DIGIT ] / nanInfinity ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
 singleValue = doubleValue                                         ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
