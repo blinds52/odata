@@ -81,6 +81,7 @@
   <!-- end of constraints for data aggregation -->
   <Constraint Rule="action">
     <Match>ActionName</Match>
+    <Match>Cluster</Match>
     <Match>Discount</Match>
     <Match>Rejection</Match>
   </Constraint>
@@ -1024,18 +1025,24 @@
     <Input>Products/$filter=@foo?@foo=Age gt 3</Input>
   </TestCase>
   <TestCase Name="4.12 Filter Path Segment - with action" Rule="odataRelativeUri">
-    <Input>Products/$filter=@foo/Special.Discount?@foo=Age gt 3</Input>
+    <Input>Products/$filter=@foo/Special.Cluster?@foo=Age gt 3</Input>
   </TestCase>
-  <TestCase Name="4.13 Addressing a Media Resource" Rule="odataRelativeUri">
+  <TestCase Name="4.12 $each Path Segment" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$each</Input>
+  </TestCase>
+  <TestCase Name="4.12 $each Path Segment - with action" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$each/Special.Discount?@foo=Age gt 3</Input>
+  </TestCase>
+  <TestCase Name="4.14 Addressing a Media Resource" Rule="odataRelativeUri">
     <Input>Categories(1)/$value</Input>
   </TestCase>
-  <TestCase Name="4.14 - Cross Join" Rule="odataRelativeUri">
+  <TestCase Name="4.15 - Cross Join" Rule="odataRelativeUri">
     <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
   </TestCase>
-  <TestCase Name="4.15 Addressing All Entities in a Service" Rule="odataRelativeUri">
+  <TestCase Name="4.16 Addressing All Entities in a Service" Rule="odataRelativeUri">
     <Input>$all?$search=red</Input>
   </TestCase>
-  <TestCase Name="4.15 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
+  <TestCase Name="4.16 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
     <Input>$all/Model.Customer?$filter=contains(Name,'red')</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" Rule="filter">
