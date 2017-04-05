@@ -111,7 +111,8 @@ resourcePath = entitySetName                  [ collectionNavigation ]
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ] [ collectionNavPath ]
 collectionNavPath    = keyPredicate [ singleNavigation ]
-                     / filterInPath [ collectionNavPath ]
+                     / filterInPath [ each ] [ boundOperation ]
+                     / each [ boundOperation ]
                      / boundOperation
                      / count
                      / ref
@@ -154,9 +155,11 @@ complexPath    = [ "/" qualifiedComplexTypeName ]
                  
 filterInPath = '/$filter' EQ parameterAlias
 
+each  = '/$each'
 count = '/$count'
 ref   = '/$ref'
 value = '/$value'
+
 ordinalIndex = "/" 1*DIGIT
 
 ; boundOperation segments can only be composed if the type of the previous segment 
