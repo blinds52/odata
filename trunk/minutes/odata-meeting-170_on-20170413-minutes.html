@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #170 Thursday Apr 13, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='4683d87e74e131f97a172a172d085db53c76860e0c73780aca14fe264caa342dd92e575e3323cca847ea580191ea90397b3ba6135b0f78157510e4082c75cab0' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #170 Thursday Apr 13, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-04-13 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Susan Malaika (IBM)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43973">normative attendance sheet for this meeting (event_id=43973)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from April 06, 2017 TC meeting #169</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60456/odata-meeting-169_on-20170406-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60456/odata-meeting-169_on-20170406-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. V4.01</h2>
+<h3>5.1 Issues for V4.01_CSD02 ready for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1037" rel="noopener noreferrer" target="_blank">ODATA-1037</a> - Add tagging term Core.Deprecated to mark deprecated model elements</h4>
+
+<p>Ralf: </p>
+<pre>
+&lt;Term Name="Deprecated" Type="Core.Tag" DefaultValue="true"> 
+  &lt;Annotation Term="Core.Description" String="Model elements annotated with this term are deprecated and should no longer be used. 
+                    They may be removed in a future version of the service." /> 
+&lt;/Term>
+</pre>
+<p>Ralf: Proposal: remove as it is covered by ODATA-1058</p>
+<p>Ralf: New term provides more information, but is a bit more verbose:</p>
+<pre>
+&lt;Term Name="Masked" Type="Core.Tag" DefaultValue="true" AppliesTo="Property">
+  &lt;Annotation Term="Core.Revisions">
+    &lt;Collection>
+      &lt;Record>
+        &lt;PropertyValue Property="Kind" EnumMember="Core.RevisionKind/Deprecated" />
+        &lt;PropertyValue Property="Description" String="Use term Common.Masking instead" />
+      &lt;/Record>
+    &lt;/Collection>
+  &lt;/Annotation>
+&lt;/Term>
+</pre>
+<p><b>George</b>: I <b>move</b> to mark issue ODATA-1037 as a duplicate of issue ODATA-1058. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1037 is closed as a duplicate of ODATA-1058</p>
+
+<h3>5.2 Document walkthrough</h3>
+
+<h4>5.2.1 Part 1: Protocol</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx</a></p>
+<p>All walk through the document, discuss and perform online changes during the meeting.</p>
+<p>Ralf: Do we want to allow a /$filter segment before /$count and in addition a $filter query option?</p>
+<p>Hubert: deprecate or at least discourage $filter query option after /$count segment</p>
+<p>Matt: don't allow both, specifying two $filter query options is already forbidden</p>
+<p>Hubert: treat /$filter= as applying a function</p>
+<p>Hubert: Products/$filter=@f/MagicHappensHere()/$count?@f=Price lt 10.00&amp;$filter=Size eq 'XXL'</p>
+<p>Hubert: Products/$filter=@f/MagicHappensHere()/$filter=@g/$count?@f=Price lt 10.00&amp;@g=Size eq 'XXL'</p>
+<p>Hubert: if we treat /$count as a function that returns raw text then combining it with $filter query option would not be allowed</p>
+<p>Hubert: Products/MyfilterFunc(Price lt 10.00)/MagicHappensHere()/MyFilterFunc(Size eq 'XXL')/$count</p>
+<p>Hubert: Products/MyfilterFunc(@f)/MagicHappensHere()/MyFilterFunc(@g)/$count?@f=Price lt 10.00&amp;@g=Size eq 'XXL'</p>
+<p>Matt: GET Products/$filter=@f?@f=Price lt 10</p>
+<p>Matt: GET Products/$filter=@f?@f=Price lt 10&amp;$filter=Price gt 20</p>
+<p>Matt: GET Products?$filter=Price lt 10&amp;$filter=Price gt 20</p>
+<p>Ralf: GET Products?$apply=filter(Price lt 10)/filter(Price gt 20)</p>
+<p>Hubert: GET Products/$filter=@f/$filter@g?@f=Price lt 10.00&amp;@g=Size eq 'XXL'</p>
+<p>Hubert: GET Products/$filter=@f/$filter@g/$count?@f=Price lt 10.00&amp;@g=Size eq 'XXL'</p>
+<p>George: With 4.01, the $filter query option MAY NOT be used in conjunction with a both a $count path segment and a $filter path segment.</p>
+<p>Matt: GET Products/$filter=@f?@f=Price lt 10&amp;$filter=Price gt 20</p>
+<p>Matt: GET Products/$filter=@f/$filter=@g?@f=Price lt 10&amp;@g=Price gt 20</p>
+<p>Ralf: Walkthrough stopped before 11.4.12 Set-Based Updates</p>
+
+<h4>5.2.2 Part 2: URL Conventions</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.3 JSON Format</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.4 CSDL JSON Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.5 CSDL XML Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.6 New in OData 4.01</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx</a></p>
+<p>Skipped</p>
+
+<h2>6. Next meetings</h2>
+
+<h3>6.2 Meeting on April 20, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Ralf: (17:00-19:00 CEST) already confirmed</p>
+<p>Hubert and Mark can't make it next week</p>
+
+<h3>6.2 Meeting after that on April 27, 2017, during 08:00-10:00 am PDT</h3> 
+
+<h2>7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
