@@ -218,6 +218,7 @@
     <Match>Special</Match>
   </Constraint>
   <Constraint Rule="parameterAlias">
+    <Match>@bar</Match>
     <Match>@c</Match>
     <Match>@cat</Match>
     <Match>@categoryId</Match>
@@ -935,6 +936,9 @@
   <TestCase Name="4.8 Addressing entities - entity set with $count" Rule="odataRelativeUri">
     <Input>Products/$count</Input>
   </TestCase>
+  <TestCase Name="4.8 Addressing entities - entity set with $count" Rule="odataRelativeUri">
+    <Input>Products/$count?$filter=Price gt 5.00</Input>
+  </TestCase>
   <TestCase Name="4.8 Addressing entities - $count not last segment" Rule="odataRelativeUri" FailAt="15">
     <Input>Products/$count/foo</Input>
   </TestCase>
@@ -1026,6 +1030,21 @@
   </TestCase>
   <TestCase Name="4.12 Filter Path Segment" Rule="odataRelativeUri">
     <Input>Products/$filter=@foo?@foo=Age gt 3</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - multiple" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with /$ref" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar/$ref?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with /$count" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar/$count?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with /$count and $filter query option" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar/$count?@foo=Age gt 3&amp;@bar=Price lt 5&amp;$filter=Price lt 6</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - multiple" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/Special.ProductsByColor(color='red')/$filter=@bar?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
   </TestCase>
   <TestCase Name="4.12 Filter Path Segment - with action" Rule="odataRelativeUri">
     <Input>Products/$filter=@foo/Special.Cluster?@foo=Age gt 3</Input>
