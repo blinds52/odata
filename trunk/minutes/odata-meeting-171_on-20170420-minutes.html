@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #171 Thursday Apr 20, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='8e91d19e667e5dc5d93a23b9cc0afea75f32de7fe0682b8b5b6fe31e9d99a44b8420fe37e9a36c49730114e5fd1ef134964056c0c9b4c60e5597afaf39fcb781' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #171 Thursday Apr 20, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-04-20 0800-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (IBM) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43974">normative attendance sheet for this meeting (event_id=43973)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from April 13, 2017 TC meeting #170</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60518/odata-meeting-170_on-20170413-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60518/odata-meeting-170_on-20170413-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. V4.01</h2>
+<h3>5.1 Issues for V4.01_CSD02 ready for resolution</h3>
+
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1065" rel="noopener noreferrer" target="_blank">ODATA-1065</a> - Generalize Edm.AnyPath to be a path to any model element</h4>
+
+<p>Ralf: With ODATA-516 we introduced the abstract type Edm.AnyPath as an abstraction of Edm.AnnotationPath, Edm.PropertyPath, and Edm.NavigationPropertyPath. <br>
+<br>
+We now face situations where we want to reference other types of model elements, e.g. bound actions or functions. <br>
+<br>
+It seems wise to use the rather generic name "AnyPath" really for any path to any type of model element, which would <br>
+a) postpone the need for actually adding specific types Edm.ActionPath, Edm.FunctionPath, Edm.EntityTypePath, ... <br>
+b) allow us to later add these more specific types for the more common cases</p>
+
+<p>Ralf: ODATA-1065 is OPEN</p>
+
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-1065 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1065 is RESOLVED as proposed</p>
+
+<p>George: request and response payload format description can be improved. For example of generic specification of request and response payloads. <br>
+See: <a href="http://www.dmtf.org/sites/default/files/standards/documents/DSP0210_1.0.0.pdf" rel="noopener noreferrer" target="_blank">http://www.dmtf.org/sites/default/files/standards/documents/DSP0210_1.0.0.pdf</a></p>
+
+<h3>5.2 Document walkthrough</h3>
+
+<h4>5.2.1 Part 1: Protocol</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx</a></p>
+<p>All walk through the document, discuss and perform online changes during the meeting.</p>
+<p>Ralf: Walkthrough stopped before XXXXXX</p>
+
+<h4>5.2.2 Part 2: URL Conventions</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.3 JSON Format</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.4 CSDL JSON Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.5 CSDL XML Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.2.6 New in OData 4.01</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx</a></p>
+<p>Skipped</p>
+
+<h2>6. Next meetings</h2>
+
+<h3>6.2 Meeting on April 27, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Ralf: (17:00-19:00 CEST) already confirmed</p>
+
+<h3>6.2 Meeting after that on May 04, 2017, during 07:00-10:00 am PDT</h3> 
+<p>Ralf: 07:00-10:00 am PDT (16:00-19:00 CEST) - one hour earlier, and one hour longer</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
