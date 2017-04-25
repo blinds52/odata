@@ -17,7 +17,7 @@
   Additional artifacts:
   This XML schema is one component of a Work Product which consists of:
   - OData Common Schema Definition Language (CSDL) XML Representation Version 4.01
-  - OData EDMX XML Schema Version 4.01 
+  - OData EDMX XML Schema Version 4.01
   - OData EDM XML Schema Version 4.01 (this document)
 
   Related work:
@@ -253,7 +253,7 @@
       <xs:element name="String" type="edm:TStringConstantExpression" />
       <xs:element name="TimeOfDay" type="edm:TTimeOfDayConstantExpression" />
       <!-- Dynamic Expressions -->
-      <xs:element name="AnnotationPath" type="edm:TPathExpression" />
+      <xs:element name="AnnotationPath" type="edm:TModelPathExpression" />
       <xs:element name="Apply" type="edm:TApplyExpression" />
       <xs:element name="Cast" type="edm:TCastOrIsOfExpression" />
       <xs:element name="Collection" type="edm:TCollectionExpression" />
@@ -271,9 +271,9 @@
       <xs:element name="LabeledElement" type="edm:TLabeledElementExpression" />
       <xs:element name="LabeledElementReference" type="edm:TLabeledElementReferenceExpression" />
       <xs:element name="Null" type="edm:TNullExpression" />
-      <xs:element name="NavigationPropertyPath" type="edm:TPathExpression" />
+      <xs:element name="NavigationPropertyPath" type="edm:TModelPathExpression" />
       <xs:element name="Path" type="edm:TPathExpression" />
-      <xs:element name="PropertyPath" type="edm:TPathExpression" />
+      <xs:element name="PropertyPath" type="edm:TModelPathExpression" />
       <xs:element name="Record" type="edm:TRecordExpression" />
       <xs:element name="UrlRef" type="edm:TOneChildExpression" />
     </xs:choice>
@@ -295,7 +295,7 @@
     <!-- Dynamic Expressions -->
     <xs:attribute name="AnnotationPath" type="edm:TPathWithTermSegments" use="optional" />
     <xs:attribute name="NavigationPropertyPath" type="edm:TPathWithTermSegments" use="optional" />
-    <xs:attribute name="Path" type="edm:TPathWithTermSegments" use="optional" />
+    <xs:attribute name="Path" type="xs:string" use="optional" />
     <xs:attribute name="PropertyPath" type="edm:TPathWithTermSegments" use="optional" />
     <xs:attribute name="UrlRef" type="xs:anyURI" use="optional" />
   </xs:attributeGroup>
@@ -427,9 +427,14 @@
       <xs:element ref="edm:Annotation" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="TPathExpression">
+  <xs:complexType name="TModelPathExpression">
     <xs:simpleContent>
       <xs:extension base="edm:TPathWithTermSegments" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TPathExpression">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TRecordExpression">
