@@ -118,10 +118,15 @@
   <Constraint Rule="entityColFunction">
     <Match>AllOrders</Match>
     <Match>ProductsByColor</Match>
+    <Match>WithIngredients</Match>
   </Constraint>
   <Constraint Rule="entityColFunctionImport">
     <Match>AllProductsByColor</Match>
     <Match>AllProductsByCategoryId</Match>
+    <Match>ProductsByCategoryId</Match>
+    <Match>ProductsByColor</Match>
+    <Match>ProductsByComplex</Match>
+    <Match>ProductsByCustomer</Match>
   </Constraint>
   <Constraint Rule="entityColNavigationProperty">
     <Match>DirectReports</Match>
@@ -129,14 +134,6 @@
     <Match>Orders</Match>
     <Match>Products</Match>
     <Match>Sales</Match>
-  </Constraint>
-  <Constraint Rule="entityColFunction">
-  </Constraint>
-  <Constraint Rule="entityColFunctionImport">
-    <Match>ProductsByCategoryId</Match>
-    <Match>ProductsByColor</Match>
-    <Match>ProductsByComplex</Match>
-    <Match>ProductsByCustomer</Match>
   </Constraint>
   <Constraint Rule="entityFunction">
     <Match>BestProduct</Match>
@@ -225,6 +222,7 @@
     <Match>@color</Match>
     <Match>@expression</Match>
     <Match>@foo</Match>
+    <Match>@i</Match>
     <Match>@key</Match>
     <Match>@ref</Match>
     <Match>@title</Match>
@@ -1496,31 +1494,25 @@
   <TestCase Name="5.1.1.12 Path expressions - key access after set navigation" Rule="commonExpr">
     <Input>Items(1)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.13 Parameter Aliases" Rule="queryOptions">
-    <Input>$filter=contains(Title,@word)&amp;@word='Black'</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.13 Parameter Aliases" Rule="queryOptions">
-    <Input>$filter=Title eq @title&amp;@title='Wizard%20of%20Oz'</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.14 Annotation Values" Rule="filter">
+  <TestCase Name="5.1.1.13 Annotation Values" Rule="filter">
     <Input>$filter=Price/@Measures.Currency eq 'EUR'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.14 Annotation Values" Rule="filter">
+  <TestCase Name="5.1.1.13 Annotation Values" Rule="filter">
     <Input>$filter=Price/@Measures.Currency eq 'EUR'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.14 Annotation Values" Rule="orderBy">
+  <TestCase Name="5.1.1.13 Annotation Values" Rule="orderBy">
     <Input>$orderby=Price/@Measures.Currency</Input>
   </TestCase>
-  <TestCase Name="5.1.1.14 Annotation Values" Rule="orderBy">
+  <TestCase Name="5.1.1.13 Annotation Values" Rule="orderBy">
     <Input>$orderby=Price/@Measures.Currency#Reporting</Input>
   </TestCase>
-  <TestCase Name="5.1.1.14 Annotation Values" Rule="filter">
+  <TestCase Name="5.1.1.13 Annotation Values" Rule="filter">
     <Input>$filter=Price/@Currency eq 'EUR'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.14 Annotation Values" Rule="filter">
+  <TestCase Name="5.1.1.13 Annotation Values" Rule="filter">
     <Input>$filter=@Core.Messages/any(m:m/severity eq 'error')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.14 Annotation Values" Rule="filter">
+  <TestCase Name="5.1.1.13 Annotation Values" Rule="filter">
     <Input>$filter=@Messages/any(m:m/severity eq 'error')</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - single navigation property" Rule="expand">
@@ -1819,6 +1811,15 @@
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="queryOptions">
     <Input>$orderby=Name&amp;!deltatoken=0412312321</Input>
+  </TestCase>
+  <TestCase Name="5.3 Parameter Aliases" Rule="queryOptions">
+    <Input>$filter=contains(Title,@word)&amp;@word='Black'</Input>
+  </TestCase>
+  <TestCase Name="5.3 Parameter Aliases" Rule="queryOptions">
+    <Input>$filter=Title eq @title&amp;@title='Wizard%20of%20Oz'</Input>
+  </TestCase>
+  <TestCase Name="5.3 Parameter Aliases" Rule="odataRelativeUri">
+    <Input>Products/Model.WithIngredients(Ingredients=@i)?@i=["Carrots","Ginger","Oranges"]</Input>
   </TestCase>
   <TestCase Name="complex parameter value - no properties" Rule="complexInUri">
     <Input>{}</Input>
