@@ -331,6 +331,12 @@
     <Input>$apply=expand(Products,expand(Sales,filter(Amount gt 3)))</Input>
   </TestCase>
   <TestCase Name="aggregate - multi-level expand with branches" Rule="queryOptions">
+    <Input>$apply=expand(Products,expand(Sales,filter(Amount gt 3)),expand(Suppliers,expand(Products,filter(true))))</Input>
+  </TestCase>
+  <TestCase Name="aggregate - multi-level expand with branches" Rule="queryOptions" FailAt="102">
+    <Input>$apply=expand(Products,expand(Sales,filter(Amount gt 3)),expand(Suppliers,filter(true),expand(Products)))</Input>
+  </TestCase>
+  <TestCase Name="aggregate - multi-level expand with branches" Rule="queryOptions" FailAt="89">
     <Input>$apply=expand(Products,expand(Sales,filter(Amount gt 3)),expand(Suppliers,expand(Products)))</Input>
   </TestCase>
   <TestCase Name="aggregate - search" Rule="queryOptions">
