@@ -1,12 +1,12 @@
 {
-    "$Version": "4.0",
+    "$Version": "4.01",
     "$EntityContainer": "org.example.DemoService",
     "$Reference": {
         "http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Core.V1.json": {
             "$Include": [
                 {
-                    "$Namespace": "Org.OData.Core.V1",
-                    "$Alias": "Core"
+                    "$Alias": "Core",
+                    "$Namespace": "Org.OData.Core.V1"
                 }
             ]
         },
@@ -14,36 +14,36 @@
             "@Some.Term": true,
             "$Include": [
                 {
-                    "$Namespace": "Org.OData.Measures.V1",
-                    "$Alias": "Measures"
+                    "$Alias": "UoM",
+                    "$Namespace": "Org.OData.Measures.V1"
                 }
             ]
         },
         "http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/Org.OData.Validation.V1.json": {
             "$Include": [
                 {
-                    "$Namespace": "Org.OData.Validation.V1",
-                    "$Alias": "Validation"
+                    "$Alias": "Validation",
+                    "$Namespace": "Org.OData.Validation.V1"
                 }
             ]
         },
         "http://somewhere/Vocabulary/V1": {
             "$IncludeAnnotations": [
                 {
-                    "$TermNamespace": "Name.Space.",
-                    "$TargetNamespace": "Target.Space."
+                    "$TermNamespace": "Name.Space",
+                    "$TargetNamespace": "Target.Space"
                 },
                 {
-                    "$TermNamespace": "Name.Space.",
-                    "$TargetNamespace": "Target.Space.",
+                    "$TermNamespace": "Name.Space",
+                    "$TargetNamespace": "Target.Space",
                     "$Qualifier": "SomeName"
                 },
                 {
-                    "$TermNamespace": "Name.Space.",
+                    "$TermNamespace": "Name.Space",
                     "$Qualifier": "SomeName"
                 },
                 {
-                    "$TermNamespace": "Name.Space."
+                    "$TermNamespace": "Name.Space"
                 }
             ]
         },
@@ -99,56 +99,143 @@
                 }
             ]
         },
-        "http://vocabs.odata.org/display/v1": {
+        "http://vocabs.odata.org/core/v1": {
             "$Include": [
                 {
-                    "$Namespace": "org.example.task",
-                    "$Alias": "task"
+                    "$Namespace": "Org.OData.Core.V1",
+                    "$Alias": "Core",
+                    "@Core.DefaultNamespace": true
+                }
+            ]
+        },
+        "http://example.org/display/v1": {
+            "$Include": [
+                {
+                    "$Alias": "UI",
+                    "$Namespace": "org.example.display"
                 },
                 {
-                    "$Namespace": "org.example.display",
-                    "$Alias": "UI"
+                    "$Alias": "task",
+                    "$Namespace": "org.example.task"
                 },
                 {
-                    "$Namespace": "org.example.vCard",
-                    "$Alias": "vCard"
+                    "$Alias": "vCard",
+                    "$Namespace": "org.example.vCard"
                 },
                 {
-                    "$Namespace": "anotherOne",
-                    "$Alias": "R6I3"
+                    "$Alias": "R7I3",
+                    "$Namespace": "anotherOne"
                 }
             ]
         },
         "http://odata.org/ann/b": {
             "$IncludeAnnotations": [
                 {
-                    "$TermNamespace": "org.example.validation."
+                    "$TermNamespace": "org.example.validation"
                 },
                 {
-                    "$TermNamespace": "org.example.display.",
+                    "$TermNamespace": "org.example.display",
                     "$Qualifier": "Tablet"
                 },
                 {
-                    "$TermNamespace": "org.example.hcm.",
-                    "$TargetNamespace": "com.example.Sales."
+                    "$TermNamespace": "org.example.hcm",
+                    "$TargetNamespace": "com.example.Sales"
                 },
                 {
-                    "$TermNamespace": "org.example.hcm.",
+                    "$TermNamespace": "org.example.hcm",
                     "$Qualifier": "Tablet",
-                    "$TargetNamespace": "com.example.Person."
+                    "$TargetNamespace": "com.example.Person"
                 }
             ]
         }
     },
     "org.example": {
         "$Kind": "Schema",
-        "$Alias": "Self",
-        "@Core.Description": "Examples from Part 3: CSDL",
+        "$Alias": "self",
+        "@Core.Description": "Example schema",
         "$Annotations": {
-            "Self.Person": {
-                "@UI.DisplayName#Tablet": {
+            "self.Person": {
+                "@Core.Description#Tablet": "Dummy",
+                "@UI.DisplayName": {
                     "$Path": "FirstName"
-                },
+                }
+            },
+            "self.MyEntityType": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityType/MyProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityType/MyNavigationProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyComplexType": {
+                "@self.Dummy": true
+            },
+            "self.MyComplexType/MyProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyComplexType/MyNavigationPropert": {
+                "@self.Dummy": true
+            },
+            "self.MyEnumType": {
+                "@self.Dummy": true
+            },
+            "self.MyEnumType/MyMember": {
+                "@self.Dummy": true
+            },
+            "self.MyTypeDefinition": {
+                "@self.Dummy": true
+            },
+            "self.MyTerm": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyEntitySet": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MySingleton": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyActionImport": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyFunctionImport": {
+                "@self.Dummy": true
+            },
+            "self.MyAction": {
+                "@self.Dummy": true
+            },
+            "self.MyFunction": {
+                "@self.Dummy": true
+            },
+            "self.MyFunction/MyParameter": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyEntitySet/MyProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyEntitySet/MyNavigationProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyEntitySet/self.MyEntityType/MyProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyEntitySet/self.MyEntityType/MyNavProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyEntitySet/MyComplexProperty/MyProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MyEntitySet/MyComplexProperty/MyNavigationProperty": {
+                "@self.Dummy": true
+            },
+            "self.MyEntityContainer/MySingleton/MyComplexProperty/MyNavigationProperty": {
+                "@self.Dummy": true
+            },
+            "self.ConstantExpressions": {
                 "@UI.Thumbnail": {
                     "$Binary": "T0RhdGE"
                 },
@@ -181,16 +268,16 @@
                 "@task.duration#element": {
                     "$Duration": "P11DT23H59M59.999999999999S"
                 },
-                "@Self.HasPattern": {
+                "@self.HasPattern": {
                     "$EnumMember": "Red"
                 },
-                "@Self.HasPattern#element": {
+                "@self.HasPattern#element": {
                     "$EnumMember": "Red"
                 },
-                "@Self.HasPattern#list": {
+                "@self.HasPattern#list": {
                     "$EnumMember": "Red,Striped"
                 },
-                "@Self.HasPattern#listelement": {
+                "@self.HasPattern#listelement": {
                     "$EnumMember": "Red,Striped"
                 },
                 "@UI.FloatWidth": 3.14,
@@ -210,6 +297,89 @@
                 },
                 "@UI.EndTime#element": {
                     "$TimeOfDay": "21:45:00"
+                }
+            },
+            "self.DynamicExpression": {
+                "@self.Dummy": [
+                    {
+                        "$PropertyPath": "/self.MyEntityContainer/MyEntitySet/MyProperty"
+                    },
+                    {
+                        "$PropertyPath": "Address/City"
+                    },
+                    {
+                        "$PropertyPath": "DirectReports/self.Manager/DirectReports"
+                    },
+                    {
+                        "$PropertyPath": "Address/City/@Capabilities.SortRestrictions/Sortable"
+                    },
+                    {
+                        "$PropertyPath": "Orders/Items/Product"
+                    },
+                    {
+                        "$PropertyPath": "Addresses/Street"
+                    },
+                    {
+                        "$PropertyPath": "Addresses/$count"
+                    },
+                    {
+                        "$PropertyPath": "Orders/Items@Capabilities.InsertRestrictions/Insertable"
+                    },
+                    {
+                        "$Path": "/self.container/SettingsCollection('FeatureXxx')/IsAvailable"
+                    },
+                    {
+                        "$Path": "/self.container/Products(ID=ProductID)/Name"
+                    }
+                ],
+                "@UI.ReferenceFacet": {
+                    "$AnnotationPath": "Product/Supplier/@UI.LineItem"
+                },
+                "@UI.CollectionFacet#Contacts": [
+                    {
+                        "$AnnotationPath": "Supplier/@Communication.Contact"
+                    },
+                    {
+                        "$AnnotationPath": "Customer/@Communication.Contact"
+                    }
+                ],
+                "@self.MyFavoriteModelElement": {
+                    "$ModelElementPath": "/self.someAction"
+                },
+                "@self.MyFavoriteModelElement#element": {
+                    "$ModelElementPath": "/self.someAction"
+                },
+                "@UI.HyperLink": {
+                    "$NavigationPropertyPath": "Supplier"
+                },
+                "@Capabilities.UpdateRestrictions#element": {
+                    "NonUpdatableNavigationProperties": [
+                        {
+                            "$NavigationPropertyPath": "Supplier"
+                        },
+                        {
+                            "$NavigationPropertyPath": "Category"
+                        }
+                    ]
+                },
+                "@UI.RefreshOnChangeOf": {
+                    "$PropertyPath": "ChangedAt"
+                },
+                "@Capabilities.UpdateRestrictions#element2": {
+                    "NonUpdatableProperties": [
+                        {
+                            "$PropertyPath": "CreatedAt"
+                        },
+                        {
+                            "$PropertyPath": "ChangedAt"
+                        }
+                    ]
+                },
+                "@UI.DisplayName": {
+                    "$Path": "FirstName"
+                },
+                "@UI.DisplayName#element": {
+                    "$Path": "@vCard.Address#work/FullName"
                 },
                 "@A.ComparisonAndLogicalOperator": [
                     {
@@ -286,17 +456,6 @@
                         ]
                     }
                 ],
-                "@UI.ReferenceFacet": {
-                    "$AnnotationPath": "Product/Supplier/@UI.LineItem"
-                },
-                "@UI.CollectionFacet#Contacts": [
-                    {
-                        "$AnnotationPath": "Supplier/@Communication.Contact"
-                    },
-                    {
-                        "$AnnotationPath": "Customer/@Communication.Contact"
-                    }
-                ],
                 "@UI.DisplayName#apply": {
                     "$Apply": [
                         "Product: ",
@@ -315,7 +474,7 @@
                     ],
                     "$Function": "odata.concat"
                 },
-                "@Some.Term#Example57": {
+                "@Some.Term#Example71": {
                     "$Apply": [
                         "http://host/someAPI/Actors/{actorName}/CV",
                         {
@@ -327,7 +486,16 @@
                     ],
                     "$Function": "odata.fillUriTemplate"
                 },
-                "@Some.Term#Example58": {
+                "@Some.Term#Example72": {
+                    "$Apply": [
+                        {
+                            "$Path": "FirstName"
+                        },
+                        "[^b-d]"
+                    ],
+                    "$Function": "odata.matchesPattern"
+                },
+                "@Some.Term#Example73": {
                     "$Apply": [
                         "http://host/service/Genres({genreName})",
                         {
@@ -364,63 +532,31 @@
                         "Male"
                     ]
                 },
-                "@Self.IsPreferredCustomer": {
+                "@self.IsPreferredCustomer": {
                     "$IsOf": {
                         "$Path": "Customer"
                     },
-                    "$Type": "Self.PreferredCustomer"
+                    "$Type": "self.PreferredCustomer"
                 },
-                "@UI.DisplayName#l": {
+                "@UI.DisplayName#LE": {
                     "$LabeledElement": {
                         "$Path": "FirstName"
                     },
                     "$Name": "org.example.CustomerFirstName"
                 },
-                "@UI.DisplayName#lelement": {
+                "@UI.DisplayName#LEelement": {
                     "$LabeledElement": {
                         "$Path": "FirstName"
                     },
                     "$Name": "org.example.CustomerFirstName"
                 },
-                "@UI.DisplayName#ref": {
-                    "$LabeledElementReference": "Self.CustomerFirstName"
+                "@UI.DisplayName#LEref": {
+                    "$LabeledElementReference": "self.CustomerFirstName"
                 },
                 "@UI.DisplayName#null": null,
                 "@UI.DisplayName#nullWithAnnotation": {
                     "$Null": null,
-                    "@Self.Reason": "Private"
-                },
-                "@UI.HyperLink": {
-                    "$NavigationPropertyPath": "Supplier"
-                },
-                "@Capabilities.UpdateRestrictions#element": {
-                    "NonUpdatableNavigationProperties": [
-                        {
-                            "$NavigationPropertyPath": "Supplier"
-                        },
-                        {
-                            "$NavigationPropertyPath": "Category"
-                        }
-                    ]
-                },
-                "@UI.DisplayName#path": {
-                    "$Path": "FirstName"
-                },
-                "@UI.DisplayName#pathelement": {
-                    "$Path": "@vCard.Address#work/FullName"
-                },
-                "@UI.RefreshOnChangeOf": {
-                    "$PropertyPath": "ChangedAt"
-                },
-                "@Capabilities.UpdateRestrictions#element2": {
-                    "NonUpdatableProperties": [
-                        {
-                            "$PropertyPath": "CreatedAt"
-                        },
-                        {
-                            "$PropertyPath": "ChangedAt"
-                        }
-                    ]
+                    "@self.Reason": "Private"
                 },
                 "@person.Employee": {
                     "GivenName": {
@@ -447,7 +583,7 @@
                         }
                     }
                 },
-                "@Some.Supplier": {
+                "@person.Supplier": {
                     "$UrlRef": {
                         "$Apply": [
                             "http://host/service/Suppliers({suppID})",
@@ -474,117 +610,8 @@
                 }
             }
         },
-        "Measurement": {
-            "$Kind": "ComplexType",
-            "Dimension": {
-                "$Nullable": false,
-                "$MaxLength": 50,
-                "$DefaultValue": "Unspecified"
-            },
-            "Length": {
-                "$Type": "Edm.Decimal",
-                "$Nullable": false,
-                "$Precision": 18,
-                "$Scale": 2
-            }
-        },
-        "Example7to11": {
-            "$Kind": "ComplexType",
-            "Units": {
-                "$Collection": true,
-                "$Type": "Edm.String"
-            },
-            "SuggestedTimes": {
-                "$Collection": true,
-                "$Type": "Edm.DateTimeOffset",
-                "$Precision": 6
-            },
-            "Amount9": {
-                "$Type": "Edm.Decimal",
-                "$Precision": 3,
-                "$Scale": 2
-            },
-            "Amount11": {
-                "$Type": "Edm.Decimal",
-                "$Precision": 3,
-                "$Scale": "variable"
-            }
-        },
-        "Product": {
-            "$Kind": "EntityType",
-            "$Key": [
-                "ID"
-            ],
-            "ID": {
-                "$Nullable": false
-            },
-            "CategoryID": {
-                "$Nullable": false
-            },
-            "Category": {
-                "$Kind": "NavigationProperty",
-                "$Type": "Self.Category",
-                "$Nullable": false,
-                "$Partner": "Products",
-                "$ReferentialConstraint": {
-                    "CategoryID": "ID",
-                    "CategoryKind": "Kind",
-                    "CategoryKind@Core.Description": "Within ReferentialConstraint"
-                }
-            },
-            "Supplier": {
-                "$Kind": "NavigationProperty",
-                "$Type": "Self.Supplier"
-            }
-        },
-        "Supplier": {
-            "$Kind": "EntityType",
-            "$Key": [
-                "ID"
-            ],
-            "ID": {
-                "$Nullable": false
-            }
-        },
-        "Customer": {
-            "$Kind": "EntityType",
-            "$Key": [
-                "ID"
-            ],
-            "ID": {
-                "$Nullable": false
-            }
-        },
-        "Order": {
-            "$Kind": "EntityType",
-            "$Key": [
-                "ID"
-            ],
-            "ID": {
-                "$Type": "Edm.Int64",
-                "$Nullable": false
-            }
-        },
-        "Category": {
-            "$Kind": "EntityType",
-            "$Key": [
-                "ID"
-            ],
-            "ID": {
-                "$Nullable": false
-            },
-            "Products": {
-                "$Kind": "NavigationProperty",
-                "$Collection": true,
-                "$Type": "Self.Product",
-                "$Partner": "Category",
-                "$OnDelete": "Cascade",
-                "$OnDelete@Core.Description": "Delete all related entities"
-            }
-        },
         "Employee": {
             "$Kind": "EntityType",
-            "$HasStream": true,
             "$Key": [
                 "ID"
             ],
@@ -599,22 +626,31 @@
             },
             "Manager": {
                 "$Kind": "NavigationProperty",
-                "$Type": "Self.Manager"
+                "$Type": "self.Manager"
             }
         },
         "Manager": {
             "$Kind": "EntityType",
-            "$BaseType": "Self.Employee",
+            "$BaseType": "self.Employee",
             "AnnualBudget": {
                 "$Type": "Edm.Decimal"
             },
             "Employees": {
                 "$Kind": "NavigationProperty",
                 "$Collection": true,
-                "$Type": "Self.Employee"
+                "$Type": "self.Employee"
             }
         },
-        "Category17": {
+        "Nothing": {
+            "$Kind": "EntityType",
+            "$Abstract": true
+        },
+        "NotMuch": {
+            "$Kind": "EntityType",
+            "$OpenType": true,
+            "$HasStream": true
+        },
+        "Category10": {
             "$Kind": "EntityType",
             "$Key": [
                 "ID"
@@ -627,7 +663,7 @@
                 "@Core.IsLanguageDependent": true
             }
         },
-        "Category18": {
+        "Category11": {
             "$Kind": "EntityType",
             "$Key": [
                 {
@@ -635,7 +671,7 @@
                 }
             ],
             "Info": {
-                "$Type": "Self.EntityInfo",
+                "$Type": "self.EntityInfo",
                 "$Nullable": false
             },
             "Name": {
@@ -667,6 +703,131 @@
                 "$Nullable": false
             }
         },
+        "Measurement": {
+            "$Kind": "ComplexType",
+            "Dimension": {
+                "$Nullable": false,
+                "$MaxLength": 50,
+                "$DefaultValue": "Unspecified"
+            },
+            "Length": {
+                "$Type": "Edm.Decimal",
+                "$Nullable": false,
+                "$Precision": 18,
+                "$Scale": 2
+            }
+        },
+        "Example16to21": {
+            "$Kind": "ComplexType",
+            "Units": {
+                "$Collection": true,
+                "$Type": "Edm.String"
+            },
+            "SuggestedTimes": {
+                "$Collection": true,
+                "$Type": "Edm.DateTimeOffset",
+                "$Precision": 6
+            },
+            "Amount32": {
+                "$Type": "Edm.Decimal",
+                "$Precision": 3,
+                "$Scale": 2
+            },
+            "Amount22": {
+                "$Type": "Edm.Decimal",
+                "$Precision": 2,
+                "$Scale": 2
+            },
+            "Amount3v": {
+                "$Type": "Edm.Decimal",
+                "$Precision": 3,
+                "$Scale": "variable"
+            },
+            "Amount3f": {
+                "$Type": "Edm.Decimal",
+                "$Precision": 7,
+                "$Scale": "floating"
+            }
+        },
+        "Product": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            },
+            "CategoryID": {
+                "$Nullable": false
+            },
+            "CategoryKind": {
+
+            },
+            "Category": {
+                "$Kind": "NavigationProperty",
+                "$Type": "self.Category",
+                "$Nullable": false,
+                "$Partner": "Products",
+                "$ReferentialConstraint": {
+                    "CategoryID": "ID",
+                    "CategoryKind": "Kind",
+                    "CategoryKind@Core.Description": "Referential Constraint to non-key property"
+                }
+            },
+            "Supplier": {
+                "$Kind": "NavigationProperty",
+                "$Type": "self.Supplier"
+            }
+        },
+        "Supplier": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            }
+        },
+        "Customer": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false,
+                "$Unicode": false
+            }
+        },
+        "Order": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Type": "Edm.Int64",
+                "$Nullable": false
+            }
+        },
+        "Category": {
+            "$Kind": "EntityType",
+            "$Key": [
+                "ID"
+            ],
+            "ID": {
+                "$Nullable": false
+            },
+            "Kind": {
+
+            },
+            "Products": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Type": "self.Product",
+                "$Partner": "Category",
+                "$OnDelete": "Cascade",
+                "$OnDelete@Core.Description": "Delete all products in this category"
+            }
+        },
         "Dimensions": {
             "$Kind": "ComplexType",
             "Height": {
@@ -682,7 +843,7 @@
                 "$Type": "Edm.Decimal"
             }
         },
-        "Product22": {
+        "Product25": {
             "$Kind": "EntityType",
             "$Key": [
                 "ID"
@@ -691,10 +852,10 @@
                 "$Nullable": false
             },
             "ProductDimensions": {
-                "$Type": "Self.Dimensions"
+                "$Type": "self.Dimensions"
             },
             "ShippingDimensions": {
-                "$Type": "Self.Dimensions"
+                "$Type": "self.Dimensions"
             }
         },
         "ShipmentBox": {
@@ -706,28 +867,26 @@
                 "$Nullable": false
             },
             "Dimensions": {
-                "$Type": "Self.Dimensions"
+                "$Type": "self.Dimensions"
             }
+        },
+        "NothingC": {
+            "$Kind": "ComplexType",
+            "$Abstract": true
+        },
+        "NotMuchC": {
+            "$Kind": "ComplexType",
+            "$OpenType": true,
+            "$BaseType": "self.NothingC"
         },
         "FileAccess": {
             "$Kind": "EnumType",
             "$UnderlyingType": "Edm.Int32",
             "$IsFlags": true,
             "Read": 1,
-            "Read@Core.Description": "Read access permitted",
             "Write": 2,
             "Create": 4,
             "Delete": 8
-        },
-        "ShippingMethod": {
-            "$Kind": "EnumType",
-            "FirstClass": 0,
-            "FirstClass@Core.Description": "Shipped with highest priority",
-            "TwoDay": 1,
-            "TwoDay@Core.Description": "Shipped within two days",
-            "Overnight": 2,
-            "Overnight@Core.Description": "Shipped overnight",
-            "@Core.Description": "Method of shipping"
         },
         "Pattern": {
             "$Kind": "EnumType",
@@ -746,41 +905,48 @@
             "RedYellowStriped": 21,
             "BlueYellowStriped": 22
         },
+        "ShippingMethod": {
+            "$Kind": "EnumType",
+            "FirstClass": 0,
+            "FirstClass@Core.Description": "Shipped with highest priority",
+            "TwoDay": 1,
+            "TwoDay@Core.Description": "Shipped within two days",
+            "Overnight": 2,
+            "Overnight@Core.Description": "Shipped overnight",
+            "@Core.Description": "Method of shipping"
+        },
         "Length": {
             "$Kind": "TypeDefinition",
             "$UnderlyingType": "Edm.Int32",
-            "@Measures.Unit": "Centimeters"
+            "@UoM.Unit": "Centimeters"
         },
         "Weight": {
             "$Kind": "TypeDefinition",
             "$UnderlyingType": "Edm.Int32",
-            "@Measures.Unit": "Kilograms"
+            "@UoM.Unit": "Kilograms"
         },
         "Size": {
             "$Kind": "ComplexType",
             "Height": {
-                "$Type": "Self.Length"
+                "$Type": "self.Length"
             },
             "Weight": {
-                "$Type": "Self.Weight"
+                "$Type": "self.Weight"
             }
         },
-        "TopSellingProducts": [
+        "Approval": [
             {
-                "$Kind": "Function",
+                "$Kind": "Action",
+                "$IsBound": true,
                 "$Parameter": [
                     {
-                        "$Name": "Year",
-                        "$MaxLength": 4
+                        "$Name": "binding",
+                        "$Type": "self.Order"
                     }
-                ],
-                "$ReturnType": {
-                    "$Collection": true,
-                    "$Type": "Self.Product"
-                }
+                ]
             }
         ],
-        "Approval": [
+        "Logout": [
             {
                 "$Kind": "Action"
             }
@@ -793,12 +959,35 @@
                         "$Name": "Rating",
                         "$Type": "Edm.Decimal",
                         "$Precision": 4,
-                        "$Scale": 0
+                        "$Scale": 0,
+                        "$Nullable": false
                     }
                 ],
                 "$ReturnType": {
                     "$Collection": true,
-                    "$Type": "Self.Product"
+                    "$Type": "self.Product"
+                }
+            }
+        ],
+        "TopSellingProducts": [
+            {
+                "$Kind": "Function",
+                "$Parameter": [
+                    {
+                        "$Name": "Year",
+                        "$MaxLength": 4
+                    }
+                ],
+                "$ReturnType": {
+                    "$Collection": true,
+                    "$Type": "self.Product"
+                }
+            },
+            {
+                "$Kind": "Function",
+                "$ReturnType": {
+                    "$Collection": true,
+                    "$Type": "self.Product"
                 }
             }
         ],
@@ -849,29 +1038,45 @@
             "@Core.Description": "Properties and terms annotated with this term MUST contain a valid URL",
             "@Core.RequiresType": "Edm.String"
         },
+        "Example40": {
+            "$Kind": "ComplexType",
+            "AmountInReportingCurrency": {
+                "$Type": "Edm.Decimal",
+                "@UoM.ISOCurrency": "USD"
+            },
+            "AmountInTransactionCurrency": {
+                "$Type": "Edm.Decimal",
+                "@UoM.ISOCurrency": {
+                    "$Path": "Currency"
+                }
+            },
+            "Currency": {
+                "$MaxLength": 3
+            }
+        },
         "DemoService": {
             "$Kind": "EntityContainer",
             "StandardCustomers": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Customer",
+                "$Type": "self.Customer",
                 "$NavigationPropertyBinding": {
                     "Orders": "Orders"
                 }
             },
             "PreferredCustomers": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Customer",
+                "$Type": "self.Customer",
                 "$NavigationPropertyBinding": {
                     "Orders": "Orders"
                 }
             },
             "Orders": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Order"
+                "$Type": "self.Order"
             },
             "Products": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Product",
+                "$Type": "self.Product",
                 "$NavigationPropertyBinding": {
                     "Category": "Categories",
                     "Supplier": "Suppliers"
@@ -880,14 +1085,14 @@
             },
             "Categories": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Category",
+                "$Type": "self.Category",
                 "$NavigationPropertyBinding": {
                     "Products": "Products"
                 }
             },
             "Suppliers": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Supplier",
+                "$Type": "self.Supplier",
                 "$NavigationPropertyBinding": {
                     "Products": "Products"
                 },
@@ -895,34 +1100,36 @@
             },
             "Categories34": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Category",
+                "$Type": "self.Category",
                 "$NavigationPropertyBinding": {
                     "Products": "SomeSet"
                 }
             },
             "Categories35": {
                 "$Kind": "EntitySet",
-                "$Type": "Self.Category",
+                "$Type": "self.Category",
                 "$NavigationPropertyBinding": {
                     "Products": "SomeModel.SomeContainer/SomeSet"
                 }
             },
+            "Categories37": {
+                "$Kind": "EntitySet",
+                "$Type": "self.Category",
+                "$NavigationPropertyBinding": {
+                    "Products/Supplier": "Suppliers"
+                }
+            },
             "MainSupplier": {
                 "$Kind": "Singleton",
-                "$Type": "Self.Supplier"
+                "$Type": "self.Supplier"
             },
             "LeaveRequestApproval": {
                 "$Kind": "ActionImport",
-                "$Action": "Self.Approval"
-            },
-            "TopSellingProducts": {
-                "$Kind": "FunctionImport",
-                "$Function": "M1.TopSellingProducts",
-                "$EntitySet": "Products"
+                "$Action": "self.Approval"
             },
             "ProductsByRating": {
                 "$Kind": "FunctionImport",
-                "$Function": "Self.ProductsByRating",
+                "$Function": "self.ProductsByRating",
                 "$EntitySet": "Products"
             }
         }
@@ -1330,7 +1537,7 @@
                 ],
                 "$ReturnType": {
                     "$Collection": true,
-                    "$Type": "Self.Product",
+                    "$Type": "self.Product",
                     "@A.B": "Works"
                 }
             }
@@ -1473,7 +1680,7 @@
                 "$Scale": "variable",
                 "$Type": "Edm.Decimal"
             },
-            "@Self.IsFloatingDecimal": {
+            "@self.IsFloatingDecimal": {
                 "$IsOf": {
                     "$Path": "Customer/$count"
                 },
@@ -1524,7 +1731,8 @@
             }
         },
         "City": {
-            "$Kind": "EntityType"
+            "$Kind": "EntityType",
+            "$HasStream": true
         },
         "Region": {
             "$Kind": "EntityType"
@@ -1551,7 +1759,7 @@
             "$Abstract": true,
             "Quantity": {
                 "$Type": "Edm.Decimal",
-                "@Measures.Unit": {
+                "@UoM.Unit": {
                     "$Path": "ShippingUnit"
                 }
             },
@@ -1686,7 +1894,7 @@
                     "VIPs@custom.ItemIsA": "X.Person"
                 }
             },
-            "Self.MyEntityContainer/MyEntitySet/Self.MyEntityType/MyProperty": {
+            "self.MyEntityContainer/MyEntitySet/self.MyEntityType/MyProperty": {
                 "@self3.Movies": {
                     "$Path": "AllMyMovies"
                 }
