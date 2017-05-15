@@ -611,8 +611,6 @@
     <xsl:apply-templates select="@*[local-name()=name() and local-name()!='Name']|edm:*[local-name()!='Annotation']" />
     <xsl:apply-templates select="edm:Annotation" mode="list2" />
     <xsl:text>,"$Name":"</xsl:text>
-    <xsl:value-of select="ancestor::edm:Schema/@Namespace" />
-    <xsl:text>.</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>"}</xsl:text>
   </xsl:template>
