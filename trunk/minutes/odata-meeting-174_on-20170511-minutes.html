@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #174 Thursday May 11, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='18d157825c67d5bda7ffb590cbc269a959298f22e47618c653c853e83a49cc9566e549e5deb21e8c7fc49395d4564dacbea68f9f0dca94239647bd88d08a9bcd' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #174 Thursday May 11, 2017</h1>
+<p>Acting chair: Mike</p>
+<pre>Chat transcript from room: odatatc
+2017-05-11 0700-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (IBM) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43977">normative attendance sheet for this meeting (event_id=43977)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Agenda is approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from May 04, 2017 TC meeting #173</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60691/odata-meeting-173_on-20170504-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60691/odata-meeting-173_on-20170504-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. V4.01</h2>
+
+<h3>5.1 Document walkthrough</h3>
+
+<p>Discussed next steps; closing OData 4.01, pushing stuff that didn't fit to 4.02, next step to work on REST profile of OData 4.01.</p>
+
+<h4>5.1.1 Part 1: Protocol</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx</a></p>
+<p>Finished already.</p>
+
+<h4>5.1.2 Part 2: URL Conventions</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx</a></p>
+<p>All walk through the document, discuss and perform online changes during the meeting.</p>
+<p>Continued from section 4.4 Addressing References between Entities</p>
+<p>Mike:</p>
+<pre>
+Products/$filter=$f/Top10()?$f=Category eq 'Auto'
+Products/$filter=@f/Top10()?@f=Category eq 'Auto'
+Products/$filter=@f/Top10()/$count?@f=Category eq 'Auto'
+Products/$filter=@f/Top10()?$filter=Price gt 10 &amp; @f=Category eq 'Auto'
+Products/$filter=@f/Top10()/$count?$filter=Price gt 10 &amp; @f=Category eq 'Auto'
+Result of an action may be: {"value":[{a=1,b=2},{a=2,b=3}]}
+What would be the result of an array of actions that returned collections?
+Possibility 1: {"value":[[{a=1,b=2},{a=2,b=3}],[{a=4,b=5}]]}
+Other possibility: {"value":[{"value":[{a=1,b=2},{a=2,b=3}]},{"value":[{a=4,b=5}]}]}
+</pre>
+<p>Mike:</p>
+<pre>
+&lt;Action Name="foo">&lt;ReturnType="fooReturn">&lt;/Action>
+&lt;ComplexType Name="fooReturn">&lt;Property Name="a" Type="Edm.Int32"/>&lt;Property Name="b" Type="Edm.Int32"/>&lt;/ComplexType>
+&lt;Action Name="fooCollection">&lt;ReturnType="Collection(fooReturn)"/>&lt;/Action>
+</pre>
+
+<h4>5.1.3 JSON Format</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.1.4 CSDL JSON Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.1.5 CSDL XML Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx</a></p>
+<p>Skipped</p>
+
+<h4>5.1.6 New in OData 4.01</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx</a></p>
+<p>Skipped</p>
+
+<h3>5.2 Issues for V4.01_CSD02</h3>
+<h4>5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1074" rel="noopener noreferrer" target="_blank">ODATA-1074 - Support Functions with /$each and define the representation for collection-valued actions and functions with /$each</a></h4>
+
+<p>Mike: We have a new issue ODATA-1074 to consider the results of /$each applied to a (collection returning) function or action.</p>
+<p>Mike: OData-1074 is open.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1074 as proposed. <b>Martin</b> seconds.</p>
+<p>Mike: OData-1074 is approved by unanimous consent.</p>
+
+<p>Ralf: Is considering opening an issue to consider not using the in operator for collections as it may limit us when considering collections of collections.</p>
+
+<h4>5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1075" rel="noopener noreferrer" target="_blank">ODATA-1075 - Introduce subsetof operator for checking whether a collection is a subset or equal to another collection has been successfully created.</a></h4>
+
+<p>Ralf:</p>
+<pre>
+a in [a,b,c]
+[a] in [[a],[a,b]]
+[a] subsetof [a,b,c]
+</pre>
+<p>Mike: [a] in [a,b,c] = false?</p>
+<p>Ralf: Yes</p>
+<p>Hubert: a subsetof [a,b,c] => false</p>
+<p>Ralf: Yes</p>
+<p>Hubert: [a,b] in [a,b,c]</p>
+<p>Mike: false</p>
+<p>Mike:</p>
+<pre>
+[a,b] subsetof [a,b,c] => true
+[a] subsetof [a,b,c] => true
+a in [a,b,c] => true
+[a] in [[a],[a,b]] => true
+</pre>
+
+<p>Mike: OData-1075 is open</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1075 as proposed. <b>George</b> seconds.</p>
+<p>Mike: OData-1075 is approved by unanimous consent.</p>
+
+<h2>6. Next meetings</h2>
+
+<h3>6.1 Next Meeting on May 18, 2017, during 08:00-11:00 am PDT</h3> 
+<p>Mike: Note: One hour longer as usual - we will start next week with section 5.1.1.5, String Functions in URL Conventions.</p>
+
+<h3>6.2 Meeting after that on May 25, 2017, during 08:00-10:00 am PDT</h3> 
+<p>Public holiday in Germany: quorum critical, moderator needed</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
