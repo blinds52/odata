@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #176 Thursday June 01, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='c48ca73f8a3f663af0ad1074bb9c214afdca127fa08aadc27faf48f6579ee90344a4b216118a4eed922570ad73fd3eaba87d441e233db696c4cb9b82fa362a20' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #176 Thursday June 01, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-06-01 0700-1000 PDT
+</pre>
+<h2>1. Roll call</h2>
+
+<h3>1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (IBM) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43980">normative attendance sheet for this meeting (event_id=43980)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2>2. Approve agenda</h2>
+<p>Agenda is approved unchanged as published.</p>
+
+<h2>3. Approve minutes from previous meeting(s)</h2>
+<h3>3.1 Minutes from May 18, 2017 TC meeting #175</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/60763/odata-meeting-175_on-20170518-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60763/odata-meeting-175_on-20170518-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2>4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3>4.1 Action items due</h3>
+<p>None</p>
+
+<h2>5. V4.01</h2>
+<h3>5.1 Issues for V4.01_CSD02</h3>
+<h4>5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1075" rel="noopener noreferrer" target="_blank">ODATA-1075</a> - Introduce subsetof operator for checking whether a collection is a subset or equal to another collection</h4>
+<p>Mike: In reviewing the application, three questions came up: </p>
+<pre>
+1) is [1,1,2] subsetof [1,2] ? (do elements of the left operand have to occur at least as many times in the right operand) 
+
+For ordered collections: 
+2) is [3,1] subsetof [4,1,3]? (does order matter) 
+3) is [4,3] subsetof [4,1,3]? (can sequence have gaps) 
+
+For unordered collections both #2 and #3 should be true
+</pre>
+<p>Hubert and Mike: Tendency for items in right operand having to occur at least as many times as in left operand, so 1) would be false</p>
+<p>Hubert: Tendency for ordering should not matter, introduce a separate operator for "subsequence preserving order"</p>
+<p>Mike: Also need to define behavior if one is unordered and one is not ordered.</p>
+<p>Mike: Option: subsetof is always unordered. a "contains" operator could apply only to ordered collections to take into account ordering.</p>
+<p>Mike: What about null values?</p>
+<p>Mike: null value is a value like any other value; you have to have at least as many null values in the right operand as the left</p>
+<p>Mike: Proposal: define subsetof always to require that each element of the left operand occur at least as many times in the right operand, and that order does not matter. If we have someone asking for an operator that requires preservation of order with ordered collections we can add one at that time.</p>
+<p>Mike: General question: when do we use functions and when do we use operators?</p>
+<p>Mike: Functions are extensible. Operators have to be defined by TC.</p>
+<p>Ralf: should we rename to "subCollectionOf" so it doesn't imply operands are sets. <a href="https://en.wikipedia.org/wiki/Subsequence" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Subsequence</a></p>
+<p>Mike: subSequence could be used for the ordered comparison.
+<p>Mike: For subsequence (as defined in Wikipedia) [4,3] would be a subsequence of [4,1,3].
+<p>Mike: Wikipedia defines a subset operator for "multisets":</p>
+<p>Ralf: <a href="https://en.wikipedia.org/wiki/Multiset" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Multiset</a> - essentially what our unordered collections are</p>
+<p>Mike: The set indicator function of a subset is smaller than or equal to that of the superset</p>
+<pre>
+A  B   x , 1 A ( x )  1 B ( x ) . {\displaystyle A\subseteq B\Leftrightarrow \forall x,\,\mathbf {1} _{A}(x)\leq \mathbf {1} _{B}(x).}
+</pre>
+<p>Hubert: [4,1,5] contains [1,5]</p>
+<p>Ralf:: [4,1,5] contains [4,5] eq false</p>
+<p>Hubert: [4,5] sequenceof [4,1,5] eq true</p>
+<p>Hubert: [4,5] subsequenceof [4,1,5] eq true</p>
+<p>Ralf: contains([4,1,5],[1,5]) --> true</p>
+<p>Ralf: contains('abc','ab')</p>
+<p>Ralf: contains(Firstname,'al')</p>
+<p>Ralf: $filter=contains(Firstname,'al')</p>
+<p>George: How is case covered?  'Al' vs 'al'</p>
+<p>Hubert: Propose we, apart from contains, also overwrite the startswith, endswith, indexof and substring??? functions with versions that accept collections</p>
+<p>Ralf: only for ordered collections</p>
+<p>Ralf: Strings essentially are ordered collections of characters</p>
+<p>Ralf: Need also subsequenceof and subsetof, either as functions or as operators</p>
+<p>Mike: Summary:</p>
+<pre>
+From 2017-6-1 discussion:
+1) elements of the left operand have to occur at least as many times in the right operand (sos [1,1,2] subsetof [1,2]  => false 
+2) subsetof should never take order (or gaps) into account:
+   i [3,1] subsetof [4,1,3] => true 
+  ii [4,3] subsetof [4,1,3] => true
+3) for ordered collections, a "subsequence" operator could take order into account. subsequence is defined by Wikipedia to ignore gaps:
+   i [3,1] subsetof [4,1,3] => false 
+  ii [4,3] subsetof [4,1,3] => true
+4) for ordered collections, an operator that takes gaps into account is really a "contains":
+   i [3,1] contains [4,1,3] => false 
+  ii [4,3] contains [4,1,3] => false
+5) for ordered collections we could also define startswith, endswith, and indexof.
+
+Question: which should we add now (versus wait for scenarios for) and should we add as functions or as operators?
+</pre>
+<p>Hubert: ~/Products?$filter=contains(CustomersThatBoughtThisProduct,[MostFavoriteCustomer(),LeastFavoriteCustomer]) eq true</p>
+<p>Hubert: ~/Products?$filter=contains(CustomersThatBoughtThisProduct,[{"@odata.id":"Customers('MostFavoriteCustomerID')"},{"@odata.id":"Customers('LeastFavoriteCustomerID')"}]) eq true</p>
+<p>Mike: Updated Proposal</p>
+<pre>
+1) subsetOf always requires that each element of the left operand occur at least as many times in the right operand, and that order does not matter so:  
+    subsetof([1,1,2],[1,2])  => false 
+subsetof should never take order (or gaps) into account:
+    subsetof([4,1,3],[3,1]) => true 
+    subsetof([4,1,3],[4,3]) => true
+
+2) for ordered collections, add a "subsequenceof" function that takes order into account and ignores gaps:
+    subsequenceof([4,1,3], [3,1])  => false 
+    subsequenceof([4,1,3],[4,3]) => true
+
+3) add support for ordered collections to contains, startswith, endswith, indexof, and substring, that takes gaps into account.
+</pre>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1075 as per the amended proposal.</p>
+<p>Mike: updated:</p>
+<pre>
+Restrict "in" to mean just "member of" 
+Add "subsetof" function:
+
+1) subsetOf always requires that each element of the left operand occur at least as many times in the right operand, and that order does not matter so:  
+    subsetof([1,2],[1,1,2])  => false 
+subsetof should never take order (or gaps) into account:
+    subsetof([4,1,3],[3,1]) => true 
+    subsetof([4,1,3],[4,3]) => true
+
+2) for ordered collections, add a "subsequenceof" function that takes order into account and ignores gaps:
+    subsequenceof([4,1,3], [3,1])  => false 
+    subsequenceof([4,1,3],[4,3]) => true
+
+3) add support for ordered collections to contains (that takes gaps into account) as well as startswith, endswith, indexof, and substring.
+</pre>
+<p>Ralf: indexof('Alfred','lf') --> 1</p>
+<p>Ralf: contains('Alfred','lf') --> true</p>
+<p>Ralf: hassubset([0,1,2],[1,2]) --> true</p>
+<p>Mike: alternate (clearer) naming:</p>
+<pre>
+Restrict "in" to mean just "member of" 
+Add "hassubset" function:
+
+1) hassubset always requires that each element of the right argument occurs at least as many times in the left argument, and that order does not matter so:  
+    hassubset([1,2],[1,1,2])  => false 
+hassubset should never take order (or gaps) into account:
+    hassubset([4,1,3],[3,1]) => true 
+    hassubset([4,1,3],[4,3]) => true
+
+2) for ordered collections, add a "hassubsequence" function that takes order into account and ignores gaps:
+    hassubsequence([4,1,3], [3,1])  => false 
+    hassubsequence([4,1,3],[4,3]) => true
+
+3) add support for ordered collections to contains (that takes gaps into account) as well as startswith, endswith, indexof, and substring.
+</pre>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1075 as per the latest amended proposal. <b>Mike</b> seconds</p>
+<p>Ralf: ODATA-1075 is RESOLVED as proposed</p>
+
+
+<h3>5.2 Document walkthrough</h3>
+
+<h4>5.2.1 Part 1: Protocol</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60437/odata-v4.01-wd02-part1-protocol-2017-04-05.docx</a></p>
+<p>Finished already.</p>
+
+<h4>5.2.2 Part 2: URL Conventions</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60438/odata-v4.01-wd02-part2-url-conventions-2017-04-05.docx</a></p>
+<p>Finished already.</p>
+
+
+<h4>5.2.3 JSON Format</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60365/odata-json-format-v4.01-wd02-2017-03-24.docx</a></p>
+<p>Completed</p>
+
+<h4>5.2.4 CSDL JSON Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60500/odata-csdl-json-v4.01-wd01-2017-04-10.docx</a></p>
+<p>Skipped - <b>Note</b>: Planned to start with this next meeting!</p>
+
+<h4>5.2.5 CSDL XML Representation</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60499/odata-csdl-xml-v4.01-wd02-2017-04-10.docx</a></p>
+<p>All go over the document, discuss, and changes are applied directly to the online editor revision</p>
+<p>Completed - <b>Note</b>: Planned to start with this next meeting!</p>
+
+<h4>5.2.6 New in OData 4.01</h4>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/60439/new-in-odata-v4.01-wd01-2017-04-05.docx</a></p>
+<p>Skipped - <b>Note</b>: Planned to shortly go over this next meeting as last document to walk through!</p>
+
+
+<h2>6. Next meetings</h2>
+
+<h3>6.1 Next Meeting on Thursday June 08, 2017 during 8-12 am PDT (17:00-21:00 CEST)</h3> 
+<p>Mike: Important to try get the documents out next week, so make it a four-hour meeting?</p>
+<p>Ralf: 8-12 am PDT 17:00-21:00 CEST</p>
+<p>All agree</p><p>All will prepare to start walking through the CSDL JSON Representation in that meeting.</p>
+<p><b>Note</b>: The meeting starts at the usual time, but for two hours longer, so that the final walk-throughs and archive for submission preparation can take place and we may hopefully progress the bundle further</p>
+
+<h3>6.2 Meeting after that on Thursday June 15, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+<p>Ralf: Public holiday in Germany</p>
+<p>Stefan will not be available on June, 15</p>
+<p>Hubert is out</p>
+<p>George can't attend</p>
+<p>Mike: Can't make June 22 (the week after the 15th)</p>
+
+<h2>7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
