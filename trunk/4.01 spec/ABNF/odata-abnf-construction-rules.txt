@@ -444,7 +444,6 @@ commonExpr = ( primitiveLiteral
              / geExpr 
              / hasExpr 
              / inExpr 
-             / subsetofExpr
              ]
              [ andExpr 
              / orExpr 
@@ -562,6 +561,8 @@ boolMethodCallExpr = endsWithMethodCallExpr
                    / startsWithMethodCallExpr 
                    / containsMethodCallExpr                                          
                    / intersectsMethodCallExpr 
+                   / hasSubsetMethodCallExpr
+                   / hasSubsequenceMethodCallExpr
 
 concatMethodCallExpr     = "concat"     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 containsMethodCallExpr   = "contains"   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
@@ -598,6 +599,9 @@ distanceMethodCallExpr   = "geo.distance"   OPEN BWS commonExpr BWS COMMA BWS co
 geoLengthMethodCallExpr  = "geo.length"     OPEN BWS commonExpr BWS CLOSE
 intersectsMethodCallExpr = "geo.intersects" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
+hasSubsetMethodCallExpr      = "hassubset"      OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+hasSubsequenceMethodCallExpr = "hassubsequence" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+
 parenExpr = OPEN BWS commonExpr BWS CLOSE
 listExpr  = OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE
 
@@ -611,8 +615,6 @@ leExpr = RWS "le" RWS commonExpr
 gtExpr = RWS "gt" RWS commonExpr
 geExpr = RWS "ge" RWS commonExpr
 inExpr = RWS "in" RWS commonExpr
-
-subsetofExpr = RWS "subsetof" RWS commonExpr
 
 hasExpr = RWS "has" RWS enum
 
