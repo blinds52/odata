@@ -8,14 +8,16 @@
     Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/examples/V4-CSDL-to-JSON.xsl
 
     TODO:
-    - $EnumMember with number value (if safe), string with number (if too long), string with member name as fallback
+    - $DefaultValue depending on @Type and IEEE754Compatible
+    - Parameter for IEEE754Compatible
+    - - $Decimal as string or number
+    - - $Int as string or number
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
 
   <xsl:key name="methods" match="//edm:Action|//edm:Function" use="concat(../@Namespace,'.',@Name)" />
 
-  <!-- TODO: combine @Target using alias-qualified names and @Target using namespace-qualified names -->
   <xsl:key name="targets" match="//edm:Annotations" use="concat(../@Namespace,'/',@Target)" />
 
   <xsl:template match="edmx:Edmx">
@@ -455,16 +457,9 @@
   </xsl:template>
 
   <xsl:template match="@Int|edm:Int">
-    <xsl:choose>
-      <xsl:when test="number(.) > 9007199254740991">
-        <xsl:text>{"$Int":"</xsl:text>
-        <xsl:value-of select="." />
-        <xsl:text>"}</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="." />
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:text>{"$Int":"</xsl:text>
+    <xsl:value-of select="." />
+    <xsl:text>"}</xsl:text>
   </xsl:template>
 
   <xsl:template
@@ -587,7 +582,7 @@
     <xsl:text>]</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:If|edm:Eq|edm:Ne|edm:Ge|edm:Gt|edm:Le|edm:Lt|edm:And|edm:Or">
+  <xsl:template match="edm:If|edm:Eq|edm:Ne|edm:Ge|edm:Gt|edm:Le|edm:Lt|edm:And|edm:Or|edm:Has|edm:In|edm:Add|edm:Sub|edm:Mul|edm:Div|edm:DivBy|edm:Mod">
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":[</xsl:text>
@@ -646,7 +641,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="edm:Not|edm:UrlRef">
+  <xsl:template match="edm:Not|edm:Neg|edm:UrlRef">
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":</xsl:text>
@@ -656,7 +651,6 @@
   </xsl:template>
 
   <xsl:template match="@EnumMember|edm:EnumMember">
-    <!-- TODO: replace symbolic value with numeric value -->
     <xsl:variable name="type" select="substring-before(.,'/')" />
     <xsl:text>{"$EnumMember":"</xsl:text>
     <xsl:call-template name="replace-all">
