@@ -330,8 +330,12 @@ searchAndExpr = RWS [ 'AND' RWS ] searchExpr
 
 searchTerm   = [ 'NOT' RWS ] ( searchPhrase / searchWord )
 searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
-searchWord   = 1*( ALPHA / DIGIT / COMMA / "." ) ; Actually: any character from the Unicode categories L or N, 
-                                                 ; but not the words AND, OR, and NOT
+
+; A searchWord is a sequence of one or more letters, digits, commas, or dots.
+; This includes Unicode characters of categories L or N using UTF-8 and percent-encoding.
+; The words AND, OR, and NOT are not a valid searchWord.
+; Expressing this in ABNF is somewhat clumsy, so the following rule is overly generous.
+searchWord   = 1*( ALPHA / DIGIT / COMMA / "." / pct-encoded )
 
 select         = ( "$select" / "select" ) EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
