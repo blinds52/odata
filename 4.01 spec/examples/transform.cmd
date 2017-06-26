@@ -1,18 +1,30 @@
 @echo off 
 setlocal
 
-@rem XSLT command-line see https://xml.apache.org/xalan-j/commandline.html
+@rem  This script uses Apache Xalan 2.7.1 as XSLT processor
+@rem  For a description of Xalan command-line parameters see http://xalan.apache.org/old/xalan-j/commandline.html
+@rem
+@rem  Prerequisites
+@rem  - Java SE 8 is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
+@rem  - Eclipse is installed with Xalan (contained in Eclipse Web Tools Platform), and ECLIPSE_HOME environment variable is set
+set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;%ECLIPSE_HOME%\plugins\org.apache.xalan_2.7.1.v201005080400.jar
+@rem  - diff.exe is installed and in the PATH
+@rem  - https://github.com/oasis-tcs/odata-vocabularies has been cloned and environment variable ODATA-VOCABULARIES set to its location
+set ODATA-VOCABULARIES=c:\git\odata-vocabularies
+@rem  - https://github.com/oasis-tcs/odata-openapi has been cloned and environment variable ODATA-OPENAPI set to its location
+set ODATA-OPENAPI=c:\git\odata-openapi
+@rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and environment variable YAJL_REFORMAT set to its location
+set YAJL_REFORMAT=c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe
 
-set CLASSPATH=%CLASSPATH%;C:\eclipse-Neon\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;C:\eclipse-Neon\plugins\org.apache.xalan_2.7.1.v201005080400.jar
 set done=false
 
-for /F "eol=# tokens=1" %%F in (%~n0.txt) do (
+for /F "eol=# tokens=1,2" %%F in (%~n0.txt) do (
 	if /I [%~n1] == [%%~nF] (
 	  set done=true
-		call :process %%F
+		call :process %%F %%G
 	) else if [%1]==[] (
 	  set done=true
-		call :process %%F
+		call :process %%F %%G
 	)
 )
 
@@ -24,14 +36,21 @@ exit /b
 
 :process
   echo %~n1
+  
+  if [%2]==[V2] (
+    java.exe org.apache.xalan.xslt.Process -XSL %ODATA-OPENAPI%\tools\V2-to-V4-CSDL.xsl -IN %1 -OUT %~n1.V4.xml
+    set INPUT=%~n1.V4.xml
+  ) else (
+    set INPUT=%1
+  )
+  
+  java.exe org.apache.xalan.xslt.Process -XSL %ODATA-VOCABULARIES%\tools\V4-CSDL-normalize-Target.xsl -L -IN %INPUT% -OUT %~n1.normalized.xml
+  java.exe org.apache.xalan.xslt.Process -XSL %ODATA-VOCABULARIES%\tools\V4-CSDL-to-JSON.xsl -L -IN %~n1.normalized.xml -OUT %~n1.tmp.json
 
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-normalize-Target.xsl -L -IN %1 -OUT %~n1.normalized.xml
-  java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-JSON.xsl -L -IN %~n1.normalized.xml -OUT %~n1.tmp.json
-  rem java.exe org.apache.xalan.xslt.Process -XSL V4-CSDL-to-JSON.xsl -L -IN %1 -OUT %~n1.tmp.json
-
-  c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe < %~n1.tmp.json > %~n1.json
+  %YAJL_REFORMAT% < %~n1.tmp.json > %~n1.json
   if not errorlevel 1 (
     del %~n1.normalized.xml %~n1.tmp.json
-    c:\bin\diff.exe --ignore-space-change --strip-trailing-cr %~n1-goal.json %~n1.json
+    if [%2]==[V2] del %~n1.V4.xml
+    diff.exe --ignore-space-change --strip-trailing-cr %~n1-goal.json %~n1.json
   )
 exit /b

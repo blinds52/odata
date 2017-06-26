@@ -5,7 +5,7 @@
   <!--
     This style sheet normalizes Target attribute values to alias-qualified names
 
-    Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/examples/V4-normalize-Target.xsl
+    Latest version: https://github.com/oasis-tcs/odata-vocabularies/blob/master/tools/V4-normalize-Target.xsl
 
   -->
 

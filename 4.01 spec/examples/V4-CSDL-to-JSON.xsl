@@ -5,8 +5,8 @@
   <!--
     This style sheet transforms OData 4.0 CSDL XML documents into CSDL JSON
 
-    Latest version: https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/examples/V4-CSDL-to-JSON.xsl
-
+    Latest version: https://github.com/oasis-tcs/odata-vocabularies/blob/master/tools/V4-CSDL-to-JSON.xsl
+    
     TODO:
     - $DefaultValue depending on @Type and IEEE754Compatible
     - Parameter for IEEE754Compatible
