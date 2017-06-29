@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #179 Thursday June 29, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='0981cc7b148697a644228f3b161b7249775035b4459d02979515c5a956fa85882722a3ceeaae8cd0aa997cb2fd112079a9729a5a13583f9c17b86be2cf4de094' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #179 Thursday June 29, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-06-29 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (IBM) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43984">normative attendance sheet for this meeting (event_id=43984)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda is approved unchanged as published.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from June 22, 2017 TC meeting #178</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61046/odata-meeting-178_on-20170622-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61046/odata-meeting-178_on-20170622-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Issues</h2>
+<h3 id="5.1">5.1 Atom: to be DEFERRED</h3>
+<p>Mike: how to distinguish these from "finally deferred" issues?</p>
+<p><b>Hubert</b> I <b>move</b> we DEFER the issues related to the Atom Format: ODATA-573, ODATA-593, ODATA-595, ODATA-596, ODATA-648, ODATA-649, ODATA-653, ODATA-655, ODATA-658, ODATA-659, ODATA-677, ODATA-719, ODATA-764, ODATA-772, ODATA-792, ODATA-898 and ODATA-990. <b>Mark</b> seconds.</p>
+<p>Ralf: No objections, motion passes</p>
+<p>Ralf: "Finally deferred" have "Fix version: V5.0"</p>
+
+<h3 id="5.2">5.2 CSDL JSON: to be CLOSED without action</h3>
+<p><b>Hubert</b> I <b>move</b> we CLOSE the issue ODATA-872 without action as CSDL JSON does not use JSON Schema any more to describe payload structure. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-872 is CLOSED without action</p>
+
+<h3 id="5.3">5.3 Vocabularies: APPLIED</h3>
+
+<h4 id="5.3.1">5.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-844" rel="noopener noreferrer" target="_blank">ODATA-844</a> - Provide JSON versions of the Core, Capabilities, Measures, and Aggregation vocabularies</h4>
+<p>Ralf: Resolution: <a href="https://github.com/oasis-tcs/odata-vocabularies/commit/bbe3e3729f9fff53f679560eee370c14e8290e86" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/commit/bbe3e3729f9fff53f679560eee370c14e8290e86</a></p>
+
+<p><b>George</b> I <b>move</b> to approve ODATA-844. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-844 is CLOSED as applied</p>
+
+<h4 id="5.3.2">5.3.2 <a href="https://issues.oasis-open.org/browse/ODATA-886" rel="noopener noreferrer" target="_blank">ODATA-886</a> - Need a stable reference to latest/current OASIS OData vocabularies</h4>
+<p>Ralf: Resolution: <a href="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html" rel="noopener noreferrer" target="_blank">http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html</a> and <a href="https://github.com/oasis-tcs/odata-vocabularies" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies</a></p>
+
+<p><b>George</b> I <b>move</b> to apply resolution to ODATA-866. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-886 is CLOSED as applied</p>
+
+
+<h4 id="5.3.3">5.3.3 <a href="https://issues.oasis-open.org/browse/ODATA-1031" rel="noopener noreferrer" target="_blank">ODATA-1031</a> - Define term for links to related information</h4>
+<p>Ralf: Resolution: <a href="https://github.com/oasis-tcs/odata-vocabularies/commit/c0e912b0d926d31f4866746fc0f12f2aa331bdfc" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/commit/c0e912b0d926d31f4866746fc0f12f2aa331bdfc</a></p>
+<p>Ralf: Example in Core vocab:</p>
+<pre>
+&lt;Annotation Term="Core.Links">
+  &lt;Collection>
+    &lt;Record>
+      &lt;PropertyValue Property="rel" String="latest-version" />
+      &lt;PropertyValue Property="href"
+        String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" />
+    &lt;/Record>
+  &lt;/Collection>
+&lt;/Annotation>
+</pre>
+<p>Ralf: Idea: add link to MarkDown version of vocabulary</p>
+<p><b>George</b> I <b>move</b> to apply resolution to ODATA-1031. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1031 is CLOSED as applied</p>
+
+<h3 id="5.4">5.4 Vocabularies: NEW or OPEN</h3>
+
+<h4 id="5.4.1">5.4.1 <a href="https://issues.oasis-open.org/browse/ODATA-1085" rel="noopener noreferrer" target="_blank">ODATA-1085</a> - Decide how to use V4.01 features in OASIS vocabularies</h4>
+<p>Ralf: In ODATA-958 we decided to use the new abstract types Edm.AnyPropertyPath in terms of the Capabilities vocabulary. <br>
+Technically this requires to use Version="4.01" in the Edmx wrapper element (which we don't do yet). <br>
+Should we provide to "versions" of the Capabilities vocabulary, one restricted to Version="4.0" constructs, and one using Version="4.01"? <br>
+<br>
+If yes, how should we do this technically: by creating a new schema name, e.g. Org.OData.Capabilities.V1_01, or by having two branches of the well-known current schema name. If the latter, which one is the "master" branch? <br>
+<br>
+How should this be reflected in the OData Vocabularies work product: should we continue to publish CSDs for version 4.0 and in parallel have CSDs for version 4.01?</p>
+<p>George: naming convention for versions: would probably need a new major version, i.e. Capabilities.V2</p>
+<p>Ralf: Current repo link: <a href="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml" rel="noopener noreferrer" target="_blank">https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml</a></p>
+<p>Mike: keep the namespace name, just use a different file name</p>
+<p>Ralf: "file name with path" would be different if we create a new branch for V4.01</p>
+<p>Mike: probably want two branches, one per CSDL version (4.0, 4.01)</p>
+<p>Mike: then apply changes to both branches as long as they only use 4.0 features</p>
+<p>Ralf:</p>
+<pre>
+xmlns:edm="http://docs.oasis-open.org/odata/ns/edm"
+</pre>
+<p>Mike: Current: <a href="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml" rel="noopener noreferrer" target="_blank">https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml</a></p>
+<p>Mike: V4.01: <a href="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/4.01/Org.OData.Capabilities.V1.xml" rel="noopener noreferrer" target="_blank">https://oasis-tcs.github.io/odata-vocabularies/vocabularies/4.01/Org.OData.Capabilities.V1.xml</a></p>
+<p>Mike: Optionally: V4.0: <a href="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/4.0/Org.OData.Capabilities.V1.xml" rel="noopener noreferrer" target="_blank">https://oasis-tcs.github.io/odata-vocabularies/vocabularies/4.0/Org.OData.Capabilities.V1.xml</a></p>
+<p>Mike: just have different file names, e.g. Org.OData.Capabilities.V1-4.01.xml</p>
+<p>Ralf: Cheating our way out of that problem would be to resolve ODATA-958 by adding optional properties NonFilterableNavigationProperties and NonSortableNavigationProperties that are collections of Edm.NavigationPropertyPath</p>
+<p>Mike: or add these to the NavigationPropertyRestriction type - Sortable, Filterable</p>
+<p>Ralf: ODATA-1085 is OPEN</p>
+<p>Mike: Here is the current capabilities definition for navigation property restrictions:</p>
+<pre>
+&lt;Term AppliesTo="EntitySet Collection" Type="Capabilities.NavigationRestrictionsType" Name="NavigationRestrictions">
+&lt;Annotation Term="Core.Description" String="Restrictions on navigating properties according to OData URL conventions"/>
+&lt;/Term>
+&lt;ComplexType Name="NavigationRestrictionsType">
+&lt;Property Type="Capabilities.NavigationType" Name="Navigability">
+&lt;Annotation Term="Core.Description" String="Supported Navigability"/>
+&lt;/Property>
+&lt;Property Type="Collection(Capabilities.NavigationPropertyRestriction)" Name="RestrictedProperties" Nullable="false">
+&lt;Annotation Term="Core.Description" String="List of navigation properties with restrictions"/>
+&lt;/Property>
+&lt;/ComplexType>
+&lt;ComplexType Name="NavigationPropertyRestriction">
+&lt;Property Type="Edm.NavigationPropertyPath" Name="NavigationProperty">
+&lt;Annotation Term="Core.Description" String="Navigation properties can be navigated"/>
+&lt;/Property>
+&lt;Property Type="Capabilities.NavigationType" Name="Navigability">
+&lt;Annotation Term="Core.Description" String="Navigation properties can be navigated to this level"/>
+&lt;/Property>
+&lt;/ComplexType>
+&lt;EnumType Name="NavigationType">
+&lt;Member Name="Recursive">
+&lt;Annotation Term="Core.Description" String="Navigation properties can be recursively navigated"/>
+&lt;/Member>
+&lt;Member Name="Single">
+&lt;Annotation Term="Core.Description" String="Navigation properties can be navigated to a single level"/>
+&lt;/Member>
+&lt;Member Name="None">
+&lt;Annotation Term="Core.Description" String="Navigation properties are not navigable"/>
+&lt;/Member>
+&lt;/EnumType>
+</pre>
+<p>Mike: (from <a href="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml" rel="noopener noreferrer" target="_blank">https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml</a>)</p>
+<p>Mike: To come up with an alternative "4.0" proposal for ODATA-958</p>
+
+<h2>6. Next meetings only bi-weekly during Summer vacation period?</h2>
+
+<p>Mike: meet next week, decide then which meetings to have during July and August</p>
+
+<h3>6.1 Next Meeting on Thursday July 06, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+<p>Confirmed as next meeting</p>
+
+<h3>6.2 Meetings following the next one (to be decided next week)</h3>
+<ul>
+<li>Thursday July 20, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 03, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 17, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 31, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+</ul>
+
+<h2 id="7">7. Data Aggregation</h2>
+<h3 id="7.1">7.1 Gerald to walk us through the proposal on:</h3>
+<h4 id="7.1.1">7.1.1 Grid-Like Access to Aggregated Data.docx</h4>
+<p>URL = <a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/60801/Grid-Like%20Access%20to%20Aggregated%20Data.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/60801/Grid-Like&nbsp;Access&nbsp;to&nbsp;Aggregated&nbsp;Data.docx</a></p>
+
+
+<h2>8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
