@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #180 Thursday July 06, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='71e21759818cc64a02e261bfd607b5af74279cd62861d574f91c562237c58762b67535bb58399ef0e0e408e4b59d25a36cacbe079e6dc5dd9a9c11d9f95efa44' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #180 Thursday July 06, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-0706 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (IBM) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43985">normative attendance sheet for this meeting (event_id=43985)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: 5.Version 4.01 Public Review - 05 July 2017 to 03 August 2017<br>
+a.Issues<br>
+i.ODATA-1090 Clarify text about referential constraint for navigation properties on complex types<br>
+ii.ODATA-1091 Special values of numeric types (public comment c201707e0002)</p>
+<p>Agenda is approved as published with above additions.</p>
+
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from June 29, 2017 TC meeting #179</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61109/odata-meeting-179_on-20170629-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61109/odata-meeting-179_on-20170629-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+
+<h2 id="5">5. Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="5.1">5.1 <a href="https://issues.oasis-open.org/browse/ODATA-1090" rel="noopener noreferrer" target="_blank">ODATA-1090</a> - Clarify text about referential constraint for navigation properties on complex types</h3>
+
+<p>Ralf: TC-Comments mailing list archive: <a href="https://lists.oasis-open.org/archives/odata-comment/" rel="noopener noreferrer" target="_blank">https://lists.oasis-open.org/archives/odata-comment/</a></p>
+<p>Ralf: Use "dependent instance" and point out that referential constraints can only be defined for properties "next" to the navigation property, i.e. paths in the Property attribute are resolved starting at the structured type declaring the navigation property.</p>
+<p>Ralf: ODATA-1090 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1090 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1090 is RESOLVED as proposed</p>
+
+<h3 id="5.2">5.2 <a href="https://issues.oasis-open.org/browse/ODATA-1091" rel="noopener noreferrer" target="_blank">ODATA-1091</a> - Special values of numeric types (public comment c201707e0002)</h3>
+
+<p>Ralf: Comment on: 4.01 Committee Specification Draft 02 / Public Review Draft 02 <br>
+<br>
+One of the new provisions in 4.01 is: <br>
+<br>
+All numeric types allow the special numeric values INF, INF, and NaN <br>
+<br>
+This feels onerous given typical technologies for storing integer numeric types. The ABNF for values of Int16, for example, now reads: <br>
+<br>
+int16Value = [ SIGN ] 1*5DIGIT / nanInfinity ; numbers in the range from -32768 to 32767 <br>
+<br>
+Clearly this now requires MORE than 16 bits to store. <br>
+<br>
+Given that the numeric integer types are typically used as keys for entities there are some odd implications too. Clearly the definitions of INF and -INF can still work as they compare equal to themselves and top/tail the value range when ordering. I'm more concerned about NaN which doesn't compare equal to itself, this is likely to cause issues if it is used as the value of an entity key. (I believe PostgreSQL allows these values as keys but treats Nan == Nan as true and Nan > x as true for all x != Nan, this goes against IEEE but seems necessary if they are to be used in context where ordering is required.) <br>
+<br>
+To use XML schema vocab, it feels like the abstract values and lexical representations have become muddled. The desire to use special values in JSON representations of integers has serious implications for the abstract value space. <br>
+<br>
+The 'special' values INF, -INF and NaN are actually values in the abstract value spaces of Single and Double types (as per IEEE, extendable to Decimal). They are not universal special (numeric) values with a status similar to 'null'. It feels like the language of the specification is sliding toward treating all of these in a similar way. Witness the definition of equals in Part 2 5.1.1.1.1 <br>
+<br>
+Each of the special values null -INF, and INF is equal to itself, and only to itself. <br>
+The special value NaN is not equal to anything, even to itself. <br>
+<br>
+You might find this SO answer in relation to C++ interesting: https://stackoverflow.com/questions/38795544/is-casting-of-infinity-to-integer-undefined I particularly like the parenthetical comment... <br>
+<br>
+truncation of infinity is still infinity, and infinity cannot be represented in int (I hope there's no question about this part) <br>
+<br>
+There's a serious point to this quote though. W.r.t. https://issues.oasis-open.org/browse/ODATA-785 I reject point (2) in the working proposal (add +inf/-inf/nan to int) for this reason. <br>
+<br>
+My proposal is to clarify that the 'special' numeric values are values of type Single, Double or Decimal only. You already have sufficient type promotion to resolve any ambiguity when parsing the literals. For example, the less contentious promotion of the constant parsed from the string "42" to any of the numeric types is already accepted without the special modifiers used in OData 2/3. <br>
+<br>
+The second part of my proposal is that if the abstract result of an operation cannot be represented in the return type defined for that operation then the result should be the special value null. This would include the special case of integer division by zero (where 4.0 says the request fails) but also covers overflow of integers in other operations. I sense the panel dislikes failing requests so my proposal fixes that by silently carrying on - the alternative is to continue to raise an exception or put in some more general provision that says that an _expression_ that fails with a division by zero is treat as null (WITHOUT continuing the computation). The latter version has less of an impact on existing behaviour in 4.0 I guess so might be worth considering. <br>
+<br>
+The NULLIF pattern for treat division by 0 as null is fairly widespread though and it is more consistent with the definition of cast: <br>
+<br>
+5.1.1.10.1 <br>
+<br>
+Numeric primitive types are cast to each other with appropriate rounding. The cast fails if the integer <br>
+part doesn't fit into target type. <br>
+... <br>
+If the cast fails, the cast function returns null. <br>
+<br>
+As a follow-up point on your open issue: https://issues.oasis-open.org/browse/ODATA-919 <br>
+<br>
+The idea of doing general type promotion to the largest integer type makes sense to me, if the result overflows Int64 then you'd get null (according to my proposal) which is freely castable to any of the integer types. <br>
+<br>
+But I propose that Single operations that overflow Single results should be promoted to Double in a similar way. The definition of cast will need to be modified to allow for the cast of a Double to Single with overflow resulting in INF (not a failed cast). The proposed difference between the way integers and floating point numbers behave in this respect is precisely because the latter can represent INF. <br>
+<br>
+Hope this helps. <br>
+<br>
+Steve Lay <br>
+https://www.pyslet.org/</p>
+<p>Ralf: ODATA-1091 is OPEN</p>
+<p>Ralf: Proposal (extracted from comment):<br>
+<br>
+1) Clarify that the 'special' numeric values are values of type Single, Double or Decimal only. You already have sufficient type promotion to resolve any ambiguity when parsing the literals. For example, the less contentious promotion of the constant parsed from the string "42" to any of the numeric types is already accepted without the special modifiers used in OData 2/3. <br>
+<br>
+2) If the abstract result of an operation cannot be represented in the return type defined for that operation then the result should be the special value null. This would include the special case of integer division by zero (where 4.0 says the request fails) but also covers overflow of integers in other operations.</p>
+<p>Mike: maybe distinguish between $filter and $compute</p>
+<p>Ralf: $compute should not fail e.g. due to division by zero</p>
+<p>Mike: what does SQL do?</p>
+<p>Ralf: SQL Anywhere doesn't raise an error but returns no results</p>
+<p>Matt: select * from Customers where ( ID / 0 ) is null</p>
+<p>Matt: select * from Customers where ( ID / 0 ) is not null</p>
+<p>Ramesh: Postgres says ERROR:  "division by zero"</p>
+<p>Ramesh: same when the expression is in the select clause</p>
+<p>Mike: From stack overflow: Select dividend / nullif(divisor, 0)</p>
+<p>Ramesh: most of the database vendors</p>
+<p>Ramesh: SQLServer yes</p>
+<p>Matt: HANA, SQLAnywhere, and UltraLite all support NULLIF</p>
+<p>Mark: Oracle and DB2 support NULLIF</p>
+<p>Mike: Question: Should we add a nullif operator to the current expression, or mandate it as part of the behavior of the existing div operator?</p>
+<p>Mike: I would be concerned about changing behavior of an operation based on protocol version. We are adding a new division operator in 4.01. We could define the nullif behavior for the new operator without breaking compatibility.</p>
+<p>Ralf: Proposal:<br>
+- no -INF, INF, NaN for integer types<br>
+- no -INF, INF for Date and DateTimeOffset<br>
+- keep -INF, INF, NaN for Decimal, Float, and Double<br>
+- divby returns null for division by zero<br>
+- div returns an error for division by zero</p>
+<p>Mike: Since divby returns a decimal, should divby zero return NaN?</p>
+<p>Ralf: Yes, should</p>
+<p>Mike: Wording from 4.01 spec:<br>
+If the left operand is numeric, then positive div zero returns INF, negative div zero returns -INF, and zero div zero returns NaN. For 4.0 services this behavior is only required if the left operand is of type Edm.Single or Edm.Double, for all other types the request MAY fail.</p>
+<p>Mike: In 4.0, we said that int div zero was an error.</p>
+<p>Ralf: Wording from 4.0 spec:<br>
+The div operator divides the left numeric operand by the right numeric operand. If the right operand is zero and the left operand is neither of type Edm.Single nor Edm.Double, the request fails. If the left operand is of type Edm.Single or Edm.Double, then positive div zero returns INF, negative div zero returns -INF, and zero div zero returns NaN.</p>
+<p>Ralf: We could treat Edm.Decimal(Scale=floating) similar to Double and Single</p>
+<p>Ralf: It's new in V4.01 and is a DECFLOAT</p>
+<p>Ralf: Only add -INF, INF, and NaN for Edm.Decimal(Scale=floating)</p>
+<p>Mike: So proposal is to go back to 4.0 behavior for div 0 (integer fails, decimal, single, and double return INF, -INF, NaN as appropriate), but since divby promotes to decimal it makes sense for it not to fail for divby 0 even if left operand is integer.</p>
+<p>Ralf: Postpone issue to next meeting, research whether to treat Edm.Decimal(Scale=floating) similar to Double and Single</p>
+
+<h2 id="6">6. Issues</h2>
+<h3 id="6.1">6.1 Vocabularies: NEW or OPEN</h3>
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a> - Capabilities: FilterRestrictions and SortRestrictions for navigation properties</h4>
+
+<p>Ralf: New proposal:<br>
+Add three new properties, FilterFunctions, FilterRestrictions, and SortRestrictions, to Capabilities.NavigationPropertyRestriction, such that the full definition becomes: </p>
+
+<pre>
+&lt;ComplexType Name="NavigationPropertyRestriction"> 
+  &lt;Property Type="Edm.NavigationPropertyPath" Name="NavigationProperty"> 
+  &lt;Annotation Term="Core.Description" String="Navigation properties can be navigated"/> 
+  &lt;/Property> 
+  &lt;Property Type="Capabilities.NavigationType" Name="Navigability"> 
+  &lt;Annotation Term="Core.Description" String="Navigation properties can be navigated to this level"/> 
+  &lt;/Property> 
+  &lt;Property Type="Collection(Edm.String)" Name="FilterFunctions"> 
+  &lt;Annotation Term="Core.Description" String="List of functions and operators supported in $filter. If null, all functions and operators may be attempted."/> 
+  &lt;/Property> 
+  &lt;Property Type="Capabilities.FilterRestrictionsType" Name="FilterRestrictions"> 
+  &lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions"/> 
+  &lt;/Property> 
+  &lt;Property Type="Capabilities.SortRestrictionsType" Name="SortRestrictions"> 
+  &lt;Annotation Term="Core.Description" String="Restrictions on $orderby expressions"/> 
+  &lt;/Property> 
+&lt;/ComplexType>
+</pre>
+<p>Mike: Here are existing definitions of FilterRestrictionsType and SortRestrictionsType:</p>
+<pre>
+&lt;Term AppliesTo="EntityContainer EntitySet" Type="Collection(Edm.String)" Name="FilterFunctions" Nullable="false">
+&lt;Annotation Term="Core.Description" String="List of functions and operators supported in $filter"/>
+&lt;/Term>
+&lt;Term AppliesTo="EntitySet Collection" Type="Capabilities.FilterRestrictionsType" Name="FilterRestrictions">
+&lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions"/>
+&lt;/Term>
+&lt;ComplexType Name="FilterRestrictionsType">
+&lt;Property Type="Edm.Boolean" Name="Filterable" DefaultValue="true">
+&lt;Annotation Term="Core.Description" String="$filter is supported"/>
+&lt;/Property>
+&lt;Property Type="Edm.Boolean" Name="RequiresFilter" DefaultValue="false">
+&lt;Annotation Term="Core.Description" String="$filter is required"/>
+&lt;/Property>
+&lt;Property Type="Collection(Edm.PropertyPath)" Name="RequiredProperties" Nullable="false">
+&lt;Annotation Term="Core.Description" String="These properties must be specified in the $filter clause (properties of derived types are not allowed here)"/>
+&lt;/Property>
+&lt;Property Type="Collection(Edm.AnyPropertyPath)" Name="NonFilterableProperties" Nullable="false">
+&lt;Annotation Term="Core.Description" String="These structural or navigation properties cannot be used in $filter expressions"/>
+&lt;/Property>
+&lt;Property Type="Collection(Capabilities.FilterExpressionRestrictionType)" Name="FilterExpressionRestrictions" Nullable="false">
+&lt;Annotation Term="Core.Description" String="These properties only allow a subset of expressions"/>
+&lt;/Property>
+&lt;Property Type="Edm.Int32" Name="MaxLevels" DefaultValue="-1">
+&lt;Annotation Term="Core.Description" String="The maximum number of levels (including recursion) that can be traversed in a $filter expression. A value of -1 indicates there is no restriction."/>
+&lt;/Property>
+&lt;/ComplexType>
+&lt;ComplexType Name="FilterExpressionRestrictionType">
+&lt;Property Type="Edm.PropertyPath" Name="Property">
+&lt;Annotation Term="Core.Description" String="Path to the restricted property"/>
+&lt;/Property>
+&lt;Property Type="Capabilities.FilterExpressionType" Name="AllowedExpressions">
+&lt;Annotation Term="Core.Description" String="Allowed subset of expressions"/>
+&lt;/Property>
+&lt;/ComplexType>
+&lt;TypeDefinition Name="FilterExpressionType" UnderlyingType="Edm.String">
+&lt;Annotation Term="Validation.AllowedValues">
+&lt;Collection>
+&lt;Record>
+&lt;PropertyValue String="SingleValue" Property="Value"/>
+&lt;Annotation Term="Core.Description" String="Property can be used in a single eq clause"/>
+&lt;/Record>
+&lt;Record>
+&lt;PropertyValue String="MultiValue" Property="Value"/>
+&lt;Annotation Term="Core.Description" String="Property can be used in a single in clause"/>
+&lt;/Record>
+&lt;Record>
+&lt;PropertyValue String="SingleRange" Property="Value"/>
+&lt;Annotation Term="Core.Description" String="Property can be used in at most one ge and/or one le clause, separated by and"/>
+&lt;/Record>
+&lt;Record>
+&lt;PropertyValue String="SearchExpression" Property="Value"/>
+&lt;Annotation Term="Core.Description" String="String property can be used as first operand in startswith, endswith, and contains clauses"/>
+&lt;/Record>
+&lt;/Collection>
+&lt;/Annotation>
+&lt;/TypeDefinition>
+&lt;Term AppliesTo="EntitySet Collection" Type="Capabilities.SortRestrictionsType" Name="SortRestrictions">
+&lt;Annotation Term="Core.Description" String="Restrictions on $orderby expressions"/>
+&lt;/Term>
+&lt;ComplexType Name="SortRestrictionsType">
+&lt;Property Type="Edm.Boolean" Name="Sortable" DefaultValue="true">
+&lt;Annotation Term="Core.Description" String="$orderby is supported"/>
+&lt;/Property>
+&lt;Property Type="Collection(Edm.PropertyPath)" Name="AscendingOnlyProperties" Nullable="false">
+&lt;Annotation Term="Core.Description" String="These properties can only be used for sorting in Ascending order"/>
+&lt;/Property>
+&lt;Property Type="Collection(Edm.PropertyPath)" Name="DescendingOnlyProperties" Nullable="false">
+&lt;Annotation Term="Core.Description" String="These properties can only be used for sorting in Descending order"/>
+&lt;/Property>
+&lt;Property Type="Collection(Edm.AnyPropertyPath)" Name="NonSortableProperties" Nullable="false">
+&lt;Annotation Term="Core.Description" String="These structural or navigation properties cannot be used in $orderby expressions"/>
+&lt;/Property>
+&lt;/ComplexType>
+</pre>
+
+<p><b>George</b>: I <b>move</b> to resolve ODATA-958 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-958 is RESOLVED as proposed</p>
+
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1085" rel="noopener noreferrer" target="_blank">ODATA-1085</a> - Decide how to use V4.01 features in OASIS vocabularies</h4>
+
+<p><b>Mike</b>: I <b>move</b> we defer ODATA-1085 and deal with compatibility issues on a case-by-case basis, as they come up. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1085 is DEFERRED for now</p>
+
+<h4 id="6.1.3">6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1089" rel="noopener noreferrer" target="_blank">ODATA-1089</a> - Org.OData.Aggregation.V1 missing Nullable="false" for Function ReturnType</h4>
+
+<p>Ralf: ODATA-1089 is OPEN</p>
+<p><b>George</b>: I <b>move</b> we resolve ODATA-1089 as proposed. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-1089 is RESOLVED as proposed</p>
+
+
+<h4 id="6.1.4">6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1086" rel="noopener noreferrer" target="_blank">ODATA-1086</a> - AppliesTo semantics are not normative</h4>
+
+<p>Ralf: Description:<br>
+The term attribute AppliesTo is documented in section "14.1.2 Applicability" in a way that has been interpreted to mean that the AppliesTo values are merely recommendations. From a specification point of view, this renders the AppliesTo attribute having no semantic value. <br>
+<br>
+I expected that the intent is that AppliesTo values are normative restrictions, but that the set of values may be changed in future versions of the vocabulary.</p>
+<p>Ralf: Proposal:<br>
+<br>
+Modify 14.1.2 Applicability as follows: <br>
+The AppliesTo attribute MAY be used to restrict a term to a list of model elements that the term may be applied to. If no list is supplied, the term is not intended to be restricted in its application. The list of elements may be extended in future versions of the vocabulary. As the intended usage may evolve over time, clients SHOULD be prepared for any term to be applied to any model element and SHOULD be prepared to handle unknown values within the AppliesTo attribute.</p>
+<p>Ralf: ODATA-1086 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> to resolve ODATA-1086 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1086 is RESOLVED as proposed</p>
+
+
+<h4 id="6.1.5">6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-1082" rel="noopener noreferrer" target="_blank">ODATA-1082</a> - Add term Constraint to Validation vocabulary</h4>
+
+<p>Ralf: Proposal:<br>
+Add new term </p>
+<pre>
+&lt;Term Name="Constraint" 
+       Type="Validation.ConstraintType" 
+       AppliesTo="Property EntityType ComplexType"> 
+  &lt;Annotation Term="Core.Description" String="Condition that the annotation target has to fulfill" /> 
+&lt;/Term> 
+&lt;ComplexType Name="ConstraintType"> 
+  &lt;Property Name="FailureMessage" Type="Edm.String" Nullable="true"> 
+    &lt;Annotation Term="Core.IsLanguageDependent" /> 
+  &lt;/Property> 
+  &lt;Property Name="Condition" Type="Edm.Boolean"> 
+    &lt;Annotation Term="Core.Description" 
+        String="Value MUST be a dynamic expression that evaluates to true if and only if the constraint is fulfilled" /> 
+  &lt;/Property> 
+&lt;/ComplexType> 
+</pre>
+<p>
+Example: </p>
+<pre>
+&lt;Annotation Term="Validation.Constraint" Qualifier="Comparison"> 
+ &lt;Record> 
+   &lt;PropertyValue Property="FailureMessage" String="Start date cannot be after end date" /> 
+   &lt;PropertyValue Property="Condition"> 
+     &lt;Le> 
+      &lt;Path>StartDate&lt;/Path> 
+      &lt;Path>EndDate&lt;/Path> 
+     &lt;/Le> 
+   &lt;/PropertyValue> 
+ &lt;/Record> 
+&lt;/Annotation>
+</pre>
+<p>Mike: Condition should be Nullable="false"</p>
+<p>Ralf: Definition of Qualifier: http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd02/odata-csdl-xml-v4.01-csprd02.html#sec_Qualifier</p>
+<p>Ralf: ODATA-1082 is OPEN</p>
+<p><b>George</b>: I <b>move</b> as amended to include Nullable="False" on Constraint. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1082 is RESOLVED with the amended proposal</p>
+
+<h4 id="6.1.6">6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1079" rel="noopener noreferrer" target="_blank">ODATA-1079</a> - Several issues with latest standard vocabularies</h4>
+
+<p>Ralf: Proposal:<br>
+Org.OData.Core.V1.xml </p>
+<pre>
+&lt;ComplexType Name="AlternateKey"> 
+&lt;Property Type="Collection(Core.PropertyRef)" Name="Key"> 
+  &lt;Annotation Term="Core.Description" String="The set of properties that make up this key" /> 
+&lt;/Property> 
+&lt;/ComplexType> 
+</pre>
+
+<p>  should have Nullable="false" in the Property <br>
+<br>
+Org.OData.Temporal.V1.xml </p>
+<pre>
+&lt;Term Name="TemporalSupported" Type="Aggregation.TemporalSupportedType" AppliesTo="EntityContainer EntitySet NavigationProperty"> --> 
+</pre>
+<p>  should be: </p>
+<pre>   
+&lt;Term Name="TemporalSupported" Type="Temporal.TemporalSupportedType" AppliesTo="EntityContainer EntitySet NavigationProperty"> 
+</pre>
+<p>  8 references to Term="Core.Documentation" should be to Term="Core.Description" <br>
+Activity</p>
+<p>Ralf: ODATA-1079 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1079 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1079 is RESOLVED as proposed</p>
+
+
+<h4 id="6.1.7">6.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-1069" rel="noopener noreferrer" target="_blank">ODATA-1069</a> - New term Capabiliies.OperationAvailable</h4>
+<p>Ralf: Proposal</p>
+<pre>
+&lt;Term Name="OperationAvailable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Action Function"> 
+&lt;Annotation Term="Core.Description" String="Action or function is available" /> 
+&lt;/Term>
+</pre>
+<p>Ralf: Example:</p>
+<pre>
+&lt;Annotation Term="Capabilties.OperationAvailable">
+  &lt;Ne>
+  &lt;Path>bindingParam/OrderStatus&lt;/Path>
+  &lt;String>SHIPPED&lt;/String>
+  &lt;/Ne>
+&lt;/Annotation>
+</pre>
+<p>Ralf: ODATA-1069 is OPEN</p>
+
+
+<h2>6. Next meetings only bi-weekly during Summer vacation period?</h2>
+
+<p>Mike: meet next week, decide then which meetings to have during July and August</p>
+
+<h3>6.1 Next Meeting on Thursday July 13, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+<p>Confirmed as next meeting</p>
+
+<h3>6.2 Meetings following the next one (to be decided next week)</h3>
+<ul>
+<li>Thursday July 20, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 03, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 17, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 31, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+</ul>
+<p>Ralf: Please all participate in Doodle: <a href="https://beta.doodle.com/poll/nivcwiuanz3yf98m" rel="noopener noreferrer" target="_blank">https://beta.doodle.com/poll/nivcwiuanz3yf98m</a></p>
+
+<h2>8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
