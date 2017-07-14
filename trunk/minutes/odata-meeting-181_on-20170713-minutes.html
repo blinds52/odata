@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #181 Thursday July 13, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='5e19cf4232e997435f70f455b9c32c1587132b23225cdeaf4d5ad97ad855a5090bb71351be14c8f5d66609eac8b367b676b5e74c9c35e3fe3607dd9f08e370e4' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #181 Thursday July 13, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-0713 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (IBM) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43986">normative attendance sheet for this meeting (event_id=43986)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: 5.2  ODATA-1092 Navigation Property Binding (public comment c201707e0004)</p>
+<p>Agenda is approved as published with above additions.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from July 06, 2017 TC meeting #180</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61164/odata-meeting-180_on-20170706-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61164/odata-meeting-180_on-20170706-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+
+<h2 id="5">5. Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="5.1">5.1 <a href="https://issues.oasis-open.org/browse/ODATA-1091" rel="noopener noreferrer" target="_blank">ODATA-1091</a> - Special values of numeric types (public comment c201707e0002)</h3>
+
+<p>Ralf: Proposal:</p>
+<blockquote>
+1) Restrict the 'special' numeric values to types Single, Double, and Decimal <br>
+2) keep 4.0 behavior for div operator - fail for division by zero <br>
+3) restrict fail-safe division by zero (resulting in -INF, INF, or null) to new divby operator</blockquote>
+<p>Ralf: DB2 DECFLOAT DIV is in sync with our proposal</p>
+<blockquote>
+1) Restrict the 'special' numeric values to types Single, Double, and Decimal(Scale=floating)<br>
+2) keep 4.0 behavior for div operator - fail for division by zero for dividends other than Single, Double, and Decimal(Scale=floating)</blockquote>
+<p>Mike:</p>
+<blockquote>
+3) restrict fail-safe division by zero (resulting in -INF, INF, or null) to new divby operator</blockquote>
+<p>Ralf: Defer motion until we have quorum</p>
+
+<h3 id="5.2">5.2 <a href="https://issues.oasis-open.org/browse/ODATA-1092" rel="noopener noreferrer" target="_blank">ODATA-1092</a> - Navigation Property Binding (public comment c201707e0004)</h3>
+
+<p>Ralf: Description:</p>
+<blockquote>
+Public Review Comment <a href="https://lists.oasis-open.org/archives/odata-comment/201707/msg00004.html" rel="noopener noreferrer" target="_blank">https://lists.oasis-open.org/archives/odata-comment/201707/msg00004.html</a> <br>
+<br>
+This comment concerns navigation property bindings. There are two parts, a general issue with 4.0 and a similar issue that has been introduced with 4.01. The comment refers to: <br>
+<br>
+OData Common Schema Definition Language (CSDL) XML Representation Version 4.01 <br>
+Committee Specification Draft 02 / Public Review Draft 02 <br>
+<br>
+ 8.4 says: <br>
+<br>
+> Containment navigation properties define an implicit entity set for each instance of its declaring structured <br>
+> type <br>
+<br>
+ 13.4 says: <br>
+<br>
+> If the entity type of an entity set or singleton declares navigation properties, a navigation property binding <br>
+> allows describing which entity set or singleton will contain the related entities <br>
+<br>
+It therefore makes sense that a Binding Target must identify a single entity set. <br>
+<br>
+My issue is that this path is allowed to be a path to any "containment navigation property in scope". Such a path only identifies an entity set uniquely in cases where the path includes a singleton. If the path includes an EntitySet then, as per 8.4, it will be pointing to a set of EntitySets, one per entity instance. <br>
+<br>
+ 15.4 contains an example that highlights the problem: <br>
+<br>
+> MySchema.MyEntityContainer/MyEntitySet/MyContainmentNavigationProperty <br>
+<br>
+This issue applies to both version 4.0 and 4.01. The resulting navigation property is only weakly bound. Anyone attempting to validate a link must exhaustively search every instance of MyEntitySet to determine the validity of the link. You also have the strange situation that a bound navigation property may link to two different entities WITH THE SAME KEY. (There is no requirement that keys are unique across entity sets.) This contravenes one of the methods of addressing entities in URLs: <br>
+<br>
+OData Version 4.01. Part 2: URL Conventions  4.9 <br>
+<br>
+> For [ ... ] collection-valued navigation properties with a NavigationPropertyBinding or ContainsTarget=true specification, members of the collection can be addressed by convention by appending the parenthesized key to the URL specifying the collection of entities <br>
+<br>
+So the above is already a problem IMO and I propose that the target paths be restricted to traversing Singletons (that is, if an entity set is specified it must be the last component of the path). <br>
+<br>
+Coming on to the new issue in 4.01... <br>
+<br>
+Version 4.01 has modified the way navigation bindings work to allow a single navigation property to be bound, simultaneously, to multiple entity sets based on the type of the target. Straight away this triggers the same issue, that bound navigation properties no longer have unique keys. <br>
+<br>
+I'm unhappy with the idea that a binding may now bind to multiple entity sets as it would involve removing the ability to append a key to uniquely identify an entity via a (bound) navigation path. It isn't clear what problem you're trying to solve here but it feels like it is best solved using multiple navigation properties rather than attempting an 'octopus binding'. <br>
+<br>
+Even if you allow a single bound navigation property to bind to multiple entity sets the new feature creates the possibility of a partially bound navigation property. If I have a navigation property called A of type Collection(TypeA) and TypeA has two sub-types, TypeB and TypeC then we can now bind any of the following: <br>
+<br>
+A <br>
+A/TypeA <br>
+A/TypeB <br>
+A/TypeC <br>
+<br>
+The most specific rule applies so the last two rules override the first two but if we only bind A/TypeC then any instances of TypeB linked to A are unbound. The result is a partially bound navigation property. This could be corrected by requiring a default binding (with no type cast segment) if a type-cast binding is provided. <br>
+<br>
+Hopefully helpful. <br>
+<br>
+Steve</blockquote>
+<p>Ralf: Proposal:</p>
+<blockquote>
+13.4.2 Binding Target <br>
+<br>
+Clarify that a containment navigation property can only be a target if it directly or indirectly belongs to a singleton - inserted text in square brackets: <br>
+<br>
+    If the target is a target path, it MUST resolve to an entity set, singleton, or <br>
+   [direct or indirect] containment navigation property [of a singleton] in scope." <br>
+<br>
+15.4 Target Path - Example 67 <br>
+<br>
+Replace "MyEntitySet" with "MySingleton" in third and fourth example to avoid confusion. <br>
+<br>
+<br>
+13.4.1 Binding Path and 13.4.2 Binding Target - Example 37 <br>
+<br>
+Part 3) of ODATA-674 was not applied - binding path may traverse collection-valued segments, binding applies to all members. Example 37 is supposed to show this. Add missing text for Part 3) of ODATA-674 and refer to it in example 37. <br>
+<br>
+[If the path traverses collection-valued complex properties or collection-valued containment navigation properties, the binding applies to all items of these collections.] <br>
+<br>
+<br>
+13.4.1 Binding Path with type-cast segment ("octopus binding") and Part 2, 4.9 Addressing a Member within an Entity Collection <br>
+<br>
+A) do not allow "octopus binding" depending on type of target - this avoids incomplete bindings and guarantees addressability via an appended key segment as advertised in Part 2, section 4.9 <br>
+<br>
+B) add complicated wording to 13.4.1 and Part 2, section 4.9 to exactly capture under which circumstances a member of a navigation property with "octopus binding" can still be addressed via its key. <br>
+<br>
+(Ralf is in favor of A) </blockquote>
+<p>Ralf: Bindings:</p>
+<pre>
+- Related/Type.A --> Foo
+- Related/Type.B --> Bar
+X(42)/Related/Type.A(1)
+X(42)/Related/Type.A(1) --> Foo(1)
+X(42)/Related/Type.B(1) --> Bar(1)
+EntitySet X
+X(42)/Related(1) --> ???
+</pre>
+<p>Mike: Clients can always get the canonical URL for a member of a collection with a navigation property binding by appending the key to the target specified in the navigation property binding for the collection.  However, addressing an entity by appending the key to the navigation property is only supported if there is a single target entity set, otherwise we can't guarantee the keys are unique.</p>
+<p>Ralf: ODATA-1092 is OPEN</p>
+<p>George: If Entities of different subtypes are in the same EntitySet, all such entities shall have unique keys in the EntitySet.</p>
+<p>Ralf: Yes. The problem we face is for a case where we deal with a collection that is not an entity set</p>
+<p>Mike: two problems:<br>
+- addressing by key in presence of bindings with type-cast<br>
+- completeness of bindings with type-casts</p>
+<p>Ralf: Need to cover all branches of the inheritance tree</p>
+<p>Ralf: Could be done by requiring a binding for the declared type of the navigation property as a fallback if no more specific binding exists</p>
+<p>Ralf: Addressing problem:<br>
+- Binding without type-cast: append key<br>
+- binding with type-cast: append type-cast and key<br>
+- all cases: take target, append key</p>
+<p>Mike: </p>
+<blockquote>
+Issue 1: Today, the presence of a navigationpropertybinding means that all members of a navigation property exist in the same entity set.  Because they existing in the same entity set, their keys must be unique, so appending the key to the navigation property must uniquely identify the member of the navigation property.<br>
+<br>
+As above, this is what is broken when we introduce multiple navigation property bindings; you are no longer assured that the keys uniquely identify an entity within the collection (just as, in 4.0, you couldn't be sure the keys uniquely identified the entity within the collection if there was no navigation property binding present).<br>
+<br>
+Clients can always get the canonical URL for a member of a collection with a navigation property binding by appending the key to the target specified in the navigation property binding for the collection.  <br>
+<br>
+Addressing an entity by appending the key directly to the navigation property is only supported if there is a single target entity set, otherwise we can't guarantee the keys are unique.  In 4.01, there is a single target entity set if there is a single navigation property that does not specify a type cast segment.  If the is a navigation property binding that includes the type in the path, then you can address instances of that type by appending the type, followed by the key, to the navigation property.<br>
+<br>
+If the client is willing to look at the navigation property binding, they can use the target to address the entity. The whole point of appending the key to the navigation property is that you don't need to look up the target, you can address the entity by convention of appending the key to the navigation property.<br>
+<br>
+Issue 2:<br>
+We should recommend that services provide navigation property bindings for all instances, either by specifying bindings for all derived types or by specifying a binding that does not include the type, as appropriate. However, we can't enforce this, so we need to cover the case where a member of the collection doesn't match any of the bound paths (i.e., there is no binding for its type and no binding that doesn't specify a type). This is treated the same as today if there was no navigation property binding for that instance.
+</blockquote>
+<p>Ralf: <a href="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.xml#L268" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.xml#L268</a></p>
+<p>Mike: For #1, we *could* introduce a new annotation to directly state that the convention of adding a key to the navigation property applies (i.e., that all members of the collection are uniquely identified by key). This is actually already there in capabilities using the indexable by key annotation.</p>
+<p>Ralf:</p> 
+<pre>
+&lt;Term Name="IndexableByKey" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet Collection">
+  &lt;Annotation Term="Core.Description" String="Supports key values according to OData URL conventions" />
+&lt;/Term>
+</pre>
+<p>Mike: Proposal for last part:</p>
+<blockquote>
+We retain "octopus binding" with the semantics that:<br>
+1) If there is a single nav prop binding with no type, you can reference members by appending the key to the nav prop.<br>
+2) If there is a nav prop binding with a type, you must include the type when appending the key segment to the nav prop.<br>
+3) If you want to know if you can append the key to the nav prop, you should really be looking at IndexableByKey annotation in the capabilities vocabulary. <br>
+4) If no binding matches an instance, it is unbound (same semantics as no navigation property binding today).</blockquote>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1092 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1092 is RESOLVED as proposed</p>
+
+<h2>6. Next meetings only bi-weekly during Summer vacation period?</h2>
+
+<p>Mike: meet next week, decide then which meetings to have during July and August</p>
+
+<h3>6.1 Next Meeting on Thursday July 20, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+<p>Confirmed as next meeting</p>
+
+<h3>6.2 Meetings following the next one</h3>
+<ul>
+<li>Thursday August 03, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li><em>Two-week break mid of August, then back to weekly schedule</em></li>
+<li>Thursday August 24, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 31, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday September 07, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+</ul>
+<p>Ralf: Meeting schedule works for Hubert</p>
+<p>Ralf: Mike won't be able to attend all, but he can't loose voting rights</p>
+
+<h2>8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
