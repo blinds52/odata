@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #182 Thursday July 20, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='3403f25b5048fbcada5f01687ed6757ab40ca96641f5229890a0e6c9286b430067150ae6b5445490b2ea93de04538d3f461a21b46795a6e257f39bc3da7432e6' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #182 Thursday July 20, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-07-20 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Michael Pizzo (IBM) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43987">normative attendance sheet for this meeting (event_id=43987)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda is approved unchanged as published.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from July 13, 2017 TC meeting #181</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61188/odata-meeting-181_on-20170713-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61188/odata-meeting-181_on-20170713-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="5.1">5.1 <a href="https://issues.oasis-open.org/browse/ODATA-1091" rel="noopener noreferrer" target="_blank">ODATA-1091</a> - Special values of numeric types (public comment c201707e0002)</h3>
+<p>Ralf:</p>
+<pre>
+  1) Restrict the 'special' numeric values to types Single, Double, and Decimal (scale=floating) 
+  2) keep 4.0 behavior for div operator - fail for division by zero for dividends other than Single, Double, and Decimal(Scale=floating) 
+  3) support fail-safe division by zero (resulting in -INF, INF, or null) for all numeric types only in the new divby operator
+</pre>
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1091 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1091 is RESOLVED as proposed</p>
+
+<h2 id="6">6. Issues - Vocabularies: NEW or OPEN</h2>
+<h3 id="6.1">6.1 <a href="https://issues.oasis-open.org/browse/ODATA-1069" rel="noopener noreferrer" target="_blank">ODATA-1069</a> - New term Capabiliies.OperationAvailable</h3>
+<p>Ralf: Description:<br>
+Availability of actions and functions can be advertised in response payloads using special name-value pairs starting with a # character.<br>
+<br>
+Define a new term that allows to express availability of an action or function statically, with reference to "global" data, e.g. from a singleton, or with reference to data of the binding parameter.</p>
+<p>Ralf:Proposal:</p>
+<pre>
+&lt;Term Name="OperationAvailable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Action Function"> 
+  &lt;Annotation Term="Core.Description" String="Action or function is available" /> 
+&lt;/Term>
+</pre>
+<p>Ralf: Comments:<br>
+Term name: alternative name "OperationAllowed" <br>
+Vocabulary: "Core" instead of "Capabilities"</p>
+<p>Mike:</p>
+<pre>
+&lt;Annotation Term="Capabilties.OperationAvailable"> 
+  &lt;Ne> 
+    &lt;Path>bindingParam/OrderStatus&lt;/Path> 
+    &lt;String>SHIPPED&lt;/String> 
+  &lt;/Ne> 
+&lt;/Annotation>
+</pre>
+<p>Mike: "#myns.Operation":null</p>
+<p>Mike: Example of applying the annotation in-line:</p>
+<pre>
+&lt;Function Name="CancelOrder">
+  &lt;Parameter Name="bindingParam" Type="Store.Order">
+  &lt;Annotation Term="Capabilties.OperationAvailable"> 
+    &lt;Ne> 
+      &lt;Path>bindingParam/OrderStatus&lt;/Path> 
+      &lt;String>SHIPPED&lt;/String> 
+    &lt;/Ne> 
+  &lt;/Annotation>
+&lt;/Function>
+</pre>
+<p>Mike: Alternatively, somebody could define the CancelOrder operation without the annotation:</p>
+<pre>
+&lt;Function Name="CancelOrder">
+  &lt;Parameter Name="bindingParam" Type="Store.Order"/>
+&lt;/Function>
+</pre>
+<p>George: I'm OK with the functionality proposed.  A white paper would be a good thing.  The implementation requirements resulting from utilization are complex.</p>
+<p>Mike: And in the same, or a different metadata document, you could annotate it:</p>
+<pre>
+&lt;Annotations Target="Store.CancelOrder">
+  &lt;Annotation Term="Capabilties.OperationAvailable"> 
+    &lt;Ne> 
+      &lt;Path>bindingParam/OrderStatus&lt;/Path> 
+      &lt;String>SHIPPED&lt;/String> 
+    &lt;/Ne> 
+  &lt;/Annotation>
+&lt;/Annotation>
+</pre>
+<p>Mike: (sorry, action would have been a better choice than function for those examples, as "CancelOrder" implies changing state)</p>
+<p>George: I like OperationCondition</p>
+<p>George: I move ODATA-1069 with modification to OperationCondition.</p>
+<p>George: OK with OperationAvailable.</p>
+<p>George: ok with either Core or Capabilities.  Note, not clear that we should have both namespaces.  The usage difference is too subtle.</p>
+<p>Mark: I am leaning towards Core</p>
+<p><b>George</b>: I <b>move</b> to resolve ODATA-1069 as proposed but in core. <b>Hubert</b> seconds.</p>
+<p>ODATA-1069 is resolved as with the amended proposal</p>
+
+<h3 id="6.2">6.2 <a href="https://issues.oasis-open.org/browse/ODATA-1067" rel="noopener noreferrer" target="_blank">ODATA-1067</a> - Consider ability to define computed default values</h3>
+<p>Ralf: Description<br>
+Currently, default values for properties and (now, as of ODATA-1066) parameters are static values. <br>
+<br>
+There are some cases where the default value may be the result of a calculation. Examples: <br>
+1) The value of a related property/parameter <br>
+2) An expression based on the value of one (or more) related properties/parameters <br>
+3) The result of invoking a function(import) on the service (with params?) <br>
+<br>
+Issues: <br>
+-how to express the value of the defaultvalue (use Edm.Untyped? -- this could only be supported in 4.01) <br>
+-what is the syntax of the expression? <br>
+-can it invoke a funciton(import) and, if so, how are parameters passed? <br>
+<br>
+For parameters, could define a derived OptionalParameterType that has a DefaultValueExpression that is Edm.Untyped and only returned as that derived type in a 4.01 payload.</p>
+<p>Ralf: SAP has use cases for such an annotation, and we already invented something similar: 
+<a href="https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#DerivedDefaultValue" rel="noopener noreferrer" target="_blank">https://wiki.scn.sap.com/wiki/display/EmTech/OData+4.0+Vocabularies+-+SAP+Common#DerivedDefaultValue</a></p>
+<p>Ralf: ODATA-1067 is OPEN</p>
+
+<h3 id="6.3">6.3 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h3>
+
+<p>Ralf: <a href="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md#AutoExpand" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md#AutoExpand</a></p>
+<p>Ralf: ODATA-1064 is OPEN</p>
+<p>Ralf: Mike to follow up with George to check whether issues mentioned in description are addressed by proposal</p>
+
+<h2>6. Next meetings only bi-weekly during Summer vacation period?</h2>
+<p>One-week break end of July</p>
+
+<h3>6.1 Next Meeting on August 03, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+
+<h3>6.2 Meetings following the next one</h3>
+<p>Two-week break mid of August, then back to weekly schedule</p>
+<ul>
+<li>Thursday August 24, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday August 31, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday September 07, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+</ul>
+
+<h2>8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
