@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #183 Thursday August 03, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='b19c775c423dd251da9548f15d7eeafbe5d2460447c67b990149fe7c739e00789f9ee7ac6e6f03f37b69d6515d6b1f54cfefe03fd631d980c22a2996ed5caded' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #183 Thursday August 03, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-08-03 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43987">normative attendance sheet for this meeting (event_id=43987)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: New topics:<br>
+1. Release date for new vocabularies, and whether these would be V4.01 or V4<br>
+2. Actions, especially bound actions - New issue ODATA-1098</p>
+<p>Agenda is approved as published with the above changes.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from July 20, 2017 TC meeting #182</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61256/odata-meeting-182_on-20170720-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61256/odata-meeting-182_on-20170720-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. (OData) Actions</h2>
+<p>Ralf: Citing from issue: <br>
+"The specification of Actions is not intuitive to me.  <br>
+a.Why would redfish specify the binding parameter with type  MyType.Actions? <br>
+i.Unclear why it isnt defined with type: MyType.MyType<br>
+b.Is the value of the binding parameter intended to be a reference to the property Actions?<br>
+c.How are by value or by reference semantics communicated in a parameter specification?</p>
+
+<h2 id="6">Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="6.1">6.1 <a href="https://issues.oasis-open.org/browse/ODATA-1087" rel="noopener noreferrer" target="_blank">ODATA-1087</a> - Discourage or disallow names differing only in case</h3>
+<p>George: disallow is hard as the spec is out for some years, so only discourage is possible</p>
+<p>Ralf: ODATA-1087 is OPEN</p>
+<p><b>George</b>: I <b>move</b> to add text to discourage use of names within any namespace that differ only in case. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1087 is RESOLVED as proposed: discourage, not disallow (yet)</p>
+
+<h3 id="6.2">6.2 <a href="https://issues.oasis-open.org/browse/ODATA-1094" rel="noopener noreferrer" target="_blank">ODATA-1094</a> - Apply expression: allow all URL functions with prefix odata.</h3>
+<p>Ralf: </p>
+<pre>
+&lt;Annotation Term="org.example.display.DisplayName">
+  &lt;Apply Function="odata.concat">
+    &lt;String>Product: &lt;/String>
+    &lt;Path>ProductName&lt;/Path>
+    &lt;String> (&lt;/String>
+    &lt;Path>Available/Quantity&lt;/Path>
+    &lt;String> &lt;/String>
+    &lt;Path>Available/Unit&lt;/Path>
+    &lt;String> available)&lt;/String>
+  &lt;/Apply>
+&lt;/Annotation>
+</pre>
+<p>Ralf: </p>
+<pre>
+&lt;Term Name="Constraint" Type="Validation.ConstraintType" AppliesTo="Property EntityType ComplexType">
+  &lt;Annotation Term="Core.Description" String="Condition that the annotation target has to fulfill" />
+&lt;/Term>
+&lt;ComplexType Name="ConstraintType">
+  &lt;Property Name="FailureMessage" Type="Edm.String" Nullable="true">
+    &lt;Annotation Term="Core.IsLanguageDependent" />
+    &lt;Annotation Term="Core.Description" String="Human-readable message that can be shown to end users if the constraint is not fulfilled" />
+  &lt;/Property>
+  &lt;Property Name="Condition" Type="Edm.Boolean" Nullable="false">
+    &lt;Annotation Term="Core.Description"
+      String="Value MUST be a dynamic expression that evaluates to true if and only if the constraint is fulfilled" />
+  &lt;/Property>
+&lt;/ComplexType>
+</pre>
+<p>Ralf: ODATA-1094 is OPEN</p>
+<p><b>George</b>: I <b>move</b> to resolve ODATA-1094 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1094 is RESOLVED as proposed</p>
+
+<h3 id="6.3">6.3 <a href="https://issues.oasis-open.org/browse/ODATA-1095" rel="noopener noreferrer" target="_blank">ODATA-1095</a> - Allow empty edm:Schema elements</h3>
+<p>Ralf: Description:<br>
+The current XML Schema for the EDM namespaces requires the edm:Schema element to contain at least one child element. <br>
+<br>
+This is problematic in at least two use cases: <br>
+* OData API Designer tools - when starting with a "blank page" <br>
+* Services that "shrink" the schema to match user authorization - when the current user isn't allowed to see anything <br>
+<br>
+Both require workarounds, e.g. having a dummy annotation in the schema telling that "this schema is intentionally empty".</p>
+<p>George: Likes the need to explain an empty schema.</p>
+<p>Mark: Agrees.</p>
+<p>Ralf: ODATA-1095 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> that OData-1095 be resolved as proposed. <b>Matt</b> seconds.</p>
+<p>Ralf: ODATA-1095 is RESOLVED as proposed</p>
+
+<h3 id="6.4">6.4 <a href="https://issues.oasis-open.org/browse/ODATA-1096" rel="noopener noreferrer" target="_blank">ODATA-1096</a> - 9.1.4 Response Code 204 No Content: rephrase second paragraph</h3>
+<p>Ralf: ODATA-1096 is OPEN</p>
+<p>Ralf: The second paragraph of section 9.1.4 is a quote from RFC7231 and somewhat hard to parse. Replace it with text that expresses its intention: send an ETag only if the client can reasonably "know" the current entity representation that has not been sent in the response: <br>
+<br>
+(1) For a PUT request: if the response body of a corresponding 200 response would have been identical to the request body, i.e. no server-side modification of values sent in the request body, no "calculated" values. <br>
+<br>
+(2) We could extend this to PATCH requests and if a corresponding 200 response would have consisted of <br>
+- values sent in PATCH request body, plus <br>
+- server-side values corresponding to ETag sent in If-Match header of PATCH request (for values not sent in PATCH request body)</p>
+<p>Ralf: The intention of the qoute from RFC7231 in section 9.4.1 is expressed by Julian Reschke (one of the 
+editors of RFC7231): "The main point here is that the server can only return an Etag if what was stored actually is what the client sent. If the server modified the data, the client will have to fetch the content using a subsequent GET request."<br>
+Source: First comment to the question at <a href="https://stackoverflow.com/questions/42246577/why-responses-to-put-requests-must-not-provide-an-etag" rel="noopener noreferrer" target="_blank">https://stackoverflow.com/questions/42246577/why-responses-to-put-requests-must-not-provide-an-etag</a>.</p>
+<p>Martin: As defined in [RFC7231], a Data Modification Request that responds with 204 No Content MUST NOT include an ETag header unless the request's representation data was saved without any transformation applied to the body (i.e., the resource's new representation data is identical to the representation data received in the PUT request) and the ETag value reflects the new representation.</p>
+<p>Martin: From RFC7231:<br>
+An origin server MUST NOT send a validator header field (Section 7.2), such as an ETag or  Last-Modified field, in a successful response to PUT unless the request's representation data was saved without any transformation applied to the body (i.e., the resource's new representation data is identical to the representation data received in the PUT request) and the validator field value reflects the new representation. This requirement allows a user agent to know when the representation body it has in memory remains current as a result of the PUT, thus not in need of being retrieved again from the origin server, and that the new validator(s) received in the response can be used for future conditional requests in order to prevent accidental overwrites (Section 5.2).</p>
+<p>Martin: The main point here is that the server can only return an Etag if what was stored actually is what the client sent. If the server modified the data, the client will have to fetch the content using a subsequent GET request.  Julian Reschke Feb 15 at 11:49</p>
+<p><b>George</b>: I <b>move</b> to approve ODATA-1096 for application to the text. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1096 is RESOLVED as proposed</p>
+
+<h3 id="6.5">6.5 <a href="https://issues.oasis-open.org/browse/ODATA-1097" rel="noopener noreferrer" target="_blank">ODATA-1097</a> - 14.4.1.1 Path Syntax: add odata.mediaETag</h3>
+<p>Ralf: Description:<br>
+We allow only three of the for odata.media* control information names in "term casts", and omit the odata.mediaETag.</p>
+<p>Ralf: ODATA-1097 is OPEN</p>
+<p><b>George</b>: I <b>move</b> to approve ODATA-1097. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1097 is RESOLVED as proposed</p>
+
+<h2 id="7">7. Release date for new vocabularies, and whether these would be V4.01 or V4</h2>
+<h3 id="7.1">7.1 Core</h3>
+<p>Ralf: Core:</p>
+<pre>
+&lt;Annotation Term="Core.Links">
+  &lt;Collection>
+    &lt;Record>
+      &lt;PropertyValue Property="rel" String="latest-version" />
+      &lt;PropertyValue Property="href"
+        String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" />
+    &lt;/Record>
+    &lt;Record>
+      &lt;PropertyValue Property="rel" String="alternate" />
+      &lt;PropertyValue Property="href"
+        String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json" />
+    &lt;/Record>
+    &lt;Record>
+      &lt;PropertyValue Property="rel" String="describedby" />
+      &lt;PropertyValue Property="href"
+        String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md" />
+    &lt;/Record>
+  &lt;/Collection>
+&lt;/Annotation>
+</pre>
+<p>Ralf: <a href="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json" rel="noopener noreferrer" target="_blank">https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json</a></p>
+<p>Ralf: Latest versions of vocabulary files (XML, JSON) and documentation (MarkDown) are in GitHub and reference each other</p>
+<p>Ralf: Will publish new wrapper OASIS Spec pointing to these files once we've resolved the current set of vocabulary-related issues</p>
+
+<h2 id="8">8. Issues</h2>
+<h3 id="8.1">8.1 Vocabularies: NEW or OPEN</h3>
+
+<h4 id="8.1.1">8.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1098" rel="noopener noreferrer" target="_blank">ODATA-1098</a> - xxxRestrictions can be applied more broadly</h4>
+<p>Ralf: ODATA-1098 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> that OData-1098 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1098 is RESOLVED as proposed</p>
+
+<h4 id="8.1.2">8.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1067" rel="noopener noreferrer" target="_blank">ODATA-1067</a> - Consider ability to define computed default values</h4>
+<p>Ralf: Postpone to next meeting</p>
+
+<h4 id="8.1.3">8.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Ralf: Term would apply to NavigationProperty</p>
+<p>Ralf: With array of enumeration type:</p>
+<pre>
+&lt;NavigationProperty Name="Systems" Type="Collection(ComputerSystem)"> 
+&lt;Annotation Term="OData.AutoMetadata"> 
+EnumMember=["Count", "NavigationLink", "Type"] /> 
+&lt;/NavigationProperty>
+</pre>
+<p>Ralf: Better:</p>
+<pre>
+&lt;NavigationProperty Name="Systems" Type="Collection(ComputerSystem)"> 
+&lt;Annotation Term="OData.AutoMetadata">
+  &lt;Collection>
+    &lt;EnumMember>Core.MetadataKind/Count&lt;/EnumMember>
+    &lt;EnumMember>Core.MetadataKind/NavigationLink&lt;/EnumMember>
+    &lt;EnumMember>Core.MetadataKind/Type&lt;/EnumMember>
+  &lt;/Collection>
+&lt;/NavigationProperty>
+</pre>
+<p>Ralf: With Flags</p>
+<pre>
+&lt;Annotation Term="OData.AutoMetadata" EnumMember="Core.MetadataKind/Count Core.MetadataKind/NavigationLink Core.MetadataKind/Type" />
+</pre>
+<p>Ralf: Flags EnumType is shorter and thus better</p>
+<p>Ralf: Ralf wants to drop Type for now</p>
+<p>Ralf: </p>
+<pre>
+&lt;Term Name="AutoMetadata" AppliesTo="NavigaitonProperty" Type="Core.MetadataKind">
+&lt;Annotation Term="Core.Description" 
+String="Defines metadata that should automatically be returned." />
+&lt;/Term>
+</pre>
+<p>Ralf: </p>
+<pre>
+&lt;EnumType Name="MetadataKind" IsFlags="true">
+&lt;Annotation Term="Core.Description" 
+String="Return count metadata, equivalent to $count." />
+
+  &lt;Member Name="Count" Value="1">
+    &lt;Annotation Term="Core.Description" 
+String="Return count metadata, equivalent to $count." />
+  &lt;/Member>
+  &lt;Member Name="NavigationLink" Value="2">
+    &lt;Annotation Term="Core.Description" 
+String="The is a URL that can be used to retrieve an entity or collection of entities related to the current entity via a navigation property. Doing a GET on this link is equivalent to specifying $expand."/>
+  &lt;/Member>
+  &lt;Member Name="AssociationLink" Value="4">
+    &lt;Annotation Term="Core.Description" 
+String=" The value is a URL that can be used to retrieve a reference to an entity or a collection of references to entities related to the current entity via a navigation property. Doing a GET on this link is equivalent to specifying $ref." />
+  &lt;/Member>
+  &lt;Member Name="Etag" Value="8">
+    &lt;Annotation Term="Core.Description" 
+String="The value is an entity tag (ETag) which is an opaque string value that can be used in a subsequent request to determine if the value of the entity has changed." />
+  &lt;/Member>
+&lt;/EnumType>
+</pre>
+<p>Ralf: </p>
+<pre>
+&lt;EntityType Name="Top">
+
+&lt;NavigationProperty Name="Systems" Type="Collection(ComputerSystem)">
+&lt;Annotation Term="OData.AutoMetadata" 
+EnumMember="Core.MetadataKind/Count Core.MetadataKind/NavigationLink" />
+&lt;/NavigationProperty>
+
+&lt;/EntityType>
+
+&lt;EntityType Name="ComputerSystem">
+
+&lt;/EntityType>
+</pre>
+<p>Ralf: Example: GET</p>
+<pre>
+-----------
+GET /redfish/v1/Top
+Response
+{
+"@odata.context": "/redfish/v1/$metadata#Top",
+"@odata.id": "/redfish/v1/Top",
+"@odata.type": "#Top ",
+"Name": "Top",
+ 
+"Systems@odata.count": 15,
+"Systems@odata.navigationlink": {"@odata.id": "/redfish/v1/Systems"}
+</pre>
+<p><b>Mark</b>: I <b>move</b> that OData-1064 be resolved per the amended proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: Amendment: use same spelling for enum member names as for odata.* control information, i.e. lowerCamelCase, etag, count, navigationLink, associationLink</p>
+<p><b>Mark</b>: I <b>move</b> that OData-1064 be resolved per the newly updated proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1064 is RESOLVED as proposed (and twice amended)</p>
+
+<h4 id="8.1.4">8.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1060" rel="noopener noreferrer" target="_blank">ODATA-1060</a> - Improve specification of element response requirements</h4>
+<p>Ralf: Postpone to next meeting</p>
+
+<h4 id="8.1.5">8.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-1055" rel="noopener noreferrer" target="_blank">ODATA-1055</a> - DeepInsertSupport: allow applying to entity sets</h4>
+<p>Ralf: ODATA-1055 is OPEN</p>
+<p>George: why not allow it for all collections</p>
+<p>Ralf: Proposal:<br>
+Add "EntitySet" and "Collection" to list of model elements in AppliesTo attribute and rephrase descriptions to match this generalization.</p>
+<p><b>Martin</b>: I <b>move</b> that OData-1055 be resolved per the amended proposal. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1055 is RESOLVED with the amended proposal</p>
+
+<h4 id="8.1.6">8.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1005" rel="noopener noreferrer" target="_blank">ODATA-1005</a> - Make sure we have capabilities for all new 4.01 functionality</h4>
+<p>Ralf: Postpone until we have concrete proposal</p>
+
+<h4 id="8.1.7">8.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+
+<p>Ralf: Postpone until we have a concrete proposal</p>
+<p>Ralf: Another gap we have towards OpenAPI is documenting custom headers and custom query options via annotations</p>
+<p>Ralf: Ralf to open a ticket for that</p>
+<p>Ralf: Proposal to be aligned with OpenAPI 3.0.0</p>
+
+<h2 id="9">9. Next meetings only bi-weekly during Summer vacation period?</h2>
+<p>Two-week break mid of August, then back to weekly schedule</p>
+
+<h3 id="9.1">9.1 Next Meeting on August 24, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+
+<h3 id="9.2">9.2 Meetings following the next one</h3>
+<ul>
+<li>Thursday August 31, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+<li>Thursday September 07, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+</ul>
+
+<h2 id="10">10. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
