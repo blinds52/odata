@@ -294,7 +294,7 @@
     <xs:attribute name="Bool" type="edm:boolean" use="optional" />
     <xs:attribute name="Date" type="edm:date" use="optional" />
     <xs:attribute name="DateTimeOffset" type="edm:dateTimeStamp" use="optional" />
-    <xs:attribute name="Decimal" type="xs:decimal" use="optional" />
+    <xs:attribute name="Decimal" type="edm:TDecimalLiteral" use="optional" />
     <xs:attribute name="Duration" type="edm:dayTimeDuration" use="optional" />
     <xs:attribute name="EnumMember" type="edm:TEnumMemberList" use="optional" />
     <xs:attribute name="Float" type="xs:double" use="optional" />
@@ -335,7 +335,7 @@
   </xs:complexType>
   <xs:complexType name="TDecimalConstantExpression">
     <xs:simpleContent>
-      <xs:extension base="xs:decimal" />
+      <xs:extension base="edm:TDecimalLiteral" />
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="TDurationConstantExpression">
@@ -353,6 +353,11 @@
       <xs:extension base="edm:TGuidLiteral" />
     </xs:simpleContent>
   </xs:complexType>
+  <xs:simpleType name="TDecimalLiteral">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="INF|(\+|-)?[0-9]+(\.[0-9]+)?([Ee](\+|-)?[0-9]+)?|-?INF|NaN" />
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="TGuidLiteral">
     <xs:restriction base="xs:string">
       <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />

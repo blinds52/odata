@@ -1277,6 +1277,15 @@
         "@A.Decimal": {
             "$Decimal": "12.34"
         },
+        "@A.Decimal#inf": {
+            "$Decimal": "INF"
+        },
+        "@A.Decimal#minusInf": {
+            "$Decimal": "-INF"
+        },
+        "@A.Decimal#nan": {
+            "$Decimal": "NaN"
+        },
         "@A.Float": 1.23456789e4,
         "@A.Float#inf": {
             "$Float": "INF"
@@ -1287,7 +1296,34 @@
         "@A.Float#nan": {
             "$Float": "NaN"
         },
-        "@A.Float#Element": 1.23456789e4,
+        "@A.NumericValues#Element": [
+            1.23456789e4,
+            -2E80,
+            {
+                "$Float": "-INF"
+            },
+            {
+                "$Float": "INF"
+            },
+            {
+                "$Float": "NaN"
+            },
+            {
+                "$Decimal": "1.23456789e4"
+            },
+            {
+                "$Decimal": "-2E80"
+            },
+            {
+                "$Decimal": "-INF"
+            },
+            {
+                "$Decimal": "INF"
+            },
+            {
+                "$Decimal": "NaN"
+            }
+        ],
         "@An.Int": {
             "$Int": "1234"
         },
@@ -1955,6 +1991,18 @@
     "Y": {
         "$Kind": "Schema",
         "$Alias": "self3",
+        "@Core.Description": {
+            "$Apply": [
+                "When: ",
+                {
+                    "$Apply": [
+
+                    ],
+                    "$Function": "odata.now"
+                }
+            ],
+            "$Function": "odata.concat"
+        },
         "$Annotations": {
             "Some.EntityType": {
                 "@self2.Person": {
