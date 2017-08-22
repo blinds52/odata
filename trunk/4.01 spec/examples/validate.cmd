@@ -30,10 +30,11 @@ exit /b
 
   rem java -jar c:\Java\json-schema-validator-2.2.6-lib.jar ../schemas/csdl.schema.json %~n1.json
 
-  call z-schema --ignoreUnknownFormats --pedanticCheck ../schemas/csdl.schema.json %~n1.json > c:\temp\z-schema.log
+  call z-schema --ignoreUnknownFormats --pedanticCheck ../schemas/csdl.schema.json %~n1.json > %~n1.log
   if %ERRORLEVEL% == 1 (
-    type c:\temp\z-schema.log
+    type %~n1.log
+  ) else (
+    del %~n1.log
   )
-  del c:\temp\z-schema.log
 
 exit /b
