@@ -123,6 +123,7 @@
   <Constraint Rule="entityColFunctionImport">
     <Match>AllProductsByColor</Match>
     <Match>AllProductsByCategoryId</Match>
+    <Match>EmployeesByManager</Match>
     <Match>ProductsByCategoryId</Match>
     <Match>ProductsByColor</Match>
     <Match>ProductsByComplex</Match>
@@ -224,9 +225,28 @@
     <Match>@foo</Match>
     <Match>@i</Match>
     <Match>@key</Match>
+    <Match>@ManagerID</Match>
+    <Match>@p1</Match>
     <Match>@ref</Match>
     <Match>@title</Match>
     <Match>@word</Match>
+  </Constraint>
+  <Constraint Rule="parameterName">
+    <Match>categoryId</Match>
+    <Match>color</Match>
+    <Match>colors</Match>
+    <Match>customer</Match>
+    <Match>complex</Match>
+    <Match>Ingredients</Match>
+    <Match>Kind</Match>
+    <Match>Location</Match>
+    <Match>ManagerID</Match>
+    <Match>Number</Match>
+    <Match>Rank</Match>
+    <Match>Size</Match>
+    <Match>Word</Match>
+    <Match>Word1</Match>
+    <Match>Word2</Match>
   </Constraint>
   <Constraint Rule="primitiveColFunction">
     <Match>MostPopularNames</Match>
@@ -597,7 +617,22 @@
     <Input>Products</Input>
   </TestCase>
   <!--
-    Test cases for example URLs in OData URI
+    Test cases for example URLs in Part 1: Protocol
+  -->
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager(ManagerID=3)</Input>
+  </TestCase>
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager(ManagerID=@p1)?@p1=3</Input>
+  </TestCase>
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager?ManagerID=3</Input>
+  </TestCase>
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager?@ManagerID=3</Input>
+  </TestCase>
+  <!--
+    Test cases for example URLs in Part 2: URL Conventions
   -->
   <TestCase Name="2 URL Components - service root URL" Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/</Input>
