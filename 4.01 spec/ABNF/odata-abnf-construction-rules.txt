@@ -216,7 +216,7 @@ functionImportCallNoParens     = entityFunctionImport
 functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
 functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
 parameterName      = odataIdentifier
-parameterAlias     = AT odataIdentifier
+parameterAlias     = AT odataIdentifier 
 
 crossjoin = '$crossjoin' OPEN
             entitySetName *( COMMA entitySetName )
@@ -230,6 +230,7 @@ crossjoin = '$crossjoin' OPEN
 queryOptions = queryOption *( "&" queryOption )        
 queryOption  = systemQueryOption  
              / aliasAndValue 
+             / nameAndValue
              / customQueryOption  
 
 batchOptions = batchOption *( "&" batchOption )   
@@ -367,6 +368,8 @@ deltatoken = "$deltatoken" EQ 1*( qchar-no-AMP )
 skiptoken = "$skiptoken" EQ 1*( qchar-no-AMP )
 
 aliasAndValue = parameterAlias EQ parameterValue
+
+nameAndValue = parameterName EQ parameterValue
 
 parameterValue = arrayOrObject
                / commonExpr
