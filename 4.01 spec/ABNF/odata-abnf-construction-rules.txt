@@ -933,8 +933,7 @@ booleanValue = "true" / "false"
 decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ] [ "e" [ SIGN ] 1*DIGIT ] / nanInfinity
 doubleValue  = decimalValue ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
 singleValue  = decimalValue ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
-nanInfinity  = 'NaN' / infinity
-infinity     = '-INF' / 'INF'
+nanInfinity  = 'NaN' / '-INF' / 'INF'
 
 guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
 
@@ -947,10 +946,9 @@ int64Value = [ SIGN ] 1*19DIGIT ; numbers in the range from -9223372036854775808
 string           = SQUOTE *( SQUOTE-in-string / pchar-no-SQUOTE ) SQUOTE
 SQUOTE-in-string = SQUOTE SQUOTE ; two consecutive single quotes represent one within a string literal
 
-dateValue = year "-" month "-" day / infinity
+dateValue = year "-" month "-" day
 
 dateTimeOffsetValue = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / SIGN hour ":" minute )
-                    / infinity
 
 duration      = [ "duration" ] SQUOTE durationValue SQUOTE
 durationValue = [ SIGN ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
