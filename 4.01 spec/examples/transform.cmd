@@ -13,10 +13,9 @@ set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1
 set ODATA-VOCABULARIES=c:\git\odata-vocabularies
 @rem  - https://github.com/oasis-tcs/odata-openapi has been cloned and environment variable ODATA-OPENAPI set to its location
 set ODATA-OPENAPI=c:\git\odata-openapi
-@rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and environment variable YAJL_REFORMAT set to its location
-set YAJL_REFORMAT=c:\git\yajl\build\yajl-2.1.1\bin\json_reformat.exe
+@rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
 @rem  - Node.js is istalled - download from https://nodejs.org
-@rem  - https://github.com/zaggino/z-schema is installed: npm install z-schema
+@rem  - ajv-cli is installed: npm install -g ajv-cli
 
 set done=false
 
@@ -40,26 +39,21 @@ exit /b
   echo %~n1
   
   if [%2]==[V2] (
-    java.exe org.apache.xalan.xslt.Process -XSL %ODATA-OPENAPI%\tools\V2-to-V4-CSDL.xsl -IN %1 -OUT %~n1.V4.xml
+    java.exe org.apache.xalan.xslt.Process -L -XSL %ODATA-OPENAPI%\tools\V2-to-V4-CSDL.xsl -IN %1 -OUT %~n1.V4.xml
     set INPUT=%~n1.V4.xml
   ) else (
     set INPUT=%1
   )
   
-  java.exe org.apache.xalan.xslt.Process -XSL %ODATA-VOCABULARIES%\tools\V4-CSDL-normalize-Target.xsl -L -IN %INPUT% -OUT %~n1.normalized.xml
-  java.exe org.apache.xalan.xslt.Process -XSL %ODATA-VOCABULARIES%\tools\V4-CSDL-to-JSON.xsl -L -IN %~n1.normalized.xml -OUT %~n1.tmp.json
+  java.exe org.apache.xalan.xslt.Process -L -XSL %ODATA-VOCABULARIES%\tools\V4-CSDL-normalize-Target.xsl -IN %INPUT% -OUT %~n1.normalized.xml
+  java.exe org.apache.xalan.xslt.Process -L -XSL %ODATA-VOCABULARIES%\tools\V4-CSDL-to-JSON.xsl -IN %~n1.normalized.xml -OUT %~n1.tmp.json
 
-  %YAJL_REFORMAT% < %~n1.tmp.json > %~n1.json
+  json_reformat.exe < %~n1.tmp.json > %~n1.json
   if not errorlevel 1 (
     del %~n1.normalized.xml %~n1.tmp.json
     if [%2]==[V2] del %~n1.V4.xml
     diff.exe --ignore-space-change --strip-trailing-cr %~n1-goal.json %~n1.json
     
-    call z-schema --ignoreUnknownFormats --pedanticCheck ../schemas/csdl.schema.json %~n1.json > %~n1.log
-    if %ERRORLEVEL% == 1 (
-      type %~n1.log
-    ) else (
-      del %~n1.log
-    )
+    call ajv -s ..\schemas\csdl.schema.json -d %~n1.json > nul
   )
 exit /b
