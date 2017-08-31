@@ -6,21 +6,21 @@ setlocal
 @rem
 @rem  Prerequisites
 @rem  - Java SE 8 is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
+@rem  - diff.exe is installed and in the PATH
 @rem  - Eclipse is installed with Xalan (contained in Eclipse Web Tools Platform), and ECLIPSE_HOME environment variable is set
 set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;%ECLIPSE_HOME%\plugins\org.apache.xalan_2.7.1.v201005080400.jar
-@rem  - diff.exe is installed and in the PATH
+@rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
+@rem  - Node.js is installed - download from https://nodejs.org/
+@rem  - ajv-cli is installed - npm install -g ajv-cli
 @rem  - https://github.com/oasis-tcs/odata-vocabularies has been cloned and environment variable ODATA-VOCABULARIES set to its location
 set ODATA-VOCABULARIES=c:\git\odata-vocabularies
 @rem  - https://github.com/oasis-tcs/odata-openapi has been cloned and environment variable ODATA-OPENAPI set to its location
 set ODATA-OPENAPI=c:\git\odata-openapi
-@rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
-@rem  - Node.js is istalled - download from https://nodejs.org
-@rem  - ajv-cli is installed: npm install -g ajv-cli
 
 set done=false
 
 for /F "eol=# tokens=1,2" %%F in (%~n0.txt) do (
-	if /I [%~n1] == [%%~nF] (
+	if /I [%~n1]==[%%~nF] (
 	  set done=true
 		call :process %%F %%G
 	) else if [%1]==[] (

@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# This script tranforms all *.xml files in the examples folder into OpenAPI 2.0 and OpenAPI 3.0 JSON files
+#
+# Prerequisites
+# - Java           sudo apt-get install default-jre
+# - Git            sudo apt-get install git
+# - Xalan 2.7.1    sudo apt-get install libxalan2-java
+# - json_reformat  sudo apt-get install yajl-tools
+# - Node.js        sudo apt-get install nodejs
+# - ajv-cli        sudo npm install -g ajv-cli
+# - https://github.com/oasis-tcs/odata-vocabularies has been cloned and ODATA_VOCABULARIES set to its location
+ODATA_VOCABULARIES=/mnt/c/git/odata-vocabularies
+# - https://github.com/oasis-tcs/odata-openapi has been cloned and ODATA_OPENAPI set to its location
+ODATA_OPENAPI=/mnt/c/git/odata-openapi
+
+process() {
+  local name=${1##*/}; name=${name%.*}
+  echo $name
+  
+  if [ "$2" = "V2" ]
+  then
+    java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL $ODATA_OPENAPI/tools/V2-to-V4-CSDL.xsl -IN $1 -OUT $name.V4.xml
+    INPUT=$name.V4.xml
+  else
+    INPUT=$1
+  fi
+  
+  java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL $ODATA_VOCABULARIES/tools/V4-CSDL-normalize-Target.xsl -IN $INPUT -OUT $name.normalized.xml
+  java -cp /usr/share/java/xalan2.jar org.apache.xalan.xslt.Process -L -XSL $ODATA_VOCABULARIES/tools/V4-CSDL-to-JSON.xsl -IN $name.normalized.xml -OUT $name.tmp.json
+
+  json_reformat < $name.tmp.json > $name.json
+  if [ $? = 0 ]
+  then 
+    rm $name.normalized.xml $name.tmp.json
+    diff --ignore-space-change --strip-trailing-cr $name-goal.json $name.json
+    
+    ajv -s ../schemas/csdl.schema.json -d $name.json > /dev/null
+  fi
+}
+
+while IFS=$' \r' read -r f g || [[ -n "$f" ]]
+do
+  if [ -n "$f" ] && [ "${f:0:1}" != "#" ]
+  then
+    if [ -z "$1" ] || [ "$f" = "$1" ] || [ "$f" = "$1.xml" ]
+    then
+      f=${f/\%ODATA-VOCABULARIES%/$ODATA_VOCABULARIES} # resolve Windows environment variable
+      f=${f//\\//} # replace backslashes with forward slashes
+      process $f $g
+      #echo $f $g
+    fi
+  fi
+done < $0.txt
