@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #185 Thursday August 31, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='e64a948b1b3e7d52d918465bd9f1dee47805da2280d31389de0fdb97c1d97354feb2bc53a2d9bd3156082728b6662cb51647085d2dc93335e23a17984969c12c' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #185 Thursday August 31, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-08-31 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Jeremy Crawford (Real Estate Standards Organization (RESO))
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43993">normative attendance sheet for this meeting (event_id=43992)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from August 24, 2017 TC meeting #184</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61447/latest/odata-meeting-184_on-20170824-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61447/latest/odata-meeting-184_on-20170824-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+
+<h2 id="5">5. Data Aggregation</h2>
+<h3 id="5.1">5.1 Gerald to walk us through the proposal on</h3>
+<h4 id="5.1.1">5.1.1 Grid-Like Access to Aggregated Data</h4>
+<p>Gerald: Walks all through the proposal</p>
+<p>Ramesh: we always enforced a implicit ordering based on the key when $orderby is not defined</p>
+<p>Hubert: OData Protocol does indeed state that: If no unique ordering is imposed through an $orderby query option, the service MUST impose a stable ordering across requests that include $skip.</p>
+<p>Hubert: Same wording for $top</p>
+
+<h2 id="6">6. Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="6.1">6.1 <a href="https://issues.oasis-open.org/browse/ODATA-1109" rel="noopener noreferrer" target="_blank">ODATA-1109</a> - Clarify that 'parameter' aliases can also be used to substitute expressions</h3>
+<p>Ralf: Current text "hidden" near the end of Part 2: URL Conventions<br>
+<br>
+5.3 Parameter Aliases<br>
+Parameter aliases can be used in place of literal values in entity keys, function parameters, or within a $filter or $orderby expression.<br>
+Parameter aliases MUST start with an @ character, see rule parameterAlias in [OData-ABNF].<br>
+The semantics of parameter aliases are covered in [OData-Protocol]. The [OData-ABNF] rule aliasAndValue defines the formal grammar for passing parameter alias values as query options.<br>
+Example 124:<br>
+<br>
+http://host/service/Movies?$filter=contains(@word,Title)&amp;@word='Black'<br>
+Example 125:<br>
+<br>
+http://host/service/Movies?$filter=Title eq @title&amp;@title='Wizard of Oz'<br>
+Example 126: JSON array of strings as parameter alias value  note that [, ], and " need to be percent-encoded in real URLs, the clear-text representation used here is just for readability<br>
+<br>
+http://host/service/Products/Model.WithIngredients(Ingredients=@i)?@i=["Carrots","Ginger","Oranges"]</p>
+<p>Ralf: <a href="http://docs.oasis-open.org/odata/odata/v4.01/csprd02/part2-url-conventions/odata-v4.01-csprd02-part2-url-conventions.html#sec_ParameterAliases" rel="noopener noreferrer" target="_blank">http://docs.oasis-open.org/odata/odata/v4.01/csprd02/part2-url-conventions/odata-v4.01-csprd02-part2-url-conventions.html#sec_ParameterAliases</a></p>
+<p>Matt: $filter=@a&amp;@a=contains('Black',Title)</p>
+<p>Ralf: Example 67: return the number of products whose Price is less than $10.00<br>
+<br>
+GET http://host/service/Products/$filter=@foo/$count?@foo=Price lt 10.00</p>
+<p>Ralf: Example 79: delete all products older than 3<br>
+<br>
+DELETE /service/Products/$filter=@foo/$each?@foo=Age gt 3</p>
+<p>Mike: Customers?$filter=startswith(FirstName,'A') AND @a&amp;@a=endswith(LastName,'Z')</p>
+<p>Ralf:</p>
+<pre>
+filterInPath = '/$filter' EQ parameterAlias
+$filter=Name eq 'Joe'
+$filter=Name eq 'James'
+$filter=Name eq @x&amp;@x'Joe'
+$filter=Name eq @x&amp;@x='Joe'
+$filter=Name eq @x&amp;@x=concat('Jo','e')
+$filter=Name eq concat('Jo','e')
+</pre>
+<p>Mike:</p>
+<pre>
+$filter=startswith(FirstName,@a)&amp;@a='A'
+$filter=startswith(FirstName,'A') AND @a&amp;@a=endswith(LastName,'Z')
+$filter=Orders($filter=ShipTo eq @a)&amp;@a=City
+</pre>
+<p>Ralf:ODATA-1109 is OPEN</p>
+<p>Ralf: Please add comments to this issue for your concerns or pros and cons</p>
+<p>Mike:</p>
+<pre>
+Customers?$filter=Orders($filter=ShipTo eq @a)&amp;@a=City  => is City the city of the customer or the order....
+</pre>
+
+<h2 id="7">7. Next meetings</h2>
+
+<h3 id="7.1">7.1 Next Meeting on Thursday September 07, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+
+<h3 id="7.2">7.2 Meetings following the next one</h3>
+<ul>
+<li>Thursday September 14, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+</ul>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
