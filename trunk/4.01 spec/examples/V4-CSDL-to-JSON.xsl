@@ -6,18 +6,17 @@
     This style sheet transforms OData 4.0 CSDL XML documents into CSDL JSON
 
     Latest version: https://github.com/oasis-tcs/odata-vocabularies/blob/master/tools/V4-CSDL-to-JSON.xsl
-    
+
     TODO:
-    - $DefaultValue depending on @Type and IEEE754Compatible
-    - Parameter for IEEE754Compatible
-    - - $Decimal as string or number
-    - - $Int as string or number
+    - $DefaultValue depending on @Type and $safe-numbers (IEEE754Compatible)
+
   -->
 
   <xsl:output method="text" indent="yes" encoding="UTF-8" omit-xml-declaration="yes" />
 
-  <xsl:key name="methods" match="//edm:Action|//edm:Function" use="concat(../@Namespace,'.',@Name)" />
+  <xsl:param name="safe-numbers" select="true()" />
 
+  <xsl:key name="methods" match="//edm:Action|//edm:Function" use="concat(../@Namespace,'.',@Name)" />
   <xsl:key name="targets" match="//edm:Annotations" use="concat(../@Namespace,'/',@Target)" />
 
   <xsl:template match="edmx:Edmx">
@@ -33,8 +32,12 @@
 
   <xsl:template match="edmx:Reference" mode="hashpair">
     <xsl:text>"</xsl:text>
-    <xsl:call-template name="json-url">
-      <xsl:with-param name="url" select="@Uri" />
+    <xsl:call-template name="escape">
+      <xsl:with-param name="string">
+        <xsl:call-template name="json-url">
+          <xsl:with-param name="url" select="@Uri" />
+        </xsl:call-template>
+      </xsl:with-param>
     </xsl:call-template>
     <xsl:text>":{</xsl:text>
     <xsl:apply-templates select="edm:Annotation" mode="list" />
@@ -50,13 +53,20 @@
   <xsl:template match="edm:Schema">
     <xsl:text>,"</xsl:text>
     <xsl:value-of select="@Namespace" />
-    <xsl:text>":{"$Kind":"Schema"</xsl:text>
-    <xsl:apply-templates select="@Alias" mode="list2" />
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    <xsl:apply-templates select="edm:Annotations[generate-id() = generate-id(key('targets', concat(../@Namespace,'/',@Target))[1])]" />
+    <xsl:text>":{</xsl:text>
+    <xsl:apply-templates select="@Alias" />
+    <xsl:apply-templates select="edm:Annotation" mode="list">
+      <xsl:with-param name="after" select="@Alias" />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="edm:Annotations[generate-id() = generate-id(key('targets', concat(../@Namespace,'/',@Target))[1])]">
+      <xsl:with-param name="after" select="@Alias|edm:Annotation" />
+    </xsl:apply-templates>
     <xsl:apply-templates
-      select="edm:EntityType|edm:ComplexType|edm:TypeDefinition|edm:EnumType|edm:Term|edm:Action[generate-id()=generate-id(key('methods',concat(../@Namespace,'.',@Name))[1])]|edm:Function[generate-id()=generate-id(key('methods',concat(../@Namespace,'.',@Name))[1])]" />
-    <xsl:apply-templates select="edm:EntityContainer" />
+      select="edm:EntityType|edm:ComplexType|edm:TypeDefinition|edm:EnumType|edm:Term|edm:Action[generate-id()=generate-id(key('methods',concat(../@Namespace,'.',@Name))[1])]|edm:Function[generate-id()=generate-id(key('methods',concat(../@Namespace,'.',@Name))[1])]|edm:EntityContainer"
+      mode="list"
+    >
+      <xsl:with-param name="after" select="@Alias|edm:Annotation|edm:Annotations" />
+    </xsl:apply-templates>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
@@ -69,7 +79,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityContainer">
-    <xsl:text>,"</xsl:text>
+    <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"$Kind":"EntityContainer"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']|edm:Annotation" mode="list2" />
@@ -161,7 +171,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityType|edm:ComplexType|edm:Term|edm:TypeDefinition">
-    <xsl:text>,"</xsl:text>
+    <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{</xsl:text>
     <xsl:text>"$Kind":"</xsl:text>
@@ -320,7 +330,7 @@
   </xsl:template>
 
   <xsl:template match="edm:EnumType">
-    <xsl:text>,"</xsl:text>
+    <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":{"$Kind":"EnumType"</xsl:text>
     <xsl:apply-templates select="@*[name()!='Name']" mode="list2" />
@@ -348,7 +358,7 @@
   </xsl:template>
 
   <xsl:template match="edm:Action|edm:Function">
-    <xsl:text>,"</xsl:text>
+    <xsl:text>"</xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text>":[</xsl:text>
     <xsl:for-each select="key('methods', concat(../@Namespace,'.',@Name))">
@@ -384,8 +394,12 @@
   </xsl:template>
 
   <xsl:template match="edm:Annotations">
+    <xsl:param name="after" />
     <xsl:if test="position()=1">
-      <xsl:text>,"$Annotations":{</xsl:text>
+      <xsl:if test="$after">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>"$Annotations":{</xsl:text>
     </xsl:if>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@Target" />
@@ -456,14 +470,22 @@
     <xsl:value-of select="." />
   </xsl:template>
 
-  <xsl:template match="@Int|edm:Int">
-    <xsl:text>{"$Int":"</xsl:text>
+  <xsl:template match="@Decimal|edm:Decimal|@Int|edm:Int">
+    <xsl:text>{"$</xsl:text>
+    <xsl:value-of select="local-name()" />
+    <xsl:text>":</xsl:text>
+    <xsl:if test="$safe-numbers or .='INF' or .='-INF' or .='NaN'">
+      <xsl:text>"</xsl:text>
+    </xsl:if>
     <xsl:value-of select="." />
-    <xsl:text>"}</xsl:text>
+    <xsl:if test="$safe-numbers or .='INF' or .='-INF' or .='NaN'">
+      <xsl:text>"</xsl:text>
+    </xsl:if>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template
-    match="@Binary|edm:Binary|@Date|edm:Date|@DateTimeOffset|edm:DateTimeOffset|@Decimal|edm:Decimal|@Duration|edm:Duration|@Guid|edm:Guid|@TimeOfDay|edm:TimeOfDay"
+    match="@Binary|edm:Binary|@Date|edm:Date|@DateTimeOffset|edm:DateTimeOffset|@Duration|edm:Duration|@Guid|edm:Guid|@TimeOfDay|edm:TimeOfDay"
   >
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
@@ -497,9 +519,29 @@
   <!-- escaped string value -->
   <xsl:template match="@String|edm:String">
     <xsl:text>"</xsl:text>
-    <xsl:call-template name="escape">
-      <xsl:with-param name="string" select="." />
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when
+        test="name(..)='PropertyValue' and ../@Property='href' and (../../edm:PropertyValue[@Property='rel']/@String='latest-version' or ../../edm:PropertyValue[@Property='rel']/edm:String='latest-version') and substring(.,string-length(.)-3) = '.xml'"
+      >
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="substring(.,1,string-length(.)-3)" />
+        </xsl:call-template>
+        <xsl:text>json</xsl:text>
+      </xsl:when>
+      <xsl:when
+        test="name(..)='PropertyValue' and ../@Property='href' and (../../edm:PropertyValue[@Property='rel']/@String='alternate' or ../../edm:PropertyValue[@Property='rel']/edm:String='alternate') and substring(.,string-length(.)-4) = '.json'"
+      >
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="substring(.,1,string-length(.)-4)" />
+        </xsl:call-template>
+        <xsl:text>xml</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="escape">
+          <xsl:with-param name="string" select="." />
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>"</xsl:text>
   </xsl:template>
 
@@ -582,7 +624,9 @@
     <xsl:text>]</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:If|edm:Eq|edm:Ne|edm:Ge|edm:Gt|edm:Le|edm:Lt|edm:And|edm:Or|edm:Has|edm:In|edm:Add|edm:Sub|edm:Mul|edm:Div|edm:DivBy|edm:Mod">
+  <xsl:template
+    match="edm:If|edm:Eq|edm:Ne|edm:Ge|edm:Gt|edm:Le|edm:Lt|edm:And|edm:Or|edm:Has|edm:In|edm:Add|edm:Sub|edm:Mul|edm:Div|edm:DivBy|edm:Mod"
+  >
     <xsl:text>{"$</xsl:text>
     <xsl:value-of select="local-name()" />
     <xsl:text>":[</xsl:text>
@@ -863,15 +907,11 @@
   <xsl:template name="json-url">
     <xsl:param name="url" />
     <xsl:choose>
-      <xsl:when test="substring($url,1,33) = 'http://docs.oasis-open.org/odata/'">
-        <xsl:text>http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/vocabularies/</xsl:text>
-        <xsl:variable name="filename">
-          <xsl:call-template name="substring-after-last">
-            <xsl:with-param name="input" select="$url" />
-            <xsl:with-param name="marker" select="'/'" />
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:value-of select="substring($filename,1,string-length($filename)-4)" />
+      <xsl:when test="substring($url,1,60) = 'https://oasis-tcs.github.io/odata-vocabularies/vocabularies/'">
+        <xsl:call-template name="substring-before-last">
+          <xsl:with-param name="input" select="$url" />
+          <xsl:with-param name="marker" select="'.'" />
+        </xsl:call-template>
         <xsl:value-of select="'.json'" />
       </xsl:when>
       <xsl:otherwise>

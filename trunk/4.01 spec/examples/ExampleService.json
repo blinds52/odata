@@ -12,8 +12,120 @@
         }
     },
     "OData.Demo": {
-        "$Kind": "Schema",
         "$Alias": "Model",
+        "Container": {
+            "$Kind": "EntityContainer",
+            "Customers": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Customer",
+                "$NavigationPropertyBinding": {
+                    "Orders": "Orders",
+                    "Sales": "Sales",
+                    "Address/Country": "Countries"
+                }
+            },
+            "Suppliers": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Supplier",
+                "$NavigationPropertyBinding": {
+                    "Products": "Products",
+                    "Model.PreferredSupplier/AccountRepresentative": "Employees"
+                }
+            },
+            "Products": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Product",
+                "$NavigationPropertyBinding": {
+                    "Category": "Categories",
+                    "Supplier": "Suppliers",
+                    "OrderItems": "OrderItems",
+                    "Sales": "Sales"
+                }
+            },
+            "Orders": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Order",
+                "$NavigationPropertyBinding": {
+                    "Items": "OrderItems",
+                    "Customer": "Customers"
+                }
+            },
+            "Categories": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Category",
+                "$NavigationPropertyBinding": {
+                    "Products": "Products"
+                }
+            },
+            "OrderItems": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.OrderItem",
+                "$NavigationPropertyBinding": {
+                    "Order": "Orders",
+                    "Product": "Products",
+                    "Currency": "Currencies"
+                }
+            },
+            "Sales": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Sales",
+                "$NavigationPropertyBinding": {
+                    "Time": "Time",
+                    "Currency": "Currencies",
+                    "Customer": "Customers",
+                    "SalesOrganization": "SalesOrganizations",
+                    "Product": "Products"
+                }
+            },
+            "Employees": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Employee",
+                "$NavigationPropertyBinding": {
+                    "Model.Manager/Employees": "Employees",
+                    "Manager": "Employees",
+                    "Model.Manager/Inbox": "LeaveRequests",
+                    "LeaveRequests": "LeaveRequests"
+                }
+            },
+            "LeaveRequests": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.LeaveRequest",
+                "$NavigationPropertyBinding": {
+                    "Manager": "Employees",
+                    "Employee": "Employees"
+                }
+            },
+            "Countries": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Country"
+            },
+            "Time": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Time",
+                "$NavigationPropertyBinding": {
+                    "Sales": "Sales"
+                }
+            },
+            "SalesOrganizations": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.SalesOrganization",
+                "$NavigationPropertyBinding": {
+                    "Sales": "Sales",
+                    "Superordinate": "SalesOrganizations"
+                }
+            },
+            "Currencies": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.Currency",
+                "$NavigationPropertyBinding": {
+                    "Sales": "Sales"
+                }
+            },
+            "Cities": {
+                "$Kind": "EntitySet",
+                "$Type": "Model.City"
+            }
+        },
         "Customer": {
             "$Kind": "EntityType",
             "$Key": [
@@ -571,119 +683,6 @@
             "$Kind": "ComplexType",
             "Carrier": {
                 "$Nullable": false
-            }
-        },
-        "Container": {
-            "$Kind": "EntityContainer",
-            "Customers": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Customer",
-                "$NavigationPropertyBinding": {
-                    "Orders": "Orders",
-                    "Sales": "Sales",
-                    "Address/Country": "Countries"
-                }
-            },
-            "Suppliers": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Supplier",
-                "$NavigationPropertyBinding": {
-                    "Products": "Products",
-                    "Model.PreferredSupplier/AccountRepresentative": "Employees"
-                }
-            },
-            "Products": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Product",
-                "$NavigationPropertyBinding": {
-                    "Category": "Categories",
-                    "Supplier": "Suppliers",
-                    "OrderItems": "OrderItems",
-                    "Sales": "Sales"
-                }
-            },
-            "Orders": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Order",
-                "$NavigationPropertyBinding": {
-                    "Items": "OrderItems",
-                    "Customer": "Customers"
-                }
-            },
-            "Categories": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Category",
-                "$NavigationPropertyBinding": {
-                    "Products": "Products"
-                }
-            },
-            "OrderItems": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.OrderItem",
-                "$NavigationPropertyBinding": {
-                    "Order": "Orders",
-                    "Product": "Products",
-                    "Currency": "Currencies"
-                }
-            },
-            "Sales": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Sales",
-                "$NavigationPropertyBinding": {
-                    "Time": "Time",
-                    "Currency": "Currencies",
-                    "Customer": "Customers",
-                    "SalesOrganization": "SalesOrganizations",
-                    "Product": "Products"
-                }
-            },
-            "Employees": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Employee",
-                "$NavigationPropertyBinding": {
-                    "Model.Manager/Employees": "Employees",
-                    "Manager": "Employees",
-                    "Model.Manager/Inbox": "LeaveRequests",
-                    "LeaveRequests": "LeaveRequests"
-                }
-            },
-            "LeaveRequests": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.LeaveRequest",
-                "$NavigationPropertyBinding": {
-                    "Manager": "Employees",
-                    "Employee": "Employees"
-                }
-            },
-            "Countries": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Country"
-            },
-            "Time": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Time",
-                "$NavigationPropertyBinding": {
-                    "Sales": "Sales"
-                }
-            },
-            "SalesOrganizations": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.SalesOrganization",
-                "$NavigationPropertyBinding": {
-                    "Sales": "Sales",
-                    "Superordinate": "SalesOrganizations"
-                }
-            },
-            "Currencies": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.Currency",
-                "$NavigationPropertyBinding": {
-                    "Sales": "Sales"
-                }
-            },
-            "Cities": {
-                "$Kind": "EntitySet",
-                "$Type": "Model.City"
             }
         }
     }
