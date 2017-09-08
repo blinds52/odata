@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #186 Thursday September 07, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='e6eb4853e529ce601516bea30171fd35369324e26dae2984510149582cf645e55654b6ecd18d226717e9c5b13aa6d18d359ccfcd79abb52e2d55a60587918915' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #186 Thursday September 07, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-09-07 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43994">normative attendance sheet for this meeting (event_id=43994)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from August 31, 2017 TC meeting #185</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61487/odata-meeting-185_on-20170831-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61487/odata-meeting-185_on-20170831-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="5.1">5.1 <a href="https://issues.oasis-open.org/browse/ODATA-1102" rel="noopener noreferrer" target="_blank">ODATA-1102</a> - Multiplication and division of Edm.Decimal: result has floating scale if either operand has floating scale</h3>
+<p>Ralf: Proposal: Floating scale dominates, then variable scale, then fixed scale.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1102 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1102 is RESOLVED as proposed</p>
+
+<h3 id="5.2">5.2 <a href="https://issues.oasis-open.org/browse/ODATA-1107" rel="noopener noreferrer" target="_blank">ODATA-1107</a> - Introduce instance annotation to specify which types an instance "implements"</h3>
+<p><b>Mike</b>: I <b>proposed</b> moving ODATA-1107 to 4.02.</p>
+<p>Ralf: No objection, moved</p>
+
+
+<h3 id="5.3">5.3 <a href="https://issues.oasis-open.org/browse/ODATA-1108" rel="noopener noreferrer" target="_blank">ODATA-1108</a> - Disallow empty parens for implicit parameter syntax</h3>
+<p>Ralf: ODATA-1108 is OPEN</p>
+<p><b>Mike</b>: I <b>propose</b> we resolve ODATA-1108 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1108 is RESOLVED as proposed</p>
+
+
+<h3 id="5.4">5.4 <a href="https://issues.oasis-open.org/browse/ODATA-1109" rel="noopener noreferrer" target="_blank">ODATA-1109</a> - Clarify that 'parameter' aliases can also be used to substitute expressions</h3>
+<p>Mike: Draft Proposal: Query parameters for $filter segment are always expressions.  All other parameters are treated as literals.</p>
+<p>Hubert: Calls out that the last example (taking the input 1&amp;$expand=Orders) is a general issue.  We should provide general guidance that, when taking input from a user, must make sure it is the expected type; for example, make sure there are no unescaped '&amp;'.</p>
+<p>Mike: Clarified proposal: Query parameters for $filter segment are always passed in as expressions. All other parameters are evaluated and passed as literals.</p>
+<p>Mike: Added new issue for Securing OData: <a href="https://issues.oasis-open.org/browse/ODATA-1110" rel="noopener noreferrer" target="_blank">https://issues.oasis-open.org/browse/ODATA-1110</a></p>
+<p>George: I'm wondering whether we could insist that the segment be a complete expression, rather than 'part' of an expression.</p>
+<p>Mike: Issue:</p>
+<pre>
+Customers?$filter=Orders($filter=ShipTo eq @a)&amp;@a=City
+</pre>
+<p>Hubert: Can one do this:</p>
+<pre>
+Customers?$filter=Orders($filter=ShipTo eq @a;@a=City)
+</pre>
+<p>George: Can one do this:</p>
+<pre>
+Customers?$filter=Orders($filter=ShipTo eq City)
+</pre>
+<p>Ralf:</p>
+<pre>
+Customers(ID=@c)/Orders(ID=@o)?@c=ID&amp;@o=45
+</pre>
+<p>Mike:</p>
+<pre>
+Customers/GetById(id=@id)?@id=1
+</pre>
+<p>Ralf: @Hubert: no, nested option syntax with semicolons doesn't allow nested aliases</p>
+<p>Mike:</p>
+<pre>
+Customers?$fitler=id eq @id?@id=1
+Customers?$filter=id eq @id&amp;@id=1
+Customers/GetById(id=@id)?@id=Manager/BestEmployee()/Id
+</pre>
+<p>Mike: (that above example was invalid...)</p>
+<p>Ralf: Parameter aliases allow the same value to be used multiple times in a request and may be used to reference primitive values, complex, or collection values.</p>
+<pre>
+products/ByColors(colors=@c)?@c=["red',"green","blue"]
+products/ByColors(colors=@c)?@c=$root/My/Preferences/Colors
+</pre>
+<p>Mike:</p>
+<pre>
+Customers?$filter=Orders($filter=ShipTo eq @a)&amp;@a=City
+</pre>
+<p>Ralf:</p>
+<pre>
+Customers(ID=@c)/Orders(ID=@o)?@c=ID&amp;@o=45
+Customers(ID=@c)/Orders(ID=@c)?@c=FirstName&amp;@o=45
+Customers(ID=@c)/Orders(ID=@o)?@c=FirstName&amp;@o=45
+Customers(ID=42)/some.function(par1=FirstName)/...
+Customers(ID=42)/some.function(par1=@p)/...?@p=FirstName
+</pre>
+<p>Hubert, Ralf: tend to have expression evaluated at point where it is used. In last example evaluation should not depend on subsequent path segments ...</p>
+<p>Mike: tends to have expression evaluated in the context of the last path segment</p>
+
+
+<h3 id="5.5">5.5 <a href="https://issues.oasis-open.org/browse/ODATA-1100" rel="noopener noreferrer" target="_blank">ODATA-1100</a> - Add mechanism for specifying match type for $search</h3>
+<p>Mike: Suggests to skip that one</p>
+
+
+<h3 id="5.6">5.6 <a href="https://issues.oasis-open.org/browse/ODATA-1105" rel="noopener noreferrer" target="_blank">ODATA-1105</a> - Simplify selection of properties of complex type</h3>
+
+<p>Mike:</p>
+<pre>
+$select=Address/City,Address/State
+$select=Address($select=City,State)
+$select=Addresses($select=City,State;$filter=Country eq 'UK')
+</pre>
+<p>Hubert:</p>
+<pre>
+$select=ComplexProp($filter=PropA eq 'foo')&amp;$expand=ComplexProp/NavProp1($select=a,b)
+$select=ComplexProp($filter=PropA eq 'foo';$expand=NavProp1($select=a,b))
+</pre>
+<p>Mike:</p>
+<pre>
+Customers?$select=Addresses($filter=Country eq 'UK')&amp;$expand=Addresses/Occupant($select=Name)
+Customers?$select=Addresses($expand=Occupant) same as Customers?$expand=Addresses/Occupant ?
+</pre>
+<p>Ralf: same as:</p>
+<pre>
+Customers?$select=Addresses&amp;$expand=Addresses/Occupant
+Customers?$select=Addresses/City,Addresses/Street&amp;$expand=Addresses/Occupant
+Customers?$select=Addresses($select=City,Street;$expand=Occupant)
+</pre>
+
+<h2 id="6">7. Next meetings</h2>
+
+<h3 id="6.1">6.1 Next Meeting on Thursday September 14, 2017 during 8-10 am PDT (17:00-19:00 CEST)</h3> 
+
+<h3 id="6.2">6.2 Meetings following the next one</h3>
+<ul>
+<li>Thursday September 21, 2017 during 8-10 am PDT (17:00-19:00 CEST)</li>
+</ul>
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
