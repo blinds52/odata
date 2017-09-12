@@ -8,14 +8,14 @@ var util = require('util');
 
 // files
 var draft04 = JSON.parse(fs.readFileSync("json-schema-draft-04.json"));
-var edm = JSON.parse(fs.readFileSync("../schemas/edm.json"));
-var capabilities = JSON.parse(fs
-		.readFileSync("../vocabularies/Org.OData.Capabilities.V1.json"));
-var core = JSON
-		.parse(fs.readFileSync("../vocabularies/Org.OData.Core.V1.json"));
-var measures = JSON.parse(fs
-		.readFileSync("../vocabularies/Org.OData.Measures.V1.json"));
-var validation = {};
+var edm = JSON.parse(fs.readFileSync("edm.json"));
+// var capabilities = JSON.parse(fs
+// 		.readFileSync("../vocabularies/Org.OData.Capabilities.V1.json"));
+// var core = JSON
+// 		.parse(fs.readFileSync("../vocabularies/Org.OData.Core.V1.json"));
+// var measures = JSON.parse(fs
+// 		.readFileSync("../vocabularies/Org.OData.Measures.V1.json"));
+// var validation = {};
 
 var csdl_16_1 = JSON.parse(fs.readFileSync("csdl-16.1.jsonschema"));
 var csdl_16_2 = JSON.parse(fs.readFileSync("csdl-16.2.jsonschema"));
@@ -23,7 +23,7 @@ var exampleService = JSON.parse(fs.readFileSync("ExampleService.jsonschema"));
 var miscellaneous = JSON.parse(fs.readFileSync("miscellaneous.jsonschema"));
 var miscellaneous2 = JSON.parse(fs.readFileSync("miscellaneous2.jsonschema"));
 var metadataService = JSON.parse(fs.readFileSync("MetadataService.jsonschema"));
-var tm1 = JSON.parse(fs.readFileSync("TM1$metadata.jsonschema"));
+// var tm1 = JSON.parse(fs.readFileSync("TM1$metadata.jsonschema"));
 // var merged_metadata =
 // JSON.parse(fs.readFileSync("merged_metadata.jsonschema"));
 

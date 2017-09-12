@@ -1,182 +1,10 @@
 {
-    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
-    "odata-version": "4.0",
+    "id": "org.example",
+    "$schema": "http://docs.oasis-open.org/odata/ns/edm.json#",
+    "odata-version": "4.01",
     "definitions": {
-        "org.example.Measurement": {
-            "type": "object",
-            "properties": {
-                "Dimension": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "default": "Unspecified"
-                },
-                "Length": {
-                    "type": [
-                        "number",
-                        "string"
-                    ],
-                    "format": "decimal",
-                    "precision": 18,
-                    "scale": 2,
-                    "multipleOf": 1e-2,
-                    "minimum": -9999999999999999.99,
-                    "maximum": 9999999999999999.99
-                }
-            }
-        },
-        "org.example.Example7to11": {
-            "type": "object",
-            "properties": {
-                "Units": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "SuggestedTimes": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "date-time",
-                        "precision": 6
-                    }
-                },
-                "Amount9": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "precision": 3,
-                    "scale": 2,
-                    "multipleOf": 1e-2,
-                    "minimum": -9.99,
-                    "maximum": 9.99
-                },
-                "Amount11": {
-                    "type": [
-                        "number",
-                        "string",
-                        "null"
-                    ],
-                    "format": "decimal",
-                    "precision": 3,
-                    "scale": "variable",
-                    "minimum": -999,
-                    "maximum": 999
-                }
-            }
-        },
-        "org.example.Product": {
-            "type": "object",
-            "keys": [
-                "ID"
-            ],
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "CategoryID": {
-                    "type": "string"
-                },
-                "Category": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/org.example.Category"
-                        }
-                    ],
-                    "relationship": {
-                        "partner": "Products",
-                        "referentialConstraints": {
-                            "CategoryID": {
-                                "referencedProperty": "ID"
-                            }
-                        }
-                    }
-                },
-                "Supplier": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/org.example.Supplier"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "relationship": {
-
-                    }
-                }
-            }
-        },
-        "org.example.Supplier": {
-            "type": "object",
-            "keys": [
-                "ID"
-            ],
-            "properties": {
-                "ID": {
-                    "type": "string"
-                }
-            }
-        },
-        "org.example.Customer": {
-            "type": "object",
-            "keys": [
-                "ID"
-            ],
-            "properties": {
-                "ID": {
-                    "type": "string"
-                }
-            }
-        },
-        "org.example.Order": {
-            "type": "object",
-            "keys": [
-                "ID"
-            ],
-            "properties": {
-                "ID": {
-                    "type": [
-                        "integer",
-                        "string"
-                    ],
-                    "format": "int64"
-                }
-            }
-        },
-        "org.example.Category": {
-            "type": "object",
-            "keys": [
-                "ID"
-            ],
-            "properties": {
-                "ID": {
-                    "type": "string"
-                },
-                "Products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/org.example.Product"
-                    },
-                    "relationship": {
-                        "partner": "Category",
-                        "onDelete": {
-                            "action": "Cascade",
-                            "description": "Delete all related entities"
-                        }
-                    }
-                }
-            }
-        },
         "org.example.Employee": {
             "type": "object",
-            "mediaEntity": true,
-            "keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -195,10 +23,7 @@
                         {
                             "type": "null"
                         }
-                    ],
-                    "relationship": {
-
-                    }
+                    ]
                 }
             }
         },
@@ -223,18 +48,18 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/org.example.Employee"
-                    },
-                    "relationship": {
-
                     }
                 }
             }
         },
-        "org.example.Category17": {
+        "org.example.Nothing": {
+            "type": "object"
+        },
+        "org.example.NotMuch": {
+            "type": "object"
+        },
+        "org.example.Category10": {
             "type": "object",
-            "keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -244,18 +69,12 @@
                     "type": [
                         "string",
                         "null"
-                    ],
-                    "@Core.IsLanguageDependent": true
+                    ]
                 }
             }
         },
-        "org.example.Category18": {
+        "org.example.Category11": {
             "type": "object",
-            "keys": [
-                {
-                    "EntityInfoID": "Info/ID"
-                }
-            ],
             "properties": {
                 "Info": {
                     "$ref": "#/definitions/org.example.EntityInfo"
@@ -286,10 +105,6 @@
         },
         "org.example.OrderLine": {
             "type": "object",
-            "keys": [
-                "OrderID",
-                "LineNumber"
-            ],
             "properties": {
                 "OrderID": {
                     "type": "integer",
@@ -298,6 +113,181 @@
                 "LineNumber": {
                     "type": "integer",
                     "format": "int32"
+                }
+            }
+        },
+        "org.example.Measurement": {
+            "type": "object",
+            "properties": {
+                "Dimension": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "default": "Unspecified"
+                },
+                "Length": {
+                    "type": [
+                        "number",
+                        "string"
+                    ],
+                    "format": "decimal",
+                    "precision": 18,
+                    "scale": 2,
+                    "multipleOf": 1e-2,
+                    "minimum": -9999999999999999.99,
+                    "maximum": 9999999999999999.99
+                }
+            }
+        },
+        "org.example.Example16to21": {
+            "type": "object",
+            "properties": {
+                "Units": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "SuggestedTimes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "date-time",
+                        "precision": 6
+                    }
+                },
+                "Amount32": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "precision": 3,
+                    "scale": 2,
+                    "multipleOf": 1e-2,
+                    "minimum": -9.99,
+                    "maximum": 9.99
+                },
+                "Amount22": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "precision": 2,
+                    "scale": 2,
+                    "multipleOf": 1e-2,
+                    "minimum": -9.99,
+                    "maximum": 9.99
+                },
+                "Amount3v": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "precision": 3,
+                    "scale": "variable",
+                    "minimum": -999,
+                    "maximum": 999
+                },
+                "Amount3f": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "precision": 7,
+                    "scale": "floating",
+                    "minimum": -9999999,
+                    "maximum": 9999999
+                }
+            }
+        },
+        "org.example.Product": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "CategoryID": {
+                    "type": "string"
+                },
+                "CategoryKind": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Category": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/org.example.Category"
+                        }
+                    ]
+                },
+                "Supplier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/org.example.Supplier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            }
+        },
+        "org.example.Supplier": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "unicode": true
+                }
+            }
+        },
+        "org.example.Customer": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string",
+                    "unicode": false
+                }
+            }
+        },
+        "org.example.Order": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": [
+                        "integer",
+                        "string"
+                    ],
+                    "format": "int64"
+                }
+            }
+        },
+        "org.example.Category": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "string"
+                },
+                "Kind": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/org.example.Product"
+                    }
                 }
             }
         },
@@ -330,11 +320,8 @@
                 }
             }
         },
-        "org.example.Product22": {
+        "org.example.Product25": {
             "type": "object",
-            "keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -363,9 +350,6 @@
         },
         "org.example.ShipmentBox": {
             "type": "object",
-            "keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -382,6 +366,17 @@
                 }
             }
         },
+        "org.example.NothingC": {
+            "type": "object"
+        },
+        "org.example.NotMuchC": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/org.example.NothingC"
+                }
+            ]
+        },
         "org.example.FileAccess": {
             "anyOf": [
                 {
@@ -397,24 +392,7 @@
                     "type": "string",
                     "pattern": "^(Read|Write|Create|Delete|[1-9][0-9]*)(,(Read|Write|Create|Delete|[1-9][0-9]*))*$"
                 }
-            ],
-            "Read@odata.value": 1,
-            "Read@Core.Description": "Read access permitted",
-            "Write@odata.value": 2,
-            "Create@odata.value": 4,
-            "Delete@odata.value": 8
-        },
-        "org.example.ShippingMethod": {
-            "type": "string",
-            "enum": [
-                "FirstClass",
-                "TwoDay",
-                "Overnight"
-            ],
-            "FirstClass@Core.Description": "Shipped with highest priority",
-            "TwoDay@Core.Description": "Shipped within two days",
-            "Overnight@Core.Description": "Shipped overnight",
-            "description": "Method of shipping"
+            ]
         },
         "org.example.Pattern": {
             "anyOf": [
@@ -439,29 +417,23 @@
                     "type": "string",
                     "pattern": "^(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped|[1-9][0-9]*)(,(Plain|Red|Blue|Yellow|Solid|Striped|SolidRed|SolidBlue|SolidYellow|RedBlueStriped|RedYellowStriped|BlueYellowStriped|[1-9][0-9]*))*$"
                 }
-            ],
-            "Plain@odata.value": 0,
-            "Red@odata.value": 1,
-            "Blue@odata.value": 2,
-            "Yellow@odata.value": 4,
-            "Solid@odata.value": 8,
-            "Striped@odata.value": 16,
-            "SolidRed@odata.value": 9,
-            "SolidBlue@odata.value": 10,
-            "SolidYellow@odata.value": 12,
-            "RedBlueStriped@odata.value": 19,
-            "RedYellowStriped@odata.value": 21,
-            "BlueYellowStriped@odata.value": 22
+            ]
+        },
+        "org.example.ShippingMethod": {
+            "type": "string",
+            "enum": [
+                "FirstClass",
+                "TwoDay",
+                "Overnight"
+            ]
         },
         "org.example.Length": {
             "type": "integer",
-            "format": "int32",
-            "@Org.OData.Measures.V1.Unit": "Centimeters"
+            "format": "int32"
         },
         "org.example.Weight": {
             "type": "integer",
-            "format": "int32",
-            "@Org.OData.Measures.V1.Unit": "Kilograms"
+            "format": "int32"
         },
         "org.example.Size": {
             "type": "object",
@@ -488,11 +460,8 @@
                 }
             }
         },
-        "org.example2.Product": {
+        "org.example.Product2": {
             "type": "object",
-            "keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "integer",
@@ -510,26 +479,35 @@
                         "null"
                     ]
                 }
-            },
-            "@UI.DisplayName": {
-                "@odata.path": "Name"
-            },
-            "@SearchVocabulary.SearchResult": {
-                "Title": {
-                    "@odata.path": "Name"
+            }
+        },
+        "org.example.Example40": {
+            "type": "object",
+            "properties": {
+                "AmountInReportingCurrency": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
                 },
-                "Abstract": {
-                    "@odata.path": "Description"
+                "AmountInTransactionCurrency": {
+                    "type": [
+                        "number",
+                        "string",
+                        "null"
+                    ],
+                    "format": "decimal",
+                    "multipleOf": 1
                 },
-                "Url": {
-                    "@odata.apply": "odata.concat",
-                    "parameterValues": [
-                        "Products(",
-                        {
-                            "@odata.path": "ID"
-                        },
-                        ")"
-                    ]
+                "Currency": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "maxLength": 3
                 }
             }
         },
@@ -673,7 +651,7 @@
                 "GeographyPoint": {
                     "anyOf": [
                         {
-                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+                            "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.GeographyPoint"
                         },
                         {
                             "type": "null"
@@ -682,7 +660,7 @@
                     "default": "SRID=0;Point(142.1 64.1)"
                 },
                 "StreamValue": {
-                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Stream"
+                    "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.Stream"
                 },
                 "TypeDefValue": {
                     "anyOf": [
@@ -699,7 +677,7 @@
                 "PrimitiveValue": {
                     "anyOf": [
                         {
-                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
+                            "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.PrimitiveType"
                         },
                         {
                             "type": "null"
@@ -748,7 +726,8 @@
                         "number",
                         "string"
                     ],
-                    "format": "single"
+                    "format": "single",
+                    "default": "-INF"
                 },
                 "DecimalValue": {
                     "type": [
@@ -808,13 +787,13 @@
                 "GeographyPoint": {
                     "anyOf": [
                         {
-                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+                            "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.GeographyPoint"
                         }
                     ],
                     "default": "SRID=0;Point(142.1 64.1)"
                 },
                 "StreamValue": {
-                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.Stream"
+                    "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.Stream"
                 },
                 "TypeDefValue": {
                     "anyOf": [
@@ -835,7 +814,7 @@
                     "default": "42"
                 },
                 "PrimitiveValue": {
-                    "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PrimitiveType"
+                    "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.PrimitiveType"
                 }
             }
         },
@@ -845,13 +824,7 @@
                 "S",
                 "M",
                 "L"
-            ],
-            "S@Core.Description": "Small",
-            "M@Core.Description": "Medium",
-            "L@Core.Description": "Large",
-            "description": "T-Shirt Size",
-            "@Core.Description#alt": "Size (S, M, L)",
-            "@Core.LongDescription": "Size, expressed with letters familiar from e.g. T-Shirt sizes"
+            ]
         },
         "Model1.Color": {
             "anyOf": [
@@ -866,23 +839,10 @@
                     "type": "string",
                     "pattern": "^(Yellow|Striped|[1-9][0-9]*)(,(Yellow|Striped|[1-9][0-9]*))*$"
                 }
-            ],
-            "Yellow@odata.value": 1,
-            "Yellow@Does.Work": true,
-            "Yellow@For.Testing": {
-                "@odata.isOf": "Edm.Binary",
-                "value": {
-                    "@odata.path": "Hugo"
-                }
-            },
-            "Striped@odata.value": 2,
-            "Striped@Core.Description": "nicely striped"
+            ]
         },
         "Model1.Weird": {
             "type": "object",
-            "keys": [
-                "TheKey"
-            ],
             "properties": {
                 "TheKey": {
                     "type": "string"
@@ -933,111 +893,22 @@
                     "maximum": 999999999999.999
                 },
                 "Permission": {
-                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Permission"
+                    "$ref": "http://vocabs.odata.org/core/v1#/definitions/Org.OData.Core.V1.Permission"
                 },
                 "AliasPermission": {
                     "anyOf": [
                         {
-                            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Permission"
+                            "$ref": "http://vocabs.odata.org/core/v1#/definitions/Org.OData.Core.V1.Permission"
                         },
                         {
                             "type": "null"
                         }
                     ]
                 }
-            },
-            "@Collection.Of.Strings": [
-                "SomeString",
-                {
-                    "@odata.path": "MyAddress/vCard.Address#work/Street"
-                },
-                {
-                    "@odata.labeledElement": "Model1.Attribute",
-                    "value": "Hello"
-                },
-                {
-                    "@odata.labeledElementReference": "Model1.Attribute"
-                },
-                {
-                    "@odata.labeledElement": "Model1.Element",
-                    "value": "Hello"
-                },
-                {
-                    "@odata.labeledElementReference": "Model1.Element"
-                }
-            ],
-            "@Collection.Of.Strings@Core.Description": "String-valued expressions",
-            "@Collection.Of.Records": [
-                {
-                    "Egon": "1",
-                    "Hugo": "2",
-                    "Hugo@Some.Term": "Some Value",
-                    "@Some.Term": "Some Value"
-                },
-                {
-                    "@odata.labeledElement": "Model1.Record",
-                    "value": {
-
-                    }
-                },
-                {
-                    "@odata.labeledElementReference": "Model1.Record"
-                }
-            ],
-            "@Collection.Of.Records@Core.Description": "Record-valued expressions",
-            "@Vocab.GIQSupplier": {
-                "@odata.urlRef": "http://www.odata.org"
-            },
-            "@Vocab.GIQSupplier#two": {
-                "@odata.urlRef": "http://www.odata.org"
-            },
-            "@Vocab.GIQSupplier#three": {
-                "@odata.urlRef": {
-                    "@odata.apply": "odata.fillUriTemplate",
-                    "parameterValues": [
-                        "http://host/service/Suppliers({suppID})",
-                        {
-                            "@odata.labeledElement": "Model1.suppID",
-                            "value": {
-                                "@odata.apply": "odata.UriEncode",
-                                "parameterValues": [
-                                    {
-                                        "@odata.path": "@SupplierId"
-                                    },
-                                    "2013-04-08T23:00:00.0Z"
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-            "@org.example.display.DisplayName#cast": {
-                "@odata.cast": "Edm.String",
-                "maxLength": 30,
-                "value": "Product Catalog"
-            },
-            "@org.example.display.DisplayName#cast2": {
-                "@odata.cast": "Edm.Decimal",
-                "precision": 30,
-                "scale": "variable",
-                "value": 3.14
-            },
-            "@Self.IsFloatingDecimal": {
-                "@odata.isOf": "Edm.Decimal",
-                "scale": "variable",
-                "value": {
-                    "@odata.path": "Customer/$count"
-                }
-            },
-            "@Some.Binary#two": "Zg",
-            "@Some.Binary#twoEqEq": "Zg==",
-            "@Some.Binary#three": "Zm8",
-            "@Some.Binary#threeEq": "Zm8=",
-            "@Some.Binary": "HugoHase-_ab"
+            }
         },
         "Model1.Address": {
             "type": "object",
-            "openType": true,
             "properties": {
                 "Street": {
                     "type": [
@@ -1053,10 +924,7 @@
                         {
                             "type": "null"
                         }
-                    ],
-                    "relationship": {
-
-                    }
+                    ]
                 },
                 "Region": {
                     "anyOf": [
@@ -1066,10 +934,7 @@
                         {
                             "type": "null"
                         }
-                    ],
-                    "relationship": {
-
-                    }
+                    ]
                 },
                 "Country": {
                     "anyOf": [
@@ -1079,15 +944,12 @@
                         {
                             "type": "null"
                         }
-                    ],
-                    "relationship": {
-
-                    }
+                    ]
                 },
                 "MapLocation": {
                     "anyOf": [
                         {
-                            "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.GeographyPoint"
+                            "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.GeographyPoint"
                         },
                         {
                             "type": "null"
@@ -1127,23 +989,15 @@
                         {
                             "type": "null"
                         }
-                    ],
-                    "relationship": {
-
-                    }
+                    ]
                 }
             }
         },
         "Model1.AnnotationOnly": {
-            "type": "object",
-            "@Some.Tag": true
+            "type": "object"
         },
         "Model1.Order": {
             "type": "object",
-            "abstract": true,
-            "keys": [
-
-            ],
             "properties": {
                 "Quantity": {
                     "type": [
@@ -1152,10 +1006,7 @@
                         "null"
                     ],
                     "format": "decimal",
-                    "multipleOf": 1,
-                    "@Measures.Unit": {
-                        "@odata.path": "ShippingUnit"
-                    }
+                    "multipleOf": 1
                 },
                 "ShippingUnit": {
                     "type": [
@@ -1178,9 +1029,7 @@
             "type": "string"
         },
         "Model1.LanguageDependentText": {
-            "type": "string",
-            "@Core.IsLanguageDependent": true,
-            "@Core.IsLanguageDependent@Core.DefaultLanguage": "en-US"
+            "type": "string"
         },
         "Model1.IntegerDecimal": {
             "type": [
@@ -1245,8 +1094,7 @@
                         {
                             "type": "null"
                         }
-                    ],
-                    "@custom.IsA": "Y.Developer X.Person"
+                    ]
                 }
             }
         },
@@ -1265,8 +1113,7 @@
                     ],
                     "format": "date"
                 }
-            },
-            "@custom.IsA": "X.Movie"
+            }
         },
         "Y.SomeThingType": {
             "type": "object",
@@ -1281,18 +1128,13 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/X.PersonType"
-                    },
-                    "@custom.ItemIsA": "X.Person"
+                    }
                 },
                 "VIPs": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/X.FriendType"
-                    },
-                    "relationship": {
-
-                    },
-                    "@custom.ItemIsA": "X.Friend"
+                    }
                 }
             }
         },
@@ -1302,882 +1144,10 @@
                 "InlineableStreamProperties": {
                     "type": "array",
                     "items": {
-                        "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.PropertyPath"
+                        "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.PropertyPath"
                     },
                     "description": "Change tracking supports inlining these stream properties"
                 }
-            }
-        }
-    },
-    "schemas": {
-        "Org.OData.Core.V1": {
-            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
-        },
-        "Core": {
-            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/schemas/Org.OData.Core.V1"
-        },
-        "Org.OData.Measures.V1": {
-            "$ref": "http://tinyurl.com/Org-OData-Measures-V1#/schemas/Org.OData.Measures.V1"
-        },
-        "Measures": {
-            "$ref": "http://tinyurl.com/Org-OData-Measures-V1#/schemas/Org.OData.Measures.V1"
-        },
-        "Org.OData.Validation.V1": {
-            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Validation.V1.json#/schemas/Org.OData.Validation.V1"
-        },
-        "Validation": {
-            "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Validation.V1.json#/schemas/Org.OData.Validation.V1"
-        },
-        "Org.OData.Capabilities.V1": {
-            "$ref": "http://vocabs.odata.org/capabilities/v1#/schemas/Org.OData.Capabilities.V1"
-        },
-        "Capabilities": {
-            "$ref": "http://vocabs.odata.org/capabilities/v1#/schemas/Org.OData.Capabilities.V1"
-        },
-        "org.example.Display": {
-            "$ref": "http://vocabs.odata.org/display/v1#/schemas/org.example.Display"
-        },
-        "UI": {
-            "$ref": "http://vocabs.odata.org/display/v1#/schemas/org.example.Display"
-        },
-        "anotherOne": {
-            "$ref": "http://vocabs.odata.org/display/v1#/schemas/anotherOne"
-        },
-        "Self": {
-            "$ref": "#/schemas/org.example"
-        },
-        "org.example": {
-            "description": "Examples from Part 3: CSDL"
-        },
-        "Model": {
-            "$ref": "#/schemas/org.example2"
-        },
-        "org.example2": {
-            "description": "Examples from Part 3: CSDL - second schema",
-            "annotations": {
-                "Self.Person": {
-                    "@org.example.display.DisplayName#Tablet": {
-                        "@odata.path": "FirstName"
-                    },
-                    "@org.example.display.Thumbnail": "T0RhdGE",
-                    "@org.example.display.Thumbnail#element": "T0RhdGE",
-                    "@org.example.display.ReadOnly": true,
-                    "@org.example.display.ReadOnly#element": true,
-                    "@org.example.vCard.birthDay": "2000-01-01",
-                    "@org.example.vCard.birthDay#element": "2000-01-01",
-                    "@org.example.display.LastUpdated": "2000-01-01T16:00:00.000Z",
-                    "@org.example.display.LastUpdated#element": "2000-01-01T16:00:00.000-09:00",
-                    "@org.example.display.Width": 3.14,
-                    "@org.example.display.Width#element": 3.14,
-                    "@org.example.task.duration": "P7D",
-                    "@org.example.task.duration#element": "P11DT23H59M59.999999999999S",
-                    "@org.example.HasPattern": "Red",
-                    "@org.example.HasPattern#element": "Red",
-                    "@org.example.HasPattern#list": "Red,Striped",
-                    "@org.example.HasPattern#listelement": "Red,Striped",
-                    "@org.example.display.FloatWidth": 3.14,
-                    "@org.example.display.FloatWidth#element": 3.14,
-                    "@org.example.display.Id": "21EC2020-3AEA-1069-A2DD-08002B30309D",
-                    "@org.example.display.Id#element": "21EC2020-3AEA-1069-A2DD-08002B30309D",
-                    "@org.example.display.IntWidth": 42,
-                    "@org.example.display.IntWidth#element": 42,
-                    "@org.example.display.DisplayName": "Product Catalog",
-                    "@org.example.display.DisplayName#element": "Product Catalog",
-                    "@org.example.display.EndTime": "21:45:00",
-                    "@org.example.display.EndTime#element": "21:45:00",
-                    "@UI.ReferenceFacet": {
-                        "@odata.annotationPath": "Product/Supplier/@UI.LineItem"
-                    },
-                    "@UI.CollectionFacet#Contacts": [
-                        {
-                            "@odata.annotationPath": "Supplier/@Communication.Contact"
-                        },
-                        {
-                            "@odata.annotationPath": "Customer/@Communication.Contact"
-                        }
-                    ],
-                    "@org.example.display.DisplayName#apply": {
-                        "@odata.apply": "odata.concat",
-                        "parameterValues": [
-                            "Product: ",
-                            {
-                                "@odata.path": "ProductName"
-                            },
-                            " (",
-                            {
-                                "@odata.path": "Available/Quantity"
-                            },
-                            "",
-                            {
-                                "@odata.path": "Available/Unit"
-                            },
-                            " available)"
-                        ]
-                    },
-                    "@Some.Term#Example57": {
-                        "@odata.apply": "odata.fillUriTemplate",
-                        "parameterValues": [
-                            "http://host/service/Genres('{genreName}')",
-                            {
-                                "@odata.labeledElement": "org.example2.genreName",
-                                "value": {
-                                    "@odata.path": "NameOfMovieGenre"
-                                }
-                            }
-                        ]
-                    },
-                    "@Some.Term#Example58": {
-                        "@odata.apply": "odata.fillUriTemplate",
-                        "parameterValues": [
-                            "http://host/service/Genres({genreName2})",
-                            {
-                                "@odata.labeledElement": "org.example2.genreName2",
-                                "value": {
-                                    "@odata.apply": "odata.uriEncode",
-                                    "parameterValues": [
-                                        {
-                                            "@odata.path": "NameOfMovieGenre"
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    "@org.example.display.Threshold": {
-                        "@odata.cast": "Edm.Decimal",
-                        "value": {
-                            "@odata.path": "Average"
-                        }
-                    },
-                    "@org.example.seo.SeoTerms": [
-                        "Product",
-                        "Supplier",
-                        "Customer"
-                    ],
-                    "@org.example.person.Gender": {
-                        "@odata.if": [
-                            {
-                                "@odata.path": "IsFemale"
-                            },
-                            "Female",
-                            "Male"
-                        ]
-                    },
-                    "@Self.IsPreferredCustomer": {
-                        "@odata.isOf": "Self.PreferredCustomer",
-                        "value": {
-                            "@odata.path": "Customer"
-                        }
-                    },
-                    "@org.example.display.DisplayName#l": {
-                        "@odata.labeledElement": "org.example2.CustomerFirstName",
-                        "value": {
-                            "@odata.path": "FirstName"
-                        }
-                    },
-                    "@org.example.display.DisplayName#lelement": {
-                        "@odata.labeledElement": "org.example2.CustomerFirstName",
-                        "value": {
-                            "@odata.path": "FirstName"
-                        }
-                    },
-                    "@org.example.display.DisplayName#ref": {
-                        "@odata.labeledElementReference": "Model.CustomerFirstName"
-                    },
-                    "@org.example.display.DisplayName#null": {
-                        "@odata.null": {
-
-                        }
-                    },
-                    "@UI.HyperLink": {
-                        "@odata.navigationPropertyPath": "Supplier"
-                    },
-                    "@Capabilities.UpdateRestrictions#element": {
-                        "NonUpdatableNavigationProperties": [
-                            {
-                                "@odata.navigationPropertyPath": "Supplier"
-                            },
-                            {
-                                "@odata.navigationPropertyPath": "Category"
-                            }
-                        ]
-                    },
-                    "@org.example.display.DisplayName#path": {
-                        "@odata.path": "FirstName"
-                    },
-                    "@org.example.display.DisplayName#pathelement": {
-                        "@odata.path": "@vCard.Address#work/FullName"
-                    },
-                    "@UI.RefreshOnChangeOf": {
-                        "@odata.propertyPath": "ChangedAt"
-                    },
-                    "@Capabilities.UpdateRestrictions#element2": {
-                        "NonUpdatableProperties": [
-                            {
-                                "@odata.propertyPath": "CreatedAt"
-                            },
-                            {
-                                "@odata.propertyPath": "ChangedAt"
-                            }
-                        ]
-                    },
-                    "@org.example.person.Employee": {
-                        "GivenName": {
-                            "@odata.path": "FirstName"
-                        },
-                        "Surname": {
-                            "@odata.path": "LastName"
-                        },
-                        "Manager": {
-                            "@odata.path": "DirectSupervisor"
-                        },
-                        "CostCenter": {
-                            "@odata.urlRef": {
-                                "@odata.apply": "odata.fillUriTemplate",
-                                "parameterValues": [
-                                    "http://host/anotherservice/CostCenters('{ccid}')",
-                                    {
-                                        "@odata.labeledElement": "org.example2.ccid",
-                                        "value": {
-                                            "@odata.path": "CostCenterID"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "@Vocab.Supplier": {
-                        "@odata.urlRef": {
-                            "@odata.apply": "odata.fillUriTemplate",
-                            "parameterValues": [
-                                "http://host/service/Suppliers({suppID})",
-                                {
-                                    "@odata.labeledElement": "org.example2.suppID",
-                                    "value": {
-                                        "@odata.apply": "odata.uriEncode",
-                                        "parameterValues": [
-                                            {
-                                                "@odata.path": "SupplierId"
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "@Core.LongDescription#element": {
-                        "@odata.urlRef": "http://host/wiki/HowToUse"
-                    },
-                    "@Core.LongDescription": {
-                        "@odata.urlRef": "http://host/wiki/HowToUse"
-                    }
-                }
-            }
-        },
-        "M1": {
-            "$ref": "#/schemas/Model1"
-        },
-        "Model1": {
-            "@UI.ReferenceFacet": {
-                "@odata.annotationPath": "@UI.LineItem"
-            },
-            "@UI.ReferenceFacet#OnNavPropTarget": {
-                "@odata.annotationPath": "Product/Supplier/@UI.LineItem"
-            },
-            "@UI.ReferenceFacet#OnNavProp": {
-                "@odata.annotationPath": "Product/Supplier@UI.LineItem"
-            },
-            "@UI.ReferenceFacet#OnNavPropQualified": {
-                "@odata.annotationPath": "Product/Supplier@UI.LineItem#Tablet"
-            },
-            "@UI.ReferenceFacet#ViaUrl": {
-                "@odata.urlRef": "http://LineItem"
-            },
-            "@UI.ReferenceFacet#complicated": {
-                "@odata.annotationPath": "@x.Supplier#X/Contacts@y.ViewVariants"
-            },
-            "@UI.HyperLink": {
-                "@odata.navigationPropertyPath": "Supplier"
-            },
-            "@Is.Null": {
-                "@odata.null": {
-                    "@Within.Null": true
-                }
-            },
-            "@Is.Null@Next.to.Null": true,
-            "@Vocabulary1.SubTitle": 1234,
-            "@Vocabulary1.SubTitle@For.Constant": true,
-            "@A.Bool": true,
-            "@A.Bool@Annotate.A.Bool": true,
-            "@A.Decimal": 12.34,
-            "@A.Float": 1.23456789e4,
-            "@A.Float#inf": "INF",
-            "@A.Float#minusInf": "-INF",
-            "@A.Float#nan": "NaN",
-            "@A.Float#Element": 1.23456789e4,
-            "@An.Int": 1234,
-            "@A.String": "1.23e4",
-            "@A.String#withAmp": "Fast&Furious",
-            "@A.String#ToBeEscaped": "A/\"good\"\r\nstory\\for\tkids",
-            "@A.Guid": "86a96539-871b-45cf-b96b-93dbc235105e",
-            "@A.Guid#Element": "86a96539-871b-45cf-b96b-93dbc235105e",
-            "@A.Date": "2013-10-09",
-            "@Capabilities.UpdateRestrictions": {
-                "Updatable": true,
-                "NonUpdatableNavigationProperties": [
-                    {
-                        "@odata.navigationPropertyPath": "Supplier"
-                    },
-                    {
-                        "@odata.navigationPropertyPath": "Category"
-                    }
-                ]
-            },
-            "@SearchVocabulary.SearchResult": {
-                "Title": {
-                    "@odata.path": "Name"
-                },
-                "Abstract": {
-                    "@odata.path": "Description"
-                },
-                "Url": {
-                    "@odata.apply": "odata.concat",
-                    "parameterValues": [
-                        "Products(",
-                        {
-                            "@odata.path": "ID"
-                        },
-                        ")"
-                    ],
-                    "@In.Apply": true
-                }
-            },
-            "@org.example.display.DisplayName#if": {
-                "@odata.if": [
-                    {
-                        "@odata.path": "IsFemale"
-                    },
-                    "Female",
-                    "Male"
-                ],
-                "@In.If": true
-            },
-            "@UI.CollectionFacet#Contacts": [
-                {
-                    "@odata.annotationPath": "Supplier/@Communication.Contact"
-                },
-                {
-                    "@odata.annotationPath": "Customer/@Communication.Contact"
-                }
-            ],
-            "@Some.Thing": {
-                "@odata.and": [
-                    {
-                        "@odata.or": [
-                            {
-                                "@odata.eq": [
-                                    {
-                                        "@odata.ge": [
-                                            {
-                                                "@odata.null": {
-
-                                                }
-                                            },
-                                            {
-                                                "@odata.null": {
-
-                                                }
-                                            }
-                                        ],
-                                        "@In.Ge": true
-                                    },
-                                    {
-                                        "@odata.gt": [
-                                            {
-                                                "@odata.null": {
-
-                                                }
-                                            },
-                                            {
-                                                "@odata.null": {
-
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "@odata.ne": [
-                                    {
-                                        "@odata.lt": [
-                                            {
-                                                "@odata.null": {
-
-                                                }
-                                            },
-                                            {
-                                                "@odata.null": {
-
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "@odata.null": {
-
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "@odata.not": {
-                            "@odata.le": [
-                                "INF",
-                                {
-                                    "@odata.null": {
-
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            },
-            "@Onelegged.If": {
-                "@odata.if": [
-                    true,
-                    {
-                        "@odata.path": "Then"
-                    }
-                ]
-            },
-            "@Twolegged.If": {
-                "@odata.if": [
-                    false,
-                    {
-                        "@odata.path": "Then"
-                    },
-                    {
-                        "@odata.path": "Else"
-                    }
-                ]
-            }
-        },
-        "X": {
-
-        },
-        "Y": {
-            "annotations": {
-                "Some.EntityType": {
-                    "@X.Person": {
-
-                    },
-                    "@Y.Developer": {
-
-                    },
-                    "description": "External description",
-                    "@Org.OData.Core.V1.Description#alt": "Alternative description",
-                    "@Core.Description": {
-                        "@odata.path": "SomeProperty"
-                    },
-                    "@Y.DevelopmentTeam": {
-                        "@odata.path": "SomeCollectionNavProp/@Y.Developer"
-                    },
-                    "@Y.DevelopmentTeam@custom.IsA": "X.Team",
-                    "@Y.ScrumTeam": {
-                        "ScrumMaster": {
-
-                        },
-                        "ScrumMaster@custom.IsA": "Y.Developer X.Person"
-                    },
-                    "@Y.Movies": {
-                        "@odata.path": "AllMyMovies"
-                    },
-                    "@Y.ArchivedMovies": {
-                        "@odata.path": "MoviesInStorage"
-                    },
-                    "@Y.ArchivedMovies@custom.ItemIsA": "X.Movie",
-                    "@Y.Something": {
-                        "SomeProperty": "Some Thing",
-                        "AnotherProperty": "A string with spaces",
-                        "SomeTime": "P20D",
-                        "MoreTime": "P20D",
-                        "Contacts": {
-                            "@odata.path": "MyContacts"
-                        },
-                        "Contacts@custom.ItemIsA": "X.Person",
-                        "VIPs": {
-                            "@odata.path": "MyBestFriends"
-                        },
-                        "VIPs@custom.ItemIsA": "X.Person"
-                    }
-                },
-                "MySchema.MyEntityContainer/MyEntitySet/MySchema.MyEntityType/MyProperty": {
-                    "@Y.Movies": {
-                        "@odata.path": "AllMyMovies"
-                    }
-                }
-            }
-        }
-    },
-    "functions": {
-        "org.example.TopSellingProducts": [
-            {
-                "parameters": [
-                    {
-                        "name": "Year",
-                        "parameterType": {
-                            "type": [
-                                "number",
-                                "string",
-                                "null"
-                            ],
-                            "format": "decimal",
-                            "precision": 4,
-                            "multipleOf": 1,
-                            "minimum": -9999,
-                            "maximum": 9999
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/org.example.Product"
-                    }
-                }
-            }
-        ],
-        "Model1.CreatedEntities": [
-            {
-                "parameters": [
-                    {
-                        "name": "before",
-                        "parameterType": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "format": "date-time"
-                        }
-                    },
-                    {
-                        "name": "after",
-                        "parameterType": {
-                            "type": [
-                                "string",
-                                "null"
-                            ],
-                            "format": "date-time"
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": "array",
-                    "items": {
-                        "anyOf": [
-                            {
-                                "$ref": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#/definitions/Edm.EntityType"
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ]
-                    }
-                }
-            }
-        ],
-        "Model1.TopSellingProducts": [
-            {
-                "parameters": [
-                    {
-                        "name": "Year",
-                        "parameterType": {
-                            "type": [
-                                "number",
-                                "string",
-                                "null"
-                            ],
-                            "format": "decimal",
-                            "precision": 4,
-                            "multipleOf": 1,
-                            "minimum": -9999,
-                            "maximum": 9999
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/org.example.Product"
-                    },
-                    "@A.B": "Works"
-                }
-            }
-        ]
-    },
-    "terms": {
-        "org.example2.IsURI": {
-            "anyOf": [
-                {
-                    "$ref": "https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/vocabularies/Org.OData.Core.V1.json#/definitions/Org.OData.Core.V1.Tag"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": true,
-            "appliesTo": "Property",
-            "description": "Properties and terms annotated with this term MUST contain a valid URI",
-            "@Core.RequiresType": "Edm.String"
-        },
-        "X.Person": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/X.PersonType"
-                },
-                {
-                    "type": "null"
-                }
-            ]
-        },
-        "X.Team": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/X.PersonType"
-            },
-            "@custom.ItemIsA": "X.Person"
-        },
-        "X.Movie": {
-            "$ref": "#/definitions/X.MovieType"
-        },
-        "X.Friend": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/X.FriendType"
-                },
-                {
-                    "type": "null"
-                }
-            ]
-        },
-        "Y.Developer": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Y.DeveloperType"
-                }
-            ],
-            "baseTerm": {
-                "$ref": "#/terms/X.Person"
-            }
-        },
-        "Y.DevelopmentTeam": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/Y.DeveloperType"
-            },
-            "@custom.ItemIsA": "Y.Developer",
-            "@custom.IsA": "X.Team"
-        },
-        "Y.ScrumTeam": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Y.ScrumTeamType"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "baseTerm": {
-                "$ref": "#/terms/Y.DevelopmentTeam"
-            }
-        },
-        "Y.Movies": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/X.MovieType"
-            }
-        },
-        "Y.ArchivedMovies": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/Y.ArchivedMovieType"
-            },
-            "@custom.ItemIsA": "X.Movie"
-        },
-        "Y.SomeThing": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Y.SomeThingType"
-                },
-                {
-                    "type": "null"
-                }
-            ]
-        },
-        "Y.AdvancedChangeTracking": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Y.ChangeTrackingType"
-                }
-            ],
-            "baseTerm": {
-                "$ref": "http://vocabs.odata.org/capabilities/v1#/terms/Org.OData.Capabilities.V1.ChangeTracking"
-            },
-            "appliesTo": [
-                "EntityContainer",
-                "EntitySet"
-            ],
-            "description": "Advanced change tracking capabilities of this service or entity set"
-        }
-    },
-    "entityContainer": {
-        "name": "DemoService",
-        "entitySets": {
-            "StandardCustomers": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Customer"
-                },
-                "navigationPropertyBindings": {
-                    "Orders": {
-                        "target": "Orders"
-                    }
-                }
-            },
-            "PreferredCustomers": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Customer"
-                },
-                "navigationPropertyBindings": {
-                    "Orders": {
-                        "target": "Orders"
-                    }
-                }
-            },
-            "Orders": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Order"
-                }
-            },
-            "Products": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Product"
-                },
-                "navigationPropertyBindings": {
-                    "Category": {
-                        "target": "Self.DemoService.Categories"
-                    },
-                    "Supplier": {
-                        "target": "Self.DemoService.Suppliers"
-                    }
-                },
-                "@org.example.display.DisplayName": "Product Catalog"
-            },
-            "Categories": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Category"
-                },
-                "navigationPropertyBindings": {
-                    "Products": {
-                        "target": "Self.DemoService.Products"
-                    }
-                }
-            },
-            "Suppliers": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Supplier"
-                },
-                "navigationPropertyBindings": {
-                    "Products": {
-                        "target": "Self.DemoService.Products"
-                    }
-                },
-                "@org.example.display.DisplayName": "Supplier Directory"
-            },
-            "Categories34": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Category"
-                },
-                "navigationPropertyBindings": {
-                    "Products": {
-                        "target": "Products"
-                    }
-                }
-            },
-            "Categories35": {
-                "entityType": {
-                    "$ref": "#/definitions/org.example.Category"
-                },
-                "navigationPropertyBindings": {
-                    "Products": {
-                        "target": "org.example.DemoService/Products"
-                    }
-                }
-            }
-        },
-        "singletons": {
-            "Contoso": {
-                "type": {
-                    "$ref": "#/definitions/org.example.Supplier"
-                }
-            }
-        },
-        "functionImports": {
-            "TopSellingProducts": {
-                "function": {
-                    "$ref": "#/functions/Model1.TopSellingProducts"
-                },
-                "entitySet": "Products"
-            }
-        }
-    },
-    "references": {
-        "http://tinyurl.com/Org-OData-Measures-V1": {
-            "@Some.Term": true
-        },
-        "http://somewhere/Vocabulary/V1": {
-            "includeAnnotations": {
-                "Name.Space": [
-                    {
-                        "targetNamespace": "Target.Space"
-                    },
-                    {
-                        "targetNamespace": "Target.Space",
-                        "qualifier": "SomeName"
-                    },
-                    {
-                        "qualifier": "SomeName"
-                    },
-                    {
-
-                    }
-                ]
-            }
-        },
-        "http://odata.org/ann/b": {
-            "includeAnnotations": {
-                "org.example.validation": [
-                    {
-
-                    }
-                ],
-                "org.example.display": [
-                    {
-                        "qualifier": "Tablet"
-                    }
-                ],
-                "org.example.hcm": [
-                    {
-                        "targetNamespace": "com.contoso.Sales"
-                    },
-                    {
-                        "qualifier": "Tablet",
-                        "targetNamespace": "com.contoso.Person"
-                    }
-                ]
             }
         }
     }
