@@ -1,12 +1,10 @@
 {
-    "$schema": "http://docs.oasis-open.org/odata/odata-json-csdl/v4.0/edm.json#",
+    "id": "org.example2",
+    "$schema": "http://docs.oasis-open.org/odata/ns/edm.json#",
     "odata-version": "4.0",
     "definitions": {
         "Schema.One.Waldo": {
             "type": "object",
-            "keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -15,10 +13,6 @@
         },
         "Schema.Two.Waldo": {
             "type": "object",
-            "abstract": true,
-            "keys": [
-
-            ],
             "properties": {
                 "Fred": {
                     "type": [
@@ -30,9 +24,6 @@
         },
         "Schema.Two.Fred": {
             "type": "object",
-            "keys": [
-                "ID"
-            ],
             "properties": {
                 "ID": {
                     "type": "string"
@@ -41,174 +32,8 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Schema.Two.Waldo"
-                    },
-                    "relationship": {
-
                     }
                 }
-            }
-        }
-    },
-    "schemas": {
-        "org.example": {
-            "$ref": "miscellaneous.json#/schemas/org.example"
-        },
-        "Model": {
-            "$ref": "#/schemas/org.example2"
-        },
-        "org.example2": {
-
-        },
-        "One": {
-            "$ref": "#/schemas/Schema.One"
-        },
-        "Schema.One": {
-
-        },
-        "Two": {
-            "$ref": "#/schemas/Schema.Two"
-        },
-        "Schema.Two": {
-
-        }
-    },
-    "actions": {
-        "Schema.One.Rejection": [
-            {
-                "parameters": [
-
-                ]
-            },
-            {
-                "parameters": [
-                    {
-                        "name": "foo",
-                        "parameterType": {
-                            "$ref": "#/definitions/Schema.One.Waldo"
-                        }
-                    }
-                ],
-                "isBound": true
-            },
-            {
-                "parameters": [
-                    {
-                        "name": "bar",
-                        "parameterType": {
-                            "$ref": "#/definitions/Schema.One.Waldo"
-                        }
-                    },
-                    {
-                        "name": "Reason",
-                        "parameterType": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "isBound": true
-            }
-        ]
-    },
-    "functions": {
-        "Schema.One.Foo": [
-            {
-                "parameters": [
-
-                ],
-                "returnType": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "maxLength": 42
-                }
-            }
-        ],
-        "Schema.One.OddWaldos": [
-            {
-                "parameters": [
-                    {
-                        "name": "waldos",
-                        "parameterType": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Schema.One.Waldo"
-                            }
-                        }
-                    }
-                ],
-                "returnType": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Schema.One.Waldo"
-                    }
-                },
-                "isBound": true,
-                "entitySetPath": "waldos"
-            }
-        ]
-    },
-    "entityContainer": {
-        "name": "Extending",
-        "extends": {
-            "$ref": "miscellaneous.json#/entityContainer"
-        },
-        "entitySets": {
-            "Categories34": {
-                "entityType": {
-                    "$ref": "miscellaneous.json#/definitions/org.example.Category"
-                },
-                "navigationPropertyBindings": {
-                    "Products": {
-                        "target": "Products"
-                    }
-                }
-            },
-            "Categories35": {
-                "entityType": {
-                    "$ref": "miscellaneous.json#/definitions/org.example.Category"
-                },
-                "navigationPropertyBindings": {
-                    "Products": {
-                        "target": "org.example.DemoService/Products"
-                    }
-                }
-            },
-            "Waldos": {
-                "entityType": {
-                    "$ref": "#/definitions/Schema.Two.Waldo"
-                }
-            },
-            "Freds": {
-                "entityType": {
-                    "$ref": "#/definitions/Schema.Two.Fred"
-                },
-                "navigationPropertyBindings": {
-                    "Waldos": {
-                        "target": "Waldos"
-                    },
-                    "MoreWaldos": {
-                        "target": "Namespace.Container/Freds"
-                    },
-                    "EvenMoreWaldos": {
-                        "target": "Namespace.Container/Orders/Items/M.E/Nav"
-                    }
-                }
-            }
-        },
-        "functionImports": {
-            "Bar": {
-                "function": {
-                    "$ref": "#/functions/Schema.One.Foo"
-                },
-                "includeInServiceDocument": true,
-                "entitySet": "Model.Extending/Freds"
-            },
-            "CreatedEntities": {
-                "function": {
-                    "$ref": "#/functions/Model1.CreatedEntities"
-                },
-                "entitySet": "Waldos"
             }
         }
     }
