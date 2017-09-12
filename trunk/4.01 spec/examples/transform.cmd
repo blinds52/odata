@@ -18,15 +18,24 @@ set ODATA-VOCABULARIES=c:\git\odata-vocabularies
 set ODATA-OPENAPI=c:\git\odata-openapi
 
 set done=false
+set here=%~dp1
 
-for /F "eol=# tokens=1,2" %%F in (%~n0.txt) do (
-	if /I [%~n1]==[%%~nF] (
-	  set done=true
-		call :process %%F %%G
-	) else if [%1]==[] (
-	  set done=true
-		call :process %%F %%G
-	)
+if exist %1\ (
+  set done=true
+  cd %1
+  for %%F in (*.xml) do (
+    call :process %%F
+  )
+) else (
+  for /F "eol=# tokens=1,2" %%F in (%~n0.txt) do (
+    if /I [%~n1]==[%%~nF] (
+      set done=true
+      call :process %%F %%G
+    ) else if [%1]==[] (
+	    set done=true
+		  call :process %%F %%G
+	  )
+  )
 )
 
 if %done%==false echo Don't know how to %~n0 %1
@@ -52,8 +61,8 @@ exit /b
   if not errorlevel 1 (
     del %~n1.normalized.xml %~n1.tmp.json
     if [%2]==[V2] del %~n1.V4.xml
-    diff.exe --ignore-space-change --strip-trailing-cr %~n1-goal.json %~n1.json
+    if exist %~n1-goal.json diff.exe --ignore-space-change --strip-trailing-cr %~n1-goal.json %~n1.json
     
-    call ajv -s ..\schemas\csdl.schema.json -d %~n1.json > nul
+    call ajv -s %here%\..\schemas\csdl.schema.json -d %~n1.json > nul
   )
 exit /b
