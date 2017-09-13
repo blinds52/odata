@@ -1,0 +1,187 @@
+{
+    "id": "Org.OData.Core.V1",
+    "$schema": "http://docs.oasis-open.org/odata/ns/edm.json#",
+    "odata-version": "4.0",
+    "definitions": {
+        "Org.OData.Core.V1.RevisionType": {
+            "type": "object",
+            "properties": {
+                "Version": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "The schema version with which this revision was first published"
+                },
+                "Kind": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Org.OData.Core.V1.RevisionKind"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "The kind of revision"
+                },
+                "Description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "Text describing the reason for the revision"
+                }
+            }
+        },
+        "Org.OData.Core.V1.RevisionKind": {
+            "type": "string",
+            "enum": [
+                "Added",
+                "Modified",
+                "Deprecated"
+            ]
+        },
+        "Org.OData.Core.V1.Link": {
+            "type": "object",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link relation type, see [IANA Link Relations](http://www.iana.org/assignments/link-relations/link-relations.xhtml)"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "URL of related information"
+                }
+            },
+            "description": "The Link term is inspired by the `atom:link` element, see [RFC4287](https://tools.ietf.org/html/rfc4287#section-4.2.7) and the `Link` HTTP header, see [RFC5988](https://tools.ietf.org/html/rfc5988)"
+        },
+        "Org.OData.Core.V1.MessageType": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "Machine-readable, language-independent message code"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Human-readable, language-dependent message text"
+                },
+                "severity": {
+                    "$ref": "#/definitions/Org.OData.Core.V1.MessageSeverity",
+                    "description": "Severity of the message"
+                },
+                "target": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "A path to the target of the message detail, relative to the annotated instance"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Org.OData.Core.V1.MessageType"
+                    },
+                    "description": "List of detail messages"
+                }
+            }
+        },
+        "Org.OData.Core.V1.MessageSeverity": {
+            "type": "string"
+        },
+        "Org.OData.Core.V1.Tag": {
+            "type": "boolean",
+            "description": "This is the type to use for all tagging terms"
+        },
+        "Org.OData.Core.V1.Permission": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "None",
+                        "Read",
+                        "Write",
+                        "ReadWrite",
+                        "Invoke"
+                    ]
+                },
+                {
+                    "type": "string",
+                    "pattern": "^(None|Read|Write|ReadWrite|Invoke|[1-9][0-9]*)(,(None|Read|Write|ReadWrite|Invoke|[1-9][0-9]*))*$"
+                }
+            ]
+        },
+        "Org.OData.Core.V1.MetadataKind": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "count",
+                        "navigationLink",
+                        "associationLink",
+                        "etag"
+                    ]
+                },
+                {
+                    "type": "string",
+                    "pattern": "^(count|navigationLink|associationLink|etag|[1-9][0-9]*)(,(count|navigationLink|associationLink|etag|[1-9][0-9]*))*$"
+                }
+            ]
+        },
+        "Org.OData.Core.V1.QualifiedTypeName": {
+            "type": "string",
+            "description": "The qualified name of a type in scope."
+        },
+        "Org.OData.Core.V1.AlternateKey": {
+            "type": "object",
+            "properties": {
+                "Key": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Org.OData.Core.V1.PropertyRef"
+                    },
+                    "description": "The set of properties that make up this key"
+                }
+            }
+        },
+        "Org.OData.Core.V1.PropertyRef": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "anyOf": [
+                        {
+                            "$ref": "http://docs.oasis-open.org/odata/ns/edm.json#/definitions/Edm.PropertyPath"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "A path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex or navigation property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes."
+                },
+                "Alias": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs"
+                }
+            }
+        },
+        "Org.OData.Core.V1.Dictionary": {
+            "type": "object",
+            "description": "A dictionary of name-value pairs"
+        },
+        "Org.OData.Core.V1.OptionalParameterType": {
+            "type": "object",
+            "properties": {
+                "DefaultValue": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "Default value for an optional parameter of primitive or enumeration type, using the same rules as the `cast` function in URLs."
+                }
+            }
+        }
+    }
+}

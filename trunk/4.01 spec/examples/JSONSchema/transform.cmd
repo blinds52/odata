@@ -11,6 +11,8 @@ set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1
 @rem  - YAJL's json_reformat from https://github.com/lloyd/yajl has been compiled and is in the PATH
 @rem  - Node.js is installed - download from https://nodejs.org/
 @rem  - ajv-cli is installed - npm install -g ajv-cli
+@rem  - https://github.com/oasis-tcs/odata-vocabularies has been cloned and environment variable ODATA-VOCABULARIES set to its location
+set ODATA-VOCABULARIES=c:\git\odata-vocabularies
 
 set done=false
 
@@ -39,7 +41,7 @@ exit /b
   if not errorlevel 1 (
     del %~n1.tmp.json
     
-    rem svn diff --force --extensions "-b -U0" csdl-16.1.jsonschema
+    svn diff --force --extensions "-b -U0" %~n1.jsonschema
     
     call ajv -s edm.json -d %~n1.jsonschema > nul
   )
