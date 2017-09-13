@@ -7,7 +7,7 @@
 
     TODO:
     - Validation annotations -> pattern, minimum, maximum, exclusiveM??imum, see ODATA-856, inline and explace style
-    - default for Geo types in GeoJSON
+    - DefaultValue for Geo types: omit or convert to GeoJSON
     - remove (most of) OData extensions
     - align with JSON Schema Draft 06, especially wrt. $ref and $id
   -->
@@ -34,7 +34,14 @@
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>{"id":"</xsl:text>
-    <xsl:value-of select="//edm:Schema/@Namespace" />
+    <xsl:choose>
+      <xsl:when test="//edm:Schema[edm:EntityContainer]/@Namespace">
+        <xsl:value-of select="//edm:Schema[edm:EntityContainer]/@Namespace" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="//edm:Schema/@Namespace" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>","$schema":"</xsl:text>
     <xsl:value-of select="$edmUri" />
     <xsl:text>#"</xsl:text>
