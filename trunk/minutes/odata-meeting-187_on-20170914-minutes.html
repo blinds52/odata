@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #187 Thursday September 14, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='3db3a3e5ffa1d56af175916f8be31831e564e3284300980fcca494772c84c336abbc3616a05bc00e4943d8b34cb48dac21d7f412f8be4ccb39d4f3e2a15127e4' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #187 Thursday September 14, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-09-14 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43995">normative attendance sheet for this meeting (event_id=43995)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda approved unchanged as published.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from September 07, 2017 TC meeting #186</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61535/odata-meeting-186_on-20170907-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61535/odata-meeting-186_on-20170907-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="5.1">5.1 <a href="https://issues.oasis-open.org/browse/ODATA-1111" rel="noopener noreferrer" target="_blank">ODATA-1111</a> - Structural properties: default for $Nullable is true</h3>
+<p>Ralf: ODATA-1111 is OPEN</p>
+<p>Mike: Note: since nullable is the common case for collections, we *could* define it as the default, just for collections, just for JSON, but that would mean that xml and json would be inconsistent and that, within JSON, the defaults for collection would be different from properties and parameters.</p>
+<p>Ralf: 7.2.1 Nullable - XML<br>
+A Boolean value specifying whether a value is required for the property.<br>
+Attribute Nullable<br>
+The value of Nullable is one of the Boolean literals true or false.<br>
+If no value is specified for a single-valued property, the Nullable attribute defaults to true.<br>
+In OData 4.01 responses a collection-valued property MUST specify a value for the Nullable attribute.<br>
+If no value is specified for a collection-valued property, the client cannot assume any default value. Clients SHOULD be prepared for this situation even in OData 4.01 responses.</p>
+<p>Ralf: 7.2.1 Nullable - JSON<br>
+A Boolean value specifying whether a value is required for the property.<br>
+$Nullable<br>
+The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.</p>
+<p>Ralf: ReturnType - both JSON and XML<br>
+$Nullable<br>
+The value of $Nullable is one of the Boolean literals true or false. Absence of the member means true.<br>
+For single-valued return types the value true means that the action or function MAY return a single null value. The value false means that the action or function will never return a null value and instead will fail with an error response if it cannot compute a result.<br>
+For collection-valued return types the result will always be a collection that MAY be empty. In this case the Nullable attribute applies to items of the collection and specifies whether the collection MAY contain null values.</p>
+<p>Mike: OpenAPI has nullable:false as default</p>
+<p>Mike: JSON Schema requires type "null" to be explicitly mentioned, omission means "no null allowed"</p>
+<p>Mike: We seem to be coming to consensus: Clean up the handling of null values in JSON by making $Nullable false the default in all usages within CSDL JSON?</p>
+<p><b>Mike</b>: I <b>move</b> we simplify the handling of null values in JSON by making $Nullable false the default value for all usages in JSON CSDL.  Additionally, we clarify the meaning of $Nullable = true for a collection (that it allows null values within the collection) and disallow $Nullable=true for collection-valued navigation properties. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1111 is RESOLVED with $Nullable:false as new default for properties, navigation properties, return types, and parameters</p>
+
+<h3 id="5.2">5.2 <a href="https://issues.oasis-open.org/browse/ODATA-1100" rel="noopener noreferrer" target="_blank">ODATA-1100</a> - Add mechanism for specifying match type for $search</h3>
+<p><b>Mark</b>: I <b>move</b> that we resolve OData -1100 with no action. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1100 is CLOSED without action</p>
+
+<h3 id="5.3">5.3 <a href="https://issues.oasis-open.org/browse/ODATA-1109" rel="noopener noreferrer" target="_blank">ODATA-1109</a> - Clarify that 'parameter' aliases can also be used to substitute expressions</h3>
+<p>Mike: Even without passing expressions to functions, we have the problem: </p>
+<pre>
+Me?$expand=Friends($filter=BestFriend/Gender eq @p1))&amp;@p1=Gender 
+</pre>
+<p> ... Does this return all of my friends whose best friend is the same gender as I am, or all of my friends whose best friend is the same gender as they are? <br>
+<br>
+I would have expected that Gender be evaluated in the context of Me, since I am the topic of the current URL path segment. <br>
+<br>
+Similarly for: </p>
+<pre>
+People?$expand=Friends($filter=BestFriend/Gender eq @p1))&amp;@p1=Gender 
+</pre>
+<p>... Does that find the friends for each person whose best friend is the same gender as the person, or the person's friend? <br>
+<br>
+In either case, the expression is not circular because it is being evaluated within the context of the same URL path segment. The circular references come in when the path segment where the alias is used is not the last path segment of the URL. <br>
+<br>
+If we say that the alias is evaluated relative to the URL path segment (not to be confused with the expression path segment) in which it is used, then the first statement would be evaluated in the context of Me, while a function within the path would be evaluated within the context of that function, i.e., conceptually: </p>
+<pre>
+Customers(ID=42)/some.function(par1=@p);@p=FirstName/BestFriend 
+</pre>
+<p>... Thoughts? <br>
+<br>
+Note that, no matter what, it makes sense for the *expression* "ID gt 1" to be passed into the $filter segment in: </p>
+<pre>
+/Customers/$filter=@f/some.Function()?@ID gt 1 
+</pre>
+<p>... Because the type of parameter for a $filter URL segment is an expression.</p>
+<p>Hubert: </p>
+<pre>
+Me?$expand=Friends($filter=BestFriend/Gender eq @p1;@p1=Gender)
+</pre>
+<p>Mike:</p>
+<pre>
+Me?$expand=Friends($filter=BestFriend/Gender eq Gender)
+Customers?$expand=Orders($filter=ShipTo/City eq @p1))&amp;@p1=HomeAddress/City &lt;= is legal, 
+if parsed in context of the Customers but not legal if parsed in context of Orders...
+</pre>
+<p>Mike: But we could extend syntax to support</p> 
+<pre>
+Customers?$expand=Orders($filter=ShipTo/City eq @p1;@p1=ShipFrom/City)
+</pre>
+<p>Hubert: </p>
+<pre>
+Customers?$expand=Orders($filter=ShipTo/City eq @p1;@p1=$it/HomeAddress/City)
+</pre>
+<p>Mike:</p>
+<pre>
+Customers?$expand=Orders($filter=ShipTo/City eq $it/HomeAddress/City)
+</pre>
+<p>Hubert: The $it literal can be used in expressions to refer to the current instance of the collection identified by the resource path.</p>
+<pre>
+Me?$expand=Friends($filter=BestFriend/Gender eq @p1;@p1=@p2)&amp;$p2=Gender
+Me?$expand=Friends($filter=BestFriend/Gender eq @p1;@p1=@p2)&amp;@p2=Gender
+Dimensions/$filter=@f/head/Hierarchies/$filter=$f/head/some.Function()?@ID gt 1
+</pre>
+<p>Mike:</p>
+<pre>
+Dimensions/$filter=@f/head/Hierarchies/$filter=@f/head/some.Function()?@f=ID gt 1
+</pre>
+<p>Hubert: </p>
+<pre>
+Dimensions/foo(@f)/head/Hierarchies/bar(@f)/some.Function?@f=...
+</pre>
+<p>Mike: The parameters would be evaluated in the context of the segment in which they are used. So the first @f would be relative to Dimensions, the second would be relative to Hierarchies.</p>
+<p>Hubert: </p>
+<pre>
+Customers/Orders?$filter=TotalAmount > @max&amp;@max=MaxTotalOrderAmount
+</pre>
+<p>Mike: Is this our proposal? Query parameters for $filter segment are always passed in as expressions.  All other parameters are evaluated in the context in which they are defined and passed as literals.<br>
+We add syntax for nesting parameters within $expand.</p>
+<p>Mike: Slightly clarified: <br>
+Query parameters for $filter segment are always passed in as expressions (because that is the expected type of the parameter).  All other parameters are evaluated in the context in which they are defined and passed as literals.<br>
+<br>
+We add syntax for nesting parameters assignments within $expand.</p>
+<p>Ralf: What is the value of:</p>
+<pre>
+Me?$expand=Friends($filter=BestFriend/Gender eq @p;@p=Gender) over Me?$expand=Friends($filter=BestFriend/Gender eq Gender)?
+</pre>
+<p>Hubert: For a long expression it's nice not to have to repeat it multiple times.</p>
+<p>Mike: Note: if we clarify the semantics of the first part we can add the semantics for the second part later.</p>
+<p>Ralf: Would like to divide the question; define semantics for the current syntax first, and introduce an issue for the second question.</p>
+
+
+<h2 id="6">6. Next meetings</h2>
+
+<h3 id="6.1">6.1 Next Meeting on Thursday September 21, 2017 during 06:00-09:00 am PDT (15:00-18:00 CEST)</h3> 
+<p><b>Note</b>: Two hours earlier, one hour longer</p>
+
+<h3 id="6.2">6.2 Meetings following the next one</h3>
+<ul>
+<li>Thursday September 28, 2017 during 8-10 am PDT</li>
+<li>Thursday October 05, 2017 during 8-10 am PDT</li>
+</ul>
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
