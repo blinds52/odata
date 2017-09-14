@@ -23,11 +23,12 @@
   <xsl:variable name="coreDescription" select="concat('@',$coreNamespace,'.Description')" />
   <xsl:variable name="coreDescriptionAliased" select="concat('@',$coreAlias,'.Description')" />
 
+
+  <xsl:key name="types" match="@Type" use="@Type" />
+
   <xsl:key name="methods" match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Action|edmx:Edmx/edmx:DataServices/edm:Schema/edm:Function"
     use="concat(../@Namespace,'.',@Name)" />
-
   <xsl:key name="targets" match="edmx:Edmx/edmx:DataServices/edm:Schema/edm:Annotations" use="concat(../@Namespace,'/',@Target)" />
-
   <xsl:key name="includeannotations" match="edmx:Edmx/edmx:Reference/edmx:IncludeAnnotations" use="concat(../@Uri,'|',@TermNamespace)" />
 
   <xsl:variable name="extension-prefix" select="''" />
@@ -91,6 +92,7 @@
   </xsl:template>
 
   <xsl:template match="edmx:DataServices">
+    <xsl:apply-templates select="edm:Schema/edm:EntityContainer" />
     <xsl:apply-templates
       select="edm:Schema/edm:EntityType|edm:Schema/edm:ComplexType|edm:Schema/edm:TypeDefinition|edm:Schema/edm:EnumType" mode="hash"
     >
@@ -107,7 +109,6 @@
       select="edm:Schema/edm:Function[generate-id() = generate-id(key('methods', concat(../@Namespace,'.',@Name))[1])]" mode="hash"
       />
       <xsl:apply-templates select="edm:Schema/edm:Term" mode="hash" />
-      <xsl:apply-templates select="edm:Schema/edm:EntityContainer" mode="list2" />
     -->
   </xsl:template>
 
@@ -912,60 +913,47 @@
   </xsl:template>
 
   <xsl:template match="edm:EntityContainer">
-    <xsl:text>"entityContainer":{</xsl:text>
-    <xsl:apply-templates select="@*" mode="list" />
-    <xsl:apply-templates select="edm:EntitySet" mode="hash" />
-    <xsl:apply-templates select="edm:Singleton" mode="hash" />
-    <xsl:apply-templates select="edm:ActionImport" mode="hash" />
-    <xsl:apply-templates select="edm:FunctionImport" mode="hash" />
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
-    <xsl:text>}</xsl:text>
+    <xsl:text>,"anyOf":[</xsl:text>
+    <xsl:apply-templates select="edm:EntitySet|edm:Singleton" mode="list" />
+    <xsl:text>]</xsl:text>
   </xsl:template>
 
-  <xsl:template match="@Extends">
-    <xsl:text>"extends":{</xsl:text>
-    <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="." />
-      <xsl:with-param name="element" select="'entityContainer'" />
-    </xsl:call-template>
-    <xsl:text>}</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="edm:EntitySet|edm:Singleton" mode="hashvalue">
-    <xsl:apply-templates select="@*[local-name()!='Name']" mode="list" />
-    <xsl:apply-templates select="edm:NavigationPropertyBinding" mode="hash">
-      <xsl:with-param name="key" select="'Path'" />
-    </xsl:apply-templates>
-    <xsl:apply-templates select="edm:Annotation" mode="list2" />
-  </xsl:template>
-
-  <xsl:template match="edm:EntitySet/@EntityType|edm:Singleton/@Type">
-    <xsl:text>"</xsl:text>
-    <xsl:call-template name="lowerCamelCase">
-      <xsl:with-param name="name" select="local-name()" />
-    </xsl:call-template>
-    <xsl:text>":{</xsl:text>
+  <!-- TODO: "required":["@odata.context","value"] -->
+  <xsl:template match="edm:EntitySet">
+    <xsl:text>{"description": "</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>: single entity","type":"object","properties":{"@odata.context":{"type":"string","pattern": "\\$metadata#</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>([/(].*)?/\\$entity"}},"allOf":[{</xsl:text>
     <xsl:call-template name="type">
-      <xsl:with-param name="type" select="." />
+      <xsl:with-param name="type" select="@EntityType" />
       <xsl:with-param name="nullableFacet" select="'false'" />
     </xsl:call-template>
-    <xsl:text>}</xsl:text>
+    <xsl:text>}]}</xsl:text>
+
+    <xsl:text>,{"description": "</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>: collection of entities","type":"object","properties":{"@odata.context":{"type":"string","pattern": "\\$metadata#</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>([/(].*)?$"},"value":{"type":"array","items":{</xsl:text>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="@EntityType" />
+      <xsl:with-param name="nullableFacet" select="'false'" />
+    </xsl:call-template>
+    <xsl:text>}}}}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="edm:ActionImport/@Action|edm:FunctionImport/@Function">
-    <xsl:variable name="name">
-      <xsl:call-template name="lowerCamelCase">
-        <xsl:with-param name="name" select="local-name()" />
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:text>"</xsl:text>
-    <xsl:value-of select="$name" />
-    <xsl:text>":{</xsl:text>
-    <xsl:call-template name="schema-ref">
-      <xsl:with-param name="qualifiedName" select="." />
-      <xsl:with-param name="element" select="concat($name,'s')" />
+  <xsl:template match="edm:Singleton">
+    <xsl:text>{"description": "</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>: singleton","type":"object","properties":{"@odata.context":{"type":"string","pattern": "\\$metadata#</xsl:text>
+    <xsl:value-of select="@Name" />
+    <xsl:text>([/(].*)?$"}},"allOf":[{</xsl:text>
+    <xsl:call-template name="type">
+      <xsl:with-param name="type" select="@Type" />
+      <xsl:with-param name="nullableFacet" select="'false'" />
     </xsl:call-template>
-    <xsl:text>}</xsl:text>
+    <xsl:text>}]}</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Annotations" mode="hashpair">
