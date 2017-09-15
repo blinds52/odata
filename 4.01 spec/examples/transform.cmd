@@ -18,9 +18,14 @@ set ODATA-VOCABULARIES=c:\git\odata-vocabularies
 set ODATA-OPENAPI=c:\git\odata-openapi
 
 set done=false
-set here=%~dp1
+set here=%~dp0
 
-if exist %1\ (
+if [%1]==[] (
+  set done=true
+  for /F "eol=# tokens=1,2" %%F in (%~n0.txt) do (
+		call :process %%F %%G
+  )
+) else if exist %1\ (
   set done=true
   cd %1
   for %%F in (*.xml) do (
@@ -31,10 +36,7 @@ if exist %1\ (
     if /I [%~n1]==[%%~nF] (
       set done=true
       call :process %%F %%G
-    ) else if [%1]==[] (
-	    set done=true
-		  call :process %%F %%G
-	  )
+    )
   )
 )
 

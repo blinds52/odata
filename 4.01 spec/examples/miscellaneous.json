@@ -2,14 +2,6 @@
     "$Version": "4.01",
     "$EntityContainer": "org.example.DemoService",
     "$Reference": {
-        "http://docs.oasis-open.org/odata/odata/v4.0/os/vocabularies/Org.OData.Core.V1.xml": {
-            "$Include": [
-                {
-                    "$Alias": "Core",
-                    "$Namespace": "Org.OData.Core.V1"
-                }
-            ]
-        },
         "http://tinyurl.com/Org-OData-Measures-V1": {
             "@Some.Term": true,
             "$Include": [
@@ -123,7 +115,7 @@
                     "$Namespace": "org.example.vCard"
                 },
                 {
-                    "$Alias": "R7I3",
+                    "$Alias": "R6I3",
                     "$Namespace": "anotherOne"
                 }
             ]
@@ -148,6 +140,9 @@
                 }
             ]
         }
+    },
+    "First": {
+        "$Alias": "self"
     },
     "org.example": {
         "$Alias": "self",
@@ -618,6 +613,7 @@
                     "$Cast": {
                         "$Path": "Average"
                     },
+                    "$Nullable": true,
                     "$Type": "Edm.Decimal"
                 },
                 "@seo.SeoTerms": [
@@ -638,6 +634,7 @@
                     "$IsOf": {
                         "$Path": "Customer"
                     },
+                    "$Nullable": true,
                     "$Type": "self.PreferredCustomer"
                 },
                 "@UI.DisplayName#LE": {
@@ -720,16 +717,17 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false
+
             },
             "FirstName": {
-                "$Nullable": false
+
             },
             "LastName": {
-                "$Nullable": false
+
             },
             "Manager": {
                 "$Kind": "NavigationProperty",
+                "$Nullable": true,
                 "$Type": "self.Manager"
             }
         },
@@ -737,6 +735,7 @@
             "$Kind": "EntityType",
             "$BaseType": "self.Employee",
             "AnnualBudget": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal"
             },
             "Employees": {
@@ -760,10 +759,10 @@
                 "ID"
             ],
             "ID": {
-                "$Type": "Edm.Int32",
-                "$Nullable": false
+                "$Type": "Edm.Int32"
             },
             "Name": {
+                "$Nullable": true,
                 "@Core.IsLanguageDependent": true
             }
         },
@@ -775,20 +774,19 @@
                 }
             ],
             "Info": {
-                "$Type": "self.EntityInfo",
-                "$Nullable": false
+                "$Type": "self.EntityInfo"
             },
             "Name": {
-
+                "$Nullable": true
             }
         },
         "EntityInfo": {
             "$Kind": "ComplexType",
             "ID": {
-                "$Type": "Edm.Int32",
-                "$Nullable": false
+                "$Type": "Edm.Int32"
             },
             "Created": {
+                "$Nullable": true,
                 "$Type": "Edm.DateTimeOffset"
             }
         },
@@ -799,24 +797,20 @@
                 "LineNumber"
             ],
             "OrderID": {
-                "$Type": "Edm.Int32",
-                "$Nullable": false
+                "$Type": "Edm.Int32"
             },
             "LineNumber": {
-                "$Type": "Edm.Int32",
-                "$Nullable": false
+                "$Type": "Edm.Int32"
             }
         },
         "Measurement": {
             "$Kind": "ComplexType",
             "Dimension": {
-                "$Nullable": false,
                 "$MaxLength": 50,
                 "$DefaultValue": "Unspecified"
             },
             "Length": {
                 "$Type": "Edm.Decimal",
-                "$Nullable": false,
                 "$Precision": 18,
                 "$Scale": 2
             }
@@ -824,8 +818,7 @@
         "Example16to21": {
             "$Kind": "ComplexType",
             "Units": {
-                "$Collection": true,
-                "$Type": "Edm.String"
+                "$Collection": true
             },
             "SuggestedTimes": {
                 "$Collection": true,
@@ -833,21 +826,25 @@
                 "$Precision": 6
             },
             "Amount32": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "$Precision": 3,
                 "$Scale": 2
             },
             "Amount22": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "$Precision": 2,
                 "$Scale": 2
             },
             "Amount3v": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "$Precision": 3,
                 "$Scale": "variable"
             },
-            "Amount3f": {
+            "Amount7f": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "$Precision": 7,
                 "$Scale": "floating"
@@ -859,18 +856,17 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false
+
             },
             "CategoryID": {
-                "$Nullable": false
+
             },
             "CategoryKind": {
-
+                "$Nullable": true
             },
             "Category": {
                 "$Kind": "NavigationProperty",
                 "$Type": "self.Category",
-                "$Nullable": false,
                 "$Partner": "Products",
                 "$ReferentialConstraint": {
                     "CategoryID": "ID",
@@ -880,6 +876,7 @@
             },
             "Supplier": {
                 "$Kind": "NavigationProperty",
+                "$Nullable": true,
                 "$Type": "self.Supplier"
             }
         },
@@ -889,7 +886,7 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false
+
             }
         },
         "Customer": {
@@ -898,7 +895,6 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false,
                 "$Unicode": false
             }
         },
@@ -908,8 +904,7 @@
                 "ID"
             ],
             "ID": {
-                "$Type": "Edm.Int64",
-                "$Nullable": false
+                "$Type": "Edm.Int64"
             }
         },
         "Category": {
@@ -918,10 +913,10 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false
+
             },
             "Kind": {
-
+                "$Nullable": true
             },
             "Products": {
                 "$Kind": "NavigationProperty",
@@ -935,15 +930,12 @@
         "Dimensions": {
             "$Kind": "ComplexType",
             "Height": {
-                "$Nullable": false,
                 "$Type": "Edm.Decimal"
             },
             "Weight": {
-                "$Nullable": false,
                 "$Type": "Edm.Decimal"
             },
             "Length": {
-                "$Nullable": false,
                 "$Type": "Edm.Decimal"
             }
         },
@@ -953,12 +945,14 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false
+
             },
             "ProductDimensions": {
+                "$Nullable": true,
                 "$Type": "self.Dimensions"
             },
             "ShippingDimensions": {
+                "$Nullable": true,
                 "$Type": "self.Dimensions"
             }
         },
@@ -968,9 +962,10 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false
+
             },
             "Dimensions": {
+                "$Nullable": true,
                 "$Type": "self.Dimensions"
             }
         },
@@ -1032,9 +1027,11 @@
         "Size": {
             "$Kind": "ComplexType",
             "Height": {
+                "$Nullable": true,
                 "$Type": "self.Length"
             },
             "Weight": {
+                "$Nullable": true,
                 "$Type": "self.Weight"
             }
         },
@@ -1045,6 +1042,7 @@
                 "$Parameter": [
                     {
                         "$Name": "binding",
+                        "$Nullable": true,
                         "$Type": "self.Order"
                     }
                 ]
@@ -1063,8 +1061,7 @@
                         "$Name": "Rating",
                         "$Type": "Edm.Decimal",
                         "$Precision": 4,
-                        "$Scale": 0,
-                        "$Nullable": false
+                        "$Scale": 0
                     }
                 ],
                 "$ReturnType": {
@@ -1079,7 +1076,10 @@
                 "$Parameter": [
                     {
                         "$Name": "Year",
-                        "$MaxLength": 4
+                        "$Nullable": true,
+                        "$Type": "Edm.Decimal",
+                        "$Precision": 4,
+                        "$Scale": 0
                     }
                 ],
                 "$ReturnType": {
@@ -1180,7 +1180,6 @@
                 "ID"
             ],
             "ID": {
-                "$Nullable": false,
                 "$Type": "Edm.Int32"
             },
             "Name": {
@@ -1213,6 +1212,7 @@
         },
         "IsURL": {
             "$Kind": "Term",
+            "$Nullable": true,
             "$Type": "Core.Tag",
             "$DefaultValue": true,
             "$AppliesTo": [
@@ -1224,16 +1224,19 @@
         "Example40": {
             "$Kind": "ComplexType",
             "AmountInReportingCurrency": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "@UoM.ISOCurrency": "USD"
             },
             "AmountInTransactionCurrency": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "@UoM.ISOCurrency": {
                     "$Path": "Currency"
                 }
             },
             "Currency": {
+                "$Nullable": true,
                 "$MaxLength": 3
             }
         }
@@ -1256,7 +1259,7 @@
             "$UrlRef": "http://LineItem"
         },
         "@UI.ReferenceFacet#complicated": {
-            "$AnnotationPath": "@self2.Supplier#X/Contacts/@self3.ViewVariants"
+            "$AnnotationPath": "@self3.Supplier#X/Contacts/@self4.ViewVariants"
         },
         "@UI.HyperLink": {
             "$NavigationPropertyPath": "Supplier"
@@ -1457,6 +1460,110 @@
         "NullablePrimitiveTypes": {
             "$Kind": "ComplexType",
             "NullValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Boolean",
+                "$DefaultValue": null
+            },
+            "TrueValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Boolean",
+                "$DefaultValue": true
+            },
+            "FalseValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Boolean",
+                "$DefaultValue": false
+            },
+            "BinaryValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Binary",
+                "$MaxLength": 31,
+                "$DefaultValue": "T0RhdGE"
+            },
+            "IntegerValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Int32",
+                "$DefaultValue": -128
+            },
+            "DoubleValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Double",
+                "$DefaultValue": 3.1415926535897931
+            },
+            "SingleValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Single"
+            },
+            "DecimalValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Decimal",
+                "$Scale": "variable",
+                "$DefaultValue": 34.95
+            },
+            "StringValue": {
+                "$Nullable": true,
+                "$DefaultValue": "Say \"Hello\",\nthen go"
+            },
+            "DateValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Date",
+                "$DefaultValue": "2012-12-03"
+            },
+            "DateTimeOffsetValue": {
+                "$Nullable": true,
+                "$Type": "Edm.DateTimeOffset",
+                "$DefaultValue": "2012-12-03T07:16:23Z"
+            },
+            "DurationValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Duration",
+                "$Precision": 12,
+                "$DefaultValue": "P12DT23H59M59.999999999999S"
+            },
+            "TimeOfDayValue": {
+                "$Nullable": true,
+                "$Type": "Edm.TimeOfDay",
+                "$Precision": 6,
+                "$DefaultValue": "07:59:59.999"
+            },
+            "GuidValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Guid",
+                "$DefaultValue": "1234567-89ab-cdef-0123-456789abcdef"
+            },
+            "Int64Value": {
+                "$Nullable": true,
+                "$Type": "Edm.Int64",
+                "$DefaultValue": 0
+            },
+            "ColorEnumValue": {
+                "$Nullable": true,
+                "$Type": "M1.Color",
+                "$DefaultValue": "yellow"
+            },
+            "GeographyPoint": {
+                "$Nullable": true,
+                "$Type": "Edm.GeographyPoint",
+                "$DefaultValue": "SRID=0;Point(142.1 64.1)"
+            },
+            "StreamValue": {
+                "$Nullable": true,
+                "$Type": "Edm.Stream"
+            },
+            "TypeDefValue": {
+                "$Nullable": true,
+                "$Type": "M1.IntegerDecimal",
+                "$Precision": 20,
+                "$DefaultValue": 42
+            },
+            "PrimitiveValue": {
+                "$Nullable": true,
+                "$Type": "Edm.PrimitiveType"
+            }
+        },
+        "NonNullablePrimitiveTypes": {
+            "$Kind": "ComplexType",
+            "NullValue": {
                 "$Type": "Edm.Boolean",
                 "$DefaultValue": null
             },
@@ -1482,7 +1589,8 @@
                 "$DefaultValue": 3.1415926535897931
             },
             "SingleValue": {
-                "$Type": "Edm.Single"
+                "$Type": "Edm.Single",
+                "$DefaultValue": "-INF"
             },
             "DecimalValue": {
                 "$Type": "Edm.Decimal",
@@ -1534,119 +1642,13 @@
                 "$Precision": 20,
                 "$DefaultValue": 42
             },
-            "PrimitiveValue": {
-                "$Type": "Edm.PrimitiveType"
-            }
-        },
-        "NonNullablePrimitiveTypes": {
-            "$Kind": "ComplexType",
-            "NullValue": {
-                "$Type": "Edm.Boolean",
-                "$DefaultValue": null,
-                "$Nullable": false
-            },
-            "TrueValue": {
-                "$Type": "Edm.Boolean",
-                "$DefaultValue": true,
-                "$Nullable": false
-            },
-            "FalseValue": {
-                "$Type": "Edm.Boolean",
-                "$DefaultValue": false,
-                "$Nullable": false
-            },
-            "BinaryValue": {
-                "$Type": "Edm.Binary",
-                "$MaxLength": 31,
-                "$DefaultValue": "T0RhdGE",
-                "$Nullable": false
-            },
-            "IntegerValue": {
-                "$Type": "Edm.Int32",
-                "$DefaultValue": -128,
-                "$Nullable": false
-            },
-            "DoubleValue": {
-                "$Type": "Edm.Double",
-                "$DefaultValue": 3.1415926535897931,
-                "$Nullable": false
-            },
-            "SingleValue": {
-                "$Type": "Edm.Single",
-                "$DefaultValue": "-INF",
-                "$Nullable": false
-            },
-            "DecimalValue": {
-                "$Type": "Edm.Decimal",
-                "$Scale": "variable",
-                "$DefaultValue": 34.95,
-                "$Nullable": false
-            },
-            "StringValue": {
-                "$DefaultValue": "Say \"Hello\",\nthen go",
-                "$Nullable": false
-            },
-            "DateValue": {
-                "$Type": "Edm.Date",
-                "$DefaultValue": "2012-12-03",
-                "$Nullable": false
-            },
-            "DateTimeOffsetValue": {
-                "$Type": "Edm.DateTimeOffset",
-                "$DefaultValue": "2012-12-03T07:16:23Z",
-                "$Nullable": false
-            },
-            "DurationValue": {
-                "$Type": "Edm.Duration",
-                "$Precision": 12,
-                "$DefaultValue": "P12DT23H59M59.999999999999S",
-                "$Nullable": false
-            },
-            "TimeOfDayValue": {
-                "$Type": "Edm.TimeOfDay",
-                "$Precision": 6,
-                "$DefaultValue": "07:59:59.999",
-                "$Nullable": false
-            },
-            "GuidValue": {
-                "$Type": "Edm.Guid",
-                "$DefaultValue": "1234567-89ab-cdef-0123-456789abcdef",
-                "$Nullable": false
-            },
-            "Int64Value": {
-                "$Type": "Edm.Int64",
-                "$DefaultValue": 0,
-                "$Nullable": false
-            },
-            "ColorEnumValue": {
-                "$Type": "M1.Color",
-                "$DefaultValue": "yellow",
-                "$Nullable": false
-            },
-            "GeographyPoint": {
-                "$Type": "Edm.GeographyPoint",
-                "$DefaultValue": "SRID=0;Point(142.1 64.1)",
-                "$Nullable": false
-            },
-            "StreamValue": {
-                "$Type": "Edm.Stream",
-                "$Nullable": false
-            },
-            "TypeDefValue": {
-                "$Type": "M1.IntegerDecimal",
-                "$Precision": 20,
-                "$DefaultValue": 42,
-                "$Nullable": false
-            },
             "TextValue": {
                 "$Type": "M1.Text",
                 "$MaxLength": 60,
-                "$DefaultValue": 42,
-                "$Nullable": false
+                "$DefaultValue": 42
             },
             "PrimitiveValue": {
-                "$Type": "Edm.PrimitiveType",
-                "$Nullable": false
+                "$Type": "Edm.PrimitiveType"
             }
         },
         "CreatedEntities": [
@@ -1655,14 +1657,17 @@
                 "$Parameter": [
                     {
                         "$Name": "before",
+                        "$Nullable": true,
                         "$Type": "Edm.DateTimeOffset"
                     },
                     {
                         "$Name": "after",
+                        "$Nullable": true,
                         "$Type": "Edm.DateTimeOffset"
                     }
                 ],
                 "$ReturnType": {
+                    "$Nullable": true,
                     "$Collection": true,
                     "$Type": "Edm.EntityType"
                 }
@@ -1674,6 +1679,7 @@
                 "$Parameter": [
                     {
                         "$Name": "Year",
+                        "$Nullable": true,
                         "$Type": "Edm.Decimal",
                         "$Precision": 4,
                         "$Scale": 0
@@ -1708,6 +1714,7 @@
                 "$IsOf": {
                     "$Path": "Hugo"
                 },
+                "$Nullable": true,
                 "$Type": "Edm.Binary"
             },
             "Striped": 2,
@@ -1719,32 +1726,35 @@
                 "TheKey"
             ],
             "TheKey": {
-                "$Nullable": false
-            },
-            "TheValue": {
 
             },
+            "TheValue": {
+                "$Nullable": true
+            },
             "TheString": {
+                "$Nullable": true,
                 "$MaxLength": 20
             },
             "Tags": {
-                "$Collection": true,
-                "$Type": "Edm.String"
+                "$Nullable": true,
+                "$Collection": true
             },
             "Dates": {
+                "$Nullable": true,
                 "$Collection": true,
                 "$Type": "Edm.Date"
             },
             "Price": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "$Precision": 15,
                 "$Scale": 3
             },
             "Permission": {
-                "$Type": "Core.Permission",
-                "$Nullable": false
+                "$Type": "Core.Permission"
             },
             "AliasPermission": {
+                "$Nullable": true,
                 "$Type": "Core.Permission"
             },
             "@A.CollectionOfStrings": [
@@ -1816,12 +1826,14 @@
             },
             "@UI.DisplayName#cast": {
                 "$Cast": "Product Catalog",
-                "$MaxLength": 30
+                "$MaxLength": 30,
+                "$Nullable": true
             },
             "@UI.DisplayName#cast2": {
                 "$Cast": 3.14,
                 "$Precision": 30,
                 "$Scale": "variable",
+                "$Nullable": true,
                 "$Type": "Edm.Decimal"
             },
             "@self.IsFloatingDecimal": {
@@ -1829,6 +1841,7 @@
                     "$Path": "Customer/$count"
                 },
                 "$Scale": "variable",
+                "$Nullable": true,
                 "$Type": "Edm.Decimal"
             },
             "@Some.Binary#two": {
@@ -1851,21 +1864,25 @@
             "$Kind": "ComplexType",
             "$OpenType": true,
             "Street": {
-
+                "$Nullable": true
             },
             "City": {
                 "$Kind": "NavigationProperty",
+                "$Nullable": true,
                 "$Type": "M1.City"
             },
             "Region": {
                 "$Kind": "NavigationProperty",
+                "$Nullable": true,
                 "$Type": "M1.Region"
             },
             "Country": {
                 "$Kind": "NavigationProperty",
+                "$Nullable": true,
                 "$Type": "M1.Country"
             },
             "MapLocation": {
+                "$Nullable": true,
                 "$Type": "Edm.GeographyPoint",
                 "$SRID": "variable"
             },
@@ -1891,6 +1908,7 @@
             "$Kind": "ComplexType",
             "Planet": {
                 "$Kind": "NavigationProperty",
+                "$Nullable": true,
                 "$Type": "M1.Planet"
             }
         },
@@ -1902,12 +1920,14 @@
             "$Kind": "EntityType",
             "$Abstract": true,
             "Quantity": {
+                "$Nullable": true,
                 "$Type": "Edm.Decimal",
                 "@UoM.Unit": {
                     "$Path": "ShippingUnit"
                 }
             },
             "ShippingUnit": {
+                "$Nullable": true,
                 "@Core.Description": "Contains the unit for property Quantity"
             }
         },
@@ -1955,10 +1975,11 @@
         }
     },
     "X": {
-        "$Alias": "self2",
+        "$Alias": "self3",
         "Person": {
             "$Kind": "Term",
-            "$Type": "self2.PersonType"
+            "$Nullable": true,
+            "$Type": "self3.PersonType"
         },
         "PersonType": {
             "$Kind": "ComplexType"
@@ -1966,27 +1987,27 @@
         "Team": {
             "$Kind": "Term",
             "$Collection": true,
-            "$Type": "self2.PersonType",
+            "$Type": "self3.PersonType",
             "@custom.ItemIsA": "X.Person"
         },
         "Movie": {
             "$Kind": "Term",
-            "$Type": "self2.MovieType",
-            "$Nullable": false
+            "$Type": "self3.MovieType"
         },
         "MovieType": {
             "$Kind": "ComplexType"
         },
         "Friend": {
             "$Kind": "Term",
-            "$Type": "self2.FriendType"
+            "$Nullable": true,
+            "$Type": "self3.FriendType"
         },
         "FriendType": {
             "$Kind": "EntityType"
         }
     },
     "Y": {
-        "$Alias": "self3",
+        "$Alias": "self4",
         "@Core.Description": {
             "$Apply": [
                 "When: ",
@@ -2001,10 +2022,10 @@
         },
         "$Annotations": {
             "Some.EntityType": {
-                "@self2.Person": {
+                "@self3.Person": {
 
                 },
-                "@self3.Developer": {
+                "@self4.Developer": {
 
                 },
                 "@Core.Description": "External description",
@@ -2012,24 +2033,24 @@
                 "@Core.Description#WithPath": {
                     "$Path": "SomeProperty"
                 },
-                "@self3.DevelopmentTeam": {
-                    "$Path": "SomeCollectionNavProp/@self3.Developer"
+                "@self4.DevelopmentTeam": {
+                    "$Path": "SomeCollectionNavProp/@self4.Developer"
                 },
-                "@self3.DevelopmentTeam@custom.IsA": "X.Team",
-                "@self3.ScrumTeam": {
+                "@self4.DevelopmentTeam@custom.IsA": "X.Team",
+                "@self4.ScrumTeam": {
                     "ScrumMaster": {
 
                     },
                     "ScrumMaster@custom.IsA": "Y.Developer X.Person"
                 },
-                "@self3.Movies": {
+                "@self4.Movies": {
                     "$Path": "AllMyMovies"
                 },
-                "@self3.ArchivedMovies": {
+                "@self4.ArchivedMovies": {
                     "$Path": "MoviesInStorage"
                 },
-                "@self3.ArchivedMovies@custom.ItemIsA": "X.Movie",
-                "@self3.Something": {
+                "@self4.ArchivedMovies@custom.ItemIsA": "X.Movie",
+                "@self4.Something": {
                     "SomeProperty": "Some Thing",
                     "AnotherProperty": "A string with spaces",
                     "SomeTime": {
@@ -2049,7 +2070,7 @@
                 }
             },
             "self.MyEntityContainer/MyEntitySet/self.MyEntityType/MyProperty": {
-                "@self3.Movies": {
+                "@self4.Movies": {
                     "$Path": "AllMyMovies"
                 }
             }
@@ -2057,81 +2078,83 @@
         "Developer": {
             "$Kind": "Term",
             "$BaseTerm": "X.Person",
-            "$Type": "self3.DeveloperType",
-            "$Nullable": false
+            "$Type": "self4.DeveloperType"
         },
         "DeveloperType": {
             "$Kind": "ComplexType",
-            "$BaseType": "self2.PersonType"
+            "$BaseType": "self3.PersonType"
         },
         "DevelopmentTeam": {
             "$Kind": "Term",
             "$Collection": true,
-            "$Type": "self3.DeveloperType",
+            "$Type": "self4.DeveloperType",
             "@custom.ItemIsA": "Y.Developer",
             "@custom.IsA": "X.Team"
         },
         "ScrumTeam": {
             "$Kind": "Term",
             "$BaseTerm": "Y.DevelopmentTeam",
-            "$Type": "self3.ScrumTeamType"
+            "$Nullable": true,
+            "$Type": "self4.ScrumTeamType"
         },
         "ScrumTeamType": {
             "$Kind": "ComplexType",
             "ScrumMaster": {
-                "$Type": "self3.DeveloperType",
+                "$Nullable": true,
+                "$Type": "self4.DeveloperType",
                 "@custom.IsA": "Y.Developer X.Person"
             }
         },
         "Movies": {
             "$Kind": "Term",
             "$Collection": true,
-            "$Type": "self2.MovieType"
+            "$Type": "self3.MovieType"
         },
         "ArchivedMovies": {
             "$Kind": "Term",
             "$Collection": true,
-            "$Type": "self3.ArchivedMovieType",
+            "$Type": "self4.ArchivedMovieType",
             "@custom.ItemIsA": "X.Movie"
         },
         "ArchivedMovieType": {
             "$Kind": "ComplexType",
-            "$BaseType": "self2.MovieType",
+            "$BaseType": "self3.MovieType",
             "@custom.IsA": "X.Movie",
             "ArchivedAt": {
+                "$Nullable": true,
                 "$Type": "Edm.Date"
             }
         },
         "SomeThing": {
             "$Kind": "Term",
-            "$Type": "self3.SomeThingType"
+            "$Nullable": true,
+            "$Type": "self4.SomeThingType"
         },
         "SomeThingType": {
             "$Kind": "ComplexType",
             "SomeProperty": {
-
+                "$Nullable": true
             },
             "Contacts": {
                 "$Collection": true,
-                "$Type": "self2.PersonType",
+                "$Type": "self3.PersonType",
                 "@custom.ItemIsA": "X.Person"
             },
             "VIPs": {
                 "$Kind": "NavigationProperty",
                 "$Collection": true,
-                "$Type": "self2.FriendType",
+                "$Type": "self3.FriendType",
                 "@custom.ItemIsA": "X.Friend"
             }
         },
         "AdvancedChangeTracking": {
             "$Kind": "Term",
             "$BaseTerm": "Capabilities.ChangeTracking",
-            "$Type": "self3.ChangeTrackingType",
+            "$Type": "self4.ChangeTrackingType",
             "$AppliesTo": [
                 "EntityContainer",
                 "EntitySet"
             ],
-            "$Nullable": false,
             "@Core.Description": "Advanced change tracking capabilities of this service or entity set"
         },
         "ChangeTrackingType": {
@@ -2144,6 +2167,6 @@
         }
     },
     "Intentionally.Empty": {
-        "$Alias": "self4"
+        "$Alias": "self5"
     }
 }
