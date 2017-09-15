@@ -77,24 +77,23 @@
         "City": {
             "$Kind": "ComplexType",
             "CountryRegion": {
-                "$Nullable": false
+
             },
             "Name": {
-                "$Nullable": false
+
             },
             "Region": {
-                "$Nullable": false
+
             }
         },
         "Location": {
             "$Kind": "ComplexType",
             "$OpenType": true,
             "Address": {
-                "$Nullable": false
+
             },
             "City": {
-                "$Type": "self.City",
-                "$Nullable": false
+                "$Type": "self.City"
             }
         },
         "EventLocation": {
@@ -102,7 +101,7 @@
             "$BaseType": "self.Location",
             "$OpenType": true,
             "BuildingInfo": {
-
+                "$Nullable": true
             }
         },
         "AirportLocation": {
@@ -111,7 +110,6 @@
             "$OpenType": true,
             "Loc": {
                 "$Type": "Edm.GeographyPoint",
-                "$Nullable": false,
                 "$SRID": "4326"
             }
         },
@@ -123,13 +121,12 @@
             ],
             "Id": {
                 "$Type": "Edm.Int64",
-                "$Nullable": false,
                 "@Core.Permissions": {
                     "$EnumMember": "Read"
                 }
             },
             "Name": {
-
+                "$Nullable": true
             },
             "@Core.AcceptableMediaTypes": [
                 "image/jpeg"
@@ -142,31 +139,29 @@
                 "UserName"
             ],
             "UserName": {
-                "$Nullable": false,
                 "@Core.Permissions": {
                     "$EnumMember": "Read"
                 }
             },
             "FirstName": {
-                "$Nullable": false
+
             },
             "LastName": {
-                "$Nullable": false
+
             },
             "Emails": {
-                "$Collection": true,
-                "$Type": "Edm.String"
+                "$Collection": true
             },
             "AddressInfo": {
                 "$Collection": true,
                 "$Type": "self.Location"
             },
             "Gender": {
+                "$Nullable": true,
                 "$Type": "self.PersonGender"
             },
             "Concurrency": {
                 "$Type": "Edm.Int64",
-                "$Nullable": false,
                 "@Core.Computed": true
             },
             "Friends": {
@@ -182,6 +177,7 @@
             },
             "Photo": {
                 "$Kind": "NavigationProperty",
+                "$Nullable": true,
                 "$Type": "self.Photo"
             }
         },
@@ -191,13 +187,12 @@
                 "AirlineCode"
             ],
             "AirlineCode": {
-                "$Nullable": false,
                 "@Core.Permissions": {
                     "$EnumMember": "Read"
                 }
             },
             "Name": {
-                "$Nullable": false
+
             }
         },
         "Airport": {
@@ -206,21 +201,18 @@
                 "IcaoCode"
             ],
             "IcaoCode": {
-                "$Nullable": false,
                 "@Core.Permissions": {
                     "$EnumMember": "Read"
                 }
             },
             "Name": {
-                "$Nullable": false
+
             },
             "IataCode": {
-                "$Nullable": false,
                 "@Core.Immutable": true
             },
             "Location": {
-                "$Type": "self.AirportLocation",
-                "$Nullable": false
+                "$Type": "self.AirportLocation"
             }
         },
         "PlanItem": {
@@ -230,21 +222,23 @@
             ],
             "PlanItemId": {
                 "$Type": "Edm.Int32",
-                "$Nullable": false,
                 "@Core.Permissions": {
                     "$EnumMember": "Read"
                 }
             },
             "ConfirmationCode": {
-
+                "$Nullable": true
             },
             "StartsAt": {
+                "$Nullable": true,
                 "$Type": "Edm.DateTimeOffset"
             },
             "EndsAt": {
+                "$Nullable": true,
                 "$Type": "Edm.DateTimeOffset"
             },
             "Duration": {
+                "$Nullable": true,
                 "$Type": "Edm.Duration"
             }
         },
@@ -252,29 +246,26 @@
             "$Kind": "EntityType",
             "$BaseType": "self.PlanItem",
             "SeatNumber": {
-
+                "$Nullable": true
             }
         },
         "Flight": {
             "$Kind": "EntityType",
             "$BaseType": "self.PublicTransportation",
             "FlightNumber": {
-                "$Nullable": false
+
             },
             "From": {
                 "$Kind": "NavigationProperty",
-                "$Type": "self.Airport",
-                "$Nullable": false
+                "$Type": "self.Airport"
             },
             "To": {
                 "$Kind": "NavigationProperty",
-                "$Type": "self.Airport",
-                "$Nullable": false
+                "$Type": "self.Airport"
             },
             "Airline": {
                 "$Kind": "NavigationProperty",
-                "$Type": "self.Airline",
-                "$Nullable": false
+                "$Type": "self.Airline"
             }
         },
         "Event": {
@@ -282,11 +273,10 @@
             "$BaseType": "self.PlanItem",
             "$OpenType": true,
             "Description": {
-
+                "$Nullable": true
             },
             "OccursAt": {
-                "$Type": "self.EventLocation",
-                "$Nullable": false
+                "$Type": "self.EventLocation"
             }
         },
         "Trip": {
@@ -296,40 +286,35 @@
             ],
             "TripId": {
                 "$Type": "Edm.Int32",
-                "$Nullable": false,
                 "@Core.Permissions": {
                     "$EnumMember": "Read"
                 }
             },
             "ShareId": {
+                "$Nullable": true,
                 "$Type": "Edm.Guid"
             },
             "Description": {
-
+                "$Nullable": true
             },
             "Name": {
-                "$Nullable": false
+
             },
             "Budget": {
                 "$Type": "Edm.Single",
-                "$Nullable": false,
                 "@Measures.ISOCurrency": "USD",
                 "@Measures.Scale": {
                     "$Int": "2"
                 }
             },
             "StartsAt": {
-                "$Type": "Edm.DateTimeOffset",
-                "$Nullable": false
+                "$Type": "Edm.DateTimeOffset"
             },
             "EndsAt": {
-                "$Type": "Edm.DateTimeOffset",
-                "$Nullable": false
+                "$Type": "Edm.DateTimeOffset"
             },
             "Tags": {
-                "$Collection": true,
-                "$Type": "Edm.String",
-                "$Nullable": false
+                "$Collection": true
             },
             "Photos": {
                 "$Kind": "NavigationProperty",
@@ -352,13 +337,11 @@
                 "$Parameter": [
                     {
                         "$Name": "person",
-                        "$Type": "self.Person",
-                        "$Nullable": false
+                        "$Type": "self.Person"
                     }
                 ],
                 "$ReturnType": {
-                    "$Type": "self.Airline",
-                    "$Nullable": false
+                    "$Type": "self.Airline"
                 }
             }
         ],
@@ -370,14 +353,12 @@
                 "$Parameter": [
                     {
                         "$Name": "trip",
-                        "$Type": "self.Trip",
-                        "$Nullable": false
+                        "$Type": "self.Trip"
                     }
                 ],
                 "$ReturnType": {
                     "$Collection": true,
-                    "$Type": "self.Person",
-                    "$Nullable": false
+                    "$Type": "self.Person"
                 }
             }
         ],
@@ -390,18 +371,15 @@
                 "$Parameter": [
                     {
                         "$Name": "person",
-                        "$Type": "self.Person",
-                        "$Nullable": false
+                        "$Type": "self.Person"
                     },
                     {
-                        "$Name": "userName",
-                        "$Nullable": false
+                        "$Name": "userName"
                     }
                 ],
                 "$ReturnType": {
                     "$Collection": true,
-                    "$Type": "self.Trip",
-                    "$Nullable": false
+                    "$Type": "self.Trip"
                 }
             }
         ],
@@ -412,18 +390,15 @@
                 "$Parameter": [
                     {
                         "$Name": "lat",
-                        "$Type": "Edm.Double",
-                        "$Nullable": false
+                        "$Type": "Edm.Double"
                     },
                     {
                         "$Name": "lon",
-                        "$Type": "Edm.Double",
-                        "$Nullable": false
+                        "$Type": "Edm.Double"
                     }
                 ],
                 "$ReturnType": {
-                    "$Type": "self.Airport",
-                    "$Nullable": false
+                    "$Type": "self.Airport"
                 }
             }
         ],
@@ -439,17 +414,14 @@
                 "$Parameter": [
                     {
                         "$Name": "person",
-                        "$Type": "self.Person",
-                        "$Nullable": false
+                        "$Type": "self.Person"
                     },
                     {
-                        "$Name": "userName",
-                        "$Nullable": false
+                        "$Name": "userName"
                     },
                     {
                         "$Name": "tripId",
-                        "$Type": "Edm.Int32",
-                        "$Nullable": false
+                        "$Type": "Edm.Int32"
                     }
                 ]
             }
