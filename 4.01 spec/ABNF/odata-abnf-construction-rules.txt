@@ -294,6 +294,7 @@ expandOption      = expandRefOption
                   / expand
                   / compute
                   / levels
+                  / aliasAndValue
                 
 levels = ( "$levels" / "levels" ) EQ ( oneToNine *DIGIT / "max" )
 
@@ -347,11 +348,14 @@ selectItem     = STAR
                  / qualifiedFunctionName  
                  )
 selectProperty = primitiveProperty  
-               / primitiveColProperty 
+               / primitiveColProperty
                / navigationProperty
-               / selectPath [ "/" selectProperty ]
-selectPath     = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ]               
-
+               / selectPath [ OPEN selectOption *( SEMI selectOption ) CLOSE
+                            / "/" selectProperty 
+                            ]
+selectPath     = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] 
+selectOption   = filter / search / inlinecount / orderby / skip / top 
+               / compute / select / expand / aliasAndValue
 
 allOperationsInSchema = namespace "." STAR                 
 
@@ -1052,7 +1056,7 @@ request-id = 1*unreserved
 entityid   = [ "OData-" ] "EntityID" ":" OWS IRI-in-header
 isolation  = [ "OData-" ] "Isolation" ":" OWS "snapshot"
 odata-maxversion = "OData-MaxVersion" ":" OWS 1*DIGIT "." 1*DIGIT     
-odata-version    = "OData-Version"    ":" OWS "4.0" [ "1" ]
+odata-version    = "OData-Version"    ":" OWS "4.0" [ oneToNine ]
       
 prefer     = "Prefer" ":" OWS preference *( COMMA preference )       
 preference = allowEntityReferencesPreference
