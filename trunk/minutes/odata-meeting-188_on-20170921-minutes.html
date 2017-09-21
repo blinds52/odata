@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #188 Thursday September 21, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='59f931dfda9980f7f13a43928a94a1030d57a62e141fd32fde21beb3006fa56725dc01535ec6bb1dc730ae865f49ed12a35dc28bf1a1a42bc52cb4a3345685cf' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #188 Thursday September 21, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-09-21 800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43996">normative attendance sheet for this meeting (event_id=43996)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: New issues:<br>
+- https://issues.oasis-open.org/browse/ODATA-1114 - If-Then-Else in $batch requests<br>
+- https://issues.oasis-open.org/browse/ODATA-1115 - Default values for $Precision and $Scale<br>
+Document walkthrough if time permits</p>
+<p>Ralf: New issues added to section 5, document walkthrough as section 6</p>
+
+<p>Agenda approved as published with above changes.</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from September 14, 2017 TC meeting #187</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61567/odata-meeting-187_on-20170914-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61567/odata-meeting-187_on-20170914-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Version 4.01 Public Review - 05 July 2017 to 03 August 2017 - Issues</h2>
+<h3 id="5.1">5.1 <a href="https://issues.oasis-open.org/browse/ODATA-1111" rel="noopener noreferrer" target="_blank">ODATA-1111</a> - Structural properties: default for $Nullable is false in CSDL JSON  feedback from implementation teams</h3>
+<p>Mike: feedback in favor of ODATA-1111, false is the better default</p>
+<p>Ralf: mixed feedback, often surprise, but no real pushback</p>
+<p>Ralf: fits better to SAP mainstream data models</p>
+
+<h3 id="5.2">5.2 <a href="https://issues.oasis-open.org/browse/ODATA-1115" rel="noopener noreferrer" target="_blank">ODATA-1115</a> - Default values for $Precision and $Scale</h3>
+<p>Ralf: $Precision does not have a default value, omission means arbitrary precision, both for Edm.Decimal (already the case) and for temporal types. The latter is in line with the "date-time" format of OpenAPI and JSON Schema for timestamps.</p>
+<p>Ralf: $Scale defaults to "variable". This is in line with the "number" type of OpenAPI and JSON Schema.</p>
+<p>Ralf: ODATA-1115 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1115 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1115 is RESOLVED as proposed</p>
+
+<h3 id="5.3">5.3 <a href="https://issues.oasis-open.org/browse/ODATA-1109" rel="noopener noreferrer" target="_blank">ODATA-1109</a> - Clarify that 'parameter' aliases can also be used to substitute expressions</h3>
+<p>Ralf: Proposal:<br>
+<br>
+Query parameters for $filter segment are always passed in as expressions (because that is the expected type of the parameter). All other parameters are evaluated in the context in which they are defined and passed as literals. <br>
+<br>
+Open an issue to consider adding syntax for nesting parameters assignments within $expand (and, depending on ODATA-1105, to $select)</p>
+<p>Mike: Revised proposal:<br>
+Query parameters for $filter segment are always passed in as expressions (because that is the expected type of the parameter). All other parameters are evaluated in the context in which they are defined and passed as literals, where "Context in which they are defined" is the resource identified by the path segment in which they are defined. <br>
+<br>
+Add ability to nest parameters definitions within $expand, in which case they are relative to the resource context of the $expand. Also consider adding to $select when considering ODATA-1105</p>
+<p>Mike: Revised wording:<br>
+Query parameters for $filter segment are always passed in as expressions (because that is the expected type of the parameter).  All other parameters defined in query options are evaluated in the context of the resource identified by the path segment in which they are defined and passed as literals.<br>
+<br>
+Add ability to nest parameters definitions within $expand, in which case they are relative to the resource context of the $expand. Also consider adding to $select when considering ODATA-1105</p>
+<p>Mike: Revised/corrected:<br>
+Query parameters for $filter segment are always passed in as expressions (because that is the expected type of the parameter).  All other parameters defined as query options are evaluated in the context of the resource identified by the URL path segment in which they are used and passed as literals.<br>
+<br>
+Add ability to assign values to parameter aliases within $expand, in which case they are evaluated relative to the resource context of the $expand. Also consider adding to $select when considering ODATA-1105.</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1109 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1109 is RESOLVED as proposed</p>
+
+
+<h3 id="5.4">5.4 <a href="https://issues.oasis-open.org/browse/ODATA-1105" rel="noopener noreferrer" target="_blank">ODATA-1105</a> - Simplify selection of properties of complex type</h3>
+<p>Ralf: Proposal:<br>
+Harmonize syntax for complex properties within $select with syntax for navigation properties within $expand: <br>
+- complex property can be followed by parentheses containing <br>
+  - $expand nested in $select. - $select with same recursive syntax <br>
+  - $compute to place computed properties within the complex type <br>
+  - for collection-valued complex properties also $filter, $search, $count, $orderby, $skip, and $top within the parentheses <br>
+<br>
+Extended $select syntax also allowed for $select nested within $expand.</p>
+<p>Mike: add: <br>
+  - support assigning values to parameter aliases within $select</p>
+<p>Ralf: Example</p>
+<pre>
+$select=Address($select=Street,City,Namespace.AddressWithLocation/Location)
+GET Customers(1)/Address?$select=Street,City,Namespace.AddressWithLocation/Location
+</pre>
+<p>Mike: Revised proposal:<br>
+Harmonize syntax for complex properties within $select with syntax for navigation properties within $expand:<br>
+- complex property can be followed by parentheses containing<br>
+  - $expand nested in $select.  <br>
+  - $select with same recursive syntax<br>
+  - $compute to place computed properties within the complex type<br>
+  - for collection-valued structural properties also $filter, $search, $count, $orderby, $skip, and $top within the parentheses<br>
+  - support assigning values to parameter aliases within $select<br>
+<br>
+Extended $select syntax also allowed for $select nested within $expand.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1105 as per the amended proposal. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1105 is RESOLVED with the amended proposal</p>
+
+<h3 id="5.5">5.5 <a href="https://issues.oasis-open.org/browse/ODATA-1114" rel="noopener noreferrer" target="_blank">ODATA-1114</a> - If-Then-Else in $batch</h3>
+
+<p>Mike: encountered situations where if-then-else or case would be useful within queries</p>
+<p>Ralf: Add an If-Then-Else construct to batch requests that allows executing a sequence of requests depending on a condition, typically the HTTP status code of a preceding request <br>
+<br>
+Example 1: <br>
+1. Book specific seat for a sports event <br>
+2. if booking failed <br>
+   2.a. book best-match seat for a sports event <br>
+   endif <br>
+<br>
+Example 2: <br>
+1. Modify shopping cart <br>
+2. Convert shopping cart to purchase order (bound action) <br>
+3. if success <br>
+   3.a. GET newly created purchase order <br>
+   else <br>
+   3.b. GET modified shopping cart <br>
+   endif</p>
+<p>Mike: In the above scenario, it appears that statement 2a would be dependent upon response code (or success/failure) of statement 1, not on the return value from the statement 1 (unless statement 1 was an action that returned true/false).</p>
+<p>Ralf: Basic idea: define a new kind of request object with members "if", "then", and optionally "else". <br>
+Value of "if" is a condition - use syntax of CSDL JSON logical expressions for annotations <br>
+Values of "then" and "else" are arrays of request objects - may contain further condition objects.</p>
+<p>Ralf: Alternative: use $filter syntax for "if"</p>
+<p>Ralf: ODATA-1114 is OPEN</p>
+<p>Ralf: Defer it to V4.02</p>
+
+
+<h2 id="6">Document walk trhough JSON Format</h2>
+<p>All walk through the editor revision of the JSON Format document in a shared session</p>
+
+<h3 id="6.1">6.1 Motion to accept application of issues</h3>
+
+<p><b>George</b>: I <b>move</b> to close the issues 
+ <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1086" rel="noopener noreferrer" target="_blank">ODATA-1086</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1087" rel="noopener noreferrer" target="_blank">ODATA-1087</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1090" rel="noopener noreferrer" target="_blank">ODATA-1090</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1091" rel="noopener noreferrer" target="_blank">ODATA-1091</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1092" rel="noopener noreferrer" target="_blank">ODATA-1092</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1094" rel="noopener noreferrer" target="_blank">ODATA-1094</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1095" rel="noopener noreferrer" target="_blank">ODATA-1095</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1096" rel="noopener noreferrer" target="_blank">ODATA-1096</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1097" rel="noopener noreferrer" target="_blank">ODATA-1097</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1102" rel="noopener noreferrer" target="_blank">ODATA-1102</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1103" rel="noopener noreferrer" target="_blank">ODATA-1103</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1104" rel="noopener noreferrer" target="_blank">ODATA-1104</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1105" rel="noopener noreferrer" target="_blank">ODATA-1105</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1108" rel="noopener noreferrer" target="_blank">ODATA-1108</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1109" rel="noopener noreferrer" target="_blank">ODATA-1109</a>, 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1111" rel="noopener noreferrer" target="_blank">ODATA-1111</a>, and 
+ <a href="https://issues.oasis-open.org/browse/ODATA-1115" rel="noopener noreferrer" target="_blank">ODATA-1115</a>
+ as applied. <b>Mike</b> seconds.</p>
+
+<p>Ralf: The above listed issues are CLOSED</p>
+
+<h2 id="7">7. Next meetings</h2>
+
+<p>Ralf: Topics for next meeting:<br>
+- progress documents for 4.012<br>
+- discuss timeline and next steps</p>
+
+<h3 id="7.1">7.1 Next Meeting on Thursday September 28, 2017 during 08:00-10:00 am PDT (17:00-19:00 CEST)</h3> 
+<p><b>Note</b>: Two hours earlier, one hour longer</p>
+
+<h3 id="7.2">7.2 Meetings following the next one</h3>
+<ul>
+<li>Thursday October 05, 2017 during 8-10 am PDT</li>
+</ul>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
