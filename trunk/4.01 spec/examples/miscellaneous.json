@@ -6,7 +6,7 @@
             "@Some.Term": true,
             "$Include": [
                 {
-                    "$Alias": "UoM",
+                    "$Alias": "Measures",
                     "$Namespace": "Org.OData.Measures.V1"
                 }
             ]
@@ -614,7 +614,8 @@
                         "$Path": "Average"
                     },
                     "$Nullable": true,
-                    "$Type": "Edm.Decimal"
+                    "$Type": "Edm.Decimal",
+                    "$Scale": 0
                 },
                 "@seo.SeoTerms": [
                     "Product",
@@ -736,7 +737,8 @@
             "$BaseType": "self.Employee",
             "AnnualBudget": {
                 "$Nullable": true,
-                "$Type": "Edm.Decimal"
+                "$Type": "Edm.Decimal",
+                "$Scale": 0
             },
             "Employees": {
                 "$Kind": "NavigationProperty",
@@ -787,7 +789,8 @@
             },
             "Created": {
                 "$Nullable": true,
-                "$Type": "Edm.DateTimeOffset"
+                "$Type": "Edm.DateTimeOffset",
+                "$Precision": 0
             }
         },
         "OrderLine": {
@@ -840,8 +843,7 @@
             "Amount3v": {
                 "$Nullable": true,
                 "$Type": "Edm.Decimal",
-                "$Precision": 3,
-                "$Scale": "variable"
+                "$Precision": 3
             },
             "Amount7f": {
                 "$Nullable": true,
@@ -930,13 +932,16 @@
         "Dimensions": {
             "$Kind": "ComplexType",
             "Height": {
-                "$Type": "Edm.Decimal"
+                "$Type": "Edm.Decimal",
+                "$Scale": 0
             },
             "Weight": {
-                "$Type": "Edm.Decimal"
+                "$Type": "Edm.Decimal",
+                "$Scale": 0
             },
             "Length": {
-                "$Type": "Edm.Decimal"
+                "$Type": "Edm.Decimal",
+                "$Scale": 0
             }
         },
         "Product25": {
@@ -1017,12 +1022,12 @@
         "Length": {
             "$Kind": "TypeDefinition",
             "$UnderlyingType": "Edm.Int32",
-            "@UoM.Unit": "Centimeters"
+            "@Measures.Unit": "Centimeters"
         },
         "Weight": {
             "$Kind": "TypeDefinition",
             "$UnderlyingType": "Edm.Int32",
-            "@UoM.Unit": "Kilograms"
+            "@Measures.Unit": "Kilograms"
         },
         "Size": {
             "$Kind": "ComplexType",
@@ -1183,10 +1188,10 @@
                 "$Type": "Edm.Int32"
             },
             "Name": {
-
+                "$Nullable": true
             },
             "Description": {
-
+                "$Nullable": true
             },
             "@UI.DisplayName": {
                 "$Path": "Name"
@@ -1226,12 +1231,15 @@
             "AmountInReportingCurrency": {
                 "$Nullable": true,
                 "$Type": "Edm.Decimal",
-                "@UoM.ISOCurrency": "USD"
+                "$Scale": 0,
+                "@Measures.ISOCurrency": "USD",
+                "@Measures.ISOCurrency@Core.Description": "The parent company’s currency"
             },
             "AmountInTransactionCurrency": {
                 "$Nullable": true,
                 "$Type": "Edm.Decimal",
-                "@UoM.ISOCurrency": {
+                "$Scale": 0,
+                "@Measures.ISOCurrency": {
                     "$Path": "Currency"
                 }
             },
@@ -1497,7 +1505,6 @@
             "DecimalValue": {
                 "$Nullable": true,
                 "$Type": "Edm.Decimal",
-                "$Scale": "variable",
                 "$DefaultValue": 34.95
             },
             "StringValue": {
@@ -1512,6 +1519,7 @@
             "DateTimeOffsetValue": {
                 "$Nullable": true,
                 "$Type": "Edm.DateTimeOffset",
+                "$Precision": 0,
                 "$DefaultValue": "2012-12-03T07:16:23Z"
             },
             "DurationValue": {
@@ -1594,7 +1602,6 @@
             },
             "DecimalValue": {
                 "$Type": "Edm.Decimal",
-                "$Scale": "variable",
                 "$DefaultValue": 34.95
             },
             "StringValue": {
@@ -1606,6 +1613,7 @@
             },
             "DateTimeOffsetValue": {
                 "$Type": "Edm.DateTimeOffset",
+                "$Precision": 0,
                 "$DefaultValue": "2012-12-03T07:16:23Z"
             },
             "DurationValue": {
@@ -1658,12 +1666,14 @@
                     {
                         "$Name": "before",
                         "$Nullable": true,
-                        "$Type": "Edm.DateTimeOffset"
+                        "$Type": "Edm.DateTimeOffset",
+                        "$Precision": 0
                     },
                     {
                         "$Name": "after",
                         "$Nullable": true,
-                        "$Type": "Edm.DateTimeOffset"
+                        "$Type": "Edm.DateTimeOffset",
+                        "$Precision": 0
                     }
                 ],
                 "$ReturnType": {
@@ -1922,13 +1932,60 @@
             "Quantity": {
                 "$Nullable": true,
                 "$Type": "Edm.Decimal",
-                "@UoM.Unit": {
+                "$Scale": 0,
+                "@Measures.Unit": {
                     "$Path": "ShippingUnit"
+                },
+                "@Validation.Minimum": {
+                    "$Decimal": "0"
                 }
             },
             "ShippingUnit": {
                 "$Nullable": true,
                 "@Core.Description": "Contains the unit for property Quantity"
+            }
+        },
+        "Validated": {
+            "$Kind": "ComplexType",
+            "EvenNumber": {
+                "$Nullable": true,
+                "$Type": "Edm.Int32",
+                "@Validation.MultipleOf": {
+                    "$Decimal": "2"
+                }
+            },
+            "PercentComplete": {
+                "$Nullable": true,
+                "$Type": "Edm.Byte",
+                "@Validation.Maximum": {
+                    "$Decimal": "100"
+                }
+            },
+            "Epsilon": {
+                "$Nullable": true,
+                "$Type": "Edm.Decimal",
+                "$Scale": 0,
+                "@Validation.Minimum": {
+                    "$Decimal": "0"
+                },
+                "@Validation.Minimum@Validation.Exclusive": true,
+                "@Validation.Maximum": {
+                    "$Decimal": "1"
+                },
+                "@Validation.Maximum@Validation.Exclusive": true
+            },
+            "Temperature": {
+                "$Nullable": true,
+                "$Type": "Edm.Decimal",
+                "$Scale": 0,
+                "@Validation.Minimum": {
+                    "$Decimal": "0"
+                },
+                "@Validation.Minimum@Validation.Exclusive": false
+            },
+            "EmailAddress": {
+                "$Nullable": true,
+                "@Validation.Pattern": "^.+@.+\\..+$"
             }
         },
         "SpecialByte": {
@@ -1965,7 +2022,6 @@
         "VariableDecimal": {
             "$Kind": "TypeDefinition",
             "$UnderlyingType": "Edm.Decimal",
-            "$Scale": "variable",
             "@Core.Description": "A floating decimal"
         },
         "ExactTimestamp": {
@@ -2164,6 +2220,9 @@
                 "$Type": "Edm.PropertyPath",
                 "@Core.Description": "Change tracking supports inlining these stream properties"
             }
+        },
+        "Minimal": {
+            "$Kind": "Term"
         }
     },
     "Intentionally.Empty": {

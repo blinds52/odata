@@ -191,8 +191,7 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="collection" select="starts-with($type,'Collection(')" />
-    <xsl:variable name="anyOf"
-      select="not($nullable='false') or (not($collection) and ($wrap or @DefaultValue or @MaxLength or @Precision))" />
+    <xsl:variable name="anyOf" select="not($nullable='false') or (not($collection) and ($wrap or @DefaultValue or @MaxLength))" />
     <xsl:if test="$collection">
       <xsl:text>"type":"array","items":{</xsl:text>
     </xsl:if>
@@ -229,7 +228,6 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:text>,"format":"decimal"</xsl:text>
-        <xsl:apply-templates select="@Precision|@Scale[.!=0]" mode="list2" />
         <xsl:choose>
           <xsl:when test="not(@Scale) or @Scale='0'">
             <xsl:text>,"multipleOf":1</xsl:text>
@@ -341,7 +339,6 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:text>,"format":"date-time"</xsl:text>
-        <xsl:apply-templates select="@Precision" mode="list2" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.TimeOfDay'">
         <xsl:call-template name="nullableType">
@@ -349,7 +346,6 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:text>,"format":"time"</xsl:text>
-        <xsl:apply-templates select="@Precision" mode="list2" />
       </xsl:when>
       <xsl:when test="$singleType='Edm.Duration'">
         <xsl:call-template name="nullableType">
@@ -373,7 +369,6 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
         <xsl:apply-templates select="@MaxLength" />
-        <xsl:apply-templates select="@Precision" mode="list2" />
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="@DefaultValue">
@@ -544,26 +539,6 @@
       </xsl:if>
       <xsl:value-of select="." />
     </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="@Precision">
-    <xsl:text>"precision":</xsl:text>
-    <xsl:value-of select="." />
-  </xsl:template>
-
-  <xsl:template match="@Scale">
-    <xsl:text>"scale":</xsl:text>
-    <xsl:choose>
-      <xsl:when test=".='variable'">
-        <xsl:text>"variable"</xsl:text>
-      </xsl:when>
-      <xsl:when test=".='floating'">
-        <xsl:text>"floating"</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="." />
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="@DefaultValue">
