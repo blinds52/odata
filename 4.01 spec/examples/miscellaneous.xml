@@ -5,7 +5,7 @@
   Version="4.01"
 >
   <edmx:Reference Uri="http://tinyurl.com/Org-OData-Measures-V1">
-    <edmx:Include Alias="UoM" Namespace="Org.OData.Measures.V1" />
+    <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1" />
     <Annotation Term="Some.Term" />
   </edmx:Reference>
   <edmx:Reference Uri="http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/vocabularies/Org.OData.Validation.V1.xml">
@@ -382,8 +382,8 @@
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Nullable="false" Type="Edm.Int32" />
-        <Property Name="Name" Nullable="false" Type="Edm.String" />
-        <Property Name="Description" Nullable="false" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Description" Type="Edm.String" />
         <Annotation Term="UI.DisplayName" Path="Name" />
         <Annotation Term="SearchVocabulary.SearchResult">
           <Record>
@@ -414,10 +414,12 @@
       <!-- Example 40: term Measures.ISOCurrency, once annotated with constant value, once with path value -->
       <ComplexType Name="Example40">
         <Property Name="AmountInReportingCurrency" Type="Edm.Decimal">
-          <Annotation Term="UoM.ISOCurrency" String="USD" />
+          <Annotation Term="Measures.ISOCurrency" String="USD">
+            <Annotation Term="Core.Description" String="The parent company’s currency" />
+          </Annotation>
         </Property>
         <Property Name="AmountInTransactionCurrency" Type="Edm.Decimal">
-          <Annotation Term="UoM.ISOCurrency" Path="Currency" />
+          <Annotation Term="Measures.ISOCurrency" Path="Currency" />
         </Property>
         <Property Name="Currency" Type="Edm.String" MaxLength="3" />
       </ComplexType>
@@ -1250,12 +1252,38 @@
 
       <EntityType Name="Order" Abstract="true">
         <Property Name="Quantity" Type="Edm.Decimal">
-          <Annotation Term="UoM.Unit" Path="ShippingUnit" />
+          <Annotation Term="Measures.Unit" Path="ShippingUnit" />
+          <Annotation Term="Validation.Minimum" Decimal="0" />
         </Property>
         <Property Name="ShippingUnit" Type="Edm.String">
           <Annotation Term="Core.Description" String="Contains the unit for property Quantity" />
         </Property>
       </EntityType>
+
+      <ComplexType Name="Validated">
+        <Property Name="EvenNumber" Type="Edm.Int32">
+          <Annotation Term="Validation.MultipleOf" Decimal="2" />
+        </Property>
+        <Property Name="PercentComplete" Type="Edm.Byte">
+          <Annotation Term="Validation.Maximum" Decimal="100" />
+        </Property>
+        <Property Name="Epsilon" Type="Edm.Decimal">
+          <Annotation Term="Validation.Minimum" Decimal="0">
+            <Annotation Term="Validation.Exclusive" />
+          </Annotation>
+          <Annotation Term="Validation.Maximum" Decimal="1">
+            <Annotation Term="Validation.Exclusive" Bool="true" />
+          </Annotation>
+        </Property>
+        <Property Name="Temperature" Type="Edm.Decimal">
+          <Annotation Term="Validation.Minimum" Decimal="0">
+            <Annotation Term="Validation.Exclusive" Bool="false" />
+          </Annotation>
+        </Property>
+        <Property Name="EmailAddress" Type="Edm.String">
+          <Annotation Term="Validation.Pattern" String="^.+@.+\..+$" />
+        </Property>
+      </ComplexType>
 
       <TypeDefinition Name="SpecialByte" UnderlyingType="Edm.Byte" />
 
@@ -1443,6 +1471,8 @@
           <Apply Function="odata.now" />
         </Apply>
       </Annotation>
+
+      <Term Name="Minimal" Type="Edm.String" Nullable="false" />
 
     </Schema>
 
