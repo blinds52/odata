@@ -429,7 +429,6 @@ contextPropertyPath = primitiveProperty
 
 ; Note: a boolCommonExpr is also a commonExpr, e.g. sort by Boolean 
 commonExpr = ( primitiveLiteral
-             / parameterAlias
              / arrayOrObject
              / rootExpr
              / firstMemberExpr
@@ -467,7 +466,6 @@ boolCommonExpr = commonExpr ; resulting in a Boolean
 rootExpr = '$root/' ( entitySetName keyPredicate / singletonEntity ) [ singleNavigationExpr ]
 
 firstMemberExpr = memberExpr
-                / '$this' 
                 / inscopeVariableExpr [ "/" memberExpr ]
 
 memberExpr = [ qualifiedEntityTypeName "/" ]
@@ -496,8 +494,10 @@ annotation          = AT [ namespace "." ] termName [ '#' annotationQualifier ]
 annotationQualifier = odataIdentifier                
                    
 inscopeVariableExpr  = implicitVariableExpr 
+                     / parameterAlias
                      / lambdaVariableExpr ; only allowed inside a lambdaPredicateExpr
-implicitVariableExpr = '$it'              ; references the unnamed outer variable of the query
+implicitVariableExpr = '$it'              ; the current instance of the resource identified by the resource path
+                     / '$this'            ; the instance on which the query option is evaluated
 lambdaVariableExpr   = odataIdentifier
 
 collectionNavigationExpr = [ "/" qualifiedEntityTypeName ]

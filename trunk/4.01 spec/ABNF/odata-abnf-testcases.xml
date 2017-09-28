@@ -217,6 +217,7 @@
     <Match>Special</Match>
   </Constraint>
   <Constraint Rule="parameterAlias">
+    <Match>@a</Match>
     <Match>@bar</Match>
     <Match>@c</Match>
     <Match>@cat</Match>
@@ -1566,6 +1567,12 @@
   </TestCase>
   <TestCase Name="5.1.1.13.6 $this" Rule="odataRelativeUri">
     <Input>Customers?$select=EmailAddresses($filter=endswith($this,'.com'))</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="odataRelativeUri">
+    <Input>Customers?$select=Addresses($filter=endswith($this/Street,'gasse'))</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="odataRelativeUri">
+    <Input>Customers?$select=Addresses(@a=$this;$filter=endswith(@a/Street,'gasse'))</Input>
   </TestCase>
   <TestCase Name="5.1.1.14 Path expressions" Rule="commonExpr">
     <Input>Items</Input>
