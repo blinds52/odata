@@ -128,6 +128,7 @@
     <Match>ProductsByColor</Match>
     <Match>ProductsByComplex</Match>
     <Match>ProductsByCustomer</Match>
+    <Match>ProductsOrderedBy</Match>
   </Constraint>
   <Constraint Rule="entityColNavigationProperty">
     <Match>DirectReports</Match>
@@ -236,6 +237,7 @@
     <Match>color</Match>
     <Match>colors</Match>
     <Match>customer</Match>
+    <Match>Customers</Match>
     <Match>complex</Match>
     <Match>Ingredients</Match>
     <Match>Kind</Match>
@@ -1541,9 +1543,6 @@
   <TestCase Name="5.1.1.13.4 $it" Rule="firstMemberExpr">
     <Input>$it/Completed</Input>
   </TestCase>
-  <TestCase Name="5.1.1.13.4 $it" Rule="boolCommonExpr">
-    <Input>$it eq 'Hugo'</Input>
-  </TestCase>
   <TestCase Name="5.1.1.13.4 $it" Rule="filter">
     <Input>$filter=endswith($it,'.com')</Input>
   </TestCase>
@@ -1552,6 +1551,21 @@
   </TestCase>
   <TestCase Name="5.1.1.13.4 $it with entity reference" Rule="queryOptions">
     <Input>$filter=$it eq {"@odata.id":"http://host/service/ZqV5t"}</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.5 $root" Rule="odataRelativeUri">
+    <Input>Employees?$filter=LastName eq $root/Employees('A1245')/LastName</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.5 $root" Rule="odataRelativeUri">
+    <Input>ProductsOrderedBy(Customers=@c)?@c=[$root/Customers('ALFKI'),$root/Customers('BLAUS')]</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="boolCommonExpr">
+    <Input>$this eq 'Hugo'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="filter">
+    <Input>$filter=endswith($this,'.com')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="odataRelativeUri">
+    <Input>Customers?$select=EmailAddresses($filter=endswith($this,'.com'))</Input>
   </TestCase>
   <TestCase Name="5.1.1.14 Path expressions" Rule="commonExpr">
     <Input>Items</Input>
