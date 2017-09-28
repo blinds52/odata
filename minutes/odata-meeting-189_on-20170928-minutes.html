@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #189 Thursday September 28, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='e9e2b5eace5704d77c97a1770b8b6b91f9c24420783da2afc5344df9dfacfb1c3d5ce8d1b2ea04d4df9abd60fae35b06a2c000a02cdac814b8af6cae9c2d5f23' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #189 Thursday September 28, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-09-28 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43997">normative attendance sheet for this meeting (event_id=43997)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from September 21, 2017 TC meeting #188</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61615/odata-meeting-188_on-20170921-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61615/odata-meeting-188_on-20170921-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Version 4.01 Next Public Review</h2>
+<h3 id="5.1">5.1 New Issues</h3>
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1116" rel="noopener noreferrer" target="_blank">ODATA-1116</a> - Introduce $this for referencing current item in $select/$expand options</h4>
+<p>Mike:</p>
+<pre>
+Customers?$select=Addresses($filter=City eq 'Paris')
+Me?$select=PhoneNumbers($filter=StartsWith($this,"425"))
+Me?$expand=Friends($filter=ns.IsAGoodGuy($this))
+Me?$expand=Friends(@a=$this;$expand=Friends($filter=Friends/Any(f:f/Friends eq @a)))
+</pre>
+<p>Ralf: ODATA-1116 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1116 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1116 is RESOLVED as proposed</p>
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1117" rel="noopener noreferrer" target="_blank">ODATA-1117</a> - 4.01 services should support $select select option in Intermediate</h4>
+<p>Ralf: ODATA-1117 is OPEN</p>
+<p>Mike: Proposal: <br>
+Add to 4.01 Intermediate conformance level, that Services MUST support the $select select option for selecting a subset of properties of a complex type.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1117 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1117 is RESOLVED as proposed</p>
+
+<h4 id="5.1.3">5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1118" rel="noopener noreferrer" target="_blank">ODATA-1118</a> - Clients must not specify select options to the same property more than once</h4>
+<p>Mike:</p>
+<pre>
+$select=Address/City,Address($select=State)
+$select=Addresses($filter=State eq 'Oregon'),Addresses($filter=State eq 'Washington')
+$select=Address($expand=Residents($select=StartsWith(Name,'B')))$expand=Address/Residents($filter=StartsWith(Name,'A'))
+$select=Address($expand=Residents($filter=StartsWith(Name,'B')))$expand=Address/Residents($filter=StartsWith(Name,'A'))
+</pre>
+<p>Hubert</p>
+<pre>
+$select=Addresses/City,Addresses($select=State;$filter=startswith(Country,'A'))
+</pre>
+<p>Mike:</p>
+<pre>
+$select=Addresses/City,Addresses($select=State;$filter=City eq 'San Francisco')
+</pre>
+<p>Hubert</p>
+<pre>
+$select=Addresses/City&amp;$expand=Addresses/NavProp($select=Foo;$filter=startswith(Bar,'A'))
+</pre>
+<p>Ralf: ODATA-1118 is OPEN</p>
+<p><b>George</b>: I <b>move</b> to resolve ODATA-1118 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1118 is RESOLVED as proposed</p>
+<h3 id="5.2">5.2 Document Walkthrough</h3>
+<h4 id="5.2.1">5.2.1 Part 1: Protocol – <a href="https://www.oasis-open.org/committees/download.php/61668/odata-v4.01-wd03-part1-protocol-2017-09-28.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61668/odata-v4.01-wd03-part1-protocol-2017-09-28.docx</a></h4>
+<h4 id="5.2.2">5.2.2 Part 2: URL Conventions – <a href="https://www.oasis-open.org/committees/download.php/61667/odata-v4.01-wd03-part2-url-conventions-2017-09-28.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61667/odata-v4.01-wd03-part2-url-conventions-2017-09-28.docx</a></h4>
+<h4 id="5.2.3">5.2.3 ABNF - <a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-construction-rules.txt?op=diff&amp;rev=1092" rel="noopener noreferrer" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01&nbsp;spec/ABNF/odata-abnf-construction-rules.txt?op=diff&amp;rev=1092</a></h4>
+<h4 id="5.2.4">5.2.4 ABNF Test Cases - <a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-testcases.xml?op=diff&amp;rev=1092" rel="noopener noreferrer" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-testcases.xml?op=diff&amp;rev=1092</a></h4>
+<h4 id="5.2.5">5.2.5 What’s New in OData V4.01 - <a href="https://www.oasis-open.org/committees/download.php/61666/new-in-odata-v4.01-wd02-2017-09-28-final.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61666/new-in-odata-v4.01-wd02-2017-09-28-final.docx</a></h4>
+<h3 id="5.3">5.3 Request next public review</h3>
+<p><b>Hubert</b>: I <b>move</b> to close ODATA-1116, ODATA-1117 and ODATA-1118 as applied. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1116, ODATA-1117 and ODATA-1118 are CLOSED as applied</p>
+
+<h4 id="5.3.1">5.3.1 Sample Motion for Part 1 and Part 2</h4>
+<p><b>Hubert</b>: I <b>move</b> that the TC approve OData V4.01 Working Draft 03 and all associated artifacts packaged together in <a href="https://www.oasis-open.org/committees/download.php/61669/odata-v4.01-csd03-2017-09-28.zip" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61669/odata-v4.01-csd03-2017-09-28.zip</a> as Committee Specification Draft 03 and designate the Microsoft Word version of the specification as authoritative. I further move that the TC approve submitting the aforementioned Committee Specification Draft 03 for 15 days of public review. <b>George</b> seconds</p>
+<p>Ralf: No objection, motion passes</p>
+
+<h4 id="5.3.2">5.3.2 Sample Motion for CSDL XML</h4>
+<p><b>Hubert</b>: I <b>move</b> that the TC approve OData Common Schema Definition Language (CSDL) XML Representation V4.01 Working Draft 03 and all associated artifacts packaged together in <a href="https://www.oasis-open.org/committees/download.php/61632/odata-csdl-xml-v4.01-csd03-2017-09-22.zip" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61632/odata-csdl-xml-v4.01-csd03-2017-09-22.zip</a> as Committee Specification Draft 03 and designate the Microsoft Word version of the specification as authoritative. I further move that the TC approve submitting the aforementioned Committee Specification Draft 03 for 15 days of public review. <b>George</b> seconds</p>
+<p>Ralf: No objection, motion passes</p>
+
+<h4 id="5.3.3">5.3.3 Sample Motion for CSDL JSON</h4>
+<p><b>Mike</b>: I <b>move</b> that the TC approve OData Common Schema Definition Language (CSDL) JSON Representation V4.01 Working Draft 02 and all associated artifacts packaged together in <a href="https://www.oasis-open.org/committees/download.php/61633/odata-csdl-json-v4.01-csd02-2017-09-22.zip" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61633/odata-csdl-json-v4.01-csd02-2017-09-22.zip</a> as Committee Specification Draft 02 and designate the Microsoft Word version of the specification as authoritative. I further move that the TC approve submitting the aforementioned Committee Specification Draft 02 for 15 days of public review. <b>Mark</b> seconds</p>
+<p>Ralf: No objection, motion passes</p>
+
+<h4 id="5.3.4">5.3.4 Sample Motion for JSON Format</h4>
+<p><b>Hubert</b>: I <b>move</b> that the TC approve OData JSON Format V4.01 Working Draft 03 and all associated artifacts packaged together in <a href="https://www.oasis-open.org/committees/download.php/61631/odata-json-format-v4.01-csd03-2017-09-22.zip" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61631/odata-json-format-v4.01-csd03-2017-09-22.zip</a> as Committee Specification Draft 03 and designate the Microsoft Word version of the specification as authoritative. I further move that the TC approve submitting the aforementioned Committee Specification Draft 03 for 15 days of public review. <b>George</b> seconds</p>
+<p>Ralf: No objection, motion passes</p>
+
+<h4 id="5.3.5">5.3.5 Sample Motion for New in OData 4.01</h4>
+<p><b>Stefan</b>: I <b>move</b> that the TC approve Whats New in OData 4.01 Working Draft 02 in <a href="https://www.oasis-open.org/committees/download.php/61666/new-in-odata-v4.01-wd02-2017-09-28-final.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61666/new-in-odata-v4.01-wd02-2017-09-28-final.docx</a> as Committee Note 02 and designate the Microsoft Word version of the note as authoritative. <b>Martin</b> seconds</p>
+<p>Ralf: No objection, motion passes</p>
+
+<h2 id="6">6. Timeline and next steps</h2>
+<h3 id="6.1">6.1 Prioritize planned Work Products</h3>
+<h4 id="6.1.1">6.1.1 OData to OpenAPI Mapping (Note)</h4>
+<p>Mike: Hosts XSLT transform created by Ralf as an online service (not intended as released service, so do not depend on it or stress test ...)</p>
+<p>Mike: Example service encapsulating our XSLT for Swagger 2.0:</p>
+<pre>
+http://odataswagger.cloudapp.net/v2/GetSwagger?uri=http://services.odata.org/TrippinRESTierService/$metadata
+</pre>
+<p>Mike: Example service encapsulating our XSLT for OpenAPI 3.0:</p>
+<pre>
+http://odataswagger.cloudapp.net/v3/GetOpenAPI?uri=http://services.odata.org/TrippinRESTierService/$metadata
+</pre>
+<h4 id="6.1.2">6.1.2 REST Profile for OData (Note)</h4>
+<h4 id="6.1.3">6.1.3 Securing OData (Note)</h4>
+<h4 id="6.1.4">6.1.4 Extension for Data Aggregation (Spec)</h4>
+<h4 id="6.1.5">6.1.5 Extension for Temporal Data (Spec)</h4>
+<h3 id="6.2">6.2 Timeline Proposal</h3>
+<h4 id="6.2.1">6.2.1 <a href="https://www.oasis-open.org/committees/download.php/61670/TC%20Timeline-2017-09-28.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61670/TC&nbsp;Timeline-2017-09-28.docx</a></h4>
+<h2 id="7">7. Next meetings</h2>
+<pre>
+Thursday October 06, 2017 during 8-10 am PDT
+</pre>
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
