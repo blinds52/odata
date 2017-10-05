@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #190 Thursday October 05, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='aefad6d8ebc5ae67fe3bc277637e9e41eeac0723a6d32cd7de6d8115e7f73c6d009cf3bacd3951c2e5c41a1030edeab4d60333caf505d803e633be1b89e0d8bf' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #190 Thursday October 05, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-10-05 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43998">normative attendance sheet for this meeting (event_id=43998)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Hubert: discuss timeline first</p>
+<p>Agenda approved as published with the above change</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from September 28, 2017 TC meeting #189</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61673/odata-meeting-189_on-20170928-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61673/odata-meeting-189_on-20170928-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Timeline and next steps</h2>
+<h3 id="5.1">5.1 Timeline Proposal</h3>
+<p>URL: <a href="https://www.oasis-open.org/committees/download.php/61677/TC%20Timeline-2017-09-29.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61677/TC&nbsp;Timeline-2017-09-29.docx</a></p> 
+<p>Ralf: Publishing of new Vocabulary revisions: consider publishing Errata04, cross-check if adding terms is problematic, and whether we did that in the past</p>
+
+<h2 id="6">6. Issues</h2>
+<h3 id="6.1">6.1 Vocabularies: APPLIED</h3>
+
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a> - Capabilities: FilterRestrictions and SortRestrictions for navigation properties</h4>
+<p>Need guidance on how to use: URL = <a href="https://issues.oasis-open.org/browse/ODATA-958?focusedCommentId=67703&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-67703" rel="noopener noreferrer" target="_blank">https://issues.oasis-open.org/browse/ODATA-958?focusedCommentId=67703&amp;page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-67703</a></p> 
+<p>Ralf: Add three new properties, FilterFunctions, FilterRestrictions, and SortRestrictions, to Capabilities.NavigationPropertyRestriction</p>
+<p>Ralf: After this addition I wonder where I should annotate filter and sort restrictions for contained entities:</p> 
+<pre>
+* FilterRestrictions and SortRestrictions on the containment navigation property (only way before applying this issue), or 
+* NavigationRestrictions on the "parent" entity set with the "container" entities 
+
+Which restrictions would apply to direct access to the contained set: 
+* GET Whole(42)/Parts?$filter=...&amp;$orderby=... 
+
+Which restrictions would apply to nested query options within expand: 
+* GET Whole?$expand=Parts($filter=...;$orderby=...)
+&lt;Annotations Target="schema.container/Whole/Parts">
+&lt;Annotation Term="FilterRestrictions" ..
+
+OR
+
+&lt;Annotations Target="schema.container/Whole">
+  &lt;Annotation Term="NavigationRestrictions">
+    ...
+     &lt;FilterRestrictions...
+</pre>
+<p>Mike: I want to discourage</p>
+<pre>
+&lt;NavigationProperty Name="Parts">&lt;Annotation Term="FilterRestrictions">...&lt;/>&lt;/>
+</pre>
+<p>Mike: One option would be to roll-back <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a>, allow FilterRestrictions, OrderRestrictions, and FilterFunctions to be applied to any collection, and encourage the best practice of applying these annotations through external targeting for reusability of types (that is, applied to any collection-valued property as well as entity set).</p>
+<p>Ralf: Another nit: <br>
+ FilterRestrictions and SortRestrictions apply to EntitySet Collection <br>
+ ExpandRestrictions and NavigationRestrictions apply to EntitySet Collection EntityType</p>
+
+<p>Mike: I think it was a mistake to say that the last two could be applied to an entity type.  This seems an anti-pattern that has no additional benefit.</p>
+<p>Mike: I can see reasons to annotate on either the EntitySet, or a collection-valued (navigation) property, but not at the EntityType level.</p>
+<p>Ralf: </p>
+<pre>
+&lt;Term Name="ExpandRestrictions" Type="Capabilities.ExpandRestrictionsType" AppliesTo="EntitySet Collection EntityType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on $expand expressions" />
+&lt;/Term>
+&lt;ComplexType Name="ExpandRestrictionsType">
+  &lt;Property Name="Expandable" Type="Edm.Boolean" DefaultValue="true">
+    &lt;Annotation Term="Core.Description" String="$expand is supported" />
+  &lt;/Property>
+  &lt;Property Name="NonExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
+    &lt;Annotation Term="Core.Description" String="These properties cannot be used in $expand expressions" />
+  &lt;/Property>
+  &lt;Property Name="MaxLevels" Type="Edm.Int32" DefaultValue="-1">
+    &lt;Annotation Term="Core.Description"
+      String="The maximum number of levels that can be expanded in a $expand expression. A value of -1 indicates there is no restriction." />
+  &lt;/Property>
+&lt;/ComplexType>
+</pre>
+<p>Ralf: Postpone to next meeting</p>
+<p>Ralf to craft examples showing both alternatives</p>
+<p>Ralf: Note: ExpandRestrictions not yet sub-structure of NavigationRestrictions, so either include all xxxRestrictions in NavigationRestrictions moving forward, or back out <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a></p>
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1055" rel="noopener noreferrer" target="_blank">ODATA-1055</a> - DeepInsertSupport: allow applying to entity sets and collection-valued navigation properties</h4>
+<p>Ralf: Adding EntitySet is fine, adding Collection has to be reconsidered along with <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a></p>
+<p>Ralf: Postponed after closing <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a></p>
+
+<h4 id="6.1.3">6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Ralf: Needs more discussion, to be prepared offline</p>
+
+<h4 id="6.1.4">6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1069" rel="noopener noreferrer" target="_blank">ODATA-1069</a> - New term Core.OperationAvailable</h4>
+
+<p>Ralf: Add to the Core vocabulary:</p>
+<pre>
+&lt;Term Name="OperationAvailable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Action Function"> 
+  &lt;Annotation Term="Core.Description" String="Action or function is available" /> 
+&lt;/Term>
+</pre>
+<p>Ralf: Applied as:</p>
+<pre>
+&lt;Term Name="OperationAvailable" Type="Edm.Boolean" DefaultValue="true" AppliesTo="Action Function">
+  &lt;Annotation Term="Core.Description" String="Action or function is available" />
+  &lt;Annotation Term="Core.LongDescription"
+    String="The annotation value will usually be an expression, e.g. using properties of the binding parameter type for instance-dependent availability, or using properties of a singleton for global availability." />
+&lt;/Term>
+</pre>
+<p>Mike: Example usage:</p>
+<pre>
+&lt;Annotation Term="Capabilties.OperationAvailable"> 
+  &lt;Ne> 
+    &lt;Path>bindingParam/OrderStatus&lt;/Path> 
+    &lt;String>SHIPPED&lt;/String> 
+  &lt;/Ne> 
+&lt;/Annotation>
+</pre>
+<p><b>Mike</b>: I <b>move</b> we approve the application of OData-1069. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-1069 is CLOSED as applied</p>
+
+<h4 id="6.1.5">6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-1079" rel="noopener noreferrer" target="_blank">ODATA-1079</a> - Several issues with latest standard vocabularies</h4>
+
+<p>Ralf: Org.OData.Core.V1.xml </p>
+<pre>
+&lt;ComplexType Name="AlternateKey"> 
+  &lt;Property Type="Collection(Core.PropertyRef)" Name="Key"> 
+    &lt;Annotation Term="Core.Description" String="The set of properties that make up this key" /> 
+  &lt;/Property> 
+&lt;/ComplexType> 
+</pre>
+<p>Ralf:   should have Nullable="false" in the Property </p>
+
+<p>Ralf: Org.OData.Temporal.V1.xml </p>
+<pre>
+  &lt;Term Name="TemporalSupported" Type="Aggregation.TemporalSupportedType" AppliesTo="EntityContainer EntitySet NavigationProperty"> --> 
+</pre>
+<p>Ralf:   should be: </p>
+<pre>   
+  &lt;Term Name="TemporalSupported" Type="Temporal.TemporalSupportedType" AppliesTo="EntityContainer EntitySet NavigationProperty"> 
+</pre>
+<p>Ralf:   8 references to Term="Core.Documentation" should be to Term="Core.Description"</p>
+<p><b>Mike</b>: I <b>move</b> we approve the application of ODATA_1079. <b>Stefan</b> seconds.</p>
+<p>Ralf: ODATA-1079 is CLOSED as applied</p>
+
+<h4 id="6.1.6">6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1082" rel="noopener noreferrer" target="_blank">ODATA-1082</a> - Add term Constraint to Validation vocabulary</h4>
+<p>Ralf: Add new term </p>
+<pre>
+&lt;Term Name="Constraint" 
+           Type="Validation.ConstraintType" 
+           AppliesTo="Property EntityType ComplexType"> 
+    &lt;Annotation Term="Core.Description" String="Condition that the annotation target has to fulfill" /> 
+&lt;/Term> 
+&lt;ComplexType Name="ConstraintType"> 
+    &lt;Property Name="FailureMessage" Type="Edm.String" Nullable="true"> 
+        &lt;Annotation Term="Core.IsLanguageDependent" /> 
+    &lt;/Property> 
+    &lt;Property Name="Condition" Type="Edm.Boolean" Nullable="false"> 
+        &lt;Annotation Term="Core.Description" 
+              String="Value MUST be a dynamic expression that evaluates to true if and only if the constraint is fulfilled" /> 
+    &lt;/Property> 
+&lt;/ComplexType> 
+</pre>
+
+<p>Ralf: Example: </p>
+<pre>
+&lt;Annotation Term="Validation.Constraint" Qualifier="Comparison"> 
+  &lt;Record> 
+    &lt;PropertyValue Property="FailureMessage" String="Start date cannot be after end date" /> 
+    &lt;PropertyValue Property="Condition"> 
+      &lt;Le> 
+        &lt;Path>StartDate&lt;/Path> 
+        &lt;Path>EndDate&lt;/Path> 
+      &lt;/Le> 
+    &lt;/PropertyValue> 
+  &lt;/Record> 
+&lt;/Annotation>
+</pre>
+<p><b>Stefan</b>: I <b>move</b> we resolve ODATA-1082 as applied. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1082 is CLOSED as applied</p>
+
+<h4 id="6.1.7">6.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-1089" rel="noopener noreferrer" target="_blank">ODATA-1089</a> - Org.OData.Aggregation.V1 missing Nullable="false" for Function ReturnType</h4>
+
+<p><b>Stefan</b>: I <b>move</b> we resolve ODATA-1089 as applied. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1089 is CLOSED as applied</p>
+
+<h4 id="6.1.8">6.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-1098" rel="noopener noreferrer" target="_blank">ODATA-1098</a> - xxxRestrictions can be applied more broadly</h4>
+<p>Ralf: Postpone until closing <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a></p>
+
+<h3 id="6.2">6.2 Vocabularies: NEW or OPEN</h3>
+
+<h4 id="6.2.1">6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1099" rel="noopener noreferrer" target="_blank">ODATA-1099</a> - Add annotations to describe custom query options and custom headers</h4>
+<p>META 1: use issue-specific branches for new terms, types, properties, or add them to master branch and mark them as experimental?<br>
+META 2: add examples to term definitions as shown here via annotation Core.Example?</p>
+
+<p>Mike: likes to put new terms into separate branches, drawback is reviewing combinations of new terms</p>
+
+<p>Ralf:</p>
+<pre>
+&lt;Term Name="CustomHeaders" Type="Collection(Capabilities.CustomParmater)" AppliesTo="EntitySet Singleton Action ActionImport Function FunctionImport"> 
+  &lt;Annotation Term="Core.Description" String="Custom headers that are supported/required for the annotated resource" /> 
+  &lt;Annotation Term="Core.Example"> 
+    &lt;Annotation Term="Capabilities.CustomHeaders"> 
+      &lt;Collection> 
+        &lt;Record> 
+          &lt;PropertyValue Property="Name" String="X-CSRF-Token" /> 
+          &lt;PropertyValue Property="Description" String="Token to protect against Cross-Site Request Forgery attacks" /> 
+          &lt;PropertyValue Property="DocumentationURL" 
+            String="https://help.sap.com/viewer/68bf513362174d54b58cddec28794093/7.51.1/en-US/b35c22518bc72214e10000000a44176d.html" /> 
+          &lt;PropertyValue Property="Required" Bool="true" /> 
+          &lt;PropertyValue Property="ExampleValues"> 
+            &lt;Collection> 
+              &lt;Record> 
+                &lt;PropertyValue Property="Value" String="Fetch" /> 
+                &lt;PropertyValue Property="Description" 
+                  String="Can be used on HEAD request to the service document for obtaining a new CSRF token. This token must then be sent in subsequent requests to resources of the service." /> 
+              &lt;/Record> 
+            &lt;/Collection> 
+          &lt;/PropertyValue> 
+        &lt;/Record> 
+      &lt;/Collection> 
+    &lt;/Annotation> 
+  &lt;/Annotation> 
+&lt;/Term>
+</pre>
+<p>Ralf: <a href="https://github.com/oasis-tcs/odata-vocabularies/blob/ODATA-1099/vocabularies/Org.OData.Capabilities.V1.md#CustomHeaders" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/blob/ODATA-1099/vocabularies/Org.OData.Capabilities.V1.md#CustomHeaders</a></p>
+<p>Stefan: likes it</p>
+<p>Mike: sees the vocabulary files grow in size though, but we do not have to put examples everywhere, we can select.</p>
+<p>Martin: suggests to split up pure vocabulary files with sibling versions (maybe with a specific extension adding the examples in) as one option</p>
+
+<h2 id="7">7. Next meetings</h2>
+<pre>
+Thursday October 12, 2017 during 8-10 am PDT
+</pre>
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
