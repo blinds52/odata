@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #191 Thursday October 12, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='c7dba0363b3828fc66c96b7045e27516069e5032ca5475ded7f97acda439900ff2c77f8f7965098b70c3710abfe9e8733cbc9026ffdbda537693691811783b76' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #191 Thursday October 12, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-10-12 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=43999">normative attendance sheet for this meeting (event_id=43999)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: New issues:</p>
+<pre>
+- https://issues.oasis-open.org/browse/ODATA-1119
+- https://issues.oasis-open.org/browse/ODATA-1120
+- https://issues.oasis-open.org/browse/ODATA-1121
+</pre>
+<p>Agenda approved as published with the above issues added</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from October 05, 2017 TC meeting #190</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61713/odata-meeting-190_on-20171005-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61713/odata-meeting-190_on-20171005-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Publication of Vocabularies</h2>
+<h3 id="5.1">5.1 Discussion</h3>
+<ol>
+  <li>We did add new terms to vocabularies in Errata, so we could publish Errata 04 to provide new official snapshots</li>
+  <li>Do we want to take that chance and re-check Errata 03 for typos or sections that need clarification?</li>
+</ol>
+<p>Ralf: Park this until George has dialled in, we need to know which "quality level" he needs: is CS01 / Committee Specification sufficient, or is (Errata to) OASIS Standard required</p>
+
+<h2 id="6">6. Issues</h2>
+
+<h3 id="6.1">Vocabularies: APPLIED</h3>
+<p>Mike: process ODATA-1119 and ODATA-1120 first</p>
+
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1119" rel="noopener noreferrer" target="_blank">ODATA-1119</a> - Add CollectionPropertyRestrictions capability term</h4>
+
+<p>Mike:<br>
+1) Remove "Collection" in AppliesTo in our capabilities vocabulary. <br>
+2) Add a new term, "CollectionPropertyRestrictions", that can be applied to collection-valued structural properties to describe support for new filter/sort/page type functionality: </p>
+<pre>
+&lt;Term Name="CollectionPropertyRestrictions" Type="Collection(Capabilities.CollectionPropertyRestrictions)" AppliesTo="EntitySet"> 
+&lt;Annotation Term="Core.Description" String="Describes restrictions on operations applied to collection-valued structural properties" /> 
+&lt;/Term> 
+&lt;ComplexType Name="CollectionPropertyRestrictions"> 
+&lt;Property Name="CollectionProperty" Type="Edm.PropertyPath"> 
+&lt;Annotation Term="Core.Description" String="Restricted Collection-valued property" /> 
+&lt;/Property> 
+&lt;Property Name="FilterFunctions" Type="Collection(Edm.String)"> 
+&lt;Annotation Term="Core.Description" 
+String="List of functions and operators supported in $filter. If null, all functions and operators may be attempted" /> 
+&lt;/Property> 
+&lt;Property Name="FilterRestrictions" type ="Capabilities.FilterRestrictionsType"> 
+&lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions" /> 
+&lt;/Property> 
+&lt;Property Name="SearchRestrictions" Type="Capabilities.SearchRestrictionsType"> 
+&lt;Annotation Term="Core.Description" String="Restrictions on $search expressions" /> 
+&lt;/Property> 
+&lt;Property Name="SortRestrictions" type ="Capabilities.FilterRestrictionsType"> 
+&lt;Annotation Term="Core.Description" String="Restrictions on $orderby expressions" /> 
+&lt;/Property> 
+&lt;Property Name="CountRestrictions" Type="Capabilities.CountRestrictionsType"> 
+&lt;Annotation Term="Core.Description" String="Restrictions on /$count path suffix and $count=true system query option" /> 
+&lt;/Property> 
+&lt;Property Name="TopSupported" Type="Core.Tag" DefaultValue="true"> 
+&lt;Annotation Term="Core.Description" String="Supports $top" /> 
+&lt;/Property> 
+&lt;Property Name="SkipSupported" Type="Core.Tag" DefaultValue="true"> 
+&lt;Annotation Term="Core.Description" String="Supports $skip" /> 
+&lt;/Property> 
+&lt;/ComplexType>
+</pre>
+<p>Ralf: ODATA-1119 is OPEN</p>
+<p>Mike: Fixed a couple typos:</p>
+<pre>
+&lt;Term Name="CollectionPropertyRestrictions" Type="Collection(Capabilities.CollectionPropertyRestrictionsType)" AppliesTo="EntitySet">
+  &lt;Annotation Term="Core.Description" String="Describes restrictions on operations applied to collection-valued structural properties" />
+&lt;/Term>
+&lt;ComplexType Name="CollectionPropertyRestrictionsType">
+  &lt;Property Name="CollectionProperty" Type="Edm.PropertyPath">
+  &lt;Annotation Term="Core.Description" String="Restricted Collection-valued property" />
+  &lt;/Property>
+  &lt;Property Name="FilterFunctions" Type="Collection(Edm.String)">
+  &lt;Annotation Term="Core.Description"
+    String="List of functions and operators supported in $filter. If null, all functions and operators may be attempted" />
+  &lt;/Property>
+  &lt;Property Name="FilterRestrictions" type ="Capabilities.FilterRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions" />
+  &lt;/Property>
+  &lt;Property Name="SearchRestrictions" Type="Capabilities.SearchRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on $search expressions" />
+  &lt;/Property>
+  &lt;Property Name="SortRestrictions" type ="Capabilities.SortRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on $orderby expressions" />
+  &lt;/Property>
+  &lt;Property Name="CountRestrictions" Type="Capabilities.CountRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on /$count path suffix and $count=true system query option" />
+  &lt;/Property>
+  &lt;Property Name="TopSupported" Type="Core.Tag" DefaultValue="true">
+   &lt;Annotation Term="Core.Description" String="Supports $top" />
+  &lt;/Property>
+  &lt;Property Name="SkipSupported" Type="Core.Tag" DefaultValue="true">
+   &lt;Annotation Term="Core.Description" String="Supports $skip" />
+  &lt;/Property>
+&lt;/ComplexType>
+</pre>
+<p>Mike: We could also add "SupportsInsert" to support POST to add a new item to the collection. Could also add "SupportsUpdate" and "SupportsDelete" that would only apply to ordered collections.</p>
+<p>Ralf: Rather park this idea in a new issue and wait for active use case</p>
+<p>George: Makes sense.</p>
+<p>George: Adding that is.  My concern is to be able to represent, in Instance Annotations that all of the CRUD operations are covered.</p>
+<p>Ralf: Then we might want to use "Insertable", "Updatable", "Deletable" as in the current XxxRestrictions</p>
+<p>Mike: Updated proposal with Insertable, Updatable, and Deletable:</p>
+<pre>
+&lt;Term Name="CollectionPropertyRestrictions" Type="Collection(Capabilities.CollectionPropertyRestrictionsType)" AppliesTo="EntitySet">
+  &lt;Annotation Term="Core.Description" String="Describes restrictions on operations applied to collection-valued structural properties" />
+&lt;/Term>
+&lt;ComplexType Name="CollectionPropertyRestrictionsType">
+  &lt;Property Name="CollectionProperty" Type="Edm.PropertyPath">
+  &lt;Annotation Term="Core.Description" String="Restricted Collection-valued property" />
+  &lt;/Property>
+  &lt;Property Name="FilterFunctions" Type="Collection(Edm.String)">
+  &lt;Annotation Term="Core.Description"
+    String="List of functions and operators supported in $filter. If null, all functions and operators may be attempted" />
+  &lt;/Property>
+  &lt;Property Name="FilterRestrictions" type ="Capabilities.FilterRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on $filter expressions" />
+  &lt;/Property>
+  &lt;Property Name="SearchRestrictions" Type="Capabilities.SearchRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on $search expressions" />
+  &lt;/Property>
+  &lt;Property Name="SortRestrictions" type ="Capabilities.SortRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on $orderby expressions" />
+  &lt;/Property>
+  &lt;Property Name="CountRestrictions" Type="Capabilities.CountRestrictionsType">
+  &lt;Annotation Term="Core.Description" String="Restrictions on /$count path suffix and $count=true system query option" />
+  &lt;/Property>
+  &lt;Property Name="TopSupported" Type="Core.Tag" DefaultValue="true">
+   &lt;Annotation Term="Core.Description" String="Supports $top" />
+  &lt;/Property>
+  &lt;Property Name="SkipSupported" Type="Core.Tag" DefaultValue="true">
+   &lt;Annotation Term="Core.Description" String="Supports $skip" />
+  &lt;/Property>
+  &lt;Property Name="Insertable" Type="Edm.Boolean" DefaultValue="true">
+   &lt;Annotation Term="Core.Description" String="This collection supports inserts" />
+  &lt;/Property>
+  &lt;Property Name="Updatable" Type="Edm.Boolean" DefaultValue="true">
+   &lt;Annotation Term="Core.Description" String="Members of this ordered collection can be updated by ordinal" />
+  &lt;/Property>
+  &lt;Property Name="Deletable" Type="Edm.Boolean" DefaultValue="true">
+   &lt;Annotation Term="Core.Description" String="Members of this ordered collection can be deleted by ordinal" />
+  &lt;/Property>
+&lt;/ComplexType>
+</pre>
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-1119 as proposed. <b>Hubert</b> seconds</p>
+<p>Ralf: ODATA-1119 is RESOLVED as proposed</p>
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1120" rel="noopener noreferrer" target="_blank">ODATA-1120</a> - Put entity set restrictions on NavigationPropertyDescriptions</h4>
+
+<p>Ralf: Proposal:<br>
+1) Remove "Collection" from AppliesTo for DeepInsertSupport; keep "EntityContainer" and "EntitySet". <br>
+2) Add DeepInsertSupport, CountRestrictions, NavigationRestrictions, IndexableByKey, TopSupported, SkipSupported, ExpandRestrictions, SearchRestrictions, InsertRestrictions, UpdateRestrictions, and DeleteRestrictions to our NavigationPropertyRestrictions.</p>
+<p>Mike: We don't really need ExpandRestrictions, NavigationRestrictions, CountRestrictions as they already have property paths.</p>
+<p><b>Ralf</b>: I <b>move</b> to remove CountRestrictions from the proposal in ODATA-1119. <b>Mike</b> seconds</p>
+<p>Ralf: Motion passes</p>
+<p>Mike: Revised proposal:<br>
+<br>
+1) Remove "Collection" from AppliesTo for DeepInsertSupport; keep "EntityContainer" and "EntitySet". <br>
+2) Add DeepInsertSupport, IndexableByKey, TopSupported, SkipSupported, SearchRestrictions, InsertRestrictions, UpdateRestrictions, and DeleteRestrictions to our NavigationPropertyRestrictions.</p>
+<p>Ralf: ODATA-1120 is OPEN</p>
+<p>Mike: I <b>move</b> we resolve ODATA-1120 as proposed. <b>Martin</b> seconds</p>
+<p>Ralf: ODATA-1120 is RESOLVED as proposed</p>
+
+<h4 id="6.1.3">6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-958" rel="noopener noreferrer" target="_blank">ODATA-958</a> - Capabilities: FilterRestrictions and SortRestrictions for navigation properties</h4>
+
+<p>Mike: I <b>move</b> we approve the application of ODATA-958. <b>George</b> seconds</p>
+<p>Ralf: ODATA-958 is CLOSED as applied</p>
+
+
+<h4 id="6.1.4">6.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1055" rel="noopener noreferrer" target="_blank">ODATA-1055</a> - DeepInsertSupport: allow applying to entity sets and collection-valued navigation properties</h4>
+
+<p>Mike: I <b>move</b> we close ODATA-1055 as applied. <b>George</b> seconds</p>
+<p>Ralf: Note: "Collection" will be removed again by ODATA-1120</p>
+<p>Ralf: ODATA-1055 is CLOSED as applied</p>
+
+
+<h4 id="6.1.5">6.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-1098" rel="noopener noreferrer" target="_blank">ODATA-1098</a> - xxxRestrictions can be applied more broadly</h4>
+
+<p>Mike: Now that we have a consistent place to annotate these starting from the entity set, we don't need to add them to the entity type. Further adding the ability to specify them in two places brings up the question of how to evaluate the effective restrictions if the same restriction is specified in a conflicting manner.</p>
+<p><b>Mike</b>: Now that we have a way to consistently apply these restrictions to both (nested) navigation properties and structural collection-valued properties, I <b>move</b> we rollback ODATA-1098 by removing "EntityType" from the set of restriction capability terms. <b>George</b> seconds.</p>
+<p>Mike: process: reject application, reject resolution, re-resolve as removing EntityType.</p>
+<p><b>George</b>: I <b>move</b> to reject the resolution of ODATA-1098. <b>Mike</b> seconds
+<p>Ralf: No objections, ODATA-1098 is OPEN (again)</p>
+
+<p><b>George</b>: I <b>move</b> to remove EntityType and Collection from ODATA-1098. <b>Mark</b> seconds
+<p>Ralf: ODATA-1098 is RESOLVED with the amended proposal</p>
+
+
+<h4 id="6.1.6">6.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+
+<p>Mike: Issue: NavigationLink/AssociationLink here is really talking about a json minimal-metadata format compression feature, not a protocol feature.</p>
+<pre>
+How do we interpret the annotation for non-json metadata formats?
+How do we interpret the annotation for json no-metadata formats?
+One option would be to have a json-specific vocabulary to control 
+    json-specific serialization optimizations, but that's probably 
+    not worth it for this scenario.
+</pre>
+<p>Mike: I'm okay to be pragmatic, word this as generically as possible, and live with it as part of core, I just wanted to call out that it was a bit of a cheat.</p>
+<p>Mike: For no-metadata cases, we currently say that count, nextlink, and deltalink are included in no-metadata cases, if requested.</p>
+<p>Mike: What happens if I explicitly select a navigation property in no-metadata case?</p>
+
+
+<h2 id="7">7. Next meetings</h2>
+<p>Ralf: </p>
+<pre>
+Next week: discuss how to publish snapshots of vocabularies
+Week after next: IANA registration
+Hubert can't attend next week
+We will discuss issue proposals if we don't get quorum
+OpenAPI: way forward also next week
+</pre>
+
+<pre>
+Thursday October 19, 2017 during 8-10 am PDT
+</pre>
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
