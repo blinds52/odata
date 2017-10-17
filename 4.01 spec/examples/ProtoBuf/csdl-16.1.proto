@@ -1,0 +1,47 @@
+syntax = "proto3";// import "Org.OData.Core.V1.proto";
+// import "Org.OData.Measures.V1.proto";
+
+
+message ODataDemo {
+
+  message Product {
+    string ID = 1;
+    string Description = 2;
+    string ReleaseDate = 3;
+    string DiscontinuedDate = 4;
+    sint32 Rating = 5;
+    string Price = 6;
+    string Currency = 7;
+    .ODataDemo.Category Category = 8;
+    .ODataDemo.Supplier Supplier = 9;
+  }
+
+  message Category {
+    sint32 ID = 1;
+    string Name = 2;
+    repeated .ODataDemo.Product Products = 3;
+  }
+
+  message Supplier {
+    string ID = 1;
+    string Name = 2;
+    .ODataDemo.Address Address = 3;
+    sint32 Concurrency = 4;
+    repeated .ODataDemo.Product Products = 5;
+  }
+
+  message Country {
+    string Code = 1;
+    string Name = 2;
+  }
+
+  message Address {
+    string Street = 1;
+    string City = 2;
+    string State = 3;
+    string ZipCode = 4;
+    string CountryName = 5;
+    .ODataDemo.Country Country = 6;
+  }
+
+}

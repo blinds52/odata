@@ -1,0 +1,116 @@
+syntax = "proto3";// import "Org.OData.Core.V1.proto";
+// import "Org.OData.Measures.V1.proto";
+// import "Org.OData.Capabilities.V1.proto";
+
+
+message Microsoft {
+
+  message OData {
+
+    message SampleService {
+
+      message Models {
+
+        message TripPin {
+
+          enum PersonGender {
+            Male = 0;
+            Female = 1;
+            Unknown = 2;
+          }
+
+          message City {
+            string CountryRegion = 1;
+            string Name = 2;
+            string Region = 3;
+          }
+
+          message Location {
+            string Address = 1;
+            .Microsoft.OData.SampleService.Models.TripPin.City City = 2;
+          }
+
+          message EventLocation {
+            string BuildingInfo = 1;
+          }
+
+          message AirportLocation {
+            string Loc = 1;
+          }
+
+          message Photo {
+            sint64 Id = 1;
+            string Name = 2;
+          }
+
+          message Person {
+            string UserName = 1;
+            string FirstName = 2;
+            string LastName = 3;
+            repeated string Emails = 4;
+            repeated .Microsoft.OData.SampleService.Models.TripPin.Location AddressInfo = 5;
+            .Microsoft.OData.SampleService.Models.TripPin.PersonGender Gender = 6;
+            sint64 Concurrency = 7;
+            repeated .Microsoft.OData.SampleService.Models.TripPin.Person Friends = 8;
+            repeated .Microsoft.OData.SampleService.Models.TripPin.Trip Trips = 9;
+            .Microsoft.OData.SampleService.Models.TripPin.Photo Photo = 10;
+          }
+
+          message Airline {
+            string AirlineCode = 1;
+            string Name = 2;
+          }
+
+          message Airport {
+            string IcaoCode = 1;
+            string Name = 2;
+            string IataCode = 3;
+            .Microsoft.OData.SampleService.Models.TripPin.AirportLocation Location = 4;
+          }
+
+          message PlanItem {
+            sint32 PlanItemId = 1;
+            string ConfirmationCode = 2;
+            string StartsAt = 3;
+            string EndsAt = 4;
+            string Duration = 5;
+          }
+
+          message PublicTransportation {
+            string SeatNumber = 1;
+          }
+
+          message Flight {
+            string FlightNumber = 1;
+            .Microsoft.OData.SampleService.Models.TripPin.Airport From = 2;
+            .Microsoft.OData.SampleService.Models.TripPin.Airport To = 3;
+            .Microsoft.OData.SampleService.Models.TripPin.Airline Airline = 4;
+          }
+
+          message Event {
+            string Description = 1;
+            .Microsoft.OData.SampleService.Models.TripPin.EventLocation OccursAt = 2;
+          }
+
+          message Trip {
+            sint32 TripId = 1;
+            string ShareId = 2;
+            string Description = 3;
+            string Name = 4;
+            float Budget = 5;
+            string StartsAt = 6;
+            string EndsAt = 7;
+            repeated string Tags = 8;
+            repeated .Microsoft.OData.SampleService.Models.TripPin.Photo Photos = 9;
+            repeated .Microsoft.OData.SampleService.Models.TripPin.PlanItem PlanItems = 10;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
