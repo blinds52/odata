@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #192 Thursday October 19, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='72fd9b70b9e8e545bed407e8fa7850a442f3f771f53a0907cce3e00a155a3b2959ad292fb7ff626c8366999c7438785df4b60bd23b011af30d8c1a75b05293ac' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #192 Thursday October 19, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-10-19 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=44000">normative attendance sheet for this meeting (event_id=44000)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>George: Additional topic for discussion:  Creation of a committee note to describe a CSDL to Protobuf transformation?</p>
+<p>Ralf: Property is currently restricted to primitive type, complex type, or enumeration type.  This unnecessarily excludes a value of EntityType.</p>
+<p>Ralf: Discuss them under AOB if time permits, otherwise put them on future agenda</p>
+<p>Ralf: Shortly discuss Property Type=EntityType versus Containment Navigation before 7 Issues</p>
+<p>Agenda approved as published with the above additions</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from October 12, 2017 TC meeting #191</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61785/odata-meeting-191_on-20171012-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61785/odata-meeting-191_on-20171012-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+<p>Ralf: Thanks to Stefan!</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Publication of Vocabularies</h2>
+<h3 id="5.1">5.1 Discussion</h3>
+<ol>
+  <li>We did add new terms to vocabularies in Errata, so we could publish Errata 04 to provide new official snapshots</li>
+  <li>Do we want to take that chance and re-check Errata 03 for typos or sections that need clarification?</li>
+</ol>
+<p>Mike: we put the vocabularies into GitHub and created a separate work product to allow faster iterations than 6-monthly Errata</p>
+<p>Mike: ODATA-886 was our effort to be able to make the latest vocabularies available.</p>
+<p>Ralf: Proposal: close / triage known issues for vocabularies, then take snapshot for Errata 04</p>
+<p>Ralf: If we align this with the plan for Vocabularies we could trigger publication of Errata 04 in November</p>
+<p>Ralf: This is a chance for correcting typos / adding clarifications in the Word documents</p>
+
+
+<h2 id="6">6. OData-to-OpenAPI Mapping</h2>
+<h3 id="6.1">6.1 Discussion</h3>
+<ol>
+  <li>Proposal: in CND02 use only OpenAPI 3.0.0 as target language, anyone interested in Swagger/OpenAPI 2.0 can refer to CND01</li>
+  <li>Discussion: which new features of OpenAPI 3.0.0 (beyond nullable) do we want to leverage?</li>
+</ol>
+<p>Mike: agree to (1.)</p>
+<p>George: agree to (1.)</p>
+<p>Ralf: (2.) which new features should we leverage?</p>
+<p>Mike: use Links where possible</p>
+<p>Ralf: anyOf for nullable single-valued navigation properties</p>
+<p>Ralf: custom headers and query options - https://issues.oasis-open.org/browse/ODATA-1099</p>
+<p>Ralf: response codes and descriptions - https://issues.oasis-open.org/browse/ODATA-884</p>
+<p>Ralf: Align Authorization vocabulary with securityDefinitions in OAS 3.0.0</p>
+<p>Ralf: Best do this before publishing Errata 04</p>
+<p>Ralf: Mike to follow up with Darrel Miller on this</p>
+<p>Mike: Microsoft is planning an open-source library for producing OpenAPI descriptions, and an OData reader for this library</p>
+<p>Ralf: Speed up timeline for new OData-to-OpenAPI Mapping to be done by End of November 2017</p>
+<p>Ralf:  More paths: containment navigation properties</p>
+<p>Ralf: Or in general first level of navigation properties</p>
+
+<h2 id="7">7. Issues</h2>
+
+<h3 id="7.1">Vocabularies: APPLIED</h3>
+
+<h4 id="7.1.1">7.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Ralf: Skip for today</p>
+
+
+<h4 id="7.1.2">7.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1098" rel="noopener noreferrer" target="_blank">ODATA-1098</a> - xxxRestrictions can be applied more broadly</h4>
+<p>Ralf: Remove EntityType and Collection previously added to the AppliesTo array for each of these restrictions.</p>
+<p>Ralf: https://github.com/oasis-tcs/odata-vocabularies/commit/fec6668c16245ac09c64afb8de5568fa5ce3ce29</p>
+<p>Mike: should these capability terms also apply to Singletons? Mike to open new issue</p>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-1098 as applied. <b>Matt</b> seconds.</p>
+<p>Ralf: ODATA-1098 is CLOSED as applied</p>
+
+<h4 id="7.1.3">7.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1119" rel="noopener noreferrer" target="_blank">ODATA-1119</a> - Add CollectionPropertyRestrictions capability term</h4>
+<p>Ralf: https://github.com/oasis-tcs/odata-vocabularies/commit/fec6668c16245ac09c64afb8de5568fa5ce3ce29</p>
+<p>Ralf: Proposal was:<br>
+<br>
+1) Remove "Collection" in AppliesTo in our capabilities vocabulary. <br>
+2) Add a new term, "CollectionPropertyRestrictions", that can be applied to collection-valued structural properties to describe support for new filter/sort/page type functionality:</p>
+<p>Mike: created https://issues.oasis-open.org/browse/ODATA-1122 to track adding capabilities to singletons</p>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-1119 as applied. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1119 is CLOSED as applied</p>
+
+
+<h4 id="7.1.4">7.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1120" rel="noopener noreferrer" target="_blank">ODATA-1120</a> - Put entity set restrictions on NavigationPropertyDescriptions</h4>
+<p>Ralf: Proposal:<br>
+<br>
+1) Remove "Collection" from AppliesTo for DeepInsertSupport; keep "EntityContainer" and "EntitySet". <br>
+2) Add DeepInsertSupport, IndexableByKey, TopSupported, SkipSupported, SearchRestrictions, InsertRestrictions, UpdateRestrictions, and DeleteRestrictions to our NavigationPropertyRestrictions.</p>
+<p>Ralf: https://github.com/oasis-tcs/odata-vocabularies/commit/fec6668c16245ac09c64afb8de5568fa5ce3ce29</p>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-1120 as applied. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1120 is CLOSED as applied</p>
+
+
+<h3 id="7.2">Vocabularies: NEW and OPEN</h3>
+
+<h4 id="7.2.1">7.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1099" rel="noopener noreferrer" target="_blank">ODATA-1099</a> - Add annotations to describe custom query options and custom headers</h4>
+<p>Ralf: See https://github.com/oasis-tcs/odata-vocabularies/blob/ODATA-1099/vocabularies/Org.OData.Capabilities.V1.md#CustomHeaders</p>
+<p>Ralf: https://github.com/oasis-tcs/odata-vocabularies/commit/dc08082853b2d6d60dec578999f2cad195601308</p>
+<p>Ralf: </p>
+<pre> 
+&lt;Term Name="CustomHeaders" Type="Collection(Capabilities.CustomParameter)" AppliesTo="EntitySet Singleton Action ActionImport Function FunctionImport">
+  &lt;Annotation Term="Core.Description" String="Custom headers that are supported/required for the annotated resource" />
+  &lt;Annotation Term="Core.Example">
+    &lt;Record>
+      &lt;Annotation Term="Capabilities.CustomHeaders">
+        &lt;Collection>
+          &lt;Record>
+            &lt;PropertyValue Property="Name" String="X-CSRF-Token" />
+            &lt;PropertyValue Property="Description" String="Token to protect against Cross-Site Request Forgery attacks" />
+            &lt;PropertyValue Property="DocumentationURL"
+              String="https://help.sap.com/viewer/68bf513362174d54b58cddec28794093/7.51.1/en-US/b35c22518bc72214e10000000a44176d.html" />
+            &lt;PropertyValue Property="Required" Bool="true" />
+            &lt;PropertyValue Property="ExampleValues">
+              &lt;Collection>
+                &lt;Record>
+                  &lt;PropertyValue Property="Value" String="Fetch" />
+                  &lt;PropertyValue Property="Description"
+                    String="Can be used on HEAD request to the service document for obtaining a new CSRF token. This token must then be sent in subsequent requests to resources of the service." />
+                &lt;/Record>
+              &lt;/Collection>
+            &lt;/PropertyValue>
+          &lt;/Record>
+        &lt;/Collection>
+      &lt;/Annotation>
+    &lt;/Record>
+  &lt;/Annotation>
+&lt;/Term>
+</pre>
+
+<p>Ralf: Short discussion on whether we need a CustomCookies term</p>
+<p>Ralf: Consensus that this is not needed now and may safely be added later</p>
+<p>Ralf: ODATA-1099 is OPEN</p>
+<p><b>George</b>: I <b>move</b> to resolve ODATA-1099 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1099 is RESOLVED as proposed</p>
+
+<h4 id="7.2.2">7.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1121" rel="noopener noreferrer" target="_blank">ODATA-1121</a> - Extend FilterExpressionRestrictions with "MultiPredicate"</h4>
+<p>Ralf: Add new allowed value </p>
+<pre>
+&lt;Record> 
+  &lt;PropertyValue Property="Value" String="MultiPredicate" /> 
+  &lt;Annotation Term="Core.Description" 
+    String="String property can be used as first operand in predicate expressions (eq, lt, startswith, ...), and multiple of these predicate expressions can be combined with 'or'" /> 
+&lt;/Record>
+</pre>
+<p>Ralf: Currently</p>
+<pre>
+&lt;Collection>
+  &lt;Record>
+    &lt;PropertyValue Property="Value" String="SingleValue" />
+    &lt;Annotation Term="Core.Description" String="Property can be used in a single eq clause" />
+  &lt;/Record>
+  &lt;Record>
+    &lt;PropertyValue Property="Value" String="MultiValue" />
+    &lt;Annotation Term="Core.Description" String="Property can be used in a single in clause" />
+  &lt;/Record>
+  &lt;Record>
+    &lt;PropertyValue Property="Value" String="SingleRange" />
+    &lt;Annotation Term="Core.Description" String="Property can be used in at most one ge and/or one le clause, separated by and" />
+  &lt;/Record>
+  &lt;Record>
+    &lt;PropertyValue Property="Value" String="SearchExpression" />
+    &lt;Annotation Term="Core.Description"
+      String="String property can be used as first operand in startswith, endswith, and contains clauses" />
+  &lt;/Record>
+&lt;/Collection>
+</pre>
+<p>George: MultiChoice instead of MultiPredicate</p>
+<p>Ralf: $filter=Type eq 'A' or Type eq 'B'</p>
+<p>Ralf: $filter=startswith(Name,'B') or Name eq 'Joe'</p>
+<p>Ralf: https://experience.sap.com/fiori-design-web/wp-content/uploads/sites/5/2014/12/desktop_definecond_nummeriert-2-768x519.png</p>
+<p>Ralf: Ralf to rework the proposal, attack it more from the angle of allowed/restricted functionality or service capability</p>
+
+
+<h4 id="7.2.3">7.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1112" rel="noopener noreferrer" target="_blank">ODATA-1112</a> - Default page size for server-driven paging</h4>
+<p>Mike: not much value for clients to know the default page size because they can specify their preferred page size</p>
+<p>Ralf: "Default value" for $top is for client-driven paging, and not to be confused with server-driven paging</p>
+<p>Ralf: I agree and will close the issue without TC action</p>
+
+<h2 id="8">8. Next meetings</h2>
+<p>Ralf: </p>
+<pre>
+Next week: check ODATA-1005 to see whether we need new capabilties
+</pre>
+
+<pre>
+Thursday October 26, 2017 during 8-10 am PDT
+</pre>
+<h2 id="9">9. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
