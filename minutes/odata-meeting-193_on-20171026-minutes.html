@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #193 Thursday October 26, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='45e1b5da36e3f79205670dd958be0025cb918a6df8a8e07380ca0034991de3d8c3881c1b27a977bd0bbd83705c78117dfa511e460215e32216902dcfaefdee61' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #193 Thursday October 26, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-10-26 0900-1100 PT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=44001">normative attendance sheet for this meeting (event_id=44001)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf:  New agenda items:</p>
+<pre>
+  5.a. V4.01 Public Review
+  iii. ODATA-1126 Remove a Reference to an Entity (public review comment c201710e00005)
+  iv.  ODATA-1127 clarify support for navigation properties on deleted entries
+  v.   Function Imports in $filter and $orderby - possible with $root/FuncImpName --> remove contradicting MUST NOT text in part 1 and 2
+  vi.  Action Invocation: editorial change to first paragraph of section 11.5.4.1 Invoking an Action
+</pre>
+<p>Agenda approved as published with the above additions</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from October 19, 2017 TC meeting #192</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61866/odata-meeting-192_on-20171019-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61866/odata-meeting-192_on-20171019-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<h4 id="4.1.1">4.1.1 #0036 Register the OData- headers and preferences with IANA</h4>
+<p><a href="https://www.oasis-open.org/committees/download.php/61752/IANA_Header_Registration.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61752/IANA_Header_Registration.docx</a><br>
+      <a href="https://www.oasis-open.org/committees/download.php/61751/IANA_Preference_Registration.docx" rel="noopener noreferrer" target="_blank"> https://www.oasis-open.org/committees/download.php/61751/IANA_Preference_Registration.docx</a></p>
+<p>Ralf: Documents look fine, Mark to follow up with Robin Cover on triggering the IANA registration</p>
+
+<h2 id="5">5. Issues</h2>
+<h2 id="5.1">5.1 V4.01 Public Review</h2>
+
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1125" rel="noopener noreferrer" target="_blank">ODATA-1125</a> - Define by-value/reference expectations for action/function payloads.</h4>
+<p>Ralf: Description<br>
+Descriptions of parameters and return types do not explain expectations for references to Entities. <br>
+The metamodel + vocabulary for CSDL allows three types of encodings: <br>
+By-reference, represented as a string containing a URL that references the resource. <br>
+By-reference, represented as an object containing a partial copy of the resource that includes just the @odata.id meta property with a value that is a string containing a URL that references the resource. <br>
+By-value, represented as an object containing a copy of the resource. <br>
+<br>
+For parameters and return-types, the question is which of these are expected in a payload.</p>
+<p>Ralf: </p>
+<pre>
+1) Describe the encoding options in the CSDL documents. 
+2) In the protocol, describe the expectations for different uses when type is an entitytype. 
+3) cover these in the JSON format document.
+</pre>
+<p>Ralf: ODATA-1125 is OPEN</p>
+<p>Ralf: Expectations:</p>
+<pre>
+- binding parameter by reference via URL preceding action/function
+- non-binding primitive and complex by value in action request body
+- non-binding (collection-valued) parameters of entity type:
+- by reference using { "@id": ... }
+ - by value using object notation with literal property values
+</pre>
+<p>Mike: Consider adding a vocabulary term to annotate an entity-valued parameter as byref/byvalue?</p>
+<p>Ralf: Expected default: by reference (George, Ralf)</p>
+<p>Mike: So term would be a "tag" representing "ByValue" with a default Boolean value (if applied) of true.</p>
+<p>Mike: or "PassByValue"?</p>
+<p>Mike: Absence of the term would mean by reference</p>
+<p>Mike: Pass by reference would be {"@id":...}</p>
+<p>Mike: When passed by value, its dependent upon the semantics of the action how many  (if any) properties need to be included...</p>
+<p>Ralf: Mixed list of value entities and entity references:</p>
+<pre>
+{
+  "Name": "UpdatedCategory",
+  "Products": [
+    {
+      "@id": "Products(42)"
+    },
+    {
+      "@id": "Products(57)",
+      "Name": "Widgets"
+    },
+    {
+      "Name": "Wedges"
+    }
+  ]
+}
+</pre>
+<p>Ralf: ByValue means: all of the above allowed</p>
+<p>Ralf: ByReference means: only first form is allowed</p>
+<p>Ralf: Example taken from http://docs.oasis-open.org/odata/odata-json-format/v4.01/csprd03/odata-json-format-v4.01-csprd03.html#sec_BindOperation</p>
+<p>Ralf: Agreement: expectations to be spelled out in Part 1: Protocol, with forward-reference to JSON Format for "bind syntax" / "entity references"</p>
+<p>Ralf: To be detailed by authors, to be reviewed in document walk-through</p>
+<p><b>George</b>: I <b>move</b> to accept the agreement on documenting the by-value/by-reference expectations in Part 1: Protocol, with forward-reference to JSON Format for "bind syntax" / "entity references". <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1125 is RESOLVED as proposed</p>
+<p>Ralf: Example 22:  primitive value</p>
+<pre>
+{
+  "@context": "http://host/service/$metadata#Edm.String",
+  "value": "Pilar Ackerman"
+}
+</pre>
+<p>Ralf: Example 25: complex value</p>
+<pre>
+{
+  "@context": "http://host/service/$metadata#Model.Address",
+  "Street": "12345 Grant Street",
+  "City": "Taft",
+  "Region": "Ohio",
+  "PostalCode": "OH 98052",
+  "Country@navigationLink": "Countries('US')"
+}
+</pre>
+<p>Ralf: Example 26: empty collection of complex values</p>
+<pre>
+{
+  "@context":"http://host/service/$metadata#Collection(Model.Address)",
+  "value": []
+}
+</pre>
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1123" rel="noopener noreferrer" target="_blank">ODATA-1123</a> - Allow 24:00:00 for Edm.TimeOfDay</h4>
+<p>Ralf: Description<br>
+Public review comment https://lists.oasis-open.org/archives/odata-comment/201710/msg00003.html <br>
+<br>
+CSDL 4.01 permits Edm.TimeOfDay values to range from 00:00:00 to 23:59:59.999*. <br>
+<br>
+However existing systems (e.g. SAP backends) frequently utilize 24:00:00 to indicate end-of-day. Requiring these values to be transmitted (e.g. to clients) as 23:59:59.999* could result in round-trip data loss. <br>
+<br>
+ In fact such SAP systems (for V2/V4) already will return PT24H or normalization-equivalent (for the V2 format of Edm.Time using XSD duration) or 24:00:00 (for the V4 format of Edm.TimeOfDay using XSD time), which is non-compliant with OData V2-V4 specifications. <br>
+<br>
+To improve interoperability, it would be preferable to standardize this behaviour. <br>
+<br>
+Note that the lexical format for XSD time permits 24:00:00, as it is the left-truncation of dateTime lexical representation, and dateTime lexical representation (see https://www.w3.org/TR/xmlschema-2/#dateTime) states: <br>
+<br>
+ - hh is a two-digit numeral that represents the hour; '24' is permitted if the minutes and seconds represented are zero, and the dateTime value so represented is the first instant of the following day (the hour property of a dateTime object in the value space cannot have a value greater than 23);</p>
+<p>Ralf: </p>
+<pre>
+{ date: 2017-10-26, time: 24:00:00 } is end of that day
+{ date: 2017-10-26, time: 00:00:00 } is begin of that day
+Would mean 00:00:00 lt 24:00:00
+Could allow it in DateTimeOffset
+2017-10-26T24:00:00 eq 2017-10-27T00:00:00
+</pre>
+<p>Mike: two concerns</p>
+<pre>
+- backward compatibility with V4 / V3 / V2 clients
+--> would need some kind of content negotiation
+--> would cause round-tripping problems for clients not able to represent 24:00:00
+</pre>
+<p>Ralf: ISO 8601 allowed 24:00 but seems to disallow it in the future: <a href="https://www.loc.gov/standards/datetime/ISO_DIS%208601-1.pdf" rel="noopener noreferrer" target="_blank">https://www.loc.gov/standards/datetime/ISO_DIS&nbsp;8601-1.pdf</a></p>
+<p>Mike: Description of PHP understanding 24:00 but saving as 00:00: <a href="https://stackoverflow.com/questions/13060467/difference-between-2400-and-0000" rel="noopener noreferrer" target="_blank">https://stackoverflow.com/questions/13060467/difference-between-2400-and-0000</a></p>
+<p>Ralf: NOTE 2 The expression 00:00:00 denotes beginning of day; for Information Technology Interchange there is no
+representation of end of day. Thus even though it is recognized that the expression 24:00:00 is used as a natural
+language expression to denote end of a day, this expression is not used for Information Technology Interchange.</p>
+<p>Ralf: ODATA-1123 is OPEN</p>
+<p><b>George</b>: I <b>move</b> to close OData-1123 with no action. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1123 is CLOSED without action</p>
+
+<h4 id="5.1.3">5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1126" rel="noopener noreferrer" target="_blank">ODATA-1126</a> - Remove a Reference to an Entity (public review comment c201710e00005)</h4>
+
+<p>Ralf: Description</p>
+<pre>
+Public review comment https://lists.oasis-open.org/archives/odata-comment/201710/msg00005.html
+
+The document "OData Version 4.0, Part1: Protocol" specifies in section
+"11.4.6.2 Remove a Reference to an Entity":
+
+     For collection-valued navigation properties, the entity reference of 
+     the entity to be removed MUST be specified using the $id query 
+     string option. 
+
+It would be nice if instead of or at least additional to using the $id query 
+option it would be allowed to use the key after the navigation property 
+to specify which entity is referenced. 
+
+Example: 
+    DELETE http://host/service/Customers(1)/Orders/$ref?$id=../../Orders(4711) 
+could be expressed as 
+    DELETE http://host/service/Customers(1)/Orders(4711)/$ref 
+
+This avoids a mandatory query option, handling of nested URLs, and parsing of relative or absolute URLs including verification that the URL is fitting; last but not least it is shorter and easier to understand. 
+
+Kind Regards, 
+Oliver Heinrich
+</pre>
+<p>George: likes it</p>
+<p>Ralf: Part 2, section 4.9: http://docs.oasis-open.org/odata/odata/v4.01/csprd03/part2-url-conventions/odata-v4.01-csprd03-part2-url-conventions.html#sec_AddressingaMemberwithinanEntityColle</p>
+<p>Ralf: Added recently, lists cases where an entity can be identified by key within a collection</p>
+<p>Mike: I believe we discussed this when defining how to delete references in OData 4.0.  The concern was the URL http://host/service/Customers(1)/Orders(4711) represents the entity, so /$ref would be order 4711's reference, not the reference from the customer...</p>
+<p>Ralf: ODATA-1126 is OPEN</p>
+<p>Mike: i.e., if you do a GET on http://host/service/Customers(1)/Orders(4711)/$ref would return Orders(4711)</p>
+<p>Mike: if you did a delete on that returned value, you would be deleting Orders(4711), not the reference from Customers(1) to Orders(4711).</p>
+<p>Ralf: </p>
+<pre>
+GET http://host/service/Customers(1)/Orders(4711)/$ref --> { @id: Orders(4711) }
+GET http://host/service/Customers(1)/Orders$ref --> [ { @id: Orders(4711) }, ... ]
+a) DELETE http://host/service/Customers(1)/Orders(4711)/$ref
+a) DELETE http://host/service/Customers(1)/Orders/$ref(4711)
+</pre>
+<p>Mike: However, we do cheat a bit on the single-valued nav prop by allowing host://service/Customers(1)/BestFriend/$ref...</p>
+<p>Ralf: Example 29: two ways of unrelating Categories(1) and Products(0)</p>
+<pre>
+DELETE http://host/service/Categories(1)/Products/$ref?$id=../../Products(0)
+DELETE http://host/service/Products(0)/Category/$ref
+</pre>
+<p>Ralf: Resolve relative URL in first notation:</p>
+<pre>
+DELETE http://host/service/Categories(1)/Products/$ref?$id=/service/Products(0)
+</pre>
+<p>Mike: The associationLink annotation in a response contains an association URL that can be used to retrieve a reference to an entity or a collection of references to entities related to the current entity via a navigation property.
+The default computed value of an association URL is the value of the navigation URL appended with /$ref. (from JSON format doc)</p>
+<p>Mike: However, when we do a GET to nav property appended with $ref you get back the id of the related entity, not relative to the nav prop.</p>
+<p>Ralf: </p>
+<pre>
+GET http://host/service/Customers(1)/Orders(4711)/$ref --> { @id: Orders(4711) }
+</pre>
+<p>Mike: Matches 11.2.8 Requesting Entity References<br>
+To request entity references in place of the actual entities, the client issues a GET request with /$ref appended to the resource path.</p>
+<p>Ralf:</p>
+<pre>
+GET http://host/service/Customers(1)/Orders/$ref --> [ { @id: Orders(4711) }, ... ]
+DELETE http://host/service/Customers(1)/Orders(4711)/$ref
+GET http://host/service/Customers(1)/Orders/$ref --> [ ... ]
+</pre>
+<p>George: for containment navigation properties DELETE Parent(key1)/CNProp(key2) and DELETE Parent(key1)/CNProp(key2)/$ref have the same result: child is gone</p>
+<p>Ralf: Single-valued case - already allowed</p>
+<pre>
+GET http://host/service/Products(0)/Category/$ref --> { Categories(1) }
+DELETE http://host/service/Products(0)/Category/$ref
+GET http://host/service/Products(0)/Category/$ref --> 204 No Content
+GET http://host/service/Products(0)/Category --> 204 No Content
+</pre>
+<p>Mike: from a pure REST perspective, the action (DELETE) is not being carried out on what would be returned by a GET on the same URL (the id of the order, not it's reference from customer), but (again) we already violate that for the single nav prop case...</p>
+<p>Ralf: Postpone to next meeting, sleep over it for some nights...</p>
+<p>Ralf: Tentative proposal:<br>
+- servers to accept both forms<br>
+- clients to prefer new form</p>
+<p>Mike: For compatibility, 4.01 service would have to support both; would prefer 4.01 clients to use the new format.</p>
+<p>Mike: not tie new URL syntax to OData-Version header, allow it also with OData-Version:4.0</p>
+
+<h2 id="5.2">5.2 Vocabularies: Schema Versioning</h2>
+<h4 id="5.2.1">5.2.1 Proposal: annotate vocabulary schemas with Core.SchemaVersion to make different revisions distinguishable</h4>
+<ol>
+  <li>Major version is 1  will only be changed if we switch to Xxx.V2</li>
+  <li>Minor version is incremented whenever we add a term, property, or AppliesTo target</li>
+  <li>Patch version is incremented whenever we fix something  typos, descriptions,</li>
+</ol>
+<p>Mike: likes it</p>
+
+<h2 id="6">6. Next meetings</h2>
+<p>Ralf: </p>
+<pre>
+Thursday November 02, 2017 during 8-10 am PDT - 16:00 CEST in Europe, one hour earlier
+Thursday November 09, 2017 during 8-10 am PDT
+</pre>
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
