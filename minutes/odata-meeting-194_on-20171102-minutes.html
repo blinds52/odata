@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #194 Thursday November 02, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='50d074589829abdf84a81f1235200483728e22af757148a4931ad6c82da9d006dbde41864415dacdb4ec23c343a08f0a3861feea928951f93b148eabe4cc0768' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #194 Thursday November 02, 2017</h1>
+<p>Acting chair: Mike</p>
+<pre>Chat transcript from room: odatatc
+2017-11-02 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=44002">normative attendance sheet for this meeting (event_id=44002)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>George:  Has to leave before the first hour is finished, thus wants to add for sake of minuting two comments /statements w.r.t. the following planned sections x.6 and x.7 (from agenda draft with x. prepended as these topics were not discussed after iissues section)</p>
+<pre>
+x.6. Committee Note on Google Protocol Buffers as an alternative data format
+x.6.1 George: describe use case and purpose of the proposed committee note
+COMMENT:
+  A relatively quick look says a lossy transformation from CSDL to protocol 
+  buffers is straight forward.  A number of potential clients would like 
+  this format.  
+  If this is amenable to a style sheet transform, 
+  then we should make that available.
+
+x.7. Structural Property with Type=Entity Type versus Containment Navigation Property
+x.7.1 George: describe use case and why containment navigation properties arent sufficient
+COMMENT:
+  NavigationProperty has two forms and semantics depending on whether the 
+  ContainsTarget attribute is true or false.  
+  Syntactically, when true, the definition is exactly like an EntitySet or Singleton, 
+  depending on the presence of Collection.   
+  Thus, really not navigation  When false, the declaration really is equivalent to 
+  a UML AssociationEnd.  
+  In the long-run, the meta-model for CSDL is simpler if we do not conflate these two uses.
+</pre>
+<p>Hubert: in investigating this type of interface in the past, knowing the size (particularly of arrays) in advance seemed to be a problem.</p>
+<p>George: Perhaps can use server side paging?</p>
+<p>Hubert: issue is performance, particularly converting numbers to strings (in json) and back to doubles.</p>
+<p>Agenda approved as published with the above additions / comments</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from October 26, 2017 TC meeting #193</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61889/odata-meeting-193_on-20171026-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61889/odata-meeting-193_on-20171026-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Issues</h2>
+<h3 id="5.1">5.1 V4.01 Public Review</h3>
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1126" rel="noopener noreferrer" target="_blank">ODATA-1126</a> - Remove a Reference to an Entity (public review comment c201710e00005)</h4>
+<p>Mike: </p>
+<pre>DELETE http://host/service/Customers(1)/Orders/$ref?$id=../../Orders(4711)
+Alternate: DELETE http://host/service/Customers(1)/Orders(4711)/$ref
+DELETE http://host/service/Customers(1)/BestFriend/$ref
+GET http://host/service/Customers(1)/BestFriend/$ref returns {"@odata.id":"Customers(5)"}
+DELETE http://host/service/Customers(1)/BestFriend deletes the best friend.
+</pre>
+<p>Hubert: don't like it, but consistent with singleton case (which he also doesn't care for)</p>
+<p>Mike: Tend to agree. Better syntax, and more consistent, but kinda rubs me wrong...</p>
+<p><b>George</b>: I <b>move</b> to accept OData-1126 as proposed. <b>Hubert</b> seconds.</p>
+<p>Mike: OData-1126 resolved as proposed.</p>
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1127" rel="noopener noreferrer" target="_blank">ODATA-1127</a> - clarify support for navigation properties on deleted entries</h4>
+<p>Matt: are there other ways to do this?</p>
+<p>Mike: yes, in a flattened manner.  However, we are moving from a flattened representation to the nested representation because it is a more natural representation and in many cases significantly more efficient.</p>
+<p>Matt: useful (and consistent) in update case.  Maybe not as useful in client case, if the related things are going to be orphaned anyway.</p>
+<p><b>Matt</b>: I <b>move</b> to accept OData-1127 as proposed. <b>HUbert</b> seconds.</p>
+<p>Mike: OData-1127 is resolved as proposed.</p>
+
+<h4 id="5.1.3">5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1128" rel="noopener noreferrer" target="_blank">ODATA-1128</a> - Clarify function imports in $filter and $orderby</h4>
+<p>Mike: I think the text was introduced before we introduced $root, and was intended to differentiate between function imports (which are called from the root) and unbound functions (which can be invoked in a $filter or $orderby as a "global" function.) i.e., syntactically, the function import has to be prefixed with the container.  A function import "binds" the function to the container.</p>
+<p>Mike: Proposal from issue: </p>
+<pre>
+Remove this sentence, or change to 
+
+Function imports can be used inside $filter or $orderby if preceded by the $root literal, see [OData-URL].
+</pre>
+<p><b>Mark</b>: I <b>move</b> that OData-1128 be resoved by making the change specified in the proposal. <b>Hubert</b> seconds.</p>
+<p>Mike: OData-1128 is resolved as proposed.</p>
+
+<h3 id="5.2">5.2 Vocabularies: NEW or OPEN</h3>
+<h4 id="5.2.1">5.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1124" rel="noopener noreferrer" target="_blank">ODATA-1124</a> - Authorization vocabulary: KeyLocation - also allow cookie as value?</h4>
+<p>Mark: is passing security information in a cookie necessarily a good practice?  if not, do we want to encourage it?</p>
+
+<h4 id="5.2.2">5.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1122" rel="noopener noreferrer" target="_blank">ODATA-1122</a> - Add singletons for capability term targets</h4>
+<p>Mike: ODATA-1122 is open.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1122 with direction to the editors to apply as appropriate and the application be reviewed when approving the changes. <b> mark</b> seconds.</p>
+<p>Mike: OData-1122 is resolved as proposed.</p>
+
+<h4 id="5.2.3">5.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1121" rel="noopener noreferrer" target="_blank">ODATA-1121</a> - Extend FilterExpressionRestrictions with "MultiPredicate"</h4>
+<p>Mike: OData-1121 is held over to next week.</p>
+
+<h4 id="5.2.4">5.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+<p>Mike: OData-884 example:</p>
+<pre>
+&lt;Annotation Term="Core.ErrorCodes"> 
+&lt;Collection> 
+&lt;Record> 
+&lt;PropertyValue Property="HttpMethod" String="GET" /> 
+&lt;PropertyValue Property="HttpStatusCode" String="400" /> 
+&lt;PropertyValue Property="ODataErrorCode" String="QueryFilterFunctionNotSupported" /> 
+&lt;PropertyValue Property="Description" 
+  String="This error indicates that a request was made with a filter function that isnt supported on this entity set. Please refer to the Capabilities.FilterFunctions annotation on this entity set for a list of supported functions, and the exact error message for which function usage triggered this error." /> 
+&lt;/Record> 
+&lt;/Collection> 
+&lt;/Annotation>
+</pre>
+<p>Mike: Questions on proposal: Do we need, then, to define a set of ODataErrorCodes?</p>
+<p>Mike: Other questions from issue comments: Would reorganizing (perhaps hierarchically) work better?</p>
+<p>Mike: Document for OpenAPI mapping: <a href="https://www.oasis-open.org/apps/org/workgroup/odata/download.php/61852/latest" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/download.php/61852/latest</a></p>
+<p>Mike: Discussion on adding version to vocabularies:5.2.1 Proposal: annotate vocabulary schemas with Core.SchemaVersion to make different revisions distinguishable</p>
+<pre>
+Major version is 1 will only be changed if we switch to Xxx.V2
+Minor version is incremented whenever we add a term, property, or AppliesTo target
+Patch version is incremented whenever we fix something typos, descriptions,
+</pre>
+
+<h2 id="6">6. Next meetings</h2>
+<p>Mike: </p>
+<pre>
+Thursday November 09, 2017 during 8-10 am PT (17:00-19:00 CET)
+</pre>
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
