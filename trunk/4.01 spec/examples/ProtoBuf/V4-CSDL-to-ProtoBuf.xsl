@@ -11,7 +11,6 @@
     - Edm.PrimitiveType
     - Edm.PropertyPath and other stuff that can only be used within annotations
     - @Nullable
-    - @BaseType
     - edm:TypeDefinition: avoid dummy property "value"
     - collection wrappers for entity sets, (navigation) properties, and return types
     - control information: count, nextLink etc.
@@ -23,15 +22,15 @@
   <xsl:key name="types" match="//edm:Property/@Type|//edm:NavigationProperty/@Type|//edm:ReturnType/@Type" use="." />
 
   <xsl:template match="edmx:Edmx">
-    <xsl:text>syntax = "proto3";</xsl:text>
+    <xsl:text>syntax = "proto3";&#xA;</xsl:text>
     <xsl:apply-templates select="//edmx:Include" />
     <xsl:apply-templates select="//edm:Schema" />
   </xsl:template>
 
   <xsl:template match="edmx:Include">
-    <xsl:text>// import "</xsl:text>
+    <xsl:text>&#xA;// import "</xsl:text>
     <xsl:value-of select="@Namespace" />
-    <xsl:text>.proto";&#xA;</xsl:text>
+    <xsl:text>.proto";</xsl:text>
   </xsl:template>
 
   <xsl:template match="edm:Schema">
@@ -96,20 +95,72 @@
     <xsl:value-of select="@Name" />
     <xsl:text> {&#xA;</xsl:text>
 
-    <xsl:if test="@BaseType">
-      <!-- TODO: find base type, copy properties, recursive -->
-    </xsl:if>
-
     <xsl:apply-templates select="edm:Property|edm:NavigationProperty">
       <xsl:with-param name="indent" select="concat($indent,'  ')" />
+      <xsl:with-param name="offset" select="0" />
     </xsl:apply-templates>
+
+    <xsl:if test="@BaseType">
+      <xsl:call-template name="basetype">
+        <xsl:with-param name="basetype" select="@BaseType" />
+        <xsl:with-param name="indent" select="$indent" />
+        <xsl:with-param name="offset" select="count(edm:Property|edm:NavigationProperty)" />
+      </xsl:call-template>
+    </xsl:if>
 
     <xsl:value-of select="$indent" />
     <xsl:text>}</xsl:text>
   </xsl:template>
 
+  <xsl:template name="basetype">
+    <xsl:param name="basetype" />
+    <xsl:param name="indent" />
+    <xsl:param name="offset" />
+
+    <!-- find base type -->
+    <xsl:variable name="qualifier">
+      <xsl:call-template name="substring-before-last">
+        <xsl:with-param name="input" select="$basetype" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="name">
+      <xsl:call-template name="substring-after-last">
+        <xsl:with-param name="input" select="$basetype" />
+        <xsl:with-param name="marker" select="'.'" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="base"
+      select="//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:EntityType[@Name=$name]|//edm:Schema[@Namespace=$qualifier or @Alias=$qualifier]/edm:ComplexType[@Name=$name]" />
+
+    <xsl:if test="not($base)">
+      <xsl:message>
+        <xsl:text>BaseType not found: </xsl:text>
+        <xsl:value-of select="$basetype" />
+      </xsl:message>
+    </xsl:if>
+
+    <!-- treat properties -->
+    <xsl:apply-templates select="$base/edm:Property|$base/edm:NavigationProperty">
+      <xsl:with-param name="indent" select="concat($indent,'  ')" />
+      <xsl:with-param name="offset" select="$offset" />
+    </xsl:apply-templates>
+
+
+    <!-- recurse to base type -->
+    <xsl:if test="$base/@BaseType">
+      <xsl:call-template name="basetype">
+        <xsl:with-param name="basetype" select="$base/@BaseType" />
+        <xsl:with-param name="indent" select="$indent" />
+        <xsl:with-param name="offset" select="$offset + count($base/edm:Property|$base/edm:NavigationProperty)" />
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="edm:Property|edm:NavigationProperty">
     <xsl:param name="indent" />
+    <xsl:param name="offset" />
 
     <xsl:value-of select="$indent" />
     <xsl:call-template name="type">
@@ -119,7 +170,7 @@
     <xsl:text> </xsl:text>
     <xsl:value-of select="@Name" />
     <xsl:text> = </xsl:text>
-    <xsl:value-of select="position()" />
+    <xsl:value-of select="$offset + position()" />
     <xsl:text>;&#xA;</xsl:text>
   </xsl:template>
 
@@ -281,6 +332,10 @@
       </xsl:when>
       <xsl:when test="$qualifier='Edm'">
         <!-- TODO: Edm.Geo* - how to encode? WKT as string? Or "any"? -->
+        <xsl:message>
+          <xsl:text>TODO: Type=</xsl:text>
+          <xsl:value-of select="$singleType" />
+        </xsl:message>
         <xsl:call-template name="nullableType">
           <xsl:with-param name="type" select="'string'" />
           <xsl:with-param name="nullable" select="$nullable" />
