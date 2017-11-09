@@ -6,8 +6,11 @@ setlocal
 @rem
 @rem  Prerequisites
 @rem  - Java SE 8 is installed and in the PATH - download from http://www.oracle.com/technetwork/java/javase/downloads/index.html 
+@rem  - diff.exe is installed and in the PATH
 @rem  - Eclipse is installed with Xalan (contained in Eclipse Web Tools Platform), and ECLIPSE_HOME environment variable is set
 set CLASSPATH=%CLASSPATH%;%ECLIPSE_HOME%\plugins\org.apache.xml.serializer_2.7.1.v201005080400.jar;%ECLIPSE_HOME%\plugins\org.apache.xalan_2.7.1.v201005080400.jar
+@rem  - https://github.com/oasis-tcs/odata-vocabularies has been cloned and environment variable ODATA-VOCABULARIES set to its location
+set ODATA-VOCABULARIES=c:\git\odata-vocabularies
 
 set done=false
 
@@ -31,6 +34,8 @@ exit /b
   echo %~n1
   
   java.exe org.apache.xalan.xslt.Process -L -XSL V4-CSDL-to-ProtoBuf.xsl -IN %1 -OUT %~n1.proto
+  if exist "%~n1 - Copy.proto" diff "%~n1 - Copy.proto" %~n1.proto
+  
   mkdir js_out 2> NUL
   mkdir js_out\%~n1 2> NUL
   protobuf-3.4.0\bin\protoc --js_out=js_out\%~n1 %~n1.proto

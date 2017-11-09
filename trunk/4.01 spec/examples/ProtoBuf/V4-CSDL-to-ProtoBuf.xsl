@@ -6,11 +6,9 @@
     This style sheet transforms OData 4.0 XML CSDL documents into Protocol Buffers Version 3
 
     TODO:
+    - wrapper types for all primitive types to allow distinguishing null / initial / omitted, first distinction for Nullable, second
+    for PATCH
     - edmx:Include -> import
-    - Edm.Geo* types
-    - Edm.PrimitiveType
-    - Edm.PropertyPath and other stuff that can only be used within annotations
-    - @Nullable
     - edm:TypeDefinition: avoid dummy property "value"
     - collection wrappers for entity sets, (navigation) properties, and return types
     - control information: count, nextLink etc.
@@ -23,6 +21,11 @@
 
   <xsl:template match="edmx:Edmx">
     <xsl:text>syntax = "proto3";&#xA;</xsl:text>
+
+    <xsl:if test="//@Type[.='Edm.PrimitiveType']">
+      <xsl:text>&#xA;import "google/protobuf/any.proto";</xsl:text>
+    </xsl:if>
+
     <xsl:apply-templates select="//edmx:Include" />
     <xsl:apply-templates select="//edm:Schema" />
   </xsl:template>
@@ -330,8 +333,28 @@
           <xsl:with-param name="nullable" select="$nullable" />
         </xsl:call-template>
       </xsl:when>
+      <xsl:when test="$singleType='Edm.PrimitiveType'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'google.protobuf.Any'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="$qualifier='Edm' and substring($singleType,5,3)='Geo'">
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when
+        test="$singleType='Edm.PropertyPath' or $singleType='Edm.NavigationPropertyPath' 
+           or $singleType='Edm.AnnotationPath' or $singleType='Edm.AnyPath'"
+      >
+        <xsl:call-template name="nullableType">
+          <xsl:with-param name="type" select="'string'" />
+          <xsl:with-param name="nullable" select="$nullable" />
+        </xsl:call-template>
+      </xsl:when>
       <xsl:when test="$qualifier='Edm'">
-        <!-- TODO: Edm.Geo* - how to encode? WKT as string? Or "any"? -->
         <xsl:message>
           <xsl:text>TODO: Type=</xsl:text>
           <xsl:value-of select="$singleType" />
