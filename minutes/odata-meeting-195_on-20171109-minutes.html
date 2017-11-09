@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #195 Thursday November 09, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='6deaa3f8f47dd970a9acf577e60f292eef07f7c57be02cf88b7b2c5b4ab0d07b6ec5add73f10f64a6d8db3feb9eb1d1bdf45889431c76f039038364bd4fd0fcc' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #195 Thursday November 09, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-11-09 0800-1000 PST
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=44003">normative attendance sheet for this meeting (event_id=44003)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Mike: walk through already applied issues in V4.01 documents</p>
+<p>Hubert: discrepancy between CSDL XML and JSON</p>
+<p>Ralf: Agenda approved with these changes</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from November 02, 2017 TC meeting #194</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/61946/odata-meeting-194_on-20171102-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61946/odata-meeting-194_on-20171102-minutes.html</a></p>
+<p>Mike: appreciate Stefan's work</p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Issues</h2>
+<h3 id="5.1">5.1 V4.01 Public Review</h3>
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1129" rel="noopener noreferrer" target="_blank">ODATA-1129</a> - Allow deep insert of media resources</h4>
+<p>Ralf: ODATA-1129 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1129 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1129 is RESOLVED as proposed</p>
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1130" rel="noopener noreferrer" target="_blank">ODATA-1130</a> - JSON Batch and continue-on-error</h4>
+<p>Mike: In the multipartmixed format, with continue-on-error false, each statement outside of a changeset is implicitly dependent upon the statement (or changeset) before it.</p>
+<p>Mike: currently, continue-on-error defaults to false.</p>
+<p>Mike: continue-on-error false may still be useful in json batch for non-dependent statements that are allowed to run in parallel but whose result is uninteresting if incomplete.</p>
+<p>Ralf: Current text seems to imply that processing MUST stop if no continue-on-error is specified</p>
+<p>Ralf: "Processing stops on the first error unless the continue-on-error preference is specified."</p>
+<p>Mike: service *must* be able to continue on error for the JSON batch format if it is processing statements in parallel.</p>
+<p>Mike: otherwise, continue-on-error false would mean can't run in parallel.</p>
+<p>Ralf: Rephrase to "MAY stop"</p>
+<p>Ralf: Currently clients can't say "continue-on-error=false"</p>
+<p>Mike: continue-on-error=false is not the correct/expected default for JSON Batch</p>
+<p>Mike: We want it to default to false for multipart/mixed (current behavior) and to default to true for JSON Batch.</p>
+<p>Mike: We could make current definition dependent on whether or not the format has a way to explicitly declare dependencies outside of an atomicity group.</p>
+<p>Mike: Alternatively, just say it only applies to multipart mixed.  Not as format-independent, but certainly clearer.</p>
+<p>Ralf: ODATA-1130 is OPEN</p>
+<p>Mike: We still don't have a way, in the JSON format, to say that I am okay running in parallel but I don't care about results if there are any errors, but that we could add later if necessary.</p>
+<p>Mike: We could later add "continue-on-error=false".</p>
+<p>Mike: We could also do it now, and say that continue-on-error defaults to false for multipart mixed, and continue-on-error defaults to true for json.</p>
+<p>Mike: allow "continue-on-error=false" and "continue-on-error=true".  "continue-on-error" implies true.  If continue-on-error is not specified, then default is false in multipart mixed, true in json. In multipartmixed, continue-on-error=false means stop if any statement fails. In json it means that a best effort is requested not to spend cycles on further processing if a failure occurs outside of dependency groups because the client is not interested in the result.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1030 as per the amended proposal. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1130 is RESOLVED with the amended proposal</p>
+
+<h4 id="5.1.3">5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1131" rel="noopener noreferrer" target="_blank">ODATA-1131</a> - Consistent order of function parameters</h4>
+<p>Ralf: ODATA-1131 is OPEN</p>
+<p>Mike: problem even more pressing with the addition of optional parameters</p>
+<p>Mike: expectation of current protocol that isn't yet explicitly stated</p>
+<p>Mike: For functions, ordering is required. For actions, it only matters for the binding parameter, but should we say that the ordering is stable for all parameters for simplicity/consistency/future extensibility?</p>
+<p>Mike: Clarify that the defined order of parameters for functions or actions, as described in the metadata document, is stable over time.</p>
+<p>Mike: I proposed we Clarify that the defined order of parameters for functions or actions, as described in the metadata document, is stable over time.</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1131 as per Mike's proposal. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1131 is RESOLVED as proposed</p>
+<p>Hubert: should be mentioned in Protocol section on Model Versioning</p>
+<p>Ralf: And in both CSDL documents</p>
+
+<h3 id="5.2">5.2 V4.01 Next Steps</h3>
+<p>Mike: take the time for another public review</p>
+<p>Mike: we only have to react to public review comments on the changes wrt the current CSD versions</p>
+<p>Hubert: sounds like the logical thing to do</p>
+<p>Mark: fine with another review</p>
+<p>George: is shortest path to "final" CS</p>
+<p>Ralf: Plan: progress documents next week</p>
+<p>Mike to walk us through the changes applied so far</p>
+<ul>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-1122" rel="noopener noreferrer" target="_blank">ODATA-1122</a> - Add singletons for capability term targets</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-1125" rel="noopener noreferrer" target="_blank">ODATA-1125</a> - Define by-value/reference expectations for action/function payloads.</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-1126" rel="noopener noreferrer" target="_blank">ODATA-1126</a> - Remove a Reference to an Entity (public review comment c201710e00005)</li>
+<li><a href="https://issues.oasis-open.org/browse/ODATA-1128" rel="noopener noreferrer" target="_blank">ODATA-1128</a> - Clarify function imports in $filter and $orderby</li>
+</ul>
+<p><b>Mark</b> I <b>move</b> that OData-1122, OData-1125, OData-1126, OData-1127 and OData-1128 be closed as applied. <b>Hubert</b> seconds.</p>
+<p>Ralf: Motion passes issues OData-1122, OData-1125, OData-1126, OData-1127 and OData-1128 are CLOSED as applied.</p>
+
+<h4 id="5.2.1">5.2.1 Issues ODATA-1126 and ODATA-1129 are new features and will require CSD04 for Part 1: Protocol and Part 2: URL Conventions</h4>
+<p>Publish CSD04 before CS01 or schedule issues for CS02 (with CSD04 after CS01)?</p>
+<h4 id="5.2.2">5.2.2 Issues ODATA-1127 and ODATA-1130 are material changes and will require CSD04 for JSON Format</h4>
+<p>Publish CSD04 before CS01 or schedule issues for CS02 (with CSD04 after CS01)?</p>
+<h4 id="5.2.3">5.2.3 The CSDL XML and CSDL JSON documents only require non-material changes and may be pushed to CS01 immediately</h4>
+<p>Wait for CSD04 review of other documents to finish or publish CS01 immediately?</p>
+
+<h2 id="6">6. Next meetings</h2>
+<p>Ralf: </p>
+<pre>
+Thursday November 16, 2017 during 8-10 am PST (17:00-19:00 CET)
+</pre>
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
