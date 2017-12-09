@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #198 Thursday December 07, 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='f732d87816a026641f0b5297f5e515f1759d2839c2bfcb195a53fedc9d401fc51a6ac46752d8fb8d243d9ed6dc6e6733e1b403f0f1899166fafe9204f5c0788e' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #198 Thursday December 07, 2017</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2017-12-07 0800-1000 PST
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=44007">normative attendance sheet for this meeting (event_id=44007)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: Mark has short update on IANA registration</p>
+<p>Ralf: Info: Public Review of V4.01 has started, from December 04 to December 18</p>
+<p>Ralf: Agenda approved with these changes</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from November 30, 2017 TC meeting #197</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62132/odata-meeting-197_on-20171130-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62132/odata-meeting-197_on-20171130-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<h4 id="4.1.1">4.1.1 #0036 Register the OData- headers and preferences with IANA – Update from Mark Biamonte</h4>
+<p>Mark: removed SchemaVersion header as it has been replaced with $schemaversion query option</p>
+
+<h2 id="5">5. Committee Note on OData to OpenAPI Mapping</h2>
+<h3 id="5.1">5.1 Document Walk-Through</h3>
+<h4 id="5.1.1">5.1.1 Committee Note on OData to OpenAPI Mapping <a href="https://www.oasis-open.org/committees/download.php/61852/odata-openapi-v1.0-wd02-2017-10-20.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61852/odata-openapi-v1.0-wd02-2017-10-20.docx</a></h4>
+<p>Ralf: </p>
+<pre>
+4.6: Add remark on more restrictive name pattern in OpenAPI 3.0
+4.6.1.1.1: try to avoid anyOf constructs just for special numeric values and Int64
+</pre>
+<p><b>Mike</b>: I <b>move</b> that services that don't support storing INF,-INF, or NaN for numbers are allowed to return "number" or "integer" (as appropriate), rather than anyof{number,string} (or anyof{integer,string}) for numeric types, including int64 and Decimal if IEE754Compatible=true is not specified as a type parameter. <b>Hubert</b> seconds.</p>
+<p>Ralf: No discussion, unanimous consent, the motion passes</p>
+<p>Mike: George to open a JIRA issue to add text to the JSON CSDL document clarifying that $schema is allowed in a JSON CSDL document, referencing the json schema published as part of the work product (as a non-normative change).</p>
+
+
+
+<h2 id="6">6. Issues</h2>
+
+<h3 id="6.1">6.1 Vocabularies: APPLIED</h3>
+<p>Skipped</p>
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Skipped</p>
+
+<h3 id="6.2">6.2 Vocabularies: NEW or OPEN</h3>
+<h4 id="6.2.1">6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1134" rel="noopener noreferrer" target="_blank">ODATA-1134</a> - Add KeyAsSegment annotation term to core vocabulary</h4>
+<p>Ralf: ODATA-1134 is OPEN</p>
+<p>Ralf: Proposal is not aligned with summary:<br>
+<br>
+Add a new boolean term to the capabilities vocabulary, SupportsKeyAsSegment: </p>
+<pre>
+&lt;Term Name="SupportsKeyAsSegment" Type="Core.Tag" DefaultValue="True" AppliesTo="EntityContainer"/>
+</pre>
+<p>Ralf: Use KeyAsSegmentSupported to rhyme with TopSupported and SkipSupported</p>
+<p>Mike: likes it</p>
+<p>Mike: Updated proposal: Add a new boolean term to the capabilities vocabulary, KeyAsSegmentSupported: </p>
+<pre>
+&lt;Term Name="KeyAsSegmentSupported" Type="Core.Tag" DefaultValue="True" AppliesTo="EntityContainer"/>
+</pre>
+<p><b>Mark</b>: I <b>move</b> that OData-1134 be resolved as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1134 is RESOLVED with the amended proposal</p>
+
+<h4 id="6.2.2">6.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1132" rel="noopener noreferrer" target="_blank">ODATA-1132</a> - Propagation of NavigationRestrictions</h4>
+<p>Skipped</p>
+<h4 id="6.2.3">6.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1124" rel="noopener noreferrer" target="_blank">ODATA-1124</a> - Authorization vocabulary: KeyLocation - also allow cookie as value?</h4>
+<p>Ralf: ODATA-1124 is OPEN</p>
+<p>Ralf:</p>
+<pre>
+&lt;EnumType Name="KeyLocation">
+  &lt;Member Name="Header">
+    &lt;Annotation Term="Core.Description" String="API Key is passed in the header" />
+  &lt;/Member>
+  &lt;Member Name="QueryOption">
+    &lt;Annotation Term="Core.Description" String="API Key is passed as a query option" />
+  &lt;/Member>
+&lt;/EnumType>
+</pre>
+<p>Ralf: OpenAPI 3 also allows "cookie":</p>
+<pre>
+instringapiKeyREQUIRED. The location of the API key. Valid values are "query", "header" or "cookie".
+</pre>
+<p>Mike: Link to the full vocabulary: <a href="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Authorization.V1.xml" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Authorization.V1.xml</a></p>
+<p>Ralf: in | string | apiKey | REQUIRED. | The location of the API key. Valid values are "query", "header" or "cookie".</p>
+<p>Mike: Description of APIKey:</p>
+<pre>
+&lt;ComplexType Name="ApiKey" BaseType="Auth.Authorization">
+  &lt;Property Name="KeyName" Type="Edm.String" Nullable="false">
+    &lt;Annotation Term="Core.Description" String="The name of the header or query parameter" />
+  &lt;/Property>
+  &lt;Property Name="Location" Type="Auth.KeyLocation" Nullable="false">
+    &lt;Annotation Term="Core.Description" String="Whether the API Key is passed in the header or as a query option" />
+  &lt;/Property>
+&lt;/ComplexType>
+
+&lt;Term Name="Authorizations" Type="Collection(Auth.Authorization)" AppliesTo="EntityContainer EntitySet Singleton NavigationProperty Action Function">
+  &lt;Annotation Term="Core.Description" String="Lists the methods available to authorize access to the annotated resource" />
+&lt;/Term>
+</pre>
+
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1124 by adding "Cookie" as a valid value for KeyLocation. <b>Hubert</b> seconds.</p>
+<p>George: we should add descriptions and examples to these term definitions</p>
+<p>Ralf: ODATA-1124 is RESOLVED as proposed</p>
+
+<h4 id="6.2.4">6.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-1121" rel="noopener noreferrer" target="_blank">ODATA-1121</a> - Extend FilterExpressionRestrictions with "MultiPredicate"</h4>
+<p>Skipped</p>
+<h4 id="6.2.5">6.2.5 <a href="https://issues.oasis-open.org/browse/ODATA-1067" rel="noopener noreferrer" target="_blank">ODATA-1067</a> - Consider ability to define computed default values</h4>
+<p>Skipped</p>
+<h4 id="6.2.6">6.2.6 <a href="https://issues.oasis-open.org/browse/ODATA-1005" rel="noopener noreferrer" target="_blank">ODATA-1005</a> - Make sure we have capabilities for all new 4.01 functionality</h4>
+<p>Skipped</p>
+<h4 id="6.2.7">6.2.7 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+<p>RAlf: Jeff Wight proposes to add a term that allows describing possible code values in OData error responses, see <a href="https://lists.oasis-open.org/archives/odata-comment/201510/msg00019.html" rel="noopener noreferrer" target="_blank">https://lists.oasis-open.org/archives/odata-comment/201510/msg00019.html</a><br>
+<br>
+Example:</p> 
+<pre>
+&lt;Annotation Term="Core.ErrorCodes"> 
+  &lt;Collection> 
+  &lt;Record> 
+    &lt;PropertyValue Property="HttpMethod" String="GET" /> 
+    &lt;PropertyValue Property="HttpStatusCode" String="400" /> 
+    &lt;PropertyValue Property="ODataErrorCode" String="QueryFilterFunctionNotSupported" /> 
+    &lt;PropertyValue Property="Description" 
+    String="This error indicates that a request was made with a filter function that isnt supported on this entity set. Please refer to the Capabilities.FilterFunctions annotation on this entity set for a list of supported functions, and the exact error message for which function usage triggered this error." /> 
+  &lt;/Record> 
+  &lt;/Collection> 
+&lt;/Annotation>
+</pre>
+
+<p>Ralf:</p>
+<pre>
+"@Core.ErrorCodes": [
+  { "method": "get", "HttpStatusCodes": [
+    { "code": "400" , "subcodes":[
+      {
+</pre>
+<pre>
+&lt;Term Name="ErrorCodes" Type="Collection(Core.ErrorCodeType)" AppliesTo="EntitySet Singleton ActionImport FunctionImport Action Function">
+</pre>
+<p>Ralf:  <a href="https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/example.openapi3.json" rel="noopener noreferrer" target="_blank">https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/example.openapi3.json</a></p>
+<pre>
+"responses": {
+  "200": {
+    "description": "Retrieved entities",
+    "content": {
+      "application/json": {
+        "schema": {
+          "title": "Collection of Product",
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ODataDemo.Product"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "default": {
+    "$ref": "#/components/responses/error"
+  }
+}
+</pre>
+<p>Hubert: we also need to allow annotating success response codes, e.g. 200 and 201 for actions</p>
+<p>Ralf: Homework: think about nested structure</p>
+<p>Mike: Alternate structure:</p>
+<pre>
+  &lt;Term Name="HttpResponses" Type="Collection(Core.HttpMethodResponse)" AppliesTo="EntitySet Singleton ActionImport FunctionImport Action Function">
+  &lt;Annotation Term="Core.Description" String="Describes possible error codes in OData responses" />
+  &lt;Annotation Term="Core.LongDescription" String="The list need not be complete. It may be used to generate API documentation, so restricting it to the most common and most important errors may increase readability." />
+  &lt;/Term>
+
+  &lt;ComplexType Name="HttpMethodResponse">
+  &lt;Property Name="Method" Type="Edm.String">
+    &lt;Annotation Term="Core.Description" String="Request verb of the HTTP request, e.g. GET, POST, PATCH, DELETE" />
+  &lt;/Property>
+  &lt;Property Name="HttpStatusCodes" Type="Collection(Core.HttpStatusCode)">
+    &lt;Annotation Term="Core.Description" String="HTTP status code of the response, e.g. 400, 403, 501" />
+  &lt;/Property>
+  &lt;/ComplexType>
+ 
+  &lt;ComplexType Name="HttpStatusCode">
+  &lt;Property Name="Code" Type="Edm.String">
+    &lt;Annotation Term="Core.Description" String="HTTP status code of the response, e.g. 400, 403, 501" />
+  &lt;/Property>
+  &lt;Property Name="Responses" Type="Collection(Core.HttpStatusCodeResponse)">
+    &lt;Annotation Term="Core.Description" String="HTTP status code of the response, e.g. 400, 403, 501" />
+  &lt;/Property>
+  &lt;/ComplexType>
+ 
+  &lt;ComplexType Name="HttpStatusCodeResponse">
+  &lt;Property Name="ODataErrorCode" Type="Edm.String">
+    &lt;Annotation Term="Core.Description" String="Language-independent, machine-readable OData error code" />
+  &lt;/Property>
+  &lt;Property Name="Description" Type="Edm.String">
+    &lt;Annotation Term="Core.Description" String="Human-readable description of the error situation" />
+  &lt;/Property>
+  &lt;/ComplexType>
+</pre>
+
+<h2 id="7">7. Next meetings</h2>
+<p>Thursday December 14, 2017 during 8-10 am PST:<br>
+Hubert and Mike can't make it</p>
+<p>Ralf: Proposal: no more meetings this year, first meeting next year on January 11</p>
+<p>Works for Mike, Hubert, Mark, Martin, Ralf, and George</p>
+<p>Ralf: Decision: next meeting on January 11, 2018</p>
+<p>Ralf:</p>
+<pre>
+Thursday January 11, 2018 during 8-10 am PST (17:00-19:00 CET)
+</pre>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>Ralf: George and Mike to prepare proposal for ODATA-1064</p>
+
+<p>Meeting adjourned by chair.</p>
+
+</div>
+</body>
+</html>
