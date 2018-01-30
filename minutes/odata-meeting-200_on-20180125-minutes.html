@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #200 Thursday January 25, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='6b75cda28988be20812689fa67770e9bb9dbf91ea87951a5966cb3dfddb256c86d2aceab849aee9f26275bbd8c60f2f8e10322b2f425a40774f1f0cf44c9180c' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #200 Thursday January 18, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-01-25 0800-1000 PST
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Kraue (SAP SE)
+    Hubert Heijkers (IBM)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46240">normative attendance sheet for this meeting (event_id=46240)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from January 18, 2018 TC meeting #199</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62392/odata-meeting-199_on-20180118-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62392/odata-meeting-199_on-20180118-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None.</p>
+
+<h2 id="5">5. Ballot to approve V4.01 CS01 Specs</h2>
+<p>URL: <a href="https://www.oasis-open.org/apps/org/workgroup/odata/ballot.php?id=3170" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/ballot.php?id=3170</a></p>
+<p>Ralf: Everyone voted yea: thank you!</p>
+
+<h2 id="6">6. Issues</h2>
+<h3 id="6.1">6.1 Vocabularies: APPLIED</h3>
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1099" rel="noopener noreferrer" target="_blank">ODATA-1099</a> - Add annotations to describe custom query options and custom headers</h4>
+<p>Ralf: <a href="https://github.com/oasis-tcs/odata-vocabularies/pull/6" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/pull/6</a></p>
+<p>Mike: Discussion: what are the semantics of ExampleValues in QueryOptions? should the client interpret these as an incomplete list of valid values? a complete list of valid values?</p>
+<p>Mike: OpenAPI has examples as well as a schema that defines the allowable values.  Should we support that as well?</p>
+<p>Mike: If we tried to generate schema from the example values, it would work for cases where the values really were enumerated, but less so for something like Skip.</p>
+<p>Ralf: Could add a Type property with either EDM types or JSON Schema types</p>
+<p>Mike: OpenAPI also has other constraints that could be applied (like positive integer).  Which should be rationalized with our validation vocabulary.</p>
+<p>Ralf: Reopen ODATA-1099</p>
+<p>Ralf: Mike volunteers for extending it to also cover schemas</p>
+<p><b>George</b>: I <b>move</b> to reopen ODATA-1099. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1099 is OPEN again</p>
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Ralf: Mike and George to come up with a proposal</p>
+<p>Ralf: Ralf to back out Core.AutomMetadata + Core.MetadataKind from master branch and move them to a separate branch</p>
+<p><b>George</b>: I <b>move</b> to re-open OData-1064 and rename AutoMetadata to IncludeMetadata. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1064 is OPEN again</p>
+<p>Mike: discuss this together with ODATA-884</p>
+<h3 id="6.2">6.2 Vocabularies: NEW or OPEN</h3>
+<h4 id="6.2.1">6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1132" rel="noopener noreferrer" target="_blank">ODATA-1132</a> - Propagation of NavigationRestrictions</h4>
+<p>Ralf: Clarify whether/how navigation restrictions "propagate". <br>
+<br>
+Assume we have <br>
+- Order entity related to single Customer entity <br>
+- Customer entity related to multiple Address entities <br>
+- a navigation restriction on Customers entity set which lists Addresses as filterable:false. <br>
+<br>
+Now a client knows that it cannot filter Customers by Addresses. <br>
+<br>
+Should a client assume that it also cannot filter Orders by Customer/Addresses? <br>
+<br>
+Or would the service have to explicitly declare navigation restrictions for all entity sets with navigation paths ending in Customer/Addresses?</p>
+<p>Ralf: ODATA-1132 is OPEN</p>
+<p>Mike: I would not assume that a navigation restriction applied to one entity set or singleton implied the same restriction on a navigation from a different entityset or singleton.</p>
+<p>Mike: We *could* say that the presence of a navigation property binding would imply inheritance of such restrictions, but that might not always be true either.</p>
+<p>Mike: There could be situations, for example, where a table underlying an entity set had an index (or federation id) that included (or was implied by) the parent, and filtering was only supported where that index (federation id) could be used. So you could only filter if you navigated through the parent.</p>
+<p>Mike: These are the exception cases, though, and perhaps not what we want to optimize for?</p>
+<p>Mike: Question: what is the cost of putting the restriction in multiple places, versus the complexity of the client having to do the aggregation of effective restrictions?</p>
+
+<h2 id="7">7. Next meetings</h2>
+<p>Ralf:</p>
+<pre>
+Thursday February 01, 2018 during 8-10 am PST (17:00-19:00 CET) (already confirmed)
+Thursday February 08, 2018 during 8-10 am PST
+</pre>
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None</p>
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
