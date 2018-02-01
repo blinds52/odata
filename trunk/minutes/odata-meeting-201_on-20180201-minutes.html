@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #201 Thursday February 01, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='b89b57060753863100cbd4996ffe69e6e0e010b2fb99b54da1cfafb49fbf665307fb83e7b7586432d52a7b39c46c6b9a8afd8ab224c6ff6e6253a61980d91be4' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #201 Thursday February 01, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-02-01 0800-1000 PST
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Kraue (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46241">normative attendance sheet for this meeting (event_id=46241)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Hubert: Proposal for a compact JSON format</p>
+<p>Agenda approved with above changes</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from January 25, 2018 TC meeting #200</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62415/odata-meeting-200_on-20180125-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62415/odata-meeting-200_on-20180125-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None.</p>
+
+<h2 id="5">5. Ballot to approve V4.01 CS01 Specs</h2>
+<p>URL: <a href="https://www.oasis-open.org/apps/org/workgroup/odata/ballot.php?id=3170" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/apps/org/workgroup/odata/ballot.php?id=3170</a></p>
+<p>Ralf: Closed, 11 yea votes for each of the four specifications, no nay votes, no abstain votes</p>
+<p>Ralf: CS01 documents will be produced and published by TC Admin</p>
+
+<h2 id="6">6. Hubert and Compact JSON</h2>
+<p>Hubert walks all through the concept document</p>
+<p>Mike and Hubert: introduce new value for odata.metadata=compact to avoid yet another format parameter and side-effects between format parameters</p>
+<p>Mike: don't rely on order of properties in $metadata (not possible with CSDL JSON), instead have the context URL list all returned properties in the order they are filled into the arrays</p>
+<p>George: Looks similar to protobuf</p>
+<p>Mike: always use an array with an object at position 0 that contains the annotations</p>
+<p>Ralf: could also do that on the outermost level, no wrapper object with "value" any more</p>
+<p><b>Hubert</b>: I <b>move</b> to request a starter document to start a new specification for the OData Compact JSON Format. <b>Ralf</b> seconds.</p>
+<p>Ralf: No objections, motion passes</p>
+
+<h2 id="7">7. Committee Note on Google Protocol Buffers as an alternative data format</h2>
+<pre>
+a.George: describe use case and purpose of the proposed committee note
+i.Pro: PB is more efficient between services.
+ii.Pro: PB has traction in the community
+iii.Con: PB is not as expressive
+iv.Con: JSON better for communication between servers.
+</pre>
+<p>Hubert:</p> 
+<pre>
+v.Pro: no conversion of floating-point numbers to strings and back
+</pre>
+<p>George: PB more useful in server-to-server communication</p>
+<p>Ramesh:</p> 
+<pre>
+vi.Pro: PB has code generation tools for lots of programming language
+</pre>
+<p>Hubert: need variable-length arrays, weren't possible in PB in the past</p>
+<p>Mike: create an informal concept document first before we request a starter document</p>
+<p>Hubert volunteers to be main/coordinating author of the ProtoBuf concept document</p>
+<p>Ralf to create action item for Hubert</p>
+
+<h2 id="8">8. Structural Property with Type=Entity Type versus Containment Navigation Property</h2>
+<pre>
+a.George: describe use case and why containment navigation properties arent sufficient
+i.Sometimes want to store the values of an entities properties, for example storing representations of entities in a log message.
+In that case, dont want the behavior features of the entity and no relationship, just a snapshot of the structural values.
+</pre>
+<p>George: can't have a relationship to the "snapshot instance" as it doesn't have an identity</p>
+<p>George: also want Collection(entity type) as a type of a structural property</p>
+<p>Ralf: Basically treat the entity type as if it were a complex type if used in a structural property</p>
+<p>Mike: interesting step to reduce the differences between Entity Types and Complex Types</p>
+<p>Hubert likes it</p>
+<p>George will create a Jira issue</p>
+
+<h2 id="9">9. Issues</h2>
+<p>Ralf: Will skip due to lack of time</p>
+<p>George updated <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</p>
+<p>Ralf updated <a href="https://issues.oasis-open.org/browse/ODATA-1121" rel="noopener noreferrer" target="_blank">ODATA-1121</a> - Extend FilterExpressionRestrictions with "MultiPredicate"</p>
+
+
+<h2 id="10">10. Next meetings</h2>
+<p>Ralf:</p>
+<pre>
+Thursday February 08, 2018 during 8-10 am PST (17:00-19:00 CET) (already confirmed)
+Thursday February 15, 2018 during 8-10 am PST
+</pre>
+<h2 id="11">11. AOB and wrap up</h2>
+<p>None</p>
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
