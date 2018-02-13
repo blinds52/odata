@@ -2,9 +2,9 @@
 <!--
 
   OData ABNF Test Cases Version 4.01
-  
-  Working Draft 03
-  28 September 2017
+
+  Working Draft 06
+  13 February 2018
 
   Technical Committee:
   OASIS Open Data Protocol (OData) TC
@@ -449,6 +449,12 @@
   <TestCase Name="DateTimeOffset: positive infinitiy" Rule="dateTimeOffsetValue" FailAt="0">
     <Input>INF</Input>
   </TestCase>
+  <TestCase Name="DateTimeOffset: no percent-encoding in payloads" Rule="dateTimeOffsetValue" FailAt="13">
+    <Input>2012-09-03T23%3A59Z</Input>
+  </TestCase>
+  <TestCase Name="DateTimeOffset: with percent-encoding" Rule="dateTimeOffsetValueInUrl">
+    <Input>2012-09-03T23%3A59Z</Input>
+  </TestCase>
   <TestCase Name="Decimal" Rule="decimalValue">
     <Input>3.14</Input>
   </TestCase>
@@ -599,6 +605,12 @@
   </TestCase>
   <TestCase Name="TimeOfDay" Rule="timeOfDayValue">
     <Input>11:22:33</Input>
+  </TestCase>
+  <TestCase Name="TimeOfDay - percent-encoded colon" Rule="timeOfDayValueInUrl">
+    <Input>11%3A22%3a33</Input>
+  </TestCase>
+  <TestCase Name="TimeOfDay - no percent-encoding in payloads" Rule="timeOfDayValue" FailAt="2">
+    <Input>11%3A22%3a33</Input>
   </TestCase>
   <TestCase Name="TimeOfDay: no seconds" Rule="timeOfDayValue">
     <Input>11:22</Input>
@@ -789,6 +801,18 @@
   <TestCase Name="4.3 Addressing entities - single entity (string)" Rule="resourcePath">
     <Input>Categories('Tablet%20)small(')</Input>
   </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (timestamp)" Rule="resourcePath">
+    <Input>Categories(2018-02-13T23:59:59Z)</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (timestamp, percent-encoded colon)" Rule="resourcePath">
+    <Input>Categories(2018-02-13T23%3A59%3A59Z)</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (time)" Rule="resourcePath">
+    <Input>Categories(23:59:59)</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (time, percent-encoded colon)" Rule="resourcePath">
+    <Input>Categories(23%3A59%3A59)</Input>
+  </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (wrong)" Rule="resourcePath" FailAt="19">
     <Input>Categories(ID=wrong)</Input>
   </TestCase>
@@ -831,9 +855,7 @@
   <TestCase Name="4.3.4 $entity with URN, id without $ prefix" Rule="odataRelativeUri">
     <Input>$entity?id=urn:some:id</Input>
   </TestCase>
-  <TestCase Name="4.3.4 $entity with OData URL, $select and $expand fails without type-cast" Rule="odataRelativeUri"
-    FailAt="48"
-  >
+  <TestCase Name="4.3.4 $entity with OData URL, $select and $expand fails without type-cast" Rule="odataRelativeUri" FailAt="48">
     <Input>$entity?$id=http://myservice/Customers('ALFKI')&amp;$select=CompanyName,ContactName&amp;$expand=Orders</Input>
   </TestCase>
   <TestCase Name="4.3.4 $entity with OData URL, $select and $expand" Rule="odataRelativeUri">
@@ -1034,9 +1056,7 @@
   <TestCase Name="4.10 Addressing a Member of an Ordered Complex Collection" Rule="odataRelativeUri">
     <Input>MainSupplier/Addresses/0</Input>
   </TestCase>
-  <TestCase Name="4.10 Addressing a Member of an Ordered Complex Collection with type-cast" Rule="odataRelativeUri"
-    FailAt="49"
-  >
+  <TestCase Name="4.10 Addressing a Member of an Ordered Complex Collection with type-cast" Rule="odataRelativeUri" FailAt="49">
     <Input>Suppliers(1)/Addresses/Model.AddressWithLocation/1</Input>
   </TestCase>
   <TestCase Name="4.11 Inheritance - set of subtypes" Rule="odataRelativeUri">
