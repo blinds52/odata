@@ -1,8 +1,8 @@
 ;------------------------------------------------------------------------------
 ; OData ABNF Construction Rules Version 4.01
 ;------------------------------------------------------------------------------
-; Working Draft 03
-; 28 September 2017
+; Working Draft 06
+; 13 February 2018
 ;------------------------------------------------------------------------------
 ;
 ; Technical Committee:
@@ -11,7 +11,7 @@
 ;
 ; Chairs:
 ;   - Ralf Handl (ralf.handl@sap.com), SAP SE
-;   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+;   - Michael Pizzo (mikep@microsoft.com), Microsoft
 ;
 ; Editors:
 ;   - Ralf Handl (ralf.handl@sap.com), SAP SE
@@ -873,9 +873,9 @@ primitiveColFunctionImport = odataIdentifier
 primitiveLiteral = nullValue                  ; plain values up to int64Value
                  / booleanValue 
                  / guidValue 
+                 / dateTimeOffsetValueInUrl 
                  / dateValue
-                 / dateTimeOffsetValue 
-                 / timeOfDayValue
+                 / timeOfDayValueInUrl
                  / decimalValue 
                  / doubleValue 
                  / singleValue 
@@ -907,8 +907,8 @@ primitiveLiteral = nullValue                  ; plain values up to int64Value
 primitiveValue = booleanValue
                / guidValue
                / durationValue
-               / dateValue
                / dateTimeOffsetValue 
+               / dateValue
                / timeOfDayValue
                / enumValue
                / fullCollectionLiteral
@@ -960,14 +960,16 @@ SQUOTE-in-string = SQUOTE SQUOTE ; two consecutive single quotes represent one w
 
 dateValue = year "-" month "-" day
 
-dateTimeOffsetValue = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / SIGN hour ":" minute )
+dateTimeOffsetValue      = year "-" month "-" day "T" timeOfDayValue      ( "Z" / SIGN hour ":" minute )
+dateTimeOffsetValueInUrl = year "-" month "-" day "T" timeOfDayValueInUrl ( "Z" / SIGN hour ":" minute )
 
 duration      = [ "duration" ] SQUOTE durationValue SQUOTE
 durationValue = [ SIGN ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
      ; the above is an approximation of the rules for an xml dayTimeDuration.
      ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
-timeOfDayValue = hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
+timeOfDayValue      = hour ":"   minute [ ":"   second [ "." fractionalSeconds ] ]
+timeOfDayValueInUrl = hour COLON minute [ COLON second [ "." fractionalSeconds ] ]
  
 oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
 zeroToFiftyNine = ( "0" / "1" / "2" / "3" / "4" / "5" ) DIGIT
@@ -1073,8 +1075,8 @@ preference = allowEntityReferencesPreference
            / returnPreference
            / trackChangesPreference
            / waitPreference
-           ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
-           ; / token [ EQ-h word ] *( OWS ";" [ OWS parameter ] )
+           ; and everything allowed by https://tools.ietf.org/html/rfc7240
+           ; / ( parameter / token ) *( OWS ";" [ OWS ( parameter / token ) ] )
            
 allowEntityReferencesPreference = [ "odata." ] "allow-entityreferences"
 
@@ -1101,8 +1103,7 @@ trackChangesPreference = [ "odata." ] "track-changes"
 
 waitPreference = "wait" EQ-h 1*DIGIT
 
-;parameter      = token [ EQ-h word ]
-;word           = token / quoted-string
+;parameter      = token "=" ( token / quoted-string )
 ;token          = 1*tchar
 ;tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
 ;               / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
