@@ -1,8 +1,8 @@
 ;------------------------------------------------------------------------------
 ; OData ABNF Construction Rules Version 4.0
 ;------------------------------------------------------------------------------
-;  Working Draft 08
-;  02 June 2016
+;  Working Draft 09
+; 13 February 2018
 ;------------------------------------------------------------------------------
 ;
 ; Technical Committee:
@@ -10,13 +10,13 @@
 ;   https://www.oasis-open.org/committees/odata
 ;
 ; Chairs:
-;   - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+;   - Barbara Hartel (barbara.hartel@sap.com), SAP SE
 ;   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
 ;
 ; Editors:
-;   - Ralf Handl (ralf.handl@sap.com), SAP AG
+;   - Ralf Handl (ralf.handl@sap.com), SAP SE
 ;   - Michael Pizzo (mikep@microsoft.com), Microsoft
-;   - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
+;   - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP SE
 ;
 ; Additional artifacts: 
 ;   This grammar is one component of a Work Product which consists of:
@@ -98,7 +98,8 @@ serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive
               "://" host [ ":" port ]
               "/" *( segment-nz "/" )
 
-odataRelativeUri = '$batch'                           ; Note: case-sensitive!
+; Note: dollar-prefixed path segments are case-sensitive!
+odataRelativeUri = '$batch'
                  / '$entity' "?" entityOptions  
                  / '$entity' "/" qualifiedEntityTypeName "?" entityCastOptions  
                  / '$metadata' [ "?" format ] [ context ]
@@ -299,8 +300,12 @@ searchAndExpr = RWS [ 'AND' RWS ] searchExpr
 
 searchTerm   = [ 'NOT' RWS ] ( searchPhrase / searchWord )
 searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
-searchWord   = 1*( ALPHA / DIGIT / COMMA / "." ) ; Actually: any character from the Unicode categories L or N, 
-                                                 ; but not the words AND, OR, and NOT
+
+; A searchWord is a sequence of one or more letters, digits, commas, or dots.
+; This includes Unicode characters of categories L or N using UTF-8 and percent-encoding.
+; The words AND, OR, and NOT are not a valid searchWord.
+; Expressing this in ABNF is somewhat clumsy, so the following rule is overly generous.
+searchWord   = 1*( ALPHA / DIGIT / COMMA / "." / pct-encoded )
 
 select         = '$select' EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
@@ -371,7 +376,7 @@ selectListItem     = STAR ; all structural properties
                      )
 selectListProperty = primitiveProperty  
                    / primitiveColProperty 
-                   / navigationProperty [ '+' ] [ selectList ]
+                   / navigationProperty [ "+" ] [ selectList ]
                    / selectPath [ "/" selectListProperty ]
 
 contextPropertyPath = primitiveProperty
@@ -386,7 +391,6 @@ contextPropertyPath = primitiveProperty
 
 ; Note: a boolCommonExpr is also a commonExpr, e.g. sort by Boolean 
 commonExpr = ( primitiveLiteral
-             / parameterAlias
              / arrayOrObject
              / rootExpr
              / firstMemberExpr
@@ -395,28 +399,28 @@ commonExpr = ( primitiveLiteral
              / methodCallExpr 
              / parenExpr 
              / castExpr 
+             / isofExpr
+             / notExpr
              ) 
              [ addExpr 
              / subExpr 
              / mulExpr 
-             / divExpr 
+             / divExpr
              / modExpr
              ]  
+             [ eqExpr 
+             / neExpr 
+             / ltExpr  
+             / leExpr  
+             / gtExpr 
+             / geExpr 
+             / hasExpr 
+             ]
+             [ andExpr 
+             / orExpr 
+             ] 
 
-boolCommonExpr = ( isofExpr 
-                 / boolMethodCallExpr 
-                 / notExpr  
-                 / commonExpr
-                   [ eqExpr 
-                   / neExpr 
-                   / ltExpr  
-                   / leExpr  
-                   / gtExpr 
-                   / geExpr 
-                   / hasExpr 
-                   ]
-                 / boolParenExpr
-                 ) [ andExpr / orExpr ] 
+boolCommonExpr = commonExpr ; resulting in a Boolean
 
 rootExpr = '$root/' ( entitySetName keyPredicate / singletonEntity ) [ singleNavigationExpr ]
 
@@ -438,8 +442,9 @@ propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ]
                    )
                    
 inscopeVariableExpr  = implicitVariableExpr 
+                     / parameterAlias
                      / lambdaVariableExpr ; only allowed inside a lambdaPredicateExpr
-implicitVariableExpr = '$it'              ; references the unnamed outer variable of the query
+implicitVariableExpr = '$it'              ; the current instance of the resource identified by the resource path
 lambdaVariableExpr   = odataIdentifier
 
 collectionNavigationExpr = [ "/" qualifiedEntityTypeName ]
@@ -509,22 +514,23 @@ methodCallExpr = indexOfMethodCallExpr
                / minDateTimeMethodCallExpr
                / maxDateTimeMethodCallExpr
                / nowMethodCallExpr
+               / boolMethodCallExpr
 
 boolMethodCallExpr = endsWithMethodCallExpr 
                    / startsWithMethodCallExpr 
                    / containsMethodCallExpr                                          
                    / intersectsMethodCallExpr 
 
+concatMethodCallExpr     = 'concat'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 containsMethodCallExpr   = 'contains'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-startsWithMethodCallExpr = 'startswith' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 endsWithMethodCallExpr   = 'endswith'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-lengthMethodCallExpr     = 'length'     OPEN BWS commonExpr BWS CLOSE
 indexOfMethodCallExpr    = 'indexof'    OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+lengthMethodCallExpr     = 'length'     OPEN BWS commonExpr BWS CLOSE
+startsWithMethodCallExpr = 'startswith' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 substringMethodCallExpr  = 'substring'  OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
 toLowerMethodCallExpr    = 'tolower'    OPEN BWS commonExpr BWS CLOSE
 toUpperMethodCallExpr    = 'toupper'    OPEN BWS commonExpr BWS CLOSE
 trimMethodCallExpr       = 'trim'       OPEN BWS commonExpr BWS CLOSE
-concatMethodCallExpr     = 'concat'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
 yearMethodCallExpr               = 'year'               OPEN BWS commonExpr BWS CLOSE
 monthMethodCallExpr              = 'month'              OPEN BWS commonExpr BWS CLOSE
@@ -550,7 +556,6 @@ distanceMethodCallExpr   = 'geo.distance'   OPEN BWS commonExpr BWS COMMA BWS co
 geoLengthMethodCallExpr  = 'geo.length'     OPEN BWS commonExpr BWS CLOSE
 intersectsMethodCallExpr = 'geo.intersects' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
-boolParenExpr = OPEN BWS boolCommonExpr BWS CLOSE
 parenExpr     = OPEN BWS commonExpr     BWS CLOSE
 
 andExpr = RWS 'and' RWS boolCommonExpr
@@ -653,10 +658,10 @@ rootExprCol = begin-array
                                         
 ; JSON syntax: adapted to URI restrictions from [RFC4627]                 
 begin-object = BWS ( "{" / "%7B" ) BWS
-end-object   = BWS ( "}" / "%7D" ) BWS
+end-object   = BWS ( "}" / "%7D" )
 
 begin-array = BWS ( "[" / "%5B" ) BWS 
-end-array   = BWS ( "]" / "%5D" ) BWS
+end-array   = BWS ( "]" / "%5D" )
 
 quotation-mark  = DQUOTE / "%22"
 name-separator  = BWS COLON BWS
@@ -802,9 +807,9 @@ primitiveColFunctionImport = odataIdentifier
 primitiveLiteral = nullValue                  ; plain values up to int64Value
                  / booleanValue 
                  / guidValue 
+                 / dateTimeOffsetValueInUrl 
                  / dateValue
-                 / dateTimeOffsetValue 
-                 / timeOfDayValue
+                 / timeOfDayValueInUrl
                  / decimalValue 
                  / doubleValue 
                  / singleValue 
@@ -836,8 +841,8 @@ primitiveLiteral = nullValue                  ; plain values up to int64Value
 primitiveValue = booleanValue
                / guidValue
                / durationValue
-               / dateValue
                / dateTimeOffsetValue 
+               / dateValue
                / timeOfDayValue
                / enumValue
                / fullCollectionLiteral
@@ -871,10 +876,9 @@ base64char  = ALPHA / DIGIT / "-" / "_"
 
 booleanValue = "true" / "false"
 
-decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ]
-
-doubleValue = decimalValue [ "e" [ SIGN ] 1*DIGIT ] / nanInfinity ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
-singleValue = doubleValue                                       ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
+decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ] [ "e" [ SIGN ] 1*DIGIT ]
+doubleValue = decimalValue / nanInfinity ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
+singleValue = decimalValue / nanInfinity ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
 nanInfinity = 'NaN' / '-INF' / 'INF'
 
 guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
@@ -890,7 +894,8 @@ SQUOTE-in-string = SQUOTE SQUOTE ; two consecutive single quotes represent one w
 
 dateValue = year "-" month "-" day
 
-dateTimeOffsetValue = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." fractionalSeconds ] ] ( "Z" / SIGN hour ":" minute )
+dateTimeOffsetValue      = year "-" month "-" day "T" timeOfDayValue      ( "Z" / SIGN hour ":" minute )
+dateTimeOffsetValueInUrl = year "-" month "-" day "T" timeOfDayValueInUrl ( "Z" / SIGN hour ":" minute )
 
 duration      = "duration" SQUOTE durationValue SQUOTE
 durationValue = [ SIGN ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
@@ -898,6 +903,7 @@ durationValue = [ SIGN ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M"
      ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
 timeOfDayValue = hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
+timeOfDayValueInUrl = hour COLON minute [ COLON second [ "." fractionalSeconds ] ]
  
 oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
 zeroToFiftyNine = ( "0" / "1" / "2" / "3" / "4" / "5" ) DIGIT
@@ -985,7 +991,8 @@ header = content-id
        / odata-version
        / prefer
 
-content-id = "Content-ID" ":" OWS 1*unreserved
+content-id = "Content-ID" ":" OWS request-id
+request-id = 1*unreserved
        
 odata-entityid   = "OData-EntityID"   ":" OWS IRI-in-header
 odata-isolation  = "OData-Isolation"  ":" OWS "snapshot"
@@ -1002,8 +1009,8 @@ preference = allowEntityReferencesPreference
            / returnPreference
            / trackChangesPreference
            / waitPreference
-           ; and everything allowed by http://tools.ietf.org/html/draft-snell-http-prefer-18
-           ; / token [ EQ-h word ] *( OWS ";" [ OWS parameter ] )
+           ; and everything allowed by https://tools.ietf.org/html/rfc7240
+           ; / ( parameter / token ) *( OWS ";" [ OWS ( parameter / token ) ] )
            
 allowEntityReferencesPreference = "odata.allow-entityreferences"
 
@@ -1030,8 +1037,7 @@ trackChangesPreference = "odata.track-changes"
 
 waitPreference = "wait" EQ-h 1*DIGIT
 
-;parameter      = token [ EQ-h word ]
-;word           = token / quoted-string
+;parameter      = token "=" ( token / quoted-string )
 ;token          = 1*tchar
 ;tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
 ;               / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"

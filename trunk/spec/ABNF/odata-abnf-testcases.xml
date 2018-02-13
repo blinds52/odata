@@ -2,22 +2,22 @@
 <!--
 
   OData ABNF Test Cases Version 4.0
-  
-  Working Draft 08
-  02 June 2016
+
+  Working Draft 09
+  13 February 2018
 
   Technical Committee:
   OASIS Open Data Protocol (OData) TC
   https://www.oasis-open.org/committees/odata
 
   Chairs:
-  - Barbara Hartel (barbara.hartel@sap.com), SAP AG
+  - Barbara Hartel (barbara.hartel@sap.com), SAP SE
   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
 
   Editors:
-  - Ralf Handl (ralf.handl@sap.com), SAP AG
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
   - Michael Pizzo (mikep@microsoft.com), Microsoft
-  - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP AG
+  - Martin Zurmuehl (martin.zurmuehl@sap.com), SAP SE
 
   Additional artifacts:
   This test case document is one component of a Work Product which consists of:
@@ -97,6 +97,8 @@
   <!-- end of constraints for data aggregation -->
   <Constraint Rule="action">
     <Match>ActionName</Match>
+    <Match>Cluster</Match>
+    <Match>Discount</Match>
     <Match>Rejection</Match>
   </Constraint>
   <Constraint Rule="actionImport">
@@ -127,15 +129,22 @@
   <Constraint Rule="customName">
     <Match>!deltatoken</Match>
     <Match>!special</Match>
-    <Match>search</Match>
+    <Match>find</Match>
   </Constraint>
   <Constraint Rule="entityColFunction">
     <Match>AllOrders</Match>
     <Match>ProductsByColor</Match>
+    <Match>WithIngredients</Match>
   </Constraint>
   <Constraint Rule="entityColFunctionImport">
     <Match>AllProductsByColor</Match>
     <Match>AllProductsByCategoryId</Match>
+    <Match>EmployeesByManager</Match>
+    <Match>ProductsByCategoryId</Match>
+    <Match>ProductsByColor</Match>
+    <Match>ProductsByComplex</Match>
+    <Match>ProductsByCustomer</Match>
+    <Match>ProductsOrderedBy</Match>
   </Constraint>
   <Constraint Rule="entityColNavigationProperty">
     <Match>DirectReports</Match>
@@ -143,14 +152,6 @@
     <Match>Orders</Match>
     <Match>Products</Match>
     <Match>Sales</Match>
-  </Constraint>
-  <Constraint Rule="entityColFunction">
-  </Constraint>
-  <Constraint Rule="entityColFunctionImport">
-    <Match>ProductsByCategoryId</Match>
-    <Match>ProductsByColor</Match>
-    <Match>ProductsByComplex</Match>
-    <Match>ProductsByCustomer</Match>
   </Constraint>
   <Constraint Rule="entityFunction">
     <Match>BestProduct</Match>
@@ -181,6 +182,7 @@
     <Match>LeaveRequests</Match>
     <Match>Orders</Match>
     <Match>OrderItems</Match>
+    <Match>People</Match>
     <Match>Products</Match>
     <Match>Sales</Match>
     <Match>SalesOrganizations</Match>
@@ -205,38 +207,57 @@
     <Match>NameKind</Match>
     <Match>Pattern</Match>
   </Constraint>
-  <!-- 
-  <Constraint Rule="keyPathLiteral">
-    <Match>1</Match>
-    <Match>Tablet</Match>
-  </Constraint>
-  -->
   <Constraint Rule="keyPropertyAlias">
     <Match>KeyAlias</Match>
   </Constraint>
   <Constraint Rule="lambdaVariableExpr">
     <Match>lambda</Match>
-  </Constraint>
-  <Constraint Rule="singletonEntity">
-    <Match>BestProductEverCreated</Match>
-    <Match>SingletonEntity</Match>
+    <Match>m</Match>
   </Constraint>
   <Constraint Rule="namespacePart">
+    <Match>Core</Match>
+    <Match>Measures</Match>
     <Match>Model</Match>
     <Match>Namespace</Match>
     <Match>odata</Match>
     <Match>SaM</Match>
     <Match>Sales</Match>
+    <Match>Special</Match>
   </Constraint>
   <Constraint Rule="parameterAlias">
+    <Match>@a</Match>
+    <Match>@bar</Match>
     <Match>@c</Match>
     <Match>@cat</Match>
+    <Match>@categoryId</Match>
     <Match>@color</Match>
     <Match>@expression</Match>
+    <Match>@foo</Match>
+    <Match>@i</Match>
     <Match>@key</Match>
+    <Match>@ManagerID</Match>
+    <Match>@p1</Match>
     <Match>@ref</Match>
     <Match>@title</Match>
     <Match>@word</Match>
+  </Constraint>
+  <Constraint Rule="parameterName">
+    <Match>categoryId</Match>
+    <Match>color</Match>
+    <Match>colors</Match>
+    <Match>customer</Match>
+    <Match>Customers</Match>
+    <Match>complex</Match>
+    <Match>Ingredients</Match>
+    <Match>Kind</Match>
+    <Match>Location</Match>
+    <Match>ManagerID</Match>
+    <Match>Number</Match>
+    <Match>Rank</Match>
+    <Match>Size</Match>
+    <Match>Word</Match>
+    <Match>Word1</Match>
+    <Match>Word2</Match>
   </Constraint>
   <Constraint Rule="primitiveColFunction">
     <Match>MostPopularNames</Match>
@@ -269,6 +290,7 @@
   </Constraint>
   <Constraint Rule="primitiveNonKeyProperty">
     <Match>AccountRepresentative</Match>
+    <Match>Age</Match>
     <Match>Amount</Match>
     <Match>BirthDate</Match>
     <Match>City</Match>
@@ -292,6 +314,7 @@
     <Match>ReleaseDate</Match>
     <Match>Revenue</Match>
     <Match>SalesArea</Match>
+    <Match>severity</Match>
     <Match>Shipped</Match>
     <Match>Spokesperson</Match>
     <Match>State</Match>
@@ -303,8 +326,22 @@
     <Match>Title</Match>
     <Match>ZipCode</Match>
   </Constraint>
+  <Constraint Rule="singletonEntity">
+    <Match>BestProductEverCreated</Match>
+    <Match>MainSupplier</Match>
+    <Match>SingletonEntity</Match>
+  </Constraint>
   <Constraint Rule="streamProperty">
     <Match>Thumbnail</Match>
+  </Constraint>
+  <Constraint Rule="termName">
+    <Match>AnotherTerm</Match>
+    <Match>Currency</Match>
+    <Match>id</Match>
+    <Match>Messages</Match>
+    <Match>id</Match>
+    <Match>SomeTerm</Match>
+    <Match>type</Match>
   </Constraint>
   <Constraint Rule="typeDefinitionName">
     <Match>MonetaryAmount</Match>
@@ -373,6 +410,12 @@
   <TestCase Name="Date: negative" Rule="dateValue">
     <Input>-10000-04-01</Input>
   </TestCase>
+  <TestCase Name="Date: negative Infinity" Rule="dateValue" FailAt="1">
+    <Input>-INF</Input>
+  </TestCase>
+  <TestCase Name="Date: positive Infinity" Rule="dateValue" FailAt="0">
+    <Input>INF</Input>
+  </TestCase>
   <TestCase Name="DateTimeOffset: no seconds" Rule="dateTimeOffsetValue">
     <Input>2012-09-03T13:52Z</Input>
   </TestCase>
@@ -403,8 +446,26 @@
   <TestCase Name="DateTimeOffset: 24:00" Rule="dateTimeOffsetValue" FailAt="12">
     <Input>2012-09-03T24:00-03:00</Input>
   </TestCase>
+  <TestCase Name="DateTimeOffset: negative infinitiy" Rule="dateTimeOffsetValue" FailAt="1">
+    <Input>-INF</Input>
+  </TestCase>
+  <TestCase Name="DateTimeOffset: positive infinitiy" Rule="dateTimeOffsetValue" FailAt="0">
+    <Input>INF</Input>
+  </TestCase>
+  <TestCase Name="DateTimeOffset: no percent-encoding in payloads" Rule="dateTimeOffsetValue" FailAt="13">
+    <Input>2012-09-03T23%3A59Z</Input>
+  </TestCase>
+  <TestCase Name="DateTimeOffset: with percent-encoding" Rule="dateTimeOffsetValueInUrl">
+    <Input>2012-09-03T23%3A59Z</Input>
+  </TestCase>
   <TestCase Name="Decimal" Rule="decimalValue">
     <Input>3.14</Input>
+  </TestCase>
+  <TestCase Name="Decimal - exponential notation" Rule="decimalValue">
+    <Input>-1.234567e3</Input>
+  </TestCase>
+  <TestCase Name="Decimal - exponential notation" Rule="decimalValue">
+    <Input>1e-101</Input>
   </TestCase>
   <TestCase Name="Duration in body" Rule="durationValue">
     <Input>P6DT23H59M59.9999S</Input>
@@ -435,6 +496,9 @@
   </TestCase>
   <TestCase Name="Double with exponent" Rule="doubleValue">
     <Input>-0.314e1</Input>
+  </TestCase>
+  <TestCase Name="Double with at most one exponent" Rule="doubleValue" FailAt="8">
+    <Input>-0.314e1e2</Input>
   </TestCase>
   <TestCase Name="Negative infinity" Rule="doubleValue">
     <Input>-INF</Input>
@@ -502,9 +566,7 @@
   <TestCase Name="primitive value in request body - binary" Rule="primitiveValue">
     <Input>a123456789abcdefABA=</Input>
   </TestCase>
-  <TestCase Name="primitive value in request body - binary with line breaks and spaces" Rule="primitiveValue"
-    FailAt="8"
-  >
+  <TestCase Name="primitive value in request body - binary with line breaks and spaces" Rule="primitiveValue" FailAt="8">
     <Input>a1234567 89&#x000D;ab
               cdefABA</Input>
   </TestCase>
@@ -535,6 +597,12 @@
   <TestCase Name="TimeOfDay" Rule="timeOfDayValue">
     <Input>11:22:33</Input>
   </TestCase>
+  <TestCase Name="TimeOfDay - percent-encoded colon" Rule="timeOfDayValueInUrl">
+    <Input>11%3A22%3a33</Input>
+  </TestCase>
+  <TestCase Name="TimeOfDay - no percent-encoding in payloads" Rule="timeOfDayValue" FailAt="2">
+    <Input>11%3A22%3a33</Input>
+  </TestCase>
   <TestCase Name="TimeOfDay: no seconds" Rule="timeOfDayValue">
     <Input>11:22</Input>
   </TestCase>
@@ -560,7 +628,16 @@
     <Input>Products</Input>
   </TestCase>
   <!--
-    Test cases for example URLs in OData URI
+    Test cases for example URLs in Part 1: Protocol
+  -->
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager(ManagerID=3)</Input>
+  </TestCase>
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager(ManagerID=@p1)?@p1=3</Input>
+  </TestCase>
+  <!--
+    Test cases for example URLs in Part 2: URL Conventions
   -->
   <TestCase Name="2 URL Components - service root URL" Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/</Input>
@@ -610,11 +687,17 @@
   <TestCase Name="4.1 - Metadata URL" Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/$metadata</Input>
   </TestCase>
-  <TestCase Name="4.1 - Metadata URL - allowed but reserved for future use" Rule="odataUri">
+  <TestCase Name="4.1 - Metadata URL - CSDL JSON" Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/$metadata?$format=json</Input>
+  </TestCase>
+  <TestCase Name="4.1 - Metadata URL - CSDL XML" Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$metadata?$format=xml</Input>
   </TestCase>
   <TestCase Name="4.1 - Metadata URL - allowed" Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/$metadata?$format=text/html</Input>
+  </TestCase>
+  <TestCase Name="4.1 - Metadata URL - allowed" Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$metadata?$format=text/html&amp;!special</Input>
   </TestCase>
   <TestCase Name="4.2 - Batch URL" Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/$batch</Input>
@@ -688,6 +771,18 @@
   <TestCase Name="4.3 Addressing entities - single entity (string)" Rule="resourcePath">
     <Input>Categories('Tablet%20)small(')</Input>
   </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (timestamp)" Rule="resourcePath">
+    <Input>Categories(2018-02-13T23:59:59Z)</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (timestamp, percent-encoded colon)" Rule="resourcePath">
+    <Input>Categories(2018-02-13T23%3A59%3A59Z)</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (time)" Rule="resourcePath">
+    <Input>Categories(23:59:59)</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - single entity (time, percent-encoded colon)" Rule="resourcePath">
+    <Input>Categories(23%3A59%3A59)</Input>
+  </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (wrong)" Rule="resourcePath" FailAt="19">
     <Input>Categories(ID=wrong)</Input>
   </TestCase>
@@ -727,9 +822,7 @@
   <TestCase Name="4.3.4 $entity with URN" Rule="odataRelativeUri">
     <Input>$entity?$id=urn:some:id</Input>
   </TestCase>
-  <TestCase Name="4.3.4 $entity with OData URL, $select and $expand fails without type-cast" Rule="odataRelativeUri"
-    FailAt="48"
-  >
+  <TestCase Name="4.3.4 $entity with OData URL, $select and $expand fails without type-cast" Rule="odataRelativeUri" FailAt="48">
     <Input>$entity?$id=http://myservice/Customers('ALFKI')&amp;$select=CompanyName,ContactName&amp;$expand=Orders</Input>
   </TestCase>
   <TestCase Name="4.3.4 $entity with OData URL, $select and $expand" Rule="odataRelativeUri">
@@ -864,6 +957,9 @@
   <TestCase Name="4.8 Addressing entities - entity set with $count" Rule="odataRelativeUri">
     <Input>Products/$count</Input>
   </TestCase>
+  <TestCase Name="4.8 Addressing entities - entity set with $count" Rule="odataRelativeUri">
+    <Input>Products/$count?$filter=Price gt 5.00</Input>
+  </TestCase>
   <TestCase Name="4.8 Addressing entities - $count not last segment" Rule="odataRelativeUri" FailAt="15">
     <Input>Products/$count/foo</Input>
   </TestCase>
@@ -903,9 +999,7 @@
   <TestCase Name="4.9 Inheritance - key access, then cast to subtype" Rule="odataRelativeUri">
     <Input>Products(1)/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - key access, then cast to subtype - only once" Rule="odataRelativeUri"
-    FailAt="61"
-  >
+  <TestCase Name="4.9 Inheritance - key access, then cast to subtype - only once" Rule="odataRelativeUri" FailAt="61">
     <Input>Products(1)/Model.BestSellingProduct/Model.BestSellingProduct</Input>
   </TestCase>
   <TestCase Name="4.9 Inheritance - complex type" Rule="odataRelativeUri">
@@ -944,14 +1038,14 @@
   <TestCase Name="4.10 Addressing a Media Resource" Rule="odataRelativeUri">
     <Input>Categories(1)/$value</Input>
   </TestCase>
-  <TestCase Name="4.12 Addressing All Entities in a Service" Rule="odataRelativeUri">
+  <TestCase Name="4.11 - Cross Join" Rule="odataRelativeUri">
+    <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
+  </TestCase>
+  <TestCase Name="4.16 Addressing All Entities in a Service" Rule="odataRelativeUri">
     <Input>$all?$search=red</Input>
   </TestCase>
   <TestCase Name="4.12 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
     <Input>$all/Model.Customer?$filter=contains(Name,'red')</Input>
-  </TestCase>
-  <TestCase Name="5 $ is reserved" Rule="filter">
-    <Input>$filter=true</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" Rule="filter">
     <Input>$filter=true</Input>
@@ -1455,7 +1549,7 @@
     <Input>$select=Model.ActionName,Model.MostPopularName(Location,Kind)</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - tricky" Rule="select">
-    <Input>$select=Namespace.PreferredSupplier/AccountRepresentative,Address/Street</Input>
+    <Input>$select=Namespace.PreferredSupplier/AccountRepresentative,Address/Street,Address/Namespace.AddressWithLocation/Location</Input>
   </TestCase>
   <TestCase Name="5.1.4 OrderBy" Rule="orderby">
     <Input>$orderby=Name</Input>
@@ -1465,6 +1559,9 @@
   </TestCase>
   <TestCase Name="5.1.4 OrderBy mixed" Rule="orderby">
     <Input>$orderby=Name asc,Rating,ReleaseDate desc</Input>
+  </TestCase>
+  <TestCase Name="5.1.4 OrderBy expression" Rule="orderby">
+    <Input>$orderby=Cost ge Revenue asc</Input>
   </TestCase>
   <TestCase Name="5.1.5 Top and Skip" Rule="queryOptions">
     <Input>$top=5&amp;$skip=10</Input>
@@ -1547,6 +1644,9 @@
   <TestCase Name="5.1.7 Search - grouping" Rule="queryOptions">
     <Input>$search=(NOT foo)</Input>
   </TestCase>
+  <TestCase Name="5.1.7 Search - UTF-8 characters: Greek Capital Letter Delta (Δ)" Rule="queryOptions">
+    <Input>$search=%CE%94</Input>
+  </TestCase>
   <TestCase Name="5.1.7 Search - on entity set" Rule="odataUri">
     <Input>http://serviceRoot/Products?$search=blue</Input>
   </TestCase>
@@ -1559,7 +1659,7 @@
   <TestCase Name="5.1.8 Format" Rule="queryOptions">
     <Input>$format=json&amp;$format=atom&amp;$format=xml&amp;$format=text/html</Input>
   </TestCase>
-  <TestCase Name="5.1.8 Format - is case-insensitive" Rule="queryOptions">
+  <TestCase Name="5.1.8 Format - value is case-insensitive" Rule="queryOptions">
     <Input>$format=JSON&amp;$format=Atom&amp;$format=XML&amp;$format=text/html</Input>
   </TestCase>
   <TestCase Name="5.1.8 Format - media type" Rule="queryOptions">
@@ -1575,7 +1675,7 @@
     <Input>$skiptoken=Not&amp;this</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="customQueryOption">
-    <Input>search=O%27Neil</Input>
+    <Input>find=O%27Neil</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="customQueryOption">
     <Input>!deltatoken='201208210403'</Input>
@@ -1584,10 +1684,19 @@
     <Input>!special</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="queryOptions">
-    <Input>search=O%27Neil&amp;!special</Input>
+    <Input>find=O%27Neil&amp;!special</Input>
   </TestCase>
   <TestCase Name="5.2 Custom Query Option" Rule="queryOptions">
     <Input>$orderby=Name&amp;!deltatoken=0412312321</Input>
+  </TestCase>
+  <TestCase Name="5.3 Parameter Aliases" Rule="queryOptions">
+    <Input>$filter=contains(Title,@word)&amp;@word='Black'</Input>
+  </TestCase>
+  <TestCase Name="5.3 Parameter Aliases" Rule="queryOptions">
+    <Input>$filter=Title eq @title&amp;@title='Wizard%20of%20Oz'</Input>
+  </TestCase>
+  <TestCase Name="5.3 Parameter Aliases" Rule="odataRelativeUri">
+    <Input>Products/Model.WithIngredients(Ingredients=@i)?@i=["Carrots","Ginger","Oranges"]</Input>
   </TestCase>
   <TestCase Name="complex parameter value - no properties" Rule="complexInUri">
     <Input>{}</Input>
@@ -1939,14 +2048,11 @@
   <TestCase Name="Context URL - Delta - deleted link" Rule="odataUri">
     <Input>http://host/service/$metadata#Orders/$deletedLink</Input>
   </TestCase>
-  <TestCase Name="Query - crossjoin" Rule="odataRelativeUri">
-    <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
-  </TestCase>
   <TestCase Name="Header - content-id" Rule="header">
     <Input>content-id: 1</Input>
   </TestCase>
-  <TestCase Name="Header - content-id" Rule="header">
-    <Input>content-id: First-Insert~Customer_1.1</Input>
+  <TestCase Name="Batch Request - request identifier" Rule="request-id">
+    <Input>First-Insert~Customer_1.1</Input>
   </TestCase>
   <TestCase Name="Header - odata-entitid" Rule="header">
     <Input>odata-entityid: ralf:handl</Input>
@@ -2069,21 +2175,4 @@
   <TestCase Name="ODATA-633 hex pair bug" Rule="stringInJSON">
     <Input>"b%75g"</Input>
   </TestCase>
-  <!-- experimental: key as path segments
-  <TestCase Name="4.3 Addressing entities - single entity (segment)" Rule="odataRelativeUri">
-    <Input>Customers/1</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - single entity (segment)" Rule="resourcePath">
-    <Input>Categories/Tablet</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - single entity (multi-part key" Rule="resourcePath">
-    <Input>OrderItems/1/1</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - navigation (segment)" Rule="resourcePath">
-    <Input>Orders/1/Items</Input>
-  </TestCase>
-  <TestCase Name="4.3 Addressing entities - navigation (segment)" Rule="resourcePath">
-    <Input>Orders/1/Items/1</Input>
-  </TestCase>
-  -->
 </TestSuite>
