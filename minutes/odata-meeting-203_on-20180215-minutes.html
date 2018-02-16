@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #203 Thursday February 15, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='6be4b96de3ca4911daf491198afbe28afc56cf84608cdb053bb5e77863d7a49f7c909819d7f81feef0fc5628024eaf486ab0ae1dfeb14e11c83492d367861b3b' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #203 Thursday February 15, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-02-15 0800-1000 PST
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Kraue (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46243">normative attendance sheet for this meeting (event_id=46243)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Mike: Would also like to discuss:</p>
+<pre>
+ODATA-1150     Case Sensitivity of Property Names, EntitySets, Singletons and Operations
+ODATA-1149     Support Delta responses for Singletons 
+ODATA-1148     PATCH with nested nav props should not remove omitted resources
+</pre>
+<p>Mike: Can review application of ODATA-1145 in 7a.</p>
+<p>George: would like to discuss ODATA-1064 first in the Issues section</p>
+<p>Agenda approved with the above modifications</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from February 08, 2018 TC meeting #202</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62475/odata-meeting-202_on-20180208-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62475/odata-meeting-202_on-20180208-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None.</p>
+
+<h2 id="5">5. V4.01 Committee Specification 01</h2>
+<p>Documents are published</p>
+
+<h2 id="6">6. V4.0 Errata 04</h2>
+<h3 id="6.1">6.1 V4.0 Errata 04</h3>
+<h4 id="6.1.1">6.1.1 ABNF: cross-apply issues such as ODATA-987 Allow digits in search phrases, or just copy V4.01 ABNF over to V4 Errata 04?</h4>
+<pre>
+i.Pro:   URL Conventions state that ABNF is overly generous and prose specification 
+         describes valid constructs, and V4.01 ABNF is super-set of V4
+ii.Pro:  removes mental barrier for downporting V4.01 features to V4 services/frameworks
+iii.Pro: we did the same with the CSDL XML namespaces: 
+         http://docs.oasis-open.org/odata/ns/edmx and http://docs.oasis-open.org/odata/ns/edm 
+         describe the V4.01 superset.
+</pre>
+<p>Mike: if we do this, we should comment that in the ABNF, e.g. for key-as-segment or optional $ in query option names</p>
+<p><b>Mike</b>: I <b>move</b> we merge the 4.01 extensions into the OData 4.0 ABNF and maintain a common ABNF across versions. <b>George</b> seconds.</p>
+<p>Ralf: No objections, motion passes</p>
+
+<h4 id="6.1.2">6.1.2 XML Schemas for CSDL: pack latest (V4.01) versions into Errata 04?</h4>
+<pre>
+i.Pro: see iii. above, XML namespace documents reference V4.01
+</pre>
+<h4 id="6.1.3">6.1.3 Prose Specifications</h4>
+<pre>
+i.Any issues that need to be (cross-) applied to the prose specification documents?
+ii.Any need to publish Errata 04 for JSON Format?
+</pre>
+<p>Mike: can we reference the V4.01 vocabularies in GitHub from Errata 04?</p>
+<p>Ralf to ask Chet whether/how this can be done</p>
+
+<h2 id="7">7. Issues</h2>
+<h3 id="7.1">7.1 APPLIED</h3>
+<p>later</p>
+<h3 id="7.2">7.2 Vocabularies: NEW or OPEN</h3>
+<h4 id="7.2.1">7.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Ralf: Add new IncludeMetadata term: </p>
+<pre>
+&lt;Term Name="IncludeMetadata" AppliesTo="NavigationProperty EntitySet Singleton" Type="Core.MetadataKind"> 
+&lt;Annotation Term="Core.Description" 
+String="Defines metadata that should automatically be returned in a response when the reply is qualified with 'metadata=minimal'." /> 
+&lt;/Term> 
+
+&lt;EnumType Name="MetadataKind" IsFlags="true"> 
+
+  &lt;Member Name="count" Value="1"> 
+    &lt;Annotation Term="Core.Description" 
+String="Return count metadata, equivalent to $count." /> 
+
+  &lt;/Member> 
+  &lt;Member Name="navigationLink" Value="2"> 
+    &lt;Annotation Term="Core.Description" 
+String="This URL can be used to retrieve an entity or collection of entities related to the current entity via a navigation property. \
+Doing a GET on this link is equivalent to specifying $expand."/> 
+  &lt;/Member> 
+
+  &lt;Member Name="associationLink" Value="4"> 
+    &lt;Annotation Term="Core.Description" 
+String=" The value is a URL that can be used to retrieve a reference to an entity or a collection of references to entities related \
+to the current entity via a navigation property. Doing a GET on this link is equivalent to specifying $ref." /> 
+  &lt;/Member> 
+
+&lt;/EnumType>
+</pre>
+<p>Mike: We could introduce modifiers to the application/json metadata parameter; i.e., application/json;metadata=minimal+navigationLink.</p>
+<h4 id="7.2.2">7.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1121" rel="noopener noreferrer" target="_blank">ODATA-1121</a> - Add FilterExpressionType values "MultiRange" and "MultiRangeOrSearchExpression"</h4>
+<p>Mike: ideally, we wouldn't have to advertise all variations of the added modifiers; a service that supported application/json;metadata=minimal would implicitly support the modifiers.</p>
+<h3 id="7.3">7.3 APPLIED (revisited)</h3>
+<h4 id="7.3.1">7.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-1144" rel="noopener noreferrer" target="_blank">ODATA-1144</a> - Allow percent-encoded colon in time values in URLs</h4>
+<p>Ralf: </p>
+<pre>
+V4.01: 
+https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-construction-rules.txt?op=diff&rev=1121 
+https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-testcases.xml?op=diff&rev=1121 
+
+V4: 
+https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-abnf.txt?op=diff&rev=1122 
+https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-testcases.xml?op=diff&rev=1122
+</pre>
+<p>Hubert: there's a left-over ":" in the offset portion of rule dateTimeOffsetValueInUrl</p>
+<p>Ralf: Postponed to next meeting</p>
+<p>Mike: https://github.com/oasis-tcs/odata-vocabularies/pull/7</p>
+<p>Ralf: https://issues.oasis-open.org/browse/ODATA-1145</p>
+<p>Mike walks us through the changes</p>
+<p><b>Hubert</b>: I <b>move</b> to close ODATA-1145 as applied. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1145 is CLOSED as applied</p>
+
+<h3 id="7.4">7.4 Vocabularies: NEW or OPEN (revisited)</h3>
+<h4 id="7.4.1">7.4.1 <a href="https://issues.oasis-open.org/browse/ODATA-1121" rel="noopener noreferrer" target="_blank">ODATA-1121</a> - Add FilterExpressionType values "MultiRange" and "MultiRangeOrSearchExpression"</h4>
+<p>Ralf: Add new allowed values </p>
+<pre>
+&lt;Record> 
+  &lt;PropertyValue Property="Value" String="MultiRange" /> 
+  &lt;Annotation Term="Core.Description" String="Property can be compared to a union of one or more closed, half-open, or open intervals" /> 
+  &lt;Annotation Term="Core.LongDescription" String="The filter expression for this property consists of one or more interval expressions \
+      combined by OR. A single interval expression is either a single comparison of the property and a literal value with eq, le, lt, ge, or gt, \
+      or pair of boundaries combined by AND and enclosed in parentheses. The lower boundary is either ge or gt, the upper boundary either le or lt." /> 
+&lt;/Record> 
+
+&lt;Record> 
+  &lt;PropertyValue Property="Value" String="MultiRangeOrSearchExpression" /> 
+  &lt;Annotation Term="Core.Description" String="Property can be compared to a union of zero or more closed, half-open, or open intervals plus zero or more simple string patters" /> 
+  &lt;Annotation Term="Core.LongDescription" String="The filter expression for this property consists of one or more interval expressions or \
+      string comparison functions combined by OR. See MultiRange for a definition of an interval expression. See SearchExpression for the allowed string comparison functions." /> 
+&lt;/Record>
+
+&lt;TypeDefinition Name="FilterExpressionType" UnderlyingType="Edm.String">
+  &lt;Annotation Term="Validation.AllowedValues">
+    &lt;Collection>
+      &lt;Record>
+        &lt;PropertyValue Property="Value" String="SingleValue" />
+        &lt;Annotation Term="Core.Description" String="Property can be used in a single eq clause" />
+      &lt;/Record>
+      &lt;Record>
+        &lt;PropertyValue Property="Value" String="MultiValue" />
+        &lt;Annotation Term="Core.Description" String="Property can be used in a single in clause" />
+      &lt;/Record>
+      &lt;Record>
+        &lt;PropertyValue Property="Value" String="SingleRange" />
+        &lt;Annotation Term="Core.Description" String="Property can be used in at most one ge and/or one le clause, separated by and" />
+      &lt;/Record>
+      &lt;Record>
+        &lt;PropertyValue Property="Value" String="SearchExpression" />
+        &lt;Annotation Term="Core.Description"
+          String="String property can be used as first operand in startswith, endswith, and contains clauses" />
+      &lt;/Record>
+    &lt;/Collection>
+  &lt;/Annotation>
+&lt;/TypeDefinition>
+</pre>
+
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1121 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1121 is RESOLVED as proposed</p>
+
+<h4 id="7.4.2">7.4.2 <a href="https://issues.oasis-open.org/browse/ODATA-1138" rel="noopener noreferrer" target="_blank">ODATA-1138</a> - Facilitate processing of aggregated results created with concat</h4>
+<p>Gerald: </p>
+<pre>
+GET ~/Sales?$apply=concat( 
+filter(&lt;complex expression 1>)/groupby((Customer),aggregate(Amount with sum as Total)), 
+ filter(&lt;complex expression 2>)/groupby((Customer),aggregate(Amount with sum as Total)))
+&lt;Term Name=RelatedConcatParameter Type=Edm.Int16> 
+&lt;Annotation Term="Core.Description" String="Position of the transformation sequence in the list of concat parameters, whose result contans this entity. Position counting starts at 0" /> 
+&lt;/Term>
+&lt;Term Name=ResultOfConcatArgument Type=Edm.Int16> 
+&lt;Annotation Term="Core.Description" String="Index number of the argument provided to the concat transformation whose result contains this and subsequent entities. The first argument has index 0." /> 
+&lt;/Term>
+concat(filter(...)/groupby(...)/compute(1 as idx), ...)
+</pre>
+<p><b>Gerald</b>: I <b>move</b> to close ODATA-1138 as proposed.</p>
+
+<h4 id="7.4.3">7.4.3 <a href="https://issues.oasis-open.org/browse/ODATA-1099" rel="noopener noreferrer" target="_blank">ODATA-1099</a> - Add annotations to describe custom query options and custom headers</h4>
+<p>Postponed</p>
+
+<h4 id="7.4.4">7.4.4 <a href="https://issues.oasis-open.org/browse/ODATA-1067" rel="noopener noreferrer" target="_blank">ODATA-1067</a> - Consider ability to define computed default values</h4>
+
+<p>Mike: skip remaining Vocabulary issues</p>
+<p>Ralf: https://issues.oasis-open.org/browse/ODATA-1148</p>
+<p>Ralf: PATCH with nested nav props should not remove omitted resources</p>
+
+<h4 id="7.4.5">7.4.5 <a href="https://issues.oasis-open.org/browse/ODATA-1147" rel="noopener noreferrer" target="_blank">ODATA-1147</a> - Annotate a function or action as "availability is advertised per instance"</h4>
+
+<p>Ralf: Actions and functions are by default available for all instances unless stated otherwise. </p>
+<pre>
+One way to state this is the term Core.OperationAvailable which currently has to evaluate to true or false. 
+
+What is missing is a way to say "availability of this operation cannot be determined up-front, 
+please look into the availability advertising in its representation".
+</pre>
+<p>Mike: it already is nullable because there's no Nullable="false" attribute</p>
+<p>Ralf: ODATA-1147 is OPEN</p>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1147 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1147 is RESOLVED as proposed</p>
+
+<h2 id="8">8. Next meetings</h2>
+<p>Ralf:</p>
+<pre>
+Thursday February 22, 2018 during 8-10 am PST?
+Thursday March 01, 2018 during 8-10 am PST?
+</pre>
+<p>Mike not present February, 22; Hubert not present March, 01</p>
+<p>All agree to meet February, 22 and March, 01.</p>
+
+<h2 id="9">9. AOB and wrap up</h2>
+<p>None</p>
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
