@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-  OData ABNF Test Cases Version 4.0
+  OData ABNF Test Cases Version 4.01
 
-  Working Draft 09
+  Working Draft 06
   15 February 2018
 
   Technical Committee:
@@ -11,7 +11,7 @@
   https://www.oasis-open.org/committees/odata
 
   Chairs:
-  - Barbara Hartel (barbara.hartel@sap.com), SAP SE
+  - Ralf Handl (ralf.handl@sap.com), SAP SE
   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
 
   Editors:
@@ -21,29 +21,18 @@
 
   Additional artifacts:
   This test case document is one component of a Work Product which consists of:
-  - OData Version 4.0 Part 1: Protocol
-  - OData Version 4.0 Part 2: URL Conventions
-  - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
-  - OData ABNF Construction Rules Version 4.0
-  - OData ABNF Test Cases (this document)
-  - OData Core Vocabulary
-  - OData Capabilities Vocabulary
-  - OData Measures Vocabulary
-  - OData Metadata Service Entity Model
-  - OData EDMX XML Schema
-  - OData EDM XML Schema
+  - OData Version 4.01 Part 1: Protocol
+  - OData Version 4.01 Part 2: URL Conventions
+  - OData ABNF Construction Rules Version 4.01
+  - OData ABNF Test Cases Version 4.01 (this document)
 
   Related work:
-  This work product is related to the following two Work Products, each of
-  which define alternate formats for OData payloads
-  - OData Atom Format Version 4.0
-  - OData JSON Format Version 4.0
   This specification replaces or supersedes:
-  - None
-
-  Declared XML namespaces:
-  - http://docs.oasis-open.org/odata/ns/edmx
-  - http://docs.oasis-open.org/odata/ns/edm
+  - OData ABNF Test Cases Version 4.0
+  This work product is related to
+  - OData Common Schema Definition Language (CSDL) JSON Representation Version 4.01
+  - OData Common Schema Definition Language (CSDL) XML Representation Version 4.01
+  - OData JSON Format Version 4.01
 
   Abstract:
   The Open Data Protocol (OData) enables the creation of REST-based data
@@ -55,10 +44,10 @@
 
   Overview:
   This document contains positive and negative test cases for the
-  OData ABNF Construction Rules Version 4.0.
+  OData ABNF Construction Rules Version 4.01.
   Positive test cases consist of the rule to test, the input string to parse,
   and a description of the test case, often starting with a section number
-  referring to OData Version 4.0 Part 2: URL Conventions.
+  referring to OData Version 4.01 Part 2: URL Conventions.
   Negative test cases in addition state the character position at which the
   invalid portion of input text starts, 0 meaning the whole input string.
 
@@ -72,10 +61,10 @@
   <!--
 
     This document contains positive and negative test cases for the
-    OData ABNF Construction Rules Version 4.0.
+    OData ABNF Construction Rules Version 4.01.
     Positive test cases consist of the rule to test, the input string to parse,
     and a description of the test case, often starting with a section number
-    referring to OData Version 4.0 Part 2: URL Conventions.
+    referring to OData Version 4.01 Part 2: URL Conventions.
     Negative test cases in addition state the character position at which the
     invalid portion of input text starts, 0 meaning the whole input string.
 
@@ -206,6 +195,14 @@
   <Constraint Rule="enumerationTypeName">
     <Match>NameKind</Match>
     <Match>Pattern</Match>
+  </Constraint>
+  <Constraint Rule="keyPathLiteral">
+    <Match>1</Match>
+    <Match>2001</Match>
+    <Match>A1245</Match>
+    <Match>O'Neil</Match>
+    <Match>O%27Neil</Match>
+    <Match>Smartphone%2FTablet</Match>
   </Constraint>
   <Constraint Rule="keyPropertyAlias">
     <Match>KeyAlias</Match>
@@ -470,6 +467,15 @@
   <TestCase Name="Decimal - exponential notation" Rule="decimalValue">
     <Input>1e-101</Input>
   </TestCase>
+  <TestCase Name="Decimal - negative infinitiy" Rule="decimalValue">
+    <Input>-INF</Input>
+  </TestCase>
+  <TestCase Name="Decimal - positive infinitiy" Rule="decimalValue">
+    <Input>INF</Input>
+  </TestCase>
+  <TestCase Name="Decimal - not a number" Rule="decimalValue">
+    <Input>NaN</Input>
+  </TestCase>
   <TestCase Name="Duration in body" Rule="durationValue">
     <Input>P6DT23H59M59.9999S</Input>
   </TestCase>
@@ -481,6 +487,9 @@
   </TestCase>
   <TestCase Name="Duration in URL" Rule="duration">
     <Input>duration'P6DT23H59M59.9999S'</Input>
+  </TestCase>
+  <TestCase Name="Duration in URL without prefix" Rule="duration">
+    <Input>'P6DT23H59M59.9999S'</Input>
   </TestCase>
   <TestCase Name="Decimal: integer" Rule="decimalValue">
     <Input>-2</Input>
@@ -639,6 +648,12 @@
   <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
     <Input>http://host/service/EmployeesByManager(ManagerID=@p1)?@p1=3</Input>
   </TestCase>
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager?ManagerID=3</Input>
+  </TestCase>
+  <TestCase Name="Inline Parameter Syntax" Rule="odataUri">
+    <Input>http://host/service/EmployeesByManager?@ManagerID=3</Input>
+  </TestCase>
   <!--
     Test cases for example URLs in Part 2: URL Conventions
   -->
@@ -705,6 +720,15 @@
   <TestCase Name="4.2 - Batch URL" Rule="odataUri">
     <Input>http://services.odata.org/OData/OData.svc/$batch</Input>
   </TestCase>
+  <TestCase Name="4.2 - Batch URL - JSON batch response" Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$batch?$format=json</Input>
+  </TestCase>
+  <TestCase Name="4.2 - Batch URL - multipart batch response" Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$batch?$format=multipart/mixed</Input>
+  </TestCase>
+  <TestCase Name="4.2 - Batch URL - allowed" Rule="odataUri">
+    <Input>http://services.odata.org/OData/OData.svc/$batch?!special</Input>
+  </TestCase>
   <TestCase Name="4.3 Addressing entities - entity set" Rule="entitySetName">
     <Input>Products</Input>
   </TestCase>
@@ -732,6 +756,9 @@
   <TestCase Name="4.3 Addressing entities - function call with query parameter" Rule="odataRelativeUri">
     <Input>ProductsByCategoryId(categoryId=2)</Input>
   </TestCase>
+  <TestCase Name="4.3 Addressing entities - function call with query parameter" Rule="odataRelativeUri">
+    <Input>ProductsByCategoryId?@categoryId=2</Input>
+  </TestCase>
   <TestCase Name="4.3 Addressing entities - function parameter" Rule="functionParameter">
     <Input>color='red'</Input>
   </TestCase>
@@ -740,6 +767,9 @@
   </TestCase>
   <TestCase Name="4.3 Addressing entities - bound function call" Rule="odataRelativeUri">
     <Input>Categories(1)/Model.ProductsByColor(color='red')</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - bound function call with implicit parameter aliases" Rule="odataRelativeUri">
+    <Input>Categories(1)/Model.ProductsByColor?@color='red'</Input>
   </TestCase>
   <TestCase Name="4.3 Addressing entities - single entity (short)" Rule="resourcePath">
     <Input>Categories(1)</Input>
@@ -825,6 +855,9 @@
   <TestCase Name="4.3.4 $entity with URN" Rule="odataRelativeUri">
     <Input>$entity?$id=urn:some:id</Input>
   </TestCase>
+  <TestCase Name="4.3.4 $entity with URN, id without $ prefix" Rule="odataRelativeUri">
+    <Input>$entity?id=urn:some:id</Input>
+  </TestCase>
   <TestCase Name="4.3.4 $entity with OData URL, $select and $expand fails without type-cast" Rule="odataRelativeUri" FailAt="48">
     <Input>$entity?$id=http://myservice/Customers('ALFKI')&amp;$select=CompanyName,ContactName&amp;$expand=Orders</Input>
   </TestCase>
@@ -833,6 +866,30 @@
   </TestCase>
   <TestCase Name="4.3.4 $entity without $id fails" Rule="odataRelativeUri" FailAt="20">
     <Input>$entity?$format=json</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - single entity (numeric single-part key)" Rule="odataRelativeUri">
+    <Input>Customers/1</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - single entity (string single-part key)" Rule="resourcePath">
+    <Input>Employees/A1245</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - single entity (string single-part key)" Rule="resourcePath">
+    <Input>People/O'Neil</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - single entity (string single-part key)" Rule="resourcePath">
+    <Input>People/O%27Neil</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - single entity (string single-part key)" Rule="resourcePath">
+    <Input>Categories/Smartphone%2FTablet</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - single entity (multi-part key)" Rule="resourcePath">
+    <Input>OrderItems/2001/1</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - navigation (segment)" Rule="resourcePath">
+    <Input>Orders/1/Items</Input>
+  </TestCase>
+  <TestCase Name="4.3.6  Key-as-Segment - navigation (segment)" Rule="resourcePath">
+    <Input>Orders/1/Items/1</Input>
   </TestCase>
   <TestCase Name="4.4 Addressing Links between Entities" Rule="odataRelativeUri">
     <Input>Categories(1)/Products/$ref</Input>
@@ -864,13 +921,13 @@
   <TestCase Name="4.5.2 Call function import" Rule="odataRelativeUri">
     <Input>TheBestProduct()</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call function import - no parentheses" Rule="odataRelativeUri" FailAt="14">
+  <TestCase Name="4.5.2 Call function import - no parentheses" Rule="odataRelativeUri">
     <Input>TheBestProduct</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call function import - inline parameter" Rule="odataRelativeUri">
     <Input>TheBestProduct(Size=3)</Input>
   </TestCase>
-  <TestCase Name="4.5.2 Call function import - only at service root" Rule="odataRelativeUri" FailAt="25">
+  <TestCase Name="4.5.2 Call function import - only at service root" Rule="odataRelativeUri" FailAt="27">
     <Input>Categories/TheBestProduct()</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call complex function import" Rule="odataRelativeUri">
@@ -984,6 +1041,9 @@
   <TestCase Name="4.8 Addressing the Count - in $filter with primitive collection" Rule="filter">
     <Input>$filter=Sizes/$count gt 0</Input>
   </TestCase>
+  <TestCase Name="4.8 Addressing the Count - in $filter with filtered collection" Rule="filter">
+    <Input>$filter=Products/$count($filter=Price gt 5.00) gt 2</Input>
+  </TestCase>
   <TestCase Name="4.8 Addressing the Count - collection navigation property with $count in $orderby" Rule="orderby">
     <Input>$orderby=Products/$count</Input>
   </TestCase>
@@ -993,65 +1053,104 @@
   <TestCase Name="4.8 Addressing the Count - collection property with $count in $orderby" Rule="orderby">
     <Input>$orderby=Sizes/$count</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - set of subtypes" Rule="odataRelativeUri">
+  <TestCase Name="4.10 Addressing a Member of an Ordered Primitive Collection" Rule="odataRelativeUri">
+    <Input>Suppliers(1)/EmailAddresses/1</Input>
+  </TestCase>
+  <TestCase Name="4.10 Addressing a Member of an Ordered Complex Collection" Rule="odataRelativeUri">
+    <Input>MainSupplier/Addresses/0</Input>
+  </TestCase>
+  <TestCase Name="4.10 Addressing a Member of an Ordered Complex Collection with type-cast" Rule="odataRelativeUri" FailAt="49">
+    <Input>Suppliers(1)/Addresses/Model.AddressWithLocation/1</Input>
+  </TestCase>
+  <TestCase Name="4.11 Inheritance - set of subtypes" Rule="odataRelativeUri">
     <Input>Products/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - set of subtypes, then key access" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - set of subtypes, then key access" Rule="odataRelativeUri">
     <Input>Products/Model.BestSellingProduct(1)</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - key access, then cast to subtype" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - key access, then cast to subtype" Rule="odataRelativeUri">
     <Input>Products(1)/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - key access, then cast to subtype - only once" Rule="odataRelativeUri" FailAt="61">
+  <TestCase Name="4.11 Inheritance - key access, then cast to subtype - only once" Rule="odataRelativeUri" FailAt="61">
     <Input>Products(1)/Model.BestSellingProduct/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - complex type" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - complex type" Rule="odataRelativeUri">
     <Input>Products(1)/Address/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - complex type with property" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - complex type with property" Rule="odataRelativeUri">
     <Input>Products(1)/Address/Model.AddressWithLocation/Street</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - collection of complex type" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - collection of complex type" Rule="odataRelativeUri">
     <Input>Products(1)/Addresses/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - expressions: complex type" Rule="propertyPathExpr">
+  <TestCase Name="4.11 Inheritance - expressions: complex type" Rule="propertyPathExpr">
     <Input>Address/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - expressions: complex type with path" Rule="propertyPathExpr">
+  <TestCase Name="4.11 Inheritance - expressions: complex type with path" Rule="propertyPathExpr">
     <Input>Address/Model.AddressWithLocation/Street</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - expressions: collection of complex type" Rule="propertyPathExpr">
+  <TestCase Name="4.11 Inheritance - expressions: collection of complex type" Rule="propertyPathExpr">
     <Input>Addresses/Model.AddressWithLocation</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products/Model.BestSellingProduct</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Products?$expand=Model.BestSellingProduct/Sales</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products/Model.BestSellingProduct($select=Name)</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products($filter=startswith(Name,'P'))</Input>
   </TestCase>
-  <TestCase Name="4.9 Inheritance - $expand on complex resource" Rule="odataRelativeUri">
+  <TestCase Name="4.11 Inheritance - $expand on complex resource" Rule="odataRelativeUri">
     <Input>TheMostPopularAddresses()?$expand=Model.AddressWithLocation/Country</Input>
   </TestCase>
-  <TestCase Name="4.10 Addressing a Media Resource" Rule="odataRelativeUri">
+  <TestCase Name="4.12 Filter Path Segment" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo?@foo=Age gt 3</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - multiple" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with /$ref" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar/$ref?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with /$count" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar/$count?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with /$count and $filter query option" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$filter=@bar/$count?@foo=Age gt 3&amp;@bar=Price lt 5&amp;$filter=Price lt 6</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - multiple" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/Special.ProductsByColor(color='red')/$filter=@bar?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - with action" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/Special.Cluster?@foo=Age gt 3</Input>
+  </TestCase>
+  <TestCase Name="4.12 $each Path Segment" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$each</Input>
+  </TestCase>
+  <TestCase Name="4.12 $each Path Segment - with action" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/$each/Special.Discount?@foo=Age gt 3</Input>
+  </TestCase>
+  <TestCase Name="4.14 Addressing a Media Resource" Rule="odataRelativeUri">
     <Input>Categories(1)/$value</Input>
   </TestCase>
-  <TestCase Name="4.11 - Cross Join" Rule="odataRelativeUri">
+  <TestCase Name="4.15 - Cross Join" Rule="odataRelativeUri">
     <Input>$crossjoin(Customers,Countries)?$expand=Customers($select=Name),Countries($select=Name)&amp;$filter=Customers/CountryCode eq Countries/CountryCode and Countries/Name eq 'USA'</Input>
   </TestCase>
   <TestCase Name="4.16 Addressing All Entities in a Service" Rule="odataRelativeUri">
     <Input>$all?$search=red</Input>
   </TestCase>
-  <TestCase Name="4.12 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
+  <TestCase Name="4.16 Addressing All Entities in a Service - with type cast" Rule="odataRelativeUri">
     <Input>$all/Model.Customer?$filter=contains(Name,'red')</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter" Rule="filter">
     <Input>$filter=true</Input>
+  </TestCase>
+  <TestCase Name="5.1.1 $ is optional" Rule="filter">
+    <Input>filter=true</Input>
   </TestCase>
   <TestCase Name="5.1.1 Filter: no spaces" Rule="filter" FailAt="7">
     <Input>$filter =true</Input>
@@ -1173,20 +1272,35 @@
   <TestCase Name="5.1.1.1.9 Logical Negation" Rule="notExpr">
     <Input>not false</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>Name eq 'Milk'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>Supplier/Name eq 'Milk'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
-    <Input>Name eq 'Milk' and Price lt 2.55</Input>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>Name EQ 'Milk' AND Price LT 2.55</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
-    <Input>Name eq 'Milk' or Price lt 2.55</Input>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>Name Eq 'Milk' OR Price Lt 2.55</Input>
   </TestCase>
-  <TestCase Name="5.1.1.1.10 Logical Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
     <Input>not endswith(Name,'ilk')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>style has Sales.Pattern'Yellow'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>Name in ('Milk', 'Cheese')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>Name in ["Milk", "Cheese"]</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>('Milk','Cheese') eq ('Oranges' , 'Carrots' ,'Ginger')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.1.12 Logical Operator Examples" Rule="boolCommonExpr">
+    <Input>["Milk", "Cheese"] eq ["Oranges", "Carrots", "Ginger"]</Input>
   </TestCase>
   <TestCase Name="5.1.1.2.1 Addition" Rule="commonExpr">
     <Input>Price add 2.45</Input>
@@ -1197,31 +1311,37 @@
   <TestCase Name="5.1.1.2.2 Subtraction" Rule="commonExpr">
     <Input>Price sub 0.55</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.3 Multiplication" Rule="commonExpr">
-    <Input>Price mul 2</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.2.4 Division" Rule="commonExpr">
-    <Input>Price div 2</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.2.5 Modulo" Rule="commonExpr">
-    <Input>Price mod 5</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.2.5 Negate" Rule="commonExpr">
+  <TestCase Name="5.1.1.2.3 Negate" Rule="commonExpr">
     <Input>-Price</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.4 Multiplication" Rule="commonExpr">
+    <Input>Price mul 2</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.5 Division" Rule="commonExpr">
+    <Input>Price div 2</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.5 Division" Rule="commonExpr">
+    <Input>Price divby 2</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.6 Modulo" Rule="commonExpr">
+    <Input>Price mod 5</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price add 2.45 eq 5.00</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price sub 0.55 eq 2.00</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price mul 2.0 eq 5.10</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Price div 2.55 eq 1</Input>
   </TestCase>
-  <TestCase Name="5.1.1.2.6 Arithmetic Operator Examples" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
+    <Input>Rating divby 2 eq 2.5</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.2.7 Arithmetic Operator Examples" Rule="boolCommonExpr">
     <Input>Rating mod 5 eq 0</Input>
   </TestCase>
   <TestCase Name="5.1.1.3 Parenthesis" Rule="commonExpr">
@@ -1242,215 +1362,278 @@
   <TestCase Name="5.1.1.3 Parenthesis" Rule="boolcommonExpr">
     <Input>(4 add 5) mod (4 sub 1) eq 0</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.1 contains" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.5.1 contains" Rule="boolCommonExpr">
     <Input>contains(CompanyName,'lfreds')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.2 endswith" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.5.1 contains" Rule="boolCommonExpr">
+    <Input>contains(Names,["Fred","George"])</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.5.2 endswith" Rule="boolCommonExpr">
     <Input>endswith(CompanyName,'Futterkiste')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.3 startswith" Rule="boolCommonExpr">
-    <Input>startswith(CompanyName,'Futterkiste')</Input>
+  <TestCase Name="5.1.1.5.2 endswith" Rule="boolCommonExpr">
+    <Input>endswith(["Fred","George","Ron"],["George","Ron"])</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.3 startswith" Rule="boolCommonExpr">
-    <Input>startswith(Supplier/Name,'Futterkiste')</Input>
+  <TestCase Name="5.1.1.5.3 indexof" Rule="boolCommonExpr">
+    <Input>indexof(["Fred","George","Ron"],["George","Ron"]) eq 1</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.4 length" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.5.4 length" Rule="boolCommonExpr">
     <Input>length(CompanyName) eq 19</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.5 indexof" Rule="boolCommonExpr">
-    <Input>indexof(CompanyName,'lfreds') eq 1</Input>
+  <TestCase Name="5.1.1.5.4 length" Rule="boolCommonExpr">
+    <Input>length(["Fred","George","Ron"]) eq 3</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.6 substring" Rule="commonExpr">
-    <Input>substring(CompanyName, 5)</Input>
+  <TestCase Name="5.1.1.5.5 startswith" Rule="boolCommonExpr">
+    <Input>startswith(CompanyName,'Futterkiste')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.6 substring with length" Rule="commonExpr">
-    <Input>substring(CompanyName,5,2)</Input>
+  <TestCase Name="5.1.1.5.5 startswith" Rule="boolCommonExpr">
+    <Input>startswith(Supplier/Name,'Futterkiste')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.7 tolower" Rule="commonExpr">
-    <Input>tolower(CompanyName)</Input>
+  <TestCase Name="5.1.1.5.5 startswith" Rule="boolCommonExpr">
+    <Input>startswith(["Fred","George","Ron"],["Fred","George"])</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.8 toupper" Rule="commonExpr">
-    <Input>toupper(CompanyName)</Input>
+  <TestCase Name="5.1.1.6.1 hassubset" Rule="boolCommonExpr">
+    <Input>hassubset(Names,('Milk', 'Cheese'))</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.9 trim" Rule="commonExpr">
-    <Input>trim(CompanyName)</Input>
+  <TestCase Name="5.1.1.6.1 hassubset" Rule="boolCommonExpr">
+    <Input>hassubset(Names,["Milk", "Cheese"])</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.10 concat" Rule="commonExpr">
+  <TestCase Name="5.1.1.6.1 hassubset" Rule="boolCommonExpr">
+    <Input>hassubset(('Milk','Cheese'),Names)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.6.1 hassubset" Rule="boolCommonExpr">
+    <Input>hassubset(["Milk", "Cheese"],Names)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.6.2 hassubsequence" Rule="boolCommonExpr">
+    <Input>hassubsequence([4,1,3],[4,3])</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.7.1 concat" Rule="commonExpr">
     <Input>concat(CompanyName, Name)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.10 concat" Rule="commonExpr">
+  <TestCase Name="5.1.1.7.1 concat" Rule="commonExpr">
     <Input>concat(concat(Street,'-'),City)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.11 year" Rule="commonExpr">
-    <Input>year(BirthDate)</Input>
+  <TestCase Name="5.1.1.7.7 substring" Rule="commonExpr">
+    <Input>substring(CompanyName, 5)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.12" Rule="commonExpr">
-    <Input>month(BirthDate)</Input>
+  <TestCase Name="5.1.1.7.7 substring with length" Rule="commonExpr">
+    <Input>substring(CompanyName,5,2)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.13" Rule="commonExpr">
-    <Input>day(BirthDate)</Input>
+  <TestCase Name="5.1.1.7.8 tolower" Rule="commonExpr">
+    <Input>tolower(CompanyName)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.14" Rule="commonExpr">
-    <Input>hour(BirthDate)</Input>
+  <TestCase Name="5.1.1.7.9 toupper" Rule="commonExpr">
+    <Input>toupper(CompanyName)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.15" Rule="commonExpr">
-    <Input>minute(BirthDate)</Input>
+  <TestCase Name="5.1.1.7.10 trim" Rule="commonExpr">
+    <Input>trim(CompanyName)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.16" Rule="commonExpr">
-    <Input>second(BirthDate)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.4.17" Rule="commonExpr">
-    <Input>fractionalseconds(LifeTime)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.4.18" Rule="commonExpr">
-    <Input>totalseconds(LifeTime)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.4.19" Rule="commonExpr">
+  <TestCase Name="5.1.1.8.1" Rule="commonExpr">
     <Input>date(LifeTime)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.20" Rule="commonExpr">
-    <Input>time(ReleaseDate)</Input>
+  <TestCase Name="5.1.1.8.2" Rule="commonExpr">
+    <Input>day(BirthDate)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.21 - totaloffsetminutes" Rule="commonExpr">
-    <Input>totaloffsetminutes(ReleaseDate)</Input>
+  <TestCase Name="5.1.1.8.3" Rule="commonExpr">
+    <Input>fractionalseconds(LifeTime)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.22" Rule="commonExpr">
-    <Input>now()</Input>
+  <TestCase Name="5.1.1.8.4" Rule="commonExpr">
+    <Input>hour(BirthDate)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.22 - non-canonical percent-encoding" Rule="commonExpr">
-    <Input>now%28%20%29</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.4.23" Rule="commonExpr">
+  <TestCase Name="5.1.1.8.5" Rule="commonExpr">
     <Input>maxdatetime()</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.23 - non-canonical percent-encoding" Rule="commonExpr">
+  <TestCase Name="5.1.1.8.5 - non-canonical percent-encoding" Rule="commonExpr">
     <Input>maxdatetime%28%20%29</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.24" Rule="commonExpr">
+  <TestCase Name="5.1.1.8.6" Rule="commonExpr">
     <Input>mindatetime()</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.24 - non-canonical percent-encoding" Rule="commonExpr">
+  <TestCase Name="5.1.1.8.6 - non-canonical percent-encoding" Rule="commonExpr">
     <Input>mindatetime%28%20%29</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.25" Rule="commonExpr">
-    <Input>round(Price)</Input>
+  <TestCase Name="5.1.1.8.7" Rule="commonExpr">
+    <Input>minute(BirthDate)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.26" Rule="commonExpr">
-    <Input>floor(Price)</Input>
+  <TestCase Name="5.1.1.8.8" Rule="commonExpr">
+    <Input>month(BirthDate)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.27" Rule="commonExpr">
+  <TestCase Name="5.1.1.8.9" Rule="commonExpr">
+    <Input>now()</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.8.9 - non-canonical percent-encoding" Rule="commonExpr">
+    <Input>now%28%20%29</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.8.10" Rule="commonExpr">
+    <Input>second(BirthDate)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.8.11" Rule="commonExpr">
+    <Input>time(ReleaseDate)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.8.12 - totaloffsetminutes" Rule="commonExpr">
+    <Input>totaloffsetminutes(ReleaseDate)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.8.13" Rule="commonExpr">
+    <Input>totalseconds(LifeTime)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.8.14 year" Rule="commonExpr">
+    <Input>year(BirthDate)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.9.1" Rule="commonExpr">
     <Input>ceiling(Price)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.28 isof(1)" Rule="isofExpr">
-    <Input>isof(Model.Customer)</Input>
+  <TestCase Name="5.1.1.9.2" Rule="commonExpr">
+    <Input>floor(Price)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.28 isof(2)" Rule="isofExpr">
-    <Input>isof(Category,Model.Customer)</Input>
+  <TestCase Name="5.1.1.9.3" Rule="commonExpr">
+    <Input>round(Price)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.28 isof(2)" Rule="isofExpr">
-    <Input>isof(Location,Edm.GeographyPoint)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.4.29 cast(1)" Rule="commonExpr">
+  <TestCase Name="5.1.1.10.1 cast(1)" Rule="commonExpr">
     <Input>cast(Model.Customer)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.29 cast(2)" Rule="commonExpr">
+  <TestCase Name="5.1.1.10.1 cast(2)" Rule="commonExpr">
     <Input>cast(Category,Model.Customer)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.29 cast(3)" Rule="commonExpr">
+  <TestCase Name="5.1.1.10.1 cast(3)" Rule="commonExpr">
     <Input>cast(Category,Edm.Boolean)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.30 geo.distance" Rule="commonExpr">
+  <TestCase Name="5.1.1.10.2 isof(1)" Rule="isofExpr">
+    <Input>isof(Model.Customer)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.10.2 isof(2)" Rule="isofExpr">
+    <Input>isof(Category,Model.Customer)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.10.2 isof(2)" Rule="isofExpr">
+    <Input>isof(Location,Edm.GeographyPoint)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.11.1 geo.distance" Rule="commonExpr">
     <Input>geo.distance(Supplier/Location,Product/Location)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.31 geo.intersects" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.11.3 geo.intersects" Rule="boolCommonExpr">
     <Input>geo.intersects(Supplier/SalesArea,Product/Location)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.32 geo.length" Rule="commonExpr">
+  <TestCase Name="5.1.1.11.3 geo.length" Rule="commonExpr">
     <Input>geo.length(Line)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.4.32 geo.length" Rule="commonExpr">
+  <TestCase Name="5.1.1.11.3 geo.length" Rule="commonExpr">
     <Input>geo.length(geography'SRID=0;LineString(142.1 64.1,3.14 2.78)')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="anyExpr">
-    <Input>any()</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="anyExpr">
-    <Input>any( )</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="anyExpr">
-    <Input>any(lambda:true)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="anyExpr">
-    <Input>any( lambda : true )</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="commonExpr">
-    <Input>Products/any(lambda:true)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any() - requires a path prefix" Rule="boolCommonExpr" FailAt="3">
-    <Input>any()</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="commonExpr">
-    <Input>Supplier/Products/any(lambda:true)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="firstMemberExpr">
-    <Input>$it/Completed</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="firstMemberExpr">
+  <TestCase Name="5.1.1.12 Lambda Operators" Rule="firstMemberExpr">
     <Input>lambda/Completed</Input>
   </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="commonExpr">
-    <Input>Products/any(lambda:lambda/Completed)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 any()" Rule="commonExpr">
-    <Input>Products/any(lambda:$it/Completed)</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 lambdaPredicateExpr" Rule="boolCommonExpr">
-    <Input>$it eq 'Hugo'</Input>
-  </TestCase>
-  <TestCase Name="5.1.1.5 lambdaPredicateExpr" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.12 Lambda Operators" Rule="boolCommonExpr">
     <Input>lambda/Name eq $it/Name</Input>
   </TestCase>
-  <TestCase Name="5.1.1.5 all()" Rule="boolCommonExpr">
+  <TestCase Name="5.1.1.12.1 any()" Rule="anyExpr">
+    <Input>any()</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any()" Rule="anyExpr">
+    <Input>any( )</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any()" Rule="anyExpr">
+    <Input>any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any()" Rule="anyExpr">
+    <Input>any( lambda : true )</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any()" Rule="commonExpr">
+    <Input>Products/any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any() - requires a path prefix" Rule="boolCommonExpr" FailAt="3">
+    <Input>any()</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any()" Rule="commonExpr">
+    <Input>Supplier/Products/any(lambda:true)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any()" Rule="commonExpr">
+    <Input>Products/any(lambda:lambda/Completed)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.1 any()" Rule="commonExpr">
+    <Input>Products/any(lambda:$it/Completed)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.12.2 all()" Rule="boolCommonExpr">
     <Input>Products/all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.5 all() - requires path prefix" Rule="boolCommonExpr" FailAt="3">
+  <TestCase Name="5.1.1.12.2 all() - requires path prefix" Rule="boolCommonExpr" FailAt="3">
     <Input>all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.5 all() - must contain a lambda expression" Rule="boolCommonExpr" FailAt="13">
+  <TestCase Name="5.1.1.12.2 all() - must contain a lambda expression" Rule="boolCommonExpr" FailAt="14">
     <Input>Products/all()</Input>
   </TestCase>
-  <TestCase Name="5.1.1.5 all()" Rule="commonExpr">
+  <TestCase Name="5.1.1.12.2 all()" Rule="commonExpr">
     <Input>Products/all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.5 all()" Rule="commonExpr">
+  <TestCase Name="5.1.1.12.2 all()" Rule="commonExpr">
     <Input>EmailAddresses/all(lambda:true)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.6.1 primitive literal" Rule="filter">
+  <TestCase Name="5.1.1.13.1 primitive literal" Rule="filter">
     <Input>$filter=ReleaseDate gt 2013-05-24</Input>
   </TestCase>
-  <TestCase Name="5.1.1.6.4 $it" Rule="filter">
+  <TestCase Name="5.1.1.13.4 $it" Rule="firstMemberExpr">
+    <Input>$it/Completed</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.4 $it" Rule="filter">
     <Input>$filter=endswith($it,'.com')</Input>
   </TestCase>
-  <TestCase Name="5.1.1.6.4 $it with alias for entity reference" Rule="queryOptions">
+  <TestCase Name="5.1.1.13.4 $it with alias for entity reference" Rule="queryOptions">
     <Input>$filter=$it eq @ref&amp;@ref={"@odata.id":"http://host/service/ZqV5t"}</Input>
   </TestCase>
-  <TestCase Name="5.1.1.6.4 $it with entity reference" Rule="queryOptions">
+  <TestCase Name="5.1.1.13.4 $it with entity reference" Rule="queryOptions">
     <Input>$filter=$it eq {"@odata.id":"http://host/service/ZqV5t"}</Input>
   </TestCase>
-  <TestCase Name="5.1.1.7 Path expressions" Rule="commonExpr">
+  <TestCase Name="5.1.1.13.5 $root" Rule="odataRelativeUri">
+    <Input>Employees?$filter=LastName eq $root/Employees('A1245')/LastName</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.5 $root" Rule="odataRelativeUri">
+    <Input>ProductsOrderedBy(Customers=@c)?@c=[$root/Customers('ALFKI'),$root/Customers('BLAUS')]</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="boolCommonExpr">
+    <Input>$this eq 'Hugo'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="filter">
+    <Input>$filter=endswith($this,'.com')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="odataRelativeUri">
+    <Input>Customers?$select=EmailAddresses($filter=endswith($this,'.com'))</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="odataRelativeUri">
+    <Input>Customers?$select=Addresses($filter=endswith($this/Street,'gasse'))</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.13.6 $this" Rule="odataRelativeUri">
+    <Input>Customers?$select=Addresses(@a=$this;$filter=endswith(@a/Street,'gasse'))</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.14 Path expressions" Rule="commonExpr">
     <Input>Items</Input>
   </TestCase>
-  <TestCase Name="5.1.1.7 Path expressions - key access after set navigation" Rule="commonExpr">
+  <TestCase Name="5.1.1.14 Path expressions - key access after set navigation" Rule="commonExpr">
     <Input>Items(1)</Input>
   </TestCase>
-  <TestCase Name="5.1.1.8 aliases" Rule="queryOptions">
-    <Input>$filter=contains(Title,@word)&amp;@word='Black'</Input>
+  <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
+    <Input>$filter=Price/@Measures.Currency eq 'EUR'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.8 aliases" Rule="queryOptions">
-    <Input>$filter=Title eq @title&amp;@title='Wizard%20of%20Oz'</Input>
+  <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
+    <Input>$filter=Price/@Measures.Currency eq 'EUR'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.15 Annotation Values" Rule="orderBy">
+    <Input>$orderby=Price/@Measures.Currency</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.15 Annotation Values" Rule="orderBy">
+    <Input>$orderby=Price/@Measures.Currency#Reporting</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
+    <Input>$filter=Price/@Currency eq 'EUR'</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
+    <Input>$filter=@Core.Messages/any(m:m/severity eq 'error')</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
+    <Input>$filter=@Messages/any(m:m/severity eq 'error')</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - single navigation property" Rule="expand">
     <Input>$expand=Items</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - $ is optional" Rule="expand">
+    <Input>expand=Items</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - single navigation property" Rule="expand">
     <Input>$expand=Items/$ref</Input>
@@ -1464,8 +1647,14 @@
   <TestCase Name="5.1.2 Expand - multiple navigation properties, nested" Rule="expand">
     <Input>$expand=Customer,Items($expand=Product)</Input>
   </TestCase>
-  <TestCase Name="5.1.2 Expand - multiple navigation properties, nested" Rule="expand">
+  <TestCase Name="5.1.2 Expand - multiple navigation properties, nested - no $ prefix" Rule="expand">
+    <Input>expand=Customer,Items(expand=Product)</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - recursive expansion" Rule="expand">
     <Input>$expand=Customer($levels=4)</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - recursive expansion - no $ prefix" Rule="expand">
+    <Input>expand=Customer(levels=4)</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - multiple navigation properties, nested" Rule="expand">
     <Input>$expand=Customer,Items($expand=Product/$ref)</Input>
@@ -1488,14 +1677,20 @@
   <TestCase Name="5.1.2 Expand - $count" Rule="expand">
     <Input>$expand=Items/$count($filter=Name eq 'Hugo')</Input>
   </TestCase>
+  <TestCase Name="5.1.2 Expand - $count - no $ prefix for query options, still required for path segment" Rule="expand">
+    <Input>expand=Items/$count(filter=Name eq 'Hugo')</Input>
+  </TestCase>
   <TestCase Name="5.1.2 Expand - $count" Rule="expand">
     <Input>$expand=Items/$count($search=Hugo)</Input>
+  </TestCase>
+  <TestCase Name="5.1.2 Expand - $count" Rule="expand">
+    <Input>expand=Items/$count(search=Hugo)</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - no $count after $count" Rule="expand" FailAt="21">
     <Input>$expand=Items/$count($count=true)</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - multiple nested options" Rule="expand">
-    <Input>$expand=Items($select=Quantity;$expand=Product($select=Name,Price))</Input>
+    <Input>$expand=Items($select=Quantity;$expand=Product($select=Name,Price);@c=15)</Input>
   </TestCase>
   <TestCase Name="5.1.2 Expand - navigation property in complex type" Rule="expand">
     <Input>$expand=Address/Country</Input>
@@ -1518,8 +1713,14 @@
   <TestCase Name="5.1.2 Expand - star on complex path with $ref and $levels" Rule="expand">
     <Input>$expand=Address/*/$ref,Address/*($levels=max)</Input>
   </TestCase>
+  <TestCase Name="5.1.2 Expand - stream property" Rule="expand">
+    <Input>$expand=$value,Thumbnail</Input>
+  </TestCase>
   <TestCase Name="5.1.3 Select - simple" Rule="select">
     <Input>$select=Rating,ReleaseDate</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - $ is optional" Rule="select">
+    <Input>select=Rating,ReleaseDate</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - with star" Rule="select">
     <Input>$select=*</Input>
@@ -1554,8 +1755,20 @@
   <TestCase Name="5.1.3 Select - tricky" Rule="select">
     <Input>$select=Namespace.PreferredSupplier/AccountRepresentative,Address/Street,Address/Namespace.AddressWithLocation/Location</Input>
   </TestCase>
+  <TestCase Name="5.1.3 Select - nested select" Rule="select">
+    <Input>$select=Address($select=Street,City,Namespace.AddressWithLocation/Location)</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - nested filter etc." Rule="select">
+    <Input>$select=Addresses($filter=startswith(City,'H');$top=5;$skip=0;$count=true;$orderby=$it;$search=blue;$expand=Country;@c=15)</Input>
+  </TestCase>
   <TestCase Name="5.1.4 OrderBy" Rule="orderby">
     <Input>$orderby=Name</Input>
+  </TestCase>
+  <TestCase Name="5.1.4 OrderBy - case-insensitive" Rule="orderby">
+    <Input>$OrderBy=Name</Input>
+  </TestCase>
+  <TestCase Name="5.1.4 OrderBy - $ is optional" Rule="orderby">
+    <Input>OrderBy=Name</Input>
   </TestCase>
   <TestCase Name="5.1.4 OrderBy asc" Rule="orderby">
     <Input>$orderby=Name&#09;asc</Input>
@@ -1569,8 +1782,14 @@
   <TestCase Name="5.1.5 Top and Skip" Rule="queryOptions">
     <Input>$top=5&amp;$skip=10</Input>
   </TestCase>
+  <TestCase Name="5.1.5 Top and Skip - $ is optional" Rule="queryOptions">
+    <Input>top=5&amp;skip=10</Input>
+  </TestCase>
   <TestCase Name="5.1.6 Inlinecount" Rule="queryOptions">
     <Input>$count=true</Input>
+  </TestCase>
+  <TestCase Name="5.1.6 Inlinecount - $ is optional" Rule="queryOptions">
+    <Input>count=true</Input>
   </TestCase>
   <TestCase Name="5.1.6 Inlinecount" Rule="queryOptions">
     <Input>$count=false</Input>
@@ -1592,6 +1811,9 @@
   </TestCase>
   <TestCase Name="5.1.7 Search - simple term" Rule="queryOptions">
     <Input>$search=9,81</Input>
+  </TestCase>
+  <TestCase Name="5.1.7 Search - $ is optional" Rule="queryOptions">
+    <Input>search=blue</Input>
   </TestCase>
   <TestCase Name="5.1.7 Search - simple phrase" Rule="queryOptions">
     <Input>$search="blue%20green"</Input>
@@ -1660,13 +1882,37 @@
     <Input>http://serviceRoot/$all?$search=blue</Input>
   </TestCase>
   <TestCase Name="5.1.8 Format" Rule="queryOptions">
-    <Input>$format=json&amp;$format=atom&amp;$format=xml&amp;$format=text/html</Input>
+    <Input>$format=json&amp;$Format=atom&amp;$format=xml&amp;$format=text/html</Input>
+  </TestCase>
+  <TestCase Name="5.1.8 Format - $ is optional" Rule="queryOptions">
+    <Input>format=json</Input>
   </TestCase>
   <TestCase Name="5.1.8 Format - value is case-insensitive" Rule="queryOptions">
     <Input>$format=JSON&amp;$format=Atom&amp;$format=XML&amp;$format=text/html</Input>
   </TestCase>
   <TestCase Name="5.1.8 Format - media type" Rule="queryOptions">
     <Input>$format=text/html</Input>
+  </TestCase>
+  <TestCase Name="5.1.9 Index" Rule="queryOptions">
+    <Input>$index=42</Input>
+  </TestCase>
+  <TestCase Name="5.1.9 Index - $ is optional" Rule="queryOptions">
+    <Input>index=42</Input>
+  </TestCase>
+  <TestCase Name="5.1.9 Index" Rule="queryOptions" FailAt="7">
+    <Input>$index=fortytwo</Input>
+  </TestCase>
+  <TestCase Name="5.1.10 Compute" Rule="queryOptions">
+    <Input>$compute=Amount mul Product/TaxRate as Tax</Input>
+  </TestCase>
+  <TestCase Name="5.1.10 Compute - $ is optional" Rule="queryOptions">
+    <Input>compute=Amount mul Product/TaxRate as Tax</Input>
+  </TestCase>
+  <TestCase Name="5.1.10 Compute - many" Rule="queryOptions">
+    <Input>$compute=Amount mul Product/TaxRate as Tax,day(Time/Date) as WeekDay</Input>
+  </TestCase>
+  <TestCase Name="5.1.10 Compute - within $expand" Rule="queryOptions">
+    <Input>$expand=Sales($compute=Amount mul Product/TaxRate as Tax)</Input>
   </TestCase>
   <TestCase Name="Delta Link" Rule="deltatoken">
     <Input>$deltatoken=A@Lot_Has:Changed?=Here!</Input>
@@ -1747,11 +1993,20 @@
   <TestCase Name="Enumeration value in URI" Rule="enum">
     <Input>Sales.Pattern'Yellow'</Input>
   </TestCase>
+  <TestCase Name="Enumeration value in URI - without prefix" Rule="enum">
+    <Input>'Yellow'</Input>
+  </TestCase>
   <TestCase Name="Enumeration value in URI - multiple flag values" Rule="enum">
     <Input>Sales.Pattern'Solid,Yellow'</Input>
   </TestCase>
+  <TestCase Name="Enumeration value in URI - multiple flag values without prefix" Rule="enum">
+    <Input>'Solid,Yellow'</Input>
+  </TestCase>
   <TestCase Name="Enumeration value - in filter" Rule="filter">
     <Input>$filter=style eq Sales.Pattern'Yellow'</Input>
+  </TestCase>
+  <TestCase Name="Enumeration value - in filter without prefix" Rule="filter">
+    <Input>$filter=style eq 'Yellow'</Input>
   </TestCase>
   <TestCase Name="Enumeration value - in filter with has" Rule="filter">
     <Input>$filter=style has Sales.Pattern'Yellow'</Input>
@@ -2060,6 +2315,9 @@
   <TestCase Name="Header - odata-entitid" Rule="header">
     <Input>odata-entityid: ralf:handl</Input>
   </TestCase>
+  <TestCase Name="Header - entitid" Rule="header">
+    <Input>entityid: ralf:handl</Input>
+  </TestCase>
   <TestCase Name="Header - odata-entitid" Rule="header">
     <Input>odata-entityID: empty-path:/</Input>
   </TestCase>
@@ -2068,6 +2326,9 @@
   </TestCase>
   <TestCase Name="Header - odata-isolation" Rule="header">
     <Input>odata-isolation:sNapShoT</Input>
+  </TestCase>
+  <TestCase Name="Header - isolation" Rule="header">
+    <Input>isolation:sNapShoT</Input>
   </TestCase>
   <TestCase Name="Header - odata-maxversion" Rule="header">
     <Input>odata-maxversion: 4.0</Input>
@@ -2081,8 +2342,14 @@
   <TestCase Name="Header - odata-version" Rule="header">
     <Input>odata-version: 4.0</Input>
   </TestCase>
-  <TestCase Name="Preferences - allow  entity references" Rule="prefer">
+  <TestCase Name="Header - odata-version" Rule="header">
+    <Input>odata-version: 4.01</Input>
+  </TestCase>
+  <TestCase Name="Preferences - allow entity references and maximum page size" Rule="prefer">
     <Input>Prefer: odata.allow-entityreferences,odata.maxpagesize=20</Input>
+  </TestCase>
+  <TestCase Name="Preferences - allow entity references and maximum page size - no prefix" Rule="prefer">
+    <Input>Prefer: allow-entityreferences,maxpagesize=20</Input>
   </TestCase>
   <TestCase Name="Preferences - callback" Rule="preference">
     <Input>odata.callback;url="please://call/me?back#here"</Input>
@@ -2096,8 +2363,26 @@
   <TestCase Name="Preferences - callback" Rule="preference">
     <Input>odata.callback;url="some:/where"</Input>
   </TestCase>
+  <TestCase Name="Preferences - without prefix" Rule="preference">
+    <Input>callback;url="some:/where"</Input>
+  </TestCase>
   <TestCase Name="Preferences - continue on error" Rule="preference">
     <Input>odata.continue-on-error</Input>
+  </TestCase>
+  <TestCase Name="Preferences - continue on error - no prefix" Rule="preference">
+    <Input>continue-on-error</Input>
+  </TestCase>
+  <TestCase Name="Preferences - continue on error with value true" Rule="preference">
+    <Input>odata.continue-on-error=true</Input>
+  </TestCase>
+  <TestCase Name="Preferences - continue on error with value true" Rule="preference">
+    <Input>continue-on-error=true</Input>
+  </TestCase>
+  <TestCase Name="Preferences - continue on error with value false" Rule="preference">
+    <Input>odata.continue-on-error=false</Input>
+  </TestCase>
+  <TestCase Name="Preferences - continue on error with value false" Rule="preference">
+    <Input>continue-on-error=false</Input>
   </TestCase>
   <TestCase Name="Preferences - include annotations - all" Rule="preference">
     <Input>odata.include-annotations="*"</Input>
@@ -2148,8 +2433,14 @@
   <TestCase Name="Preferences - include annotations - several" Rule="preference">
     <Input>odata.include-annotations="Namespace.SomeTerm,Model.AnotherTerm,Namespace.*"</Input>
   </TestCase>
+  <TestCase Name="Preferences - include annotations - no prefix" Rule="preference">
+    <Input>include-annotations="*"</Input>
+  </TestCase>
   <TestCase Name="Preferences - maxpagesize - ok" Rule="preference">
     <Input>odata.maxpagesize=50</Input>
+  </TestCase>
+  <TestCase Name="Preferences - maxpagesize - no prefix" Rule="preference">
+    <Input>maxpagesize=50</Input>
   </TestCase>
   <TestCase Name="Preferences - maxpagesize - not zero" Rule="maxpagesizePreference" FailAt="18">
     <Input>odata.maxpagesize=0</Input>
@@ -2169,11 +2460,26 @@
   <TestCase Name="Preferences - track changes" Rule="preference">
     <Input>odata.track-changes</Input>
   </TestCase>
+  <TestCase Name="Preferences - track changes - no prefix" Rule="preference">
+    <Input>track-changes</Input>
+  </TestCase>
   <TestCase Name="Preferences - wait" Rule="preference">
     <Input>wait=0</Input>
   </TestCase>
   <TestCase Name="Preferences - wait with bad whitespace" Rule="preference">
     <Input>wait = 0</Input>
+  </TestCase>
+  <TestCase Name="Schema Version - numeric" Rule="systemQueryOption">
+    <Input>$schemaversion=0001</Input>
+  </TestCase>
+  <TestCase Name="Schema Version - alphanumeric" Rule="systemQueryOption">
+    <Input>schemaversion=second</Input>
+  </TestCase>
+  <TestCase Name="Schema Version - semantic" Rule="systemQueryOption">
+    <Input>schemaversion=1.42.2</Input>
+  </TestCase>
+  <TestCase Name="Schema Version - latest" Rule="systemQueryOption">
+    <Input>$schemaversion=*</Input>
   </TestCase>
   <TestCase Name="ODATA-633 hex pair bug" Rule="stringInJSON">
     <Input>"b%75g"</Input>
