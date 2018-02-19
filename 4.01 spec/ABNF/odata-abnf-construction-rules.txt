@@ -1065,7 +1065,7 @@ isolation  = [ "OData-" ] "Isolation" ":" OWS "snapshot"
 odata-maxversion = "OData-MaxVersion" ":" OWS 1*DIGIT "." 1*DIGIT     
 odata-version    = "OData-Version"    ":" OWS "4.0" [ oneToNine ]
       
-prefer     = "Prefer" ":" OWS preference *( COMMA preference )       
+prefer     = "Prefer" ":" OWS preference *( OWS "," OWS preference )       
 preference = allowEntityReferencesPreference
            / callbackPreference
            / continueOnErrorPreference
@@ -1085,7 +1085,7 @@ callbackPreference = [ "odata." ] "callback" OWS ";" OWS "url" EQ-h DQUOTE URI D
 continueOnErrorPreference = [ "odata." ] "continue-on-error" [ EQ-h booleanValue ]   
            
 includeAnnotationsPreference = [ "odata." ] "include-annotations" EQ-h DQUOTE annotationsList DQUOTE
-annotationsList      = annotationIdentifier *(COMMA annotationIdentifier)
+annotationsList      = annotationIdentifier *("," annotationIdentifier)
 annotationIdentifier = [ excludeOperator ]
                        ( STAR 
                        / namespace "." ( termName / STAR ) 
