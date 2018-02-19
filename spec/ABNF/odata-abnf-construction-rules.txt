@@ -1,7 +1,7 @@
 ;------------------------------------------------------------------------------
-; OData ABNF Construction Rules Version 4.0
+; OData ABNF Construction Rules Version 4.01
 ;------------------------------------------------------------------------------
-; Working Draft 09
+; Working Draft 06
 ; 15 February 2018
 ;------------------------------------------------------------------------------
 ;
@@ -10,8 +10,8 @@
 ;   https://www.oasis-open.org/committees/odata
 ;
 ; Chairs:
-;   - Barbara Hartel (barbara.hartel@sap.com), SAP SE
-;   - Ram Jeyaraman (Ram.Jeyaraman@microsoft.com), Microsoft
+;   - Ralf Handl (ralf.handl@sap.com), SAP SE
+;   - Michael Pizzo (mikep@microsoft.com), Microsoft
 ;
 ; Editors:
 ;   - Ralf Handl (ralf.handl@sap.com), SAP SE
@@ -20,29 +20,18 @@
 ;
 ; Additional artifacts: 
 ;   This grammar is one component of a Work Product which consists of:
-;   - OData Version 4.0 Part 1: Protocol
-;   - OData Version 4.0 Part 2: URL Conventions
-;   - OData Version 4.0 Part 3: Common Schema Definition Language (CSDL)
-;   - OData ABNF Construction Rules Version 4.0 (this document)
-;   - OData ABNF Test Cases
-;   - OData Core Vocabulary
-;   - OData Capabilities Vocabulary
-;   - OData Measures Vocabulary
-;   - OData Metadata Service Entity Model
-;   - OData EDMX XML Schema
-;   - OData EDM XML Schema
+;   - OData Version 4.01 Part 1: Protocol
+;   - OData Version 4.01 Part 2: URL Conventions
+;   - OData ABNF Construction Rules Version 4.01 (this document)
+;   - OData ABNF Test Cases Version 4.01
 ;
 ; Related work:
-;   This work product is related to the following two Work Products, each of 
-;   which define alternate formats for OData payloads
-;   - OData Atom Format Version 4.0
-;   - OData JSON Format Version 4.0
 ;   This specification replaces or supersedes:
-;   - None
-;
-; Declared XML namespaces:
-;   - http://docs.oasis-open.org/odata/ns/edmx
-;   - http://docs.oasis-open.org/odata/ns/edm
+;   - OData ABNF Construction Rules Version 4.0
+;   This work product is related to
+;   - OData Common Schema Definition Language (CSDL) JSON Representation Version 4.01
+;   - OData Common Schema Definition Language (CSDL) XML Representation Version 4.01
+;   - OData JSON Format Version 4.01
 ;
 ; Abstract:
 ;   The Open Data Protocol (OData) enables the creation of REST-based data
@@ -99,10 +88,10 @@ serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive
               "/" *( segment-nz "/" )
 
 ; Note: dollar-prefixed path segments are case-sensitive!
-odataRelativeUri = '$batch'
+odataRelativeUri = '$batch'  [ "?" batchOptions ]
                  / '$entity' "?" entityOptions  
                  / '$entity' "/" qualifiedEntityTypeName "?" entityCastOptions  
-                 / '$metadata' [ "?" format ] [ context ]
+                 / '$metadata' [ "?" metadataOptions ] [ context ]
                  / resourcePath [ "?" queryOptions ]
 
 
@@ -119,23 +108,26 @@ resourcePath = entitySetName                  [ collectionNavigation ]
              / complexFunctionImportCall      [ complexPath ] 
              / primitiveColFunctionImportCall [ primitiveColPath ] 
              / primitiveFunctionImportCall    [ primitivePath ] 
+             / functionImportCallNoParens
              / crossjoin
              / '$all'                         [ "/" qualifiedEntityTypeName ]
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ] [ collectionNavPath ]
 collectionNavPath    = keyPredicate [ singleNavigation ]
+                     / filterInPath [ collectionNavigation ]
+                     / each [ boundOperation ]
                      / boundOperation
                      / count
                      / ref
 
-keyPredicate     = simpleKey / compoundKey ;/ keyPathSegments
+keyPredicate     = simpleKey / compoundKey / keyPathSegments
 simpleKey        = OPEN ( parameterAlias / keyPropertyValue ) CLOSE
 compoundKey      = OPEN keyValuePair *( COMMA keyValuePair ) CLOSE
 keyValuePair     = ( primitiveKeyProperty / keyPropertyAlias  ) EQ ( parameterAlias / keyPropertyValue )
 keyPropertyValue = primitiveLiteral
 keyPropertyAlias = odataIdentifier
-;keyPathSegments  = 1*( "/" keyPathLiteral )
-;keyPathLiteral   = *pchar
+keyPathSegments  = 1*( "/" keyPathLiteral )
+keyPathLiteral   = *pchar
 
 singleNavigation = [ "/" qualifiedEntityTypeName ] 
                    [ "/" propertyPath
@@ -152,21 +144,26 @@ propertyPath = entityColNavigationProperty [ collectionNavigation ]
              / primitiveProperty           [ primitivePath ]
              / streamProperty              [ boundOperation ]
 
-primitiveColPath = count / boundOperation
+primitiveColPath = count / boundOperation / ordinalIndex
 
 primitivePath  = value / boundOperation
 
-complexColPath = [ "/" qualifiedComplexTypeName ] 
-                 [ count / boundOperation ]
+complexColPath = ordinalIndex
+               / [ "/" qualifiedComplexTypeName ] [ count / boundOperation ]
 
 complexPath    = [ "/" qualifiedComplexTypeName ] 
                  [ "/" propertyPath 
                  / boundOperation
                  ]
+                 
+filterInPath = '/$filter' EQ parameterAlias
 
+each  = '/$each'
 count = '/$count'
 ref   = '/$ref'
 value = '/$value'
+
+ordinalIndex = "/" 1*DIGIT
 
 ; boundOperation segments can only be composed if the type of the previous segment 
 ; matches the type of the first parameter of the action or function being called.
@@ -178,6 +175,7 @@ boundOperation = "/" ( boundActionCall
                      / boundComplexFunctionCall      [ complexPath ]
                      / boundPrimitiveColFunctionCall [ primitiveColPath ] 
                      / boundPrimitiveFunctionCall    [ primitivePath ] 
+                     / boundFunctionCallNoParens
                      )
 
 actionImportCall = actionImport
@@ -197,6 +195,13 @@ boundComplexColFunctionCall   = namespace "." complexColFunction   functionParam
 boundPrimitiveFunctionCall    = namespace "." primitiveFunction    functionParameters
 boundPrimitiveColFunctionCall = namespace "." primitiveColFunction functionParameters
 
+boundFunctionCallNoParens     = namespace "." entityFunction
+                              / namespace "." entityColFunction
+                              / namespace "." complexFunction
+                              / namespace "." complexColFunction
+                              / namespace "." primitiveFunction
+                              / namespace "." primitiveColFunction
+
 entityFunctionImportCall       = entityFunctionImport       functionParameters
 entityColFunctionImportCall    = entityColFunctionImport    functionParameters
 complexFunctionImportCall      = complexFunctionImport      functionParameters
@@ -204,10 +209,17 @@ complexColFunctionImportCall   = complexColFunctionImport   functionParameters
 primitiveFunctionImportCall    = primitiveFunctionImport    functionParameters
 primitiveColFunctionImportCall = primitiveColFunctionImport functionParameters
 
+functionImportCallNoParens     = entityFunctionImport
+                               / entityColFunctionImport
+                               / complexFunctionImport
+                               / complexColFunctionImport
+                               / primitiveFunctionImport
+                               / primitiveColFunctionImport
+
 functionParameters = OPEN [ functionParameter *( COMMA functionParameter ) ] CLOSE
 functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
 parameterName      = odataIdentifier
-parameterAlias     = AT odataIdentifier
+parameterAlias     = AT odataIdentifier 
 
 crossjoin = '$crossjoin' OPEN
             entitySetName *( COMMA entitySetName )
@@ -221,8 +233,17 @@ crossjoin = '$crossjoin' OPEN
 queryOptions = queryOption *( "&" queryOption )        
 queryOption  = systemQueryOption  
              / aliasAndValue 
+             / nameAndValue
              / customQueryOption  
+
+batchOptions = batchOption *( "&" batchOption )   
+batchOption  = format
+             /customQueryOption   
              
+metadataOptions = metadataOption *( "&" metadataOption )   
+metadataOption  = format
+                /customQueryOption   
+
 entityOptions  = *( entityIdOption "&" ) id *( "&" entityIdOption )
 entityIdOption = format
                / customQueryOption
@@ -231,23 +252,31 @@ entityCastOption  = entityIdOption
                   / expand 
                   / select
 
-id = '$id' EQ IRI-in-query       
+id = ( "$id" / "id" ) EQ IRI-in-query       
 
-systemQueryOption = deltatoken
+systemQueryOption = compute
+                  / deltatoken
                   / expand 
                   / filter 
                   / format 
                   / id
                   / inlinecount 
                   / orderby 
+                  / schemaversion
                   / search
                   / select 
                   / skip 
                   / skiptoken
                   / top 
+                  / index
 
-expand            = '$expand' EQ expandItem *( COMMA expandItem )
+compute          = ( "$compute" / "compute" ) EQ computeItem *( COMMA computeItem )
+computeItem      = commonExpr RWS "as" RWS computedProperty
+computedProperty = odataIdentifier         
+
+expand            = ( "$expand" / "expand" ) EQ expandItem *( COMMA expandItem )
 expandItem        = STAR [ ref / OPEN levels CLOSE ]
+                  / "$value"
                   / expandPath
                     [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
@@ -255,7 +284,7 @@ expandItem        = STAR [ ref / OPEN levels CLOSE ]
                     ]
 expandPath        = [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
                     *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
-                    ( STAR / navigationProperty [ "/" qualifiedEntityTypeName ] )
+                    ( STAR / streamProperty / navigationProperty [ "/" qualifiedEntityTypeName ] )
 expandCountOption = filter
                   / search
 expandRefOption   = expandCountOption
@@ -266,19 +295,23 @@ expandRefOption   = expandCountOption
 expandOption      = expandRefOption
                   / select 
                   / expand
+                  / compute
                   / levels
+                  / aliasAndValue
                 
-levels = '$levels' EQ ( oneToNine *DIGIT / 'max' )
+levels = ( "$levels" / "levels" ) EQ ( oneToNine *DIGIT / "max" )
 
-filter = '$filter' EQ boolCommonExpr
+filter = ( "$filter" / "filter" ) EQ boolCommonExpr
 
-orderby     = '$orderby' EQ orderbyItem *( COMMA orderbyItem )
-orderbyItem = commonExpr [ RWS ( 'asc' / 'desc' ) ]
+orderby     = ( "$orderby" / "orderby" ) EQ orderbyItem *( COMMA orderbyItem )
+orderbyItem = commonExpr [ RWS ( "asc" / "desc" ) ]
 
-skip = '$skip' EQ 1*DIGIT
-top  = '$top'  EQ 1*DIGIT
+skip = ( "$skip" / "skip" ) EQ 1*DIGIT
+top  = ( "$top"  / "top"  ) EQ 1*DIGIT
 
-format = '$format' EQ
+index  = ( "$index" / "index" ) EQ 1*DIGIT
+
+format = ( "$format" / "format" ) EQ
          ( "atom"
          / "json" 
          / "xml"
@@ -286,9 +319,11 @@ format = '$format' EQ
          )                     ; format specific to the specific data service> or
                                ; <An IANA-defined [IANA-MMT] content type>
                           
-inlinecount = '$count' EQ booleanValue
+inlinecount = ( "$count" / "count" ) EQ booleanValue
 
-search     = '$search' EQ BWS searchExpr
+schemaversion   = ( "$schemaversion" / "schemaversion" ) EQ ( STAR / 1*unreserved )
+
+search     = ( "$search" / "search" ) EQ BWS searchExpr
 searchExpr = ( OPEN BWS searchExpr BWS CLOSE
              / searchTerm 
              ) [ searchOrExpr
@@ -307,7 +342,7 @@ searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
 ; Expressing this in ABNF is somewhat clumsy, so the following rule is overly generous.
 searchWord   = 1*( ALPHA / DIGIT / COMMA / "." / pct-encoded )
 
-select         = '$select' EQ selectItem *( COMMA selectItem )
+select         = ( "$select" / "select" ) EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
                / allOperationsInSchema 
                / [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
@@ -316,11 +351,15 @@ selectItem     = STAR
                  / qualifiedFunctionName  
                  )
 selectProperty = primitiveProperty  
-               / primitiveColProperty 
+               / primitiveColProperty [ OPEN selectOptionPC *( SEMI selectOptionPC ) CLOSE ]
                / navigationProperty
-               / selectPath [ "/" selectProperty ]
-selectPath     = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ]               
-
+               / selectPath [ OPEN selectOption *( SEMI selectOption ) CLOSE
+                            / "/" selectProperty 
+                            ]
+selectPath     = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] 
+selectOptionPC = filter / search / inlinecount / orderby / skip / top 
+selectOption   = selectOptionPC
+               / compute / select / expand / aliasAndValue
 
 allOperationsInSchema = namespace "." STAR                 
 
@@ -332,11 +371,13 @@ qualifiedFunctionName = namespace "." function [ OPEN parameterNames CLOSE ]
 ; The names of all non-binding parameters, separated by commas 
 parameterNames = parameterName *( COMMA parameterName )
 
-deltatoken = '$deltatoken' EQ 1*( qchar-no-AMP )
+deltatoken = "$deltatoken" EQ 1*( qchar-no-AMP )
 
-skiptoken = '$skiptoken' EQ 1*( qchar-no-AMP )
+skiptoken = "$skiptoken" EQ 1*( qchar-no-AMP )
 
 aliasAndValue = parameterAlias EQ parameterValue
+
+nameAndValue = parameterName EQ parameterValue
 
 parameterValue = arrayOrObject
                / commonExpr
@@ -398,6 +439,7 @@ commonExpr = ( primitiveLiteral
              / negateExpr 
              / methodCallExpr 
              / parenExpr 
+             / listExpr
              / castExpr 
              / isofExpr
              / notExpr
@@ -406,6 +448,7 @@ commonExpr = ( primitiveLiteral
              / subExpr 
              / mulExpr 
              / divExpr
+             / divbyExpr 
              / modExpr
              ]  
              [ eqExpr 
@@ -415,6 +458,7 @@ commonExpr = ( primitiveLiteral
              / gtExpr 
              / geExpr 
              / hasExpr 
+             / inExpr 
              ]
              [ andExpr 
              / orExpr 
@@ -430,6 +474,7 @@ firstMemberExpr = memberExpr
 memberExpr = [ qualifiedEntityTypeName "/" ]
              ( propertyPathExpr
              / boundFunctionExpr 
+             / annotationExpr
              )
              
 propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ] 
@@ -441,10 +486,21 @@ propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ]
                    / streamProperty              [ primitivePathExpr ]
                    )
                    
+annotationExpr = annotation
+                 [ collectionPathExpr
+                 / singleNavigationExpr
+                 / complexPathExpr
+                 / primitivePathExpr
+                 ]
+                 
+annotation          = AT [ namespace "." ] termName [ '#' annotationQualifier ]
+annotationQualifier = odataIdentifier                
+                   
 inscopeVariableExpr  = implicitVariableExpr 
                      / parameterAlias
                      / lambdaVariableExpr ; only allowed inside a lambdaPredicateExpr
 implicitVariableExpr = '$it'              ; the current instance of the resource identified by the resource path
+                     / '$this'            ; the instance on which the query option is evaluated
 lambdaVariableExpr   = odataIdentifier
 
 collectionNavigationExpr = [ "/" qualifiedEntityTypeName ]
@@ -457,17 +513,19 @@ singleNavigationExpr = "/" memberExpr
 complexColPathExpr = [ "/" qualifiedComplexTypeName ]
                      [ collectionPathExpr ]
  
-collectionPathExpr = count 
+collectionPathExpr = count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                    / "/" boundFunctionExpr
+                   / "/" annotationExpr
                    / "/" anyExpr
                    / "/" allExpr
  
 complexPathExpr = [ "/" qualifiedComplexTypeName ]
                   [ "/" propertyPathExpr 
                   / "/" boundFunctionExpr 
+                  / "/" annotationExpr
                   ]
 
-primitivePathExpr = "/" boundFunctionExpr
+primitivePathExpr = "/" [ annotationExpr / boundFunctionExpr ]
 
 boundFunctionExpr = functionExpr ; boundFunction segments can only be composed if the type of the    
                                  ; previous segment matches the type of the first function parameter
@@ -484,8 +542,8 @@ functionExpr = namespace "."
 functionExprParameters = OPEN [ functionExprParameter *( COMMA functionExprParameter ) ] CLOSE
 functionExprParameter  = parameterName EQ ( parameterAlias / parameterValue )
 
-anyExpr = 'any' OPEN BWS [ lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr ] BWS CLOSE
-allExpr = 'all' OPEN BWS   lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr   BWS CLOSE
+anyExpr = "any" OPEN BWS [ lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr ] BWS CLOSE
+allExpr = "all" OPEN BWS   lambdaVariableExpr BWS COLON BWS lambdaPredicateExpr   BWS CLOSE
 lambdaPredicateExpr = boolCommonExpr ; containing at least one lambdaVariableExpr
 
 methodCallExpr = indexOfMethodCallExpr 
@@ -520,68 +578,76 @@ boolMethodCallExpr = endsWithMethodCallExpr
                    / startsWithMethodCallExpr 
                    / containsMethodCallExpr                                          
                    / intersectsMethodCallExpr 
+                   / hasSubsetMethodCallExpr
+                   / hasSubsequenceMethodCallExpr
 
-concatMethodCallExpr     = 'concat'     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-containsMethodCallExpr   = 'contains'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-endsWithMethodCallExpr   = 'endswith'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-indexOfMethodCallExpr    = 'indexof'    OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-lengthMethodCallExpr     = 'length'     OPEN BWS commonExpr BWS CLOSE
-startsWithMethodCallExpr = 'startswith' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-substringMethodCallExpr  = 'substring'  OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
-toLowerMethodCallExpr    = 'tolower'    OPEN BWS commonExpr BWS CLOSE
-toUpperMethodCallExpr    = 'toupper'    OPEN BWS commonExpr BWS CLOSE
-trimMethodCallExpr       = 'trim'       OPEN BWS commonExpr BWS CLOSE
+concatMethodCallExpr     = "concat"     OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+containsMethodCallExpr   = "contains"   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+endsWithMethodCallExpr   = "endswith"   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+indexOfMethodCallExpr    = "indexof"    OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+lengthMethodCallExpr     = "length"     OPEN BWS commonExpr BWS CLOSE
+startsWithMethodCallExpr = "startswith" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+substringMethodCallExpr  = "substring"  OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS [ COMMA BWS commonExpr BWS ] CLOSE
+toLowerMethodCallExpr    = "tolower"    OPEN BWS commonExpr BWS CLOSE
+toUpperMethodCallExpr    = "toupper"    OPEN BWS commonExpr BWS CLOSE
+trimMethodCallExpr       = "trim"       OPEN BWS commonExpr BWS CLOSE
 
-yearMethodCallExpr               = 'year'               OPEN BWS commonExpr BWS CLOSE
-monthMethodCallExpr              = 'month'              OPEN BWS commonExpr BWS CLOSE
-dayMethodCallExpr                = 'day'                OPEN BWS commonExpr BWS CLOSE
-hourMethodCallExpr               = 'hour'               OPEN BWS commonExpr BWS CLOSE
-minuteMethodCallExpr             = 'minute'             OPEN BWS commonExpr BWS CLOSE
-secondMethodCallExpr             = 'second'             OPEN BWS commonExpr BWS CLOSE
-fractionalsecondsMethodCallExpr  = 'fractionalseconds'  OPEN BWS commonExpr BWS CLOSE
-totalsecondsMethodCallExpr       = 'totalseconds'       OPEN BWS commonExpr BWS CLOSE
-dateMethodCallExpr               = 'date'               OPEN BWS commonExpr BWS CLOSE
-timeMethodCallExpr               = 'time'               OPEN BWS commonExpr BWS CLOSE
-totalOffsetMinutesMethodCallExpr = 'totaloffsetminutes' OPEN BWS commonExpr BWS CLOSE 
+yearMethodCallExpr               = "year"               OPEN BWS commonExpr BWS CLOSE
+monthMethodCallExpr              = "month"              OPEN BWS commonExpr BWS CLOSE
+dayMethodCallExpr                = "day"                OPEN BWS commonExpr BWS CLOSE
+hourMethodCallExpr               = "hour"               OPEN BWS commonExpr BWS CLOSE
+minuteMethodCallExpr             = "minute"             OPEN BWS commonExpr BWS CLOSE
+secondMethodCallExpr             = "second"             OPEN BWS commonExpr BWS CLOSE
+fractionalsecondsMethodCallExpr  = "fractionalseconds"  OPEN BWS commonExpr BWS CLOSE
+totalsecondsMethodCallExpr       = "totalseconds"       OPEN BWS commonExpr BWS CLOSE
+dateMethodCallExpr               = "date"               OPEN BWS commonExpr BWS CLOSE
+timeMethodCallExpr               = "time"               OPEN BWS commonExpr BWS CLOSE
+totalOffsetMinutesMethodCallExpr = "totaloffsetminutes" OPEN BWS commonExpr BWS CLOSE 
 
-minDateTimeMethodCallExpr = 'mindatetime' OPEN BWS CLOSE
-maxDateTimeMethodCallExpr = 'maxdatetime' OPEN BWS CLOSE
-nowMethodCallExpr         = 'now' OPEN BWS CLOSE
+minDateTimeMethodCallExpr = "mindatetime" OPEN BWS CLOSE
+maxDateTimeMethodCallExpr = "maxdatetime" OPEN BWS CLOSE
+nowMethodCallExpr         = "now"         OPEN BWS CLOSE
 
-roundMethodCallExpr   = 'round'   OPEN BWS commonExpr BWS CLOSE
-floorMethodCallExpr   = 'floor'   OPEN BWS commonExpr BWS CLOSE
-ceilingMethodCallExpr = 'ceiling' OPEN BWS commonExpr BWS CLOSE
+roundMethodCallExpr   = "round"   OPEN BWS commonExpr BWS CLOSE
+floorMethodCallExpr   = "floor"   OPEN BWS commonExpr BWS CLOSE
+ceilingMethodCallExpr = "ceiling" OPEN BWS commonExpr BWS CLOSE
 
-distanceMethodCallExpr   = 'geo.distance'   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
-geoLengthMethodCallExpr  = 'geo.length'     OPEN BWS commonExpr BWS CLOSE
-intersectsMethodCallExpr = 'geo.intersects' OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+distanceMethodCallExpr   = "geo.distance"   OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+geoLengthMethodCallExpr  = "geo.length"     OPEN BWS commonExpr BWS CLOSE
+intersectsMethodCallExpr = "geo.intersects" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
-parenExpr     = OPEN BWS commonExpr     BWS CLOSE
+hasSubsetMethodCallExpr      = "hassubset"      OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
+hasSubsequenceMethodCallExpr = "hassubsequence" OPEN BWS commonExpr BWS COMMA BWS commonExpr BWS CLOSE
 
-andExpr = RWS 'and' RWS boolCommonExpr
-orExpr  = RWS 'or'  RWS boolCommonExpr
+parenExpr = OPEN BWS commonExpr BWS CLOSE
+listExpr  = OPEN BWS commonExpr BWS *( COMMA BWS commonExpr BWS ) CLOSE
 
-eqExpr = RWS 'eq' RWS commonExpr     
-neExpr = RWS 'ne' RWS commonExpr
-ltExpr = RWS 'lt' RWS commonExpr
-leExpr = RWS 'le' RWS commonExpr
-gtExpr = RWS 'gt' RWS commonExpr
-geExpr = RWS 'ge' RWS commonExpr
+andExpr = RWS "and" RWS boolCommonExpr
+orExpr  = RWS "or"  RWS boolCommonExpr
 
-hasExpr = RWS 'has' RWS enum
+eqExpr = RWS "eq" RWS commonExpr     
+neExpr = RWS "ne" RWS commonExpr
+ltExpr = RWS "lt" RWS commonExpr
+leExpr = RWS "le" RWS commonExpr
+gtExpr = RWS "gt" RWS commonExpr
+geExpr = RWS "ge" RWS commonExpr
+inExpr = RWS "in" RWS commonExpr
 
-addExpr = RWS 'add' RWS commonExpr
-subExpr = RWS 'sub' RWS commonExpr
-mulExpr = RWS 'mul' RWS commonExpr
-divExpr = RWS 'div' RWS commonExpr
-modExpr = RWS 'mod' RWS commonExpr
+hasExpr = RWS "has" RWS enum
+
+addExpr   = RWS "add"   RWS commonExpr
+subExpr   = RWS "sub"   RWS commonExpr
+mulExpr   = RWS "mul"   RWS commonExpr
+divExpr   = RWS "div"   RWS commonExpr
+divbyExpr = RWS "divby" RWS commonExpr
+modExpr   = RWS "mod"   RWS commonExpr
 
 negateExpr = "-" BWS commonExpr
 
-notExpr = 'not' RWS boolCommonExpr
+notExpr = "not" RWS boolCommonExpr
 
-isofExpr = 'isof' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
-castExpr = 'cast' OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
+isofExpr = "isof" OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
+castExpr = "cast" OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
 
 
 ;------------------------------------------------------------------------------
@@ -819,9 +885,9 @@ primitiveLiteral = nullValue                  ; plain values up to int64Value
                  / int32Value 
                  / int64Value 
                  / string                     ; single-quoted
-                 / duration                   ; all others are quoted and prefixed
-                 / binary 
+                 / duration
                  / enum
+                 / binary                     ; all others are quoted and prefixed 
                  / geographyCollection 
                  / geographyLineString 
                  / geographyMultiLineString 
@@ -876,10 +942,10 @@ base64char  = ALPHA / DIGIT / "-" / "_"
 
 booleanValue = "true" / "false"
 
-decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ] [ "e" [ SIGN ] 1*DIGIT ]
-doubleValue = decimalValue / nanInfinity ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
-singleValue = decimalValue / nanInfinity ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
-nanInfinity = 'NaN' / '-INF' / 'INF'
+decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ] [ "e" [ SIGN ] 1*DIGIT ] / nanInfinity
+doubleValue  = decimalValue ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
+singleValue  = decimalValue ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
+nanInfinity  = 'NaN' / '-INF' / 'INF'
 
 guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
 
@@ -897,12 +963,12 @@ dateValue = year "-" month "-" day
 dateTimeOffsetValue      = year "-" month "-" day "T" timeOfDayValue      ( "Z" / SIGN hour ":"   minute )
 dateTimeOffsetValueInUrl = year "-" month "-" day "T" timeOfDayValueInUrl ( "Z" / SIGN hour COLON minute )
 
-duration      = "duration" SQUOTE durationValue SQUOTE
+duration      = [ "duration" ] SQUOTE durationValue SQUOTE
 durationValue = [ SIGN ] "P" [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT [ "." 1*DIGIT ] "S" ] ]
      ; the above is an approximation of the rules for an xml dayTimeDuration.
      ; see the lexical representation for dayTimeDuration in http://www.w3.org/TR/xmlschema11-2#dayTimeDuration for more information
 
-timeOfDayValue = hour ":" minute [ ":" second [ "." fractionalSeconds ] ]
+timeOfDayValue      = hour ":"   minute [ ":"   second [ "." fractionalSeconds ] ]
 timeOfDayValueInUrl = hour COLON minute [ COLON second [ "." fractionalSeconds ] ]
  
 oneToNine       = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
@@ -919,7 +985,7 @@ minute = zeroToFiftyNine
 second = zeroToFiftyNine       
 fractionalSeconds = 1*12DIGIT
 
-enum            = qualifiedEnumTypeName SQUOTE enumValue SQUOTE
+enum            = [ qualifiedEnumTypeName ] SQUOTE enumValue SQUOTE
 enumValue       = singleEnumValue *( COMMA singleEnumValue )
 singleEnumValue = enumerationMember / enumMemberValue
 enumMemberValue = int64Value
@@ -985,8 +1051,8 @@ geometryPrefix  = "geometry"
 ;------------------------------------------------------------------------------
 
 header = content-id
-       / odata-entityid
-       / odata-isolation
+       / entityid 
+       / isolation
        / odata-maxversion
        / odata-version
        / prefer
@@ -994,10 +1060,10 @@ header = content-id
 content-id = "Content-ID" ":" OWS request-id
 request-id = 1*unreserved
        
-odata-entityid   = "OData-EntityID"   ":" OWS IRI-in-header
-odata-isolation  = "OData-Isolation"  ":" OWS "snapshot"
+entityid   = [ "OData-" ] "EntityID" ":" OWS IRI-in-header
+isolation  = [ "OData-" ] "Isolation" ":" OWS "snapshot"
 odata-maxversion = "OData-MaxVersion" ":" OWS 1*DIGIT "." 1*DIGIT     
-odata-version    = "OData-Version"    ":" OWS "4.0"
+odata-version    = "OData-Version"    ":" OWS "4.0" [ oneToNine ]
       
 prefer     = "Prefer" ":" OWS preference *( COMMA preference )       
 preference = allowEntityReferencesPreference
@@ -1012,13 +1078,13 @@ preference = allowEntityReferencesPreference
            ; and everything allowed by https://tools.ietf.org/html/rfc7240
            ; / ( parameter / token ) *( OWS ";" [ OWS ( parameter / token ) ] )
            
-allowEntityReferencesPreference = "odata.allow-entityreferences"
+allowEntityReferencesPreference = [ "odata." ] "allow-entityreferences"
 
-callbackPreference = "odata.callback" OWS ";" OWS "url" EQ-h DQUOTE URI DQUOTE
+callbackPreference = [ "odata." ] "callback" OWS ";" OWS "url" EQ-h DQUOTE URI DQUOTE
 
-continueOnErrorPreference = "odata.continue-on-error"           
+continueOnErrorPreference = [ "odata." ] "continue-on-error" [ EQ-h booleanValue ]   
            
-includeAnnotationsPreference = "odata.include-annotations" EQ-h DQUOTE annotationsList DQUOTE
+includeAnnotationsPreference = [ "odata." ] "include-annotations" EQ-h DQUOTE annotationsList DQUOTE
 annotationsList      = annotationIdentifier *(COMMA annotationIdentifier)
 annotationIdentifier = [ excludeOperator ]
                        ( STAR 
@@ -1027,13 +1093,13 @@ annotationIdentifier = [ excludeOperator ]
                        [ "#" odataIdentifier ]
 excludeOperator      = "-"
            
-maxpagesizePreference = "odata.maxpagesize" EQ-h oneToNine *DIGIT         
+maxpagesizePreference = [ "odata." ] "maxpagesize" EQ-h oneToNine *DIGIT         
 
 respondAsyncPreference = "respond-async"
 
 returnPreference = "return" EQ-h ( 'representation' / 'minimal' )
 
-trackChangesPreference = "odata.track-changes"
+trackChangesPreference = [ "odata." ] "track-changes"
 
 waitPreference = "wait" EQ-h 1*DIGIT
 
