@@ -1,8 +1,7 @@
 ;------------------------------------------------------------------------------
-; OData ABNF Construction Rules Version 4.01
+; OData ABNF Construction Rules Version 4.01 and 4.0
 ;------------------------------------------------------------------------------
-; Working Draft 06
-; 15 February 2018
+; 27 February 2018
 ;------------------------------------------------------------------------------
 ;
 ; Technical Committee:
@@ -90,7 +89,7 @@ serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive
 ; Note: dollar-prefixed path segments are case-sensitive!
 odataRelativeUri = '$batch'  [ "?" batchOptions ]
                  / '$entity' "?" entityOptions  
-                 / '$entity' "/" qualifiedEntityTypeName "?" entityCastOptions  
+                 / '$entity' "/" optionallyQualifiedEntityTypeName "?" entityCastOptions  
                  / '$metadata' [ "?" metadataOptions ] [ context ]
                  / resourcePath [ "?" queryOptions ]
 
@@ -110,9 +109,9 @@ resourcePath = entitySetName                  [ collectionNavigation ]
              / primitiveFunctionImportCall    [ primitivePath ] 
              / functionImportCallNoParens
              / crossjoin
-             / '$all'                         [ "/" qualifiedEntityTypeName ]
+             / '$all'                         [ "/" optionallyQualifiedEntityTypeName ]
 
-collectionNavigation = [ "/" qualifiedEntityTypeName ] [ collectionNavPath ]
+collectionNavigation = [ "/" optionallyQualifiedEntityTypeName ] [ collectionNavPath ]
 collectionNavPath    = keyPredicate [ singleNavigation ]
                      / filterInPath [ collectionNavigation ]
                      / each [ boundOperation ]
@@ -129,7 +128,7 @@ keyPropertyAlias = odataIdentifier
 keyPathSegments  = 1*( "/" keyPathLiteral )
 keyPathLiteral   = *pchar
 
-singleNavigation = [ "/" qualifiedEntityTypeName ] 
+singleNavigation = [ "/" optionallyQualifiedEntityTypeName ] 
                    [ "/" propertyPath
                    / boundOperation
                    / ref 
@@ -149,9 +148,9 @@ primitiveColPath = count / boundOperation / ordinalIndex
 primitivePath  = value / boundOperation
 
 complexColPath = ordinalIndex
-               / [ "/" qualifiedComplexTypeName ] [ count / boundOperation ]
+               / [ "/" optionallyQualifiedComplexTypeName ] [ count / boundOperation ]
 
-complexPath    = [ "/" qualifiedComplexTypeName ] 
+complexPath    = [ "/" optionallyQualifiedComplexTypeName ] 
                  [ "/" propertyPath 
                  / boundOperation
                  ]
@@ -179,7 +178,7 @@ boundOperation = "/" ( boundActionCall
                      )
 
 actionImportCall = actionImport
-boundActionCall  = namespace "." action
+boundActionCall  = [ namespace "." ] action
                    ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
                    ; and is specified by reference using the URI immediately preceding (to the left) of the boundActionCall
 
@@ -188,19 +187,19 @@ boundActionCall  = namespace "." action
 ;  - the binding parameter type MUST match the type of resource identified by the 
 ;    URI immediately preceding (to the left) of the boundXxxFunctionCall, and
 ;  - the functionParameters MUST NOT include the bindingParameter.
-boundEntityFunctionCall       = namespace "." entityFunction       functionParameters
-boundEntityColFunctionCall    = namespace "." entityColFunction    functionParameters
-boundComplexFunctionCall      = namespace "." complexFunction      functionParameters
-boundComplexColFunctionCall   = namespace "." complexColFunction   functionParameters
-boundPrimitiveFunctionCall    = namespace "." primitiveFunction    functionParameters
-boundPrimitiveColFunctionCall = namespace "." primitiveColFunction functionParameters
+boundEntityFunctionCall       = [ namespace "." ] entityFunction       functionParameters
+boundEntityColFunctionCall    = [ namespace "." ] entityColFunction    functionParameters
+boundComplexFunctionCall      = [ namespace "." ] complexFunction      functionParameters
+boundComplexColFunctionCall   = [ namespace "." ] complexColFunction   functionParameters
+boundPrimitiveFunctionCall    = [ namespace "." ] primitiveFunction    functionParameters
+boundPrimitiveColFunctionCall = [ namespace "." ] primitiveColFunction functionParameters
 
-boundFunctionCallNoParens     = namespace "." entityFunction
-                              / namespace "." entityColFunction
-                              / namespace "." complexFunction
-                              / namespace "." complexColFunction
-                              / namespace "." primitiveFunction
-                              / namespace "." primitiveColFunction
+boundFunctionCallNoParens     = [ namespace "." ] entityFunction
+                              / [ namespace "." ] entityColFunction
+                              / [ namespace "." ] complexFunction
+                              / [ namespace "." ] complexColFunction
+                              / [ namespace "." ] primitiveFunction
+                              / [ namespace "." ] primitiveColFunction
 
 entityFunctionImportCall       = entityFunctionImport       functionParameters
 entityColFunctionImportCall    = entityColFunctionImport    functionParameters
@@ -410,7 +409,7 @@ navigation            = *( "/" complexProperty [ "/" qualifiedComplexTypeName ] 
 selectList         = OPEN selectListItem *( COMMA selectListItem ) CLOSE
 selectListItem     = STAR ; all structural properties
                    / allOperationsInSchema 
-                   / [ qualifiedEntityTypeName "/" ] 
+                   / [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
                      ( qualifiedActionName
                      / qualifiedFunctionName 
                      / selectListProperty
@@ -471,11 +470,12 @@ rootExpr = '$root/' ( entitySetName keyPredicate / singletonEntity ) [ singleNav
 firstMemberExpr = memberExpr
                 / inscopeVariableExpr [ "/" memberExpr ]
 
-memberExpr = [ qualifiedEntityTypeName "/" ]
-             ( propertyPathExpr
-             / boundFunctionExpr 
-             / annotationExpr
-             )
+memberExpr = directMemberExpr
+           / ( optionallyQualifiedEntityTypeName / optionallyQualifiedComplexTypeName ) "/" directMemberExpr
+             
+directMemberExpr = propertyPathExpr
+                 / boundFunctionExpr 
+                 / annotationExpr
              
 propertyPathExpr = ( entityColNavigationProperty [ collectionNavigationExpr ] 
                    / entityNavigationProperty    [ singleNavigationExpr ] 
@@ -503,34 +503,31 @@ implicitVariableExpr = '$it'              ; the current instance of the resource
                      / '$this'            ; the instance on which the query option is evaluated
 lambdaVariableExpr   = odataIdentifier
 
-collectionNavigationExpr = [ "/" qualifiedEntityTypeName ]
-                           [ keyPredicate [ singleNavigationExpr ] 
-                           / collectionPathExpr 
-                           ]
+collectionNavigationExpr = [ "/" optionallyQualifiedEntityTypeName ]
+                           ( collectionPathExpr
+                           / keyPredicate [ singleNavigationExpr ] 
+                           )
 
 singleNavigationExpr = "/" memberExpr
 
-complexColPathExpr = [ "/" qualifiedComplexTypeName ]
-                     [ collectionPathExpr ]
+complexColPathExpr = collectionPathExpr
+                   / "/" optionallyQualifiedComplexTypeName [ collectionPathExpr ]
  
 collectionPathExpr = count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
-                   / "/" boundFunctionExpr
-                   / "/" annotationExpr
                    / "/" anyExpr
                    / "/" allExpr
+                   / "/" boundFunctionExpr
+                   / "/" annotationExpr
  
-complexPathExpr = [ "/" qualifiedComplexTypeName ]
-                  [ "/" propertyPathExpr 
-                  / "/" boundFunctionExpr 
-                  / "/" annotationExpr
-                  ]
+complexPathExpr = "/" directMemberExpr
+                / "/" optionallyQualifiedComplexTypeName [ "/" directMemberExpr ]
 
 primitivePathExpr = "/" [ annotationExpr / boundFunctionExpr ]
 
 boundFunctionExpr = functionExpr ; boundFunction segments can only be composed if the type of the    
                                  ; previous segment matches the type of the first function parameter
                                      
-functionExpr = namespace "."
+functionExpr = [ namespace "." ]
                ( entityColFunction    functionExprParameters [ collectionNavigationExpr ] 
                / entityFunction       functionExprParameters [ singleNavigationExpr ] 
                / complexColFunction   functionExprParameters [ complexColPathExpr ]
@@ -701,7 +698,7 @@ complexPropertyInUri = quotation-mark complexProperty quotation-mark
                        name-separator 
                        complexInUri
                             
-annotationInUri = quotation-mark AT namespace "." termName quotation-mark
+annotationInUri = quotation-mark AT [ namespace "." ] termName quotation-mark
                   name-separator
                   ( complexInUri / complexColInUri / primitiveLiteralInJSON / primitiveColInUri )
 
@@ -780,6 +777,9 @@ qualifiedEntityTypeName     = namespace "." entityTypeName
 qualifiedComplexTypeName    = namespace "." complexTypeName
 qualifiedTypeDefinitionName = namespace "." typeDefinitionName 
 qualifiedEnumTypeName       = namespace "." enumerationTypeName
+
+optionallyQualifiedEntityTypeName  = [ namespace "." ] entityTypeName
+optionallyQualifiedComplexTypeName = [ namespace "." ] complexTypeName
 
 ; an alias is just a single-part namespace
 namespace     = namespacePart *( "." namespacePart )
