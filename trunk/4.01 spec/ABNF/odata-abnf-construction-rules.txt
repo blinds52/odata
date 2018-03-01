@@ -281,9 +281,10 @@ expandItem        = STAR [ ref / OPEN levels CLOSE ]
                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
                     /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
                     ]
-expandPath        = [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
-                    *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
-                    ( STAR / streamProperty / navigationProperty [ "/" qualifiedEntityTypeName ] )
+expandPath        = expandPathDirect 
+                  / optionallyQualifiedEntityTypeName "/" expandPathDirect
+expandPathDirect  = *( ( complexProperty / complexColProperty / optionallyQualifiedComplexTypeName ) "/" )
+                    ( STAR / streamProperty / navigationProperty [ "/" optionallyQualifiedEntityTypeName ] )
 expandCountOption = filter
                   / search
 expandRefOption   = expandCountOption
@@ -344,18 +345,21 @@ searchWord   = 1*( ALPHA / DIGIT / COMMA / "." / pct-encoded )
 select         = ( "$select" / "select" ) EQ selectItem *( COMMA selectItem )
 selectItem     = STAR
                / allOperationsInSchema 
-               / [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ] 
-                 ( selectProperty
-                 / qualifiedActionName  
-                 / qualifiedFunctionName  
-                 )
+               / selectProperty
+               / optionallyQualifiedActionName  
+               / optionallyQualifiedFunctionName  
+               / ( optionallyQualifiedEntityTypeName / optionallyQualifiedComplexTypeName ) 
+                 "/" ( selectProperty
+                     / optionallyQualifiedActionName   
+                     / optionallyQualifiedFunctionName  
+                     )
 selectProperty = primitiveProperty  
                / primitiveColProperty [ OPEN selectOptionPC *( SEMI selectOptionPC ) CLOSE ]
                / navigationProperty
                / selectPath [ OPEN selectOption *( SEMI selectOption ) CLOSE
                             / "/" selectProperty 
                             ]
-selectPath     = ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] 
+selectPath     = ( complexProperty / complexColProperty ) [ "/" optionallyQualifiedComplexTypeName ] 
 selectOptionPC = filter / search / inlinecount / orderby / skip / top 
 selectOption   = selectOptionPC
                / compute / select / expand / aliasAndValue
@@ -363,9 +367,9 @@ selectOption   = selectOptionPC
 allOperationsInSchema = namespace "." STAR                 
 
 ; The parameterNames uniquely identify the bound function overload
-; only if it has overloads.
-qualifiedActionName   = namespace "." action
-qualifiedFunctionName = namespace "." function [ OPEN parameterNames CLOSE ]
+; Necessary only if it has overloads
+optionallyQualifiedActionName   = [ namespace "." ] action
+optionallyQualifiedFunctionName = [ namespace "." ] function [ OPEN parameterNames CLOSE ]
 
 ; The names of all non-binding parameters, separated by commas 
 parameterNames = parameterName *( COMMA parameterName )
@@ -417,12 +421,15 @@ selectListItem     = STAR ; all structural properties
 selectListProperty = primitiveProperty  
                    / primitiveColProperty 
                    / navigationProperty [ "+" ] [ selectList ]
-                   / selectPath [ "/" selectListProperty ]
+                   / ( complexProperty / complexColProperty ) [ "/" qualifiedComplexTypeName ] [ "/" selectListProperty ]
 
 contextPropertyPath = primitiveProperty
                     / primitiveColProperty
                     / complexColProperty
                     / complexProperty [ [ "/" qualifiedComplexTypeName ] "/" contextPropertyPath ]
+
+qualifiedActionName   = namespace "." action
+qualifiedFunctionName = namespace "." function [ OPEN parameterNames CLOSE ]
                  
 
 ;------------------------------------------------------------------------------
@@ -643,8 +650,8 @@ negateExpr = "-" BWS commonExpr
 
 notExpr = "not" RWS boolCommonExpr
 
-isofExpr = "isof" OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
-castExpr = "cast" OPEN BWS [ commonExpr BWS COMMA BWS ] qualifiedTypeName BWS CLOSE
+isofExpr = "isof" OPEN BWS [ commonExpr BWS COMMA BWS ] optionallyQualifiedTypeName BWS CLOSE
+castExpr = "cast" OPEN BWS [ commonExpr BWS COMMA BWS ] optionallyQualifiedTypeName BWS CLOSE
 
 
 ;------------------------------------------------------------------------------
@@ -764,22 +771,32 @@ exp          = "e" [ "-" / "+" ] 1*DIGIT
 ; 6. Names and identifiers
 ;------------------------------------------------------------------------------
 
+qualifiedTypeName = singleQualifiedTypeName                  
+                  / 'Collection' OPEN singleQualifiedTypeName CLOSE
+
+optionallyQualifiedTypeName = singleQualifiedTypeName                  
+                            / 'Collection' OPEN singleQualifiedTypeName CLOSE
+                            / singleTypeName
+                            / 'Collection' OPEN singleTypeName CLOSE
+
 singleQualifiedTypeName = qualifiedEntityTypeName 
                         / qualifiedComplexTypeName
                         / qualifiedTypeDefinitionName
                         / qualifiedEnumTypeName
                         / primitiveTypeName 
+                        
+singleTypeName = entityTypeName 
+               / complexTypeName 
+               / typeDefinitionName 
+               / enumerationTypeName                         
                   
-qualifiedTypeName = singleQualifiedTypeName                  
-                  / 'Collection' OPEN singleQualifiedTypeName CLOSE
-
 qualifiedEntityTypeName     = namespace "." entityTypeName
 qualifiedComplexTypeName    = namespace "." complexTypeName
 qualifiedTypeDefinitionName = namespace "." typeDefinitionName 
 qualifiedEnumTypeName       = namespace "." enumerationTypeName
 
-optionallyQualifiedEntityTypeName  = [ namespace "." ] entityTypeName
-optionallyQualifiedComplexTypeName = [ namespace "." ] complexTypeName
+optionallyQualifiedEntityTypeName     = [ namespace "." ] entityTypeName
+optionallyQualifiedComplexTypeName    = [ namespace "." ] complexTypeName
 
 ; an alias is just a single-part namespace
 namespace     = namespacePart *( "." namespacePart )
