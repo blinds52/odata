@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #205 Thursday March 01, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='2e501375345ea9d6a2321d79e5ce652c48820962bab890730d0ab401ff945cbd4d9a4d985b396bf500c1e328606db2b47e890a1e0c4aa85449cc1e1bdc327e57' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #205 Thursday March 01, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-03-01 0800-1000 PST
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Kraue (SAP SE)
+    # Hubert Heijkers (IBM)
+    # Mark Biamonte (Progress Software)
+    # Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46245">normative attendance sheet for this meeting (event_id=46245)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Mike: timeline and prioritization of next steps</p>
+<p>George: Redfish/Swordfish community seems fine with GitHub-based vocabularies</p>
+<p>Ralf: No need for Errata 04 from that perspective</p>
+<p>Ralf: <a href="https://issues.oasis-open.org/browse/ODATA-1155" rel="noopener noreferrer" target="_blank">https://issues.oasis-open.org/browse/ODATA-1155</a></p>
+<p>Ralf: ABNF: allow omitting default namespaces everywhere in the URL</p>
+<p>Ralf: Agenda is approved with these additions</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from February 22, 2018 TC meeting #204</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62583/odata-meeting-204_on-20180222-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62583/odata-meeting-204_on-20180222-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None.</p>
+
+<h2 id="5">5. Timeline and Prioritization of Next Steps</h2>
+<p>Ralf: <a href="https://www.oasis-open.org/committees/download.php/61677/TC%20Timeline-2017-09-29.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/61677/TC Timeline-2017-09-29.docx</a>
+<p>Ralf: </p>
+<pre>
+Whats New in OData Version 4.01
+  September 2017  Approve Whats New in OData Version 4.01 CN02
+OData Core and JSON Version 4.01
+  September 2017 Initiate public review of CSD03
+  November 2017  Approve OData Core and JSON Version 4.01 CS01
+CSDL JSON Version 4.01
+  September 2017 Initiate public review of CSD02
+  November 2017  Approve CSDL JSON Version 4.01 CS01
+    Not achieved
+OData Vocabularies Version 4.0
+  November 2017 Initiate public review of CSD02
+  January 2018  Approve OData Vocabularies Version 4.0 CS01
+OData to OpenAPI Mapping Version 1.0
+  December 2017 Initiate public review of CND02 based on OpenAPI 3.0.0
+  February 2018 Approve OData to OpenAPI Mapping Version 1.0 CN01
+Planned next:
+  REST Profile for OData Version 4.01
+  - February 2018 Initiate public review of CND01
+  - April 2018 Approve REST Profile for OData Version 4.01 CN01
+  Securing OData Version 4.0
+  - December 2017 Initiate public review of CND01
+  - February 2018 Approve Securing OData Version 4.0 CN01
+</pre>
+<p>Mike: someone needs to prepare proposal for REST Profile</p>
+<p>Mike: OpenAPI mapping might be next</p>
+<p>George: vocabularies almost done</p>
+<p>George: triage remaining vocabulary issues</p>
+<p>Ralf: </p>
+<pre>
+1. Vocabularies
+2. OpenAPI Mapping
+3. REST Profile
+</pre>
+<p>Ralf: Ralf to ping Stefan regarding "Securing OData"</p>
+<p>Ralf:</p>
+<pre>
+Extension for Data Aggregation Version 4.0
+- July 2018 Initiate public review of CSD04
+- September 2018 Approve Extension for Data Aggregation Version 4.0 CS03
+</pre>
+<p>Ralf: Mike volunteers to prepare a proposal for the REST profile</p>
+<p>Ralf: Vocabularies: issues resolved and applied by end of march</p>
+<p>Ralf: OpenAPI mapping: someone (default: Ralf) needs to apply issues identified in last walk-through December 2017</p>
+<p>George: RedFish is also working on an OpenAPI mapping</p>
+<p>Ralf: George to set up meeting with RedFish folks and Mike</p>
+<p>Mike: take March to update OpenAPI mapping document and potentially work in DMTF feedback</p>
+<p>Mike: initial REST Profile document by mid of April</p>
+<p>Ralf: Ralf to create action item</p>
+<p>Ralf: Data Aggregation: walk through "Grid-like Access" sometime within next six weeks to get feedback and direction</p>
+<p>Ralf: V4.01 CS02</p>
+<p>Mike: keep V4.01 open long enough to get feedback from implementation teams</p>
+<p>Ralf: Three "statements of use" needed for progressing V4.01 to Candidate OASIS Standard</p>
+<p>George: "OData Essentials" ???</p>
+<p>Ralf: Nice name!</p>
+<p>Ralf: Ralf to update timeline accordingly</p>
+
+<h2 id="6">6. Issues</h2>
+<h3 id="6.1">6.1 APPLIED</h3>
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1132" rel="noopener noreferrer" target="_blank">ODATA-1132</a> - Propagation of NavigationRestrictions</h4>
+
+<p>Ralf: <a href="https://github.com/oasis-tcs/odata-vocabularies/pull/11" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/pull/11</a></p>
+<p>Ralf: Change: new long description for NavigationRestrictions:<br>
+"@Core.LongDescription": "Restrictions specified on an entity set are valid whether the request is directly to the entity set or through a navigation property bound to that entity set. Services can specify a different set of restrictions specific to a path, in which case the more specific restrictions take precedence."</p>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-1132 as applied. <b>George</b> seconds.</p>
+<p>Ralf: No objections, ODATA-1132 is CLOSED as applied</p>
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1153" rel="noopener noreferrer" target="_blank">ODATA-1153</a> - Core.Immutable: clarify that value can be provided *by client* in insert</h4>
+
+<p>Ralf: <a href="https://github.com/oasis-tcs/odata-vocabularies/pull/10" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/pull/10</a></p>
+<p>Ralf: Immutable and ComputedDefaultValue: value can be provided by the client</p>
+<p><b>Mike</b>: I <b>move</b> we close ODATA-1153 as applied. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1153 is CLOSED as applied</p>
+
+<h3 id="6.2">6.2 V4.01: NEW or OPEN</h3>
+<h4 id="6.2.1">6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1155" rel="noopener noreferrer" target="_blank">ODATA-1155</a> - ABNF: allow omitting default namespaces everywhere in the URL</h4>
+<p>Ralf: Relax ABNF to allow omitting namespaces for </p>
+<pre>
+- functions 
+- actions 
+- type-cast 
+in 
+- path 
+- query options
+</pre>
+<p>Ralf: But NOT in the context URL.</p>
+<p>Ralf: ODATA-1155 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we make the ABNF consistent with the prose by resolving ODATA-1155 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1155 is RESOLVED as proposed</p>
+
+<h4 id="6.2.2">6.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1154" rel="noopener noreferrer" target="_blank">ODATA-1154</a> - Clarify which OData-Version a service should return</h4>
+<p>Ralf: The service MUST respond with the minimum of the request's OData-MaxVersion, if specified, and the maximum version of the protocol that the service implements.</p>
+<p>Ralf: ODATA-1154 is OPEN</p>
+<p>Mike: trickier than it seems at first glance</p>
+<p>Mike: Proposed re-wording: The service MUST respond with a payload compliant with the greatest version of the protocol that is less than or equal to the request's OData-MaxVersion, if specified.</p>
+<p>George: Add 'supported'</p>
+<p>George: The service MUST respond with a payload compliant with the greatest supported version of the protocol that is less than or equal to the request's OData-MaxVersion, if specified.</p>
+<p>Mike: potential gap for clients that support only 4:01</p>
+<p>Mike: OData-Version should only tell what was used to generate the request body, not the URL</p>
+<p>Ralf: Problem are "scared recipients" that stop processing on receiving OData-Version:4.01</p>
+<p>George: Rightly so, since a 4.0 client may not understand a 4.01 response.</p>
+<p>Mike: If a client only understands the 4.0 payload format (in requests, as well as responses) but wants to use a URL construct introduced in 4.01 (which a 4.0 service is allowed to support), then I would want to say that my request is a 4.0 request (because the payload is a 4.0 payload) but use a 4.01 construct.</p>
+<p>Mike: Can either say odata-version only describes the payload, or we can say it describes the request but the request may include compatible extensions introduced in later versions of the payload.</p>
+<p>Mike: distinguish version of protocol and version of format</p>
+<p>Mike: Probably adds unnecessary complexity to try and separately specify payload version and url/protocol version.</p>
+<p>Ralf: Mike to craft a more detailed proposal</p>
+<p>Mike: Open Questions:</p>
+<pre>
+Questions:
+1) What if no OData-MaxVersion is specified?
+2) Does specifying an OData-Version limit the constructs that the request can use in the URL? 
+   i.e., if I have a 4.0 payload, am I restricted to 4.0 URL constructs, even if I know the service supports them?
+3) What if the client *only* support 4.01? Do we have a way to specify NOT to return 4.0?
+4) Does a service have to return a 4.01 payload if the request uses a 4.01 construct?
+</pre>
+
+<h4 id="6.2.3">6.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1151" rel="noopener noreferrer" target="_blank">ODATA-1151</a> - Edm.Stream and Nullable</h4>
+<p>Ralf: Can stream properties be nullable? </p>
+<pre>
+If yes, how would a null value be represented? 
+- if expanded: "streamProp":null 
+- if not expanded: "streamProp@mediaReadLink":null, i.e. no link?
+</pre>
+<p>Ralf: What if that stream property is directly accessed</p>
+<p>Ralf: GET es(1)/streamProp</p>
+<p>Ralf: Would that be 204, 404, or 200 with Content-Length:0</p>
+<p>Ralf: ODATA-1151 is OPEN</p>
+<p>Mike: expanded representation makes sense</p>
+<p>Mike: you'd need an edit link in order to write/create it</p>
+<p>Mike: Can we say: </p>
+<pre>
+1) Expanded returns null
+2) Link is always valid, returns 204 if the value is null
+</pre>
+<p>Ralf: Same behavior as for navigation properties</p>
+<p>Ralf: Ralf to craft proposal conforming to discussion and nav prop behavior</p>
+
+<h4 id="6.2.4">6.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-1150" rel="noopener noreferrer" target="_blank">ODATA-1150</a> - Case Sensitivity of Property Names, EntitySets, Singletons and Operations</h4>
+<p>Ralf: Proposal:</p>
+<pre>
+Interoperable clients SHOULD specify identifiers (in payloads and URLs) in the case they are specified in $metadata. 
+
+Services MUST return identifiers (payloads, contextUrl, etc.) in the case defined in $metadata. 
+
+Services SHOULD NOT have identifiers within a uniqueness scope that differ only by case. 
+
+Services MAY support case-insensitive comparisons of identifiers in URLs and request payloads 
+if no exact match is found, following the existing precedence rules.
+</pre>
+<p>Ralf: ODATA-1150 is OPEN</p>
+<p>Ralf: Would prefer MUST for interoperable clients</p>
+<p>Ralf: Non-interoperable clients are free to send arbitrary requests</p>
+<p>Ralf: MAY also for 4.01 services</p>
+<p>Mike: not worth defining a capability for this</p>
+<p>Mike: interoperable clients will use $metadata case</p>
+<p>Mike: Updated proposal (just changed "SHOULD" to "MUST" for interoperable clients):</p>
+<pre>
+Interoperable clients MUST specify identifiers (in payloads and URLs) in the case they are specified in $metadata. 
+
+Services MUST return identifiers (payloads, contextUrl, etc.) in the case defined in $metadata. 
+
+Services SHOULD NOT have identifiers within a uniqueness scope that differ only by case. 
+
+Services MAY support case-insensitive comparisons of identifiers in URLs and request payloads 
+if no exact match is found, following the existing precedence rules.
+</pre>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1150 as proposed. <b>Ted</b> seconds.</p>
+<p>Ralf: ODATA-1150 is RESOLVED with the modified proposal</p>
+
+<h3 id="6.3">6.3 Vocabularies: NEW or OPEN with concrete proposal</h3>
+
+<h4 id="6.3.1">6.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Ralf:</p> 
+<pre>
+---------------- 
+Add new example to Prefer header to showing use of count and navigation links 
+-------------------- 
+To OData Version 4.01. Part 1: Protocol, clause 8.2.8.4 Preference include-annotations (odata.include-annotations) 
+Add: 
+Example 8: a Prefer header requesting that navigation links be returned in the case that the \
+  format metadata=minimal is specified in the Accept header. 
+      Prefer: include-annotations="odata.navigationLink,odata.count" 
+
+Add paragraph before example 3. 
+Regardless of the metadata format specified, annotations specified by the include-annotations preference should be added to response.
+
+-------------------- 
+Example: 
+
+------------------ 
+Proposed schema 
+&lt;EntityType Name="Top"> 
+       
+      &lt;NavigationProperty Name="Systems" Type="Collection(ComputerSystem)"/> 
+       
+&lt;/EntityType> 
+---------- 
+Example: GET 
+
+GET /redfish/v1/Top 
+Prefer: include-annotations="odata.count,odata.navigationLink" 
+
+Response 
+Preferences-Applied: include-annotations="odata.count,odata.navigationLink" 
+{ 
+"@odata.context": "/redfish/v1/$metadata#Top", 
+"@odata.id": "/redfish/v1/Top", 
+"@odata.type": "#Top ", 
+"Name": "Top", 
+ 
+"Systems@odata.count": 15, 
+"Systems@odata.navigationLink": {"/redfish/v1/Systems"} 
+ 
+}
+</pre>
+<p>Ralf: Current JSON Format spec text:<br>
+In addition, the client may use the include-annotations preference in the Prefer header to request additional control information. Services supporting this MUST NOT omit control information required by the chosen metadata parameter, and services MUST NOT exclude the nextLink, deltaLink, and count if they are required by the response type.</p>
+<p>George: Alternative: include-controls preference</p>
+<p>Ralf: Note: this paragraph was already in V4</p>
+
+<h2 id="7">7. Next meetings</h2>
+<p>Ralf:</p>
+<pre>
+Thursday March 08, 2018 during 8-10 am PST (17:00-19:00 CET)
+Thursday March 15, 2018 during 8-10 am PST (16:00-18:00 CEST)  Daylight Saving Time in Central Europe
+</pre>
+<p>Ralf: Mike might not attend next week</p>
+<p>Ralf: Mike to send "minimum list" of vocab issues from his perspective</p>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None</p>
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
