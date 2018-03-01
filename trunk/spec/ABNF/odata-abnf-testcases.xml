@@ -833,6 +833,15 @@
   <TestCase Name="4.3 Addressing entities - follow navigation property and call function" Rule="odataRelativeUri">
     <Input>Categories(1)/Products/Model.AllOrders()</Input>
   </TestCase>
+  <TestCase Name="4.3 Addressing entities - follow navigation property and call function, then count results" Rule="odataRelativeUri">
+    <Input>Categories(1)/Products/Model.AllOrders()/$count</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - follow navigation property and call function - no parens" Rule="odataRelativeUri">
+    <Input>Categories(1)/Products/Model.AllOrders</Input>
+  </TestCase>
+  <TestCase Name="4.3 Addressing entities - follow navigation property and call function - no namespace" Rule="odataRelativeUri">
+    <Input>Categories(1)/Products/AllOrders</Input>
+  </TestCase>
   <TestCase Name="4.3 Addressing entities - follow navigation property and call function" Rule="odataRelativeUri">
     <Input>Categories(1)/Products/Model.MostExpensive()</Input>
   </TestCase>
@@ -959,8 +968,14 @@
   <TestCase Name="4.5.2 Call bound complex collection function with cast" Rule="odataRelativeUri">
     <Input>Customers/Model.MostPopularAddresses()/Model.AddressWithLocation/$count</Input>
   </TestCase>
+  <TestCase Name="4.5.2 Call bound complex collection function with cast, no namespace" Rule="odataRelativeUri">
+    <Input>Customers/MostPopularAddresses()/AddressWithLocation/$count</Input>
+  </TestCase>
   <TestCase Name="4.5.2 Call bound complex collection function - multiple" Rule="odataRelativeUri">
     <Input>Customers/Model.MostPopularAddresses()/Model.MostPopularNames()</Input>
+  </TestCase>
+  <TestCase Name="4.5.2 Call bound complex collection function - multiple, no namespace" Rule="odataRelativeUri">
+    <Input>Customers/MostPopularAddresses()/MostPopularNames()</Input>
   </TestCase>
   <TestCase Name="4.5.2 Call bound primitive function" Rule="odataRelativeUri">
     <Input>Customers/Model.MostPopularName()</Input>
@@ -1079,6 +1094,9 @@
   <TestCase Name="4.11 Inheritance - complex type with property" Rule="odataRelativeUri">
     <Input>Products(1)/Address/Model.AddressWithLocation/Street</Input>
   </TestCase>
+  <TestCase Name="4.11 Inheritance - complex type with property, no namespace" Rule="odataRelativeUri">
+    <Input>Products(1)/Address/AddressWithLocation/Street</Input>
+  </TestCase>
   <TestCase Name="4.11 Inheritance - collection of complex type" Rule="odataRelativeUri">
     <Input>Products(1)/Addresses/Model.AddressWithLocation</Input>
   </TestCase>
@@ -1088,14 +1106,23 @@
   <TestCase Name="4.11 Inheritance - expressions: complex type with path" Rule="propertyPathExpr">
     <Input>Address/Model.AddressWithLocation/Street</Input>
   </TestCase>
+  <TestCase Name="4.11 Inheritance - expressions: complex type with path, no namespace" Rule="propertyPathExpr">
+    <Input>Address/AddressWithLocation/Street</Input>
+  </TestCase>
   <TestCase Name="4.11 Inheritance - expressions: collection of complex type" Rule="propertyPathExpr">
     <Input>Addresses/Model.AddressWithLocation</Input>
   </TestCase>
   <TestCase Name="4.11 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products/Model.BestSellingProduct</Input>
   </TestCase>
+  <TestCase Name="4.11 Inheritance - $expand, no namespace" Rule="odataRelativeUri">
+    <Input>Categories?$expand=Products/BestSellingProduct</Input>
+  </TestCase>
   <TestCase Name="4.11 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Products?$expand=Model.BestSellingProduct/Sales</Input>
+  </TestCase>
+  <TestCase Name="4.11 Inheritance - $expand, no namespace" Rule="odataRelativeUri">
+    <Input>Products?$expand=BestSellingProduct/Sales</Input>
   </TestCase>
   <TestCase Name="4.11 Inheritance - $expand" Rule="odataRelativeUri">
     <Input>Categories?$expand=Products/Model.BestSellingProduct($select=Name)</Input>
@@ -1123,6 +1150,9 @@
   </TestCase>
   <TestCase Name="4.12 Filter Path Segment - multiple" Rule="odataRelativeUri">
     <Input>Products/$filter=@foo/Special.ProductsByColor(color='red')/$filter=@bar?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
+  </TestCase>
+  <TestCase Name="4.12 Filter Path Segment - multiple, no namespace" Rule="odataRelativeUri">
+    <Input>Products/$filter=@foo/ProductsByColor(color='red')/$filter=@bar?@foo=Age gt 3&amp;@bar=Price lt 5</Input>
   </TestCase>
   <TestCase Name="4.12 Filter Path Segment - with action" Rule="odataRelativeUri">
     <Input>Products/$filter=@foo/Special.Cluster?@foo=Age gt 3</Input>
@@ -1490,8 +1520,14 @@
   <TestCase Name="5.1.1.10.1 cast(1)" Rule="commonExpr">
     <Input>cast(Model.Customer)</Input>
   </TestCase>
+  <TestCase Name="5.1.1.10.1 cast(1), no nanmespace" Rule="commonExpr">
+    <Input>cast(Customer)</Input>
+  </TestCase>
   <TestCase Name="5.1.1.10.1 cast(2)" Rule="commonExpr">
     <Input>cast(Category,Model.Customer)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.10.1 cast(2), no namespace" Rule="commonExpr">
+    <Input>cast(Category,Customer)</Input>
   </TestCase>
   <TestCase Name="5.1.1.10.1 cast(3)" Rule="commonExpr">
     <Input>cast(Category,Edm.Boolean)</Input>
@@ -1499,8 +1535,14 @@
   <TestCase Name="5.1.1.10.2 isof(1)" Rule="isofExpr">
     <Input>isof(Model.Customer)</Input>
   </TestCase>
+  <TestCase Name="5.1.1.10.2 isof(1), no namespace" Rule="isofExpr">
+    <Input>isof(Customer)</Input>
+  </TestCase>
   <TestCase Name="5.1.1.10.2 isof(2)" Rule="isofExpr">
     <Input>isof(Category,Model.Customer)</Input>
+  </TestCase>
+  <TestCase Name="5.1.1.10.2 isof(2), no namespace" Rule="isofExpr">
+    <Input>isof(Category,Customer)</Input>
   </TestCase>
   <TestCase Name="5.1.1.10.2 isof(2)" Rule="isofExpr">
     <Input>isof(Location,Edm.GeographyPoint)</Input>
@@ -1610,8 +1652,8 @@
   <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
     <Input>$filter=Price/@Measures.Currency eq 'EUR'</Input>
   </TestCase>
-  <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
-    <Input>$filter=Price/@Measures.Currency eq 'EUR'</Input>
+  <TestCase Name="5.1.1.15 Annotation Values, no namespace" Rule="filter">
+    <Input>$filter=Price/@Currency eq 'EUR'</Input>
   </TestCase>
   <TestCase Name="5.1.1.15 Annotation Values" Rule="orderBy">
     <Input>$orderby=Price/@Measures.Currency</Input>
@@ -1619,8 +1661,8 @@
   <TestCase Name="5.1.1.15 Annotation Values" Rule="orderBy">
     <Input>$orderby=Price/@Measures.Currency#Reporting</Input>
   </TestCase>
-  <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
-    <Input>$filter=Price/@Currency eq 'EUR'</Input>
+  <TestCase Name="5.1.1.15 Annotation Values, no namespace" Rule="filter">
+    <Input>$filter=Price/@Currency#Reporting eq 'EUR'</Input>
   </TestCase>
   <TestCase Name="5.1.1.15 Annotation Values" Rule="filter">
     <Input>$filter=@Core.Messages/any(m:m/severity eq 'error')</Input>
@@ -1736,8 +1778,14 @@
   <TestCase Name="5.1.3 Select - with cast and property of complex property" Rule="select">
     <Input>$select=Address/Model.AddressWithLocation/Location</Input>
   </TestCase>
+  <TestCase Name="5.1.3 Select - with cast and property of complex property, no namespace" Rule="select">
+    <Input>$select=Address/AddressWithLocation/Location</Input>
+  </TestCase>
   <TestCase Name="5.1.3 Select on complex resource - with cast and property of sub-type" Rule="select">
     <Input>$select=Model.AddressWithLocation/Location</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select on complex resource - with cast and property of sub-type, no namespace" Rule="select">
+    <Input>$select=AddressWithLocation/Location</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - with expand" Rule="queryOptions">
     <Input>$expand=Category($select=Name)</Input>
@@ -1751,8 +1799,14 @@
   <TestCase Name="5.1.3 Select - actions and functions with signature" Rule="select">
     <Input>$select=Model.ActionName,Model.MostPopularName(Location,Kind)</Input>
   </TestCase>
+  <TestCase Name="5.1.3 Select - actions and functions with signature, no  namespace" Rule="select">
+    <Input>$select=ActionName,MostPopularName(Location,Kind)</Input>
+  </TestCase>
   <TestCase Name="5.1.3 Select - tricky" Rule="select">
     <Input>$select=Namespace.PreferredSupplier/AccountRepresentative,Address/Street,Address/Namespace.AddressWithLocation/Location</Input>
+  </TestCase>
+  <TestCase Name="5.1.3 Select - tricky, no namespace" Rule="select">
+    <Input>$select=PreferredSupplier/AccountRepresentative,Address/Street,Address/AddressWithLocation/Location</Input>
   </TestCase>
   <TestCase Name="5.1.3 Select - nested select" Rule="select">
     <Input>$select=Address($select=Street,City,Namespace.AddressWithLocation/Location)</Input>
@@ -2086,6 +2140,9 @@
   <TestCase Name="Functions in commonExpr - composed functions" Rule="commonExpr">
     <Input>Products/Model.BestProduct()/Model.MostPopularName()</Input>
   </TestCase>
+  <TestCase Name="Functions in commonExpr - composed functions, no namespace" Rule="commonExpr">
+    <Input>Products/BestProduct()/MostPopularName()</Input>
+  </TestCase>
   <TestCase Name="Functions in commonExpr - singleNavigation" Rule="commonExpr">
     <Input>Products/Model.BestProduct()/Name</Input>
   </TestCase>
@@ -2152,8 +2209,14 @@
   <TestCase Name="Functions in commonExpr - collectionPath" Rule="commonExpr">
     <Input>Items/Model.MostPopularNames()/Model.MostPopularName()</Input>
   </TestCase>
+  <TestCase Name="Functions in commonExpr - collectionPath, no namespace" Rule="commonExpr">
+    <Input>Items/MostPopularNames()/MostPopularName()</Input>
+  </TestCase>
   <TestCase Name="Functions in commonExpr - singlePath" Rule="commonExpr">
     <Input>Items/Model.MostPopularName()/Model.MostPopularName()</Input>
+  </TestCase>
+  <TestCase Name="Functions in commonExpr - singlePath, no namespace" Rule="commonExpr">
+    <Input>Items/MostPopularName()/MostPopularName()</Input>
   </TestCase>
   <TestCase Name="Functions in commonExpr - collection parameter in JSON" Rule="commonExpr">
     <Input>Products/Model.ProductsByColor(colors=["red","green","blue"])</Input>
@@ -2191,119 +2254,122 @@
   <TestCase Name="Context URL - Entity set" Rule="odataUri">
     <Input>http://host/service/$metadata#Customers</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Address,Orders)</Input>
+  <TestCase Name="Context URL - Entity set with $select" Rule="odataRelativeUri">
+    <Input>$metadata#Customers(Address,Orders)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Address/Street,Orders)</Input>
+  <TestCase Name="Context URL - Entity set with $select" Rule="context">
+    <Input>#Customers(Address/Street,Orders)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Address/Country)</Input>
+  <TestCase Name="Context URL - Entity set with $select" Rule="context">
+    <Input>#Customers(Address/Country)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Address/Model.AddressWithLocation,Orders)</Input>
+  <TestCase Name="Context URL - Entity set with $select and type-cast" Rule="context">
+    <Input>#Customers(Address/Model.AddressWithLocation,Orders)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Address/Name,Orders)</Input>
+  <TestCase Name="Context URL - Entity set with $select and type-cast, qualifier is required" Rule="context" FailAt="38">
+    <Input>#Customers(Address/AddressWithLocation,Orders)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Orders(ID))</Input>
+  <TestCase Name="Context URL - Entity set with $select" Rule="context">
+    <Input>#Customers(Address/Name,Orders)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select and type cast" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Name,Address/Country,Model.VipCustomer/Rating)</Input>
+  <TestCase Name="Context URL - Entity set with $select" Rule="context">
+    <Input>#Customers/Model.VipCustomer(Orders(ID))</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select and $expand" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country,Model.*)</Input>
+  <TestCase Name="Context URL - Entity set with $select and type cast" Rule="context">
+    <Input>#Customers(Name,Address/Country,Model.VipCustomer/Rating)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select and $expand with nested select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Name,Address/Country(Code,Model.ActionName,Model.MostPopularAddress))</Input>
+  <TestCase Name="Context URL - Entity set with $select and $expand" Rule="context">
+    <Input>#Customers/Model.VipCustomer(Name,Address/Country,Model.*)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with $select and $expand with nested select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(Orders,Orders(ID,Items(Price)))</Input>
+  <TestCase Name="Context URL - Entity set with $select and $expand with nested select" Rule="context">
+    <Input>#Customers/Model.VipCustomer(Name,Address/Country(Code,Model.ActionName,Model.MostPopularAddress))</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity with $select and $expand with nested select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer(*,Orders(ID))/$entity</Input>
+  <TestCase Name="Context URL - Entity set with $select and $expand with nested select" Rule="context">
+    <Input>#Customers/Model.VipCustomer(Orders,Orders(ID,Items(Price)))</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with cast, $select and recursive $expand" Rule="odataUri">
-    <Input>http://host/service/$metadata#Employees(Title,DirectReports+(FirstName,LastName))</Input>
+  <TestCase Name="Context URL - Entity with $select and $expand with nested select" Rule="context">
+    <Input>#Customers/Model.VipCustomer(*,Orders(ID))/$entity</Input>
   </TestCase>
-  <TestCase Name="Context URL - Collection of structured type with $select and recursive $expand" Rule="odataUri">
-    <Input>http://host/service/$metadata#Collection(Model.Employee)(Title,DirectReports+(FirstName,LastName))</Input>
+  <TestCase Name="Context URL - Entity set with cast, $select and recursive $expand" Rule="context">
+    <Input>#Employees(Title,DirectReports+(FirstName,LastName))</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity set with type cast" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer</Input>
+  <TestCase Name="Context URL - Collection of structured type with $select and recursive $expand" Rule="context">
+    <Input>#Collection(Model.Employee)(Title,DirectReports+(FirstName,LastName))</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/$entity</Input>
+  <TestCase Name="Context URL - Entity set with type cast" Rule="context">
+    <Input>#Customers/Model.VipCustomer</Input>
   </TestCase>
-  <TestCase Name="Context URL - Singleton" Rule="odataUri">
-    <Input>http://host/service/$metadata#SingletonEntity</Input>
+  <TestCase Name="Context URL - Entity" Rule="context">
+    <Input>#Customers/$entity</Input>
   </TestCase>
-  <TestCase Name="Context URL - Singleton with containment" Rule="odataUri">
-    <Input>http://host/service/$metadata#SingletonEntity/Orders</Input>
+  <TestCase Name="Context URL - Singleton" Rule="context">
+    <Input>#SingletonEntity</Input>
   </TestCase>
-  <TestCase Name="Context URL - Singleton with containment" Rule="odataUri">
-    <Input>http://host/service/$metadata#SingletonEntity/Orders(3)/Items</Input>
+  <TestCase Name="Context URL - Singleton with containment" Rule="context">
+    <Input>#SingletonEntity/Orders</Input>
   </TestCase>
-  <TestCase Name="Context URL - collection with containment" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers('ALFKI')/Orders</Input>
+  <TestCase Name="Context URL - Singleton with containment" Rule="context">
+    <Input>#SingletonEntity/Orders(3)/Items</Input>
   </TestCase>
-  <TestCase Name="Context URL - containment" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers('ALFKI')/Orders/$entity</Input>
+  <TestCase Name="Context URL - collection with containment" Rule="context">
+    <Input>#Customers('ALFKI')/Orders</Input>
   </TestCase>
-  <TestCase Name="Context URL - collection with containment - multi-level" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers('ALFKI')/Orders(1)/Items</Input>
+  <TestCase Name="Context URL - containment" Rule="context">
+    <Input>#Customers('ALFKI')/Orders/$entity</Input>
   </TestCase>
-  <TestCase Name="Context URL - containment - multi-level with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers('ALFKI')/Orders(1)/Items(Product)/$entity</Input>
+  <TestCase Name="Context URL - collection with containment - multi-level" Rule="context">
+    <Input>#Customers('ALFKI')/Orders(1)/Items</Input>
   </TestCase>
-  <TestCase Name="Context URL - containment with type cast" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers('ALFKI')/Model.VipCustomer/Address/Orders</Input>
+  <TestCase Name="Context URL - containment - multi-level with $select" Rule="context">
+    <Input>#Customers('ALFKI')/Orders(1)/Items(Product)/$entity</Input>
   </TestCase>
-  <TestCase Name="Context URL - Singleton with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#SingletonEntity(Address,Orders)</Input>
+  <TestCase Name="Context URL - containment with type cast" Rule="context">
+    <Input>#Customers('ALFKI')/Model.VipCustomer/Address/Orders</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(Address,Orders)/$entity</Input>
+  <TestCase Name="Context URL - Singleton with $select" Rule="context">
+    <Input>#SingletonEntity(Address,Orders)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity with type cast" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/Model.VipCustomer/$entity</Input>
+  <TestCase Name="Context URL - Entity with $select" Rule="context">
+    <Input>#Customers(Address,Orders)/$entity</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity property value" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(1)/Addresses</Input>
+  <TestCase Name="Context URL - Entity with type cast" Rule="context">
+    <Input>#Customers/Model.VipCustomer/$entity</Input>
   </TestCase>
-  <TestCase Name="Context URL - Entity property value with $select" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers(1)/Addresses(Country)</Input>
+  <TestCase Name="Context URL - Entity property value" Rule="context">
+    <Input>#Customers(1)/Addresses</Input>
   </TestCase>
-  <TestCase Name="Context URL - Individual value" Rule="odataUri">
-    <Input>http://host/service/$metadata#Model.MonetaryAmount</Input>
+  <TestCase Name="Context URL - Entity property value with $select" Rule="context">
+    <Input>#Customers(1)/Addresses(Country)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Individual collection value" Rule="odataUri">
-    <Input>http://host/service/$metadata#Collection(Edm.String)</Input>
+  <TestCase Name="Context URL - Individual value" Rule="context">
+    <Input>#Model.MonetaryAmount</Input>
   </TestCase>
-  <TestCase Name="Context URL - Reference collection" Rule="odataUri">
-    <Input>http://host/service/$metadata#Collection($ref)</Input>
+  <TestCase Name="Context URL - Individual collection value" Rule="context">
+    <Input>#Collection(Edm.String)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Reference" Rule="odataUri">
-    <Input>http://host/service/$metadata#$ref</Input>
+  <TestCase Name="Context URL - Reference collection" Rule="context">
+    <Input>#Collection($ref)</Input>
   </TestCase>
-  <TestCase Name="Context URL - $all" Rule="odataUri">
-    <Input>http://host/service/$metadata#Collection(Edm.EntityType)</Input>
+  <TestCase Name="Context URL - Reference" Rule="context">
+    <Input>#$ref</Input>
   </TestCase>
-  <TestCase Name="Context URL - $crossjoin" Rule="odataUri">
-    <Input>http://host/service/$metadata#Collection(Edm.ComplexType)</Input>
+  <TestCase Name="Context URL - $all" Rule="context">
+    <Input>#Collection(Edm.EntityType)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Delta" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/$delta</Input>
+  <TestCase Name="Context URL - $crossjoin" Rule="context">
+    <Input>#Collection(Edm.ComplexType)</Input>
   </TestCase>
-  <TestCase Name="Context URL - Delta - deleted entity" Rule="odataUri">
-    <Input>http://host/service/$metadata#Orders/$deletedEntity</Input>
+  <TestCase Name="Context URL - Delta" Rule="context">
+    <Input>#Customers/$delta</Input>
   </TestCase>
-  <TestCase Name="Context URL - Delta - link" Rule="odataUri">
-    <Input>http://host/service/$metadata#Customers/$link</Input>
+  <TestCase Name="Context URL - Delta - deleted context" Rule="context">
+    <Input>#Orders/$deletedEntity</Input>
   </TestCase>
-  <TestCase Name="Context URL - Delta - deleted link" Rule="odataUri">
-    <Input>http://host/service/$metadata#Orders/$deletedLink</Input>
+  <TestCase Name="Context URL - Delta - link" Rule="context">
+    <Input>#Customers/$link</Input>
+  </TestCase>
+  <TestCase Name="Context URL - Delta - deleted link" Rule="context">
+    <Input>#Orders/$deletedLink</Input>
   </TestCase>
   <TestCase Name="Header - content-id" Rule="header">
     <Input>content-id: 1</Input>
