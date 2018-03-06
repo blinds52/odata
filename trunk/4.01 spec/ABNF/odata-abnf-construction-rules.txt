@@ -274,17 +274,18 @@ computeItem      = commonExpr RWS "as" RWS computedProperty
 computedProperty = odataIdentifier         
 
 expand            = ( "$expand" / "expand" ) EQ expandItem *( COMMA expandItem )
-expandItem        = STAR [ ref / OPEN levels CLOSE ]
-                  / "$value"
+expandItem        = "$value"
                   / expandPath
-                    [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
-                    / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
-                    /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
-                    ]
-expandPath        = expandPathDirect 
-                  / optionallyQualifiedEntityTypeName "/" expandPathDirect
-expandPathDirect  = *( ( complexProperty / complexColProperty / optionallyQualifiedComplexTypeName ) "/" )
-                    ( STAR / streamProperty / navigationProperty [ "/" optionallyQualifiedEntityTypeName ] )
+                  / optionallyQualifiedEntityTypeName "/" expandPath
+expandPath        = *( ( complexProperty / complexColProperty / optionallyQualifiedComplexTypeName ) "/" )
+                    ( STAR [ ref / OPEN levels CLOSE ]
+                    / streamProperty 
+                    / navigationProperty [ "/" optionallyQualifiedEntityTypeName ] 
+                      [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
+                      / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
+                      /         OPEN expandOption      *( SEMI expandOption      ) CLOSE 
+                      ]                    
+                    )
 expandCountOption = filter
                   / search
 expandRefOption   = expandCountOption
