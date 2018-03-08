@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #206 Thursday March 08, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='46fb1fb24c049577ebbe4d1ed076b2fd88ebe9d6d821c99613a268c8b3f7afa860e8ebb866365be44ddf391ca5d3cbd8ba407f04946dfc340f835e139550f22a' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #206 Thursday March 08, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-03-08 0800-1000 PST
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Kraue (SAP SE)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46246">normative attendance sheet for this meeting (event_id=46246)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: Agenda approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from March 01, 2018 TC meeting #205</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62633/odata-meeting-205_on-20180301-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62633/odata-meeting-205_on-20180301-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None.</p>
+
+<h2 id="5">5. Infos from TC Admin (Chet Ensign)</h2>
+<h3 id="5.1">5.1 Vocabularies and V4.0 Errata 04</h3>
+<ol>
+<li>We can change the vocabulary references in the specification documents to the GitHub vocabularies</li>
+<li>We should in addition pack the most recent copy of the GitHub vocabularies into the Errata zip, so they are published at the usual location</li>
+<li>This is not a problem because the GitHub vocabularies contain latest-version links that point to GitHub</li>
+</ol>
+<p>George: let's go with GitHub as the vocabulary source and NOT publish Errata 04</p>
+<p>Ralf: Change log of vocabulary files is GitHub: <a href="https://github.com/oasis-tcs/odata-vocabularies" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies</a></p>
+<p>Ralf: Commits link back to TC Jira</p>
+<p>Ralf: Same procedure in the time before GitHub: SVN as source control, commit comment links to TC Jira</p>
+<p>Ralf: </p>
+<pre>
+&lt;Annotation Term="Core.Links">
+  &lt;Collection>
+    &lt;Record>
+      &lt;PropertyValue Property="rel" String="latest-version" />
+      &lt;PropertyValue Property="href" String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" />
+    &lt;/Record>
+    &lt;Record>
+      &lt;PropertyValue Property="rel" String="alternate" />
+      &lt;PropertyValue Property="href" String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.json" />
+    &lt;/Record>
+    &lt;Record>
+      &lt;PropertyValue Property="rel" String="describedby" />
+      &lt;PropertyValue Property="href"
+        String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Core.V1.md" />
+    &lt;/Record>
+  &lt;/Collection>
+&lt;/Annotation>
+</pre>
+
+<h3 id="5.2">5.2 Jira Issue Notifications</h3>
+<ol>
+<li>Currently the TC Jira sends notifications to the TC mailing list for every change of an issue:<br>
+1.Created, Updated, Resolved, Closed, Commented, Comment Edited, Comment Deleted, Reopened, Deleted</li>
+<li>Now a terse notification scheme is available, reduced to:<br>
+1.Created, Resolved</li>
+<li>Do we want to switch to terse? Watchers of an issue will still receive notifications of any change to the watched issue</li>
+</ol>
+<p>Gerald: terse</p>
+<p>Ralf: terse</p>
+<p>Mark: no preference</p>
+<p>Ramesh: keep verbose (but fine with switching to terse)</p>
+<p>Stefan: also in favour of terse</p>
+<p>Ralf to contact TC Admin to switch to "terse" notifications</p>
+
+
+
+<h2 id="6">6. Timeline</h2>
+<h3 id="6.1">6.1 Updated timeline</h3>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/62637/TC%20Timeline-2018-03-02.docx" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62637/TC Timeline-2018-03-02.docx</a></p>
+<p><b>Ralf</b>: I <b>move</b> to approve the new timeline. <b>Martin</b> seconds.</p>
+<p>Ralf: No objections, motion passes</p>
+
+<h2 id="7">7. Issues</h2>
+
+<h3 id="7.1">7.1 APPLIED</h3>
+<h4 id="7.1.1">7.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1155" rel="noopener noreferrer" target="_blank">ODATA-1155</a> - ABNF: allow omitting default namespaces everywhere in the URL</h4>
+<p>Ralf: Relax ABNF to allow omitting namespaces for </p>
+<pre>
+- functions 
+- actions 
+- type-cast 
+in 
+- path 
+- query options 
+
+But NOT in the context URL.
+</pre>
+<p>Ralf: <a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/?op=comp&amp;compare%5B%5D=%2Ftrunk%2F4.01+spec%2FABNF@1129&amp;compare%5B%5D=%2Ftrunk%2F4.01+spec%2FABNF@1142&amp;manualorder=1" rel="noopener noreferrer" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/?op=comp&amp;compare%5B%5D=%2Ftrunk%2F4.01+spec%2FABNF@1129&amp;compare%5B%5D=%2Ftrunk%2F4.01+spec%2FABNF@1142&amp;manualorder=1</a></p>
+<p><b>Ralf</b>: I <b>move</b> to CLOSE ODATA-1155 as applied. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1155 is CLOSED as applied</p>
+
+
+<h3 id="7.2">7.2 Vocabularies: NEW or OPEN with concrete proposal</h3>
+
+<h4 id="7.2.1">7.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1072" rel="noopener noreferrer" target="_blank">ODATA-1072</a> - Annotation to describe supported aggregation methods</h4>
+<p><b>Gerald</b>: I <b>move</b> to resolve ODATA-1072 as proposed. <b>Martn</b> seconds.</p>
+<p>Ralf: ODATA-1072 is RESOLVED as proposed</p>
+
+<h4 id="7.2.2">7.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1064" rel="noopener noreferrer" target="_blank">ODATA-1064</a> - Add ability to annotate collections to return only count and NextLink</h4>
+<p>Ralf: Skipped</p>
+
+
+<h3 id="7.3">7.3 Vocabularies: NEW or OPEN that need more discussion  triage</h3>
+
+<h4 id="7.3.1">7.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-1099" rel="noopener noreferrer" target="_blank">ODATA-1099</a> - Add annotations to describe custom query options and custom headers</h4>
+<p>Ralf: would like to have it for odata-to-openapi mapping</p>
+
+<h4 id="7.3.2">7.3.2 <a href="https://issues.oasis-open.org/browse/ODATA-1067" rel="noopener noreferrer" target="_blank">ODATA-1067</a> - Consider ability to define computed default values</h4>
+<p>Ralf: No one voting for doing it now, deferred</p>
+
+<h4 id="7.3.3">7.3.3 <a href="https://issues.oasis-open.org/browse/ODATA-1005" rel="noopener noreferrer" target="_blank">ODATA-1005</a> - Make sure we have capabilities for all new 4.01 functionality</h4>
+<p>Ralf: need this for generic clients</p>
+<p>Mark: agreed, need to do it</p>
+<p>Ralf: split it up into "topic groups" to see some progress</p>
+
+<h4 id="7.3.4">7.3.4 <a href="https://issues.oasis-open.org/browse/ODATA-884" rel="noopener noreferrer" target="_blank">ODATA-884</a> - Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)</h4>
+<p>Ralf: probably have to do this together with <a href="https://issues.oasis-open.org/browse/ODATA-1099" rel="noopener noreferrer" target="_blank">ODATA-1099</a> - Add annotations to describe custom query options and custom headers</p>
+
+
+<h3 id="7.4">7.4 V4.01: NEW or OPEN</h3>
+
+<h4 id="7.4.1">7.4.1 <a href="https://issues.oasis-open.org/browse/ODATA-1156" rel="noopener noreferrer" target="_blank">ODATA-1156</a> - Context URL: allow empty parentheses after navigation property</h4>
+<p>Ralf: ABNF issue, ABNF is more restrictive than prose specification</p>
+<p>Ralf: ODATA-1156 is OPEN</p>
+<p>Ralf: <a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-construction-rules.txt?op=diff&amp;rev=1137" rel="noopener noreferrer" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-construction-rules.txt?op=diff&amp;rev=1137</a><br> 
+<a href="https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-testcases.xml?op=diff&amp;rev=1137" rel="noopener noreferrer" target="_blank">https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec/ABNF/odata-abnf-testcases.xml?op=diff&amp;rev=1137</a></p>
+<p>Ralf: Change:</p>
+<pre>
+old: selectList         = OPEN selectListItem *( COMMA selectListItem ) CLOSE
+new: selectList         = OPEN [ selectListItem *( COMMA selectListItem ) ] CLOSE
+</pre>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1156 as proposed. <b>George</b> seconds.</p>
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-1156 as applied. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-1156 is CLOSED as applied</p>
+
+<h4 id="7.4.2">7.4.2 <a href="https://issues.oasis-open.org/browse/ODATA-1154" rel="noopener noreferrer" target="_blank">ODATA-1154</a> - Clarify which OData-Version a service should return</h4>
+<p>Ralf: Skipped</p>
+
+<h4 id="7.4.3">7.4.3 <a href="https://issues.oasis-open.org/browse/ODATA-1151" rel="noopener noreferrer" target="_blank">ODATA-1151</a> - Edm.Stream and Nullable</h4>
+<p>Ralf: </p>
+<pre>
+1) Expanded returns null 
+2) Link is always valid, returns 204 if the value is null
+</pre>
+<p>Ralf: Remark</p>
+<pre>
+1) is consistent with the representation of structural properties of other primitive type and with expanded single-valued navigation properties 
+2) is consistent with directly accessing a property that has the null value, directly accessing the raw value of a property that has the null value, 
+   and directly accessing a single-valued navigation property that has no entity related 
+- http://docs.oasis-open.org/odata/odata/v4.01/cs01/part1-protocol/odata-v4.01-cs01-part1-protocol.html#sec_RequestingIndividualProperties 
+- http://docs.oasis-open.org/odata/odata/v4.01/cs01/part1-protocol/odata-v4.01-cs01-part1-protocol.html#sec_RequestingaPropertysRawValueusingval 
+- http://docs.oasis-open.org/odata/odata/v4.01/cs01/part1-protocol/odata-v4.01-cs01-part1-protocol.html#sec_RequestingRelatedEntities
+</pre>
+<p><b>Ralf</b>: I <b>move</b> to resolve ODATA-1151 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-2251 is RESOVLED as proposed</p>
+
+<h4 id="7.4.4">7.4.4 <a href="https://issues.oasis-open.org/browse/ODATA-1149" rel="noopener noreferrer" target="_blank">ODATA-1149</a> - Support Delta responses for Singletons</h4>
+
+<p>Ralf: Today we are a bit unclear about whether or not deltas are supported for singletons. </p>
+<pre>
+In 11.3 Requesting Changes of the Protocol document, we say: 
+"Any GET request to retrieve one or more entities MAY allow change-tracking." 
+
+However, in 15.1 Delta Response of the JSON document we say: 
+"Responses from a delta request are returned as a JSON object. The JSON object MUST contain an array-valued property named value containing all added, 
+changed, or deleted entities, as well as added links or deleted links between entities, and MAY contain additional, unchanged entities." 
+
+The wording from the JSON spec makes sense for 4.0, since changes to related entities and links were represented in a flattened result, 
+but with the ability to represent nested related content, it is useful to support a delta payload (GET or PATCH) for requests anchored on a single node.
+</pre>
+<p>George: why not</p>
+<p>George: no array, just one "delta object"</p>
+<p>Ralf: need new context URL pattern to distinguish this from "full object"</p>
+<p>Ralf: ODATA-1149 is OPEN</p>
+<p>Ralf: Need a more concrete proposal</p>
+
+<h4 id="7.4.5">7.4.5 <a href="https://issues.oasis-open.org/browse/ODATA-1148" rel="noopener noreferrer" target="_blank">ODATA-1148</a> - PATCH with nested nav props should not remove omitted resources</h4>
+<p>Ralf: </p>
+<pre>
+In OData 4.0 we explicitly disallowed deep updates (i.e., including related entities in a PUT or PATCH request). 
+We did allow binding (through the @bind annotation). 
+
+In OData 4.01 we added the ability to do deep updates, but we are inconsistent with how we describe the behavior. 
+
+In the Protocol document we say that the nested content replaces the existing content, removing any related resources not specified in the payload: 
+
+11.4.3.1 Update Related Entities When Updating an Entity (Protocol) 
+ 
+Payloads with an OData-Version header with a value of 4.01 or greater MAY include nested entities and entity references 
+that specify the full set of currently related entities, or a nested delta payload representing 
+the related entities that have been added, removed, or changed. 
+
+If the nested collection is represented identical to an expanded navigation property, then the set of nested entities 
+and entity references specified in a successful update request represents the full set of entities to be related according 
+to that relationship and MUST NOT include added links, deleted links, or deleted entities. 
+
+However, this is different than the semantics we describe in section 8.5 of the JSON document (taken from 4.0), 
+which says that the bound items are added, and don't affect the existing relationships: 
+
+8.5 Bind Operation (JSON) 
+ 
+For update operations a bind operation on a collection navigation property adds additional relationships, 
+it does not replace existing relationships, while bind operations on an entity navigation property update the relationship. 
+
+In fact, for a PATCH operation, most people expect that the membership of the collection-valued nav prop is not replaced, 
+but that specified resources are added or updated. 
+
+It would probably be more intuitive to say that PATCH updates the service with the references in the payload, 
+and that PUT must be used in order to do the replace semantics, or @delta can be used to remove (or upsert) individual entries.
+</pre>
+<p>George: consider PATCH on collection</p>
+<p>Ralf: </p>
+<pre>
+11.4.12 Update a Collection of Entities
+Collections of entities can be updated by submitting a PATCH request to the resource path of the collection. 
+The body of the request MUST be a delta payload, and the resource path of the collection MUST NOT contain type cast or filter segments.
+
+Added/changed entities are applied as upserts, and deleted entities as deletions. 
+The top-level collection may include added and deleted links, and related entities represented inline are updated 
+according to the rules for treating related entities when updating an entity.
+
+The response, if requested, is a delta payload, in the same structure and order as the request payload, representing the applied changes.
+
+On failure, the service MUST NOT apply any of the changes specified in the delta request payload.
+</pre>
+<p>Ralf: </p>
+<pre>
+Current PATCH behavior for single entity with related collection:
+{
+  "Items": [...] 
+}
+means replace
+</pre>
+<p>Ralf: </p>
+<pre>
+For "delta patch" use
+ {
+  "Items@odata.delta": [...] 
+}
+</pre>
+<p>Ralf: ODATA-1148 is OPEN</p>
+
+<h4 id="7.4.6">7.4.6 <a href="https://issues.oasis-open.org/browse/ODATA-1141" rel="noopener noreferrer" target="_blank">ODATA-1141</a> - Upsert: clarify upsert along nullable single-valued navigation path</h4>
+<p>Ralf: Description:</p>
+<pre>
+Section 11.4.4 Upsert an Entity allows upsert request to any URL that identifies a single entity. 
+It then references section 11.4.2 Create an Entity, which only talks about creating entities in a collection 
+
+Clarify that upsert is also valid along a nullable single-valued navigation property, at least as long the key property values are client-defined. 
+May also work with server-defined keys by responding with 201 and a location header with the canonical URL of the newly created entity.
+</pre>
+<p>George: for server-generated keys: if key is provided, relate and update target, otherwise create and relate new target entity</p>
+<p>Ralf: ODATA-1141 is OPEN</p>
+
+
+<h2 id="8">8. Next meetings</h2>
+<p>Ralf:</p>
+<pre>
+Thursday March 15, 2018 during 8-10 am PDT (16:00-18:00 CET) – Daylight Saving Time in North America
+Thursday March 22, 2018 during 8-10 am PDT (16:00-18:00 CET) – Daylight Saving Time in North America
+Thursday March 29, 2018 during 8-10 am PDT (17:00-19:00 CEST) – back to normal time difference, Easter is coming
+</pre>
+
+<h2 id="9">9. AOB and wrap up</h2>
+<p>Ralf: Switch back to Adobe Connect for telco</p>
+<pre>
+* Dial-in not possible from Linux with Skype for Business
+* Screen sharing problematic
+</pre>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
