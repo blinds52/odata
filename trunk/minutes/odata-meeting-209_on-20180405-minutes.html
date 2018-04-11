@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #209 Thursday April 05, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='aee00cfbd9ac99cb08912d61b957aec0b44ae72018dcb52f754208bb3fddc34cc3fc830ca8ee105ff53f22910881f23913f0ad8babdc766b85151a85d2117ff2' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #209 Thursday April 05, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-04-05 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46250">normative attendance sheet for this meeting (event_id=46250)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from March 22, 2018 TC meeting #208</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62749/odata-meeting-208_on-20180322-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62749/odata-meeting-208_on-20180322-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+<p>Additional decisions and suggestions:</p>
+<p>Ralf: Section 5.1.3</p>
+<pre>
+"initial default version" needs more clarification
+</pre>
+<p>Mike: in ODATA-1154: "initial Default Version" needs clarification.</p>
+<pre>
+Our intention was that the behavior of the service did not change over time 
+with respect to a client that does not specify an OData-MaxVersion header.
+</pre>
+<p>Mike: shift Outline for REST Profile / OData Essentials to May 3rd</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+
+<h2 id="5">5. Issues</h2>
+
+<h3 id="5.1">5.1 V4.01: NEW or OPEN</h3>
+
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1170" rel="noopener noreferrer" target="_blank">ODATA-1170</a> - Allow @odata.type next to $EnumMember for isomorphy to CSDL XML</h4>
+<p>Ralf: </p>
+<pre>
+The XML representation of &lt;EnumMember> constant expressions contains 
+the enumeration type name of the enumeration value as a prefix: 
+
+&lt;Annotation Term="Namespace1_Alias.TermEnum"> 
+  &lt;EnumMember> 
+     Namespace1_Alias.ENString/String1 Namespace1_Alias.ENString/String3 
+ &lt;/EnumMember> 
+&lt;/Annotation> 
+
+The JSON representation does not contain the type name: 
+
+"@com.odata.v4.technical.scenario.TermEnum": 
+{ 
+   "$EnumMember": "String1,String3" 
+} 
+
+This breaks isomorphy between XML and JSON representation of CSDL. 
+
+The JSON representation was explicitly chosen without type prefix to 
+mirror the JSON Format representation of enumeration values in data payloads. 
+
+Allowing an @odata.type control information next to $EnumMember would 
+both be consistent with JSON Format and establish isomorphy to CSDL XML: 
+
+"@com.odata.v4.technical.scenario.TermEnum": 
+{ 
+   "@odata.type": "Namespace1_Alias.ENString", 
+   "$EnumMember": "String1,String3" 
+}
+</pre>
+<p>Ralf:</p>
+<pre>
+Dynamic enum property in JSON Format:
+   "DynEnumProp@odata.type": "Namespace1_Alias.ENString", 
+   "DynEnumProp": "String1,String3"
+
+Alternative:
+"@com.odata.v4.technical.scenario.TermEnum": 
+{ 
+   "$EnumMember@odata.type": "Namespace1_Alias.ENString", 
+   "$EnumMember": "String1,String3" 
+}
+
+Alternative (corrected):
+"@com.odata.v4.technical.scenario.TermEnum": 
+{ 
+   "$EnumMember@odata.type": "#Namespace1_Alias.ENString", 
+   "$EnumMember": "String1,String3" 
+}
+
+"@com.odata.v4.technical.scenario.TermEnum": 
+{ 
+   "$EnumMember@odata.type": "https://some.other/service/$metadata#Namespace1_Alias.ENString", 
+   "$EnumMember": "String1,String3" 
+}
+</pre>
+<p>Ralf: ODATA-1170 is OPEN</p>
+<p>Mike: do we allow @odata.type or do we require it?</p>
+<p>Mike: if term is Edm.Primitive or Edm.Untyped, then required</p>
+<p>Ralf: if term is concretely typed, allow it, don't require it</p>
+<p>Mike: if we don't require it, then creating the XML representation requires having the term definitions around</p>
+<p>Mike: optional is fine, is consistent with payloads</p>
+<p>George: follow the same rules as @odata.type in data payloads: required if it cannot be computed</p>
+<p>Mike: We should make it optional in the normal case, required if you can't deduce the type; (i.e., if the term cannot be resolved for some reason or the type of the term is Edm.Untyped), as in the data payload.</p>
+<p><b>George</b>: I <b>move</b> to approve OData-1170 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1170 is RESOLVED with the amended proposal</p>
+
+
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1168" rel="noopener noreferrer" target="_blank">ODATA-1168</a> - Clarify the use of ETags for Avoiding Update Conflicts</h4>
+<p>Ralf: Description: <a href="http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Data_Modification" rel="noopener noreferrer" target="_blank">http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Data_Modification</a>  states:</p>
+<pre>
+11.4.1.1 Use of ETags for Avoiding Update Conflicts 
+If an ETag value is specified in an If-Match or If-None-Match header of a Data Modification Request or Action Request, 
+the operation MUST only be invoked if the if-match or if-none-match condition is satisfied. 
+
+The ETag value specified in the if-match or if-none-match request header may be obtained from an ETag header of a response 
+for an individual entity, or may be included for an individual entity in a format-specific manner. 
+
+Issue requiring clarification: we carefully need to distinguish between ODatas meaning of entity = an instance of an entity type" 
+and HTTPs meaning of entity = the thing whose representation is transferred. ETags (= entity tags) refer to the HTTP meaning, 
+and thus links/references/relationships are HTTP entities that can have their own ETags.
+</pre>
+<p>Ralf: </p>
+<pre>
+GET Orders(1) --> ETag: a
+GET Orders(1)/Items --> ETag: b
+POST Orders(1)/Items,If-Match: b
+GET Orders(1)/ShippingDate --> ETag: a
+GET Orders(1)/Customer --> ETag: c - is a different OData entity
+</pre>
+<p>Mike: to flavors of ETags: ETag header (HTTP) and @odata.etag control information</p>
+<p>George: need examples</p>
+<p>Mike: I think we agreed to:</p>
+<pre>
+An ETag returned as a header represents the entire response. A Conditional GET for the same request 
+using that ETag should return a response iff *anything* in the response has changed.
+</pre>
+<p>Mike: Question: Under what conditions can I use the ETag for an update?</p>
+<p>George: Question w.r.t. current defn of behavior of ETAG for contained entities.</p>
+<p>Ralf: </p>
+<pre>
+Each entity has its own ETag value that MUST change when structural properties or links from that entity have changed. 
+In addition, modifying, adding, or deleting a contained entity MAY change the ETag of the parent entity.
+</pre>
+<p>Mike: If the response was a single entity, then the etag can be used for a conditional update.</p>
+<p>Mike: </p>
+<pre>
+-What if the request was for a collection? Can the ETag be used in updating the collection? 
+Would a POST or DELETE fail if any member of the collection had changed, or only if something had been added/removed from the collection?  
+Could I use an ETag header from a GET collection/$ref if I only wanted it to fail if the membership had changed?
+</pre>
+<p>Ralf: </p>
+<pre>
+GET Orders(1) --> ETag: a
+GET Orders(1)?$expand=Items --> ETag: d?
+</pre>
+<p>Mike: yes if service supports conditional GET</p>
+<p>Ralf: Service could always return 200 OK with latest representation</p>
+<p>Mike: Issue: </p>
+<pre>
+If I do a GET for customers?$expand=orders, and get back an ETag, and do a conditional GET to the same URL using the same ETag, 
+I must get a response back if anything in the payload has changed, otherwise caching will return incorrect responses.
+</pre>
+<p>Ralf: </p>
+<pre>
+GET Orders(1) --> ETag: a
+PATCH Orders(1) must have If-Match
+Ralf to write up proposal reflecting this discussion
+</pre>
+<p>Georgr: See 13.9 of RFC2616, which proscribes caching with GET requests containing ? parameters.</p>
+
+<p>Ralf: one step back: ODATA-1168 is OPEN (to not waste the discussion </p>
+
+
+<h4 id="5.1.3">5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1165" rel="noopener noreferrer" target="_blank">ODATA-1165</a> - Describe $expand and $select via prose text and examples, remove ABNF snippets</h4>
+<p>Ralf: Postponed until Ralf prepares an example</p>
+
+
+<h4 id="5.1.4">5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1163" rel="noopener noreferrer" target="_blank">ODATA-1163</a> - A Case for Common Expressions</h4>
+<p>Ralf: </p>
+<pre>
+If all parameters are of the same type, the type of the expression is of that type. 
+If all parameter expressions are of numeric type, the return value has a numeric type capable of representing any of these expressions. 
+Otherwise, the return value is the result of casting the expression of the matching parameter to Edm.String.
+</pre>
+<p>Mike:</p> 
+<pre>
+Issues with default cast to string: If expressions are different type (int, boolean) does case really do an implicit cast to string?  
+What if an expression is a complex/entity type?
+
+Alternative 1: Require expressions to be cast to compatible types
+Alternative 2: Allow the case expression to be Untyped
+
+If we start with 1 (which is more restrictive) we could relax later for alternative 2. 
+We could not go the other way...
+</pre>
+<p>Ralf: Alternative 1: Mike, Mark, Ralf, George, Hubert, Matt</p>
+<p>Ted: would Alternative 1 pose problems for untyped languages?</p>
+<p>Mike: Proposed wording to capture alternative 1:</p>
+<pre>
+All parameter expressions must be compatible.If all parameters are of the same type, the type of the case expression is of that type. 
+If all parameter expressions are of numeric type, the type of the case expression has a numeric type capable of representing any of 
+these expressions according to standard type promotion rules. 
+If types of parameter expressions are not compatible, then they must be cast to compatible types.
+</pre>
+<p>Ralf: Postponed to next meeting</p>
+
+<h2 id="6">6. Next meetings</h2>
+<pre>
+Thursday April 12, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+Thursday April 19, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+<p>George:  <a href="https://www.omg.org/spec/OCL/2.4/PDF" rel="noopener noreferrer" target="_blank">https://www.omg.org/spec/OCL/2.4/PDF</a> - Object Constraint Language</p>
+<p>Mike: can't make next week</p>
+<p>Hubert: might be late</p>
+
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
