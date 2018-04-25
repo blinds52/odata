@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #211 Thursday April 19, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='f6de5df901a859b3692eb9a38ba064754605f7f4b3fb763099bbfeb804f4934e78fcae2900a52fc0184f4dbf7cdd93f42209a9b9f6bdc889f24e8e5b3c87c989' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #211 Thursday April 19, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-04-19 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46252">normative attendance sheet for this meeting (event_id=46252)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Ralf: New V4.01 issue: ODATA-1172 - 4.5.3: use $schemaversion query option instead of SchemaVersion header</p>
+<p>Agenda is approved</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from April 05, 2018 TC meeting #209</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/62839/odata-meeting-209_on-20180405-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/62839/odata-meeting-209_on-20180405-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Timeline</h2>
+
+<h3 id="5.1">5.1 Vocabularies</h3>
+<ol>
+  <li>Publish CSD02 soon, or rather continue with issue processing and publishing on GitHub?</li>
+</ol>
+<h3 id="5.2">5.2 OData to OpenAPI Mapping</h3>
+<ol>
+  <li>Publish CND02 soon, or rather postpone it after REST Profile and/or Compact JSON?</li>
+</ol>
+<p>Mike: review latest changes next</p>
+<p>Ralf: Open issues affecting OpenAPI Mapping:</p>
+<pre>
+i.ODATA-1099 Add annotations to describe custom query options and custom headers
+iii.ODATA-884 Add term ErrorCodes to describe possible codes in error messages (public comment c201510e00019)
+</pre>
+<p>Mike to follow up on ODATA-884</p>
+<p>Ralf to amend ODATA-1099 with schema/examples for custom header/option values</p>
+<p>Ralf: Example values in primitive property definitions in OpenAPI are used by Swagger UI for drawing example payloads</p>
+<p>Ralf: See <a href="http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/TripPin.openapi3.json#/People/get_People" rel="noopener noreferrer" target="_blank">http://petstore.swagger.io/?url=https://raw.githubusercontent.com/oasis-tcs/odata-openapi/master/examples/TripPin.openapi3.json#/People/get_People</a></p>
+<p>Ralf: Example Value:</p>
+<pre>
+{
+  "value": [
+    {
+      "UserName": "string",
+      "FirstName": "string",
+      "LastName": "string",
+      "Emails": [
+        "string"
+      ],
+      "AddressInfo": [
+        {
+          "Address": "string",
+          "City": {
+            "CountryRegion": "string",
+            "Name": "string",
+            "Region": "string"
+          }
+        }
+      ],
+      "Concurrency": "42",
+      "Friends": [
+        null
+      ],
+      "Trips": [
+        {
+          "TripId": 0,
+          "ShareId": "01234567-89ab-cdef-0123-456789abcdef",
+          "Description": "string",
+          "Name": "string",
+          "Budget": 3.14,
+          "StartsAt": "2017-04-13T15:51:04Z",
+          "EndsAt": "2017-04-13T15:51:04Z",
+          "Tags": [
+            "string"
+          ],
+          "Photos": [
+            {
+              "Id": "42",
+              "Name": "string"
+            }
+          ],
+          "PlanItems": [
+            {
+              "PlanItemId": 0,
+              "ConfirmationCode": "string",
+              "StartsAt": "2017-04-13T15:51:04Z",
+              "EndsAt": "2017-04-13T15:51:04Z",
+              "Duration": "P4DT15H51M04.217S"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+</pre>
+<p>Ralf: After resolving these two issues update document and walk through again</p>
+
+<h3 id="5.3">5.3 REST Profile / Essential OData</h3>
+<ol>
+  <li>Before or after Compact JSON?</li>
+</ol>
+<p>Ralf: Next: REST Profile or Compact JSON</p>
+<p>Ralf: "REST Profile" or "OData Light" or "Essential OData": Overview/cookbook for adopting OData step by step</p>
+<p>Ralf: Option: don't use "OData" to avoid confusion around data-centric/non-data-centric APIs</p>
+<p>Ralf: Idea: OpenAPI instead of CSDL as metadata/service description</p>
+<p>George: RestLite doesn't have any hits</p>
+<p>Ralf: Unfortunately it does:</p>
+<pre>
+- GitHub - theintencity/restlite: Light-weight RESTful server tools in Python
+- GitHub - ncribt/restlite: A JavaScript Microframework to make Single ...
+</pre>
+<p>Ralf: and more</p>
+<p>Ralf: Compact JSON: walk-through next week</p>
+
+<h3 id="5.4">5.4 Compact JSON</h3>
+<ol>
+<li>Before or after REST Profile?</li>
+<li>Hubert has contributed a proposal: <a href="1.https://www.oasis-open.org/committees/document.php?document_id=62898&amp;wg_abbrev=odata" rel="noopener noreferrer" target="_blank">1.https://www.oasis-open.org/committees/document.php?document_id=62898&amp;wg_abbrev=odata</a></li>
+</ol>
+<p>George: no pushback from Redfish on Github as publishing point for vocabularies</p>
+<p>Mike: no reason to publish legacy documents</p>
+<p><b>Mike</b>: I <b>move</b> that we continue processing Vocabulary issues through GitHub and do not plan to publish a legacy CSD02 document for the accumulated changes. <b>Hubert</b> seconds.</p>
+<p>Ralf: No objection, motion passes</p>
+
+
+
+<h2 id="6">6. Issues</h2>
+
+<h3 id="6.1">6.1 V4.01: NEW or OPEN</h3>
+
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1172" rel="noopener noreferrer" target="_blank">ODATA-1172</a> - 4.5.3: use $schemaversion query option instead of SchemaVersion header</h4>
+
+
+<p>Ralf: Proposal:</p>
+<pre>
+Current text: 
+---- 
+If the URI references a metadata document (that is, its not just a fragment), and refers to a specific version of that metadata, then the object or name/value pair MUST also be annotated with the Core.SchemaVersion annotation, defined in [OData-VocCore], to indicate the version of the metadata document containing the corresponding version of the type. For streamed JSON responses, this annotation MUST immediately follow the type annotation. If the Core.SchemaVersion annotation is present, the Core.SchemaVersion header, defined in [OData-Protocol], SHOULD be used when retrieving the referenced metadata document. 
+---- 
+
+Change to 
+---- 
+If the URI references a metadata document (that is, its not just a fragment), it MAY refer to a specific version of that metadata document using the $schemaversion system query option defined in [OData-Protocol]. 
+---- 
+
+That is: no need for an additional annotation with Core.SchemaVersion, just follow the @odata.type URL.
+</pre>
+<p>Ralf: ODATA-1172 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1172 as proposed. <b>Mark</b> seconds.</p>
+<p>Ralf: ODATA-1172 is RESOLVED as proposed</p>
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1171" rel="noopener noreferrer" target="_blank">ODATA-1171</a> - Consider using matrix parameters for filter segments</h4>
+
+<p>Mike: Current filter segment syntax: </p>
+<pre>
+Customers/$filter=@q/myns.action?$@q=Age gt 18
+Syntax using Matrix Parameters: Customers;$filter=@q?$@q=name eq 'Smith'
+Customers;$filter=@q/myns.action?$@q=name eq 'Smith'
+</pre>
+<p>Ralf: According to "Restful Java with JAX-RS 2.0", a request like "GET /mercedes/e55;color=black/2006/interior;color=tan" would have an ambiguous definition of the color matrix param.</p>
+<p>Ralf: ODATA-1171 is OPEN
+<p>Mike to get feedback from implementation team regarding concerns of IETF specifications and HTTP-related tools being unable to cope with semicolons in URL paths</p>
+<p>Mike: don't have both syntax variants, decide for exactly one soon</p>
+
+<h4 id="6.1.3">6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1163" rel="noopener noreferrer" target="_blank">ODATA-1163</a> - A Case for Common Expressions</h4>
+
+<p>Ralf: Proposal:</p>
+<pre>
+The case function has the following signatures: 
+
+expression case(Edm.Boolean:expression, ..., Edm.Boolean:expression) 
+expression case(Edm.Boolean:expression, ..., Edm.Boolean:expression,expression) 
+
+Each Edm.Boolean:expression parameter is a tuple separated by a colon, 
+where the first component evaluates to a Boolean value, 
+and the second component may be an expression of any type. 
+
+The case function returns the expression value of the leftmost parameter, whose first component evaluates to true. 
+If none of the parameters match, case returns null, unless the last parameter is an expression, 
+whose value is returned otherwise. 
+
+If all parameters are of the same type, the type of the expression is of that type. 
+If all parameter expressions are of numeric type, the return value has a numeric type capable 
+of representing any of these expressions. 
+Otherwise, the return value is the result of casting the expression of the matching parameter to Edm.String.
+</pre>
+<p>Mike: (From ODATA-1171: George: Note that putting a filter in the Path is problematic for some implementations that serve hard-coded paths or do routing based on fixed path templates. Also, it breaks the hypermedia-driven model of services providing URLs and the client only affecting query string parameters.)</p>
+<p>Mike: agree that type-compatible result expressions lead to that type using existing OData rules</p>
+<p>Mike: From 2018-4-5: All parameter expressions must be compatible. If all parameters are of the same type, the type of the case expression is of that type. If all parameter expressions are of numeric type, then the type of the case expression is a numeric type capable of representing any of these expressions according to standard type promotion rules. If types of parameter expressions are not compatible, then they must be cast to compatible types.</p>
+<p>Mike: could use Edm.Untyped instead of forcing cast in case the parameter expressions aren't compatible</p>
+<p>Mike: can start with the stricter rule and relax it later to resulting in Edm.Untyped.</p>
+<p>George: be strict and make client responsible for formulating consistent requests</p>
+<p>Ralf: Side-discussion on wording in CSDL "14.4.11 Null", George to open separate issue with proposal for improved wording</p>
+<p>Mike: One option: Clients SHOULD ensure that the type of the expression is well defined. Services MAY support case expressions containing parameters of different types, in which case the type of the expression is UnTyped.</p>
+<p>George: OData-1173 addresses 14.4.11</p>
+<p>Mike: Revised proposal: </p>
+<pre>
+The client SHOULD ensure that all expressions are compatible. 
+If all parameters are of the same type, the type of the case expression is of that type. 
+If all parameter expressions are of numeric type, then the type of the case expression 
+is a numeric type capable of representing any of these expressions according to standard type promotion rules.
+
+Services MAY support case expressions containing parameters of incompatible types, 
+in which case the expression is treated as Edm.Untyped.
+</pre>
+<p>Ralf: Perfect</p>
+<p>Mike: Revised last statement: Services MAY support case expressions containing parameters of incompatible types, in which case the expression is treated as Edm.Untyped and its value is the type of the parameter expression taken selected by the case statement..</p>
+<p>Mike: Reworded: </p>
+<pre>
+The client SHOULD ensure that all parameter expressions are compatible. 
+If all parameter expressions are of the same type, the type of the case expression is of that type. 
+If all parameter expressions are of numeric type, then the type of the case expression is a 
+numeric type capable of representing any of these expressions according to standard type promotion rules.
+
+Services MAY support case expressions containing parameters of incompatible types, in which case the expression 
+is treated as Edm.Untyped and its value is the type of the parameter expression selected by the case statement.
+</pre>
+<p>Mark: I like this latest proposal</p>
+<p>Ralf: Me too</p>
+<p><b>Mark</b>: I <b>move</b> that OData-1163 be resolved as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1163 is RESOLVED with the amended proposal</p>
+
+<h2 id="7">7. Next meetings</h2>
+<pre>
+Thursday April 19, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+Thursday May 03, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
