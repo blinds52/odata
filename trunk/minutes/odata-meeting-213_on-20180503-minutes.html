@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #213 Thursday May 03, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='d5eb3e2bb037379bd4768f0f0c4fd1dc2d0a79d910a9192354989f7844a222231943390dee1440c1a073f3ee2e108d518f546fedc6ff79387c46b0b823cdc651' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #213 Thursday May 03, 2018</h1>
+<p>Acting chair: Mike</p>
+<pre>Chat transcript from room: odatatc
+2018-05-03 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46254">normative attendance sheet for this meeting (event_id=46254)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Gerald: two issues for data aggregation:</p>
+<pre>
+https://issues.oasis-open.org/browse/ODATA-1158 - Transformations for limiting the number of entities in the result of a $apply transformation
+https://issues.oasis-open.org/browse/ODATA-1157 - Transformation for sorting entities created by a $apply transformation
+</pre>
+<p>Agenda is approved with the above change</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from April 26, 2018 TC meeting #212</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/63048/odata-meeting-212_on-20180426-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/63048/odata-meeting-212_on-20180426-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<h4 id="4.1.1">4.1.1 #0038 Prepare proposal for REST Profile / OData Essentials</h4>
+<p>Ted: Not to be confused with RESTEasy.  <a href="http://resteasy.jboss.org/" rel="noopener noreferrer" target="_blank">http://resteasy.jboss.org/</a></p>
+<p>Ralf: </p>
+<pre>
+Goals: easy to understand, fun to read, as brief as possible
+Examples first, then explanations
+https://www.whois.com/whois/rest-ez.com is not available!!
+https://www.whois.com/whois/rest-ez.org is ok
+https://www.whois.com/whois/rest-ez.io is available
+</pre>
+<p>Ralf: Next steps:</p>
+<pre>
+- Mike: send out document
+- all: give feedback
+</pre>
+
+<h2 id="5">5. Issues</h2>
+
+<h3 id="5.1">5.1 Data Aggregation</h3>
+
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1158" rel="noopener noreferrer" target="_blank">ODATA-1158</a> - Transformations for limiting the number of entities in the result of a $apply transformation</h4>
+<p>Ralf: Description:</p>
+<pre>
+Transformation concat combines entity collections returned by two or more transformation sequences in a new, concatenated collection.
+
+For limiting the number of items returned from the overall result collection, today the only way is to use system query options $skip and $top. 
+It is currently not possible to limit the individual result collections of the transformation sequences passed to concat.
+
+There are use cases requiring this ability. As an example, consider a request asking for (1) the grand total sales amount along 
+with (2) the sales figures for the first 10 customers. 
+Note that (1) may return a collection with more than one entry in case multiple currencies are involved, hence a global $top does not give 
+full control to the client. In the worst case with more than ten currencies, not a single customer sales amount would be returned. 
+If the aggregated result is put into a stable order with the orderby transformation (described in &lt;issue>), this can be avoided with a top transformation:
+
+GET ~/Sales?$apply=
+concat( groupby( (Currency), Amount with sum as TotalAmount ),
+groupby( (Customer,Currency), Amount with sum as TotalAmount )
+/orderby( Customer,Currency )
+/top( 10 )
+)
+
+Another example also involving a skip transformation could be a request fetching sales amounts per customer and month in pages of 
+ten data points per request, complemented with minimum and maximum amounts of the entities on this page. 
+The request for the fourth page would look like:
+
+GET ~/Sales?$apply=
+groupby( (Customer,Time/Month,Currency), Amount with sum as TotalAmount ),
+/orderby( Customer,Time/Month,Currency )
+/skip( 30 )/top( 10 )
+/concat( 
+identity, 
+aggregate( Amount with min as MinAmount, Amount with max as MaxAmount ) )
+[18:29] Ralf Handl (SAP SE): Proposal:
+Define transformations skip and top:
+
+The skip transformation takes a non-negative integer n as argument and excludes the first n entities of the input set and returns 
+all entities starting at position n+1.
+The top transformation takes a non-negative integer n as argument and returns the number of available entities from the input 
+set up to but not greater than the specified value n.
+</pre>
+<p>Gerald: </p>
+<pre>
+GET ~/Sales?$apply=
+concat( groupby( (Currency), Amount with sum as TotalAmount ),
+groupby( (Customer,Currency), Amount with sum as TotalAmount )
+/orderby( Customer,Currency )
+/top( 10 )
+)
+
+GET ~/Sales?$apply=
+groupby( (Customer,Time/Month,Currency), Amount with sum as TotalAmount ),
+/orderby( Customer,Time/Month,Currency )
+/skip( 30 )/top( 10 )
+/concat( 
+identity, 
+aggregate( Amount with min as MinAmount, Amount with max as MaxAmount ) )
+</pre>
+<p>Mike: </p>
+<pre>
+would need to define whether filter() preserves order or not
+individual transformations for top() and skip() allow e.g. top(10)/skip(20) leading to an empty result
+skip() should preserve order to not make top() meaningless or require orderby()/skip()/orderby()/top()
+top and skip need to preserve order
+top and skip without orderby are kinda meaningless, but allowed.
+we don't define whether or not transformations in general preserve ordering
+</pre>
+<p>Gerald: some other (i.e., custom) transformation may already define an ordering, in which case the orderby would not be required</p>
+<p>Mike: relevant use case for introducing orderby, top, skip as transformations come from concat</p>
+<p>Ralf: The topxxx and bottomxxx transformations already are defined not to change the order of instances in the input set, same for concat</p>
+<p>Ralf: Gerald to update the proposal</p>
+
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1157" rel="noopener noreferrer" target="_blank">ODATA-1157</a> - Transformation for sorting entities created by a $apply transformation</h4>
+<p>Not discussed</p>
+
+<h2 id="7">7. Next meetings</h2>
+<p>Skip this one:</p>
+<pre>
+Thursday May 10, 2018 during 8-10 am PDT (17:00-19:00 CEST)  Note: public holiday in Germany
+</pre>
+<p>Do these:</p>
+<pre>
+Thursday May 17, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+Thursday May 24, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
