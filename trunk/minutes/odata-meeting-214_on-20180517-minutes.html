@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #214 Thursday May 17, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='fdaaa20080c788cf247aeee7988ce8d192fced82c48298d64ab303f1cb134318dd3d103910ca11339467be4c2f33733038edba6cdbe06c942aa9251fb0b12ac8' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #214 Thursday May 17, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-05-17 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Martin Zurmuehl (SAP SE)
+    Matthew Borges (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46256">normative attendance sheet for this meeting (event_id=46256)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda is approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from May 03, 2018 TC meeting #213</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/63049/odata-meeting-213_on-20180503-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/63049/odata-meeting-213_on-20180503-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Move ABNF to GitHub</h2>
+
+<h3 id="5.1">5.1 Request TC GitHub project oasis-tcs/odata-abnf</h3>
+<ol>
+  <li>Make latest version of ABNF more visible</li>
+  <li>Easier public feedback via issues etc.</li>
+  <li>Easier issue application via branches and pull requests</li>
+</ol>
+
+<p>Mike: likes it</p>
+<p>George: what else is not yet in GitHub</p>
+<p>Ralf:</p>
+<pre>
+XML Schemas for CSDL 
+JSON Schema for CSDL
+</pre>
+<p>Ralf: Another project</p>
+<pre>
+odata-csdl
+odata-schemas
+odata-csdl-schemas
+</pre>
+<p>George: another project for odata-to-json-schema or odata-validation</p>
+<p>Ralf: Three new repos</p>
+<pre>
+1) odata-abnf
+2) odata-csdl-schemas
+3) odata-json-schema
+</pre>
+<p><b>Mike</b>: I <b>move</b> that we create a new OASIS TC GitHub repo (oasis-tcs/odata-abnf) for the ABNF, a new odata-csdl-schemas repo for the XML Schema for CSDL and JSON Schema for CSDL, and an odata-json-schema repo for the CSDL to JSON Schema transformation. <b>George</b> seconds.</p>
+<p>Ralf: Motion passes</p>
+
+<h2 id="6">6. Issues</h2>
+
+<h3 id="6.1">6.1 APPLIED</h3>
+
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1175" rel="noopener noreferrer" target="_blank">ODATA-1175</a> - Capabilities: allow UpdateRestrictions also for singletons</h4>
+
+<p>Mike: Let's be sure we have a good readme for the odata-json-schema repo describing its state and the fact that we are not investing in it.</p>
+<p>Ralf: Pull request <a href="https://github.com/oasis-tcs/odata-vocabularies/pull/13" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/pull/13</a></p>
+<p><b>George</b>: I <b>move</b> to approve OData 1175. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1175 is CLOSED as applied</p>
+
+<h3 id="6.2">6.2 Data Aggregation: NEW or OPEN</h3>
+
+<h4 id="6.2.1">6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1158" rel="noopener noreferrer" target="_blank">ODATA-1158</a> - Transformations for limiting the number of entities in the result of a $apply transformation</h4>
+
+<p>Ralf: ODATA-1158 is OPEN</p>
+<p><b>Mike</b>: I <b>move</b> we approve ODATA-1158 as proposed. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1158 is RESOLVED as proposed</p>
+
+
+<h4 id="6.2.2">6.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1157" rel="noopener noreferrer" target="_blank">ODATA-1157</a> - Transformation for sorting entities created by a $apply transformation</h4>
+
+<p>Ralf: ODATA-1157 is OPEN</p>
+
+<p>Mike:</p> 
+<pre>
+Consider specifying that orderby expression is a property path with asc/desc, while services may support additional expressivity according to the abnf.
+Note that expressions supported by orderby system query option may differ from expressions supported by orderby transformation.
+Added to proposal: orderby expression of the orderby transformation conforms to same abnf as the system query option; minimal bar is property path expressions with asc/desc.
+</pre>
+<p><b>Mike</b>: I <b>move</b> we resolve ODATA-1157 according to the amended proposal. <b>Martin</b> seconds.</p>
+<p>Ralf: ODATA-1157 is RESOLVED with the amended proposal</p>
+
+<h3 id="6.3">6.3 V4.01: NEW or OPEN</h3>
+
+<h4 id="6.3.1">6.3.1 <a href="https://issues.oasis-open.org/browse/ODATA-1181" rel="noopener noreferrer" target="_blank">ODATA-1181</a> - Clarify $expand=NavSingle/$count and $expand=*/$count</h4>
+
+<p>Mike: </p>
+<pre>
+how about direct paths to a single entity, e.g. Products(42)/$count
+how about filter expressions?
+likes */$count
+</pre>
+<p>Ralf:</p>
+<pre>
+for $expand
+NavProp@count:1
+Or rather NavProp:{ @count:1 } because for object values we put annotations and control information into the object
+</pre>
+<p>Ralf: Proposal: do not allow this</p>
+<p>Ralf: ODATA-1181 is OPEN</p>
+<p>Ralf steps down from chair role temporarily, Mike takes over</p>
+<p><b>Ralf</b>: I <b>move</b> to close ODATA-1181 without action; we don't want to allow these requests and their consequences for expressions in general. <b>Martin</b> seconds.</p>
+<p>ODATA-1181 is closed without action</p>
+<p>Ralf continues with chair role</p>
+<p>Ralf to update the "Proposal"</p>
+
+<h4 id="6.3.2">6.3.2 <a href="https://issues.oasis-open.org/browse/ODATA-1180" rel="noopener noreferrer" target="_blank">ODATA-1180</a> - Cast between enumeration types and integer types</h4>
+
+<p>Ralf: Description</p>
+<pre>
+Enumeration members have an explicit or (only in CSDL XML) implicit numeric value.
+
+Sorting and comparison of enumeration members is based in this numeric value.
+
+Unfortunately casting between enumeration types and integer types is not yet defined.
+</pre>
+<p>Ralf: Proposal:</p>
+<pre>
+Casting between enumeration types and integer types (of sufficient width) is possible based on the numeric value.
+
+This casting is implicit, same as casting between numeric types.
+
+Call this out in URL Conventions, section 5.1.1.10.1 cast.
+
+Call out implicit casting for annotation values in CSDL XML and CSDL JSON, section 14.4.1.2 Path Evaluation.
+</pre>
+<p>Ralf: ODATA-1180 is OPEN</p>
+<p>Mike: From ABNF:</p>
+<pre>
+enum            = [ qualifiedEnumTypeName ] SQUOTE enumValue SQUOTE
+enumValue       = singleEnumValue *( COMMA singleEnumValue )
+singleEnumValue = enumerationMember / enumMemberValue
+enumMemberValue = int64Value
+</pre>
+
+<h4 id="6.3.3">6.3.3 <a href="https://issues.oasis-open.org/browse/ODATA-1178" rel="noopener noreferrer" target="_blank">ODATA-1178</a> - External targeting for action/function overloads</h4>
+
+<p>Ralf: Proposal:</p>
+<pre>
+Allow external targeting of individual action/function overload with syntax similar to action/function advertisement 
+in JSON data by optionally appending the overload signature to the action/function name.
+
+The signature consists of parentheses containing a comma-separated list starting with the qualified name of the 
+binding parameter type, and for functions followed by the names of the non-binding parameters. 
+This uniquely identifies a single overload.
+
+Examples:
+
+MySchema.MyAction(MySchema.BindingParameterType)
+MySchema.MyFunction(MySchema.BindingParameterType,FirstNonBindingParameter,SecondNonBindingParameter)
+</pre>
+
+<p>Mike:</p> 
+<pre>
+fills a gap between external targeting and inline annotations
+should be extended to non-bound overloads
+no omitting of namespace/alias for binding parameter type, MUST be qualified name
+that avoids naming conflicts between types and binding parameters
+</pre>
+<p>Ralf: ODATA-1178 is OPEN</p>
+<p><b>George</b>: I <b>move</b> to approve ODATA-1178. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1178 is RESOLVED as proposed</p>
+
+<h4 id="6.3.4">6.3.4 <a href="https://issues.oasis-open.org/browse/ODATA-1177" rel="noopener noreferrer" target="_blank">ODATA-1177</a> - Core: add term SchemaLocatio</h4>
+
+<p>Ralf: Description</p>
+<pre>
+Allow to specify the JSON or OpenAPI schema for values of properties of type Edm.Untyped.
+</pre>
+<p>Hubert: add reference to JSON Schema files in addition to references to CSDL files</p>
+
+
+<h2 id="7">7. Next meetings</h2>
+<pre>
+Thursday May 24, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+Thursday May 31, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
