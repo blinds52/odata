@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #215 Thursday May 24, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='f42ecb657fb60bb086b88d268dd718cfd5d96ee6ff2ae30762a770464eed15373b344b0408413d265aa4e48a2cddb773a649de447c5cc0955be90eb4c3f7a64d' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #215 Thursday May 24, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-05-24 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46257">normative attendance sheet for this meeting (event_id=46257)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda is approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+<h3 id="3.1">3.1 Minutes from May 17, 2018 TC meeting #214</h3>
+<p><a href="https://www.oasis-open.org/committees/download.php/63146/odata-meeting-214_on-20180517-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/63146/odata-meeting-214_on-20180517-minutes.html</a></p>
+<p>Minutes approved unchanged as published.</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. New GitHub Repos  Description and Purpose statements</h2>
+<p><b>George</b>: I <b>move</b> to request creation of github repositories as described in the following three subsections 5.1, 5.2, and 5.3. <b>Huber</b> seconds.</p>
+<p>Ralf: Motion passes</p>
+
+<h3 id="5.1">5.1 odata-csdl-schemas</h3>
+<ol>
+  <li><b>Description</b>: Schemas for validating CSDL JSON and CSDL XML ($metadata) documents</li>
+  <li><b>Purpose</b>: This repository contains JSON schemas for validating CSDL JSON documents and XML schemas for validating CSDL XML documents.</li>
+</ol>
+
+<h3 id="5.2">5.2 odata-abnf</h3>
+<ol>
+  <li><b>Description</b>: ABNF for OData URLs, headers, and literal data values</li>
+  <li><b>Purpose</b>: This repository contains ABNF-based grammars for OData Uniform Resource Identifiers, request and response headers, and literal data values in request and response bodies. Each grammar is accompanied by a set of positive and negative test cases that serve as examples for what is intended and not intended, and that can also be used to automatically test the grammars.</li>
+</ol>
+
+<h3 id="5.3">5.3 odata-json-schema</h3>
+<p>Ralf: <a href="http://json-schema.org/" rel="noopener noreferrer" target="_blank">http://json-schema.org/</a></p>
+<ol>
+  <li><b>Description</b>: Tools for producing JSON Schema documents for OData services</li>
+  <li><b>Purpose</b>: This repository provides tools for producing JSON Schema documents for validating OData JSON request and response bodies.</li>
+</ol>
+
+<h3 id="5.4">5.4 odata-vocabularies - existing repo, just for reference</h3>
+<ol>
+  <li><b>Description</b>: Standard vocabularies for annotating OData services</li>
+  <li><b>Purpose</b>: This repository contains the most recent copies of the standard OData vocabularies authored by the OASIS OData Technical committee.</li>
+</ol>
+<p>Ralf: <a href="http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html" rel="noopener noreferrer" target="_blank">http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/odata-vocabularies-v4.0.html</a></p>
+<h3 id="5.5">5.5 odata-openapi - existing repo, just for reference</h3>
+<ol>
+  <li><b>Description</b>: Tools for producing API descriptions for OData services that adhere to the OpenAPI Specification</li>
+  <li><b>Purpose</b>: This repository provides tools for producing OpenAPI descriptions for OData services.</li>
+</ol>
+
+<h2 id="6">6. Issues</h2>
+
+<h3 id="6.1">6.1 APPLIED</h3>
+
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1182" rel="noopener noreferrer" target="_blank">ODATA-1182</a> - Clarify that transformation topcount keeps the order of the input set</h4>
+
+
+<p>Ralf: ODATA-1182 is OPEN</p>
+<p><b>Mark</b>: I <b>move</b> to resolve OData-1182 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1182 is RESOLVED as proposed</p>
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1179" rel="noopener noreferrer" target="_blank">ODATA-1179</a> - Enhance orderby $apply-transformation with sorting of undefined properties</h4>
+
+
+<h4 id="6.1.3">6.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1169" rel="noopener noreferrer" target="_blank">ODATA-1169</a> - Transformation for nesting the result of another transformation within a single entity</h4>
+
+<p>All work suppoted by a shared screen</p>
+<p>Ralf:</p>
+<pre>
+$compute=Orders($filter=...) as FilteredOrders
+</pre>
+<p>Mike: Discussion on how transpose, which introduces a computed (dynamic) navigation property, relates to $compute with an expression to do something similar...</p>
+<p>Ralf:</p>
+<pre>
+transpose(NewProp,...)
+compute(... as NewProp)
+</pre>
+<p>Mike: would need to be able to put the groupby expression within the compute...</p>
+<p>Mike: in the case of transpose, the computed values are part of the input set; in compute we are computing values based on the input set.</p>
+<p>Gerald</p>
+<pre>
+GET ~/Sales?$apply=
+groupby( (Customer/Country,Customer/Name,Currency),
+    transpose( Cells,
+        groupby( (Product/Category/Name,Product/Name),
+                 aggregate( Amount with sum as Total ) )
+        /orderby( Product/Category/Name asc, Product/Name desc ) ) )
+</pre>
+<p>Hubert</p>
+<pre>
+groupby( (Customer/Country,Customer/Name,Currency) )/
+    compute( groupby( (Product/Category/Name,Product/Name),
+                 aggregate( Amount with sum as Total ) )
+        /orderby( Product/Category/Name asc, Product/Name desc ) ) )
+</pre>
+<p>Hubert</p>
+<pre>
+groupby( (Customer/Country,Customer/Name,Currency) )/
+    compute( 
+        groupby( (Product/Category/Name,Product/Name),
+                 aggregate( Amount with sum as Total ) ) as Cells )
+</pre>
+<p>Ralf</p>
+<pre>
+transpose(newProp,chain)
+chain/wrap(newProp)
+$compute=... is same as $apply=compute(...)
+For collection-valued resources
+</pre>
+<p>Ralf: ODATA-1169 and ODATA-1179 are OPEN</p>
+
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1169 as proposed with the change of naming the proposed function 'nest' as opposed to 'transpose'. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1169 is RESOLVED with the amended proposal</p>
+
+<h2 id="7">7. Next meetings</h2>
+<p>Suggested:</p>
+<pre>
+Thursday May 31, 2018 during 8-10 am PDT (17:00-19:00 CEST)  public holiday in Germany
+</pre>
+<p>Mike: Skip nect one</p>
+<p>Ralf: No objections</p>
+<p>Agreed next meeting:</p>
+<pre>
+Thursday Jun 07, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
