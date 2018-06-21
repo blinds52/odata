@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #217 Thursday June 14, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='4be91903a0e660e51baf2b283790b2acd85aca232c5f8d9eb282984fb28555657b1bd2735d878124191262f0c8be35d859f15420ca4661dbd9007199d7fc0088' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #217 Thursday June 14, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-06-14 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46260">normative attendance sheet for this meeting (event_id=46260)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>George: iv.ODATA-1183 Allow Singletons to be null</p>
+<p>Mike: iii.ODATA-1187 No way to bind nav prop on recursively nested (contained or complex) type</p>
+<p>Mike: pushback on lack of DateTime data type</p>
+<p>Agenda is approved with the above changes</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+
+<h3 id="3.1">3.1 Minutes from June 07, 2018 TC meeting #216</h3>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/63236/odata-meeting-216_on-20180607-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/63236/odata-meeting-216_on-20180607-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h3 id="3.2">3.2 Minutes from May 24, 2018 TC meeting #215</h3>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/63235/odata-meeting-215_on-20180524-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/63235/odata-meeting-215_on-20180524-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Thread on lack of DateTime datatype</h2>
+<h3 id="5.1">5.1 Mike on DateTime with unknown time zone</h3>
+<p>Mike: Thread on lack of DateTime datatype inhibiting adoption of OData: <a href="https://github.com/OData/WebApi/issues/136" rel="noopener noreferrer" target="_blank">https://github.com/OData/WebApi/issues/136</a></p>
+<p>Ralf: We could add an Edm.LocalDateTime with the explicit meaning that the time zone of this timestamp is unknown and that clients MUST NOT assume it to be UTC</p>
+<p>Mike: use a type definition over Edm.String with a pattern validation</p>
+<p>George: define a term for annotating string properties</p>
+<p>Ralf: Pattern validation: <a href="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md#Pattern" rel="noopener noreferrer" target="_blank">https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Validation.V1.md#Pattern</a></p>
+<p>George: also introduce further annotations for e.g. ISO 8601 intervals</p>
+<p>Ralf: <a href="https://issues.oasis-open.org/browse/ODATA-220" rel="noopener noreferrer" target="_blank">https://issues.oasis-open.org/browse/ODATA-220</a></p>
+<p>Mike to reopen ODATA-220 and prepare a proposal</p>
+
+
+<h2 id="6">6. Issues</h2>
+
+<h3 id="6.1">6.1 V4.01: NEW or OPEN</h3>
+
+<h4 id="6.1.1">6.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1183" rel="noopener noreferrer" target="_blank">ODATA-1183</a> - Allow Singletons to be null</h4>
+<p>Ralf: ODATA-1183 is OPEN</p>
+<p>Mike: seems consistent with single-valued nullable navigation properties</p>
+<p>Ralf: is also consistent with top-level function imports with a nullable return type</p>
+<p>Ralf: </p>
+<pre>
+If singleton is null, follow 11.2.7 Requesting Related Entities
+If the relationship terminates on a single entity, the response MUST be the format-specific representation of the related single entity. 
+If no entity is related, the service returns 204 No Content.
+</pre>
+<p>Ralf: Postponed to next week</p>
+<p>Ralf: Homework: think about the default - consistency with navigation properties versus compatibility with V4</p>
+
+<h4 id="6.1.2">6.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1187" rel="noopener noreferrer" target="_blank">ODATA-1187</a> - ODATA-1187 No way to bind nav prop on recursively nested (contained or complex) type</h4>
+<p>Mike: Example complex type containing a navigation property:</p>
+<pre>
+&lt;ComplexType Name="Address">
+&lt;Property Name="PreviousAddress" Type="self.PreviousAddress" Nullable="true"/>
+&lt;NavigationProperty Name="Country" Type="self.Country"/>
+&lt;/ComplexType>
+</pre>
+<p>Mike: To bind the country property of address within an entityset:</p>
+<pre>
+&lt;EntitySet Name="Customers" EntityType="self.Customer">
+&lt;NavigationPropertyBinding Path="Address/Country" Target="Countries" />
+&lt;NavigationPropertyBinding Path="Address/PreviousAddress/Country" Target="Countries" />
+&lt;/EntitySet>
+</pre>
+<p>Ralf:</p>
+<pre>
+&lt;NavigationPropertyBinding Path="Address/PreviousAddress*/Country" Target="Countries" />
+&lt;NavigationPropertyBinding Path="Address/PreviousAddress+/Country" Target="Countries" />
+$expand=PreviousAddress($levels=5)
+</pre>
+<p>Ralf: Context URL: PreviousAddress+ with "+" suffix</p>
+<p>Mike: </p>
+<pre>
+Alternatively; to avoid a breaking change we could add an annotation to the exiting path that says "recursive"
+Then we could specify the "recursive path" within the annotation (which may contain more than one segment)...
+Might not need to specify path; if the path is recursive, you can annotate it with "recursive"...
+We don't need to specify different bindings for different levels of recursion.
+</pre>
+<p>Ralf: ODATA-1187 is OPEN</p>
+<p>Mike to prepare a proposal</p>
+<p>Mike: Note:</p>
+<pre>
+we originally intended annotations as a first-class mechanism for compatibly extend metadata.  
+However, there are some model elements that cannot be annotated today (including NavigationPropertyBindings).  
+Should we fix this by making sure all elements can be annotated?
+</pre>
+<p>Mike to open issue for Hubert on which metadata constructs should be annotatable</p>
+
+
+<h3 id="6.2">6.2 Data Aggregation: NEW or OPEN</h3>
+
+<h4 id="6.2.1">6.2.1 <a href="https://issues.oasis-open.org/browse/ODATA-1159" rel="noopener noreferrer" target="_blank">ODATA-1159</a> - Clarify context URLs for aggregated result sets</h4>
+<p><b>Gerald</b>: I <b>move</b> to resolve ODATA-1159 as proposed.</p>
+<p>Hubert: what if a property is primitive for some instances, and structured for others?</p>
+<p>Ralf: </p>
+<pre>
+What if identically named dynamic properties are differently structured / projected in different parts of the concatenated result?
+Outermost context URL specifies "most common" structure, deviating instances have individual context URLs
+</pre>
+<p><b>Hubert</b>: I second</p>
+<p>Ralf: ODATA-1159 is RESOLVED as proposed</p>
+
+
+<h4 id="6.2.2">6.2.2 <a href="https://issues.oasis-open.org/browse/ODATA-1137" rel="noopener noreferrer" target="_blank">ODATA-1137</a> - Clarify type information for dynamic properties in the aggregated result set</h4>
+<p>Ralf: ODATA-1137 is OPEN</p>
+<p><b>Gerald</b>: I <b>move</b> to resolve ODATA-1137 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1137 is RESOLVED as proposed</p>
+
+<h4 id="6.2.3">6.2.3 <a href="https://issues.oasis-open.org/browse/ODATA-1073" rel="noopener noreferrer" target="_blank">ODATA-1073</a> - Conformance section references wrong annotation term</h4>
+
+<p>Ralf: Replace "via the Custom Aggregates annotation" by "via the ApplySupported annotation"</p>
+<p>Ralf: ODATA-1073 is OPEN</p>
+<p><b>Gerald</b>: I <b>move</b> to resolve ODATA-1073 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-1073 is RESOLVED with the amended proposal</p>
+
+<h4 id="6.2.4">6.2.4 <a href="https://issues.oasis-open.org/browse/ODATA-1068" rel="noopener noreferrer" target="_blank">ODATA-1068</a> - 3.12 Transformation expand: require at least two parameters, with innermost expansion requiring a filter()</h4>
+<p>Ralf: </p>
+<pre>
+An expand() transformation without a nested filter() is just a complicated identity transformation, 
+so we should require a filter() for the innermost expand() transformation in a nested expand(). 
+Outer and intermediate expand() don't need a filter() as they are necessary to reach the level 
+where the filter() needs to be applied.
+</pre>
+<p>Ralf: ODATA-1068 is OPEN</p>
+<p>Ralf:</p>
+<pre>
+..../expand(Products)/.... doesn't do anything
+.../expand(Products,filter(...)/... actually changes something
+GET ~/Categories?$apply=expand(Products,expand(Sales,filter(Amount gt 3)))
+$apply=expand(Products,expand(Sales,filter(Amount gt 3)),expand(Suppliers,expand(Products,filter(true))))
+</pre>
+
+
+<h2 id="7">7. Next meetings</h2>
+<p>Agreed next meetings:</p>
+<pre>
+Thursday June 21, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+Thursday June 28, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+
+<h2 id="8">8. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
