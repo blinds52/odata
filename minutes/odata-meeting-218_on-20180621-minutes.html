@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #218 Thursday June 21, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='ac21b865db7ddef0c91b3c1c7c6dfc4483ea2452efa932c31fd466ee60a602a22c7049f36a9124b5b30fed10ff65a59db975b020c4f46cd8753a3831b75f9b6a' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #218 Thursday June 21, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-06-21 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    x
+    George Ericson (Dell)
+    Gerald Krause (SAP SE)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE)
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46261">normative attendance sheet for this meeting (event_id=46261)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Mark: asks why www.odata.org links to V4.01 specifications</p>
+<p>Ralf: V4.01 specs point back to V4 under</p>
+<pre>
+- Related work:
+-- This specification replaces or supersedes:
+</pre>
+<p>Mike: next Face-to-Face</p>
+<p>Mike: September 2018</p>
+<p>Ralf: Please check your calendars and let's find a date next meeting</p>
+<p>Mike: Microsoft might host the meeting</p>
+<p>Agenda is approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+
+<h3 id="3.1">3.1 Minutes from June 14, 2018 TC meeting #217</h3>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/63287/odata-meeting-217_on-20180614-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/63287/odata-meeting-217_on-20180614-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Issues</h2>
+
+<h3 id="5.1">5.1 Data Aggregation: NEW or OPEN</h3>
+
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-1068" rel="noopener noreferrer" target="_blank">ODATA-1068</a> - 3.12 Transformation expand: require at least two parameters, with innermost expansion requiring a filter()</h4>
+
+<p>Ralf:</p>
+<pre>
+..../expand(Products)/.... doesn't do anything
+.../expand(Products,filter(...)/... actually changes something
+GET ~/Categories?$apply=expand(Products,expand(Sales,filter(Amount gt 3)))
+$apply=expand(Products,expand(Sales,filter(Amount gt 3)),expand(Suppliers,expand(Products,filter(true))))
+</pre>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-1068 as proposed. <b>Ralf</b> seconds.</p>
+<p>Ralf: ODATA-1068 is RESOLVED as proposed</p>
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-1041" rel="noopener noreferrer" target="_blank">ODATA-1041</a> - Broaden definitions of transformations topcount and bottomcount</h4>
+<p>Gerald: </p>
+<pre>
+GET ~/Sales?$apply=topcount(2,Amount)
+$apply=groupby((Product),topcount(1,Date))
+
+The topcount transformation takes two parameters.
+
+The first parameter specifies the number of instances to return in the transformed set. 
+It MUST be an expression that can be evaluated on the set level and MUST result in a positive integer.
+
+The second parameter specifies the value by which the instances are compared for determining the result set. 
+It MUST be an expression that can be evaluated on instances of the input set and MUST result in a primitive numeric value.
+
+The transformation retains the number of instances specified by the first parameter that have the highest values specified by the second expression.
+
+In case the value of the second expression is ambiguous, the service MUST impose a stable ordering before 
+determining the returned instances.
+</pre>
+<p>Gerald: Proposal: Replace current definitions by "[...] and MUST result in values of a primitive type whose values are totally ordered.".</p>
+<p>Ralf: ODATA-1041 is OPEN</p>
+<p><b>Gerald</b>: I <b>move</b> to resolve ODATA-1041 as proposed. <b>Hubert</b> seconds.</p>
+<p>Ralf: ODATA-1041 is RESOLVED as proposed</p>
+
+
+<h4 id="5.1.3">5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-1040" rel="noopener noreferrer" target="_blank">ODATA-1040</a> - Clarification of term "expression"</h4>
+<p>Gerald: </p>
+<pre>
+The keyword with is used to apply an aggregation method to an aggregatable property or expression.
+Instead of applying a single aggregation method for calculating the aggregated value of an expression across all properties no
+
+Proposal: At the beginning of section 3 for $apply, define that any reference to an expression, 
+if not specified otherwise, refers to "those expressions that could also be used in a $filter 
+system query option and result in a value of primitive type". With such a statement in the preamble, 
+this phrase could then be deleted from some some sub-sections.
+</pre>
+<p>Ralf: <a href="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/odata-data-aggregation-ext-v4.0.html" rel="noopener noreferrer" target="_blank">http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/odata-data-aggregation-ext-v4.0.html</a></p>
+<p>Ralf: <a href="http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html#_Toc435016563" rel="noopener noreferrer" target="_blank">http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html#_Toc435016563</a></p>
+<p>Ralf: </p>
+<pre>
+This specification defines the following terms:
+
+- Aggregatable Property  a property for which the values can be aggregated using an aggregation method.
+- Aggregation Method  a method that can be used to aggregate an aggregatable property or expression
+- Standard Aggregation Method  one of the standard aggregation methods: sum, min, max, average, and countdistinct
+- Custom Aggregation Method  a custom aggregation method that can be applied to expressions of a specified type
+- Custom Aggregate  a dynamic property that can appear in an aggregate clause
+- Groupable Property  a property whose values can be used to group entities or complex type instances for aggregation.
+- Hierarchy  an arrangement of groupable properties whose values are represented as being above, below, or at the same level as one another.
+</pre>
+<p>Ralf: ODATA-1040 is OPEN</p>
+<p>Gerald: revise proposal to define "Expression" in section 2.1</p>
+<p>Gerald: New proposal: In section 2.1, add a definition of expressions: is a common expression resulting in a value of primitive type</p>
+<p>George: if needed define "general expression" and "primitive expression" and use appropriately</p>
+<p>Gerald: </p>
+<pre>
+In section 2.1, add a definition of expressions: is a common expression; 
+and of primitive expression being an expression resulting in a value of primitive type
+
+Check all occurrencies in the text for occurrences of "expression" and update accordingly.
+</pre>
+<p>Gerald: </p>
+<pre>
+In section 2.1, add a definition of expressions: is a common expression
+
+add a definition of primitive expression being an expression resulting in a value of primitive type or a boolCommonExpression
+
+Check all occurrencies in the text for occurrences of "expression" and update accordingly.
+</pre>
+<p>Defered: Gerald and Ralf to come up with a concrete proposal</p>
+
+<h4 id="5.1.4">5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-1038" rel="noopener noreferrer" target="_blank">ODATA-1038</a> - Clarify term "simple value"</h4>
+<p>Ralf: Guess: number, string, boolean</p>
+<p>Ralf: Not: Geo, Stream</p>
+<p>Defered: Gerald and Ralf to come up with a concrete proposal</p>
+<p>Ralf: ODATA-1038 is OPEN</p>
+
+<h4 id="5.1.5">5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-947" rel="noopener noreferrer" target="_blank">ODATA-947</a> - Transformation for computing ratios with aggregated values</h4>
+<p>Ralf: </p>
+<pre>
+Description
+
+It is interesting to get the ratio between an individual and an aggregated value from the same input set. 
+
+Examples:
+
+1. Customer classification: Revenue per customer in relation to total revenue
+2. Revenue trend: Revenue per year in relation to total revenue for any given customer
+3. Order size: Order volume relative to average order volume
+
+They cannot be expressed with combining groupby/aggregate, because the individual 
+entity values are no longer available after these transformations have produced an aggregated value.
+
+The ratio transformation takes a comma-separated list of one or more parameters 
+describing a value, an aggregate expression, and an alias:
+
+ratio(valueExpression to aggregateExpression as alias, )
+
+A valueExpression may be an expression valid in a $filter system query option on the 
+input set that results in a simple value. The aggregateExpression is an aggregate expression 
+as defined for transformation aggregate (section 3.1). The alias introduces a dynamic property 
+for the ratio values in the result set that are of type Edm.Decimal with unspecified precision 
+and variable scale.
+
+The transformation first determines the aggregated value for the input set by applying 
+the aggregateExpression. Then, it calculates for every entity in the input set the ratio 
+between the valueExpression and the aggregated value and adds the result as dynamic property 
+to the entity that is put into the result set.
+
+Applied to examples:
+
+Re 1:
+
+GET ~/Sales?$apply=
+groupby((Customer),aggregate(Amount with sum as CustomerAmount)) 
+/ratio(CustomerAmount to CustomerAmount with sum as RevenueContribution)
+
+Re 2:
+
+GET ~/Sales?$apply=
+groupby((Customer,Year) aggregate(Amount with sum as CustomerYearAmount))
+/groupby((Customer),ratio(CustomerYearAmount to CustomerYearAmount with sum as RevenueTrend)
+
+Re 3:
+
+GET ~/Sales?$apply=ratio(Amount to Amount with average as RelativeOrderSize)
+
+In all these example, the value expression is identical with the base in the aggregate expression, 
+that is, they follow the pattern: ratio(X to X with M as A). If there were no other use cases, 
+the syntax could be simplified to: ratio(X with M as A).
+</pre>
+<p>Gerald:</p>
+<pre>
+GET ~/Sales?$apply=
+groupby((Customer),aggregate(Amount with sum as CustomerAmount))
+/ratio(CustomerAmount to CustomerAmount with sum as RevenueContribution)
+ratio(valueExpression to aggregateExpression as alias, )
+Order size: Order volume relative to average order volume
+GET ~/Sales?$apply=ratio(Amount to Amount with average as RelativeOrderSize)
+</pre>
+<p>Ralf: ODATA-947 is OPEN</p>
+<p>Ralf: </p>
+<pre>
+ratio combines aggregate and compute in a special way
+Maybe there's a more generic way to express that
+</pre>
+<p>Hubert: </p>
+<pre>
+think about similar use cases
+ratio() is very useful
+combine this with hierarchies
+revenue contribution of offices to countries to continents
+ability to refer to the input set
+</pre>
+<p>Ralf: Defer until we have more use cases and a clearer understanding</p>
+
+<h4 id="5.1.6">5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-946" rel="noopener noreferrer" target="_blank">ODATA-946</a> - Clarify scope for $apply</h4>
+<p>Ralf: </p>
+<pre>
+expandOption =/ apply
+</pre>
+<p>Ralf: ODATA-946 is OPEN</p>
+<p>Ralf: Adjust section 3, first sentence. Changes are enclosed with : *Aggregation behavior **on a collection of instances* is triggered</p>
+<p><b>Gerald</b>: I <b>move</b> to resolve ODATA-946 as proposed. <b>Mike</b> seconds.</p>
+<p>Ralf: ODATA-946 is RESOLVED as proposed</p>
+
+<h2 id="6">6. Next meetings</h2>
+<p>Agreed next meetings:</p>
+<pre>
+Thursday June 28, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+Thursday July 05, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+<p>Matt: will be away July 5th</p>
+<p>Hubert: cannot attend July 05 and 12</p>
+<p>George: expects to attend on July 05</p>
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
