@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OData TC meeting #219 Thursday June 28, 2018</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+body{-webkit-font-smoothing:antialiased;font-family:Cambria,Arial,Verdana,sans-serif;margin:0} body {margin-left:2%}
+body,p,td,div{color:#111;font-family:"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;/*word-wrap:break-word*/}
+h1,h2,h3,h4,h5,h6{line-height:1.5em}
+a{-webkit-transition:color .2s ease-in-out;color:#0d6ea1;text-decoration:none}
+a:hover{color:#3593d9}.footnote{color:#0d6ea1;font-size:.8em;vertical-align:super}dd{margin-bottom:1em}
+li>p:first-child{margin:0}ul ul,ul ol{margin-bottom:.4em}.poetry
+pre{display:block;font-family:Georgia,Garamond,serif!important;font-size:110%!important;font-style:italic;line-height:1.6em;margin-left:1em}
+.poetry pre code{font-family:Georgia,Garamond,serif!important}
+sup,sub,a.footnote{font-size:1.4ex;height:0;line-height:1;position:relative;vertical-align:super}sub{vertical-align:sub;top:-1px}
+p,h5{font-size:1.1429em;line-height:1.3125em;margin:1.3125em 0}dt,th{font-weight:700}p{margin:0.7ex 2.0em}pre{margin-left:4em;}
+p.note{font-size:75%}
+.code-like{font-family:monospace;font-size:120%!important}
+@media print{body{overflow:auto}
+#wrapper{background:#fff;color:#303030;font-size:85%;padding:10px;position:relative;text-indent:0}}
+@media screen{/*::selection{background:rgba(157,193,200,.5)}*/.inverted{background:#333}
+.inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th{color:#eee!important}
+.inverted a{color:#fff;text-decoration:underline}#wrapper{padding:20px}.inverted #wrapper{background:#333}}
+</style>
+<!-- # grep -v excluding_those_lines __file__ |shasum -a 512 -->
+<!-- sha512_excluding_those_lines='0565a0619c05d7a21d985e175566562ba2680ef9b13f379a1b975338f8de43fe524a428353124dc962577cb67e61ed8b53f40b3511a2a15eb05fcf63db288689' -->
+</head>
+<body class="normal">
+  <div id="wrapper">
+<h1>OData TC meeting #219 Thursday June 28, 2018</h1>
+<p>Acting chair: Ralf</p>
+<pre>Chat transcript from room: odatatc
+2018-06-28 0800-1000 PDT
+</pre>
+<h2 id="1">1. Roll call</h2>
+
+<h3 id="1.1">1.1 Members present</h3>
+
+<pre>
+    George Ericson (Dell)
+    Hubert Heijkers (IBM)
+    Mark Biamonte (Progress Software)
+    Matthew Borges (SAP SE) a.k.a. Matt
+    Michael Pizzo (Microsoft) a.k.a. Mike
+    Ralf Handl (SAP SE)
+    Ramesh Reddy (Red Hat)
+    Stefan Hagen (Individual)
+    Ted Jones (Red Hat)
+</pre>
+
+<p>Quorum achieved. Details cf. <a href="https://www.oasis-open.org/apps/org/workgroup/odata/event.php?event_id=46262">normative attendance sheet for this meeting (event_id=46262)</a>.</p>
+
+<p>Notes taken by all and subsequently edited for readability by Stefan.</p>
+
+<h2 id="2">2. Approve agenda</h2>
+<p>Agenda is approved unchanged as published</p>
+
+<h2 id="3">3. Approve minutes from previous meeting(s)</h2>
+
+<h3 id="3.1">3.1 Minutes from June 21, 2018 TC meeting #218</h3>
+<p>URL = <a href="https://www.oasis-open.org/committees/download.php/63317/odata-meeting-218_on-20180621-minutes.html" rel="noopener noreferrer" target="_blank">https://www.oasis-open.org/committees/download.php/63317/odata-meeting-218_on-20180621-minutes.html</a></p>
+<p>Minutes approved unchanged as published</p>
+
+<h2 id="4">4. Review action items [<a href="https://www.oasis-open.org/apps/org/workgroup/odata/members/action_items.php" rel="noopener noreferrer" target="_blank">Link to Action item list</a>]</h2>
+<h3 id="4.1">4.1 Action items due</h3>
+<p>None</p>
+
+<h2 id="5">5. Issues</h2>
+
+<h3 id="5.1">5.1 Data Aggregation: NEW or OPEN</h3>
+
+<h4 id="5.1.1">5.1.1 <a href="https://issues.oasis-open.org/browse/ODATA-839" rel="noopener noreferrer" target="_blank">ODATA-839</a> - A recursive hierarchy annotation may also contain a navigation property to the children nodes</h4>
+<p>Ralf: Proposal:</p>
+<pre>
+&lt;ComplexType Name="RecursiveHierarchyType">
+  &lt;Property Type="Edm.PropertyPath" Name="NodeProperty" Nullable="false">
+    &lt;Annotation Term="Core.Description" String="Property holding the hierarchy node value"/>
+  &lt;/Property>
+  &lt;Property Type="Edm.NavigationPropertyPath" Name="ParentNavigationProperty" Nullable="false">
+    &lt;Annotation Term="Core.Description" String="Property for navigating to the parent node"/>
+  &lt;/Property>
+  &lt;Property Type="Edm.NavigationPropertyPath" Name="ChildrenNavigationProperty" Nullable="true">
+    &lt;Annotation Term="Core.Description" String="Property for navigating to the children nodes"/>
+  &lt;/Property>
+  &lt;Property Type="Edm.PropertyPath" Name="DistanceFromRootProperty" Nullable="true">
+    &lt;Annotation Term="Core.Description" String="Property holding the number of edges between the node and the root node"/>
+  &lt;/Property>
+  &lt;Property Type="Edm.PropertyPath" Name="IsLeafProperty" Nullable="true">
+    &lt;Annotation Term="Core.RequiresType" String="Edm.Boolean"/>
+    &lt;Annotation Term="Core.Description" String="Property indicating whether the node is a leaf of the hierarchy"/>
+  &lt;/Property>
+&lt;/ComplexType>
+</pre>
+<p>Ralf: Description</p>
+<pre>
+Consider a client processing entities according to their hierarchical structure imposed by the given hierarchy annotation.
+
+If the client wants to retrieve the descendants for the next three levels, this could be accomplished with a single request 
+that makes use of a (cyclic) navigation property pointing to the children of a node. 
+Assuming this navigation property has name childrenNodes, and the corresponding navigation property annotated 
+as ParentNavigationProperty has name parentNode, the request would be:
+
+GET set(nodeId)?$expand=childrenNodes($levels=3;$select=parentNode/nodeId,nodeId)
+
+
+In order to let clients detect the availability of such navigations, the existing RecursiveHierarchy term needs 
+to be Extended as proposed.
+</pre>
+<p>Ralf: ODATA-839 is OPEN</p>
+<p>Ralf: </p>
+<pre>
+Naming: ParentNavigationProperty
+Proposals: ChildrenNavigationProperty or ChildNavigationProperty
+Result is an array of children
+</pre>
+<p>George: children is more appropriate</p>
+<p>Mike agrees: navigates to a collection of children</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-839 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-839 is RESOLVED as proposed</p>
+
+<h4 id="5.1.2">5.1.2 <a href="https://issues.oasis-open.org/browse/ODATA-904" rel="noopener noreferrer" target="_blank">ODATA-904</a> - Example 55: clarify groupby in combination with relationships of instance cardinality zero</h4>
+<p>Ralf: Description</p>
+<pre>
+Example 55:
+
+GET ~/Customers?$apply=groupby((Country,Sales/Product/Name))
+
+The example result does not contain an entry for country France. 
+The example data contains a customer in France that does not have any sales.
+The prose text before the example states expansion "in a left-outer-join fashion".
+This would suggest that a result row is missing:
+
+{ "@odata.id": null, "Country": "France", "Sales": [ { "Product":
+{ "Name": null }
+} ] }
+
+This would be consistent with both the left-outer-join statement and the URL conventions 
+for path expressions where properties of related entities are treated as null if no entity is related:
+the left-outer join would produce a single Sales row containing only null values, including the related product and its name
+this would create a ("France",null) group during aggregation
+folding back into the original shape would create the additional entry
+</pre>
+<p>Ralf: Alternative:</p>
+<pre>
+{ "@odata.id": null, "Country": "France", "Sales": [ ] }
+</pre>
+<p>Hubert: prefers the alternative of an empty Sales array</p>
+<p>George: agrees</p>
+<p>Ralf: ODATA-904 is OPEN</p>
+[17:24] Hubert Heijkers (IBM): I move to resolve ODATA-904 with the updated proposal to use the alternative representation using the empty array.
+[17:24] George Ericson (Dell): Second
+<p>Ralf: Updated proposal:</p>
+<pre>
+Explicitly state what "left-outer-join fashion" means, i.e. not inventing dummy records with null values, 
+instead use empty arrays that match the $expand structure:
+
+{ "@odata.id": null, "Country": "France", "Sales": [ ] }
+
+Fix the unbalanced curly braces in all result rows while we are at it.
+</pre>
+<p>Ralf: ODATA-904 is RESOLVED with the amended proposal</p>
+
+<h4 id="5.1.3">5.1.3 <a href="https://issues.oasis-open.org/browse/ODATA-905" rel="noopener noreferrer" target="_blank">ODATA-905</a> - Example 67: result row for USA, Sugar missing, Example 68: last total should be 7</h4>
+<p>Ralf: </p> 
+<pre>
+Example 67: transformation sequences are also useful inside groupby: 
+To get the aggregated amount by only considering the top two sales amounts per product and county:
+
+GET ~/Sales?$apply=groupby((Customer/Country,Product/Name,Currency/Code),
+                      topcount(2,Amount)/aggregate(Amount with sum as Total))
+
+results in
+
+{
+  "@odata.context":
+     "$metadata#Sales(Customer(Country),Product(Name),Total,Currency(Code))",
+  "value": [
+    { "@odata.id": null, "Customer": { "Country": "Netherlands" },
+      "Product": { "Name": "Paper" },
+      "Total":  3, "Currency": { "Code": "EUR" }
+    },
+    { "@odata.id": null, "Customer": { "Country": "Netherlands" },
+      "Product": { "Name": "Sugar" },
+      "Total":  2, "Currency": { "Code": "EUR" }
+    },
+    { "@odata.id": null, "Customer": { "Country": "USA" },
+      "Product": { "Name": "Coffee" },
+      "Total": 12, "Currency": { "Code": "USD" }
+    },
+    { "@odata.id": null, "Customer": { "Country": "USA" },
+      "Product": { "Name": "Paper" },
+      "Total":  5, "Currency": { "Code": "USD" } 
+    }
+  ]
+}
+</pre>
+<p>Ralf: Example data: http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html#_Toc435016565</p>
+<p>Ralf: Sugar is indeed missing</p>
+<p>Ralf: Example 68:</p>
+<pre>
+The function takes the name of a numeric property as a parameter, retains those entities that topcount also would retain, 
+and replaces the remaining entities by a single aggregated entity, where only the numeric property has a defined value 
+being the aggregated value over those remaining entities:
+GET ~/Sales?$apply=groupby((Customer/Country,Product/Name),
+                         aggregate(Amount with sum as Total))
+                  /groupby((Customer/Country),
+                           Self.TopCountAndBalance(Count=1,Property='Total'))
+
+results in
+
+{
+  "@odata.context": "$metadata#Sales(Customer(Country),Product(Name),Total)",
+  "value": [
+    { "@odata.id": null, "Customer": { "Country": "Netherlands" },
+      "Product": { "Name": "Paper" }, "Total":  3 },
+    { "@odata.id": null, "Customer": { "Country": "Netherlands" },
+      "Product": { "Name": "**Other**" }, "Total":  2 },
+    { "@odata.id": null, "Customer": { "Country": "USA" },
+      "Product": { "Name": "Coffee" }, "Total": 12 },
+    { "@odata.id": null, "Customer": { "Country": "USA" },
+      "Product": { "Name": "**Other**" }, "Total":  5 }
+  ]
+}
+</pre>
+<p>Ralf: Last total indeed is 7</p>
+<p>Ralf: ODATA-905 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-905 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-905 is RESOLVED as proposed</p>
+
+<h4 id="5.1.4">5.1.4 <a href="https://issues.oasis-open.org/browse/ODATA-909" rel="noopener noreferrer" target="_blank">ODATA-909</a> - ABNF for pathPrefix should also allow qualifiedComplexTypeName</h4>
+<p>Ralf: </p>
+<pre>
+https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/spec/ABNF/odata-aggregation-abnf.txt?op=diff&rev=789
+</pre>
+<p>Ralf: ODATA-909 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-909 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-909 is RESOLVED as proposed</p>
+<p><b>Hubert</b>: I <b>move</b> to close ODATA-909 as applied. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-909 is CLOSED as applied</p>
+
+<h4 id="5.1.5">5.1.5 <a href="https://issues.oasis-open.org/browse/ODATA-943" rel="noopener noreferrer" target="_blank">ODATA-943</a> - Correct broken link for Groupable Property</h4>
+<p>Ralf: Section 2.1 includes a definition for the term groupable property. The link behind it does not point to section 6.2.1 as expected.</p>
+<p>Ralf: ODATA-943 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-943 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-943 is RESOLVED as proposed</p>
+<p><b>Hubert</b>: I <b>move</b> to close ODATA-943 as applied. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-943 is CLOSED as applied</p>
+
+<h4 id="5.1.6">5.1.6 <a href="https://issues.oasis-open.org/browse/ODATA-944" rel="noopener noreferrer" target="_blank">ODATA-944</a> - Clarify scope of property paths in transformations</h4>
+<p>Ralf: Description:</p>
+<pre>
+Property paths in transformations always relate to the structure of the immediate input set, 
+which is either the collection identified by the request resource path or the output of the preceding transformation. 
+
+For some transformations, this has been specified explicitly, e.g. in section 3.1 for the aggregate transformation: 
+an expression valid in a $filter system query option on the input set. But not for all, e.g. section 3.12 does 
+not make a statement for the expand transformation. 
+In order to avoid any possible misinterpretation or confusion, the document should spell this out clearly.
+</pre>
+<p>Ralf: Proposal:</p>
+<pre>
+Add another sentence to section 3, at the end of the third para (enclosed with *): 
+
+"So the actual (or relevant) structure of each intermediary result will resemble a projection of the original 
+data model that could also have been formed using the standard system query options $expand and $select 
+defined in [OData-Protocol], with dynamic properties representing the aggregate values. 
+The parameters of set transformations allow specifying how the result instances are constructed from the input instances. 
+This especially means that all property paths relate to the structure of the immediate input set."
+</pre>
+<p>Ralf: ODATA-944 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-944 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-944 is RESOLVED as proposed</p>
+
+<h4 id="5.1.7">5.1.7 <a href="https://issues.oasis-open.org/browse/ODATA-945" rel="noopener noreferrer" target="_blank">ODATA-945</a> - Correct examples 53 and 54</h4>
+<p>Ralf: Description</p>
+<pre>
+Example 53 requests aggregation of property path Sales/Amount, but the response shows the dynamic 
+property Total nested inside Sales. Rightly, it should have been added to the type containing the 
+original expression (section 3.1.1).
+
+In example 54, the response payload shows the dynamic property Total nested within Sales. 
+According to the request, which uses the path expression Sales/Amount for aggregation, 
+the Total property should be at the top level.
+</pre>
+<p>Ralf: Proposal:</p>
+<pre>
+Example 53: Replace response payload with
+
+{
+"@odata.context": "$metadata#Products(Name,Total)",
+"value": [
+{ "@odata.id": null, "Name": "Coffee", "Total": 12 }
+,
+{ "@odata.id": null, "Name": "Paper", "Total": 8 }
+,
+{ "@odata.id": null, "Name": "Pencil", "Total": null }
+,
+{ "@odata.id": null, "Name": "Sugar", "Total": 4 }
+]
+}
+
+Example 54: Modify request to properly reflect the nesting shown in the response: 
+
+GET ~/Products?$apply=groupby((Name,Sales/Currency/Code),
+aggregate(Sales(Amount with sum as Total)))
+</pre>
+<p>Ralf: Current text:</p>
+<pre>
+Example 53: 
+
+GET ~/Products?$apply=groupby((Name),
+
+                              aggregate(Sales/Amount with sum as Total))
+
+results in
+
+{
+  "@odata.context": "$metadata#Products(Name,Sales(Total))",
+  "value": [
+    { "@odata.id": null, "Name": "Coffee", "Sales": [ { "Total":   12 } ] },
+    { "@odata.id": null, "Name": "Paper",  "Sales": [ { "Total":    8 } ] },
+    { "@odata.id": null, "Name": "Pencil", "Sales": [ { "Total": null } ] },
+    { "@odata.id": null, "Name": "Sugar",  "Sales": [ { "Total":    4 } ] }
+  ]
+}
+
+Note that the base set of the request is Products, so there is a result item for 
+product Pencil even though there are no sales item. As aggregate returns exactly 
+one result item even if there are no items to be aggregated, the Sales navigation 
+propertys value is an array with one element representing the sum over no input values, which is null.
+
+Example 54: careful observers will notice that the above amounts have been aggregated 
+across currencies, which is semantically wrong. 
+Yet it is the correct response to the question asked, so be careful what you ask for. 
+The semantically meaningful question
+
+GET ~/Products?$apply=groupby((Name,Sales/Currency/Code),
+                              aggregate(Sales/Amount with sum as Total))
+
+results in
+
+{
+  "@odata.context": "$metadata#Products(Name,Sales(Total,Currency(Code)))",
+  "value": [
+    { "@odata.id": null, "Name": "Coffee",
+      "Sales": [ { "Total": 12, "Currency": { "Code": "USD" } } ] },
+    { "@odata.id": null, "Name: "Paper",
+      "Sales": [ { "Total":  3, "Currency": { "Code": "EUR" } },
+                 { "Total":  5, "Currency": { "Code": "USD" } } ] },
+    { "@odata.id": null, "Name: "Pencil",
+      "Sales": [] },
+    { "@odata.id": null, "Name: "Sugar",  
+      "Sales": [ { "Total":  2, "Currency": { "Code": "EUR" } },
+                 { "Total":  2, "Currency": { "Code": "USD" } } ] }
+  ]
+}
+
+Note that navigation properties are "expanded" in a left-outer-join fashion, 
+starting from the target of the aggregation request, before grouping the entities for aggregation. 
+Afterwards the results are folded back to match the cardinality of the navigation properties.
+</pre>
+<p>Ralf: Correct request URL for 54 is</p>
+<pre>
+GET ~/Products?$apply=groupby((Name,Sales/Currency/Code),
+aggregate(Sales(Amount with sum as Total)))
+</pre>
+<p>Ralf: ODATA-945 is OPEN</p>
+<p>Hubert: we have to explain more about the differences</p>
+<p>Ralf: </p>
+<pre>
+Plain paths with / work like compute: pull arguments from related entities, place result "at the top"
+Parentheses can be used to place the result within the related/nested structure
+</pre>
+<p>Ralf: Slight difference:</p>
+<pre>
+GET ~/Products?$apply=groupby((Name,Sales/Currency/Code),aggregate(Sales(Amount with sum as Total)))
+GET ~/Products?$apply=groupby((Name,Sales/Currency/Code),aggregate(Sales/Amount with sum as Total))
+</pre>
+<p>Ralf: 3.1.1 Keyword as</p>
+<pre>
+Aggregate expressions can define an alias using the as keyword, followed by a SimpleIdentifier (see [OData-CSDL, section 17.2]).
+
+The alias will introduce a dynamic property in the aggregated result set. The introduced dynamic property is added to the 
+type containing the original expression or custom aggregate. 
+The alias MUST NOT collide with names of declared properties, custom aggregates, or other aliases in that type.
+</pre>
+<p>Ralf: </p>
+<pre>
+Sales/Amount with sum as Total
+Sales(Amount with sum as Total)
+</pre>
+<p>George: be more explicit in the definition and not define by example</p>
+<p>Ralf: </p>
+<pre>
+First example: in top context we are interested in the Amount
+Second example: we are interested in the Sales, and within the Sales in the Amount
+Need to revise the specification text: section 3.1.1
+</pre>
+
+<h4 id="5.1.8">5.1.8 <a href="https://issues.oasis-open.org/browse/ODATA-967" rel="noopener noreferrer" target="_blank">ODATA-967</a> - Chapter 3: remove restriction for input type of bound functions</h4>
+<p>Ralf: Description:</p>
+<pre>
+When generalizing $apply from "entities" to "instances" of any type we forgot to reformulate the paragraph on 
+service defined "custom functiions".
+</pre>
+<p>Ralf: Proposal:</p>
+<pre>
+Prose spec chapter 3, second-to-last paragraph new:
+
+Service-defined bound functions that take a collection as their binding parameter MAY be used as set transformations 
+within $apply if the type of the binding parameter matches the type of the result set of the preceding transformation. 
+If it returns a collection, further transformations can follow the bound function. 
+The parameter syntax for bound function segments is identical to the parameter syntax for bound functions in 
+resource path segments or $filter expressions. See section 7.6 for an example.
+
+old:
+
+Service-defined bound functions that take an entity set as their binding parameter MAY be used as set transformations 
+within $apply if the type of the binding parameter matches the type of the result set of the preceding transformation. 
+If it returns an entity set, further transformations can follow the bound function. 
+The parameter syntax for bound function segments is identical to the parameter syntax for bound functions in 
+resource path segments or $filter expressions. See section 7.6 for an example.
+
+ABNF new:
+
+customFunction = namespace "." ( entityColFunction / complexColFunction / primitiveColFunction ) functionExprParameters
+
+old:
+
+customFunction = namespace "." entityColFunction functionExprParameters
+</pre>
+<p>George: use "structured values" instead of "instances"</p>
+<p>Ralf: ODATA-967 is OPEN</p>
+<p><b>Hubert</b>: I <b>move</b> to resolve ODATA-967 as proposed. <b>George</b> seconds.</p>
+<p>Ralf: ODATA-967 is RESOLVED as proposed</p>
+
+<h4 id="5.1.9">5.1.9 <a href="https://issues.oasis-open.org/browse/ODATA-968" rel="noopener noreferrer" target="_blank">ODATA-968</a> - 3.1.4: add example for from in aggregate() with multiple arguments</h4>
+[18:23] Ralf Handl (SAP SE): https://issues.oasis-open.org/browse/ODATA-968
+<p>Ralf: Description</p>
+<pre>
+Explain how in aggregate() with multiple arguments the "from" keyword can be resolved into a groupby/aggregate 
+sequence by initially grouping by all "from" properties appearing in any argument.
+
+Will probably work only if all "from" chains are compatible, i.e. there exists a "super-chain" so that 
+any from chain is a sub-chain of this super-chain.
+
+1) from A from B from D,from A from C from D works with super-chain from A from B from C from D (B and C can be swapped to get another possible super-chain.
+
+2) from A from B, from B from A won't work
+</pre>
+<p>Ralf: </p> 
+<pre>
+GET ~/Sales?$apply=aggregate(Amount with sum as DailyAverage from Time with average)
+GET ~/Sales?$apply=groupby((Time),aggregate(Amount with sum as Total)) 
+                  /aggregate(Total with average as DailyAverage)
+GET ~/Sales?$apply=groupby((Time/Date),aggregate(Amount with sum as Total)) 
+                  /aggregate(Total with average as DailyAverage)
+</pre>
+<p>Ralf: should we keep this in, seeing how much trouble we had reconstructing the non-intuitive meaning of the "from" syntax?</p>
+<p>Ralf: ODATA-968 is OPEN</p>
+<p>Hubert: park this and reconstruct together with Gerald why we invented the "from" syntax</p>
+
+<h4 id="5.1.10">5.1.10 <a href="https://issues.oasis-open.org/browse/ODATA-971" rel="noopener noreferrer" target="_blank">ODATA-971</a> - 7.1: Add example for grouping by single-valued navigation property</h4>
+<p>Ralf: Description:</p>
+<pre>
+Section 7.1 defines the result of grouping by a single-valued navigation property without giving an example.
+
+Any example in this section that groups by the key property of a related entity could be rephrased to group by the 
+navigation property instead. Here's how example 52 would look like:
+
+GET ~Sales?$apply=groupby((Customer,Product))
+and results in
+{
+"@odata.context": "$metadata#Sales(Customer(Name,ID),Product(Name))",
+"value": [
+{ "@odata.id": null, "Customer@odata.navigationLink": "Customers('C1')", "Product@odata.navigationLink": "Products('P2')" }
+,
+{ "@odata.id": null, "Customer@odata.navigationLink": "Customers('C1')", "Product@odata.navigationLink": "Products('P3')" }
+,
+{ "@odata.id": null, "Customer@odata.navigationLink": "Customers('C1')", "Product@odata.navigationLink": "Products('P1')"}
+,
+{ "@odata.id": null, "Customer@odata.navigationLink": "Customers('C2')", "Product@odata.navigationLink": "Products('P2')" }
+,
+{ "@odata.id": null, "Customer@odata.navigationLink": "Customers('C2')", "Product@odata.navigationLink": "Products('P3')" }
+,
+{ "@odata.id": null, "Customer@odata.navigationLink": "Customers('C3')", "Product@odata.navigationLink": "Products('P3')"}
+},
+
+{ "@odata.id": null, "Customer@odata.navigationLink": "Customers('C3')", "Product@odata.navigationLink": "Products('P1')" }
+]
+}
+</pre>
+<p>Ralf: </p> 
+<pre>
+GET ~Sales?$apply=groupby((Customer/ID,Product/ID))
+and results in
+{
+"@odata.context": "$metadata#Sales(Customer(ID),Product(ID))",
+"value": [
+{ "@odata.id": null, "Customer":{"ID": "C1"}, "Product":{"ID": "P2"} },
+</pre>
+<p>Ralf: ODATA-971 is OPEN</p>
+<p>Ralf: Response seems somewhat non-intuitive but can be derived from JSON Format rules</p>
+
+<h2 id="6">6. Next meetings</h2>
+<pre>
+Thursday July 5, 2018 during 8-10 am PDT (17:00-19:00 CEST): 
+    no meeting due to public holiday in the US on July 4
+</pre>
+<p>Agreed next meetings:</p>
+<pre>
+Thursday July 12, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+Thursday July 19, 2018 during 8-10 am PDT (17:00-19:00 CEST)
+</pre>
+<p>Hubert: cannot attend July 12</p>
+
+<h2 id="7">7. AOB and wrap up</h2>
+<p>None.</p>
+
+<p>Meeting adjourned by chair.</p>
+</div>
+</body>
+</html>
